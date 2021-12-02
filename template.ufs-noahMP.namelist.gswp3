@@ -5,12 +5,12 @@
   forcing_dir      = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/forcing/C96/gswp3/forcing/"
   
   separate_output = .true.
-  output_dir       = "./OIoutput/"
+  output_dir       = "./noahmp_output/"
 
   restart_frequency_s = 86400
   restart_simulation  = .true.
-  restart_date        = "YYYY-MM-DD HH:00:00"
-  restart_dir         = "./OIoutput/"
+  restart_date        = "XXYYYY-XXMM-XXDD XXHH:00:00"
+  restart_dir         = "./restarts/vector/"
 
   timestep_seconds = 3600
 

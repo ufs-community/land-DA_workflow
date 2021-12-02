@@ -1,7 +1,0 @@
- &NAMCYC
-  idim=96, jdim=96, lsoil=4,
-  iy=YYYY, im=MM, id=DD, ih=HH, fh=0,
-  deltsfc=6,ialb=1,use_ufo=.true.,donst='NO',
-  adjt_nst_only=.false.,isot=1,ivegsrc=1,
-  zsea1_mm=0,zsea2_mm=0,MAX_TASKS=6,
- /
