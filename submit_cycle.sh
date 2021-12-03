@@ -44,7 +44,7 @@ date_count=0
 #while [ $thisdate -le $enddate ]; do
 while [ $date_count -lt $dates_per_job ]; do
 
-    if [ $thisdate -gt $enddate ]; then 
+    if [ $thisdate -ge $enddate ]; then 
         echo "All done, at date ${thisdate}"  >> $logfile
         exit 
     fi

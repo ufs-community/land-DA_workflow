@@ -15,14 +15,14 @@
 
 ! Location of vector restart file (vector2tile direction)
 
-  vector_restart_path = "./restarts/vector/"
+  vector_restart_path = "junk"
   
 ! Location of tile restart files (tile2vector direction)
 
-  tile_restart_path = "junk" 
+  tile_restart_path = "./restarts/tile/" 
   
 ! Path for converted files; if same as tile/vector path, files may be overwritten
 
-  output_path = "./restarts/tile/"
+  output_path = "./restarts/vector/"
 
 /
