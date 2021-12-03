@@ -1,0 +1,3 @@
+[submodule "vector2tile"]
+	path = vector2tile
+	url = https://github.com/ClaraDraper-NOAA/vector2tile.git

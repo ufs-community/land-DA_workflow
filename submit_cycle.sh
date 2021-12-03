@@ -11,9 +11,8 @@
 #SBATCH --export=NONE
 
 # set your executables
-snowDAexec=/scratch2/BMC/gsienkf/Tseganeh.Gichamo/global-workflow/exec/driver_snowda
 LSMexec=/scratch2/BMC/gsienkf/Clara.Draper/gerrit-hera/noahMP_driver/cycleOI/ufs_land_driver/ufsLand.exe 
-vec2tileexec=/scratch2/BMC/gsienkf/Clara.Draper/vector2tile/vector2tile_converter.exe
+vec2tileexec=./vector2tile/vector2tile_converter.exe
 
 dates_per_job=20
 
