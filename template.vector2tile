@@ -11,7 +11,9 @@
 ! FV3 resolution and path to oro files
 
   tile_size = 96
-  tile_path = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/models/vector/v2t_data/tile_files/C96.mx100_frac/"
+!  tile_path = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/models/vector/v2t_data/tile_files/C96.mx100_frac/"
+! this should be the same as set at landDA_workflow/jedi/fv3-jedi/Data/
+  tile_path = "/scratch2/BMC/gsienkf/Clara.Draper/data_RnR/orog_files_Mike/" 
 
 ! Location of vector restart file (vector2tile direction)
 

@@ -10,28 +10,40 @@
 #SBATCH -e err_noahmp.%j.err
 #SBATCH --export=NONE
 
-# set your executables
-LSMexec=/scratch2/BMC/gsienkf/Clara.Draper/gerrit-hera/noahMP_driver/cycleOI/ufs_land_driver/ufsLand.exe 
-vec2tileexec=./vector2tile/vector2tile_converter.exe
+# set your directories
+WORKDIR=/scratch2/BMC/gsienkf/Clara.Draper/workdir/ # temporary work dir
+RSTRDIR=/scratch2/BMC/gsienkf/Clara.Draper/gerrit-hera/noahMP_driver/cycleOI/restarts # dir to save restarts
 
 dates_per_job=20
 
+######################################################
 # shouldn't need to change anything below here
-base_dir=$(pwd)
-incdate=$base_dir/incdate.sh
 
-#source /home/Azadeh.Gholoubi/.my_mods 
-module load intel
-module load netcdf/4.7.0
+source cycle_mods_bash
 
-# probably don't need this.
-export LD_LIBRARY_PATH=/apps/hdf5/1.10.5/intel/18.0.5.274/lib:/apps/nco/4.7.0/intel/18.0.3.051/lib:/apps/netcdf/4.7.4/intel/18.0.5/lib:/apps/pnetcdf/1.10.0/intel/16.1.150/impi/5.1.2.150/lib:/apps/wgrib2/2.0.8/intel/18.0.3.222/lib:/apps/intel/compilers_and_libraries_2018/linux/mpi/intel64/lib::/apps/slurm/default/lib:/apps/intel/parallel_studio_xe_2018.4.057/compilers_and_libraries_2018/linux/compiler/lib/intel64:/apps/intel/parallel_studio_xe_2018.4.057/compilers_and_libraries_2018/linux/ipp/lib/intel64:/apps/intel/parallel_studio_xe_2018.4.057/compilers_and_libraries_2018/linux/compiler/lib/intel64_lin:/apps/intel/parallel_studio_xe_2018.4.057/compilers_and_libraries_2018/linux/mkl/lib/intel64_lin:/apps/intel/parallel_studio_xe_2018.4.057/compilers_and_libraries_2018/linux/tbb/lib/intel64/gcc4.7:/apps/intel/parallel_studio_xe_2018.4.057/debugger_2018/libipt/intel64/lib:/apps/intel/parallel_studio_xe_2018.4.057/compilers_and_libraries_2018/linux/daal/lib/intel64_lin:/apps/intel/parallel_studio_xe_2018.4.057/compilers_and_libraries_2018/linux/daal/../tbb/lib/intel64_lin/gcc4.4:$LD_LIBRARY_PATH
+# executables
+
+CYCLEDIR=$(pwd)  # this directory
+vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
+LSMexec=${CYCLEDIR}/ufs_land_driver/ufsLand.exe 
+
+analdate=${CYCLEDIR}/analdates.sh
+incdate=${CYCLEDIR}/incdate.sh
+
+logfile=${CYCLEDIR}/cycle.log
+touch $logfile
+
+if [[ -d $WORKDIR ]]; then 
+  rm -rf $WORKDIR
+fi 
+
+mkdir $WORKDIR
+cd $WORKDIR
+ln -s $RSTRDIR ${WORKDIR}/restarts
+ln -s ${CYCLEDIR}/noahmp_output ${WORKDIR}/noahmp_output 
 
 # read in dates 
-source $base_dir/analdates.sh
-
-logfile=$base_dir/cycle.log
-touch $logfile
+source ${analdate}
 
 echo "***************************************" >> $logfile
 echo "cycling from $startdate to $enddate" >> $logfile
@@ -40,11 +52,12 @@ thisdate=$startdate
 
 date_count=0
 
-#while [ $thisdate -le $enddate ]; do
 while [ $date_count -lt $dates_per_job ]; do
 
     if [ $thisdate -ge $enddate ]; then 
         echo "All done, at date ${thisdate}"  >> $logfile
+        cd $CYCLEDIR 
+        rm -rf $WORKDIR
         exit 
     fi
 
@@ -57,7 +70,7 @@ while [ $date_count -lt $dates_per_job ]; do
     export HH=`echo $thisdate | cut -c9-10`
 
     # update model namelist 
-    cp  template.ufs-noahMP.namelist.gswp3  ufs-land.namelist
+    cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.gswp3  ufs-land.namelist
 
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist 
     sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
@@ -65,22 +78,22 @@ while [ $date_count -lt $dates_per_job ]; do
     sed -i -e "s/XXHH/${HH}/g" ufs-land.namelist
      
     # update vec2tile and tile2vec namelists
-    cp  template.vector2tile vector2tile.namelist
+    cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
 
     sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
     sed -i -e "s/XXMM/${MM}/g" vector2tile.namelist
     sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
     sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
 
-    cp  template.tile2vector tile2vector.namelist
+    cp  ${CYCLEDIR}/template.tile2vector tile2vector.namelist
 
     sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
     sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
     sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
     sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
 
-    # save input restart
-    cp restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    # save background restart
+    cp ${CYCLEDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${CYCLEDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
 
     # submit vec2tile 
     echo '************************************************'
@@ -105,7 +118,7 @@ while [ $date_count -lt $dates_per_job ]; do
     # submit model
     echo '************************************************'
     echo 'calling model' 
-#    $LSMexec
+    $LSMexec
 # no error codes on exit from model, check for restart below instead
 #    if [[ $? != 0 ]]; then
 #        echo "model failed"
@@ -114,6 +127,10 @@ while [ $date_count -lt $dates_per_job ]; do
 
     if [[ -e restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ]]; then 
        echo "Finished job number, ${date_count},for  date: ${thisdate}" >> $logfile
+       echo "Deleting tile files" 
+        if [[ ! $KEEPTILES ]]; then 
+                rm $RSTRDIR/tile/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile*.nc
+        fi 
     else 
        echo "Something is wrong, probably the model, exiting" 
        exit
@@ -126,8 +143,10 @@ done
 
 # resubmit
 if [ $thisdate -lt $enddate ]; then
-    echo "export startdate=${thisdate}" > ${base_dir}/analdates.sh
-    echo "export enddate=${enddate}" >> ${base_dir}/analdates.sh
-    sbatch submit_cycle.sh
+    echo "export startdate=${thisdate}" > ${analdate}
+    echo "export enddate=${enddate}" >> ${analdate}
+    cd ${CYCLEDIR}
+    rm -rf ${WORKDIR}
+    sbatch ${CYCLEDIR}/submit_cycle.sh
 fi
 

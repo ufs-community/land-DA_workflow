@@ -1,0 +1,4 @@
+module purge
+module load intel 
+module load netcdf/4.7.0
+
