@@ -12,7 +12,8 @@
 
 # set your directories
 WORKDIR=/scratch2/BMC/gsienkf/Clara.Draper/workdir/ # temporary work dir
-RSTRDIR=/scratch2/BMC/gsienkf/Clara.Draper/gerrit-hera/noahMP_driver/cycleOI/restarts # dir to save restarts
+SAVEDIR=/scratch2/BMC/gsienkf/Clara.Draper/gerrit-hera/noahMP_driver/cycleOI/output/restarts # dir to save restarts
+MODLDIR=/scratch2/BMC/gsienkf/Clara.Draper/gerrit-hera/noahMP_driver/cycleOI/output/noahmp # dir to save restarts
 
 dates_per_job=20
 
@@ -33,41 +34,48 @@ incdate=${CYCLEDIR}/incdate.sh
 logfile=${CYCLEDIR}/cycle.log
 touch $logfile
 
+# create temporary workdir
 if [[ -d $WORKDIR ]]; then 
   rm -rf $WORKDIR
 fi 
 
 mkdir $WORKDIR
 cd $WORKDIR
-ln -s $RSTRDIR ${WORKDIR}/restarts
-ln -s ${CYCLEDIR}/noahmp_output ${WORKDIR}/noahmp_output 
+ln -s ${MODLDIR} ${WORKDIR}/noahmp_output 
+
+mkdir ${WORKDIR}/restarts
+mkdir ${WORKDIR}/restarts/tile
+mkdir ${WORKDIR}/restarts/vector
 
 # read in dates 
 source ${analdate}
 
 echo "***************************************" >> $logfile
-echo "cycling from $startdate to $enddate" >> $logfile
+echo "cycling from $STARTDATE to $ENDDATE" >> $logfile
 
-thisdate=$startdate
+THISDATE=$STARTDATE
 
 date_count=0
 
 while [ $date_count -lt $dates_per_job ]; do
 
-    if [ $thisdate -ge $enddate ]; then 
-        echo "All done, at date ${thisdate}"  >> $logfile
+    if [ $THISDATE -ge $ENDDATE ]; then 
+        echo "All done, at date ${THISDATE}"  >> $logfile
         cd $CYCLEDIR 
         rm -rf $WORKDIR
-        exit 
+        exit  
     fi
 
-    echo "starting $thisdate"  
+    echo "starting $THISDATE"  
 
     # substringing to get yr, mon, day, hr info
-    export YYYY=`echo $thisdate | cut -c1-4`
-    export MM=`echo $thisdate | cut -c5-6`
-    export DD=`echo $thisdate | cut -c7-8`
-    export HH=`echo $thisdate | cut -c9-10`
+    export YYYY=`echo $THISDATE | cut -c1-4`
+    export MM=`echo $THISDATE | cut -c5-6`
+    export DD=`echo $THISDATE | cut -c7-8`
+    export HH=`echo $THISDATE | cut -c9-10`
+
+    # copy initial restart
+    cp $SAVEDIR/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc $WORKDIR/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
 
     # update model namelist 
     cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.gswp3  ufs-land.namelist
@@ -92,9 +100,6 @@ while [ $date_count -lt $dates_per_job ]; do
     sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
     sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
 
-    # save background restart
-    cp ${CYCLEDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${CYCLEDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-
     # submit vec2tile 
     echo '************************************************'
     echo 'calling vector2tile' 
@@ -103,8 +108,16 @@ while [ $date_count -lt $dates_per_job ]; do
         echo "vec2tile failed"
         exit 
     fi
+    # add coupler.res file
+    cres_file=${WORKDIR}/restarts/tile/${YYYY}${MM}${DD}.${HH}0000.coupler.res
+    cp  ${CYCLEDIR}/template.coupler.res $cres_file
+
+    sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
+    sed -i -e "s/XXMM/${MM}/g" $cres_file
+    sed -i -e "s/XXDD/${DD}/g" $cres_file
 
     # submit snow DA 
+    echo 'snow DA call here'
 
     # submit tile2vec
     echo '************************************************'
@@ -114,6 +127,9 @@ while [ $date_count -lt $dates_per_job ]; do
         echo "tile2vector failed"
         exit 
     fi
+
+    # save analysis restart
+    cp ${WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${SAVEDIR}/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
 
     # submit model
     echo '************************************************'
@@ -125,26 +141,29 @@ while [ $date_count -lt $dates_per_job ]; do
 #        exit 
 #    fi
 
-    if [[ -e restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ]]; then 
-       echo "Finished job number, ${date_count},for  date: ${thisdate}" >> $logfile
-       echo "Deleting tile files" 
-        if [[ ! $KEEPTILES ]]; then 
-                rm $RSTRDIR/tile/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile*.nc
-        fi 
+    NEXTDATE=`${incdate} $THISDATE 24`
+    export YYYY=`echo $NEXTDATE | cut -c1-4`
+    export MM=`echo $NEXTDATE | cut -c5-6`
+    export DD=`echo $NEXTDATE | cut -c7-8`
+    export HH=`echo $NEXTDATE | cut -c9-10`
+
+    if [[ -e ${WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ]]; then 
+       cp ${WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${SAVEDIR}/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+       echo "Finished job number, ${date_count},for  date: ${THISDATE}" >> $logfile
     else 
        echo "Something is wrong, probably the model, exiting" 
        exit
     fi
 
-    thisdate=`${incdate} $thisdate 24`
+    THISDATE=`${incdate} $THISDATE 24`
     date_count=$((date_count+1))
 
 done
 
 # resubmit
-if [ $thisdate -lt $enddate ]; then
-    echo "export startdate=${thisdate}" > ${analdate}
-    echo "export enddate=${enddate}" >> ${analdate}
+if [ $THISDATE -lt $ENDDATE ]; then
+    echo "export STARTDATE=${THISDATE}" > ${analdate}
+    echo "export ENDDATE=${ENDDATE}" >> ${analdate}
     cd ${CYCLEDIR}
     rm -rf ${WORKDIR}
     sbatch ${CYCLEDIR}/submit_cycle.sh
