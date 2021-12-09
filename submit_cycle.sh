@@ -1,4 +1,4 @@
-#! /bin/sh -l
+#!/bin/bash -l
 #SBATCH --job-name=offline_noahmp
 #SBATCH --account=gsienkf
 #SBATCH --qos=debug
@@ -8,7 +8,6 @@
 #SBATCH -t 00:10:00
 #SBATCH -o log_noahmp.%j.log
 #SBATCH -e err_noahmp.%j.err
-#SBATCH --export=NONE
 
 # set your directories
 WORKDIR=/scratch2/BMC/gsienkf/Clara.Draper/workdir/ # temporary work dir
@@ -27,6 +26,7 @@ source cycle_mods_bash
 CYCLEDIR=$(pwd)  # this directory
 vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
 LSMexec=${CYCLEDIR}/ufs_land_driver/ufsLand.exe 
+DAscript=${CYCLEDIR}/landDA_workflow/do_snowDA.sh 
 
 analdate=${CYCLEDIR}/analdates.sh
 incdate=${CYCLEDIR}/incdate.sh
@@ -117,9 +117,14 @@ while [ $date_count -lt $dates_per_job ]; do
     sed -i -e "s/XXDD/${DD}/g" $cres_file
 
     # submit snow DA 
-    echo 'snow DA call here'
+    echo '************************************************'
+    echo 'calling snow DA'
+    $DAscript
+    if [[ $? != 0 ]]; then
+        echo "land DA script failed"
+        exit
+    fi  # submit tile2vec
 
-    # submit tile2vec
     echo '************************************************'
     echo 'calling tile2vector' 
     $vec2tileexec tile2vector.namelist
