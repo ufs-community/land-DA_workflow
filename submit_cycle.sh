@@ -11,8 +11,8 @@
 
 # set your directories
 WORKDIR=/scratch2/BMC/gsienkf/Clara.Draper/workdir/ # temporary work dir
-SAVEDIR=/scratch2/BMC/gsienkf/Clara.Draper/gerrit-hera/noahMP_driver/cycleOI/output/restarts # dir to save restarts
-MODLDIR=/scratch2/BMC/gsienkf/Clara.Draper/gerrit-hera/noahMP_driver/cycleOI/output/noahmp # dir to save restarts
+SAVEDIR=/scratch2/BMC/gsienkf/Clara.Draper/gerrit-hera/AZworkflow/output/restarts # dir to save restarts
+MODLDIR=/scratch2/BMC/gsienkf/Clara.Draper/gerrit-hera/AZworkflow/output/noahmp # dir to save noah-mp output
 
 dates_per_job=20
 
@@ -119,6 +119,7 @@ while [ $date_count -lt $dates_per_job ]; do
     # submit snow DA 
     echo '************************************************'
     echo 'calling snow DA'
+    export THISDATE
     $DAscript
     if [[ $? != 0 ]]; then
         echo "land DA script failed"
