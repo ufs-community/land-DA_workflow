@@ -78,7 +78,7 @@ while [ $date_count -lt $dates_per_job ]; do
     cp $SAVEDIR/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc $WORKDIR/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
 
     # update model namelist 
-    cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.gswp3  ufs-land.namelist
+    cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.gdas  ufs-land.namelist
 
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist 
     sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
