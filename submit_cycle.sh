@@ -110,11 +110,20 @@ while [ $date_count -lt $dates_per_job ]; do
     fi
     # add coupler.res file
     cres_file=${WORKDIR}/restarts/tile/${YYYY}${MM}${DD}.${HH}0000.coupler.res
-    cp  ${CYCLEDIR}/template.coupler.res $cres_file
+    # temporary
+    cp  ${CYCLEDIR}/template.coupler18.res $cres_file
+    #cp  ${CYCLEDIR}/template.coupler.res $cres_file
 
     sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
     sed -i -e "s/XXMM/${MM}/g" $cres_file
     sed -i -e "s/XXDD/${DD}/g" $cres_file
+
+    # temporary
+    for tile in 1 2 3 4 5 6 
+    do
+    ln -s ${WORKDIR}/restarts/tile/${YYYY}${MM}${DD}.${HH}0000.sfc_data.tile${tile}.nc ${WORKDIR}/restarts/tile/${YYYY}${MM}${DD}.180000.sfc_data.tile${tile}.nc
+    done
+
 
     # submit snow DA 
     echo '************************************************'

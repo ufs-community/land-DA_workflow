@@ -65,11 +65,11 @@
 /
 
 &forcing
- forcing_timestep_seconds       = 10800
- forcing_type                   = "gswp3"
- forcing_filename               = "C96_GSWP3_forcing_"
- forcing_interp_solar           = "gswp3_zenith"  ! gswp3_zenith or linear
- forcing_time_solar             = "gswp3_average"  ! gswp3_average or instantaneous
+ forcing_timestep_seconds       = 3600
+ forcing_type                   = "gdas"
+ forcing_filename               = "C96_GDAS_forcing_"
+ forcing_interp_solar           = "linear"  ! gswp3_zenith or linear
+ forcing_time_solar             = "instantaneous"  ! gswp3_average or instantaneous
  forcing_name_precipitation     = "precipitation_conserve"
  forcing_name_temperature       = "temperature"
  forcing_name_specific_humidity = "specific_humidity"
