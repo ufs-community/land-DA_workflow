@@ -34,19 +34,6 @@ incdate=${CYCLEDIR}/incdate.sh
 logfile=${CYCLEDIR}/cycle.log
 touch $logfile
 
-# create temporary workdir
-if [[ -d $WORKDIR ]]; then 
-  rm -rf $WORKDIR
-fi 
-
-mkdir $WORKDIR
-cd $WORKDIR
-ln -s ${MODLDIR} ${WORKDIR}/noahmp_output 
-
-mkdir ${WORKDIR}/restarts
-mkdir ${WORKDIR}/restarts/tile
-mkdir ${WORKDIR}/restarts/vector
-
 # read in dates 
 source ${analdate}
 
@@ -67,6 +54,19 @@ while [ $date_count -lt $dates_per_job ]; do
     fi
 
     echo "starting $THISDATE"  
+
+    # create temporary workdir
+    if [[ -d $WORKDIR ]]; then 
+      rm -rf $WORKDIR
+    fi 
+
+    mkdir $WORKDIR
+    cd $WORKDIR
+    ln -s ${MODLDIR} ${WORKDIR}/noahmp_output 
+
+    mkdir ${WORKDIR}/restarts
+    mkdir ${WORKDIR}/restarts/tile
+    mkdir ${WORKDIR}/restarts/vector
 
     # substringing to get yr, mon, day, hr info
     export YYYY=`echo $THISDATE | cut -c1-4`
@@ -120,6 +120,7 @@ while [ $date_count -lt $dates_per_job ]; do
     echo '************************************************'
     echo 'calling snow DA'
     export THISDATE
+    export WORKDIR
     $DAscript
     if [[ $? != 0 ]]; then
         echo "land DA script failed"
