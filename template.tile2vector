@@ -15,6 +15,8 @@
 ! this should be the same as set at landDA_workflow/jedi/fv3-jedi/Data/
   tile_path = "/scratch2/BMC/gsienkf/Clara.Draper/data_RnR/orog_files_Mike/"
 
+  static_filename  = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/forcing/C96/static/ufs-land_C96_static_fields.nc"
+
 ! Location of vector restart file (vector2tile direction)
 
   vector_restart_path = "junk"
