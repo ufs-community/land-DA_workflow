@@ -51,7 +51,7 @@ while [ $date_count -lt $dates_per_job ]; do
     if [ $THISDATE -ge $ENDDATE ]; then 
         echo "All done, at date ${THISDATE}"  >> $logfile
         cd $CYCLEDIR 
-        #rm -rf $WORKDIR
+        rm -rf $WORKDIR
         exit  
     fi
 
