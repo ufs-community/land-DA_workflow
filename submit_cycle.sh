@@ -16,6 +16,8 @@ MODLDIR=/scratch2/BMC/gsienkf/Clara.Draper/gerrit-hera/AZworkflow/output/noahmp 
 
 dates_per_job=20
 
+open_loop=False # If "False" do DA.
+
 ######################################################
 # shouldn't need to change anything below here
 
@@ -49,7 +51,7 @@ while [ $date_count -lt $dates_per_job ]; do
     if [ $THISDATE -ge $ENDDATE ]; then 
         echo "All done, at date ${THISDATE}"  >> $logfile
         cd $CYCLEDIR 
-        rm -rf $WORKDIR
+        #rm -rf $WORKDIR
         exit  
     fi
 
@@ -85,67 +87,62 @@ while [ $date_count -lt $dates_per_job ]; do
     sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
     sed -i -e "s/XXHH/${HH}/g" ufs-land.namelist
      
-    # update vec2tile and tile2vec namelists
-    cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
+    if [ $open_loop == "False" ]; then  # do DA
 
-    sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
-    sed -i -e "s/XXMM/${MM}/g" vector2tile.namelist
-    sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
-    sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
+        # update vec2tile and tile2vec namelists
+        cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
 
-    cp  ${CYCLEDIR}/template.tile2vector tile2vector.namelist
+        sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
+        sed -i -e "s/XXMM/${MM}/g" vector2tile.namelist
+        sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
+        sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
 
-    sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
-    sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
-    sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
-    sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
+        cp  ${CYCLEDIR}/template.tile2vector tile2vector.namelist
 
-    # submit vec2tile 
-    echo '************************************************'
-    echo 'calling vector2tile' 
-    $vec2tileexec vector2tile.namelist
-    if [[ $? != 0 ]]; then
-        echo "vec2tile failed"
-        exit 
-    fi
-    # add coupler.res file
-    cres_file=${WORKDIR}/restarts/tile/${YYYY}${MM}${DD}.${HH}0000.coupler.res
-    # temporary
-    cp  ${CYCLEDIR}/template.coupler18.res $cres_file
-    #cp  ${CYCLEDIR}/template.coupler.res $cres_file
+        sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
+        sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
+        sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
+        sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
 
-    sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
-    sed -i -e "s/XXMM/${MM}/g" $cres_file
-    sed -i -e "s/XXDD/${DD}/g" $cres_file
+        # submit vec2tile 
+        echo '************************************************'
+        echo 'calling vector2tile' 
+        $vec2tileexec vector2tile.namelist
+        if [[ $? != 0 ]]; then
+            echo "vec2tile failed"
+            exit 
+        fi
+        # add coupler.res file
+        cres_file=${WORKDIR}/restarts/tile/${YYYY}${MM}${DD}.${HH}0000.coupler.res
+        cp  ${CYCLEDIR}/template.coupler.res $cres_file
 
-    # temporary
-    for tile in 1 2 3 4 5 6 
-    do
-    ln -s ${WORKDIR}/restarts/tile/${YYYY}${MM}${DD}.${HH}0000.sfc_data.tile${tile}.nc ${WORKDIR}/restarts/tile/${YYYY}${MM}${DD}.180000.sfc_data.tile${tile}.nc
-    done
+        sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
+        sed -i -e "s/XXMM/${MM}/g" $cres_file
+        sed -i -e "s/XXDD/${DD}/g" $cres_file
 
+        # submit snow DA 
+        echo '************************************************'
+        echo 'calling snow DA'
+        export THISDATE
+        export WORKDIR
+        $DAscript
+        if [[ $? != 0 ]]; then
+            echo "land DA script failed"
+            exit
+        fi  # submit tile2vec
 
-    # submit snow DA 
-    echo '************************************************'
-    echo 'calling snow DA'
-    export THISDATE
-    export WORKDIR
-    $DAscript
-    if [[ $? != 0 ]]; then
-        echo "land DA script failed"
-        exit
-    fi  # submit tile2vec
+        echo '************************************************'
+        echo 'calling tile2vector' 
+        $vec2tileexec tile2vector.namelist
+        if [[ $? != 0 ]]; then
+            echo "tile2vector failed"
+            exit 
+        fi
 
-    echo '************************************************'
-    echo 'calling tile2vector' 
-    $vec2tileexec tile2vector.namelist
-    if [[ $? != 0 ]]; then
-        echo "tile2vector failed"
-        exit 
-    fi
+        # save analysis restart
+        cp ${WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${SAVEDIR}/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
 
-    # save analysis restart
-    cp ${WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${SAVEDIR}/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    fi # DA step
 
     # submit model
     echo '************************************************'
