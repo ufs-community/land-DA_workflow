@@ -19,10 +19,10 @@ To install and build:
 > cd landDA_workflow 
   then follow instructions in README.
 
-3. Create output directories:  
-> create_output_dirs.sh 
+3. Put vector in this directory. 
 
-put restart in output/restarts/vector/
+filename example:ufs_land_restart.2015-09-02_18-00-00.nc
+
 
 4. Set start and end dates in analdates.sh 
 
