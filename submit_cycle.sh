@@ -23,8 +23,8 @@ exp_name=DA_testing
 # specify DA options (all should be "YES" or "NO") 
 ##################################################
 
-export do_DA=YES   # do full DA update
-do_hofx=NO  # use JEDI to calculate hofx, but do not do update 
+export do_DA=NO   # do full DA update
+do_hofx=YES  # use JEDI to calculate hofx, but do not do update 
             # only used if do_DA=NO  
 
 # Zhichang - I'm assuming you'll add a do_ens option here.

@@ -7,7 +7,7 @@ To install and build:
 1. Fetch sub-modules.
 >git submodule update --init
 
-2. Compule sub-modules.
+2. Compile sub-modules.
 
 > cd vector2tile 
   then follow instructions in README. 
@@ -19,14 +19,13 @@ To install and build:
 > cd landDA_workflow 
   then follow instructions in README.
 
-3. Put vector in this directory. 
+3. Put vector restart in this directory. 
 
 filename example:ufs_land_restart.2015-09-02_18-00-00.nc
 
-
 4. Set start and end dates in analdates.sh 
 
-5. Set directories at top of submit_cycle.sh 
+5. Set directories and DA options at top of submit_cycle.sh 
 
 To run: 
 >submit_cycle.sh
