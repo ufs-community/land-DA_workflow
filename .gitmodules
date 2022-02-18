@@ -5,7 +5,3 @@
 	path = landDA_workflow
 	url = https://github.com/ClaraDraper-NOAA/landDA_workflow.git
         branch = main
-[submodule "ufs-land-driver"]
-	path = ufs-land-driver
-	url = https://github.com/barlage/ufs-land-driver
-        branch = master
