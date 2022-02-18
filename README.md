@@ -14,7 +14,8 @@ To install and build:
 > cd .. 
 
 > cd ufs_land_driver
-  make sure executable is present. 
+   build ufsLand.exe following the "Pre 2021-12-06" instructions:
+   https://github.com/barlage/ufs-land-driver/wiki/Some-basic-instructions-for-running-the-UFS-land-driver
 
 > cd landDA_workflow 
   then follow instructions in README.
