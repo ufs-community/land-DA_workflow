@@ -12,6 +12,7 @@
 ############################
 # to do: 
 # -specify resolution in this script (currently fixed at 96) 
+# -update ICS directory to include forcing / res info.
 # -decide how to manage soil moisture DA. Separate DA script to snow? 
 # -add ensemble options
 
@@ -26,7 +27,7 @@ exp_name=openloop_testing
 export ensemble_size=1 # ensemble_size of 1 = do not run ensemble 
                        # LETKF-OI pseudo ensemble uses 1
 
-atmos_forc='gdas' # options gdas, gswp3
+atmos_forc='gdas' # options: gdas, gswp3, gefs_ens
 
 dates_per_job=2 # number of cycles to submit in a single job
 
@@ -34,7 +35,7 @@ dates_per_job=2 # number of cycles to submit in a single job
 # DA options
 
 # select YES or NO
-export do_DA=NO   # do full DA update
+export do_DA=YES  # do full DA update
 do_hofx=NO  # use JEDI to calculate hofx, but do not do update 
              # only used if do_DA=NO  
 export ASSIM_IMS=NO
@@ -49,7 +50,7 @@ DAtype="letkfoi_snow" # options: "letkfoi_snow" , "letkf_snow"
 CYCLEDIR=$(pwd)  # this directory
 export WORKDIR=/scratch2/BMC/gsienkf/Clara.Draper/workdir/ # temporary work dir 
 export OUTDIR=${CYCLEDIR}/exp_out/${exp_name}/output/      # directory where output will be saved
-ICSDIR="./ICS/"                                            # OUTDIR for experiment with initial conditions
+ICSDIR="/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/offline_ICS/single/" # OUTDIR for experiment with initial conditions
                                                            # will use ensemble of restarts if present, otherwise will try 
                                                            # to copy a non-ensemble restart into each ensemble restart
                                 
@@ -166,6 +167,7 @@ while [ $n_ens -le $ensemble_size ]; do
 
     # if ensemble of restarts exist, use these. Otherwise, use single restart.
     if [[ ! -e ${target_restart} ]]; then 
+        echo $source_restart
         if [[ -e ${source_restart} ]]; then
            cp ${source_restart} ${target_restart}
         else  # use non-ensemble restart
@@ -247,6 +249,7 @@ while [ $date_count -lt $dates_per_job ]; do
 
         cd ${WORKDIR}
 
+        # CSDtodo - do for every ensemble member
         # update vec2tile and tile2vec namelists
         cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
 
@@ -278,6 +281,7 @@ while [ $date_count -lt $dates_per_job ]; do
         sed -i -e "s/XXMM/${MM}/g" $cres_file
         sed -i -e "s/XXDD/${DD}/g" $cres_file
 
+        # CSDtodo - call once
         # submit snow DA 
         echo '************************************************'
         echo 'calling snow DA'
@@ -286,8 +290,8 @@ while [ $date_count -lt $dates_per_job ]; do
         if [[ $? != 0 ]]; then
             echo "land DA script failed"
             exit
-        fi  # submit tile2vec
-
+        fi   
+        # CSDtodo - every ensemble member 
         echo '************************************************'
         echo 'calling tile2vector' 
         $vec2tileexec tile2vector.namelist
@@ -296,8 +300,9 @@ while [ $date_count -lt $dates_per_job ]; do
             exit 
         fi
 
+        # CSDtodo - every ensemble member 
         # save analysis restart
-        cp ${WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${OUTDIR}/${mem_ens}/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+        cp ${WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${OUTDIR}/modl/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
 
     fi # DA step
 
@@ -340,8 +345,8 @@ while [ $date_count -lt $dates_per_job ]; do
         sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
         sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
         sed -i -e "s/XXHH/${HH}/g" ufs-land.namelist
-
-        # CSD - todo: add ensemble forcing here
+        NN="`printf %02i $n_ens`" # ensemble number 
+        sed -i -e "s/XXMEM/${NN}/g" ufs-land.namelist
 
         # submit model
         echo '************************************************'
