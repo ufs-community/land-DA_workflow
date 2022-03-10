@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/bin/bash -le 
 #SBATCH --job-name=offline_noahmp
 #SBATCH --account=gsienkf
 #SBATCH --qos=debug
@@ -9,87 +9,60 @@
 #SBATCH -o log_noahmp.%j.log
 #SBATCH -e err_noahmp.%j.err
 
-##########
+############################
 # to do: 
 # -specify resolution in this script (currently fixed at 96) 
+# -update ICS directory to include forcing / res info.
 # -decide how to manage soil moisture DA. Separate DA script to snow? 
 # -add ensemble options
 
+############################
 # experiment name 
 
-exp_name=DA_testing
+exp_name=openloop_testing
 
-##################################################
-# specify DA options (all should be "YES" or "NO") 
-##################################################
+############################
+# model options
 
-export do_DA=NO   # do full DA update
-do_hofx=YES  # use JEDI to calculate hofx, but do not do update 
-            # only used if do_DA=NO  
+export ensemble_size=1 # ensemble_size of 1 = do not run ensemble 
+                       # LETKF-OI pseudo ensemble uses 1
 
-# Zhichang - I'm assuming you'll add a do_ens option here.
+atmos_forc='gdas' # options: gdas, gswp3, gefs_ens
 
-# DA options (select "YES" to assimilate or calcualte hofx) 
-DAtype="letkfoi_snow" # for snow, use "letkfoi_snow" 
-export ASSIM_IMS=YES
+dates_per_job=2 # number of cycles to submit in a single job
+
+############################
+# DA options
+
+# select YES or NO
+export do_DA=YES  # do full DA update
+do_hofx=NO  # use JEDI to calculate hofx, but do not do update 
+             # only used if do_DA=NO  
+export ASSIM_IMS=NO
 export ASSIM_GHCN=YES
 export ASSIM_SYNTH=NO
 
-if [[ $do_DA == "YES" || $do_hofx == "YES" ]]; then  # do DA
-   do_jedi=YES
-   # construct yaml name
-   if [ $do_DA == "YES" ]; then 
-        JEDI_YAML=${DAtype}"_offline_DA"
-   elif [ $do_hofx == "YES" ]; then 
-        JEDI_YAML=${DAtype}"_offline_hofx"
-   fi 
+DAtype="letkfoi_snow" # options: "letkfoi_snow" , "letkf_snow"
 
-   if  [ ASSIM_IMS=="YES" ]; then JEDI_YAML=${JEDI_YAML}"_IMS" ; fi 
-   if  [ ASSIM_GHCN=="YES" ]; then JEDI_YAML=${JEDI_YAML}"_GHCN" ; fi 
-
-   JEDI_YAML=${JEDI_YAML}"_C96.yaml" # IMS and GHCN
-   
-   echo "JEDI YAML is: "$JEDI_YAML
-
-   if [[ ! -e ./landDA_workflow/jedi/fv3-jedi/yaml_files/$JEDI_YAML ]]; then 
-        echo "YAML does not exist, exiting" 
-        exit 
-   fi 
-   export JEDI_YAML
-else
-   do_jedi=NO
-fi 
-
+############################
 # set your directories
-export WORKDIR=/scratch2/BMC/gsienkf/Clara.Draper/workdir/ # temporary work dir
-export OUTDIR=/scratch2/BMC/gsienkf/Clara.Draper/gerrit-hera/AZworkflow/${exp_name}/output/
 
-dates_per_job=2
-
-######################################################
+CYCLEDIR=$(pwd)  # this directory
+export WORKDIR=/scratch2/BMC/gsienkf/Clara.Draper/workdir/ # temporary work dir 
+export OUTDIR=${CYCLEDIR}/exp_out/${exp_name}/output/      # directory where output will be saved
+ICSDIR="/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/offline_ICS/single/" # OUTDIR for experiment with initial conditions
+                                                           # will use ensemble of restarts if present, otherwise will try 
+                                                           # to copy a non-ensemble restart into each ensemble restart
+                                
+#############################################################################################################################
 # shouldn't need to change anything below here
 
-SAVEDIR=${OUTDIR}/restarts # dir to save restarts
-MODLDIR=${OUTDIR}/noahmp # dir to save noah-mp output
-
-# create output directories if they do not already exist.
-if [[ ! -e ${OUTDIR} ]]; then
-    mkdir -p ${OUTDIR}/DA
-    mkdir ${OUTDIR}/DA/IMSproc 
-    mkdir ${OUTDIR}/DA/jedi_incr
-    mkdir ${OUTDIR}/DA/logs
-    mkdir ${OUTDIR}/DA/hofx
-    mkdir ${OUTDIR}/restarts
-    mkdir ${OUTDIR}/restarts/vector
-    mkdir ${OUTDIR}/restarts/tile
-    mkdir ${OUTDIR}/noahmp
-fi 
+# load modules 
 
 source cycle_mods_bash
 
-# executables
+# set executables
 
-CYCLEDIR=$(pwd)  # this directory
 vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
 LSMexec=${CYCLEDIR}/ufs_land_driver/ufsLand.exe 
 DAscript=${CYCLEDIR}/landDA_workflow/do_snowDA.sh 
@@ -98,30 +71,119 @@ export DADIR=${CYCLEDIR}/landDA_workflow/
 analdate=${CYCLEDIR}/analdates.sh
 incdate=${CYCLEDIR}/incdate.sh
 
-logfile=${CYCLEDIR}/cycle.log
-touch $logfile
+# create clean workdir
+if [[ -e ${WORKDIR} ]]; then 
+   rm -rf ${WORKDIR} 
+fi
 
-# read in dates 
+mkdir ${WORKDIR}
+
+############################
+# create the jedi yaml name 
+
+if [[ $do_DA == "YES" || $do_hofx == "YES" ]]; then  # do DA
+   do_jedi=YES
+   # construct yaml name
+   if [ $do_DA == "YES" ]; then
+        JEDI_YAML=${DAtype}"_offline_DA"
+   elif [ $do_hofx == "YES" ]; then
+        JEDI_YAML=${DAtype}"_offline_hofx"
+   fi
+
+   if [ $ASSIM_IMS == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_IMS" ; fi
+   if [ $ASSIM_GHCN == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_GHCN" ; fi
+   if [ $ASSIM_SYNTH == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_SYNTH"; fi
+
+   JEDI_YAML=${JEDI_YAML}"_C96.yaml" # IMS and GHCN
+
+   echo "JEDI YAML is: "$JEDI_YAML
+
+   if [[ ! -e ./landDA_workflow/jedi/fv3-jedi/yaml_files/$JEDI_YAML ]]; then
+        echo "YAML does not exist, exiting" 
+        exit
+   fi
+   export JEDI_YAML
+else
+   do_jedi=NO
+fi
+
+############################
+# create output directories if they do not already exist.
+
+if [[ ! -e ${OUTDIR} ]]; then
+    mkdir -p ${OUTDIR}/DA
+    mkdir ${OUTDIR}/DA/IMSproc 
+    mkdir ${OUTDIR}/DA/jedi_incr
+    mkdir ${OUTDIR}/DA/logs
+    mkdir ${OUTDIR}/DA/hofx
+    mkdir ${OUTDIR}/modl
+    n_ens=1
+    while [ $n_ens -le $ensemble_size ]; do
+
+        if [ $ensemble_size == 1 ]; then 
+            mem_ens="" 
+        else 
+            mem_ens="mem`printf %03i $n_ens`"
+        fi 
+
+        mkdir -p ${OUTDIR}/modl/${mem_ens}/restarts/vector/ 
+        mkdir ${OUTDIR}/modl/${mem_ens}/restarts/tile/
+        mkdir -p ${OUTDIR}/modl/${mem_ens}/noahmp/
+        n_ens=$((n_ens+1))
+    done # n_ens < ensemble_size
+fi 
+
+############################
+# fetch initial conditions, if not already in place 
+
+# read in dates  
 source ${analdate}
 
+logfile=${CYCLEDIR}/cycle.log
+touch $logfile
 echo "***************************************" >> $logfile
 echo "cycling from $STARTDATE to $ENDDATE" >> $logfile
-
-# If there is no restart in experiment directory, copy from current directory
 
 sYYYY=`echo $STARTDATE | cut -c1-4`
 sMM=`echo $STARTDATE | cut -c5-6`
 sDD=`echo $STARTDATE | cut -c7-8`
 sHH=`echo $STARTDATE | cut -c9-10`
 
-if [[ ! -e ${OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc ]]; then
+# copy initial conditions
+n_ens=1
+while [ $n_ens -le $ensemble_size ]; do
 
-cp ./ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc ${OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+    if [ $ensemble_size == 1 ]; then 
+        mem_ens="" 
+    else 
+        mem_ens="mem`printf %03i $n_ens`"
+    fi 
 
-fi
+    MEM_OUTDIR=${OUTDIR}/modl/${mem_ens}/
+    MEM_ICSDIR=${ICSDIR}/modl/${mem_ens}/
+
+    source_restart=${MEM_ICSDIR}/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+    target_restart=${MEM_OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+
+    # if ensemble of restarts exist, use these. Otherwise, use single restart.
+    if [[ ! -e ${target_restart} ]]; then 
+        echo $source_restart
+        if [[ -e ${source_restart} ]]; then
+           cp ${source_restart} ${target_restart}
+        else  # use non-ensemble restart
+           echo 'using single restart for every ensemble member' 
+           cp ${ICSDIR}/modl/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc ${target_restart}
+        fi 
+    fi 
+
+    n_ens=$((n_ens+1))
+
+done # n_ens < ensemble_size
+
+############################
+# loop over time steps
 
 THISDATE=$STARTDATE
-
 date_count=0
 
 while [ $date_count -lt $dates_per_job ]; do
@@ -135,38 +197,59 @@ while [ $date_count -lt $dates_per_job ]; do
 
     echo "starting $THISDATE"  
 
-    # create temporary workdir
-    if [[ -d $WORKDIR ]]; then 
-      rm -rf $WORKDIR
-    fi 
-
-    mkdir $WORKDIR
-    cd $WORKDIR
-    ln -s ${MODLDIR} ${WORKDIR}/noahmp_output 
-
-    mkdir ${WORKDIR}/restarts
-    mkdir ${WORKDIR}/restarts/tile
-    mkdir ${WORKDIR}/restarts/vector
-
     # substringing to get yr, mon, day, hr info
     export YYYY=`echo $THISDATE | cut -c1-4`
     export MM=`echo $THISDATE | cut -c5-6`
     export DD=`echo $THISDATE | cut -c7-8`
     export HH=`echo $THISDATE | cut -c9-10`
 
-    # copy initial restart
-    cp $SAVEDIR/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc $WORKDIR/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    ############################
+    # create work directory and copy in restarts
 
-    # update model namelist 
-    cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.gdas  ufs-land.namelist
+    n_ens=1
+    while [ $n_ens -le $ensemble_size ]; do
 
-    sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist 
-    sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
-    sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
-    sed -i -e "s/XXHH/${HH}/g" ufs-land.namelist
-     
+        if [ $ensemble_size == 1 ]; then 
+            mem_ens="" 
+        else 
+            mem_ens="mem`printf %03i $n_ens`"
+        fi 
+        
+        MEM_WORKDIR=${WORKDIR}/${mem_ens}/
+        MEM_OUTDIR=${OUTDIR}/modl/${mem_ens}/ # for model only
+
+        # create temporary workdir
+        if [[ -d $MEM_WORKDIR ]]; then 
+          rm -rf $MEM_WORKDIR
+        fi 
+
+        # move to work directory, and copy in templates and restarts
+        mkdir -p $MEM_WORKDIR
+        cd $MEM_WORKDIR
+
+        ln -s ${MEM_OUTDIR}/noahmp/ ${MEM_WORKDIR}/noahmp_output 
+
+        mkdir ${MEM_WORKDIR}/restarts
+        mkdir ${MEM_WORKDIR}/restarts/tile
+        mkdir ${MEM_WORKDIR}/restarts/vector
+
+        # copy restarts into work directory
+        source_restart=${MEM_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
+        target_restart=${MEM_WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+        cp $source_restart $target_restart 
+
+        n_ens=$((n_ens+1))
+
+    done # n_ens < ensemble_size
+
+    ############################
+    # call JEDI 
+
     if [ $do_jedi == "YES" ]; then  # do DA
 
+        cd ${WORKDIR}
+
+        # CSDtodo - do for every ensemble member
         # update vec2tile and tile2vec namelists
         cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
 
@@ -198,6 +281,7 @@ while [ $date_count -lt $dates_per_job ]; do
         sed -i -e "s/XXMM/${MM}/g" $cres_file
         sed -i -e "s/XXDD/${DD}/g" $cres_file
 
+        # CSDtodo - call once
         # submit snow DA 
         echo '************************************************'
         echo 'calling snow DA'
@@ -206,8 +290,8 @@ while [ $date_count -lt $dates_per_job ]; do
         if [[ $? != 0 ]]; then
             echo "land DA script failed"
             exit
-        fi  # submit tile2vec
-
+        fi   
+        # CSDtodo - every ensemble member 
         echo '************************************************'
         echo 'calling tile2vector' 
         $vec2tileexec tile2vector.namelist
@@ -216,46 +300,92 @@ while [ $date_count -lt $dates_per_job ]; do
             exit 
         fi
 
+        # CSDtodo - every ensemble member 
         # save analysis restart
-        cp ${WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${SAVEDIR}/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+        cp ${WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${OUTDIR}/modl/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
 
     fi # DA step
 
-    # submit model
-    echo '************************************************'
-    echo 'calling model' 
-    $LSMexec
-# no error codes on exit from model, check for restart below instead
-#    if [[ $? != 0 ]]; then
-#        echo "model failed"
-#        exit 
-#    fi
+    ############################
+    # run the forecast model
 
     NEXTDATE=`${incdate} $THISDATE 24`
-    export YYYY=`echo $NEXTDATE | cut -c1-4`
-    export MM=`echo $NEXTDATE | cut -c5-6`
-    export DD=`echo $NEXTDATE | cut -c7-8`
-    export HH=`echo $NEXTDATE | cut -c9-10`
+    export nYYYY=`echo $NEXTDATE | cut -c1-4`
+    export nMM=`echo $NEXTDATE | cut -c5-6`
+    export nDD=`echo $NEXTDATE | cut -c7-8`
+    export nHH=`echo $NEXTDATE | cut -c9-10`
 
-    if [[ -e ${WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ]]; then 
-       cp ${WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${SAVEDIR}/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-       echo "Finished job number, ${date_count},for  date: ${THISDATE}" >> $logfile
-    else 
-       echo "Something is wrong, probably the model, exiting" 
-       exit
-    fi
+    # loop over ensemble members
 
-    THISDATE=`${incdate} $THISDATE 24`
+    n_ens=1
+    while [ $n_ens -le $ensemble_size ]; do
+
+        if [ $ensemble_size == 1 ]; then 
+            mem_ens="" 
+        else 
+            mem_ens="mem`printf %03i $n_ens`"
+        fi 
+
+        MEM_WORKDIR=${WORKDIR}/${mem_ens}/
+        MEM_OUTDIR=${OUTDIR}/modl/${mem_ens}/ # for model only
+
+        cd $MEM_WORKDIR
+
+        # update model namelist 
+     
+        if [ $ensemble_size == 1 ]; then
+            cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
+        else
+            #cp ${CYCLEDIR}/template.ens.ufs-noahMP.namelist.${atmos_forc} ufs-land.namelist
+            echo 'CSD - temporarily using non-ensemble namelist' 
+            cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
+        fi
+
+        sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
+        sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
+        sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
+        sed -i -e "s/XXHH/${HH}/g" ufs-land.namelist
+        NN="`printf %02i $n_ens`" # ensemble number 
+        sed -i -e "s/XXMEM/${NN}/g" ufs-land.namelist
+
+        # submit model
+        echo '************************************************'
+        echo 'calling model' 
+        echo $MEM_WORKDIR
+        $LSMexec
+
+    # no error codes on exit from model, check for restart below instead
+    #    if [[ $? != 0 ]]; then
+    #        echo "model failed"
+    #        exit 
+    #    fi
+
+        if [[ -e ${MEM_WORKDIR}/restarts/vector/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then 
+           cp ${MEM_WORKDIR}/restarts/vector/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
+        else 
+           echo "Something is wrong, probably the model, exiting" 
+           exit
+        fi
+
+        n_ens=$((n_ens+1))
+    done # n_ens < ensemble_size
+
+    echo "Finished job number, ${date_count},for  date: ${THISDATE}" >> $logfile
+
+    #THISDATE=`${incdate} $THISDATE 24`
+    THISDATE=$NEXTDATE
     date_count=$((date_count+1))
 
-done
+done #  date_count -lt dates_per_job
 
-# resubmit
+
+############################
+# resubmit script 
+
 if [ $THISDATE -lt $ENDDATE ]; then
     echo "export STARTDATE=${THISDATE}" > ${analdate}
     echo "export ENDDATE=${ENDDATE}" >> ${analdate}
     cd ${CYCLEDIR}
-    rm -rf ${WORKDIR}
     sbatch ${CYCLEDIR}/submit_cycle.sh
 fi
 
