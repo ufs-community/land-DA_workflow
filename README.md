@@ -32,23 +32,27 @@ To run:
 
 #################################################################################
 
-* Submitting pull requests to offline_land_driver
+* Submitting pull requests to offline_land_workflow
 
-1) Before doing the final push, make sure that any directories / variable values that you changed to run the code are changed back to their orginal values.
+1) Each pull request should have an associated issue. Create a draft pull request as soon as you start working on it, and .... 
+
+2) Before doing the final push, make sure that any directories / variable values that you changed to run the code are changed back to their orginal values.
 Each script has a line that says something like "you shouldn't have to change anything below here" - this marks the end of the user-specified varuiables.
-In your PRs the user-specified variable should not be changed (so don't change the values of variables above that line).
+In your PRs the user-specified variable should not be changed (so don't change the values of variables *above* that line).
 
-2) Edit your .gitmodules to point at the original repos, and not to your version.
+3) Before doing the final push, edit your .gitmodules to point at the original repos, and not to your version.
 
-3) Try to minimize unnecessary moving code around / reformatting code / changing script names.
+4) Make sure that your added code does not affect the pre-existing code capabailities (regression test will be added soon).
 
-4) Give you PR a name that clearly identifies it. Likewise, give your branches identifying names.
+5) Try to minimize unnecessary moving code around / reformatting code / changing script names.
 
-5) Add comments to the PR briefly listing all the changes that have been made (i.e. 'fixed bug in WHATEVER_VARIABLE, added SMAP observations, ...').
+6) Give your PR a name that clearly identifies it. Likewise, give your branches identifying names.
 
-6) If you need to submit PRs to multiple repos, give them the same name and note in the comments that they're linked.
+7) Add comments to the PR briefly listing all the changes that have been made (i.e. 'fixed bug in WHATEVER_VARIABLE, added SMAP observation assimilation, ...').
 
-7) As you prepare the PR, you will have an option to see your changes. Use this to double-check everything (and to make sure you've done 1 and 2 above).
+8) If you need to submit PRs to multiple repos, give them the same name and note in the comments that they're linked.
+
+9) As you prepare the PR, you will have an option to see your changes. Use this to double-check everything (and to make sure you've done 1 and 2 above).
 
 
 * To clone and commit code with submodules
