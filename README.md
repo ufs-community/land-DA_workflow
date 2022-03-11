@@ -34,7 +34,7 @@ To run:
 
 * Submitting pull requests to offline_land_workflow
 
-1) Each pull request should have an associated issue. Create a draft pull request as soon as you start working on it, and .... 
+1) Each pull request should have an associated issue. Create a draft pull request as soon as you start working on a new issue, and select the "DRAFT: do not merge" option from the labels. You should then regularly push commits to your branch, making sure to provide a useful description of the commit in the comments. 
 
 2) Before doing the final push, make sure that any directories / variable values that you changed to run the code are changed back to their orginal values.
 Each script has a line that says something like "you shouldn't have to change anything below here" - this marks the end of the user-specified varuiables.
