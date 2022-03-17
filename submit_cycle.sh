@@ -1,11 +1,11 @@
-#!/bin/bash -le 
+#!/bin/bash -le
 #SBATCH --job-name=offline_noahmp
 #SBATCH --account=fv3-cpu
 #SBATCH --qos=debug
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
 #SBATCH --cpus-per-task=1
-#SBATCH -t 00:10:00
+#SBATCH -t 00:20:00
 #SBATCH -o log_noahmp.%j.log
 #SBATCH -e err_noahmp.%j.err
 
@@ -27,9 +27,9 @@ exp_name=openloop_testing
 export ensemble_size=1 # ensemble_size of 1 = do not run ensemble 
                        # LETKF-OI pseudo ensemble uses 1
 
-atmos_forc='gdas' # options: gdas, gswp3, gefs_ens
+atmos_forc='gdas_gts' # options: gdas, gdas_gts, gswp3, gefs_ens
 
-dates_per_job=2 # number of cycles to submit in a single job
+dates_per_job=80 # number of cycles to submit in a single job
 
 ############################
 # DA options
@@ -39,8 +39,10 @@ export do_DA=YES  # do full DA update
 do_hofx=NO  # use JEDI to calculate hofx, but do not do update 
              # only used if do_DA=NO  
 export ASSIM_IMS=NO
-export ASSIM_GHCN=YES
+export ASSIM_GHCN=NO
 export ASSIM_SYNTH=NO
+export ASSIM_GTS=YES
+export INCHR=6
 
 DAtype="letkfoi_snow" # options: "letkfoi_snow" , "letkf_snow"
 
@@ -48,12 +50,12 @@ DAtype="letkfoi_snow" # options: "letkfoi_snow" , "letkf_snow"
 # set your directories
 
 CYCLEDIR=$(pwd)  # this directory
-export WORKDIR=/scratch2/BMC/gsienkf/Clara.Draper/workdir/ # temporary work dir 
-export OUTDIR=${CYCLEDIR}/exp_out/${exp_name}/output/      # directory where output will be saved
+export WORKDIR=/scratch1/NCEPDEV/global/Jiarui.Dong/JEDI/workflow/experiment/workdir # temporary work dir 
+export OUTDIR=/scratch1/NCEPDEV/global/Jiarui.Dong/JEDI/workflow/experiment/output      # directory where output will be saved
 ICSDIR="/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/offline_ICS/single/" # OUTDIR for experiment with initial conditions
                                                            # will use ensemble of restarts if present, otherwise will try 
                                                            # to copy a non-ensemble restart into each ensemble restart
-                                
+
 #############################################################################################################################
 # shouldn't need to change anything below here
 
@@ -93,8 +95,9 @@ if [[ $do_DA == "YES" || $do_hofx == "YES" ]]; then  # do DA
    if [ $ASSIM_IMS == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_IMS" ; fi
    if [ $ASSIM_GHCN == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_GHCN" ; fi
    if [ $ASSIM_SYNTH == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_SYNTH"; fi
+   if [ $ASSIM_GTS == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_GTS" ; fi
 
-   JEDI_YAML=${JEDI_YAML}"_C96.yaml" # IMS and GHCN
+   JEDI_YAML=${JEDI_YAML}"_C96.yaml"
 
    echo "JEDI YAML is: "$JEDI_YAML
 
@@ -203,6 +206,12 @@ while [ $date_count -lt $dates_per_job ]; do
     export DD=`echo $THISDATE | cut -c7-8`
     export HH=`echo $THISDATE | cut -c9-10`
 
+    PREVDATE=`${incdate} $THISDATE -6`
+    export YYYP=`echo $PREVDATE | cut -c1-4`
+    export MP=`echo $PREVDATE | cut -c5-6`
+    export DP=`echo $PREVDATE | cut -c7-8`
+    export HP=`echo $PREVDATE | cut -c9-10`
+
     ############################
     # create work directory and copy in restarts
 
@@ -280,6 +289,12 @@ while [ $date_count -lt $dates_per_job ]; do
         sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
         sed -i -e "s/XXMM/${MM}/g" $cres_file
         sed -i -e "s/XXDD/${DD}/g" $cres_file
+        sed -i -e "s/XXHH/${HH}/g" $cres_file
+
+        sed -i -e "s/XXYYYP/${YYYP}/g" $cres_file
+        sed -i -e "s/XXMP/${MP}/g" $cres_file
+        sed -i -e "s/XXDP/${DP}/g" $cres_file
+        sed -i -e "s/XXHP/${HP}/g" $cres_file
 
         # CSDtodo - call once
         # submit snow DA 
@@ -309,7 +324,7 @@ while [ $date_count -lt $dates_per_job ]; do
     ############################
     # run the forecast model
 
-    NEXTDATE=`${incdate} $THISDATE 24`
+    NEXTDATE=`${incdate} $THISDATE $INCHR`
     export nYYYY=`echo $NEXTDATE | cut -c1-4`
     export nMM=`echo $NEXTDATE | cut -c5-6`
     export nDD=`echo $NEXTDATE | cut -c7-8`
@@ -386,6 +401,7 @@ if [ $THISDATE -lt $ENDDATE ]; then
     echo "export STARTDATE=${THISDATE}" > ${analdate}
     echo "export ENDDATE=${ENDDATE}" >> ${analdate}
     cd ${CYCLEDIR}
+#    rm -rf ${WORKDIR}
     sbatch ${CYCLEDIR}/submit_cycle.sh
 fi
 
