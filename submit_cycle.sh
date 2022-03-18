@@ -42,7 +42,7 @@ export ASSIM_IMS=NO
 export ASSIM_GHCN=NO
 export ASSIM_SYNTH=NO
 export ASSIM_GTS=YES
-export INCHR=6
+export CYCHR=6
 
 DAtype="letkfoi_snow" # options: "letkfoi_snow" , "letkf_snow"
 
@@ -52,7 +52,8 @@ DAtype="letkfoi_snow" # options: "letkfoi_snow" , "letkf_snow"
 CYCLEDIR=$(pwd)  # this directory
 export WORKDIR=/scratch1/NCEPDEV/global/Jiarui.Dong/JEDI/workflow/experiment/workdir # temporary work dir 
 export OUTDIR=/scratch1/NCEPDEV/global/Jiarui.Dong/JEDI/workflow/experiment/output      # directory where output will be saved
-ICSDIR="/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/offline_ICS/single/" # OUTDIR for experiment with initial conditions
+export ICSDIR=$OUTDIR
+#ICSDIR="/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/offline_ICS/single/" # OUTDIR for experiment with initial conditions
                                                            # will use ensemble of restarts if present, otherwise will try 
                                                            # to copy a non-ensemble restart into each ensemble restart
 
@@ -324,7 +325,7 @@ while [ $date_count -lt $dates_per_job ]; do
     ############################
     # run the forecast model
 
-    NEXTDATE=`${incdate} $THISDATE $INCHR`
+    NEXTDATE=`${incdate} $THISDATE $CYCHR`
     export nYYYY=`echo $NEXTDATE | cut -c1-4`
     export nMM=`echo $NEXTDATE | cut -c5-6`
     export nDD=`echo $NEXTDATE | cut -c7-8`
