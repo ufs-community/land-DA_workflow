@@ -23,10 +23,10 @@
 
   run_days         = XXRDD   ! number of days to run
   run_hours        = XXRHH   ! number of hours to run
-  run_minutes      = 0   ! number of minutes to run
-  run_seconds      = 0   ! number of seconds to run
+  run_minutes      = 0       ! number of minutes to run
+  run_seconds      = 0       ! number of seconds to run
   
-  run_timesteps    = 0   ! number of timesteps to run
+  run_timesteps    = 0       ! number of timesteps to run
   
   begloc           = 1
   endloc           = 18360
