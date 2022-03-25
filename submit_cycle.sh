@@ -1,11 +1,11 @@
 #!/bin/bash -le
 #SBATCH --job-name=offline_noahmp
-#SBATCH --account=fv3-cpu
+#SBATCH --account=gsienkf
 #SBATCH --qos=debug
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
 #SBATCH --cpus-per-task=1
-#SBATCH -t 00:20:00
+#SBATCH -t 00:10:00
 #SBATCH -o log_noahmp.%j.log
 #SBATCH -e err_noahmp.%j.err
 
@@ -39,10 +39,10 @@ export do_DA=YES  # do full DA update
 do_hofx=NO  # use JEDI to calculate hofx, but do not do update 
              # only used if do_DA=NO  
 export ASSIM_IMS=NO
-export ASSIM_GHCN=NO
+export ASSIM_GHCN=YES
 export ASSIM_SYNTH=NO
-export ASSIM_GTS=YES
-export CYCHR=6
+export ASSIM_GTS=NO
+export CYCHR=24
 
 DAtype="letkfoi_snow" # options: "letkfoi_snow" , "letkf_snow"
 
@@ -50,13 +50,12 @@ DAtype="letkfoi_snow" # options: "letkfoi_snow" , "letkf_snow"
 # set your directories
 
 CYCLEDIR=$(pwd)  # this directory
-export WORKDIR=/scratch1/NCEPDEV/global/Jiarui.Dong/JEDI/workflow/experiment/workdir # temporary work dir 
-export OUTDIR=/scratch1/NCEPDEV/global/Jiarui.Dong/JEDI/workflow/experiment/output      # directory where output will be saved
-export ICSDIR=$OUTDIR
-#ICSDIR="/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/offline_ICS/single/" # OUTDIR for experiment with initial conditions
+export WORKDIR=/scratch2/BMC/gsienkf/Clara.Draper/workdir/ # temporary work dir 
+export OUTDIR=${CYCLEDIR}/exp_out/${exp_name}/output/      # directory where output will be saved
+ICSDIR="/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/offline_ICS/single/" # OUTDIR for experiment with initial conditions
                                                            # will use ensemble of restarts if present, otherwise will try 
                                                            # to copy a non-ensemble restart into each ensemble restart
-
+                                
 #############################################################################################################################
 # shouldn't need to change anything below here
 
@@ -402,7 +401,6 @@ if [ $THISDATE -lt $ENDDATE ]; then
     echo "export STARTDATE=${THISDATE}" > ${analdate}
     echo "export ENDDATE=${ENDDATE}" >> ${analdate}
     cd ${CYCLEDIR}
-#    rm -rf ${WORKDIR}
     sbatch ${CYCLEDIR}/submit_cycle.sh
 fi
 
