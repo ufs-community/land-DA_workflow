@@ -2,12 +2,12 @@
 
   static_file      = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/forcing/C96/static/ufs-land_C96_static_fields.nc"
   init_file        = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/forcing/C96/init/ufs-land_C96_init_fields_1hr.nc"
-  forcing_dir      = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/forcing/C96/gdas/forcing/"
+  forcing_dir      = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/forcing/C96/gdas/forcing"
   
   separate_output = .false.
   output_dir       = "./noahmp_output/"
 
-  restart_frequency_s = 86400
+  restart_frequency_s = XXFREQ
   restart_simulation  = .true.
   restart_date        = "XXYYYY-XXMM-XXDD XXHH:00:00"
   restart_dir         = "./restarts/vector/"
@@ -21,8 +21,8 @@
   simulation_start = "2000-01-01 00:00:00"   ! start date [yyyy-mm-dd hh:mm:ss]
 !  simulation_end   = "1999-01-01 06:00:00"   !   end date [yyyy-mm-dd hh:mm:ss]
 
-  run_days         = 1   ! number of days to run
-  run_hours        = 0   ! number of hours to run
+  run_days         = XXRDD   ! number of days to run
+  run_hours        = XXRHH   ! number of hours to run
   run_minutes      = 0   ! number of minutes to run
   run_seconds      = 0   ! number of seconds to run
   

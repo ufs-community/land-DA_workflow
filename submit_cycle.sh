@@ -27,7 +27,7 @@ exp_name=openloop_testing
 export ensemble_size=1 # ensemble_size of 1 = do not run ensemble 
                        # LETKF-OI pseudo ensemble uses 1
 
-atmos_forc='gdas_gts' # options: gdas, gdas_gts, gswp3, gefs_ens
+atmos_forc='gdas' # options: gdas, gswp3, gefs_ens
 
 dates_per_job=80 # number of cycles to submit in a single job
 
@@ -206,11 +206,17 @@ while [ $date_count -lt $dates_per_job ]; do
     export DD=`echo $THISDATE | cut -c7-8`
     export HH=`echo $THISDATE | cut -c9-10`
 
+    # substringing to get yr, mon, day, hr info for previous cycle
     PREVDATE=`${incdate} $THISDATE -6`
     export YYYP=`echo $PREVDATE | cut -c1-4`
     export MP=`echo $PREVDATE | cut -c5-6`
     export DP=`echo $PREVDATE | cut -c7-8`
     export HP=`echo $PREVDATE | cut -c9-10`
+
+    # compute the restart frequency, run_days and run_hours
+    export FREQ=`expr 3600 \* $CYCHR`
+    export RDD=`expr $CYCHR / 24`
+    export RHH=`expr $CYCHR % 24`
 
     ############################
     # create work directory and copy in restarts
@@ -360,6 +366,9 @@ while [ $date_count -lt $dates_per_job ]; do
         sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
         sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
         sed -i -e "s/XXHH/${HH}/g" ufs-land.namelist
+        sed -i -e "s/XXFREQ/${FREQ}/g" ufs-land.namelist
+        sed -i -e "s/XXRDD/${RDD}/g" ufs-land.namelist
+        sed -i -e "s/XXRHH/${RHH}/g" ufs-land.namelist
         NN="`printf %02i $n_ens`" # ensemble number 
         sed -i -e "s/XXMEM/${NN}/g" ufs-land.namelist
 
