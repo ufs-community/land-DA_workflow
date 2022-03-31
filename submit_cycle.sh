@@ -1,4 +1,4 @@
-#!/bin/bash -le 
+#!/bin/bash -le
 #SBATCH --job-name=offline_noahmp
 #SBATCH --account=gsienkf
 #SBATCH --qos=debug
@@ -41,6 +41,8 @@ do_hofx=NO  # use JEDI to calculate hofx, but do not do update
 export ASSIM_IMS=NO
 export ASSIM_GHCN=YES
 export ASSIM_SYNTH=NO
+export ASSIM_GTS=NO
+export CYCHR=24
 
 DAtype="letkfoi_snow" # options: "letkfoi_snow" , "letkf_snow"
 
@@ -93,8 +95,9 @@ if [[ $do_DA == "YES" || $do_hofx == "YES" ]]; then  # do DA
    if [ $ASSIM_IMS == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_IMS" ; fi
    if [ $ASSIM_GHCN == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_GHCN" ; fi
    if [ $ASSIM_SYNTH == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_SYNTH"; fi
+   if [ $ASSIM_GTS == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_GTS" ; fi
 
-   JEDI_YAML=${JEDI_YAML}"_C96.yaml" # IMS and GHCN
+   JEDI_YAML=${JEDI_YAML}"_C96.yaml"
 
    echo "JEDI YAML is: "$JEDI_YAML
 
@@ -203,6 +206,18 @@ while [ $date_count -lt $dates_per_job ]; do
     export DD=`echo $THISDATE | cut -c7-8`
     export HH=`echo $THISDATE | cut -c9-10`
 
+    # substringing to get yr, mon, day, hr info for previous cycle
+    PREVDATE=`${incdate} $THISDATE -6`
+    export YYYP=`echo $PREVDATE | cut -c1-4`
+    export MP=`echo $PREVDATE | cut -c5-6`
+    export DP=`echo $PREVDATE | cut -c7-8`
+    export HP=`echo $PREVDATE | cut -c9-10`
+
+    # compute the restart frequency, run_days and run_hours
+    export FREQ=`expr 3600 \* $CYCHR`
+    export RDD=`expr $CYCHR / 24`
+    export RHH=`expr $CYCHR % 24`
+
     ############################
     # create work directory and copy in restarts
 
@@ -280,6 +295,12 @@ while [ $date_count -lt $dates_per_job ]; do
         sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
         sed -i -e "s/XXMM/${MM}/g" $cres_file
         sed -i -e "s/XXDD/${DD}/g" $cres_file
+        sed -i -e "s/XXHH/${HH}/g" $cres_file
+
+        sed -i -e "s/XXYYYP/${YYYP}/g" $cres_file
+        sed -i -e "s/XXMP/${MP}/g" $cres_file
+        sed -i -e "s/XXDP/${DP}/g" $cres_file
+        sed -i -e "s/XXHP/${HP}/g" $cres_file
 
         # CSDtodo - call once
         # submit snow DA 
@@ -309,7 +330,7 @@ while [ $date_count -lt $dates_per_job ]; do
     ############################
     # run the forecast model
 
-    NEXTDATE=`${incdate} $THISDATE 24`
+    NEXTDATE=`${incdate} $THISDATE $CYCHR`
     export nYYYY=`echo $NEXTDATE | cut -c1-4`
     export nMM=`echo $NEXTDATE | cut -c5-6`
     export nDD=`echo $NEXTDATE | cut -c7-8`
@@ -345,6 +366,9 @@ while [ $date_count -lt $dates_per_job ]; do
         sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
         sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
         sed -i -e "s/XXHH/${HH}/g" ufs-land.namelist
+        sed -i -e "s/XXFREQ/${FREQ}/g" ufs-land.namelist
+        sed -i -e "s/XXRDD/${RDD}/g" ufs-land.namelist
+        sed -i -e "s/XXRHH/${RHH}/g" ufs-land.namelist
         NN="`printf %02i $n_ens`" # ensemble number 
         sed -i -e "s/XXMEM/${NN}/g" ufs-land.namelist
 
