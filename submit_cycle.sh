@@ -1,4 +1,4 @@
-#!/bin/bash -le 
+#!/bin/bash -le
 #SBATCH --job-name=offline_noahmp
 #SBATCH --account=gsienkf
 #SBATCH --qos=debug
@@ -29,7 +29,7 @@ export ensemble_size=1 # ensemble_size of 1 = do not run ensemble
 
 atmos_forc='gdas' # options: gdas, gswp3, gefs_ens
 
-dates_per_job=80 # number of cycles to submit in a single job
+dates_per_job=2 # number of cycles to submit in a single job
 
 ############################
 # DA options
