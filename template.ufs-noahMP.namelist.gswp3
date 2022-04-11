@@ -52,7 +52,7 @@
  canopy_stomatal_resistance_option = 2
  soil_wetness_option               = 1
  runoff_option                     = 1
- surface_exchange_option           = 1
+ surface_exchange_option           = 3
  supercooled_soilwater_option      = 1
  frozen_soil_adjust_option         = 1
  radiative_transfer_option         = 3
@@ -60,6 +60,7 @@
  precip_partition_option           = 1
  soil_temp_lower_bdy_option        = 2
  soil_temp_time_scheme_option      = 3
+ thermal_roughness_scheme_option   = 2
  surface_evap_resistance_option    = 1
  glacier_option                    = 1
 /
