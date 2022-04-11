@@ -13,8 +13,8 @@ To install and build:
   then follow instructions in README. 
 > cd .. 
 
-> cd ufs_land_driver
-  make sure executable is present. 
+> cd ufs-land-driver
+  make (on hera, do not use configure option. The cloned user_build_config is correct).
 
 > cd landDA_workflow 
   then follow instructions in README.
