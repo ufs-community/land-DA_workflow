@@ -7,7 +7,7 @@ export exp_name=
 
 # for LETKF, this is size of ensemble.
 # for LETKF-OI pseudo ensemble, or non-ensemble runs use 1 
-export ensemble_size= 
+export ensemble_size=
 
 #forcing options: gdas, gswp3, gefs_ens
 export atmos_forc=
@@ -33,7 +33,7 @@ export do_hofx=
 
 # DA algorithm and state being updated
 # options: "letkfoi_snow" , "letkf_snow"
-export DAtype=letkfoi_snow
+export DAtype=
 
 # select osbervations to be assimilated
 # options YES or NO
@@ -49,7 +49,7 @@ export ASSIM_GTS=
 export WORKDIR=
 
 # directory with initial conditions
-# can find some here: scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/offline_ICS/single/
+# can find some here:/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/single
 export ICSDIR=
 
 # on hera, use Clara's JEDI bundles listed below. 
@@ -66,5 +66,5 @@ export IODA_BUILD_DIR=/scratch2/BMC/gsienkf/Clara.Draper/jedi/src/ioda-bundle/bu
 # optional directories - both default to current directory if not specified.
 
 # export EXPDIR= # directory where output will be saved.
-# export CYCLEDIR=  # directory where cycleDA scripts are. 
+# export CYCLEDIR=  # directory where cycleDA scripts are.  
 

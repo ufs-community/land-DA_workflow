@@ -2,5 +2,4 @@ cycle.log
 err_noahmp.*
 log_noahmp.*
 *.namelist
-noahmp_output/ufs_land_output* 
-output/
+exp_out/*
