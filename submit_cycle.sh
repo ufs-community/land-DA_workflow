@@ -14,54 +14,28 @@
 # -specify resolution in this script (currently fixed at 96) 
 # -update ICS directory to include forcing / res info.
 # -decide how to manage soil moisture DA. Separate DA script to snow? 
-# -add ensemble options
 
 ############################
-# experiment name 
 
-exp_name=snowDA_test
+# load config file   
 
-############################
-# model options
+if [[ $# -gt 0 ]]; then 
+    config_file=${CURDIR}/$1
+else
+    config_file=./config.sh
+fi
 
-export ensemble_size=1 # ensemble_size of 1 = do not run ensemble 
-                       # LETKF-OI pseudo ensemble uses 1
-
-atmos_forc='gdas' # options: gdas, gswp3, gefs_ens
-
-dates_per_job=1 # number of cycles to submit in a single job
-
-############################
-# DA options
-
-# select YES or NO
-export do_DA=YES  # do full DA update
-do_hofx=NO  # use JEDI to calculate hofx, but do not do update 
-             # only used if do_DA=NO  
-export ASSIM_IMS=NO
-export ASSIM_GHCN=YES
-export ASSIM_SYNTH=NO
-export ASSIM_GTS=NO
-export CYCHR=24
-
-DAtype="letkfoi_snow" # options: "letkfoi_snow" , "letkf_snow"
-
-############################
-# set your directories
-
-CYCLEDIR=$(pwd)  # this directory
-export WORKDIR=/scratch2/BMC/gsienkf/Clara.Draper/workdir/ # temporary work dir 
-export OUTDIR=${CYCLEDIR}/exp_out/${exp_name}/output/      # directory where output will be saved
-ICSDIR="/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/offline_ICS/single/" # OUTDIR for experiment with initial conditions
-                                                           # will use ensemble of restarts if present, otherwise will try 
-                                                           # to copy a non-ensemble restart into each ensemble restart
-                                
-#############################################################################################################################
-# shouldn't need to change anything below here
+source $config_file
 
 # load modules 
 
 source cycle_mods_bash
+
+# set out directory
+export EXPDIR=${EXPDIR:-$(pwd)}  # directory that output will be save to. default to current directory if not set in config
+export CYCLEDIR=${CYCLEDIR:-$(pwd)}  #  directory weith cycleDA scripts.  default to current directory if not set in config
+
+export OUTDIR=${EXPDIR}/exp_out/${exp_name}/output/      # directory where output will be saved
 
 # set executables
 
@@ -168,9 +142,10 @@ while [ $n_ens -le $ensemble_size ]; do
     source_restart=${MEM_ICSDIR}/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
     target_restart=${MEM_OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
 
-    # if ensemble of restarts exist, use these. Otherwise, use single restart.
+    # if restart not in experiment out directory, copy the restarts from the ICSDIR
     if [[ ! -e ${target_restart} ]]; then 
         echo $source_restart
+        # if ensemble of restarts exists in ICSDIR, use these. Otherwise, use single restart.
         if [[ -e ${source_restart} ]]; then
            cp ${source_restart} ${target_restart}
         else  # use non-ensemble restart
