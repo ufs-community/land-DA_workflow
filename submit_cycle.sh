@@ -20,10 +20,12 @@
 # load config file   
 
 if [[ $# -gt 0 ]]; then 
-    config_file=${CURDIR}/$1
+    config_file=$1
 else
     config_file=./config.sh
 fi
+
+echo "reading settings from $config_file"
 
 source $config_file
 
@@ -41,8 +43,8 @@ export OUTDIR=${EXPDIR}/exp_out/${exp_name}/output/      # directory where outpu
 
 vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
 LSMexec=${CYCLEDIR}/ufs-land-driver/run/ufsLand.exe 
-DAscript=${CYCLEDIR}/landDA_workflow/do_snowDA.sh 
-export DADIR=${CYCLEDIR}/landDA_workflow/
+export DADIR=${CYCLEDIR}/DA_update/
+DAscript=${DADIR}/do_snowDA.sh 
 
 analdate=${CYCLEDIR}/analdates.sh
 incdate=${CYCLEDIR}/incdate.sh
@@ -75,7 +77,7 @@ if [[ $do_DA == "YES" || $do_hofx == "YES" ]]; then  # do DA
 
    echo "JEDI YAML is: "$JEDI_YAML
 
-   if [[ ! -e ./landDA_workflow/jedi/fv3-jedi/yaml_files/$JEDI_YAML ]]; then
+   if [[ ! -e ${DADIR}/jedi/fv3-jedi/yaml_files/$JEDI_YAML ]]; then
         echo "YAML does not exist, exiting" 
         exit
    fi

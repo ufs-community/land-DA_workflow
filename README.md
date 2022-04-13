@@ -9,10 +9,12 @@ To install and build:
 
 2. Compile sub-modules.
 
+2a. 
 > cd vector2tile 
   then follow instructions in README. 
 > cd .. 
 
+2b. 
 > cd ufs-land-driver
 
 > git submodule update --init (if did not use --recursive flag above) 
@@ -23,6 +25,7 @@ To install and build:
 
 > make 
 
+2c.
 > cd DA_update
   then follow instructions in README.
 
