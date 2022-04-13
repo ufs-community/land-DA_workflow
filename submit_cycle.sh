@@ -67,8 +67,8 @@ source cycle_mods_bash
 
 vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
 LSMexec=${CYCLEDIR}/ufs-land-driver/run/ufsLand.exe 
-DAscript=${CYCLEDIR}/landDA_workflow/do_snowDA.sh 
-export DADIR=${CYCLEDIR}/landDA_workflow/
+DAscript=${CYCLEDIR}/DA_update/do_snowDA.sh 
+export DADIR=${CYCLEDIR}/DA_update/
 
 analdate=${CYCLEDIR}/analdates.sh
 incdate=${CYCLEDIR}/incdate.sh

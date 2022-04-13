@@ -16,7 +16,7 @@ To install and build:
 > cd ufs-land-driver
   make (on hera, do not use configure option. The cloned user_build_config is correct).
 
-> cd landDA_workflow 
+> cd DA_update
   then follow instructions in README.
 
 3. Put vector restart in this directory. 

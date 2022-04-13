@@ -12,7 +12,7 @@
 
   tile_size = 96
 !  tile_path = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/models/vector/v2t_data/tile_files/C96.mx100_frac/"
-! this should be the same as set at landDA_workflow/jedi/fv3-jedi/Data/
+! this should be the same as set at DA_update/jedi/fv3-jedi/Data/
   tile_path = "/scratch2/BMC/gsienkf/Clara.Draper/data_RnR/orog_files_Mike/"
 
   static_filename  = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/forcing/C96/static/ufs-land_C96_static_fields.nc"
