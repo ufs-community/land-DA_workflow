@@ -1,0 +1,70 @@
+###########################
+# experiment name
+export exp_name=
+
+############################
+# model options
+
+# for LETKF, this is size of ensemble.
+# for LETKF-OI pseudo ensemble, or non-ensemble runs use 1 
+export ensemble_size= 
+
+#forcing options: gdas, gswp3, gefs_ens
+export atmos_forc=
+
+# number of cycles to submit in a single job
+# on hera in the debug queue 20 is a good number.
+export dates_per_job=
+
+# length of each forecast in hours 
+# if using DA this is also the time between DA updates
+export CYCHR=
+
+############################
+# DA options
+
+# do DA state updating with JEDI
+# options, YES or NO
+export do_DA=
+
+# calculate hofx with JEDI (only used if do_DA is NO)
+# options, YES or NO
+export do_hofx=
+
+# DA algorithm and state being updated
+# options: "letkfoi_snow" , "letkf_snow"
+export DAtype=letkfoi_snow
+
+# select osbervations to be assimilated
+# options YES or NO
+export ASSIM_IMS=
+export ASSIM_GHCN=
+export ASSIM_SYNTH=
+export ASSIM_GTS=
+
+############################
+# set your directories
+
+# temporary directory where experiment is run from
+export WORKDIR=
+
+# directory with initial conditions
+# can find some here: scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/offline_ICS/single/
+export ICSDIR=
+
+# on hera, use Clara's JEDI bundles listed below. 
+# is using your own, may need to make changes for your version 
+# specifically, may need to update the JEDI DA yaml if using a different fv3-jedi version.
+
+# JEDI FV3 build directory
+export JEDI_EXECDIR=/scratch2/BMC/gsienkf/Clara.Draper/jedi/build/bin/
+
+# JEDI IODA-converter source directory
+export IODA_BUILD_DIR=/scratch2/BMC/gsienkf/Clara.Draper/jedi/src/ioda-bundle/build/
+
+############################
+# optional directories - both default to current directory if not specified.
+
+# export EXPDIR= # directory where output will be saved.
+# export CYCLEDIR=  # directory where cycleDA scripts are. 
+

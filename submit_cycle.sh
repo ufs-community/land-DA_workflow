@@ -41,8 +41,8 @@ export OUTDIR=${EXPDIR}/exp_out/${exp_name}/output/      # directory where outpu
 
 vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
 LSMexec=${CYCLEDIR}/ufs-land-driver/run/ufsLand.exe 
-DAscript=${CYCLEDIR}/DA_update/do_snowDA.sh 
-export DADIR=${CYCLEDIR}/DA_update/
+DAscript=${CYCLEDIR}/landDA_workflow/do_snowDA.sh 
+export DADIR=${CYCLEDIR}/landDA_workflow/
 
 analdate=${CYCLEDIR}/analdates.sh
 incdate=${CYCLEDIR}/incdate.sh

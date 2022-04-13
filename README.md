@@ -5,7 +5,7 @@ Clara Draper, Nov, 2021.
 To install and build: 
 
 1. Fetch sub-modules.
->git submodule update --init
+>git submodule update --init --recursive
 
 2. Compile sub-modules.
 
@@ -14,21 +14,27 @@ To install and build:
 > cd .. 
 
 > cd ufs-land-driver
-> git submodule update --init
+
+> git submodule update --init (if did not use --recursive flag above) 
+
 > configure 
-  select 2 
-> make
+   
+  select hera, load indicated modules 
+
+> make 
 
 > cd DA_update
   then follow instructions in README.
 
-3. Put vector restart in this directory. 
+3. Set start and end dates in analdates.sh 
 
-filename example:ufs_land_restart.2015-09-02_18-00-00.nc
+4. Set directories and DA options at top of submit_cycle.sh 
 
-4. Set start and end dates in analdates.sh 
+5. Make sure there is a restart in your ICSDIR, and that the start date in analdates.sh match the restart. 
 
-5. Set directories and DA options at top of submit_cycle.sh 
+restart filename example:ufs_land_restart.2015-09-02_18-00-00.nc 
+ICSDIR points to the experiment directory with the restart. If creating a new dircetory, the structure is: 
+$ICSDIR/modl/restart/vector/fs_land_restart.2015-09-02_18-00-00.nc 
 
 To run: 
 >submit_cycle.sh
@@ -71,7 +77,7 @@ In your PRs the user-specified variable should not be changed (so don't change t
 >update .gitmodules to point to your forks/branches
 >git submodule update --init --recursive
 
-(note: landDA_workflow also has submodules. same process for .gitmodules in that repo if you need to change these).
+(note: DA_update also has submodules. same process for .gitmodules in that repo if you need to change these).
 
 4) Make your code changes.
 
