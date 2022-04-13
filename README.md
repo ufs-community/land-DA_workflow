@@ -14,7 +14,10 @@ To install and build:
 > cd .. 
 
 > cd ufs-land-driver
-  make (on hera, do not use configure option. The cloned user_build_config is correct).
+> git submodule update --init
+> configure 
+  select 2 
+> make
 
 > cd DA_update
   then follow instructions in README.
