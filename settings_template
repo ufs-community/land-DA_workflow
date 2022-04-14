@@ -68,3 +68,5 @@ export IODA_BUILD_DIR=/scratch2/BMC/gsienkf/Clara.Draper/jedi/src/ioda-bundle/bu
 # export EXPDIR= # directory where output will be saved.
 # export CYCLEDIR=  # directory where cycleDA scripts are.  
 
+# optional option not to delete last workdir.
+#export KEEPWORKDIR=YES

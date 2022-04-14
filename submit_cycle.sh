@@ -49,6 +49,8 @@ DAscript=${DADIR}/do_snowDA.sh
 analdate=${CYCLEDIR}/analdates.sh
 incdate=${CYCLEDIR}/incdate.sh
 
+KEEPWORKDIR=${KEEPWORKDIR:-"NO"}
+
 # create clean workdir
 if [[ -e ${WORKDIR} ]]; then 
    rm -rf ${WORKDIR} 
@@ -171,7 +173,9 @@ while [ $date_count -lt $dates_per_job ]; do
     if [ $THISDATE -ge $ENDDATE ]; then 
         echo "All done, at date ${THISDATE}"  >> $logfile
         cd $CYCLEDIR 
-        rm -rf $WORKDIR
+        if [ ! $KEEPWORKDIR ];   then 
+            rm -rf $WORKDIR
+        fi
         exit  
     fi
 
