@@ -154,7 +154,7 @@ while [ $n_ens -le $ensemble_size ]; do
            cp ${source_restart} ${target_restart}
         else  # use non-ensemble restart
            echo 'using single restart for every ensemble member' 
-           cp ${ICSDIR}/modl/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc ${target_restart}
+           cp ${ICSDIR}/output/modl/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc ${target_restart}
         fi 
     fi 
 
