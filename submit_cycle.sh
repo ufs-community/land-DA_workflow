@@ -22,7 +22,7 @@
 if [[ $# -gt 0 ]]; then 
     config_file=$1
 else
-    config_file=./config.sh
+    config_file=settings
 fi
 
 echo "reading settings from $config_file"
