@@ -36,13 +36,14 @@ COMPILING and TESTING.
 
 3. Run the test.
 
- change WORKDIR in settings_DA_IMS_test to point to your own directory. 
+ in settings_DA_IMS_test change WORKDIR to point to your own directory. 
+ in submit_cycle.sh change #SBATCH --account=gsienkf to point to your own account.
 
-> sbatch submit_cycle.sh settings_DA_IMS_test
+> submit_test.sh 
 
-Once run, check if passed.
+Once completed:
 
-> check_test_passed.sh
+> check_test.sh
 
 RUNNING YOUR OWN EXPERIMENTS 
 
@@ -56,7 +57,9 @@ restart filename example:ufs_land_restart.2015-09-02_18-00-00.nc
 ICSDIR points to the experiment directory with the restart. If creating a new dircetory, the structure is: 
 $ICSDIR/output/modl/restarts/vector/ufs_land_restart.2015-09-02_18-00-00.nc 
 
-4. Submit your job 
+4. in submit_cycle.sh change #SBATCH --account=gsienkf to point to your own account.
+
+5. Submit your job 
 
 >sbatch submit_cycle.sh your-settings-filename
 
