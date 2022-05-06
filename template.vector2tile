@@ -36,18 +36,18 @@
 !------------------- only perturbation mapping -------------------
 ! layout, options: 1x4, 4x1, 2x2, an input settings for generating the perturbation file
 
-  lndp_layout = "1x4"
+  lndp_layout = ""
 
-! input files
+! input perturbation pattern files
 
-  lndp_input_file = "/scratch2/NCEPDEV/land/data/DA/ensemble_pert/workg_T162_984x488.tileXX.nc"
+  lndp_input_file = ""
 
 ! output files
 
-  lndp_output_file = "./output.nc"
+  lndp_output_file = ""
 
-! land perturbation variable list
+! land perturbation variable list, for an example: 'vgf','smc'
 
-  lndp_var_list='vgf','smc'
+  lndp_var_list = ''
 
 /
