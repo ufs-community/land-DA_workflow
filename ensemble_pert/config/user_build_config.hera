@@ -1,0 +1,10 @@
+
+#===============================================================================
+#  Placeholder options for hera
+#===============================================================================
+
+ COMPILERF90    =       ifort
+ FREESOURCE     =       
+ F90FLAGS       =       
+ NETCDFMOD      =       -I/apps/netcdf/4.7.0/intel/18.0.5.274/include
+ NETCDFLIB      =       -L/apps/netcdf/4.7.0/intel/18.0.5.274/lib -lnetcdf -lnetcdff

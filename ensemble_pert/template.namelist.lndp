@@ -1,0 +1,19 @@
+&run_setup
+! input perturbation pattern file
+  lndp_input_file = ""
+
+! input variable file
+  var_input_file = ""
+
+! output file
+  output_file = ""
+
+! land perturbation variable list, for an example: 'vgf','smc'
+  lndp_var_list = ''
+
+! amplitude for each land perturbation variable
+  lndp_prt_list = ''
+
+! time step
+  dtf = 60.0
+/
