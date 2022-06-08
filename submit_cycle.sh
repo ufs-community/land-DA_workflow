@@ -94,7 +94,7 @@ if [[ $do_DA == "YES" || $do_hofx == "YES" ]]; then  # do DA
    if [ $do_DA == "YES" ]; then
         echo "JEDI_YAML for DA "$YAML_DA
         if [[ ! -e ${DADIR}/jedi/fv3-jedi/yaml_files/$YAML_DA ]]; then
-            echo "YAML does not exist, exiting" 
+            echo "DA YAML does not exist, exiting" 
             exit
         fi
         export YAML_DA 
@@ -102,7 +102,7 @@ if [[ $do_DA == "YES" || $do_hofx == "YES" ]]; then  # do DA
    if [ $do_hofx == "YES" ]; then
         echo "JEDI_YAML for hofx "$YAML_HOFX
         if [[ ! -e ${DADIR}/jedi/fv3-jedi/yaml_files/$YAML_HOFX ]]; then
-            echo "YAML does not exist, exiting" 
+            echo "HOFX YAML does not exist, exiting" 
             exit
         fi
         export YAML_HOFX

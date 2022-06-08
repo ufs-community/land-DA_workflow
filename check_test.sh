@@ -18,6 +18,8 @@ fi
 done
 done 
 
+echo 'test passed'
+
 
 TEST_DATE=2016-01-03_18-00-00
 state='back'

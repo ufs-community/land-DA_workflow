@@ -45,7 +45,7 @@ export DA_GTS=NO
 
 # calculate hofx with JEDI (only used if do_DA is NO)
 # options, YES or NO
-export do_hofx=YES
+export do_hofx=NO
 
 # select osbervations to be assimilated (ignored if do_HOFX = NO)
 # options YES or NO
