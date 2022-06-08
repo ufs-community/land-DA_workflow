@@ -36,20 +36,27 @@ export CYCHR=24
 # options, YES or NO
 export do_DA=YES
 
+# select osbervations to be assimilated (ignored if do_DA = NO)
+# options YES or NO
+export DA_IMS=YES
+export DA_GHCN=NO
+export DA_SYNTH=NO
+export DA_GTS=NO
+
 # calculate hofx with JEDI (only used if do_DA is NO)
 # options, YES or NO
-export do_hofx=NO
+export do_hofx=YES
+
+# select osbervations to be assimilated (ignored if do_HOFX = NO)
+# options YES or NO
+export HOFX_IMS=NO
+export HOFX_GHCN=NO
+export HOFX_SYNTH=NO
+export HOFX_GTS=NO
 
 # DA algorithm and state being updated
 # options: "letkfoi_snow" , "letkf_snow"
 export DAtype=letkfoi_snow
-
-# select osbervations to be assimilated
-# options YES or NO
-export ASSIM_IMS=YES
-export ASSIM_GHCN=NO
-export ASSIM_SYNTH=NO
-export ASSIM_GTS=NO
 
 ############################
 # set your directories
