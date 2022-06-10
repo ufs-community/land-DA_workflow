@@ -63,7 +63,7 @@ export DAtype=letkfoi_snow
 
 # directory with initial conditions
 # can find some here:/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/single
-export ICSDIR=/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/DA_IMS_test/
+export ICSDIR=/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/test_ICS/
 
 # on hera, use Clara's JEDI bundles listed below. 
 # is using your own, may need to make changes for your version 
