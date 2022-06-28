@@ -1,37 +1,43 @@
 program lndp_apply_pert
-
+!
+! Note: 1. This code reads in the perturbation pattern generated from Phil's stochastic 
+!          physics (converted to the vector format) and the vegetation fraction,
+!          apply the perturbation to the vegetation fraction and output them to
+!          a static file;
+!       2. the basic outline and routine apply_pert have been copied from the routine
+!          lndp_apply_perts.F90 in stochastic physics;
+!       3. This is currently a special case, in which the input data file for vegetation
+!          fraction has been read in and perturbed, once at the start of the forecast. The
+!          vegetation fraction is specified for each month, and the same perturbation is
+!          added each month.
+!
   use netcdf
   implicit none
 
   integer, parameter :: max_n_var_lndp = 20
 
-  real, allocatable :: sfc_wts(:)
-  real, allocatable :: vfrac(:)
+  real, allocatable :: sfc_wts(:) ! perturbation pattern
+  real, allocatable :: vfrac(:)   ! vegetation fraction
 
   type namelist_type
-    character*256      :: namelist_name = ""
-    character*256      :: lndp_input_file = ""
-    character*256      :: var_input_file = ""
-    character*256      :: output_file = ""
-    character(len=128) :: lndp_var_list(max_n_var_lndp)
-    real               :: lndp_prt_list(max_n_var_lndp)
-    integer            :: n_var_lndp
-    real               :: dtf
+    character*256      :: namelist_name = ""             ! namelist file name
+    character*256      :: lndp_input_file = ""           ! input file for perturbation
+    character*256      :: var_input_file = ""            ! input file for vegetation fraction
+    character*256      :: output_file = ""               ! output file name
+    character(len=128) :: lndp_var_list(max_n_var_lndp)  ! variable names in the perturbation file
+    real               :: lndp_prt_list(max_n_var_lndp)  ! adjustment factor for each perturbation
+    integer            :: n_var_lndp                     ! actual numbers of perturbation variables
   end type namelist_type
 
   type(namelist_type) :: namelist
   character*256       :: cmd
   integer             :: status, system
-  real                :: p, min_bound, max_bound, pert, factor
+  real                :: p, min_bound, max_bound, pert
   integer             :: i, v, tstep, tsteps, vector_length
   integer             :: ncid
-  logical             :: lndp_each_step
 
   ! initialize vector length
   vector_length = -1
-
-  ! apply land perturbation at each step or not
-  lndp_each_step = .false.
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Get namelist file name from command line
@@ -48,14 +54,6 @@ program lndp_apply_pert
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   call ReadNamelist(namelist)
-
-  ! lndp_prt_list input is per hour, factor converts to per timestep
-  ! Do conversion only when variables are perturbed at every time step
-  if(lndp_each_step) then
-    factor = namelist%dtf/3600.
-  else
-    factor = 1.
-  endif
 
   ! read in vector length from the perturbation file
   call ReadVectorLength(namelist%lndp_input_file, vector_length)
@@ -109,7 +107,6 @@ program lndp_apply_pert
            ! apply perturbation
            do i = 1, vector_length 
              pert = sfc_wts(i)*namelist%lndp_prt_list(v)
-             pert = pert*factor
              call apply_pert ('vfrac', pert, vfrac(i), p, min_bound, max_bound)
            enddo
 
@@ -143,10 +140,9 @@ contains
     character(len=128)  :: lndp_var_list(max_n_var_lndp)
     real                :: lndp_prt_list(max_n_var_lndp)
     integer             :: n_var_lndp
-    real                :: dtf
     integer             :: k
 
-    namelist / run_setup  / lndp_input_file, var_input_file, output_file, lndp_var_list, lndp_prt_list, n_var_lndp, dtf
+    namelist / run_setup  / lndp_input_file, var_input_file, output_file, lndp_var_list, lndp_prt_list, n_var_lndp
 
     lndp_var_list = 'XXX'
     lndp_prt_list = -999.
@@ -158,7 +154,6 @@ contains
     namelist%lndp_input_file  = lndp_input_file
     namelist%var_input_file  = var_input_file
     namelist%output_file = output_file
-    namelist%dtf         = dtf
     n_var_lndp= 0
     do k =1,size(lndp_var_list)
        if ((trim(lndp_var_list(k)) .EQ. 'XXX') .or. (lndp_prt_list(k) .LE. 0.)) then
@@ -258,6 +253,10 @@ contains
 
   end subroutine WriteVectorVariable
 
+!
+! The following routine has been copied from the routine apply_pert in
+! lndp_apply_perts.F90 in stochastic physics with few modifications.
+!
   subroutine apply_pert(vname, pert, state, p, vmin, vmax)
 
    ! intent in

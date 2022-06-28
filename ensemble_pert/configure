@@ -2,7 +2,7 @@
 
   if($#ARGV == 0) {
      $response = shift(@ARGV) ;
-     print("Configure soil test environment: $response \n");
+     print("Configure perturbation application environment: $response \n");
   }else {
      print "Please select from following predefined environments: \n\n";
 
