@@ -1,0 +1,39 @@
+#!/usr/bin/perl
+
+  if($#ARGV == 0) {
+     $response = shift(@ARGV) ;
+     print("Configure perturbation application environment: $response \n");
+  }else {
+     print "Please select from following predefined environments: \n\n";
+
+     print "   1. hera \n";
+     print "   2. orion \n";
+     print "   3. gfortran compiler serial \n";
+     print "   0. exit only \n";
+
+     printf "\nEnter selection : " ;
+
+     $response = <STDIN> ;
+     chop($response);
+  }
+
+  if ($response == 1) {
+              # Hera settings
+              system "cp config/user_build_config.hera user_build_config"; 
+              print "\n load necessary modules:\n"; 
+              print "\n module load  intel/2020.2 netcdf/4.7.0 \n\n\n"; 
+            }
+
+  elsif ($response == 2) {
+              # Orion settings
+              system "cp config/user_build_config.orion user_build_config"; 
+              print "\n load necessary modules:\n"; 
+              print "\n module load intel netcdf \n\n\n"; 
+            }
+
+  elsif ($response == 3) {
+              # Mike's Mac settings
+              system "cp config/user_build_config.gfortran.serial user_build_config"; 
+            }
+
+  else   {print "no selection $response\n"; last} 
