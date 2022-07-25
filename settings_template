@@ -27,20 +27,27 @@ export CYCHR=
 # options, YES or NO
 export do_DA=
 
+# select osbervations to be assimilated (ignored if do_DA = NO)
+# options YES or NO
+export DA_IMS=
+export DA_GHCN=
+export DA_SYNTH=
+export DA_GTS=
+
 # calculate hofx with JEDI (only used if do_DA is NO)
 # options, YES or NO
 export do_hofx=
 
+# select osbervations to be assimilated (ignored if do_HOFX = NO)
+# options YES or NO
+export HOFX_IMS=
+export HOFX_GHCN=
+export HOFX_SYNTH=
+export HOFX_GTS=
+
 # DA algorithm and state being updated
 # options: "letkfoi_snow" , "letkf_snow"
 export DAtype=
-
-# select osbervations to be assimilated
-# options YES or NO
-export ASSIM_IMS=
-export ASSIM_GHCN=
-export ASSIM_SYNTH=
-export ASSIM_GTS=
 
 ############################
 # set your directories
@@ -69,4 +76,8 @@ export IODA_BUILD_DIR=/scratch2/BMC/gsienkf/Clara.Draper/jedi/src/ioda-bundle/bu
 # export CYCLEDIR=  # directory where cycleDA scripts are.  
 
 # optional option not to delete last workdir.
-#export KEEPWORKDIR=YES
+# export KEEPWORKDIR=YES
+
+# optional - if specify YAML here will overwrite name constructed in script
+# export YAML_DA_SPEC=
+# export YAML_HOFX_SPEC=

@@ -65,25 +65,49 @@ if [[ $do_DA == "YES" || $do_hofx == "YES" ]]; then  # do DA
    do_jedi=YES
    # construct yaml name
    if [ $do_DA == "YES" ]; then
-        JEDI_YAML=${DAtype}"_offline_DA"
-   elif [ $do_hofx == "YES" ]; then
-        JEDI_YAML=${DAtype}"_offline_hofx"
+        YAML_DA=${DAtype}"_offline_DA"
+   fi 
+   if [ $do_hofx == "YES" ]; then
+        YAML_HOFX=${DAtype}"_offline_hofx"
    fi
 
-   if [ $ASSIM_IMS == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_IMS" ; fi
-   if [ $ASSIM_GHCN == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_GHCN" ; fi
-   if [ $ASSIM_SYNTH == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_SYNTH"; fi
-   if [ $ASSIM_GTS == "YES" ]; then JEDI_YAML=${JEDI_YAML}"_GTS" ; fi
-
-   JEDI_YAML=${JEDI_YAML}"_C96.yaml"
-
-   echo "JEDI YAML is: "$JEDI_YAML
-
-   if [[ ! -e ${DADIR}/jedi/fv3-jedi/yaml_files/$JEDI_YAML ]]; then
-        echo "YAML does not exist, exiting" 
-        exit
+   if [ $do_DA == "YES" ]; then
+       if [ $DA_IMS == "YES" ]; then YAML_DA=${YAML_DA}"_IMS" ; fi
+       if [ $DA_GHCN == "YES" ]; then YAML_DA=${YAML_DA}"_GHCN" ; fi
+       if [ $DA_SYNTH == "YES" ]; then YAML_DA=${YAML_DA}"_SYNTH"; fi
+       if [ $DA_GTS == "YES" ]; then YAML_DA=${YAML_DA}"_GTS" ; fi
    fi
-   export JEDI_YAML
+
+   if [ $do_hofx == "YES" ]; then
+       if [ $HOFX_IMS == "YES" ]; then YAML_HOFX=${YAML_HOFX}"_IMS" ; fi
+       if [ $HOFX_GHCN == "YES" ]; then YAML_HOFX=${YAML_HOFX}"_GHCN" ; fi
+       if [ $HOFX_SYNTH == "YES" ]; then YAML_HOFX=${YAML_HOFX}"_SYNTH"; fi
+       if [ $HOFX_GTS == "YES" ]; then YAML_HOFX=${YAML_HOFX}"_GTS" ; fi
+   fi
+
+   YAML_DA=${YAML_DA}"_C96.yaml"
+   YAML_HOFX=${YAML_HOFX}"_C96.yaml"
+ 
+   # if yamls specified in namelist, use those
+   YAML_DA=${YAML_DA_SPEC:-$YAML_DA}
+   YAML_HOFX=${YAML_HOFX_SPEC:-$YAML_HOFX}
+   if [ $do_DA == "YES" ]; then
+        echo "JEDI_YAML for DA "$YAML_DA
+        if [[ ! -e ${DADIR}/jedi/fv3-jedi/yaml_files/$YAML_DA ]]; then
+            echo "DA YAML does not exist, exiting" 
+            exit
+        fi
+        export YAML_DA 
+   fi
+   if [ $do_hofx == "YES" ]; then
+        echo "JEDI_YAML for hofx "$YAML_HOFX
+        if [[ ! -e ${DADIR}/jedi/fv3-jedi/yaml_files/$YAML_HOFX ]]; then
+            echo "HOFX YAML does not exist, exiting" 
+            exit
+        fi
+        export YAML_HOFX
+   fi
+
 else
    do_jedi=NO
 fi
@@ -113,6 +137,7 @@ if [[ ! -e ${OUTDIR} ]]; then
         n_ens=$((n_ens+1))
     done # n_ens < ensemble_size
 fi 
+
 
 ############################
 # fetch initial conditions, if not already in place 
