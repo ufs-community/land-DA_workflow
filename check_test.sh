@@ -18,9 +18,6 @@ fi
 done
 done 
 
-echo 'test passed'
-
-
 TEST_DATE=2016-01-03_18-00-00
 state='back'
 cmp ./exp_out/DA_IMS_test/output/modl/restarts/vector/ufs_land_restart_${state}.${TEST_DATE}.nc ${TEST_BASEDIR}/ufs_land_restart_${state}.${TEST_DATE}.nc

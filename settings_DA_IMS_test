@@ -81,3 +81,6 @@ export IODA_BUILD_DIR=/scratch2/BMC/gsienkf/Clara.Draper/jedi/src/ioda-bundle/bu
 # export EXPDIR= # directory where output will be saved.
 # export CYCLEDIR=  # directory where cycleDA scripts are.  
 
+# optional - if specify YAML here will overwrite name constructed in script
+# export YAML_DA_SPEC=
+# export YAML_HOFX_SPEC=
