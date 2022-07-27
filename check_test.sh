@@ -11,6 +11,7 @@ do
 cmp ./exp_out/DA_IMS_test/output/modl/restarts/vector/ufs_land_restart_${state}.${TEST_DATE}.nc ${TEST_BASEDIR}/ufs_land_restart_${state}.${TEST_DATE}.nc
 
 if [[ $? != 0 ]]; then
+    echo TEST FAILED
     echo "$TEST_DATE $state are different"
     exit
 fi
@@ -22,6 +23,12 @@ TEST_DATE=2016-01-03_18-00-00
 state='back'
 cmp ./exp_out/DA_IMS_test/output/modl/restarts/vector/ufs_land_restart_${state}.${TEST_DATE}.nc ${TEST_BASEDIR}/ufs_land_restart_${state}.${TEST_DATE}.nc
 
-exit
+if [[ $? != 0 ]]; then
+    echo TEST FAILED
+    echo "$TEST_DATE $state are different"
+    exit
+fi
 
 echo "TEST PASSED"
+
+exit
