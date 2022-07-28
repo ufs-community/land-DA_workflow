@@ -1,6 +1,6 @@
 #!/bin/bash -le
 #SBATCH --job-name=offline_noahmp
-#SBATCH --account=fv3-cpu
+#SBATCH --account=gsienkf
 #SBATCH --qos=debug
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
