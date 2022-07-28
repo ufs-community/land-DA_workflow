@@ -1,0 +1,87 @@
+# Settings file for submit_cycle, for running the DA_IMS_test 
+
+# temporary directory where experiment is run from
+# update this to your own directory.
+#export WORKDIR=/scratch2/BMC/gsienkf/Clara.Draper/workdir/
+export WORKDIR=/scratch1/NCEPDEV/global/Jiarui.Dong/JEDI/workflow/experiment/workdir/
+export OBSDIR=/scratch1/NCEPDEV/global/Jiarui.Dong/JEDI/workflow/
+
+####################################################################
+# DO NOT CHANGE ANYTHING BELOW HERE.
+
+###########################
+# experiment name
+export exp_name=DA_GTS_test
+
+############################
+# model options
+
+# for LETKF, this is size of ensemble.
+# for LETKF-OI pseudo ensemble, or non-ensemble runs use 1 
+export ensemble_size=1
+
+#forcing options: gdas, gswp3, gefs_ens
+export atmos_forc=gdas
+
+# number of cycles to submit in a single job
+# on hera in the debug queue 20 is a good number.
+export dates_per_job=80
+
+# length of each forecast in hours 
+# if using DA this is also the time between DA updates
+export CYCHR=6
+
+############################
+# DA options
+
+# do DA state updating with JEDI
+# options, YES or NO
+export do_DA=YES
+
+# select osbervations to be assimilated (ignored if do_DA = NO)
+# options YES or NO
+export DA_IMS=NO
+export DA_GHCN=NO
+export DA_SYNTH=NO
+export DA_GTS=YES
+
+# calculate hofx with JEDI (only used if do_DA is NO)
+# options, YES or NO
+export do_hofx=NO
+
+# select osbervations to be assimilated (ignored if do_HOFX = NO)
+# options YES or NO
+export HOFX_IMS=NO
+export HOFX_GHCN=NO
+export HOFX_SYNTH=NO
+export HOFX_GTS=NO
+
+# DA algorithm and state being updated
+# options: "letkfoi_snow" , "letkf_snow"
+export DAtype=letkfoi_snow
+
+############################
+# set your directories
+
+# directory with initial conditions
+# can find some here:/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/single
+#export ICSDIR=/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/test_ICS/
+export ICSDIR=/scratch1/NCEPDEV/global/Jiarui.Dong/JEDI/workflow/experiment/offline_ICS/single
+
+# on hera, use Clara's JEDI bundles listed below. 
+# is using your own, may need to make changes for your version 
+# specifically, may need to update the JEDI DA yaml if using a different fv3-jedi version.
+
+# JEDI FV3 build directory
+export JEDI_EXECDIR=/scratch1/NCEPDEV/global/Jiarui.Dong/JEDI/workflow/fv3-bundle/build/bin/
+
+# JEDI IODA-converter source directory
+export IODA_BUILD_DIR=/scratch2/BMC/gsienkf/Clara.Draper/jedi/src/ioda-bundle/build/
+#export IODA_BUILD_DIR=/scratch1/NCEPDEV/global/Jiarui.Dong/JEDI/workflow/ioda-bundle/build/
+
+############################
+# optional directories - both default to current directory if not specified.
+
+# export EXPDIR= # directory where output will be saved.
+# export CYCLEDIR=  # directory where cycleDA scripts are.  
+
