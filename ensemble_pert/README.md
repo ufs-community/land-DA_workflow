@@ -2,17 +2,35 @@ Code to apply the given perturbation pattern onto vectorized land surface variab
 
 Zhichang Guo, Mike Barlage, Clara Draper. Aug 2022.
 
-We assume the perturbation pattern has been generated using Phil's stochastic physics and mapped to vector format used by the Noah-MP offline driver from the tile format used by the UFS atmospheric model with the following procedures.
+We assume the perturbation pattern has been generated using the UFS stochastic physics package and mapped to vector format used by the Noah-MP offline driver from the tile format used by the UFS atmospheric model with the following procedures.
 
-1. git clone the repo of Phil's stochastic physics:
+1. git clone the repo of the UFS stochastic physics package:
 
 git clone https://github.com/pjpegion/stochastic_physics
 
-2. run Phil's stochastic physics to generate the perturbation pattern:
+2. run the UFS stochastic physics package to generate the perturbation pattern:
 
 cd stochastic_physics/unit_tests
 
-modify run_standalone.sh and run the script
+modify run_standalone.sh and run the script:
+
+  a. modify SBATCH --account to yhe user account
+
+  b. modify the resolution "RES"
+
+  c. modify the INPUT directory, for an example, use the following directory
+
+     /scratch2/BMC/gsienkf/Tseganeh.Gichamo/stochastic_physics/unit_tests/INPUT
+
+  d. copy the INPUT directory or create a symbolic link
+
+     ln -s /scratch2/BMC/gsienkf/Tseganeh.Gichamo/stochastic_physics/unit_tests/INPUT INPUT
+
+  e. cp input.nml.template input.nml and made the following changes
+
+  f. change lndp_var_list and iseed_lndp (the seed for randomization generator)
+
+  g. n_var_lndp is the actual number of variables in lndp_var_list, change this value according to your choice.
 
 3. map the perturbation pattern in tile format to the vector format
 
