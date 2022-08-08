@@ -9,7 +9,8 @@ program lndp_apply_pert
 !       3. This is currently a special case, in which the input data file for vegetation
 !          fraction has been read in and perturbed, once at the start of the forecast. The
 !          vegetation fraction is specified for each month, and the same perturbation is
-!          added each month.
+!          added each month. The lower and upper limits for the perturbed value
+!          (min_bound and max_bound) are set to 0.05 and 0.95, respectively. 
 !
   use netcdf
   implicit none
@@ -85,8 +86,8 @@ program lndp_apply_pert
      !=================================================================
      case('vgf')  ! vegetation fraction
          p = 5.
-         min_bound=0.
-         max_bound=1.
+         min_bound=0.05
+         max_bound=0.95
 
          ! allocate variables
          allocate(sfc_wts(vector_length))
