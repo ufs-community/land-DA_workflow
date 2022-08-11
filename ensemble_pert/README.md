@@ -14,7 +14,7 @@ cd stochastic_physics/unit_tests
 
 modify run_standalone.sh and run the script:
 
-  a. modify SBATCH --account to yhe user account
+  a. modify SBATCH --account to the user account
 
   b. modify the resolution "RES"
 
