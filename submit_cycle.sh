@@ -11,7 +11,6 @@
 
 ############################
 # to do: 
-# -specify resolution in this script (currently fixed at 96) 
 # -update ICS directory to include forcing / res info.
 # -decide how to manage soil moisture DA. Separate DA script to snow? 
 
@@ -44,7 +43,7 @@ export OUTDIR=${EXPDIR}/exp_out/${exp_name}/output/      # directory where outpu
 vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
 LSMexec=${CYCLEDIR}/ufs-land-driver/run/ufsLand.exe 
 export DADIR=${CYCLEDIR}/DA_update/
-DAscript=${DADIR}/do_snowDA.sh
+DAscript=${DADIR}/do_landDA.sh
 
 analdate=${CYCLEDIR}/analdates.sh
 incdate=${CYCLEDIR}/incdate.sh
