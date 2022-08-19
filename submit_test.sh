@@ -9,7 +9,7 @@ export STARTDATE=2016010118
 export ENDDATE=2016010318
 EOF
 
-sbatch submit_cycle.sh settings_DA_IMS_test
+sbatch submit_cycle.sh settings_cycle_test
 
 
 

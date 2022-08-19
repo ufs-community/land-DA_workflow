@@ -24,17 +24,19 @@ else
     config_file=settings
 fi
 
-echo "reading settings from $config_file"
+echo "reading cycle settings from $config_file"
 
 source $config_file
+
+if [ $DA_config == "" ]; then do_jedi="NO" ; else do_jedi="YES" ; fi 
 
 # load modules 
 
 source cycle_mods_bash
 
 # set out directory
+export CYCLEDIR=$(pwd) 
 export EXPDIR=${EXPDIR:-$(pwd)}  # directory that output will be save to. default to current directory if not set in config
-export CYCLEDIR=${CYCLEDIR:-$(pwd)}  #  directory weith cycleDA scripts.  default to current directory if not set in config
 
 export OUTDIR=${EXPDIR}/exp_out/${exp_name}/output/      # directory where output will be saved
 
@@ -42,7 +44,7 @@ export OUTDIR=${EXPDIR}/exp_out/${exp_name}/output/      # directory where outpu
 
 vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
 LSMexec=${CYCLEDIR}/ufs-land-driver/run/ufsLand.exe 
-export DADIR=${CYCLEDIR}/DA_update/
+DADIR=${CYCLEDIR}/DA_update/
 DAscript=${DADIR}/do_landDA.sh
 
 analdate=${CYCLEDIR}/analdates.sh
@@ -56,15 +58,6 @@ if [[ -e ${WORKDIR} ]]; then
 fi
 
 mkdir ${WORKDIR}
-
-############################
-# Activate the JEDI DA 
-
-if [[ $do_DA == "YES" || $do_hofx == "YES" ]]; then  # do DA
-   do_jedi=YES
-else
-   do_jedi=NO
-fi
 
 ############################
 # create output directories if they do not already exist.
@@ -174,9 +167,9 @@ while [ $date_count -lt $dates_per_job ]; do
     export HP=`echo $PREVDATE | cut -c9-10`
 
     # compute the restart frequency, run_days and run_hours
-    export FREQ=`expr 3600 \* $CYCHR`
-    export RDD=`expr $CYCHR / 24`
-    export RHH=`expr $CYCHR % 24`
+    export FREQ=`expr 3600 \* $FCSTHR`
+    export RDD=`expr $FCSTHR / 24`
+    export RHH=`expr $FCSTHR % 24`
 
     ############################
     # create work directory and copy in restarts
@@ -267,7 +260,7 @@ while [ $date_count -lt $dates_per_job ]; do
         echo '************************************************'
         echo 'calling snow DA'
         export THISDATE
-        $DAscript
+        $DAscript ${CYCLEDIR}/$DA_config
         if [[ $? != 0 ]]; then
             echo "land DA script failed"
             exit
@@ -290,7 +283,7 @@ while [ $date_count -lt $dates_per_job ]; do
     ############################
     # run the forecast model
 
-    NEXTDATE=`${incdate} $THISDATE $CYCHR`
+    NEXTDATE=`${incdate} $THISDATE $FCSTHR`
     export nYYYY=`echo $NEXTDATE | cut -c1-4`
     export nMM=`echo $NEXTDATE | cut -c5-6`
     export nDD=`echo $NEXTDATE | cut -c7-8`

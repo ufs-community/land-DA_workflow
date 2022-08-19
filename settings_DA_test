@@ -1,0 +1,36 @@
+
+# if calling from submit_cycle, these will already be set. Otherwise, need to be set here:
+# export WORKDIR=/scratch2/BMC/gsienkf/${USER}/workdir/  # temporary directory where experiment is run from
+# export exp_name= # experiment name
+
+# directory where do_landDA.sh script is 
+SCRIPTDIR=${CYCLEDIR}/DA_update/ # if calling from submit_cycle.sh
+
+############################
+# DA options
+
+# DA algorithm and state being updated
+# options: "letkfoi_snow" , "letkf_snow"
+export DAtype=letkfoi_snow
+
+# JEDI input obs. options : IMS, GHCN, GTS, SYNTH 
+export OBS_TYPES=("IMS")   # format: ("OBS1" "OBS2") 
+# JEDI call type for each obs_type above. options: DA, HOFX
+export JEDI_TYPES=("DA")   # format ("DA" "HOFX") 
+
+#  DA window lenth. Will generally be the same as the FCSTLEN 
+export WINLEN=6
+
+# YAMLS. Options, either:
+# 1. "construct" to construct the YAML name, based on requested obs types and their availability 
+# 2. enter the desired YAML name (will not test for availability of obs)
+export YAML_DA=construct
+export YAML_HOFX=construct
+
+# OPTIONAL: CHANGE JEDI DIRECTORIES
+# is using different JEDI VERSION, will likely need to edit your yamls.
+# JEDI FV3 build directory
+#export JEDI_EXECDIR=
+# JEDI IODA-converter source directory
+#export IODA_BUILD_DIR=
+
