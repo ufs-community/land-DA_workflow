@@ -36,7 +36,8 @@ COMPILING and TESTING.
 
 3. Run the test.
 
- in settings_DA_IMS_test change WORKDIR to point to your own directory. 
+ in settings_cycle_test check WORKDIR and OUTDIR are OK
+ create OUTDIR
  in submit_cycle.sh change #SBATCH --account=gsienkf to point to your own account.
 
 > submit_test.sh 

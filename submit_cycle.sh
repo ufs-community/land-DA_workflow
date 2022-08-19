@@ -1,4 +1,4 @@
-#!/bin/bash -le
+#!/bin/bash -lx
 #SBATCH --job-name=offline_noahmp
 #SBATCH --account=gsienkf
 #SBATCH --qos=debug
@@ -28,17 +28,11 @@ echo "reading cycle settings from $config_file"
 
 source $config_file
 
-if [ $DA_config == "" ]; then do_jedi="NO" ; else do_jedi="YES" ; fi 
-
 # load modules 
 
 source cycle_mods_bash
 
-# set out directory
 export CYCLEDIR=$(pwd) 
-export EXPDIR=${EXPDIR:-$(pwd)}  # directory that output will be save to. default to current directory if not set in config
-
-export OUTDIR=${EXPDIR}/exp_out/${exp_name}/output/      # directory where output will be saved
 
 # set executables
 
@@ -50,7 +44,7 @@ DAscript=${DADIR}/do_landDA.sh
 analdate=${CYCLEDIR}/analdates.sh
 incdate=${CYCLEDIR}/incdate.sh
 
-KEEPWORKDIR=${KEEPWORKDIR:-"NO"}
+KEEPWORKDIR="YES"
 
 # create clean workdir
 if [[ -e ${WORKDIR} ]]; then 
@@ -62,13 +56,8 @@ mkdir ${WORKDIR}
 ############################
 # create output directories if they do not already exist.
 
-if [[ ! -e ${OUTDIR} ]]; then
-    mkdir -p ${OUTDIR}/DA
-    mkdir ${OUTDIR}/DA/IMSproc 
-    mkdir ${OUTDIR}/DA/jedi_incr
-    mkdir ${OUTDIR}/DA/logs
-    mkdir ${OUTDIR}/DA/hofx
-    mkdir ${OUTDIR}/modl
+if [[ ! -e ${OUTDIR}/modl ]]; then
+    mkdir -p ${OUTDIR}/modl
     n_ens=1
     while [ $n_ens -le $ensemble_size ]; do
 
@@ -145,7 +134,7 @@ while [ $date_count -lt $dates_per_job ]; do
     if [ $THISDATE -ge $ENDDATE ]; then 
         echo "All done, at date ${THISDATE}"  >> $logfile
         cd $CYCLEDIR 
-        if [ ! $KEEPWORKDIR ];   then 
+        if [ $KEEPWORKDIR == "NO" ];   then 
             rm -rf $WORKDIR
         fi
         exit  
@@ -154,22 +143,22 @@ while [ $date_count -lt $dates_per_job ]; do
     echo "starting $THISDATE"  
 
     # substringing to get yr, mon, day, hr info
-    export YYYY=`echo $THISDATE | cut -c1-4`
-    export MM=`echo $THISDATE | cut -c5-6`
-    export DD=`echo $THISDATE | cut -c7-8`
-    export HH=`echo $THISDATE | cut -c9-10`
+    YYYY=`echo $THISDATE | cut -c1-4`
+    MM=`echo $THISDATE | cut -c5-6`
+    DD=`echo $THISDATE | cut -c7-8`
+    HH=`echo $THISDATE | cut -c9-10`
 
     # substringing to get yr, mon, day, hr info for previous cycle
     PREVDATE=`${incdate} $THISDATE -6`
-    export YYYP=`echo $PREVDATE | cut -c1-4`
-    export MP=`echo $PREVDATE | cut -c5-6`
-    export DP=`echo $PREVDATE | cut -c7-8`
-    export HP=`echo $PREVDATE | cut -c9-10`
+    YYYP=`echo $PREVDATE | cut -c1-4`
+    MP=`echo $PREVDATE | cut -c5-6`
+    DP=`echo $PREVDATE | cut -c7-8`
+    HP=`echo $PREVDATE | cut -c9-10`
 
     # compute the restart frequency, run_days and run_hours
-    export FREQ=`expr 3600 \* $FCSTHR`
-    export RDD=`expr $FCSTHR / 24`
-    export RHH=`expr $FCSTHR % 24`
+    FREQ=`expr 3600 \* $FCSTHR`
+    RDD=`expr $FCSTHR / 24`
+    RHH=`expr $FCSTHR % 24`
 
     ############################
     # create work directory and copy in restarts
@@ -212,6 +201,17 @@ while [ $date_count -lt $dates_per_job ]; do
 
     ############################
     # call JEDI 
+
+    #if [ $HH == 00 ]; then DA_config=$DA_config00 ; fi  
+    #if [ $HH == 06 ]; then DA_config=$DA_config06 ; fi  
+    #if [ $HH == 12 ]; then DA_config=$DA_config12 ; fi  
+    #if [ $HH == 18 ]; then DA_config=$DA_config18 ; fi  
+
+    this_config=DA_config$HH
+    DA_config=${!this_config}
+
+    if [ $DA_config == "" ]; then do_jedi="NO" ; else do_jedi="YES" ; fi 
+    echo "entering JEDI" $do_jedi
 
     if [ $do_jedi == "YES" ]; then  # do DA
 
@@ -284,10 +284,10 @@ while [ $date_count -lt $dates_per_job ]; do
     # run the forecast model
 
     NEXTDATE=`${incdate} $THISDATE $FCSTHR`
-    export nYYYY=`echo $NEXTDATE | cut -c1-4`
-    export nMM=`echo $NEXTDATE | cut -c5-6`
-    export nDD=`echo $NEXTDATE | cut -c7-8`
-    export nHH=`echo $NEXTDATE | cut -c9-10`
+    nYYYY=`echo $NEXTDATE | cut -c1-4`
+    nMM=`echo $NEXTDATE | cut -c5-6`
+    nDD=`echo $NEXTDATE | cut -c7-8`
+    nHH=`echo $NEXTDATE | cut -c9-10`
 
     # loop over ensemble members
 
@@ -349,7 +349,6 @@ while [ $date_count -lt $dates_per_job ]; do
 
     echo "Finished job number, ${date_count},for  date: ${THISDATE}" >> $logfile
 
-    #THISDATE=`${incdate} $THISDATE 24`
     THISDATE=$NEXTDATE
     date_count=$((date_count+1))
 
@@ -360,8 +359,8 @@ done #  date_count -lt dates_per_job
 # resubmit script 
 
 if [ $THISDATE -lt $ENDDATE ]; then
-    echo "export STARTDATE=${THISDATE}" > ${analdate}
-    echo "export ENDDATE=${ENDDATE}" >> ${analdate}
+    echo "STARTDATE=${THISDATE}" > ${analdate}
+    echo "ENDDATE=${ENDDATE}" >> ${analdate}
     cd ${CYCLEDIR}
     sbatch ${CYCLEDIR}/submit_cycle.sh $1
 fi

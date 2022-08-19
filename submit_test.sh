@@ -1,6 +1,8 @@
-#!/bin/bash -le
+#!/bin/bash -e
 
-rm -rf exp_out/DA_IMS_test 
+source settings_cycle_test
+
+rm -rf ${OUTDIR}
 mv analdates.sh analdates.sh_
 
 touch analdates.sh 
