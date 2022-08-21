@@ -21,9 +21,9 @@ SCRIPTDIR=${CYCLEDIR}/DA_update/ # if calling from submit_cycle.sh
 DAtype=letkfoi_snow
 
 # JEDI input obs. options : IMS, GHCN, GTS, SYNTH 
-OBS_TYPES=("IMS" "GHCN")   # format: ("OBS1" "OBS2") 
+OBS_TYPES=("IMS" )   # format: ("OBS1" "OBS2") 
 # JEDI call type for each obs_type above. options: DA, HOFX
-JEDI_TYPES=("DA" "HOFX")   # format ("DA" "HOFX") 
+JEDI_TYPES=("DA" )   # format ("DA" "HOFX") 
 
 #  DA window lenth. Will generally be the same as the FCSTLEN 
 WINLEN=6

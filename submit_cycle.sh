@@ -1,4 +1,4 @@
-#!/bin/bash -lx
+#!/bin/bash -le 
 #SBATCH --job-name=offline_noahmp
 #SBATCH --account=gsienkf
 #SBATCH --qos=debug
@@ -156,9 +156,9 @@ while [ $date_count -lt $dates_per_job ]; do
     HP=`echo $PREVDATE | cut -c9-10`
 
     # compute the restart frequency, run_days and run_hours
-    FREQ=`expr 3600 \* $FCSTHR`
-    RDD=`expr $FCSTHR / 24`
-    RHH=`expr $FCSTHR % 24`
+    FREQ=$(( 3600 * $FCSTHR )) 
+    RDD=$(( $FCSTHR / 24 )) 
+    RHH=$(( $FCSTHR % 24 )) 
 
     ############################
     # create work directory and copy in restarts
