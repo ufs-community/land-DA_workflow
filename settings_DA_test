@@ -11,7 +11,7 @@
 # RES= #FV3 resolution
 
 # directory where do_landDA.sh script is 
-SCRIPTDIR=${CYCLEDIR}/DA_update/ # if calling from submit_cycle.sh
+LANDDADIR=${CYCLEDIR}/DA_update/ # if calling from submit_cycle.sh
 
 ############################
 # DA options
