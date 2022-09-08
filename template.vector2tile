@@ -8,8 +8,9 @@
 
 ! FV3 resolution and path to oro files for restart/perturbation conversion
 
-  tile_size = 96
-!  tile_path = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/models/vector/v2t_data/tile_files/C96.mx100_frac/"
+  tile_size = XXRES
+  tile_type = XXTTYPE
+!  tile_path = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/models/vector/v2t_data/tile_files/CXXRES.mx100_frac/"
 ! this should be the same as set at DADIR_workflow/jedi/fv3-jedi/Data/
   tile_path = "/scratch2/BMC/gsienkf/Clara.Draper/data_RnR/orog_files_Mike/" 
   
@@ -19,7 +20,7 @@
   restart_date = "XXYYYY-XXMM-XXDD XXHH:00:00"
   
 ! Path for static file  
-  static_filename = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/forcing/C96/static/ufs-land_C96_static_fields.nc"
+  static_filename = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/forcing/CXXRES/static/ufs-land_CXXRES_static_fields.nc"
   
 ! Location of vector restart file (vector2tile direction)
 

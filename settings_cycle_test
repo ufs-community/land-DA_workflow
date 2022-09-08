@@ -22,6 +22,7 @@ atmos_forc=gdas
 
 #FV3 resolution
 export RES=96
+export TTYPE="mx100" # orography file type. Options: "mx100" for coupled atm/sea/ice model, "" for uncoupled (atm or land only)
 
 # number of cycles to submit in a single job
 # on hera in the debug queue 20 is a good number.
