@@ -227,7 +227,8 @@ while [ $date_count -lt $dates_per_job ]; do
         sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
         sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
         sed -i -e "s/XXRES/${RES}/g" vector2tile.namelist
-        sed -i -e "s/XXTTYPE/${TTYPE}/g" vector2tile.namelist
+        sed -i -e "s/XXTSTUB/${TSTUB}/g" vector2tile.namelist
+        sed -i -e "s#XXTPATH#${TPATH}#g" vector2tile.namelist
 
         cp  ${CYCLEDIR}/template.tile2vector tile2vector.namelist
 
@@ -236,7 +237,8 @@ while [ $date_count -lt $dates_per_job ]; do
         sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
         sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
         sed -i -e "s/XXRES/${RES}/g" tile2vector.namelist
-        sed -i -e "s/XXTTYPE/${TTYPE}/g" tile2vector.namelist
+        sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
+        sed -i -e "s#XXTPATH#${TPATH}#g" tile2vector.namelist
 
         # submit vec2tile 
         echo '************************************************'

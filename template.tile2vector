@@ -9,10 +9,8 @@
 ! FV3 resolution and path to oro files for restart/perturbation conversion
 
   tile_size = XXRES
-  tile_type = XXTTYPE
-!  tile_path = "/scratch1/NCEPDEV/stmp2/Michael.Barlage/models/vector/v2t_data/tile_files/C96.mx100_frac/"
-! this should be the same as set at DA_update/jedi/fv3-jedi/Data/
-  tile_path = "/scratch2/BMC/gsienkf/Clara.Draper/data_RnR/orog_files_Mike/"
+  tile_path = "XXTPATH"
+  tile_fstub = "XXTSTUB"
   
 !------------------- only restart conversion -------------------
 ! Time stamp for conversion for restart conversion
