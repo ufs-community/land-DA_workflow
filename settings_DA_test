@@ -9,6 +9,9 @@
 # OUTDIR=/scratch2/BMC/gsienkf/${USER}/cycle_land/${exp_name}/  # temporary directory where experiment is run from
 # RSTRDIR= #  if not specified, is constructed from $WORKDIR
 # RES= #FV3 resolution
+#export TPATH=
+#export TSTUB= # file stub for orography files in $TPATH
+              # oro_C${RES} for atm only, oro_C${RES}.mx100 for atm/ocean.
 
 # directory where do_landDA.sh script is 
 LANDDADIR=${CYCLEDIR}/DA_update/ # if calling from submit_cycle.sh
