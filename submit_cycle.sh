@@ -248,19 +248,6 @@ while [ $date_count -lt $dates_per_job ]; do
             echo "vec2tile failed"
             exit 
         fi
-        # add coupler.res file
-        cres_file=${WORKDIR}/restarts/tile/${YYYY}${MM}${DD}.${HH}0000.coupler.res
-        cp  ${CYCLEDIR}/template.coupler.res $cres_file
-
-        sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
-        sed -i -e "s/XXMM/${MM}/g" $cres_file
-        sed -i -e "s/XXDD/${DD}/g" $cres_file
-        sed -i -e "s/XXHH/${HH}/g" $cres_file
-
-        sed -i -e "s/XXYYYP/${YYYP}/g" $cres_file
-        sed -i -e "s/XXMP/${MP}/g" $cres_file
-        sed -i -e "s/XXDP/${DP}/g" $cres_file
-        sed -i -e "s/XXHP/${HP}/g" $cres_file
 
         # CSDtodo - call once
         # submit snow DA 
