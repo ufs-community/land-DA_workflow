@@ -64,3 +64,22 @@ $ICSDIR/output/modl/restarts/vector/ufs_land_restart.2015-09-02_18-00-00.nc
 
 >sbatch submit_cycle.sh your-settings-filename
 
+#############################
+
+build steps with cmake: jedi stack works ok on orion but need to follow up jedi stack on hera.
+
+1. git clone -b feature/bundle-cmake https://github.com/jkbk2004/land-offline_workflow-1
+
+2. cd land-offline_workflow-1/
+
+3. git submodule update --init --recursive
+
+4. mkdir build
+
+5. source configures/machine.orion.intel
+
+6. cd build/
+
+7. ecbuild ..
+
+8. make -j 1
