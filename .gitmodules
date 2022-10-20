@@ -6,8 +6,8 @@
         #tag = p8 
 [submodule "DA_update"]
 	path = DA_update
-	url = https://github.com/jkbk2004/land-DA_update.git
-        branch = feature/cmake 
+	url = https://github.com/NOAA-PSL/land-DA_update.git
+        branch = develop
 [submodule "vector2tile"]
 	path = vector2tile
 	url = https://github.com/NOAA-PSL/land-vector2tile.git
