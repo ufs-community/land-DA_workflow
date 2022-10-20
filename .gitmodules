@@ -6,9 +6,9 @@
         #tag = p8 
 [submodule "DA_update"]
 	path = DA_update
-	url = https://github.com/noaa-psd/land-DA_update.git
-        branch = develop 
+	url = https://github.com/NOAA-PSL/land-DA_update.git
+        branch = develop
 [submodule "vector2tile"]
 	path = vector2tile
-	url = https://github.com/noaa-psd/land-vector2tile.git
+	url = https://github.com/NOAA-PSL/land-vector2tile.git
         branch = develop

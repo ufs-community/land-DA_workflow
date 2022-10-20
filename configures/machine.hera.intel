@@ -1,0 +1,12 @@
+#!/bin/bash
+
+export JEDI_OPT=/scratch1/NCEPDEV/jcsda/jedipara/opt/modules
+module use $JEDI_OPT/modulefiles/core
+module purge
+module load jedi/intel-impi/2020.2
+module load cmake/3.20.1
+module load nco/4.9.1
+source /scratch2/NCEPDEV/marineda/Jong.Kim/hera.anaconda
+module load anaconda/3.15.1
+export MPIRUN=$(which srun)
+export WORKLOAD_MANAGER=slurm
