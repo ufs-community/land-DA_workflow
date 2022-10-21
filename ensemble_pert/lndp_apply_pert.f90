@@ -85,7 +85,7 @@ program lndp_apply_pert
      ! Parameter updates
      !=================================================================
      case('vgf')  ! vegetation fraction
-         p = 5.
+         p = 2.
          min_bound=0.05
          max_bound=1.00
 
@@ -283,14 +283,16 @@ contains
            endif
 
            z = -1. + 2*(state  - vmin)/(vmax - vmin) ! flat-top function
-           state =  state  + pert*(1-abs(z**p))
+           if (state > vmin .and. state < vmax)  then ! only apply pert if between vmin and vmax
+                state =  state  + pert*(1-abs(z**p))
+                state = max( min( state , vmax ), vmin )
+           endif
        else
           state =  state  + pert
+          if (present(vmax)) state =  min( state , vmax )
+          if (present(vmin)) state =  max( state , vmin )
        endif
 
-       if (present(vmax)) state =  min( state , vmax )
-       if (present(vmin)) state =  max( state , vmin )
-       !state = max( min( state , vmax ), vmin )
 
   end subroutine apply_pert
 

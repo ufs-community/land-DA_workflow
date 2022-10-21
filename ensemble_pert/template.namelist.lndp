@@ -13,5 +13,5 @@
   lndp_var_list = ''
 
 ! list of perturbation magnitudes
-  lndp_prt_list = ''
+  lndp_prt_list = 
 /

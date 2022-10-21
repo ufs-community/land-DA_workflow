@@ -18,40 +18,39 @@ modify run_standalone.sh and run the script:
 
   b. modify the resolution "RES"
 
-  c. modify the INPUT directory, for an example, use the following directory
+  c. modify the INPUT directory (directory should contain the grid files for that res). An example:
 
      /scratch2/BMC/gsienkf/Tseganeh.Gichamo/stochastic_physics/unit_tests/INPUT
 
-  d. copy the INPUT directory or create a symbolic link
+  d. cp input.nml.template input.nml and made the following changes
 
-     ln -s /scratch2/BMC/gsienkf/Tseganeh.Gichamo/stochastic_physics/unit_tests/INPUT INPUT
+  e. change lndp_var_list and iseed_lndp (the seed for randomization generator)
 
-  e. cp input.nml.template input.nml and made the following changes
+  f. n_var_lndp is the actual number of variables in lndp_var_list, change this value according to your choice.
 
-  f. change lndp_var_list and iseed_lndp (the seed for randomization generator)
+  g. sbatch run_standalone.sh
 
-  g. n_var_lndp is the actual number of variables in lndp_var_list, change this value according to your choice.
+This will output (in stochy_out) directory, a number of files, depending on the layout. A layout of 1x1 will give 6 files.
 
 3. map the perturbation pattern in tile format to the vector format
 
-go to the directory vector2tile and run the code to do the mapping
+  a. go to vector2tile directory. 
 
-The steps for applying the vectorized perturbation pattern onto land surface variables  
+  b. in the namelist (namelist.vector2tile) set 
+        direction = "lndp2vector"
+        + all variables starting with lndp
 
-4. compile the code on hera: 
+  c. run with vector2tile_converter.exe namelist.vector2tile 
 
->configure
+The will output a vector the of the perts over land, in the file name specified by lndp_output_file in the namelist.
 
- choose hera
- 
- load the modules indicated
- 
->make 
-
-5. To run: 
+4. Apply the vectorized perturbation pattern onto land surface variables  
+(from this directory)
 
 >cp template.namelist.lndp namelist.lndp
 
 >modify namelist.lndp, the namelist defines the paths of the input/output files, the list of variables to be perturbed, and the perturbation magnitudes
 
 >lndp_apply_pert.exe namelist.lndp
+
+This will output a file with the perturbed parameters. For perturbing veg frac, input file is the static file used by the model.
