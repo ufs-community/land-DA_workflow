@@ -10,13 +10,7 @@
 #SBATCH -e err_noahmp.%j.err
 
 ############################
-# to do: 
-# -update ICS directory to include forcing / res info.
-# -decide how to manage soil moisture DA. Separate DA script to snow? 
-
-############################
-
-# load config file   
+# load config file 
 
 if [[ $# -gt 0 ]]; then 
     config_file=$1
@@ -25,15 +19,17 @@ else
 fi
 
 echo "reading cycle settings from $config_file"
-
 source $config_file
 
+KEEPWORKDIR="YES"
+
+############################
 # load modules 
 
 source cycle_mods_bash
-
 export CYCLEDIR=$(pwd) 
 
+############################
 # set executables
 
 vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
@@ -44,41 +40,9 @@ DAscript=${DADIR}/do_landDA.sh
 analdate=${CYCLEDIR}/analdates.sh
 incdate=${CYCLEDIR}/incdate.sh
 
-KEEPWORKDIR="YES"
-
-# create clean workdir
-if [[ -e ${WORKDIR} ]]; then 
-   rm -rf ${WORKDIR} 
-fi
-
-mkdir ${WORKDIR}
-
 ############################
-# create output directories if they do not already exist.
-
-if [[ ! -e ${OUTDIR}/modl ]]; then
-    mkdir -p ${OUTDIR}/modl
-    n_ens=1
-    while [ $n_ens -le $ensemble_size ]; do
-
-        if [ $ensemble_size == 1 ]; then 
-            mem_ens="" 
-        else 
-            mem_ens="mem`printf %03i $n_ens`"
-        fi 
-
-        mkdir -p ${OUTDIR}/modl/${mem_ens}/restarts/vector/ 
-        mkdir ${OUTDIR}/modl/${mem_ens}/restarts/tile/
-        mkdir -p ${OUTDIR}/modl/${mem_ens}/noahmp/
-        n_ens=$((n_ens+1))
-    done # n_ens < ensemble_size
-fi 
-
-
-############################
-# fetch initial conditions, if not already in place 
-
 # read in dates  
+
 source ${analdate}
 
 logfile=${CYCLEDIR}/cycle.log
@@ -91,9 +55,31 @@ sMM=`echo $STARTDATE | cut -c5-6`
 sDD=`echo $STARTDATE | cut -c7-8`
 sHH=`echo $STARTDATE | cut -c9-10`
 
-# copy initial conditions
+# compute the restart frequency, run_days and run_hours
+FREQ=$(( 3600 * $FCSTHR )) 
+RDD=$(( $FCSTHR / 24 )) 
+RHH=$(( $FCSTHR % 24 )) 
+
+############################
+# set up directories
+
+#workdir
+if [[ ! -e ${WORKDIR} ]]; then 
+    mkdir ${WORKDIR}
+fi
+
+#outdir for model
+if [[ ! -e ${OUTDIR}/modl ]]; then
+    mkdir -p  ${OUTDIR}/modl
+fi 
+
+###############################
+# create ensemble dirs and copy in ICS if needed
+echo 'ensemble size, '$ensemble_size 
+
 n_ens=1
 while [ $n_ens -le $ensemble_size ]; do
+    echo 'in ensemble loop, '$n_ens
 
     if [ $ensemble_size == 1 ]; then 
         mem_ens="" 
@@ -101,21 +87,54 @@ while [ $n_ens -le $ensemble_size ]; do
         mem_ens="mem`printf %03i $n_ens`"
     fi 
 
-    MEM_OUTDIR=${OUTDIR}/modl/${mem_ens}/
-    MEM_ICSDIR=${ICSDIR}/modl/${mem_ens}/
+    # ensemble workdir
+    MEM_WORKDIR=${WORKDIR}/${mem_ens}
+    if [[ ! -e $MEM_WORKDIR ]]; then
+      mkdir $MEM_WORKDIR
+    fi
 
-    source_restart=${MEM_ICSDIR}/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
-    target_restart=${MEM_OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+    # workdir subdirs
+    if [[ ! -e ${MEM_WORKDIR}/restarts ]]; then
+        mkdir ${MEM_WORKDIR}/restarts
+        mkdir ${MEM_WORKDIR}/restarts/tile
+        mkdir ${MEM_WORKDIR}/restarts/vector
+    fi 
 
+    # ensemble outdir (model only)
+    MEM_MODL_OUTDIR=${OUTDIR}/modl/${mem_ens}
+    if [[ ! -e $MEM_MODL_OUTDIR ]]; then  #ensemble outdir
+        mkdir -p $MEM_MODL_OUTDIR
+    fi 
+    
+    # outdir subdirs
+    if [[ ! -e ${MEM_MODL_OUTDIR}/restarts/ ]]; then  # subdirectories
+        mkdir -p ${MEM_MODL_OUTDIR}/restarts/vector/ 
+        mkdir ${MEM_MODL_OUTDIR}/restarts/tile/
+        mkdir -p ${MEM_MODL_OUTDIR}/noahmp/
+        ln -s ${MEM_MODL_OUTDIR}/noahmp/ ${MEM_WORKDIR}/noahmp_output 
+    fi
+
+    # copy ICS into restarts, if needed 
+    rst_in=${ICSDIR}/output/modl/${mem_ens}/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+    rst_in_single=${ICSDIR}/output/modl/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+    rst_out=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+ 
     # if restart not in experiment out directory, copy the restarts from the ICSDIR
-    if [[ ! -e ${target_restart} ]]; then 
-        echo $source_restart
+    if [[ ! -e ${rst_out} ]]; then 
+        echo "Looking for ICS: ${rst_in}"
         # if ensemble of restarts exists in ICSDIR, use these. Otherwise, use single restart.
-        if [[ -e ${source_restart} ]]; then
-           cp ${source_restart} ${target_restart}
+        if [[ -e ${rst_in} ]]; then
+           echo "ICS found, copying" 
+           cp ${rst_in} ${rst_out}
         else  # use non-ensemble restart
-           echo 'using single restart for every ensemble member' 
-           cp ${ICSDIR}/output/modl/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc ${target_restart}
+           echo "ICS not found. Checking for ensemble started from single member: ${rst_in_single}"
+           if [[ -e ${rst_in_single} ]]; then
+               echo "ICS found, copying" 
+               cp ${rst_in_single} ${rst_out}
+           else 
+               echo "ICS not found. Exiting" 
+               exit 10 
+           fi 
         fi 
     fi 
 
@@ -155,13 +174,8 @@ while [ $date_count -lt $dates_per_job ]; do
     DP=`echo $PREVDATE | cut -c7-8`
     HP=`echo $PREVDATE | cut -c9-10`
 
-    # compute the restart frequency, run_days and run_hours
-    FREQ=$(( 3600 * $FCSTHR )) 
-    RDD=$(( $FCSTHR / 24 )) 
-    RHH=$(( $FCSTHR % 24 )) 
-
     ############################
-    # create work directory and copy in restarts
+    # copy in restarts
 
     n_ens=1
     while [ $n_ens -le $ensemble_size ]; do
@@ -171,29 +185,13 @@ while [ $date_count -lt $dates_per_job ]; do
         else 
             mem_ens="mem`printf %03i $n_ens`"
         fi 
-        
-        MEM_WORKDIR=${WORKDIR}/${mem_ens}/
-        MEM_OUTDIR=${OUTDIR}/modl/${mem_ens}/ # for model only
 
-        # create temporary workdir
-        if [[ -d $MEM_WORKDIR ]]; then 
-          rm -rf $MEM_WORKDIR
-        fi 
-
-        # move to work directory, and copy in templates and restarts
-        mkdir -p $MEM_WORKDIR
-        cd $MEM_WORKDIR
-
-        ln -s ${MEM_OUTDIR}/noahmp/ ${MEM_WORKDIR}/noahmp_output 
-
-        mkdir ${MEM_WORKDIR}/restarts
-        mkdir ${MEM_WORKDIR}/restarts/tile
-        mkdir ${MEM_WORKDIR}/restarts/vector
+        MEM_WORKDIR=${WORKDIR}/${mem_ens}
 
         # copy restarts into work directory
-        source_restart=${MEM_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
-        target_restart=${MEM_WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-        cp $source_restart $target_restart 
+        rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
+        rst_out=${MEM_WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+        cp $rst_in $rst_out 
 
         n_ens=$((n_ens+1))
 
@@ -201,11 +199,6 @@ while [ $date_count -lt $dates_per_job ]; do
 
     ############################
     # call JEDI 
-
-    #if [ $HH == 00 ]; then DA_config=$DA_config00 ; fi  
-    #if [ $HH == 06 ]; then DA_config=$DA_config06 ; fi  
-    #if [ $HH == 12 ]; then DA_config=$DA_config12 ; fi  
-    #if [ $HH == 18 ]; then DA_config=$DA_config18 ; fi  
 
     this_config=DA_config$HH
     DA_config=${!this_config}
@@ -294,7 +287,7 @@ while [ $date_count -lt $dates_per_job ]; do
         fi 
 
         MEM_WORKDIR=${WORKDIR}/${mem_ens}/
-        MEM_OUTDIR=${OUTDIR}/modl/${mem_ens}/ # for model only
+        MEM_MODL_OUTDIR=${OUTDIR}/modl/${mem_ens}/ # for model only
 
         cd $MEM_WORKDIR
 
@@ -303,9 +296,7 @@ while [ $date_count -lt $dates_per_job ]; do
         if [ $ensemble_size == 1 ]; then
             cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
         else
-            #cp ${CYCLEDIR}/template.ens.ufs-noahMP.namelist.${atmos_forc} ufs-land.namelist
-            echo 'CSD - temporarily using non-ensemble namelist' 
-            cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
+            cp ${CYCLEDIR}/template.ufs-noahMP.namelist.ens.${atmos_forc} ufs-land.namelist
         fi
 
         sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
@@ -315,7 +306,7 @@ while [ $date_count -lt $dates_per_job ]; do
         sed -i -e "s/XXFREQ/${FREQ}/g" ufs-land.namelist
         sed -i -e "s/XXRDD/${RDD}/g" ufs-land.namelist
         sed -i -e "s/XXRHH/${RHH}/g" ufs-land.namelist
-        NN="`printf %02i $n_ens`" # ensemble number 
+        NN="`printf %02i $n_ens`" # ensemble number  # update this to 03 (in forcing file)
         sed -i -e "s/XXMEM/${NN}/g" ufs-land.namelist
 
         # submit model
@@ -331,7 +322,7 @@ while [ $date_count -lt $dates_per_job ]; do
     #    fi
 
         if [[ -e ${MEM_WORKDIR}/restarts/vector/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then 
-           cp ${MEM_WORKDIR}/restarts/vector/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
+           cp ${MEM_WORKDIR}/restarts/vector/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
         else 
            echo "Something is wrong, probably the model, exiting" 
            exit
