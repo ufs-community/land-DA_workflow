@@ -4,4 +4,3 @@ log_noahmp.*
 *.namelist
 exp_out/*
 analdates.sh
-analdates.sh_

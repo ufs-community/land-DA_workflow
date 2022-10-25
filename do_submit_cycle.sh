@@ -65,8 +65,8 @@ fi
 mkdir ${WORKDIR}
 
 #outdir for model
-if [[ ! -e ${OUTDIR}/modl ]]; then
-    mkdir -p  ${OUTDIR}/modl
+if [[ ! -e ${OUTDIR} ]]; then
+    mkdir -p  ${OUTDIR}
 fi 
 
 ###############################
@@ -77,7 +77,7 @@ while [ $n_ens -le $ensemble_size ]; do
     echo 'in ensemble loop, '$n_ens
 
     if [ $ensemble_size == 1 ]; then 
-        mem_ens="" 
+        mem_ens="mem000" 
     else 
         mem_ens="mem`printf %03i $n_ens`"
     fi 
@@ -89,7 +89,7 @@ while [ $n_ens -le $ensemble_size ]; do
     fi
 
     # ensemble outdir (model only)
-    MEM_MODL_OUTDIR=${OUTDIR}/modl/${mem_ens}
+    MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
     if [[ ! -e $MEM_MODL_OUTDIR ]]; then  #ensemble outdir
         mkdir -p $MEM_MODL_OUTDIR
     fi 
@@ -103,8 +103,8 @@ while [ $n_ens -le $ensemble_size ]; do
     ln -sf ${MEM_MODL_OUTDIR}/noahmp ${MEM_WORKDIR}/noahmp_output 
 
     # copy ICS into restarts, if needed 
-    rst_in=${ICSDIR}/output/modl/${mem_ens}/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
-    rst_in_single=${ICSDIR}/output/modl/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+    rst_in=${ICSDIR}/output/${mem_ens}/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+    rst_in_single=${ICSDIR}/output/mem000/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
     rst_out=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
  
     # if restart not in experiment out directory, copy the restarts from the ICSDIR
