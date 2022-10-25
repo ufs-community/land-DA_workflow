@@ -5,9 +5,7 @@
 
 # exp_name= # experiment name
 # THISDATE= # date YYYYMMDDHH
-# WORKDIR=/scratch2/BMC/gsienkf/${USER}/workdir/  # temporary directory where experiment is run from
 # OUTDIR=/scratch2/BMC/gsienkf/${USER}/cycle_land/${exp_name}/  # temporary directory where experiment is run from
-# RSTRDIR= #  if not specified, is constructed from $WORKDIR
 # RES= #FV3 resolution
 #export TPATH=
 #export TSTUB= # file stub for orography files in $TPATH
@@ -15,6 +13,8 @@
 
 # directory where do_landDA.sh script is 
 LANDDADIR=${CYCLEDIR}/DA_update/ # if calling from submit_cycle.sh
+JEDIWORKDIR=${WORKDIR}/jedi/ # temporary directory where experiment is run from
+RSTRDIR=${WORKDIR} 
 
 ############################
 # DA options

@@ -10,7 +10,7 @@
   restart_frequency_s = XXFREQ
   restart_simulation  = .true.
   restart_date        = "XXYYYY-XXMM-XXDD XXHH:00:00"
-  restart_dir         = "./restarts/vector/"
+  restart_dir         = "./"
 
   timestep_seconds = 3600
 

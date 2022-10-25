@@ -26,11 +26,11 @@
   
 ! Location of tile restart files (tile2vector direction)
 
-  tile_restart_path = "./restarts/tile/"
+  tile_restart_path = "./"
   
 ! Path for converted files; if same as tile/vector path, files may be overwritten
 
-  output_path = "./restarts/vector/"
+  output_path = "./"
 
 !------------------- only perturbation mapping -------------------
 ! layout, options: 1x4, 4x1, 2x2, an input settings for generating the perturbation file

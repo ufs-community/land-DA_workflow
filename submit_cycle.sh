@@ -64,9 +64,10 @@ RHH=$(( $FCSTHR % 24 ))
 # set up directories
 
 #workdir
-if [[ ! -e ${WORKDIR} ]]; then 
-    mkdir ${WORKDIR}
+if [[ -e ${WORKDIR} ]]; then 
+    rm -rf ${WORKDIR}
 fi
+mkdir ${WORKDIR}
 
 #outdir for model
 if [[ ! -e ${OUTDIR}/modl ]]; then
@@ -93,13 +94,6 @@ while [ $n_ens -le $ensemble_size ]; do
       mkdir $MEM_WORKDIR
     fi
 
-    # workdir subdirs
-    if [[ ! -e ${MEM_WORKDIR}/restarts ]]; then
-        mkdir ${MEM_WORKDIR}/restarts
-        mkdir ${MEM_WORKDIR}/restarts/tile
-        mkdir ${MEM_WORKDIR}/restarts/vector
-    fi 
-
     # ensemble outdir (model only)
     MEM_MODL_OUTDIR=${OUTDIR}/modl/${mem_ens}
     if [[ ! -e $MEM_MODL_OUTDIR ]]; then  #ensemble outdir
@@ -111,8 +105,8 @@ while [ $n_ens -le $ensemble_size ]; do
         mkdir -p ${MEM_MODL_OUTDIR}/restarts/vector/ 
         mkdir ${MEM_MODL_OUTDIR}/restarts/tile/
         mkdir -p ${MEM_MODL_OUTDIR}/noahmp/
-        ln -s ${MEM_MODL_OUTDIR}/noahmp/ ${MEM_WORKDIR}/noahmp_output 
     fi
+    ln -sf ${MEM_MODL_OUTDIR}/noahmp ${MEM_WORKDIR}/noahmp_output 
 
     # copy ICS into restarts, if needed 
     rst_in=${ICSDIR}/output/modl/${mem_ens}/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
@@ -190,7 +184,7 @@ while [ $date_count -lt $dates_per_job ]; do
 
         # copy restarts into work directory
         rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
-        rst_out=${MEM_WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+        rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
         cp $rst_in $rst_out 
 
         n_ens=$((n_ens+1))
@@ -262,7 +256,7 @@ while [ $date_count -lt $dates_per_job ]; do
 
         # CSDtodo - every ensemble member 
         # save analysis restart
-        cp ${WORKDIR}/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${OUTDIR}/modl/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+        cp ${WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${OUTDIR}/modl/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
 
     fi # DA step
 
@@ -286,8 +280,8 @@ while [ $date_count -lt $dates_per_job ]; do
             mem_ens="mem`printf %03i $n_ens`"
         fi 
 
-        MEM_WORKDIR=${WORKDIR}/${mem_ens}/
-        MEM_MODL_OUTDIR=${OUTDIR}/modl/${mem_ens}/ # for model only
+        MEM_WORKDIR=${WORKDIR}/${mem_ens}
+        MEM_MODL_OUTDIR=${OUTDIR}/modl/${mem_ens} # for model only
 
         cd $MEM_WORKDIR
 
@@ -321,8 +315,8 @@ while [ $date_count -lt $dates_per_job ]; do
     #        exit 
     #    fi
 
-        if [[ -e ${MEM_WORKDIR}/restarts/vector/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then 
-           cp ${MEM_WORKDIR}/restarts/vector/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
+        if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then 
+           cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
         else 
            echo "Something is wrong, probably the model, exiting" 
            exit
