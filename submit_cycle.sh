@@ -10,137 +10,15 @@
 #SBATCH -e err_noahmp.%j.err
 
 ############################
-# load config file 
-
-if [[ $# -gt 0 ]]; then 
-    config_file=$1
-else
-    config_file=settings
-fi
-
-echo "reading cycle settings from $config_file"
-source $config_file
-
-KEEPWORKDIR="YES"
-
-############################
-# load modules 
-
-source cycle_mods_bash
-export CYCLEDIR=$(pwd) 
-
-############################
-# set executables
-
-vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
-LSMexec=${CYCLEDIR}/ufs-land-driver/run/ufsLand.exe 
-DADIR=${CYCLEDIR}/DA_update/
-DAscript=${DADIR}/do_landDA.sh
-
-analdate=${CYCLEDIR}/analdates.sh
-incdate=${CYCLEDIR}/incdate.sh
-
-############################
-# read in dates  
-
-source ${analdate}
-
-logfile=${CYCLEDIR}/cycle.log
-touch $logfile
-echo "***************************************" >> $logfile
-echo "cycling from $STARTDATE to $ENDDATE" >> $logfile
-
-sYYYY=`echo $STARTDATE | cut -c1-4`
-sMM=`echo $STARTDATE | cut -c5-6`
-sDD=`echo $STARTDATE | cut -c7-8`
-sHH=`echo $STARTDATE | cut -c9-10`
-
-# compute the restart frequency, run_days and run_hours
-FREQ=$(( 3600 * $FCSTHR )) 
-RDD=$(( $FCSTHR / 24 )) 
-RHH=$(( $FCSTHR % 24 )) 
-
-############################
-# set up directories
-
-#workdir
-if [[ -e ${WORKDIR} ]]; then 
-    rm -rf ${WORKDIR}
-fi
-mkdir ${WORKDIR}
-
-#outdir for model
-if [[ ! -e ${OUTDIR}/modl ]]; then
-    mkdir -p  ${OUTDIR}/modl
-fi 
-
-###############################
-# create ensemble dirs and copy in ICS if needed
-echo 'ensemble size, '$ensemble_size 
-
-n_ens=1
-while [ $n_ens -le $ensemble_size ]; do
-    echo 'in ensemble loop, '$n_ens
-
-    if [ $ensemble_size == 1 ]; then 
-        mem_ens="" 
-    else 
-        mem_ens="mem`printf %03i $n_ens`"
-    fi 
-
-    # ensemble workdir
-    MEM_WORKDIR=${WORKDIR}/${mem_ens}
-    if [[ ! -e $MEM_WORKDIR ]]; then
-      mkdir $MEM_WORKDIR
-    fi
-
-    # ensemble outdir (model only)
-    MEM_MODL_OUTDIR=${OUTDIR}/modl/${mem_ens}
-    if [[ ! -e $MEM_MODL_OUTDIR ]]; then  #ensemble outdir
-        mkdir -p $MEM_MODL_OUTDIR
-    fi 
-    
-    # outdir subdirs
-    if [[ ! -e ${MEM_MODL_OUTDIR}/restarts/ ]]; then  # subdirectories
-        mkdir -p ${MEM_MODL_OUTDIR}/restarts/vector/ 
-        mkdir ${MEM_MODL_OUTDIR}/restarts/tile/
-        mkdir -p ${MEM_MODL_OUTDIR}/noahmp/
-    fi
-    ln -sf ${MEM_MODL_OUTDIR}/noahmp ${MEM_WORKDIR}/noahmp_output 
-
-    # copy ICS into restarts, if needed 
-    rst_in=${ICSDIR}/output/modl/${mem_ens}/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
-    rst_in_single=${ICSDIR}/output/modl/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
-    rst_out=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
- 
-    # if restart not in experiment out directory, copy the restarts from the ICSDIR
-    if [[ ! -e ${rst_out} ]]; then 
-        echo "Looking for ICS: ${rst_in}"
-        # if ensemble of restarts exists in ICSDIR, use these. Otherwise, use single restart.
-        if [[ -e ${rst_in} ]]; then
-           echo "ICS found, copying" 
-           cp ${rst_in} ${rst_out}
-        else  # use non-ensemble restart
-           echo "ICS not found. Checking for ensemble started from single member: ${rst_in_single}"
-           if [[ -e ${rst_in_single} ]]; then
-               echo "ICS found, copying" 
-               cp ${rst_in_single} ${rst_out}
-           else 
-               echo "ICS not found. Exiting" 
-               exit 10 
-           fi 
-        fi 
-    fi 
-
-    n_ens=$((n_ens+1))
-
-done # n_ens < ensemble_size
-
-############################
 # loop over time steps
+
+source $analdate 
 
 THISDATE=$STARTDATE
 date_count=0
+
+echo 'CSD start date'$STARTDATE
+echo 'CSD this date'$THISDATE
 
 while [ $date_count -lt $dates_per_job ]; do
 
@@ -181,6 +59,7 @@ while [ $date_count -lt $dates_per_job ]; do
         fi 
 
         MEM_WORKDIR=${WORKDIR}/${mem_ens}
+        MEM_MODL_OUTDIR=${OUTDIR}/modl/${mem_ens}
 
         # copy restarts into work directory
         rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
@@ -340,6 +219,6 @@ if [ $THISDATE -lt $ENDDATE ]; then
     echo "STARTDATE=${THISDATE}" > ${analdate}
     echo "ENDDATE=${ENDDATE}" >> ${analdate}
     cd ${CYCLEDIR}
-    sbatch ${CYCLEDIR}/submit_cycle.sh $1
+    sbatch ${CYCLEDIR}/submit_cycle.sh
 fi
 
