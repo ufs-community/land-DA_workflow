@@ -32,7 +32,7 @@ COMPILING and TESTING.
 
 2c.
 > cd DA_update
-  then follow instructions in README.
+> build_all.sh 
 
 3. Run the test.
 
@@ -40,7 +40,7 @@ COMPILING and TESTING.
  create OUTDIR
  in submit_cycle.sh change #SBATCH --account=gsienkf to point to your own account.
 
-> submit_test.sh 
+> do_submit_test.sh 
 
 Once completed:
 
@@ -52,17 +52,17 @@ RUNNING YOUR OWN EXPERIMENTS
 
 2. Set start and end dates in analdates.sh 
 
-3. Make sure there is a restart in your ICSDIR, and that the start date in analdates.sh match the restart. 
+3. Make sure there is a restart in your ICSDIR.
 
 restart filename example:ufs_land_restart.2015-09-02_18-00-00.nc 
 ICSDIR points to the experiment directory with the restart. If creating a new dircetory, the structure is: 
-$ICSDIR/output/modl/restarts/vector/ufs_land_restart.2015-09-02_18-00-00.nc 
+$ICSDIR/output/mem000/restarts/vector/ufs_land_restart.2015-09-02_18-00-00.nc 
 
 4. in submit_cycle.sh change #SBATCH --account=gsienkf to point to your own account.
 
 5. Submit your job 
 
->sbatch submit_cycle.sh your-settings-filename
+>do_submit_cycle.sh your-settings-filename
 
 #############################
 
