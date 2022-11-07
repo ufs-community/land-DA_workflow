@@ -17,7 +17,7 @@ source $analdate
 THISDATE=$STARTDATE
 date_count=0
 
-while [ $date_count -lt $dates_per_job ]; do
+while [ $date_count -lt $cycles_per_job ]; do
 
     if [ $THISDATE -ge $ENDDATE ]; then 
         echo "All done, at date ${THISDATE}"  >> $logfile
@@ -132,10 +132,10 @@ while [ $date_count -lt $dates_per_job ]; do
 
         if [ $ensemble_size == 1 ]; then 
             mem_ens="mem000" 
-            NN=""
+            NNN="000"
         else 
             mem_ens="mem`printf %03i $n_ens`"
-            NN="`printf %02i $n_ens`" # forcing ensemble number
+            NNN="`printf %03i $n_ens`" 
         fi 
 
         MEM_WORKDIR=${WORKDIR}/${mem_ens}
@@ -180,19 +180,40 @@ while [ $date_count -lt $dates_per_job ]; do
         sed -i -e "s/XXFREQ/${FREQ}/g" ufs-land.namelist
         sed -i -e "s/XXRDD/${RDD}/g" ufs-land.namelist
         sed -i -e "s/XXRHH/${RHH}/g" ufs-land.namelist
-        sed -i -e "s/XXMEM/${NN}/g" ufs-land.namelist
+        sed -i -e "s/XXMEM/${NNN}/g" ufs-land.namelist
 
         # submit model
         echo '************************************************'
-        echo 'calling model' 
+        echo "calling model for member ${NNN}"
         echo $MEM_WORKDIR
-        $LSMexec
+        srun -n 1 $LSMexec 
+        #PID=$!
+        #$LSMexec
 
         # no error codes on exit from model, check for restart below instead
         #    if [[ $? != 0 ]]; then
         #        echo "model failed"
         #        exit 
         #    fi
+
+        n_ens=$((n_ens+1))
+    done # n_ens < ensemble_size
+
+    # wait for model(s) to complete.
+    wait 
+
+    # check model ouput
+    n_ens=1
+    while [ $n_ens -le $ensemble_size ]; do
+
+        if [ $ensemble_size == 1 ]; then 
+            mem_ens="mem000" 
+        else 
+            mem_ens="mem`printf %03i $n_ens`"
+        fi 
+
+        MEM_WORKDIR=${WORKDIR}/${mem_ens}
+        MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
 
         if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then 
            cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
@@ -209,7 +230,7 @@ while [ $date_count -lt $dates_per_job ]; do
     THISDATE=$NEXTDATE
     date_count=$((date_count+1))
 
-done #  date_count -lt dates_per_job
+done #  date_count -lt cycles_per_job
 
 
 ############################

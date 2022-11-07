@@ -30,16 +30,15 @@ export TSTUB="oro_C96.mx100" # file stub for orography files in $TPATH
 
 # number of cycles to submit in a single job
 # on hera in the debug queue 20 is a good number.
-export dates_per_job=1
+export cycles_per_job=1
 
 # directory with initial conditions
 # can find some here:/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/single
 export ICSDIR=/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/test_ICS/
 
 # namelist for do_landDA.sh
-# set to empty to not call do_landDA.sh
+# set to "openloop" to not call do_landDA.sh
 export DA_config="settings_DA_test"
-#export DA_config="" # do not call.
 
 # if want different DA at different times, list here. 
 export DA_config00=${DA_config} 
