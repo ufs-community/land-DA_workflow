@@ -103,8 +103,8 @@ while [ $n_ens -le $ensemble_size ]; do
     ln -sf ${MEM_MODL_OUTDIR}/noahmp ${MEM_WORKDIR}/noahmp_output 
 
     # copy ICS into restarts, if needed 
-    rst_in=${ICSDIR}/output/${mem_ens}/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
-    rst_in_single=${ICSDIR}/output/mem000/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+    rst_in=${ICSDIR}/${mem_ens}/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+    rst_in_single=${ICSDIR}/mem000/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
     rst_out=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
  
     # if restart not in experiment out directory, copy the restarts from the ICSDIR
