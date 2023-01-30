@@ -243,7 +243,11 @@ data can be provided in netCDF format.
 The static file is pre-staged and available to download here:
 
 Table 2.1 Configuration variables specified in the static file
+<<<<<<< HEAD
 (“ufs-land_C96_static_fields.nc”)
+=======
+(“:mark:`ufs-land_C96_static_fields.nc”)`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +---------------------------+------------------------------------------+
 | **Configuration           | **Description**                          |
@@ -310,7 +314,11 @@ in netCDF format.
 The initial condition file is pre-staged and available to download here:
 
 Table 2.2 Configuration variables specified in the static file
+<<<<<<< HEAD
 ("ufs-land_C96_static_fields.nc”)
+=======
+(“:mark:`ufs-land_C96_static_fields.nc”)`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +-----------------------------+----------------------------------------+
 | **Configuration Variables** | **Units**                              |
@@ -356,10 +364,17 @@ static_file : specifies the UFS Land static file.
 
 init_file : specifies the UFS Land initial condition file.
 
+<<<<<<< HEAD
 forcing_dir : specifies the UFS Land forcing directory.
 
 separate_output : specifies whether to enable the separate output. 
 Acceptable values are:
+=======
+forcing_dir :mark:`: specifies the UFS Land forcing directory.`
+
+   separate_output :mark:`: specifies whether to enable the separate
+   output. Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +-----------------+----------------------------------------------------+
 | **Value**       | **Description**                                    |
@@ -369,6 +384,7 @@ Acceptable values are:
 | true            | enable                                             |
 +-----------------+----------------------------------------------------+
 
+<<<<<<< HEAD
 output_dir : specifies the output directory.
 
 restart_frequency_s : specifies the restart frequency (second)
@@ -376,6 +392,15 @@ restart_frequency_s : specifies the restart frequency (second)
 
 restart_simulation : specifies whether to enable the restart
    simulation. Acceptable values are:
+=======
+output_dir :mark:`: specifies the output directory.`
+
+   restart_frequency_s:mark:`: specifies the restart frequency (second)
+   for the UFS Land model.`
+
+   restart_simulation:mark:`: specifies whether to enable the restart
+   simulation. Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +-----------------+----------------------------------------------------+
 | **Value**       | **Description**                                    |
@@ -387,6 +412,7 @@ restart_simulation : specifies whether to enable the restart
 
 ..
 
+<<<<<<< HEAD
 restart_date : specifies the restart date. The form is
    YYYY-MM-DD HH:MM:SS, where YYYY is a 4-digit year, MM is a 2-digit
    month, DD is a 2-digit day, HH is a 2-digit hour, MM is a 2-digit
@@ -397,10 +423,23 @@ restart_dir : specifies the restart directory.
 timestep_seconds : specifies the timestep in seconds.
 
 simulation_start : specifies the simulation start time. The
+=======
+   restart_date :mark:`: specifies the restart date. The form is
+   YYYY-MM-DD HH:MM:SS, where YYYY is a 4-digit year, MM is a 2-digit
+   month, DD is a 2-digit day, HH is a 2-digit hour, MM is a 2-digit
+   minute, and SS is a 2-digit second.`
+
+   restart_dir :mark:`: specifies the restart directory.`
+
+   timestep_seconds :mark:`: specifies the` :mark:`timestep in seconds.`
+
+   simulation_start :mark:`: specifies the simulation start time. The
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
    form is YYYY-MM-DD HH:MM:SS, where YYYY is a 4-digit year, MM is a
    2-digit month, DD is a 2-digit day, HH is a 2-digit hour, MM is a
    2-digit minute, and SS is a 2-digit second.`
 
+<<<<<<< HEAD
 simulation_end : specifies the simulation end time. The form
    is YYYY-MM-DD HH:MM:SS, where YYYY is a 4-digit year, MM is a 2-digit
    month, DD is a 2-digit day, HH is a 2-digit hour, MM is a 2-digit
@@ -420,6 +459,27 @@ run_timesteps : specifies the number of timesteps to run.
 
    land_model : specifies which land surface model to use.
    Acceptable values are:
+=======
+   simulation_end :mark:`: specifies the simulation end time. The form
+   is YYYY-MM-DD HH:MM:SS, where YYYY is a 4-digit year, MM is a 2-digit
+   month, DD is a 2-digit day, HH is a 2-digit hour, MM is a 2-digit
+   minute, and SS is a 2-digit second.`
+
+run_days :mark:`: specifies the number of days to run.`
+
+run_hours :mark:`: specifies the number of hours to run.`
+
+run_minutes :mark:`: specifies the number of minutes to run.`
+
+run_seconds :mark:`: specifies the number of seconds to run.`
+
+run_timesteps :mark:`: specifies the number of timesteps to run.`
+
+**Land model option**
+
+   land_model : :mark:`specifies which land surface model to use.
+   Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +-----------------+----------------------------------------------------+
 | **Value**       | **Description**                                    |
@@ -431,6 +491,7 @@ run_timesteps : specifies the number of timesteps to run.
 
 **Structure**
 
+<<<<<<< HEAD
 num_soil_levels : specifies the number of soil levels.`
 
 forcing_height : specifies the forcing height in meters.`
@@ -447,12 +508,31 @@ soil_level_nodes : specifies the soil level centroids from the
 
 dynamic_vegetation_option : specifies the dynamic vegetation
    model option. Acceptable values are:
+=======
+num_soil_levels :mark:`: specifies the number of soil levels.`
+
+forcing_height :mark:`: specifies the forcing height in meters.`
+
+**Soil setup**
+
+   soil_level_thickness :mark:`: specifies the thickness (in meters) of
+   each of the soil layers (top layer to bottom layer).`
+
+   soil_level_nodes :mark:`: specifies the soil level centroids from the
+   surface (in meters).`
+
+**Noah-MP.4.0.1 options**
+
+   dynamic_vegetation_option :mark:`: specifies the dynamic vegetation
+   model option. Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
 | 1              | off (use table LAI; use FVEG=SHDFAC from input)     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | 2              | on (dynamic vegetation; must use Ball-Berry         |
 |                | canopy option)                                      |
 +----------------+-----------------------------------------------------+
@@ -475,6 +555,30 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 +----------------+-----------------------------------------------------+
 | 10             | crop model on (use maximum vegetation               |
 |                | fraction)                                           |
+=======
+| 2              | On (dynamic vegetation:mark:`; must use Ball-Berry  |
+|                | canopy option)`                                     |
++----------------+-----------------------------------------------------+
+| 3              | Off (use table LAI; calculate FVEG)                 |
++----------------+-----------------------------------------------------+
+| 4              | Off (use table LAI; use maximum vegetation          |
+|                | fraction)                                           |
++----------------+-----------------------------------------------------+
+| 5              | :mark:`on (use maximum vegetation fraction)`        |
++----------------+-----------------------------------------------------+
+| 6              | :mark:`on (use FVEG = SHDFAC from input)`           |
++----------------+-----------------------------------------------------+
+| 7              | :mark:`off (use input LAI; use FVEG = SHDFAC from   |
+|                | input)`                                             |
++----------------+-----------------------------------------------------+
+| 8              | :mark:`off (use input LAI; calculate FVEG)`         |
++----------------+-----------------------------------------------------+
+| 9              | :mark:`off (use input LAI; use maximum vegetation   |
+|                | fraction)`                                          |
++----------------+-----------------------------------------------------+
+| 10             | :mark:`crop model on (use maximum vegetation        |
+|                | fraction)`                                          |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 ..
@@ -485,8 +589,13 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 
    SHDFAC: greenness vegetation (shaded) fraction
 
+<<<<<<< HEAD
    canopy_stomatal_resistance_option : specifies the canopy
    stomatal resistance option. Acceptable values are:
+=======
+   canopy_stomatal_resistance_option :mark:`: specifies the canopy
+   stomatal resistance option. Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
@@ -498,8 +607,13 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 
 ..
 
+<<<<<<< HEAD
    soil_wetness_option : specifies the soil moisture factor for
    the stomatal resistance option. Acceptable values are:
+=======
+   soil_wetness_option :mark:`: specifies the soil moisture factor for
+   the stomatal resistance option. Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
@@ -513,12 +627,18 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 
 ..
 
+<<<<<<< HEAD
    runoff_option : specifies the runoff option. Acceptable values
    are:
+=======
+   runoff_option :mark:`: specifies the runoff option. Acceptable values
+   are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | 1              | SIMGM: TOPMODEL with groundwater (Niu et al.        |
 |                | 2007 JGR)`                                          |
 +----------------+-----------------------------------------------------+
@@ -534,57 +654,115 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 | 5              | Miguez-Macho&Fan groundwater scheme                 |
 |                | (Miguez-Macho et al. 2007 JGR; Fan et al. 2007      |
 |                | JGR)                                                |
+=======
+| 1              | :mark:`SIMGM: TOPMODEL with groundwater (Niu et al. |
+|                | 2007 JGR)`                                          |
++----------------+-----------------------------------------------------+
+| 2              | :mark:`SIMTOP: TOPMODEL with an equilibrium water   |
+|                | table (Niu et al. 2005 JGR)`                        |
++----------------+-----------------------------------------------------+
+| 3              | :mark:`Noah original surface and subsurface runoff  |
+|                | (free drainage) (Schaake 1996)`                     |
++----------------+-----------------------------------------------------+
+| 4              | :mark:`BATS surface and subsurface runoff (free     |
+|                | drainage)`                                          |
++----------------+-----------------------------------------------------+
+| 5              | :mark:`Miguez-Macho&Fan groundwater scheme          |
+|                | (Miguez-Macho et al. 2007 JGR; Fan et al. 2007      |
+|                | JGR)`                                               |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 ..
 
+<<<<<<< HEAD
    surface_exchange_option : specifies the surface layer drag
    coefficient option. Acceptable values are:
+=======
+   surface_exchange_option :mark:`: specifies the surface layer drag
+   coefficient option. Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | 1              | Monin-Obukhov                                       |
 +----------------+-----------------------------------------------------+
 | 2              | original Noah (Chen 1997)                           |
+=======
+| 1              | :mark:`Monin-Obukhov`                               |
++----------------+-----------------------------------------------------+
+| 2              | :mark:`original Noah (Chen 1997)`                   |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 ..
 
+<<<<<<< HEAD
    supercooled_soilwater_option : specifies the supercooled
    liquid water option. Acceptable values are:
+=======
+   supercooled_soilwater_option :mark:`: specifies the supercooled
+   liquid water option. Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | 1              | no iteration (Niu and Yang, 2006 JHM)               |
 +----------------+-----------------------------------------------------+
 | 2              | Koren’s iteration (1999)                            |
+=======
+| 1              | :mark:`no iteration (Niu and Yang, 2006 JHM)`       |
++----------------+-----------------------------------------------------+
+| 2              | :mark:`Koren’s iteration (1999)`                    |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 ..
 
+<<<<<<< HEAD
    frozen_soil_adjust_option : specifies the frozen soil
    permeability option. Acceptable values are:
+=======
+   frozen_soil_adjust_option :mark:`: specifies the frozen soil
+   permeability option. Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | 1              | linear effects, more permeable (Niu and             |
 |                | Yang, 2006, JHM)                                    |
 +----------------+-----------------------------------------------------+
 | 2              | nonlinear effects, less permeable (Koren            |
 |                | 1999)                                               |
+=======
+| 1              | :mark:`linear effects, more permeable (Niu and      |
+|                | Yang, 2006, JHM)`                                   |
++----------------+-----------------------------------------------------+
+| 2              | :mark:`nonlinear effects, less permeable (Koren     |
+|                | 1999)`                                              |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 ..
 
+<<<<<<< HEAD
    radiative_transfer_option : specifies the radiation transfer
    option. Acceptable values are:
+=======
+   radiative_transfer_option :mark:`: specifies the radiation transfer
+   option. Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | 1              | modified two-stream (gap = F(solar angle, 3D        |
 |                | structure...)<1-FVEG)                               |
 +----------------+-----------------------------------------------------+
@@ -592,29 +770,56 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 +----------------+-----------------------------------------------------+
 | 3              | two-stream applied to a vegetated fraction          |
 |                | (gap=1-FVEG)                                        |
+=======
+| 1              | :mark:`modified two-stream (gap = F(solar angle, 3D |
+|                | structure …​)<1-FVEG)`                               |
++----------------+-----------------------------------------------------+
+| 2              | :mark:`two-stream applied to grid-cell (gap = 0)`   |
++----------------+-----------------------------------------------------+
+| 3              | :mark:`two-stream applied to a vegetated fraction   |
+|                | (gap=1-FVEG)`                                       |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 ..
 
+<<<<<<< HEAD
    snow_albedo_option : specifies the snow surface albedo option.
    Acceptable values are:
+=======
+   :mark:`snow_albedo_option : specifies the snow surface albedo option.
+   Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | 1              | BATS                                                |
 +----------------+-----------------------------------------------------+
 | 2              | CLASS                                               |
+=======
+| 1              | :mark:`BATS`                                        |
++----------------+-----------------------------------------------------+
+| 2              | :mark:`CLASS`                                       |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 ..
 
+<<<<<<< HEAD
    precip_partition_option : specifies the option for partitioning 
    precipitation into rainfall and snowfall. Acceptable values are:
+=======
+   precip_partition_option :mark:`: specifies the option for
+   partitioning precipitation into rainfall and snowfall. Acceptable
+   values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | 1              | Jordan (1991)                                       |
 +----------------+-----------------------------------------------------+
 | 2              | BATS: when SFCTMP<TFRZ+2.2                          |
@@ -622,38 +827,74 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 | 3              | Noah: when SFCTMP<TFRZ                              |
 +----------------+-----------------------------------------------------+
 | 4              | Use WRF microphysics output                         |
+=======
+| 1              | :mark:`Jordan (1991)`                               |
++----------------+-----------------------------------------------------+
+| 2              | :mark:`BATS: when SFCTMP<TFRZ+2.2`                  |
++----------------+-----------------------------------------------------+
+| 3              | :mark:`Noah: when SFCTMP<TFRZ`                      |
++----------------+-----------------------------------------------------+
+| 4              | :mark:`Use WRF microphysics output`                 |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 ..
 
+<<<<<<< HEAD
    SFCTMP : surface air temperature
 
    TFRZ : freezing/melting point (K)
 
    soil_temp_lower_bdy_option : specifies the lower boundary
    condition of soil temperature option. Acceptable values are:
+=======
+   :mark:`SFCTMP: surface air temperature`
+
+   :mark:`TFRZ: freezing/melting point (K)`
+
+   soil_temp_lower_bdy_option :mark:`: specifies the lower boundary
+   condition of soil temperature option. Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | 1              | zero heat flux from the bottom (ZBOT and TBOT not   |
 |                | used)                                               |
 +----------------+-----------------------------------------------------+
 | 2              | TBOT at ZBOT (8m) read from a file (original Noah)  |                          
+=======
+| 1              | :mark:`zero heat flux from the bottom (ZBOT and     |
+|                | TBOT not used)`                                     |
++----------------+-----------------------------------------------------+
+| 2              | :mark:`TBOT at ZBOT (8m) read from a file (original |
+|                | Noah)`                                              |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 ..
 
+<<<<<<< HEAD
    TBOT : lower boundary soil temperature [K]
 
    ZBOT : depth[m] of lower boundary soil temperature (TBOT)
 
    soil_temp_time_scheme_option : specifies the snow and soil
    temperature time scheme. Acceptable values are:
+=======
+   :mark:`TBOT: lower boundary soil temperature [K]`
+
+:mark:`ZBOT: depth[m] of lower boundary soil temperature (TBOT)`
+
+   soil_temp_time_scheme_option :mark:`: specifies the snow and soil
+   temperature time scheme. Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | 1              | semi-implicit; flux top boundary condition          |
 +----------------+-----------------------------------------------------+
 | 2              | fully implicit (original Noah); temperature top     |
@@ -661,20 +902,39 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 +----------------+-----------------------------------------------------+
 | 3              | same as 1, but FSNO for TS calculation (generally   |
 |                | improves snow; v3.7)                                |
+=======
+| 1              | :mark:`semi-implicit; flux top boundary condition`  |
++----------------+-----------------------------------------------------+
+| 2              | :mark:`fully implicit (original Noah); temperature  |
+|                | top boundary condition`                             |
++----------------+-----------------------------------------------------+
+| 3              | :mark:`same as 1, but FSNO for TS calculation       |
+|                | (generally improves snow; v3.7)`                    |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 ..
 
+<<<<<<< HEAD
    FSNO: fraction of surface covered with snow
 
    TS: surface temperature
 
    surface_evap_resistance_option : specifies the surface resistance
    option. Acceptable values are:
+=======
+   :mark:`FSNO: fraction of surface covered with snow`
+
+   :mark:`TS: surface temperature`
+
+   surface_evap_resistance_option : specifies the surface resistance
+   option. :mark:`Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | 1              | Sakaguchi and Zeng, 2009                            |
 +----------------+-----------------------------------------------------+
 | 2              | Sellers (1992)                                      |
@@ -682,30 +942,60 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 | 3              | adjusted Sellers to decrease RSURF for wet soil     |
 +----------------+-----------------------------------------------------+
 | 4              | option 1 for non-snow; rsurf = rsurf_snow for snow  |
+=======
+| 1              | :mark:`Sakaguchi and Zeng, 2009`                    |
++----------------+-----------------------------------------------------+
+| 2              | :mark:`Sellers (1992)`                              |
++----------------+-----------------------------------------------------+
+| 3              | adjusted Sellers to decrease RSURF for wet soil     |
++----------------+-----------------------------------------------------+
+| 4              | :mark:`option 1 for non-snow; rsurf = rsurf_snow    |
+|                | for snow (set in MPTABLE); AD v3.8`                 |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 ..
 
    rsurf: ground surface resistance (s/m)
 
+<<<<<<< HEAD
    glacier_option : specifies the glacier model option. Acceptable
    values are:
+=======
+   glacier_option :mark:`: specifies the glacier model option.
+   Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | 1              | include phase change of ice                         |
 +----------------+-----------------------------------------------------+
 | 2              | simple (ice treatment more like original Noah)      |
+=======
+| 1              | :mark:`include phase change of ice`                 |
++----------------+-----------------------------------------------------+
+| 2              | :mark:`simple (ice treatment more like original     |
+|                | Noah)`                                              |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 **Forcing**
 
+<<<<<<< HEAD
    forcing_timestep_seconds : specifies the timestep of forcing
    in seconds.
 
    forcing_type : specifies the forcing type option. Acceptable
    values are:
+=======
+   forcing_timestep_seconds :mark:`: specifies the timestep of forcing
+   in seconds.`
+
+   forcing_type :mark:`: specifies the forcing type option. Acceptable
+   values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
@@ -721,12 +1011,18 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 
 ..
 
+<<<<<<< HEAD
    forcing_filename : specifies the forcing file name. Acceptable
    values are:
+=======
+   forcing_filename :mark:`: specifies the forcing file name. Acceptable
+   values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | C96_           |                                                     |
 | _GDAS_forcing  |                                                     |
 +----------------+-----------------------------------------------------+
@@ -735,12 +1031,27 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 +----------------+-----------------------------------------------------+
 | C96_GS         |                                                     |
 | WP3_forcing    |                                                     |
+=======
+| :mark:`C96     |                                                     |
+| _GDAS_forcing` |                                                     |
++----------------+-----------------------------------------------------+
+| C96_           |                                                     |
+| GEFS_forcing\_ |                                                     |
++----------------+-----------------------------------------------------+
+| :mark:`C96_GS  |                                                     |
+| WP3_forcing\_` |                                                     |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 ..
 
+<<<<<<< HEAD
    forcing_interp_solar : specifies the interpolation option for
    solar radiation. Acceptable values are:
+=======
+   forcing_interp_solar :mark:`: specifies the interpolation option for
+   solar radiation. Acceptable values are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
@@ -756,6 +1067,7 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 
 ..
 
+<<<<<<< HEAD
    forcing_name_precipitation : specifies the name of forcing
    precipitation.
 
@@ -776,6 +1088,28 @@ dynamic_vegetation_option : specifies the dynamic vegetation
 
    forcing_name_lw_radiation : specifies the name of forcing
    longwave radiation.
+=======
+   forcing_name_precipitation :mark:`: specifies the name of forcing
+   precipitation.`
+
+   forcing_name_temperature :mark:`: specifies the name of forcing
+   temperature.`
+
+   forcing_name_specific_humidity :mark:`: specifies the name of forcing
+   specific-humidity.`
+
+   forcing_name_wind_speed :mark:`: specifies the name of forcing wind
+   speed.`
+
+   forcing_name_pressure :mark:`: specifies the name of forcing surface
+   pressure.`
+
+   forcing_name_sw_radiation :mark:`: specifies the name of forcing
+   shortwave radiation.`
+
+   forcing_name_lw_radiation :mark:`: specifies the name of forcing
+   longwave radiation.`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 Example of ‘ufs-land.namelist.noahmp’ entry
 
@@ -962,8 +1296,13 @@ This section describes the options in the ‘namelist.vector2tile’ file.
 
 **Run setup**
 
+<<<<<<< HEAD
    direction : specifies the conversion option. Acceptable values
    are:
+=======
+   direction : :mark:`specifies the conversion option. Acceptable values
+   are:`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
@@ -972,9 +1311,15 @@ This section describes the options in the ‘namelist.vector2tile’ file.
 +----------------+-----------------------------------------------------+
 | tile2vector    | tile to vector conversion for restart file          |
 +----------------+-----------------------------------------------------+
+<<<<<<< HEAD
 | lndp2tile      | land perturbation to tile                           |
 +----------------+-----------------------------------------------------+
 | lndp2vector    | land perturbation to vector                         |
+=======
+| lndp2tile      | :mark:`land perturbation to tile`                   |
++----------------+-----------------------------------------------------+
+| lndp2vector    | :mark:`land perturbation to vector`                 |
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 +----------------+-----------------------------------------------------+
 
 **FV3 resolution and path to orographic files for restart/perturbation
@@ -990,6 +1335,7 @@ tile_fstub : specifies the name of orographic tile
 
 static_filename : specifies the path for static file.
 
+<<<<<<< HEAD
 vector_restart_path : specifies the location of vector restart file,
    vector to tile direction.
 
@@ -997,11 +1343,24 @@ tile_restart_path : specifies the location of tile restart file, tile
    to vector direction.
 
 output_path : specifies the path for converted files. If this is same
+=======
+   vector_restart_path : specifies the location of vector restart file,
+   vector to tile direction.
+
+   tile_restart_path : specifies the location of tile restart file, tile
+   to vector direction.
+
+   output_path : specifies the path for converted files. If this is same
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
    as tile/vector path, the files may be overwritten.
 
 **This part is only for perturbation mapping**
 
+<<<<<<< HEAD
 lndp_layout : specifies the layout options. Acceptable values are:
+=======
+   lndp_layout : specifies the layout options. Acceptable values are:
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 +----------------+-----------------------------------------------------+
 | **Value**      | **Description**                                     |
@@ -1015,11 +1374,19 @@ lndp_layout : specifies the layout options. Acceptable values are:
 
 ..
 
+<<<<<<< HEAD
 lndp_input_file : specifies the path for input file.
 
 output files : specifies the path for output file
 
 lndp_var_list : specifies the land perturbation variable options.
+=======
+   lndp_input_file : specifies the path for input file.
+
+   output files : specifies the path for output file
+
+   lndp_var_list : specifies the land perturbation variable options.
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
    Acceptable values are:
 
 +----------------+-----------------------------------------------------+
@@ -1106,11 +1473,19 @@ lndp_var_list='vgf','smc'
 References
 ==========
 
+<<<<<<< HEAD
 Chen, F., Mitchell, K., Schaake, J., Xue, Y., Pan, H.L., Koren,
 V., Duan, Q.Y., Ek, M. and Betts, A: Modeling of land surface
 evaporation by four schemes and comparison with FIFE
 observations.Journal of Geophysical Research Atmospheres, 101(D3), 
 pp.7251-7268, 1996.
+=======
+:mark:`Chen, F., Mitchell, K., Schaake, J., Xue, Y., Pan, H.L., Koren,
+V., Duan, Q.Y., Ek, M. and Betts, A., 1996. Modeling of land surface
+evaporation by four schemes and comparison with FIFE
+observations. `\ *Journal of Geophysical Research:
+Atmospheres*\ :mark:`, `\ *101*\ :mark:`(D3), pp.7251-7268.`
+>>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
 
 Ek, M. B., Mitchell, K. and Y. Lin: Implementation of Noah land surface
 model advances in the National Centers for Environmental Prediction
