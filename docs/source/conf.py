@@ -6,10 +6,6 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-<<<<<<< HEAD
-import os
-import sys
-sys.path.insert(0, os.path.abspath('..'))
 =======
 #import os
 #import sys
@@ -34,8 +30,6 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-<<<<<<< HEAD
-html_theme = 'sphinx_rtd_theme'
 =======
 html_theme = 'alabaster'
 >>>>>>> ed25deab1d8b6b894a7f00e374ce0b6e1380646c
