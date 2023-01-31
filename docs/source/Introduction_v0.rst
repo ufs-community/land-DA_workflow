@@ -6,15 +6,14 @@ Introduction
 
 This User's Guide provides guidance for running the Unified Forecast System 
 (:term:`UFS`) land model. This land model is the Multi-Physics (MP) version of the 
-Noah land surface model used by NOAA (the current `UFS land
-model <https://ufscommunity.org/>`__, hereinafter Noah-MP). Its data
-assimilation framework uses the `Joint Effort for Data assimilation Integration
-(JEDI) <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/>`__.
-Noah-MP is tightly coupled with the UFS atmospheric model, and it is
-essentially a module/subroutine within the `Common Community Physics Package
+Noah land surface model used by NOAA (Noah-MP). Its data assimilation framework uses 
+the Joint Effort for Data assimilation Integration (:term:`JEDI`) software.
+Noah-MP is tightly coupled with the atmospheric component of the 
+`UFS Weather Model <https://github.com/ufs-community/ufs-weather-model>`__, 
+and it is essentially a module/subroutine within the `Common Community Physics Package
 (CCPP) <https://dtcenter.org/community-code/common-community-physics-package-ccpp>`__
-repository. The UFS Land DA currently only works with snow data. Thus,
-this version of the User's Guide focuses primarily on this process.
+repository. The UFS Land DA System currently only works with snow data. Thus,
+this User's Guide focuses primarily on the snow DA process.
 
 Code Repositories and Directory Structure
 ==============================================
@@ -22,7 +21,13 @@ Code Repositories and Directory Structure
 Directory Structure
 ----------------------
 
-The main repository for the Land DA System is named ``land-offline_workflow`` and is available on GitHub at https://github.com/NOAA-PSL/land-offline_workflow. Under this repository reside a number of submodules that are nested in specific directories under the parent repository's working directory. When the ``land-offline_workflow`` repository is cloned with the ``--recurse-submodules`` argument, the basic directory structure will be similar to the example below. Files and some directories have been removed for brevity. 
+The main repository for the Land DA System is named ``land-offline_workflow`` 
+and is available on GitHub at https://github.com/NOAA-PSL/land-offline_workflow. 
+Under this repository reside a number of submodules that are nested in specific 
+directories under the parent repository's working directory. 
+When the ``land-offline_workflow`` repository is cloned with the 
+``--recurse-submodules`` argument, the basic directory structure will be similar 
+to the example below. Some files and directories have been removed for brevity. 
 
 .. COMMENT: Update GitHub link later to reflect NOAA-EPIC location.
 
@@ -46,7 +51,8 @@ The main repository for the Land DA System is named ``land-offline_workflow`` an
 Land DA Components
 ---------------------
 
-.. COMMENT: Choose different name for this section?
+:numref:`Table %s <LandDAComponents>` describes the various subrepositories that form
+the UFS Land DA System. 
 
 .. _LandDAComponents:
 
