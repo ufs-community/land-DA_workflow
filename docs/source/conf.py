@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'UFS Offline LandDA'
-copyright = '2023, Rhae Sung Kim'
-author = 'Rhae Sung Kim'
+copyright = ''
+author = ''
 release = '0.0'
 
 # -- General configuration ---------------------------------------------------
