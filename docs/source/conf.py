@@ -6,10 +6,10 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'UFS Offline LandDA'
-copyright = ''
-author = ''
-release = '0.0'
+#project = 'UFS Offline LandDA'
+#copyright = ''
+#author = ''
+#release = '0.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
