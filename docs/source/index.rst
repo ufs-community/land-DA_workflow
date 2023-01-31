@@ -10,7 +10,9 @@ Welcome to UFS Offline LandDA's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   Introduction_v0
+   Model_v0
+   Glossary
 
 Indices and tables
 ==================
