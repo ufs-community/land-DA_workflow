@@ -7,7 +7,8 @@ Welcome to UFS Offline LandDA's documentation!
 ==============================================
 
 .. toctree::
-   :maxdepth: 2
+   :numbered:
+   :maxdepth: 3
    :caption: Contents:
 
    Introduction_v0
