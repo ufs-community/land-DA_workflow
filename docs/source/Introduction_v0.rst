@@ -75,7 +75,7 @@ the UFS Land DA System.
    | ufs-land-driver          | Repository for the UFS Land             | https://github.com/barlage/ufs-land-driver           | 
    |                          | Driver                                  |                                                      |
    +--------------------------+-----------------------------------------+------------------------------------------------------+
-   |   - *ccpp-physics*         | Repository for the Common               | https://github.com/NCAR/ccpp-physics                 |
+   |   - *ccpp-physics*       | Repository for the Common               | https://github.com/NCAR/ccpp-physics                 |
    |                          | Community Physics Package (CCPP)        |                                                      |
    |                          |                                         |                                                      |
    +--------------------------+-----------------------------------------+------------------------------------------------------+
