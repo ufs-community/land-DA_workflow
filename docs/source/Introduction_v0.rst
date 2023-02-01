@@ -58,16 +58,15 @@ History of Noah MP
 --------------------
 
 Noah is a land surface model (LSM) that has evolved through community
-efforts for pursuing and refining a modern-era LSM suitable for use in
+efforts to pursue and refine a modern-era LSM suitable for use in the
 National Centers for Environmental Prediction (NCEP) operational weather
-and climate prediction models. In the 1990s, the Environmental Modeling
-Center (EMC) of NCEP chose the OSU LSM (:cite:t:`Mahrt&Pan1984`) due to
-its good performance and pre-existing hands-on experience with this LSM
-by various EMC staff members after NCEP carried out an intercomparison
-of four LSMS, including 1) a simple bucket model, 2) the OSU LSM, 3) the
-simplified Simple Biosphere Model (SSiB) model, and 4) the Simple Water
-Balance model (SWB) of OH (:cite:t:`ChenEtAl1996`). NCEP used the Noah for
-further refinement and implementation in NCEP regional and global
+and climate prediction models. In the 1990s, NCEP compared four LSMs, 
+including (1) a simple bucket model, (2) the OSU LSM, (3) the
+simplified Simple Biosphere Model (SSiB) model, and (4) the Simple Water
+Balance model (SWB) of OH (:cite:t:`ChenEtAl1996`). The Environmental Modeling
+Center (EMC) of NCEP chose the OSU LSM (:cite:t:`Mahrt&Pan1984`) based on
+its performance and EMC staff members' previous experience with this LSM. 
+NCEP used the Noah LSM for further refinement and implementation in NCEP regional and global
 coupled weather and climate models and their companion data assimilation
 systems. In 2000, given a) the advent of the "New Millenium", b) a
 strong desire by EMC to better recognize its LSM collaborators, and c) a
@@ -100,15 +99,15 @@ presented by :cite:t:`EkEtAl2003` 2003 and :cite:t:`KorenEtAl1999` 1999.
 
 Noah-MP is currently used operationally at the NOAA National Water Model
 (NWM) which is built upon the legacy of the Noah model, but with new and
-multiple options for selected processes: 1) restructuring the model to
-include a separated vegetation canopy accounting for vegetation effects
-on surface energy and water balances, 2) a modified two-stream
-approximation scheme to include the effects of vegetation canopy gaps
-that vary with solar zenith angle and the canopy 3-D structure on
-radiation transfer, 3) a 3-layer physically-based snow model, 4) a more
-permeable frozen soil by separating a grid cell into a permeable
-fraction and impermeable fraction, 5) a simple groundwater model with a
-TOPMODEL-based runoff scheme, and 6) a short-term leaf phenology model.
+multiple options for selected processes: 
+   
+   #. restructuring the model to include a separated vegetation canopy accounting for vegetation effects on surface energy and water balances, 
+   #. a modified two-stream approximation scheme to include the effects of vegetation canopy gaps that vary with solar zenith angle and the canopy 3-D structure on radiation transfer, 
+   #. a 3-layer physically-based snow model, 
+   #. a more permeable frozen soil by separating a grid cell into a permeable fraction and impermeable fraction, 
+   #. a simple groundwater model with a TOPMODEL-based runoff scheme, and 
+   #. a short-term leaf phenology model.
+
 Multiple parameterizations are the key to treating
 hydrology-snow-vegetation processes in a single land modeling framework
 and structural differences improve performance over heterogeneous
@@ -177,18 +176,18 @@ the UFS Land DA System.
    |                          | performing data assimilation (DA)       |                                                      |
    |                          | procedures.                             |                                                      |
    +--------------------------+-----------------------------------------+------------------------------------------------------+
-   |   *land-apply_jedi_incr* | Contains code that applies the          | https://github.com/NOAA-PSL/land-apply_jedi_incr     |
+   | *-- land-apply_jedi_incr*| Contains code that applies the          | https://github.com/NOAA-PSL/land-apply_jedi_incr     |
    |                          | JEDI-generated DA increment to UFS      |                                                      |
    |                          | ``sfc_data`` restart                    |                                                      |
    +--------------------------+-----------------------------------------+------------------------------------------------------+
-   |   *land-IMS_proc*        | Contains code for processing Ice        | https://github.com/NOAA-PSL/land-IMS_proc            |
+   | *-- land-IMS_proc*       | Contains code for processing Ice        | https://github.com/NOAA-PSL/land-IMS_proc            |
    |                          | Mapping Data (IMS) ASCII input files    |                                                      |
    |                          | on the UFS model grid.                  |                                                      |
    +--------------------------+-----------------------------------------+------------------------------------------------------+
    | ufs-land-driver          | Repository for the UFS Land             | https://github.com/barlage/ufs-land-driver           | 
    |                          | Driver                                  |                                                      |
    +--------------------------+-----------------------------------------+------------------------------------------------------+
-   |   - *ccpp-physics*       | Repository for the Common               | https://github.com/NCAR/ccpp-physics                 |
+   | *-- ccpp-physics*        | Repository for the Common               | https://github.com/NCAR/ccpp-physics                 |
    |                          | Community Physics Package (CCPP)        |                                                      |
    |                          |                                         |                                                      |
    +--------------------------+-----------------------------------------+------------------------------------------------------+
