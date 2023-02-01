@@ -150,8 +150,7 @@ The static file is available in the ``land-release`` :ref:`tar file above <TarFi
    +---------------------------+------------------------------------------+
    | max_snow_albedo           | maximum snow albedo                      |
    +---------------------------+------------------------------------------+
-   | gvf_monthly (green        | monthly green vegetation fraction        |
-   | vegetation fraction)      |                                          |
+   | gvf_monthly               | monthly green vegetation fraction (gvf)  |
    +---------------------------+------------------------------------------+
    | visible_black_sky_albedo  | visible black sky albedo                 |
    +---------------------------+------------------------------------------+
@@ -165,6 +164,8 @@ The static file is available in the ``land-release`` :ref:`tar file above <TarFi
    +---------------------------+------------------------------------------+
    | soil_level_thickness      | soil level thickness                     |
    +---------------------------+------------------------------------------+
+
+.. COMMENT: Need description for cube_tile, cube_i, and cube_j
 
 Forcing Initial Conditions File (``ufs-land_C96_init_fields_1hr.nc``)
 ------------------------------------------------------------------------
@@ -192,9 +193,9 @@ The forcing initial conditions file is available in the ``land-release`` :ref:`t
    +-----------------------------+----------------------------------------+
    | date (date length)          | UTC date                               |
    +-----------------------------+----------------------------------------+
-   | latitude                    | degrees_north                          |
+   | latitude                    | degrees north                          |
    +-----------------------------+----------------------------------------+
-   | longitude                   | degrees_east                           |
+   | longitude                   | degrees east                           |
    +-----------------------------+----------------------------------------+
    | snow_water_equivalent       | mm                                     |
    +-----------------------------+----------------------------------------+
@@ -215,6 +216,9 @@ The forcing initial conditions file is available in the ``land-release`` :ref:`t
    | soil_level_nodes            | m                                      |
    +-----------------------------+----------------------------------------+
 
+.. COMMENT: Should latitude be "degrees north-south" and longitude "degrees east-west"?
+   Or does this only work in the northern & eastern hemispheres?
+
 Model Configuration File (``ufs-land.namelist.noahmp``)
 ---------------------------------------------------------
 
@@ -227,13 +231,15 @@ Run Setup Parameters
 ^^^^^^^^^^^^^^^^^^^^^^
 
 ``static_file``
-   Specifies the UFS Land static file.
+   Specifies the UFS land static file.
 
 ``init_file``
-   Specifies the UFS Land initial condition file.
+   Specifies the UFS land initial condition file.
 
 ``forcing_dir``
-   Specifies the UFS Land forcing directory.
+   Specifies the UFS land forcing directory.
+
+.. COMMENT: Should we add recommended values for the 3 variables above based on the data we provide? 
 
 ``separate_output``
    Specifies whether to enable the separate output. Valid values: ``.false.`` | ``true``
@@ -246,11 +252,16 @@ Run Setup Parameters
       | true     | enable         |
       +----------+----------------+
 
+.. COMMENT: What would the separate output be? An output directory? 
+   Should "true" be ".true."? That's how it is in the sample file below.
+
 ``output_dir``
    Specifies the output directory.
 
+.. COMMENT: Is this required if "separate_output=.false."?
+
 ``restart_frequency_s``
-   Specifies the restart frequency (second) for the UFS land model.
+   Specifies the restart frequency (in seconds) for the UFS land model.
 
 ``restart_simulation``
    Specifies whether to enable the restart simulation. Valid values: ``.false.`` | ``true``
@@ -262,6 +273,8 @@ Run Setup Parameters
       +----------+----------------+
       | true     | enable         |
       +----------+----------------+
+
+.. COMMENT: Should "true" be ".true."? That's how it is in the sample file below.
 
 ``restart_date``
    Specifies the restart date. The form is ``YYYY-MM-DD HH:MM:SS``, where 
@@ -307,7 +320,7 @@ Land Model Options
 
       +--------+-------------+
       | Value  | Description |
-      +========+-------------+
+      +========+=============+
       | 1      | Noah        |
       +--------+-------------+
       | 2      | Noah-MP     |
@@ -326,7 +339,7 @@ Soil Setup Parameters
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 ``soil_level_thickness``
-   Specifies the thickness (in meters) of each of the soil layers (top layer to bottom layer).`
+   Specifies the thickness (in meters) of each of the soil layers (top layer to bottom layer).
 
 ``soil_level_nodes``
    Specifies the soil level centroids from the surface (in meters).
@@ -413,6 +426,8 @@ Noah-MP.4.0.1 Options
       |        | Fan et al. 2007 JGR)                                                  |
       +--------+-----------------------------------------------------------------------+
 
+.. COMMENT: Do we have links to these articles so I can add to the bibliography?
+
 ``surface_exchange_option``
    Specifies the surface layer drag coefficient option. Valid values: ``1`` | ``2``
 
@@ -427,13 +442,16 @@ Noah-MP.4.0.1 Options
 ``supercooled_soilwater_option``
    Specifies the supercooled liquid water option. Valid values: ``1`` | ``2``
 
-      +--------+---------------------------------------+
-      | Value  | Description                           |
-      +========+=======================================+
-      | 1      | no iteration (Niu and Yang, 2006 JHM) |
-      +--------+---------------------------------------+
-      | 2      | Koren’s iteration (1999)              |
-      +--------+---------------------------------------+
+      +--------+---------------------------------------------+
+      | Value  | Description                                 |
+      +========+=============================================+
+      | 1      | no iteration (Niu and Yang, 2006 JHM)       |
+      +--------+---------------------------------------------+
+      | 2      | Koren's iteration (:cite:t:`KorenEtAl1999`) |
+      +--------+---------------------------------------------+
+
+.. COMMENT: Just want to confirm that this is the correct citation. 
+   Did Koren publish and additional/separate article in 1999? 
 
 ``frozen_soil_adjust_option``
    Specifies the frozen soil permeability option. Valid values: ``1`` | ``2``
@@ -484,7 +502,9 @@ Noah-MP.4.0.1 Options
       +--------+-----------------------------+
       | 4      | Use WRF microphysics output |
       +--------+-----------------------------+
-      
+
+.. COMMENT: Need Jordan citation
+
 ``SFCTMP``
    Surface air temperature
 
@@ -541,6 +561,9 @@ Noah-MP.4.0.1 Options
       +----------------+-----------------------------------------------------+
       | 4              | option 1 for non-snow; rsurf = rsurf_snow for snow  |
       +----------------+-----------------------------------------------------+
+
+.. COMMENT: Need citations
+   Also, what is the "evap" in the var name? Should the description say "Specifies the surface evaporation resistance option."
 
 ``rsurf``
    Ground surface resistance (s/m)
@@ -629,6 +652,10 @@ Forcing Parameters
 
 ``forcing_name_lw_radiation``
    Specifies the name of forcing longwave radiation.
+
+.. COMMENT: Are these "forcing_name_*" variables all *file* names? 
+   Or are there specific options that users should be choosing from...?
+   I'm not clear on what these variables are naming. 
 
 Example of a ``ufs-land.namelist.noahmp`` Entry
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -779,7 +806,7 @@ Example of a ``ufs-land.namelist.noahmp`` Entry
 Vector-to-Tile Converter
 ============================
 
-The vector-to-tile converter is used for mapping between the vector format
+The Vector-to-Tile Converter is used for mapping between the vector format
 used by the Noah-MP offline driver, and the tile format used by the UFS
 atmospheric model. This is currently used to prepare input tile files
 for JEDI. Note that these files include only those fields required by
@@ -832,31 +859,39 @@ Run Setup Parameters
       +--------------+---------------------------------------------+
       | Value        | Description                                 |
       +==============+=============================================+
-      | vector2tile  | vector to tile conversion for restart file  |
+      | vector2tile  | vector-to-tile conversion for restart file  |
       +--------------+---------------------------------------------+
-      | tile2vector  | tile to vector conversion for restart file  |
+      | tile2vector  | tile-to-vector conversion for restart file  |
       +--------------+---------------------------------------------+
       | lndp2tile    | land perturbation to tile                   |
       +--------------+---------------------------------------------+
       | lndp2vector  | land perturbation to vector                 |
       +--------------+---------------------------------------------+
 
-Resolution and Orographic Files Parameters
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tile-Related Parameters for Restart/Perturbation Conversion
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Parameters in this section include the FV3 resolution and path to orographic files 
 for restart/perturbation conversion. 
 
+.. COMMENT: I took this description above from the original section title, but it seems 
+   like it all has more to do with tiles than orographic files... 
+   Could use a little clarification.
+
 ``tile_size``
-   Specifies the size of tile.
+   Specifies the size of tile
+
+.. COMMENT: What are the units (# grid/tile cells?)? Are there set tile sizes? Or can it be any number?
 
 ``tile path``
-   Specifies the path of tile location.
+   Specifies the path of tile location
 
 .. COMMENT: Should "tile path" have an underscore?
 
 ``tile_fstub``
    Specifies the name of orographic tile
+
+.. COMMENT: Is the "orographic tile" different from the tiles mentioned in the vars above?
 
 Parameters for Restart Conversion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
