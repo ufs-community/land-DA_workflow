@@ -12,11 +12,19 @@ Glossary
    data assimilation
       One of the major sources of error in weather and climate forecasts is uncertainty related to the initial conditions that are used to generate future predictions. Even the most precise instruments have a small range of unavoidable measurement error, which means that tiny measurement errors (e.g., related to atmospheric conditions and instrument location) can compound over time. These small differences result in very similar forecasts in the short term (i.e., minutes, hours), but they cause widely divergent forecasts in the long term. Data assimilation systems seek to mitigate this problem by combining the most timely observational data with other sources of data, such as historical data, to provide an analysis of possible atmospheric states and the probabilities of each. Errors in weather and climate forecasts can also arise because models are imperfect representations of reality. Data assimilation systems can use techniques including stochastic physics, which applies randomized perturbations to the physical tendencies or the physical parameters of a model, to compensate for model uncertainty. 
    
+   JEDI
+      The Joint Effort for Data assimilation Integration (`JEDI <https://www.jcsda.org/jcsda-project-jedi>`__) is a unified and versatile data assimilation (DA) system for Earth System Prediction. It aims to enable efficient research and accelerated transition from research to operations by providing a framework that takes into account all components of the Earth system in a consistent manner. The JEDI software package can run on a variety of platforms and for a variety of purposes, and it is designed to readily accommodate new atmospheric and oceanic models and new observation systems. The `JEDI User's Guide <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/>`__ contains extensive information on the software. 
+
+      JEDI is developed and distributed by the `Joint Center for Satellite Data Assimilation <https://www.jcsda.org/>`__, a multi-agency research center hosted by the University Corporation for Atmospheric Research (`UCAR <https://www.ucar.edu/>`__). JCSDA is dedicated to improving and accelerating the quantitative use of research and operational satellite data in weather, ocean, climate and environmental analysis and prediction systems.
+
    HPC
       High-Performance Computing.
 
    MPI
       MPI stands for Message Passing Interface. An MPI is a standardized communication system used in parallel programming. It establishes portable and efficient syntax for the exchange of messages and data between multiple processors that are used by a single computer program. An MPI is required for high-performance computing (HPC) systems.
+
+   netCDF
+      NetCDF (`Network Common Data Form <https://www.unidata.ucar.edu/software/netcdf/>`__) is a file format and community standard for storing multidimensional scientific data. It includes a set of software libraries and machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.
 
    NWP
       Numerical Weather Prediction (NWP) takes current observations of weather and processes them with computer models to forecast the future state of the weather. 
