@@ -15,6 +15,8 @@ and is essentially a module/subroutine within the `Common Community Physics Pack
 repository. The UFS Land DA System currently only works with snow data. Thus,
 this User's Guide focuses primarily on the snow DA process.
 
+.. _Background:
+
 Background Information
 =========================
 

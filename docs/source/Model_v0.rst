@@ -4,141 +4,39 @@
 UFS Noah-MP Land Surface Model
 =================================
 
-Background 
-=============
-
-The :term:`UFS` is a community-based, coupled, comprehensive Earth modeling
-system, including the Global Forecast System
-(`GFS <https://www.emc.ncep.noaa.gov/emc/pages/numerical_forecast_systems/gfs.php>`__)
-and the Global Ensemble Forecast System
-(`GEFS <https://www.emc.ncep.noaa.gov/emc/pages/numerical_forecast_systems/gefs.php>`__).
-NOAA’s operational model suite for numerical weather prediction
-(:term:`NWP`)
-is quickly transitioning to the UFS from many different modeling
-systems. The UFS enables research, development, and contribution
-opportunities within the broader :term:`Weather Enterprise` (including
-government, industry, and academia). Currently, the UFS consists of the
-`FV3 <https://www.gfdl.noaa.gov/fv3/>`__ dynamical core with the Common
-Community Physics Package
-(`CCPP <https://dtcenter.ucar.edu/gmtb/users/ccpp/docs/sci_doc_v2/>`__)
-for the atmosphere, `MOM6 <https://github.com/NOAA-GFDL/MOM6>`__ for the
-ocean,
-`GOCART <https://gmao.gsfc.nasa.gov/research/aerosol/modeling/>`__ for
-aerosols, `CICE6 <https://github.com/CICE-Consortium/CICE>`__ for sea
-ice, and `WW3 <https://polar.ncep.noaa.gov/waves/wavewatch/>`__ for
-ocean waves. Noah, Noah-MP, and Rapid Update Cycle (RUC) land models are
-currently available options within the CCPP framework, and the CCPP
-modules are assumed to be 1D column models. Recently, in GFSv17 updates,
-the Noah LSM (widely used, bulk surface treatment) has been replaced
-with Noah-MP LSM (explicit canopy, process-based, see details in :numref:`Section
-%s <NoahMP>`). This transition will contribute: 1) improving surface forecasts
-when significant heterogeneities exit, 2) looking beyond the LSM as a
-boundary condition, 3) providing multiple land surface process-level
-information, and 4) increasing both atmospheric and land surface DA. For
-more information about the UFS, visit the `UFS
-Portal <https://ufscommunity.org/>`__.
-
-.. _NoahMP:
-
-Noah-MP 
-============
-
-Noah is a land surface model (LSM) that has evolved through community
-efforts for pursuing and refining a modern-era LSM suitable for use in
-National Centers for Environmental Prediction (NCEP) operational weather
-and climate prediction models. In the 1990s, the Environmental Modeling
-Center (EMC) of the NCEP chose the OSU LSM (Mahrt and Pan, 1984) due to
-its good performance and pre-existing hands-on experience with this LSM
-by various EMC staff members after NCEP carried out an intercomparison
-of four LSMS, including 1) a simple bucket model, 2) the OSU LSM, 3) the
-simplified Simple Biosphere Model (SSiB) model, and 4) the Simple Water
-Balance model (SWB) of OH (Chen et al, 1996). NCEP used the Noah for
-further refinement and implementation in NCEP regional and global
-coupled weather and climate models and their companion data assimilation
-systems. In 2000, given a) the advent of the "New Millenium", b) a
-strong desire by EMC to better recognize its LSM collaborators, and c) a
-new NCEP goal to more strongly pursue and offer "Community Models", EMC
-decided to coin the new name "NOAH" for the LSM that had emerged at NCEP
-during the 1990s. 
-
-   * **N:** National Centers for Environmental Prediction (NCEP)
-   * **O:** Oregon State University (Dept of Atmospheric Sciences)
-   * **A:** Air Force (both Air Force Weather Agency (AFWA) and Air Force Research Lab (AFRL) --- formerly AFGL, PL)
-   * **H:** Hydrology Lab –-- NWS (National Weather Service, formerly Office of Hydrology –-- OH)
-
-With the choice of the "NOAH" acronym, EMC strived to explicitly acknowledge 
-both the multi-group heritage and
-informal "community" usage of this LSM, going back to the early 1980s.
-Since its beginning then at Oregon State University, the evolution of
-the present NOAH LSM herein has spanned significant ongoing development
-efforts by the above groups.
-
-Noah LSM is a stand-alone, uncoupled, 1-D column version used to execute
-single-site land surface simulations. In this traditional 1-D uncoupled
-mode, near-surface atmospheric forcing data is required as input
-forcing. This LSM simulates soil moisture (both liquid and frozen), soil
-temperature, skin temperature, snow depth, snow water equivalent (SWE),
-snow density, canopy water content, and the energy flux and water flux
-terms of the surface energy balance and surface water balance. Noah LSM
-has been extensively evaluated in both the offline mode and the coupled
-mode. More detailed descriptions of Noah physics and developments are
-presented by Ek et al., (2003) and Koren et al. (1999).
-
-Noah-MP is currently used operationally at the NOAA National Water Model
-(NWM) which is built upon the legacy of the Noah model, but with new and
-multiple options for selected processes: 1) restructuring the model to
-include a separated vegetation canopy accounting for vegetation effects
-on surface energy and water balances, 2) a modified two-stream
-approximation scheme to include the effects of vegetation canopy gaps
-that vary with solar zenith angle and the canopy 3-D structure on
-radiation transfer, 3) a 3-layer physically-based snow model, 4) a more
-permeable frozen soil by separating a grid cell into a permeable
-fraction and impermeable fraction, 5) a simple groundwater model with a
-TOPMODEL-based runoff scheme, and 6) a short-term leaf phenology model.
-Multiple parameterizations are the key to treating
-hydrology-snow-vegetation processes in a single land modeling framework
-and structural differences improve performance over heterogeneous
-surfaces. In addition, Noah-MP LSM enables a modular framework for
-diagnosing differences in process representation, facilitating ensemble
-forecasts and uncertainty quantification, and choosing process
-presentations appropriate for the application. On the basis of the
-modified Noah, the developers designed options of schemes for leaf
-dynamics, radiation transfer, stomatal resistance, soil moisture stress
-factor for stomatal resistance, aerodynamic resistance, runoff,
-snowfall, snow surface albedo, supercooled liquid water in frozen soil,
-and frozen soil permeability, etc. A collaborative effort among NCAR,
-NCEP, NASA, and university groups has been established to develop and
-improve the community Noah-MP LSM. Details about the model's physical
-parameterizations can be referred to Niu et al. [2011].
+This chapter provides practical information on building and running the Noah-MP Land Surface Model (LSM). 
+It also contains information on required input files and the Vector-to-Tile Converter.
+For background information on the evolution of the Unified Forecast System (:term:`UFS`) 
+and the Noah-MP Land Surface Model (LSM), see :numref:`Section %s <Background>` of the Introduction. 
 
 .. _BuildRun:
 
 Building and Running the UFS Land Model
--------------------------------------------
+==========================================
 
 Make sure your local system has a Fortran compiler and NetCDF software
 installed.
 
-1. Clone the UFS land model from GitHub:
+#. Clone the UFS land model from GitHub:
 
    .. code-block:: console
 
       git clone --recurse-submodules
       https://github.com/barlage/ufs-land-driver.git
 
-2. Navigate to the UFS land driver:
+#. Navigate to the UFS land driver:
 
    .. code-block:: console
 
       cd ufs-land-driver
 
-3. Create a ``user_build_config`` file:
+#. Create a ``user_build_config`` file:
 
    .. code-block:: console
 
       ./configure
 
-4. Edit the ``user_build_config`` file to setup compiler and library
+#. Edit the ``user_build_config`` file to setup compiler and library
    paths to be consistent with your environment if not done by default:
 
    .. code-block:: console
@@ -159,7 +57,7 @@ installed.
    directory, all the drivers in the ``driver`` directory, and executables
    are in the ``run`` directory.
 
-5. Compile the code:
+#. Compile the code:
 
    .. code-block:: console
 
@@ -171,131 +69,135 @@ installed.
 .. _InputFiles:
 
 Input Files 
--------------
+===============
 
 The UFS Land Model requires multiple input files to run: static datasets
 (fix files containing climatological information, terrain, and land use
 data), initial and boundary condition files, and model configuration
 files (such as namelists). Please see the `Noah-MP User's
-guide <https://www.jsg.utexas.edu/noah-mp/files/Users_Guide_v0.pdf>`__
+Guide <https://www.jsg.utexas.edu/noah-mp/files/Users_Guide_v0.pdf>`__
 for a detailed description of how to run the Noah-MP model.
 
+.. COMMENT: We talk about "statics datasets" above but then a single 
+   "static file" below, which could be confusing.
+
 Static File
-^^^^^^^^^^^^^^
+--------------
 
 The static file includes the specific information on location, time,
-soil layers, and variables that are required by the Noah-MP run. The
-data can be provided in netCDF format.
+soil layers, and variables that are required for the Noah-MP run. The
+data can be provided in :term:`netCDF` format.
 
 The static file is pre-staged and available to download here:
 
-Table 2.1 Configuration variables specified in the static file
-(“ufs-land_C96_static_fields.nc”)
+.. COMMENT: I think we need a link here...
 
-+---------------------------+------------------------------------------+
-| **Configuration           | **Description**                          |
-| Variables**               |                                          |
-+---------------------------+------------------------------------------+
-| land_mask                 | land-sea mask (0-ocean, 1-land)          |
-+---------------------------+------------------------------------------+
-| vegetation_category       | vegetation type                          |
-+---------------------------+------------------------------------------+
-| soil_category             | soil type                                |
-+---------------------------+------------------------------------------+
-| slope_category            | slope type                               |
-+---------------------------+------------------------------------------+
-| albedo_monthly            | monthly albedo                           |
-+---------------------------+------------------------------------------+
-| lai_monthly (leaf area    | monthly leaf area index                  |
-| index_monthly)            |                                          |
-+---------------------------+------------------------------------------+
-| emissivity                | emissivity                               |
-+---------------------------+------------------------------------------+
-| z0_monthly                | monthly ground roughness length          |
-+---------------------------+------------------------------------------+
-| cube_tile                 |                                          |
-+---------------------------+------------------------------------------+
-| cube_i                    |                                          |
-+---------------------------+------------------------------------------+
-| cube_j                    |                                          |
-+---------------------------+------------------------------------------+
-| latitude                  | latitude                                 |
-+---------------------------+------------------------------------------+
-| longitude                 | longitude                                |
-+---------------------------+------------------------------------------+
-| elevation                 | elevation                                |
-+---------------------------+------------------------------------------+
-| deep_soil_temperature     | lower boundary soil temperature          |
-+---------------------------+------------------------------------------+
-| max_snow_albedo           | maximum snow albedo                      |
-+---------------------------+------------------------------------------+
-| gvf_monthly (green        | monthly green vegetation fraction        |
-| vegetation fraction)      |                                          |
-+---------------------------+------------------------------------------+
-| visible_black_sky_albedo  | visible black sky albedo                 |
-+---------------------------+------------------------------------------+
-| visible_white_sky_albedo  | visible white sky albedo                 |
-+---------------------------+------------------------------------------+
-| near_IR_black_sky_albedo  | near infrared black sky albedo           |
-+---------------------------+------------------------------------------+
-| near_IR_white_sky_albedo  | near infrared white sky albedo           |
-+---------------------------+------------------------------------------+
-| soil_level_nodes          | soil level nodes                         |
-+---------------------------+------------------------------------------+
-| soil_level_thickness      | soil level thickness                     |
-+---------------------------+------------------------------------------+
+.. table:: Configuration variables specified in the static file (ufs-land_C96_static_fields.nc)
 
-Initial Condition File
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+   +---------------------------+------------------------------------------+
+   | Configuration Variables   | Description                              |
+   +===========================+==========================================+
+   | land_mask                 | land-sea mask (0-ocean, 1-land)          |
+   +---------------------------+------------------------------------------+
+   | vegetation_category       | vegetation type                          |
+   +---------------------------+------------------------------------------+
+   | soil_category             | soil type                                |
+   +---------------------------+------------------------------------------+
+   | slope_category            | slope type                               |
+   +---------------------------+------------------------------------------+
+   | albedo_monthly            | monthly albedo                           |
+   +---------------------------+------------------------------------------+
+   | lai_monthly (leaf area    | monthly leaf area index                  |
+   | index_monthly)            |                                          |
+   +---------------------------+------------------------------------------+
+   | emissivity                | emissivity                               |
+   +---------------------------+------------------------------------------+
+   | z0_monthly                | monthly ground roughness length          |
+   +---------------------------+------------------------------------------+
+   | cube_tile                 |                                          |
+   +---------------------------+------------------------------------------+
+   | cube_i                    |                                          |
+   +---------------------------+------------------------------------------+
+   | cube_j                    |                                          |
+   +---------------------------+------------------------------------------+
+   | latitude                  | latitude                                 |
+   +---------------------------+------------------------------------------+
+   | longitude                 | longitude                                |
+   +---------------------------+------------------------------------------+
+   | elevation                 | elevation                                |
+   +---------------------------+------------------------------------------+
+   | deep_soil_temperature     | lower boundary soil temperature          |
+   +---------------------------+------------------------------------------+
+   | max_snow_albedo           | maximum snow albedo                      |
+   +---------------------------+------------------------------------------+
+   | gvf_monthly (green        | monthly green vegetation fraction        |
+   | vegetation fraction)      |                                          |
+   +---------------------------+------------------------------------------+
+   | visible_black_sky_albedo  | visible black sky albedo                 |
+   +---------------------------+------------------------------------------+
+   | visible_white_sky_albedo  | visible white sky albedo                 |
+   +---------------------------+------------------------------------------+
+   | near_IR_black_sky_albedo  | near infrared black sky albedo           |
+   +---------------------------+------------------------------------------+
+   | near_IR_white_sky_albedo  | near infrared white sky albedo           |
+   +---------------------------+------------------------------------------+
+   | soil_level_nodes          | soil level nodes                         |
+   +---------------------------+------------------------------------------+
+   | soil_level_thickness      | soil level thickness                     |
+   +---------------------------+------------------------------------------+
 
-The UFS Land DA currently supports the snow DA initial condition file
-from the Noah-MP model. The initial condition file includes the specific
+Initial Conditions File
+--------------------------
+
+Land DA currently supports the snow DA initial conditions file
+from the Noah-MP model. The initial conditions file includes the specific
 information on location, time, soil layers, and variables that are
-required by the UFS Land snow DA cycling run. The data can be provided
-in netCDF format.
+required for the UFS Land snow DA cycling. The data can be provided
+in :term:`netCDF` format.
 
 The initial condition file is pre-staged and available to download here:
 
-Table 2.2 Configuration variables specified in the static file
-("ufs-land_C96_static_fields.nc”)
+.. COMMENT: I think we need a link here...
 
-+-----------------------------+----------------------------------------+
-| **Configuration Variables** | **Units**                              |
-+-----------------------------+----------------------------------------+
-| time                        | seconds since 1970-01-01 00:00:00      |
-+-----------------------------+----------------------------------------+
-| date (date length)          | UTC date                               |
-+-----------------------------+----------------------------------------+
-| latitude                    | degrees_north                          |
-+-----------------------------+----------------------------------------+
-| longitude                   | degrees_east                           |
-+-----------------------------+----------------------------------------+
-| snow_water_equivalent       | mm                                     |
-+-----------------------------+----------------------------------------+
-| snow_depth                  | m                                      |
-+-----------------------------+----------------------------------------+
-| canopy_water                | mm                                     |
-+-----------------------------+----------------------------------------+
-| skin_temperature            | K                                      |
-+-----------------------------+----------------------------------------+
-| soil_temperature            | mm                                     |
-+-----------------------------+----------------------------------------+
-| soil_moisture               | m\ :sup:`3`/m\ :sup:`3`                |
-+-----------------------------+----------------------------------------+
-| soil_liquid                 | m\ :sup:`3`/m\ :sup:`3`                |
-+-----------------------------+----------------------------------------+
-| soil_level_thickness        | m                                      |
-+-----------------------------+----------------------------------------+
-| soil_level_nodes            | m                                      |
-+-----------------------------+----------------------------------------+
+.. table:: Configuration variables specified in the static file (ufs-land_C96_static_fields.nc)
+
+   +-----------------------------+----------------------------------------+
+   | Configuration Variables     | Units                                  |
+   +=============================+========================================+
+   | time                        | seconds since 1970-01-01 00:00:00      |
+   +-----------------------------+----------------------------------------+
+   | date (date length)          | UTC date                               |
+   +-----------------------------+----------------------------------------+
+   | latitude                    | degrees_north                          |
+   +-----------------------------+----------------------------------------+
+   | longitude                   | degrees_east                           |
+   +-----------------------------+----------------------------------------+
+   | snow_water_equivalent       | mm                                     |
+   +-----------------------------+----------------------------------------+
+   | snow_depth                  | m                                      |
+   +-----------------------------+----------------------------------------+
+   | canopy_water                | mm                                     |
+   +-----------------------------+----------------------------------------+
+   | skin_temperature            | K                                      |
+   +-----------------------------+----------------------------------------+
+   | soil_temperature            | mm                                     |
+   +-----------------------------+----------------------------------------+
+   | soil_moisture               | m\ :sup:`3`/m\ :sup:`3`                |
+   +-----------------------------+----------------------------------------+
+   | soil_liquid                 | m\ :sup:`3`/m\ :sup:`3`                |
+   +-----------------------------+----------------------------------------+
+   | soil_level_thickness        | m                                      |
+   +-----------------------------+----------------------------------------+
+   | soil_level_nodes            | m                                      |
+   +-----------------------------+----------------------------------------+
 
 Model Configuration File
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------
 
 The UFS Land model uses a series of template files, combined with
 user-selected settings, to create required name lists and parameter
 files needed by the UFS Land DA workflow. This section describes the
-options in the ‘ufs-land.namelist.noahmp’ file.
+options in the ``ufs-land.namelist.noahmp`` file.
 
 **Run setup**
 
@@ -867,8 +769,8 @@ forcing_name_lw_radiation = "longwave_radiationXXMEM"
 
 .. _VectorTileConverter:
 
-2.2.3. Vector to Tile Converter
-----------------------------------
+Vector to Tile Converter
+==================================
 
 The vector to tile convertor is used for mapping between vector format
 used by the Noah-MP offline driver, and the tile format used by the UFS
@@ -876,8 +778,8 @@ atmospheric model. This is currently used to prepare input tile files
 for JEDI. Note that these files include only those fields required by
 JEDI, rather than the full restart.
 
-2.2.3.1. Building and Running the Vector to Tile Converter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Building and Running the Vector to Tile Converter
+-----------------------------------------------------
 
    1. Clone the UFS land model from GitHub:
 
@@ -904,8 +806,8 @@ Make
 
 Vector2tile_converter.exe namelist.vector2tile
 
-2.2.3.2. Configuration File
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Configuration File
+---------------------
 
 This section describes the options in the ‘namelist.vector2tile’ file.
 
