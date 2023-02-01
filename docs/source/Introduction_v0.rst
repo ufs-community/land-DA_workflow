@@ -6,7 +6,7 @@ Introduction
 
 This User's Guide provides guidance for running the Unified Forecast System 
 (:term:`UFS`) land model. This land model is the Multi-Physics (MP) version of the 
-Noah land surface model used by NOAA (Noah-MP). Its data assimilation framework uses 
+Noah land surface model (LSM) used by NOAA (referred to as Noah-MP). Its data assimilation framework uses 
 the Joint Effort for Data assimilation Integration (:term:`JEDI`) software.
 Noah-MP is tightly coupled with the atmospheric component of the 
 `UFS Weather Model <https://github.com/ufs-community/ufs-weather-model>`__, 
@@ -14,6 +14,117 @@ and is essentially a module/subroutine within the `Common Community Physics Pack
 (CCPP) <https://dtcenter.org/community-code/common-community-physics-package-ccpp>`__
 repository. The UFS Land DA System currently only works with snow data. Thus,
 this User's Guide focuses primarily on the snow DA process.
+
+Background Information
+=========================
+
+Unified Forecast System
+--------------------------
+
+The Unified Forecast System (:term:`UFS`) is a community-based, coupled, comprehensive Earth modeling system. NOAA’s operational model suite for numerical weather prediction (:term:`NWP`) is quickly transitioning to the UFS from many different modeling systems. For example, the UFS-based Global Forecast System
+(`GFS <https://www.emc.ncep.noaa.gov/emc/pages/numerical_forecast_systems/gfs.php>`__)
+and the Global Ensemble Forecast System
+(`GEFS <https://www.emc.ncep.noaa.gov/emc/pages/numerical_forecast_systems/gefs.php>`__) are currently in operational use.
+The UFS enables research, development, and contribution
+opportunities within the broader :term:`Weather Enterprise` (including
+government, industry, and academia). 
+
+Currently, the UFS Weather Model includes: 
+
+   * The `FV3 <https://www.gfdl.noaa.gov/fv3/>`__ dynamical core with the Common Community Physics Package (`CCPP <https://dtcenter.ucar.edu/gmtb/users/ccpp/docs/sci_doc_v2/>`__) for atmospheric modeling, 
+   * The `MOM6 <https://github.com/NOAA-GFDL/MOM6>`__ ocean model,
+   * The `GOCART <https://gmao.gsfc.nasa.gov/research/aerosol/modeling/>`__ aerosols model, 
+   * The `CICE6 <https://github.com/CICE-Consortium/CICE>`__ sea ice model, and 
+   * The `WW3 <https://polar.ncep.noaa.gov/waves/wavewatch/>`__ ocean wave model. 
+
+Noah, Noah-MP, and Rapid Update Cycle (RUC) land models are
+currently available options within the CCPP framework, and the CCPP
+modules are assumed to be one-dimensional (1-D) column models. 
+Since the GFSv17 updates, Noah LSM (widely used, bulk surface treatment) has been replaced with Noah-MP LSM (explicit canopy, process-based, see details in :numref:`Section %s <NoahMP>`). 
+This transition will contribute to: 
+
+   #. improving surface forecasts when significant heterogeneities exist, 
+   #. looking beyond the LSM as a boundary condition, 
+   #. providing multiple land surface process-level information, and 
+   #. increasing both atmospheric and land surface DA. 
+
+For more information about the UFS, visit the `UFS Portal <https://ufscommunity.org/>`__.
+
+.. _NoahMP:
+
+History of Noah MP
+--------------------
+
+Noah is a land surface model (LSM) that has evolved through community
+efforts for pursuing and refining a modern-era LSM suitable for use in
+National Centers for Environmental Prediction (NCEP) operational weather
+and climate prediction models. In the 1990s, the Environmental Modeling
+Center (EMC) of NCEP chose the OSU LSM (:cite:t:`Mahrt&Pan1984`) due to
+its good performance and pre-existing hands-on experience with this LSM
+by various EMC staff members after NCEP carried out an intercomparison
+of four LSMS, including 1) a simple bucket model, 2) the OSU LSM, 3) the
+simplified Simple Biosphere Model (SSiB) model, and 4) the Simple Water
+Balance model (SWB) of OH (:cite:t:`ChenEtAl1996`). NCEP used the Noah for
+further refinement and implementation in NCEP regional and global
+coupled weather and climate models and their companion data assimilation
+systems. In 2000, given a) the advent of the "New Millenium", b) a
+strong desire by EMC to better recognize its LSM collaborators, and c) a
+new NCEP goal to more strongly pursue and offer "Community Models", EMC
+decided to coin the new name "NOAH" for the LSM that had emerged at NCEP
+during the 1990s. 
+
+   * **N:** National Centers for Environmental Prediction (NCEP)
+   * **O:** Oregon State University (Dept of Atmospheric Sciences)
+   * **A:** Air Force (both Air Force Weather Agency (AFWA) and Air Force Research Lab (AFRL) --- formerly AFGL, PL)
+   * **H:** Hydrology Lab –-- NWS (National Weather Service, formerly Office of Hydrology –-- OH)
+
+With the choice of the "NOAH" acronym, EMC strived to explicitly acknowledge 
+both the multi-group heritage and
+informal "community" usage of this LSM, going back to the early 1980s.
+Since its beginning then at Oregon State University, the evolution of
+the present NOAH LSM herein has spanned significant ongoing development
+efforts by the above groups.
+
+Noah LSM is a stand-alone, uncoupled, 1-D column version used to execute
+single-site land surface simulations. In this traditional 1-D uncoupled
+mode, near-surface atmospheric forcing data is required as input
+forcing. This LSM simulates soil moisture (both liquid and frozen), soil
+temperature, skin temperature, snow depth, snow water equivalent (SWE),
+snow density, canopy water content, and the energy flux and water flux
+terms of the surface energy balance and surface water balance. Noah LSM
+has been extensively evaluated in both the offline mode and the coupled
+mode. More detailed descriptions of Noah physics and developments are
+presented by :cite:t:`EkEtAl2003` 2003 and :cite:t:`KorenEtAl1999` 1999.
+
+Noah-MP is currently used operationally at the NOAA National Water Model
+(NWM) which is built upon the legacy of the Noah model, but with new and
+multiple options for selected processes: 1) restructuring the model to
+include a separated vegetation canopy accounting for vegetation effects
+on surface energy and water balances, 2) a modified two-stream
+approximation scheme to include the effects of vegetation canopy gaps
+that vary with solar zenith angle and the canopy 3-D structure on
+radiation transfer, 3) a 3-layer physically-based snow model, 4) a more
+permeable frozen soil by separating a grid cell into a permeable
+fraction and impermeable fraction, 5) a simple groundwater model with a
+TOPMODEL-based runoff scheme, and 6) a short-term leaf phenology model.
+Multiple parameterizations are the key to treating
+hydrology-snow-vegetation processes in a single land modeling framework
+and structural differences improve performance over heterogeneous
+surfaces. In addition, Noah-MP LSM enables a modular framework for
+diagnosing differences in process representation, facilitating ensemble
+forecasts and uncertainty quantification, and choosing process
+presentations appropriate for the application. On the basis of the
+modified Noah, the developers designed options of schemes for leaf
+dynamics, radiation transfer, stomatal resistance, soil moisture stress
+factor for stomatal resistance, aerodynamic resistance, runoff,
+snowfall, snow surface albedo, supercooled liquid water in frozen soil,
+and frozen soil permeability, etc. A collaborative effort among NCAR,
+NCEP, NASA, and university groups has been established to develop and
+improve the community Noah-MP LSM. Details about the model's physical
+parameterizations can be referred to Niu et al. [2011].
+
+.. COMMENT: Need a citation for Niu et al (2011)! 
+
 
 Code Repositories and Directory Structure
 ==============================================
@@ -87,7 +198,7 @@ the UFS Land DA System.
 
 
 Disclaimer 
-================
+==============
 
 The United States Department of Commerce (DOC) GitHub project code is
 provided on an “as is” basis and the user assumes responsibility for its
@@ -103,32 +214,7 @@ The Department of Commerce seal and logo, or the seal and logo of a DOC
 bureau, shall not be used in any manner to imply endorsement of any
 commercial product or activity by DOC or the United States Government.
 
+References
+============
+
 .. bibliography:: references.bib
-
-.. COMMENT: 
-
-   References
-   ==========
-
-   Chen, F., Mitchell, K., Schaake, J., Xue, Y., Pan, H.L., Koren,
-   V., Duan, Q.Y., Ek, M. and Betts, A
-   Modeling of land surface evaporation by four schemes and comparison with FIFE
-   observations.
-   Journal of Geophysical Research Atmospheres, 101(D3), 
-   pp.7251-7268, 1996.
-
-   Ek, M. B., Mitchell, K. and Y. Lin 
-   Implementation of Noah land surface model advances in the National Centers for Environmental Prediction
-   operational mesoscale Eta model, 
-   Journal of Geophysical Research,
-   108(D22), 
-   doi:10.1029/2002JD003296, 
-   2003.
-
-   Koren, V., Schaake, J., Mitchell, K., Duan, Q. Y., Chen, F. and Baker,
-   J. M.: A parameterization of snowpack and frozen ground intended for
-   NCEP weather and climate models, Journal of Geophysical Research
-   Atmospheres, 104(D16), 19569- 19585, doi:10.1029/1999JD900232, 1999.
-
-   Mahrt, L. and Pan, H.: A two-layer model of soil hydrology,
-   Boundary-Layer Meteorology, 29(1), 1-20, doi:10.1007/BF00119116, 1984.
