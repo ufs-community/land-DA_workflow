@@ -258,7 +258,7 @@ Run Setup Parameters
 ``output_dir``
    Specifies the output directory.
 
-.. COMMENT: Is this required if "separate_output=.false."?
+.. COMMENT: Is this required if "separate_output=.true."?
 
 ``restart_frequency_s``
    Specifies the restart frequency (in seconds) for the UFS land model.
@@ -427,6 +427,12 @@ Noah-MP.4.0.1 Options
       +--------+-----------------------------------------------------------------------+
 
 .. COMMENT: Do we have links to these articles so I can add to the bibliography?
+   Niu, G. Y., Z. L. Yang, R. E. Dickinson, L. E. Gulden, and H. Su (2007), Development of a simple groundwater model for use in climate models and evaluation with Gravity Recovery and Climate Experiment data, J. Geophys. Res., 112, D07, doi:10.1029/2006JD007522.
+   Niu, G.-Y., Z.-L. Yang, R. E. Dickinson, and L. E. Gulden (2005), A simple TOPMODEL-based runoff parameterization (SIMTOP) for use in GCMs, J. Geophys. Res., 110, D21, doi:10.1029/2005JD006111.
+   Schaake, J. C., V. I. Koren, Q.-Y. Duan, K. E. Mitchell, and F. Chen (1996), Simple water balance model for estimating runoff at different spatial and temporal scales, J. Geophys. Res., 101, 7461–7475, doi:10.1029/95JD02892.
+   G. Miguez-Macho and Y. Fan and C.P. Weaver and R. Walko, and A. Robock. (2007). Incorporating water table dynamics in climate modeling: 2. Formulation, validation, and soil moisture simulation. J. Geophys. Res. 112, D13, https://doi.org/10.1029/2006JD008112
+   Fan, Y., G. Miguez-Macho, C. P. Weaver, R. Walko, and A. Robock (2007), Incorporating water table dynamics in climate modeling: 1. Water table observations and equilibrium water table simulations, J. Geophys. Res. 112, D10, doi:10.1029/2006JD008111.
+
 
 ``surface_exchange_option``
    Specifies the surface layer drag coefficient option. Valid values: ``1`` | ``2``
@@ -452,17 +458,22 @@ Noah-MP.4.0.1 Options
 
 .. COMMENT: Just want to confirm that this is the correct citation. 
    Did Koren publish and additional/separate article in 1999? 
+   Niu, G. Y., & Yang, Z. L. (2006). Effects of frozen soil on snowmelt runoff and soil water storage at a continental scale. Journal of Hydrometeorology, 7(5), 937– 952. https://doi.org/10.1175/JHM538.1
 
 ``frozen_soil_adjust_option``
    Specifies the frozen soil permeability option. Valid values: ``1`` | ``2``
 
-      +--------+----------------------------------------------------------+
-      | Value  | Description                                              |
-      +========+==========================================================+
-      | 1      | linear effects, more permeable (Niu and Yang, 2006, JHM) |
-      +--------+----------------------------------------------------------+
-      | 2      | nonlinear effects, less permeable (Koren, 1999)          |
-      +--------+----------------------------------------------------------+
+      +--------+-------------------------------------------------------------+
+      | Value  | Description                                                 |
+      +========+=============================================================+
+      | 1      | linear effects, more permeable (Niu and Yang, 2006, JHM)    |
+      +--------+-------------------------------------------------------------+
+      | 2      | nonlinear effects, less permeable (:cite:t:`KorenEtAl1999`) |
+      +--------+-------------------------------------------------------------+
+
+.. COMMENT:
+   Niu, G. Y., & Yang, Z. L. (2006). Effects of frozen soil on snowmelt runoff and soil water storage at a continental scale. Journal of Hydrometeorology, 7(5), 937– 952. https://doi.org/10.1175/JHM538.1
+   Correct Koren article?
 
 ``radiative_transfer_option``
    Specifies the radiation transfer option. Valid values: ``1`` | ``2`` | ``3``
@@ -504,6 +515,7 @@ Noah-MP.4.0.1 Options
       +--------+-----------------------------+
 
 .. COMMENT: Need Jordan citation
+      Jordan, R., 1991: A one-dimensional temperature model for a snow cover: Technical documentation for SNTHERM.89. U.S. Army Cold Regions Research and Engineering Laboratory Special Rep. 91-16, 49 pp.
 
 ``SFCTMP``
    Surface air temperature
@@ -564,6 +576,8 @@ Noah-MP.4.0.1 Options
 
 .. COMMENT: Need citations
    Also, what is the "evap" in the var name? Should the description say "Specifies the surface evaporation resistance option."
+   K. Sakaguchi, and X. Zeng, (2009), Effects of soil wetness, plant litter, and under-canopy atmospheric stability on ground evaporation in the Community Land Model (CLM3.5), Journal of Geophysical Research: Atmospheres, Volume 114, Issue D1. https://doi.org/10.1029/2008JD010834
+   A. Henderson-Sellers, and A.J. Pitman, (1992), Land-surface schemes for future climate models: Specification, aggregation, and heterogeneity. Journal of Geophysical Research: Atmospheres, Vol 97, Issue D3.pp 2687-2696. https://doi.org/10.1029/91JD01697
 
 ``rsurf``
    Ground surface resistance (s/m)
