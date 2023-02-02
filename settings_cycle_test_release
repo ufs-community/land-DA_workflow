@@ -1,0 +1,48 @@
+# Settings file for submit_cycle, for running the DA_IMS_test 
+
+# experiment name
+export exp_name=DA_IMS_test_mp2
+
+# temporary directory where experiment is run from
+export WORKDIR=${LANDDAROOT}/land-release/workdir/
+# directory where output is saved
+export OUTDIR=${LANDDAROOT}/land-release/cycle_land/${exp_name}/
+
+############################
+
+# for LETKF, this is size of ensemble.
+# for LETKF-OI pseudo ensemble, or non-ensemble runs use 1 
+ensemble_size=1
+
+# length of each forecast
+FCSTHR=24
+
+#forcing options: gdas, gswp3, gefs_ens
+atmos_forc=gdas
+
+#FV3 resolution
+export RES=96
+#export TPATH="/scratch2/BMC/gsienkf/Clara.Draper${LANDDAROOT}_RnR/orog_files_Mike/" 
+export TPATH="${LANDDAROOT}/land-release/orog_files/" 
+export TSTUB="oro_C96.mx100" # file stub for orography files in $TPATH
+                             # oro_C${RES} for atm only, oro_C${RES}.mx100 for atm/ocean.
+
+# number of cycles to submit in a single job
+# on hera in the debug queue 20 is a good number.
+dates_per_job=1
+
+# directory with initial conditions
+# can find some here:/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/single
+#CSDIR=/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/single
+ICSDIR=${LANDDAROOT}/land-release/single
+
+# namelist for do_landDA.sh
+# set to empty to not call do_landDA.sh
+DA_config="settings_DA_test"
+#export DA_config="" # do not call.
+
+# if want different DA at different times, list here. 
+DA_config00=${DA_config} 
+DA_config06=${DA_config} 
+DA_config12=${DA_config} 
+DA_config18=${DA_config} 

@@ -1,0 +1,52 @@
+&run_setup
+
+!------------------- common -------------------
+! Direction of conversion: either "vector2tile" or "tile2vector" for restart file
+!                                 "lndp2tile" or "lndp2vector" for perturbation 
+
+  direction = "tile2vector"
+
+! FV3 resolution and path to oro files for restart/perturbation conversion
+
+  tile_size = XXRES
+  tile_path = "XXTPATH"
+  tile_fstub = "XXTSTUB"
+  
+!------------------- only restart conversion -------------------
+! Time stamp for conversion for restart conversion
+
+  restart_date = "XXYYYY-XXMM-XXDD XXHH:00:00"
+  
+! Path for static file  
+  static_filename = "/LANDDAROOT/land-release/CXXRES/static/ufs-land_CXXRES_static_fields.nc"
+  
+! Location of vector restart file (vector2tile direction)
+
+  vector_restart_path = "junk"
+  
+! Location of tile restart files (tile2vector direction)
+
+  tile_restart_path = "./restarts/tile/"
+  
+! Path for converted files; if same as tile/vector path, files may be overwritten
+
+  output_path = "./restarts/vector/"
+
+!------------------- only perturbation mapping -------------------
+! layout, options: 1x4, 4x1, 2x2, an input settings for generating the perturbation file
+
+  lndp_layout = ""
+
+! input perturbation pattern files
+
+  lndp_input_file = ""
+
+! output files
+
+  lndp_output_file = ""
+
+! land perturbation variable list, for an example: 'vgf','smc'
+
+  lndp_var_list = ''
+
+/

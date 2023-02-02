@@ -1,0 +1,81 @@
+&run_setup
+
+  static_file      = "/LANDDAROOT/land-release/forcing/C96/static/ufs-land_C96_static_fields.nc"
+  init_file        = "/LANDDAROOT/land-release/forcing/C96/init/ufs-land_C96_init_fields_1hr.nc"
+  forcing_dir      = "/LANDDAROOT/land-release/forcing/C96/gdas/forcing"
+  
+  separate_output = .false.
+  output_dir       = "./noahmp_output/"
+
+  restart_frequency_s = XXFREQ
+  restart_simulation  = .true.
+  restart_date        = "XXYYYY-XXMM-XXDD XXHH:00:00"
+  restart_dir         = "./restarts/vector/"
+
+  timestep_seconds = 3600
+
+! simulation_start is required
+! either set simulation_end or run_* or run_timesteps, priority
+!   1. simulation_end 2. run_[days/hours/minutes/seconds] 3. run_timesteps
+
+  simulation_start = "2000-01-01 00:00:00"   ! start date [yyyy-mm-dd hh:mm:ss]
+!  simulation_end   = "1999-01-01 06:00:00"   !   end date [yyyy-mm-dd hh:mm:ss]
+
+  run_days         = XXRDD   ! number of days to run
+  run_hours        = XXRHH   ! number of hours to run
+  run_minutes      = 0       ! number of minutes to run
+  run_seconds      = 0       ! number of seconds to run
+  
+  run_timesteps    = 0       ! number of timesteps to run
+  
+  begloc           = 1
+  endloc           = 18360
+  
+/
+
+&land_model_option
+ land_model        = 2   ! choose land model: 1=noah, 2=noahmp
+/
+
+&structure
+ num_soil_levels   = 4     ! number of soil levels
+ forcing_height    = 6     ! forcing height [m]
+/
+
+&soil_setup
+ soil_level_thickness   =  0.10,    0.30,    0.60,    1.00      ! soil level thicknesses [m]
+ soil_level_nodes       =  0.05,    0.25,    0.70,    1.50      ! soil level centroids from surface [m]
+/
+
+&noahmp_options
+ dynamic_vegetation_option         = 4
+ canopy_stomatal_resistance_option = 2
+ soil_wetness_option               = 1
+ runoff_option                     = 1
+ surface_exchange_option           = 3
+ supercooled_soilwater_option      = 1
+ frozen_soil_adjust_option         = 1
+ radiative_transfer_option         = 3
+ snow_albedo_option                = 2
+ precip_partition_option           = 1
+ soil_temp_lower_bdy_option        = 2
+ soil_temp_time_scheme_option      = 3
+ thermal_roughness_scheme_option   = 2
+ surface_evap_resistance_option    = 1
+ glacier_option                    = 1
+/
+
+&forcing
+ forcing_timestep_seconds       = 3600
+ forcing_type                   = "gdas"
+ forcing_filename               = "C96_GDAS_forcing_"
+ forcing_interp_solar           = "linear"  ! gswp3_zenith or linear
+ forcing_time_solar             = "instantaneous"  ! gswp3_average or instantaneous
+ forcing_name_precipitation     = "precipitation_conserve"
+ forcing_name_temperature       = "temperature"
+ forcing_name_specific_humidity = "specific_humidity"
+ forcing_name_wind_speed        = "wind_speed"
+ forcing_name_pressure          = "surface_pressure"
+ forcing_name_sw_radiation      = "solar_radiation"
+ forcing_name_lw_radiation      = "longwave_radiation"
+/
