@@ -20,30 +20,36 @@
 #NOTES--If running with a container, need to get executable scripts set up for all in land-offline_workflow/build/bin, python and fv3-bundle/build/bin/fv3jedi_letkf.x
 set -x
 ulimit -s unlimited
-#TODO Fix this and make it more robust
-if [[ ${SLURM_SUBMIT_HOST} =~ hfe ]]; then
-  # Hera
-  EPICHOME=/scratch1/NCEPDEV/nems/role.epic
-elif [[ ${SLURM_SUBMIT_HOST} =~ Orion ]]; then
-  EPICHOME=/work/noaa/epic-ps/role-epic-ps
-else
-  EPICHOME=/opt
-fi
-
-module use ${EPICHOME}/miniconda3/modulefiles
-module use ${EPICHOME}/spack-stack/envs/landda-release-1.0-intel/install/modulefiles/Core
-module load stack-intel stack-intel-oneapi-mpi netcdf-c netcdf-fortran cmake ecbuild stack-python
-
 dirup=`dirname $PWD`
 export LANDDAROOT=${LANDDAROOT:-`dirname $dirup`}
 export BUILDDIR=${BUILDDIR:-${LANDDAROOT}/land-release/land-offline_workflow/build}
 locpython=`which python3 | head -n 1`
 export PYTHON=${PYTHON:-${locpython}}
 export PATH=$PATH:./
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${BUILDDIR}/lib
 
-export JEDI_INSTALL=/scratch1/NCEPDEV/nems/role.epic/contrib
+#TODO Fix this and make it more robust
+if [[ ${USE_SINGULARITY} =~ yes ]]; then
+  EPICHOME=/opt
+  export PYTHON=$PWD/singularity/bin/python
+  export JEDI_INSTALL=/opt
+  export BUILDDIR=$PWD/singularity
+  export JEDI_EXECDIR=${LANDDAROOT}/land-release/land-offline_workflow/singularity/bin
+elif [[ ${SLURM_SUBMIT_HOST} =~ hfe ]]; then
+  # Hera
+  EPICHOME=/scratch1/NCEPDEV/nems/role.epic
+  export JEDI_INSTALL=/scratch1/NCEPDEV/nems/role.epic/contrib
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${BUILDDIR}/lib
+elif [[ ${SLURM_SUBMIT_HOST} =~ Orion ]]; then
+  EPICHOME=/work/noaa/epic-ps/role-epic-ps
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${BUILDDIR}/lib
+fi
+
 export PYTHONPATH=${JEDI_INSTALL}/ioda-bundle/build/lib/pyiodaconv:${JEDI_INSTALL}/ioda-bundle/build/lib/python3.9/pyioda
+
+module use ${EPICHOME}/miniconda3/modulefiles
+module use ${EPICHOME}/spack-stack/envs/landda-release-1.0-intel/install/modulefiles/Core
+module load stack-intel stack-intel-oneapi-mpi netcdf-c netcdf-fortran cmake ecbuild stack-python
+
 
 if [[ $# -gt 0 ]]; then 
     config_file=$1
