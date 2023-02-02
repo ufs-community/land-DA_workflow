@@ -20,6 +20,19 @@
 #NOTES--If running with a container, need to get executable scripts set up for all in land-offline_workflow/build/bin, python and fv3-bundle/build/bin/fv3jedi_letkf.x
 set -x
 ulimit -s unlimited
+#TODO Fix this and make it more robust
+if [[ ${SLURM_SUBMIT_HOST} =~ hfe ]]; then
+  # Hera
+  EPICHOME=/scratch1/NCEPDEV/nems/role.epic
+elif [[ ${SLURM_SUBMIT_HOST} =~ Orion ]]; then
+  EPICHOME=/work/noaa/epic-ps/role-epic-ps
+else
+  EPICHOME=/opt
+fi
+
+module use ${EPICHOME}/miniconda3/modulefiles
+module use ${EPICHOME}/spack-stack/envs/landda-release-1.0-intel/install/modulefiles/Core
+module load stack-intel stack-intel-oneapi-mpi netcdf-c netcdf-fortran cmake ecbuild stack-python
 
 dirup=`dirname $PWD`
 export LANDDAROOT=${LANDDAROOT:-`dirname $dirup`}
