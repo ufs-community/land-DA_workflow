@@ -66,12 +66,11 @@ simplified Simple Biosphere Model (SSiB) model, and (4) the Simple Water
 Balance model (SWB) of OH (:cite:t:`ChenEtAl1996`). The Environmental Modeling
 Center (EMC) of NCEP chose the OSU LSM (:cite:t:`Mahrt&Pan1984`) based on
 its performance and EMC staff members' previous experience with this LSM. 
-NCEP used the Noah LSM for further refinement and implementation in NCEP regional and global
-coupled weather and climate models and their companion data assimilation
-systems. In 2000, given a) the advent of the "New Millenium", b) a
-strong desire by EMC to better recognize its LSM collaborators, and c) a
-new NCEP goal to more strongly pursue and offer "Community Models", EMC
-decided to coin the new name "NOAH" for the LSM that had emerged at NCEP
+NCEP used this LSM to refine and implement NCEP regional and global
+coupled weather and climate models and their data assimilation
+systems. In 2000, a strong desire by EMC to better recognize its LSM 
+collaborators and a new NCEP goal to more strongly pursue and offer "Community Models"
+prompted EMC to coin the new name "NOAH" for the LSM that had emerged at NCEP
 during the 1990s. 
 
    * **N:** National Centers for Environmental Prediction (NCEP)
@@ -79,16 +78,14 @@ during the 1990s.
    * **A:** Air Force (both Air Force Weather Agency (AFWA) and Air Force Research Lab (AFRL) --- formerly AFGL, PL)
    * **H:** Hydrology Lab –-- NWS (National Weather Service, formerly Office of Hydrology –-- OH)
 
-With the choice of the "NOAH" acronym, EMC strived to explicitly acknowledge 
-both the multi-group heritage and
+The "NOAH" acronym explicitly acknowledged both the multi-group heritage and
 informal "community" usage of this LSM, going back to the early 1980s.
-Since its beginning then at Oregon State University, the evolution of
-the present NOAH LSM herein has spanned significant ongoing development
+Since its inception, NOAH LSM has evolved due to significant ongoing development
 efforts by the above groups.
 
-Noah LSM is a stand-alone, uncoupled, 1-D column version used to execute
-single-site land surface simulations. In this traditional 1-D uncoupled
-mode, near-surface atmospheric forcing data is required as input
+Noah LSM is a stand-alone, uncoupled, one-dimensional (1-D) column model 
+used to execute single-site land surface simulations. In this traditional 1-D 
+uncoupled mode, near-surface atmospheric forcing data is required as input
 forcing. This LSM simulates soil moisture (both liquid and frozen), soil
 temperature, skin temperature, snow depth, snow water equivalent (SWE),
 snow density, canopy water content, and the energy flux and water flux
@@ -97,19 +94,21 @@ has been extensively evaluated in both the offline mode and the coupled
 mode. More detailed descriptions of Noah physics and developments are
 presented by :cite:t:`EkEtAl2003` 2003 and :cite:t:`KorenEtAl1999` 1999.
 
-Noah-MP is currently used operationally at the NOAA National Water Model
-(NWM) which is built upon the legacy of the Noah model, but with new and
-multiple options for selected processes: 
+Noah-MP is currently used operationally by the NOAA National Water Model
+(NWM), which is built upon the legacy of the Noah model, but with 
+multiple new options for selected processes: 
    
-   #. restructuring the model to include a separated vegetation canopy accounting for vegetation effects on surface energy and water balances, 
+   #. a separated vegetation canopy accounting for vegetation effects on surface energy and water balances, 
    #. a modified two-stream approximation scheme to include the effects of vegetation canopy gaps that vary with solar zenith angle and the canopy 3-D structure on radiation transfer, 
    #. a 3-layer physically-based snow model, 
    #. a more permeable frozen soil by separating a grid cell into a permeable fraction and impermeable fraction, 
    #. a simple groundwater model with a TOPMODEL-based runoff scheme, and 
    #. a short-term leaf phenology model.
 
+.. COMMENT: Is this section about the National Water Model relevant? It's not part of UFS, is it? 
+
 Multiple parameterizations are the key to treating
-hydrology-snow-vegetation processes in a single land modeling framework
+hydrology-snow-vegetation processes in a single land modeling framework,
 and structural differences improve performance over heterogeneous
 surfaces. In addition, Noah-MP LSM enables a modular framework for
 diagnosing differences in process representation, facilitating ensemble
@@ -122,10 +121,7 @@ snowfall, snow surface albedo, supercooled liquid water in frozen soil,
 and frozen soil permeability, etc. A collaborative effort among NCAR,
 NCEP, NASA, and university groups has been established to develop and
 improve the community Noah-MP LSM. Details about the model's physical
-parameterizations can be referred to Niu et al. [2011].
-
-.. COMMENT: Need a citation for Niu et al (2011)! 
-
+parameterizations can be referred to (:cite:t:`NiuEtAl2011`).
 
 Code Repositories and Directory Structure
 ==============================================
