@@ -20,26 +20,35 @@
 #NOTES--If running with a container, need to get executable scripts set up for all in land-offline_workflow/build/bin, python and fv3-bundle/build/bin/fv3jedi_letkf.x
 set -x
 ulimit -s unlimited
+
+#Get the directory structure figured out here
 dirup=`dirname $PWD`
+#Currently, this is the parent directory of land-release. We should probably change this to just be whatever 
+#the user wants to call the current "land-release" directory
 export LANDDAROOT=${LANDDAROOT:-`dirname $dirup`}
+#This is where the land release executables reside. This will be different for singularity
 export BUILDDIR=${BUILDDIR:-${LANDDAROOT}/land-release/land-offline_workflow/build}
-locpython=`which python3 | head -n 1`
-export PYTHON=${PYTHON:-${locpython}}
 export PATH=$PATH:./
 
 #TODO Fix this and make it more robust
+#Set the environment variable "USE_SINGULARITY" to yes in order to run using a container
 if [[ ${USE_SINGULARITY} =~ yes ]]; then
   EPICHOME=/opt
+  #use the python that is built into the container. It has all the pythonpaths set and can run the ioda converters
   export PYTHON=$PWD/singularity/bin/python
+  #JEDI is installed under /opt in the container
   export JEDI_INSTALL=/opt
+  #Scripts that launch containerized versions of the executables are in $PWD/singularity/bin They should be called
+  #from the host system to be run (e.g. mpiexec -n 6 $BUILDDIR/bin/fv3jedi_letkf.x )
   export BUILDDIR=$PWD/singularity
   export JEDI_EXECDIR=${LANDDAROOT}/land-release/land-offline_workflow/singularity/bin
+  #we need to have intelmpi loaded on the host system to run the workflow. Try to load it here.
+  #TODO--figure out a way to make sure we have intelmpi loaded or don't let the workflow start
   module try-load impi
   module try-load intel-oneapi-mpi
   module try-load intelmpi
   module try-load singularity
   export SINGULARITYBIN=`which singularity`
-# export MPIEXEC=`which mpiexec`
   sed -i 's/singularity exec/${SINGULARITYBIN} exec/g' run_container_executable.sh
 elif [[ ${SLURM_SUBMIT_HOST} =~ hfe ]]; then
   # Hera
@@ -50,13 +59,14 @@ elif [[ ${SLURM_SUBMIT_HOST} =~ Orion ]]; then
   export JEDI_INSTALL=/work/noaa/epic-ps/role-epic-ps/contrib
   EPICHOME=/work/noaa/epic-ps/role-epic-ps
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${BUILDDIR}/lib
-  echo $PYTHONPATH
 fi
 
 
 module use ${EPICHOME}/miniconda3/modulefiles
 module use ${EPICHOME}/spack-stack/envs/landda-release-1.0-intel/install/modulefiles/Core
 module try-load stack-intel stack-intel-oneapi-mpi netcdf-c netcdf-fortran cmake ecbuild stack-python
+locpython=`which python3 | head -n 1`
+export PYTHON=${PYTHON:-${locpython}}
 export MPIEXEC=`which mpiexec`
 #TODO -- make this more portable--not every install will use python3.9
 export PYTHONPATH=${JEDI_INSTALL}/ioda-bundle/build/lib/pyiodaconv:${JEDI_INSTALL}/ioda-bundle/build/lib/python3.9/pyioda
