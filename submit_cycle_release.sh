@@ -74,7 +74,7 @@ LSMexec=${BUILDDIR}/bin/ufsLandDriver.exe
 DADIR=${CYCLEDIR}/DA_update/
 DAscript=${DADIR}/do_landDA_release.sh
 
-analdate=${CYCLEDIR}/analdates.sh
+analdate=${CYCLEDIR}/analdates_sample.sh
 incdate=${CYCLEDIR}/incdate.sh
 
 KEEPWORKDIR="YES"
