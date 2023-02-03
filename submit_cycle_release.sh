@@ -1,11 +1,11 @@
 #!/bin/bash -le 
 #SBATCH --job-name=offline_noahmp
 #SBATCH --account=da-cpu
-#SBATCH --qos=debug
+#SBATCH --qos=batch
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
 #SBATCH --cpus-per-task=1
-#SBATCH -t 00:10:00
+#SBATCH -t 00:04:00
 #SBATCH -o log_noahmp.%j.log
 #SBATCH -e err_noahmp.%j.err
 
@@ -34,22 +34,32 @@ if [[ ${USE_SINGULARITY} =~ yes ]]; then
   export JEDI_INSTALL=/opt
   export BUILDDIR=$PWD/singularity
   export JEDI_EXECDIR=${LANDDAROOT}/land-release/land-offline_workflow/singularity/bin
+  module try-load impi
+  module try-load intel-oneapi-mpi
+  module try-load intelmpi
+  module try-load singularity
+  export SINGULARITYBIN=`which singularity`
+# export MPIEXEC=`which mpiexec`
+  sed -i 's/singularity exec/${SINGULARITYBIN} exec/g' run_container_executable.sh
 elif [[ ${SLURM_SUBMIT_HOST} =~ hfe ]]; then
   # Hera
   EPICHOME=/scratch1/NCEPDEV/nems/role.epic
   export JEDI_INSTALL=/scratch1/NCEPDEV/nems/role.epic/contrib
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${BUILDDIR}/lib
 elif [[ ${SLURM_SUBMIT_HOST} =~ Orion ]]; then
+  export JEDI_INSTALL=/work/noaa/epic-ps/role-epic-ps/contrib
   EPICHOME=/work/noaa/epic-ps/role-epic-ps
   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${BUILDDIR}/lib
+  echo $PYTHONPATH
 fi
 
-export PYTHONPATH=${JEDI_INSTALL}/ioda-bundle/build/lib/pyiodaconv:${JEDI_INSTALL}/ioda-bundle/build/lib/python3.9/pyioda
 
 module use ${EPICHOME}/miniconda3/modulefiles
 module use ${EPICHOME}/spack-stack/envs/landda-release-1.0-intel/install/modulefiles/Core
-module load stack-intel stack-intel-oneapi-mpi netcdf-c netcdf-fortran cmake ecbuild stack-python
-
+module try-load stack-intel stack-intel-oneapi-mpi netcdf-c netcdf-fortran cmake ecbuild stack-python
+export MPIEXEC=`which mpiexec`
+#TODO -- make this more portable--not every install will use python3.9
+export PYTHONPATH=${JEDI_INSTALL}/ioda-bundle/build/lib/pyiodaconv:${JEDI_INSTALL}/ioda-bundle/build/lib/python3.9/pyioda
 
 if [[ $# -gt 0 ]]; then 
     config_file=$1
@@ -68,7 +78,6 @@ source $config_file
 export CYCLEDIR=$(pwd) 
 
 # set executables
-
 vec2tileexec=${BUILDDIR}/bin/vector2tile_converter.exe
 LSMexec=${BUILDDIR}/bin/ufsLandDriver.exe 
 DADIR=${CYCLEDIR}/DA_update/
