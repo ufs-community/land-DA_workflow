@@ -193,9 +193,9 @@ The forcing initial conditions file is available in the ``land-release`` :ref:`t
    +-----------------------------+----------------------------------------+
    | date (date length)          | UTC date                               |
    +-----------------------------+----------------------------------------+
-   | latitude                    | degrees north                          |
+   | latitude                    | degrees north-south                    |
    +-----------------------------+----------------------------------------+
-   | longitude                   | degrees east                           |
+   | longitude                   | degrees east-west                      |
    +-----------------------------+----------------------------------------+
    | snow_water_equivalent       | mm                                     |
    +-----------------------------+----------------------------------------+
@@ -215,9 +215,6 @@ The forcing initial conditions file is available in the ``land-release`` :ref:`t
    +-----------------------------+----------------------------------------+
    | soil_level_nodes            | m                                      |
    +-----------------------------+----------------------------------------+
-
-.. COMMENT: Should latitude be "degrees north-south" and longitude "degrees east-west"?
-   Or does this only work in the northern & eastern hemispheres?
 
 Model Configuration File (``ufs-land.namelist.noahmp``)
 ---------------------------------------------------------
@@ -239,21 +236,18 @@ Run Setup Parameters
 ``forcing_dir``
    Specifies the UFS land forcing directory.
 
-.. COMMENT: Should we add recommended values for the 3 variables above based on the data we provide? 
+.. COMMENT: Add recommended values for the 3 variables above based on the data we provide (once it has been cleaned up/restructured). 
 
 ``separate_output``
-   Specifies whether to enable the separate output. Valid values: ``.false.`` | ``true``
+   Specifies whether to enable a separate output directory. Valid values: ``.false.`` | ``.true.``
 
       +----------+----------------+
       | Value    | Description    |
       +==========+================+
       | .false.  | do not enable  |
       +----------+----------------+
-      | true     | enable         |
+      | .true.   | enable         |
       +----------+----------------+
-
-.. COMMENT: What would the separate output be? An output directory? 
-   Should "true" be ".true."? That's how it is in the sample file below.
 
 ``output_dir``
    Specifies the output directory.
@@ -264,17 +258,15 @@ Run Setup Parameters
    Specifies the restart frequency (in seconds) for the UFS land model.
 
 ``restart_simulation``
-   Specifies whether to enable the restart simulation. Valid values: ``.false.`` | ``true``
+   Specifies whether to enable the restart simulation. Valid values: ``.false.`` | ``.true.``
 
       +----------+----------------+
       | Value    | Description    |
       +==========+================+
       | .false.  | do not enable  |
       +----------+----------------+
-      | true     | enable         |
+      | .true.   | enable         |
       +----------+----------------+
-
-.. COMMENT: Should "true" be ".true."? That's how it is in the sample file below.
 
 ``restart_date``
    Specifies the restart date. The form is ``YYYY-MM-DD HH:MM:SS``, where 
@@ -542,7 +534,7 @@ Noah-MP.4.0.1 Options
    Surface temperature
 
 ``surface_evap_resistance_option``
-   Specifies the surface resistance option. Valid values: ``1`` | ``2`` | ``3`` | ``4``
+   Specifies the surface evaporation resistance option. Valid values: ``1`` | ``2`` | ``3`` | ``4``
 
       +----------------+-----------------------------------------------------+
       | Value          | Description                                         |
@@ -880,15 +872,13 @@ for restart/perturbation conversion.
 
 .. COMMENT: What are the units (# grid/tile cells?)? Are there set tile sizes? Or can it be any number?
 
-``tile path``
+``tile_path``
    Specifies the path of tile location
-
-.. COMMENT: Should "tile path" have an underscore?
 
 ``tile_fstub``
    Specifies the name of orographic tile
 
-.. COMMENT: Is the "orographic tile" different from the tiles mentioned in the vars above?
+.. COMMENT: The "orographic tile" here is different from the tiles mentioned in the vars above.
 
 Parameters for Restart Conversion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -932,8 +922,6 @@ These parameters are *only* relevant for perturbation mapping.
 
 ``output files``
    Specifies the path for output file
-
-.. COMMENT: Should "output files" have an underscore?
 
 ``lndp_var_list``
    Specifies the land perturbation variable options. Valid values: ``vgf`` | ``smc``
