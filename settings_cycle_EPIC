@@ -2,8 +2,8 @@
 
 # experiment name and time period
 export exp_name=
-STARTDATE=
-ENDDATE=
+STARTDATE=20211001
+ENDDATE=20211003
 
 # temporary directory where experiment is run from
 export WORKDIR=
@@ -21,7 +21,7 @@ export atmos_forc=era5
 #FV3 resolution
 export RES=
 export TPATH=
-export TSTUB= # file stub for orography files in $TPATH
+export TSTUB=oro_C96 # file stub for orography files in $TPATH
               # oro_C${RES} for atm only, oro_C${RES}.mx100 for atm/ocean.
 
 # number of cycles to submit in a single job
@@ -32,7 +32,7 @@ export ICSDIR=
 
 # namelist for do_landDA.sh
 # set to "openloop" to not call do_landDA.sh
-export DA_config=openloop
+export DA_config=settings_DA_EPIC
 
 # if want different DA at different times, list here. 
 export DA_config00=${DA_config} 
