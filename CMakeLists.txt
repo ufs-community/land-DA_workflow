@@ -22,17 +22,13 @@ include( landda_compiler_flags )
 # Dependencies
 ################################################################################
 find_package( NetCDF REQUIRED COMPONENTS Fortran)
-#find_package( gsl-lite REQUIRED HINTS $ENV{gsl_list_DIR})
-#find_package( eckit  1.11.6   REQUIRED)
-#find_package( fckit  0.7.0    REQUIRED)
-#find_package( atlas  0.20.2   REQUIRED)
-#find_package( oops   1.0.0    REQUIRED)
-#find_package( saber  1.0.0    REQUIRED)
-#find_package( ioda   1.0.0    REQUIRED)
-#find_package( ufo    1.0.0    REQUIRED)
-#find_package( crtm   2.2.3)
+find_package( fv3-bundle REQUIRED)
+find_package( ioda-bundle REQUIRED)
 include_directories( ${NETCDF_INCLUDE_DIRS} )
 
+message("HEY, features are ${fv3-bundle_FEATURES}")
+message("HEY, version is ${fv3-bundle_version}")
+message("${fv3-bundle_BASE_DIR} and ${ioda-bundle_BASE_DIR})")
 
 ################################################################################
 # Sources
@@ -47,6 +43,14 @@ add_subdirectory( DA_update/IMS_proc )
 if(ECBUILD_INSTALL_FORTRAN_MODULES)
   install(DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR} DESTINATION ${INSTALL_INCLUDE_DIR} )
 endif()
+execute_process(
+  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/DA_update/jedi/fv3-jedi/Data/make_links.sh ${fv3-bundle_BASE_DIR}
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/DA_update/jedi/fv3-jedi/Data
+)
+execute_process(
+  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/DA_update/jedi/ioda//make_links.sh ${ioda-bundle_BASE_DIR}
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/DA_update/jedi/ioda/
+)
 
 ################################################################################
 # Finalise configuration
