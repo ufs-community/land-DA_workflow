@@ -12,12 +12,13 @@ Noah-MP is tightly coupled with the atmospheric component of the
 `UFS Weather Model <https://github.com/ufs-community/ufs-weather-model>`__, 
 and is essentially a module/subroutine within the `Common Community Physics Package
 (CCPP) <https://dtcenter.org/community-code/common-community-physics-package-ccpp>`__
-repository. The UFS Land DA System currently only works with snow data. Thus,
-this User's Guide focuses primarily on the snow DA process.
+repository. The UFS Land Data Assimilation (DA) System currently only works with snow data. 
+Thus, this User's Guide focuses primarily on the snow DA process.
 
 This User's Guide is organized as follows:
 
-   * This chapter (Introduction) provides background information on the Unified Forecast System (:term:`UFS`) and the NoahMP model. and outlines basic technical information about supported systems and the directory structure. 
+   * This chapter (Introduction) provides background information on the Unified Forecast System (:term:`UFS`) and the NoahMP model. 
+   * :numref:`Chapter %s <TechOverview>` (Technical Overview) outlines user support levels and describes the code repositories and directory structure. 
    * :numref:`Chapter %s <Model>` (Model) provides practical information on building and running the Noah-MP Land Surface Model (LSM) and using the Vector-to-Tile Converter.
    * :numref:`Chapter %s <Glossary>` (Glossary) lists important terms. 
 
