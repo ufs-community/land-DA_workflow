@@ -14,38 +14,113 @@ and the Noah-MP Land Surface Model (LSM), see :numref:`Section %s <Background>` 
 Building and Running the UFS Land Model
 ==========================================
 
-Make sure your local system has a Fortran compiler and :term:`NetCDF` software installed.
+Prerequisites
+---------------
+To run the Land DA system, users must have a Fortran compiler and :term:`NetCDF` software installed on their system. Additionally, users will need data to run an experiment. See the :ref:`next section <GetData>` for information on downloading data for a sample case. 
 
-#. Clone the UFS land model from GitHub:
+.. _GetData:
+
+Get Data
+----------
+
+Users should set up a fresh directory somewhere on their system and download the data 
+required to run a Land DA cycle. For example:
+
+.. code-block:: console
+
+   mkdir /path/to/land-da
+   cd /path/to/land-da
+   wget https://epic-sandbox-srw.s3.amazonaws.com/land-da-data.tar.gz
+
+.. COMMENT: Replace with path to actual data
+
+Users should substitute ``/path/to/land-da`` with the actual path to the directory where they want their Land DA data to reside. 
+
+Next, untar the data. 
+
+.. code-block:: console
+
+   tar xvfz land-da-data.tar.gz
+
+The data will be located in a directory called ``land-release``.
+
+.. _DownloadCode:
+
+Clone the Repository
+-----------------------
+
+#. Navigate to the ``land-release`` directory, and clone the UFS Land DA system from GitHub:
 
    .. code-block:: console
 
-      git clone --recurse-submodules
-      https://github.com/barlage/ufs-land-driver.git
+      cd /path/to/land-release
+      git clone --recursive -b feature/release-v1.beta  https://github.com/NOAA-EPIC/land-offline_workflow
 
-#. Navigate to the UFS land driver:
+Build the Land DA System
+--------------------------
 
-   .. code-block:: console
-
-      cd ufs-land-driver
-
-#. Create a ``user_build_config`` file:
+#. ``cd`` into the new ``land-offline_workflow`` directory, and create a ``build`` directory. 
 
    .. code-block:: console
 
-      ./configure
+      cd land-offline_workflow
+      mkdir build
 
-#. Edit the ``user_build_config`` file to setup compiler and library
-   paths to be consistent with your environment if not done by default:
+#. Load the modules required for the Land DA workflow. 
+
+   .. code-block:: console
+      
+      module use ${EPICHOME}/miniconda3/modulefiles
+      module use ${EPICHOME}/spack-stack/envs/landda-release-1.0-intel/install/modulefiles/Core
+      module try-load stack-intel stack-intel-oneapi-mpi netcdf-c netcdf-fortran cmake ecbuild stack-python
+   
+   where ``${EPICHOME}`` refers to the path where the different modulefiles (e.g., for miniconda, spack-stack) are installed. 
+
+   +--------------+-----------------------------------------------------------+
+   | System       | Path                                                      |
+   +==============+===========================================================+
+   | Hera         | /scratch1/NCEPDEV/nems/role.epic                          |
+   +--------------+-----------------------------------------------------------+
+   | Orion        | /work/noaa/epic-ps/role-epic-ps                           |
+   +--------------+-----------------------------------------------------------+
+   
+#. Compile the code to build the Land DA system.  
 
    .. code-block:: console
 
-      COMPILERF90 = /opt/local/bin/gfortran-mp-10
-      FREESOURCE = #-ffree-form -ffree-line-length-none
-      F90FLAGS = -fdefault-real-8 -fdefault-double-8
-      NETCDFMOD = -I/opt/local/include
-      NETCDFLIB = -L/opt/local/lib -lnetcdf -lnetcdff
-      PHYSDIR = ../ccpp-physics/physics
+      cd build
+      ecbuild ..
+      make -j 8
+
+   If the code successfully compiles, you will see ``ufsLand.exe`` in the ``run`` directory.
+
+   .. COMMENT: Probably should say the build directory, right?
+
+.. _ConfigureExpt:
+
+Configure the Experiment
+---------------------------
+
+Coming soon!
+
+.. COMMENT: Is this still required?
+   #. Create a ``user_build_config`` file:
+
+      .. code-block:: console
+
+         ./configure
+
+   #. Edit the ``user_build_config`` file to setup compiler and library
+      paths to be consistent with your environment if not done by default:
+
+      .. code-block:: console
+
+         COMPILERF90 = /opt/local/bin/gfortran-mp-10
+         FREESOURCE = #-ffree-form -ffree-line-length-none
+         F90FLAGS = -fdefault-real-8 -fdefault-double-8
+         NETCDFMOD = -I/opt/local/include
+         NETCDFLIB = -L/opt/local/lib -lnetcdf -lnetcdff
+         PHYSDIR = ../ccpp-physics/physics
 
    If users prefer to use a different ``ccpp-physics`` directory from the one
    automatically downloaded with the clone, they can set the ``PHYSDIR`` in
@@ -56,14 +131,20 @@ Make sure your local system has a Fortran compiler and :term:`NetCDF` software i
    directory, all the drivers in the ``driver`` directory, and executables
    are in the ``run`` directory.
 
-#. Compile the code:
+.. _SubmitExpt:
 
-   .. code-block:: console
+Submit the Experiment
+------------------------
 
-      make
+Navigate back to the ``land-offline_workflow`` directory and submit the experiment using the ``sbatch`` command. It will run through a cycle.
 
-   If the code successfully compiles, you will see ``ufsLand.exe``
-   in the ``run`` directory.
+.. code-block:: console
+
+   cd ..
+   sbatch submit_cycle_release.sh settings_cycle_test_release
+
+The system will output a message such as ``Submitted batch job ########``, indicating that the job was successfully submitted. If all goes well, a full cycle will run with data assimilation (DA) and a forecast. To view progress, users can open the log file, 
+      
 
 .. _InputFiles:
 
