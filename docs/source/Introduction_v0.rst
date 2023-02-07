@@ -15,15 +15,26 @@ and is essentially a module/subroutine within the `Common Community Physics Pack
 repository. The UFS Land DA System currently only works with snow data. Thus,
 this User's Guide focuses primarily on the snow DA process.
 
+This User's Guide is organized as follows:
+
+   * This chapter (Introduction) provides background information on the Unified Forecast System (:term:`UFS`) and the NoahMP model. and outlines basic technical information about supported systems and the directory structure. 
+   * :numref:`Chapter %s <Model>` (Model) provides practical information on building and running the Noah-MP Land Surface Model (LSM) and using the Vector-to-Tile Converter.
+   * :numref:`Chapter %s <Glossary>` (Glossary) lists important terms. 
+
+   .. * :numref:`Chapter %s <DA>` (Introduction to Data Assimilation and JEDI) ---> mention IODA bundle, obs, etc. 
+   .. * :numref:`Chapter %s <Next>` (Next Steps) 
+   .. * :numref:`Chapter %s <Container>` (Container) explains how to build the Land DA system from a Singularity container. 
+   .. Chapter 5 (Configuration Parameters) lists the purpose and valid values for various configuration parameters.
+
 .. _Background:
 
 Background Information
 =========================
 
-Unified Forecast System
---------------------------
+Unified Forecast System (UFS)
+-------------------------------
 
-The Unified Forecast System (:term:`UFS`) is a community-based, coupled, comprehensive Earth modeling system. NOAA’s operational model suite for numerical weather prediction (:term:`NWP`) is quickly transitioning to the UFS from many different modeling systems. For example, the UFS-based Global Forecast System
+The UFS is a community-based, coupled, comprehensive Earth modeling system. NOAA’s operational model suite for numerical weather prediction (:term:`NWP`) is quickly transitioning to the UFS from many different modeling systems. For example, the UFS-based Global Forecast System
 (`GFS <https://www.emc.ncep.noaa.gov/emc/pages/numerical_forecast_systems/gfs.php>`__)
 and the Global Ensemble Forecast System
 (`GEFS <https://www.emc.ncep.noaa.gov/emc/pages/numerical_forecast_systems/gefs.php>`__) are currently in operational use.
@@ -122,77 +133,6 @@ and frozen soil permeability, etc. A collaborative effort among NCAR,
 NCEP, NASA, and university groups has been established to develop and
 improve the community Noah-MP LSM. Details about the model's physical
 parameterizations can be referred to (:cite:t:`NiuEtAl2011`).
-
-Code Repositories and Directory Structure
-==============================================
-
-Directory Structure
-----------------------
-
-The main repository for the Land DA System is named ``land-offline_workflow``; 
-it is available on GitHub at https://github.com/NOAA-PSL/land-offline_workflow. 
-A number of submodules are nested under the main ``land-offline_workflow`` directory. 
-When the ``land-offline_workflow`` repository is cloned with the 
-``--recurse-submodules`` argument, the basic directory structure will be similar 
-to the example below. Some files and directories have been removed for brevity. 
-
-.. COMMENT: Update GitHub link later to reflect NOAA-EPIC location.
-
-.. code-block:: console
-
-   land-offline_workflow
-    ├── DA_update
-    │     ├── IMS_proc
-    │     ├── add_jedi_incr
-    │     └── jedi
-    ├── cmake
-    ├── configures
-    ├── docs 
-    ├── ensemble_pert
-    ├── ufs-land-driver
-    │     └── ccpp-physics
-    ├── vector2tile
-    ├── CMakeLists.txt
-    └── README.md
-
-Land DA Components
----------------------
-
-:numref:`Table %s <LandDAComponents>` describes the various subrepositories that form
-the UFS Land DA System. 
-
-.. _LandDAComponents:
-
-.. table:: UFS Land DA System Components
-
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | Repository Name          | Repository Description                  | Authoritative repository URL                         |
-   +==========================+=========================================+======================================================+
-   | land-DA_update           | Contains scripts and components for     | https://github.com/NOAA-PSL/land-DA_update           |
-   |                          | performing data assimilation (DA)       |                                                      |
-   |                          | procedures.                             |                                                      |
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | *-- land-apply_jedi_incr*| Contains code that applies the          | https://github.com/NOAA-PSL/land-apply_jedi_incr     |
-   |                          | JEDI-generated DA increment to UFS      |                                                      |
-   |                          | ``sfc_data`` restart                    |                                                      |
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | *-- land-IMS_proc*       | Contains code for processing Ice        | https://github.com/NOAA-PSL/land-IMS_proc            |
-   |                          | Mapping Data (IMS) ASCII input files    |                                                      |
-   |                          | on the UFS model grid.                  |                                                      |
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | ufs-land-driver          | Repository for the UFS Land             | https://github.com/barlage/ufs-land-driver           | 
-   |                          | Driver                                  |                                                      |
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | *-- ccpp-physics*        | Repository for the Common               | https://github.com/NCAR/ccpp-physics                 |
-   |                          | Community Physics Package (CCPP)        |                                                      |
-   |                          |                                         |                                                      |
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | land-vector2tile         | Contains code to map between the vector | https://github.com/NOAA-PSL/land-vector2tile         |
-   |                          | format used by the Noah-MP offline      |                                                      |
-   |                          | driver, and the tile format used by the |                                                      |
-   |                          | UFS atmospheric model.                  |                                                      |
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-
 
 Disclaimer 
 ==============
