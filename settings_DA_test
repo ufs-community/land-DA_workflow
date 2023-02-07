@@ -24,7 +24,8 @@ RSTRDIR=${MEM_WORKDIR}
 DAtype=letkfoi_snow
 
 # JEDI input obs. options : IMS, GHCN, GTS, SYNTH 
-OBS_TYPES=("IMS" )   # format: ("OBS1" "OBS2") 
+#OBS_TYPES=("IMS" )   # format: ("OBS1" "OBS2") 
+OBS_TYPES=("GHCN" )   # format: ("OBS1" "OBS2") 
 # JEDI call type for each obs_type above. options: DA, HOFX
 JEDI_TYPES=("DA" )   # format ("DA" "HOFX") 
 
