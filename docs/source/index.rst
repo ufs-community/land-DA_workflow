@@ -12,6 +12,7 @@ Welcome to UFS Offline LandDA's documentation!
    :caption: Contents:
 
    Introduction_v0
+   TechOverview
    Model_v0
    Glossary
 
