@@ -20,9 +20,10 @@ Additionally, users will need:
    * Fortran compiler
    * 6 CPU cores (or option to run with "oversubscribe")
    * Python
+   * :term:`NetCDF`
 
       .. COMMENT: Disk space: for spack-stack, Data, Land DA repo, running Land DA, etc.
-      .. COMMENT: What's the minimum version of Python?
+      .. COMMENT: What's the minimum version of Python & NetCDF?
       .. COMMENT: What about Perl, git, curl, wget, Lmod
 
 Software Prerequisites
@@ -37,6 +38,7 @@ The Land DA System requires:
 These software prerequisites are pre-installed in the Land DA :term:`container` and on Level 1 systems. However, users on other systems will need to install them.
 
 Before using the Land DA :term:`container`, users will need to install `Singularity <https://docs.sylabs.io/guides/latest/user-guide/>`__ and an Intel MPI (available `free here <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`__). 
+
 
 .. _LevelsOfSupport:
 

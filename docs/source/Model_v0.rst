@@ -14,12 +14,6 @@ and the Noah-MP Land Surface Model (LSM), see :numref:`Section %s <Background>` 
 Building and Running the UFS Land Model
 ==========================================
 
-Prerequisites
----------------
-To run the Land DA system, users must have a Fortran compiler and :term:`NetCDF` software installed on their system. Additionally, users will need data to run an experiment. See the :ref:`next section <GetData>` for information on downloading data for a sample case. 
-
-.. COMMENT: Get additional details from Mark/Cameron.
-
 .. _GetData:
 
 Get Data
@@ -53,8 +47,9 @@ Clone the Repository
 
 .. attention::
 
-   To build the Land DA system in a container, continue instead to :numref:`Chapter %s <Container>`. The Land DA container packages together the Land DA system with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`)
-   The container approach provides a uniform enviroment in which to build and run the SRW App. Normally, the details of building and running the SRW App vary from system to system due to the many possible combinations of operating systems, compilers, MPIs, and package versions available. Installation via Singularity container reduces this variability and allows for a smoother SRW App build experience. Normally, containers can only run on a single compute node and are not compatible with the Rocoto workflow manager, so users must run each task in the workflow manually. However, the Singularity container described in this chapter has been adapted such that it is able to run across multiple nodes using Rocoto. This makes it an excellent starting point for beginners. The non-container build approach may still be more appropriate for users who desire additional customizability, particularly if they already have experience running the SRW App.
+   To build the Land DA system in a container, continue instead to :numref:`Chapter %s <Container>`. The Land DA container packages together the Land DA system with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform enviroment in which to build and run the SRW App. This approach is recommended for users not running Land DA on a supported Level 1 system (e.g., Hera, Orion). 
+
+.. COMMENT: Link to list of Level 1 systems. 
 
 #. Navigate to the ``land-release`` directory, and clone the UFS Land DA system from GitHub:
 
