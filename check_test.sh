@@ -1,7 +1,7 @@
 #!/bin/sh 
 
 # get OUTDIR
-source settings_cycle_test
+source ./settings_cycle_test
 
 TEST_BASEDIR=/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/DA_IMS_test/output/mem000/restarts/vector/
 

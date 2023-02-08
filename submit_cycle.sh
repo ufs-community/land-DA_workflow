@@ -1,21 +1,33 @@
 #!/bin/bash -le 
 #SBATCH --job-name=offline_noahmp
-#SBATCH --account=gsienkf
+#SBATCH --account=da-cpu
 #SBATCH --qos=debug
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
 #SBATCH --cpus-per-task=1
-#SBATCH -t 00:10:00
+#SBATCH -t 00:04:00
 #SBATCH -o log_noahmp.%j.log
 #SBATCH -e err_noahmp.%j.err
 
 ############################
 # loop over time steps
 
-source $analdate 
-
+set -x
+#source ./$analdate 
+source ./settings_cycle_test
+export CYCLEDIR=$(pwd) 
+export incdate=$PWD/incdate.sh
+export PATH=$PATH:./
 THISDATE=$STARTDATE
 date_count=0
+
+export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
+export BUILDDIR=${BUILDDIR:-${LANDDAROOT}/land-offline_workflow/build}
+vec2tileexec=${BUILDDIR}/bin/vector2tile_converter.exe
+LSMexec=${BUILDDIR}/bin/ufsLandDriver.exe
+DADIR=${CYCLEDIR}/DA_update/
+DAscript=${DADIR}/do_landDA_release.sh
+export MPIEXEC=`which mpiexec`
 
 while [ $date_count -lt $cycles_per_job ]; do
 
@@ -49,7 +61,12 @@ while [ $date_count -lt $cycles_per_job ]; do
     MP=`echo $PREVDATE | cut -c5-6`
     DP=`echo $PREVDATE | cut -c7-8`
     HP=`echo $PREVDATE | cut -c9-10`
-    
+   
+    # compute the restart frequency, run_days and run_hours
+    FREQ=$(( 3600 * $FCSTHR ))
+    RDD=$(( $FCSTHR / 24 ))
+    RHH=$(( $FCSTHR % 24 ))
+ 
     # substring for next cycle
     NEXTDATE=`${incdate} $THISDATE $FCSTHR`
     nYYYY=`echo $NEXTDATE | cut -c1-4`
@@ -64,6 +81,9 @@ while [ $date_count -lt $cycles_per_job ]; do
 
     MEM_WORKDIR=${WORKDIR}/${mem_ens}
     MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
+
+    mkdir -p $MEM_WORKDIR
+    mkdir -p $MEM_MODL_OUTDIR
 
     cd $MEM_WORKDIR
 
@@ -81,6 +101,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         # update vec2tile and tile2vec namelists
         cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
 
+        sed -i "s|LANDDAROOT|${LANDDAROOT}|g" vector2tile.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
         sed -i -e "s/XXMM/${MM}/g" vector2tile.namelist
         sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
@@ -135,6 +156,7 @@ while [ $date_count -lt $cycles_per_job ]; do
 
         cp  ${CYCLEDIR}/template.tile2vector tile2vector.namelist
 
+        sed -i "s|LANDDAROOT|${LANDDAROOT}|g" tile2vector.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
         sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
         sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
@@ -155,10 +177,11 @@ while [ $date_count -lt $cycles_per_job ]; do
 
     ############################
     # run the forecast model
-
+    set -x 
     # update model namelist 
-    cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
+    cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.release.${atmos_forc}  ufs-land.namelist
 
+    sed -i "s|LANDDAROOT|${LANDDAROOT}|g" ufs-land.namelist 
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
     sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
     sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
@@ -171,7 +194,7 @@ while [ $date_count -lt $cycles_per_job ]; do
     echo '************************************************'
     echo "calling model"
     echo $MEM_WORKDIR
-    srun -n 1 $LSMexec 
+    ${MPIEXEC} -n 1 $LSMexec 
     # no error codes on exit from model, check for restart below instead
 
     ############################
@@ -189,7 +212,7 @@ while [ $date_count -lt $cycles_per_job ]; do
        exit
     fi
 
-    echo "Finished job number, ${date_count},for  date: ${THISDATE}" >> $logfile
+#   echo "Finished job number, ${date_count},for  date: ${THISDATE}" >> $logfile
 
     THISDATE=$NEXTDATE
     date_count=$((date_count+1))
@@ -200,10 +223,10 @@ done #  date_count -lt cycles_per_job
 ############################
 # resubmit script 
 
-if [ $THISDATE -lt $ENDDATE ]; then
-    echo "STARTDATE=${THISDATE}" > ${analdate}
-    echo "ENDDATE=${ENDDATE}" >> ${analdate}
-    cd ${CYCLEDIR}
-    sbatch ${CYCLEDIR}/submit_cycle.sh
-fi
+#if [ $THISDATE -lt $ENDDATE ]; then
+#    echo "STARTDATE=${THISDATE}" > ${analdate}
+#    echo "ENDDATE=${ENDDATE}" >> ${analdate}
+#    cd ${CYCLEDIR}
+#    sbatch ${CYCLEDIR}/submit_cycle.sh
+#fi
 

@@ -1,14 +1,14 @@
 # Template for settings for submit_cycle. 
 
 # experiment name and time period
-export exp_name=
-STARTDATE=20211001
-ENDDATE=20211003
+export exp_name=clara-test
+STARTDATE=2021100118
+ENDDATE=2021100318
 
 # temporary directory where experiment is run from
-export WORKDIR=
+export WORKDIR=/scratch1/NCEPDEV/stmp2/Mark.Potts/land-test/land-release/land-offline_workflow/clara-work
 # directory where output is saved
-export OUTDIR=
+export OUTDIR=/scratch1/NCEPDEV/stmp2/Mark.Potts/land-test/land-release/land-offline_workflow/clara-out
 
 ############################
 
@@ -19,7 +19,7 @@ export FCSTHR=24
 export atmos_forc=era5
 
 #FV3 resolution
-export RES=
+export RES=96
 export TPATH=
 export TSTUB=oro_C96 # file stub for orography files in $TPATH
               # oro_C${RES} for atm only, oro_C${RES}.mx100 for atm/ocean.
@@ -28,7 +28,7 @@ export TSTUB=oro_C96 # file stub for orography files in $TPATH
 export cycles_per_job=1
 
 # directory with initial conditions
-export ICSDIR=
+export ICSDIR=/scratch1/NCEPDEV/stmp2/Mark.Potts/land-test/land-release/land-offline_workflow/inputs
 
 # namelist for do_landDA.sh
 # set to "openloop" to not call do_landDA.sh
