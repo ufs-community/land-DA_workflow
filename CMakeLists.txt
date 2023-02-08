@@ -23,7 +23,7 @@ include( landda_compiler_flags )
 ################################################################################
 find_package( NetCDF REQUIRED COMPONENTS Fortran)
 find_package( fv3-bundle REQUIRED)
-find_package( ioda-bundle REQUIRED)
+#find_package( ioda-bundle REQUIRED)
 include_directories( ${NETCDF_INCLUDE_DIRS} )
 
 message("HEY, features are ${fv3-bundle_FEATURES}")
@@ -38,7 +38,7 @@ set( LANDDA_LINKER_LANGUAGE CXX)
 add_subdirectory( vector2tile )
 add_subdirectory( ufs-land-driver )
 add_subdirectory( DA_update/add_jedi_incr )
-add_subdirectory( DA_update/IMS_proc )
+#add_subdirectory( DA_update/IMS_proc )
 
 if(ECBUILD_INSTALL_FORTRAN_MODULES)
   install(DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR} DESTINATION ${INSTALL_INCLUDE_DIR} )

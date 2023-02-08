@@ -1,8 +1,8 @@
 &run_setup
 
-  static_file      = "/LANDDAROOT/land-release/forcing/C96/static/ufs-land_C96_static_fields.nc"
-  init_file        = "/LANDDAROOT/land-release/forcing/C96/init/ufs-land_C96_init_fields_1hr.nc"
-  forcing_dir      = "/LANDDAROOT/land-release/forcing/C96/gdas/forcing"
+  static_file      = "/LANDDAROOT/inputs/forcing/C96/static/ufs-land_C96_static_fields.nc"
+  init_file        = "/LANDDAROOT/inputs/forcing/C96/init/ufs-land_C96_init_fields_1hr.nc"
+  forcing_dir      = "/LANDDAROOT/inputs/forcing/C96/gdas/forcing"
   
   separate_output = .false.
   output_dir       = "./noahmp_output/"

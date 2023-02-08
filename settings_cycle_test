@@ -29,7 +29,6 @@ export TSTUB="oro_C96.mx100" # file stub for orography files in $TPATH
                              # oro_C${RES} for atm only, oro_C${RES}.mx100 for atm/ocean.
 
 # number of cycles to submit in a single job
-# on hera in the debug queue 20 is a good number.
 export cycles_per_job=1
 
 # directory with initial conditions

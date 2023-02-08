@@ -14,8 +14,8 @@
 # if calling from submit_cycle.sh, do not change these three:
 JEDIWORKDIR=${WORKDIR}/jedi/
 LANDDADIR=${CYCLEDIR}/DA_update/  # directory where do_landDA.sh script is 
-RSTRDIR=${MEM_WORKDIR} 
-
+#RSTRDIR=${MEM_WORKDIR} 
+export RSTRDIR=${LANDDAROOT}/outputs/workdir/restarts/tile
 ############################
 # DA options
 

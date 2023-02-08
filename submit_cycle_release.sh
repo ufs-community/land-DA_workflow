@@ -22,12 +22,10 @@ set -x
 ulimit -s unlimited
 
 #Get the directory structure figured out here
-dirup=`dirname $PWD`
-#Currently, this is the parent directory of land-release. We should probably change this to just be whatever 
-#the user wants to call the current "land-release" directory
-export LANDDAROOT=${LANDDAROOT:-`dirname $dirup`}
+#We expect the workflow, data and work directories to generally be in this same space under LANDDAROOT
+export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
 #This is where the land release executables reside. This will be different for singularity
-export BUILDDIR=${BUILDDIR:-${LANDDAROOT}/land-release/land-offline_workflow/build}
+export BUILDDIR=${BUILDDIR:-${LANDDAROOT}/land-offline_workflow/build}
 export PATH=$PATH:./
 
 #TODO Fix this and make it more robust
@@ -41,7 +39,7 @@ if [[ ${USE_SINGULARITY} =~ yes ]]; then
   #Scripts that launch containerized versions of the executables are in $PWD/singularity/bin They should be called
   #from the host system to be run (e.g. mpiexec -n 6 $BUILDDIR/bin/fv3jedi_letkf.x )
   export BUILDDIR=$PWD/singularity
-  export JEDI_EXECDIR=${LANDDAROOT}/land-release/land-offline_workflow/singularity/bin
+  export JEDI_EXECDIR=${LANDDAROOT}/land-offline_workflow/singularity/bin
   #we need to have intelmpi loaded on the host system to run the workflow. Try to load it here.
   #TODO--figure out a way to make sure we have intelmpi loaded or don't let the workflow start
   module try-load impi
@@ -70,7 +68,7 @@ export PYTHON=${PYTHON:-${locpython}}
 export MPIEXEC=`which mpiexec`
 #TODO -- make this more portable--not every install will use python3.9
 export PYTHONPATH=${JEDI_INSTALL}/ioda-bundle/build/lib/pyiodaconv:${JEDI_INSTALL}/ioda-bundle/build/lib/python3.9/pyioda
-
+export RSTRDIR=${LANDDAROOT}/outputs/workdir/restarts/tile
 if [[ $# -gt 0 ]]; then 
     config_file=$1
 else
@@ -97,7 +95,7 @@ analdate=${CYCLEDIR}/analdates_sample.sh
 incdate=${CYCLEDIR}/incdate.sh
 
 KEEPWORKDIR="YES"
-
+echo $WORKDIR
 # create clean workdir
 if [[ -e ${WORKDIR} ]]; then 
    rm -rf ${WORKDIR} 
