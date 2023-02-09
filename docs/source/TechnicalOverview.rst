@@ -16,28 +16,29 @@ Additionally, users will need:
 
    * Disk space: TBD 
    * Memory: TBD
-   * An :term:`MPI` implementation
-   * Fortran compiler
    * 6 CPU cores (or option to run with "oversubscribe")
-   * Python
-   * :term:`NetCDF`
 
-      .. COMMENT: Disk space: for spack-stack, Data, Land DA repo, running Land DA, etc.
-      .. COMMENT: What's the minimum version of Python & NetCDF?
-      .. COMMENT: What about Perl, git, curl, wget, Lmod
+.. COMMENT: Disk space: for spack-stack, Data, Land DA repo, running Land DA, etc.
 
 Software Prerequisites
 ------------------------
 
 The Land DA System requires:
 
+   * An :term:`MPI` implementation
+   * Fortran compiler
+   * Python
+   * :term:`NetCDF`
    * `spack-stack <https://spack-stack.readthedocs.io/en/latest/>`__
-   * FV3 bundle
+   * `FV3 bundle <https://github.com/JCSDA/fv3-bundle/wiki>`__
    * `IODA <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/ioda/index.html>`__ bundle
 
-These software prerequisites are pre-installed in the Land DA :term:`container` and on Level 1 systems. However, users on other systems will need to install them.
+      .. COMMENT: What's the minimum version of Python & NetCDF?
+      .. COMMENT: What about Perl, git, curl, wget, Lmod
 
-Before using the Land DA :term:`container`, users will need to install `Singularity <https://docs.sylabs.io/guides/latest/user-guide/>`__ and an Intel MPI (available `free here <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`__). 
+These software prerequisites are pre-installed in the Land DA :term:`container` and on Level 1 systems (see :ref:`below <LevelsOfSupport>` for details). However, users on other systems will need to install them.
+
+Before using the Land DA container, users will need to install `Singularity <https://docs.sylabs.io/guides/latest/user-guide/>`__ and an **Intel** MPI (available `free here <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`__). 
 
 
 .. _LevelsOfSupport:
@@ -47,14 +48,14 @@ Supported Systems for Running Land DA
 
 Four levels of support have been defined for :term:`UFS` applications, and the Land DA system operates under this paradigm: 
 
-* Level 1 (Pre-configured): Prerequisite software libraries are pre-built and available in a central location; code builds; full testing of model
-* Level 2 (Configurable): Prerequisite libraries are not available in a centralized location but are expected to install successfully; code builds; full testing of model
-* Level 3 (Limited test platforms): Libraries and code build, limited testing of the model
-* Level 4 (Build only platforms): Libraries and code build, no tests with running the model
+* **Level 1** *(Pre-configured)*: Prerequisite software libraries are pre-built and available in a central location; code builds; full testing of model
+* **Level 2** *(Configurable)*: Prerequisite libraries are not available in a centralized location but are expected to install successfully; code builds; full testing of model
+* **Level 3** *(Limited-test platforms)*: Libraries and code build on these systems, but there is limited testing of the model
+* **Level 4** *(Build-only platforms)*: Libraries and code build, no tests with running the model
 
 Level 1 Systems
 ------------------
-Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via *spack-stack*. Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them.
+Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack`. Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them.
 
 +-----------+------------------+----------------------------------------------------------------------------+
 | Platform  | Compilers        | spack-stack Installation                                                   |

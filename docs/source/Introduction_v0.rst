@@ -83,7 +83,7 @@ emerged at NCEP during the 1990s. It stands for:
    * **N:** National Centers for Environmental Prediction (NCEP)
    * **O:** Oregon State University (Department of Atmospheric Sciences)
    * **A:** Air Force (both Air Force Weather Agency (AFWA) and Air Force Research Lab (AFRL) --- formerly AFGL, PL)
-   * **H:** Hydrology Lab –-- NWS (National Weather Service, formerly Office of Hydrology –-- OH)
+   * **H:** Hydrology Lab --- NWS (National Weather Service, formerly Office of Hydrology --- OH)
 
 The "NOAH" acronym explicitly acknowledged both the multi-group heritage and
 informal "community" usage of this LSM, going back to the early 1980s.
