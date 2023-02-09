@@ -1,18 +1,20 @@
 #!/bin/sh 
 
 # get OUTDIR
+export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
 source ./settings_cycle_test
 
-TEST_BASEDIR=/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/DA_IMS_test/output/mem000/restarts/vector/
+TEST_BASEDIR=/work/noaa/epic-ps/role-epic-ps/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector
 
 for TEST_DATE in 2016-01-01_18-00-00 2016-01-02_18-00-00 
 do
 
-for state in back anal
+for state in anal
 do 
 
 cmp ${OUTDIR}/mem000/restarts/vector/ufs_land_restart_${state}.${TEST_DATE}.nc ${TEST_BASEDIR}/ufs_land_restart_${state}.${TEST_DATE}.nc
 
+echo "testing ${state} on ${TEST_DATE}"
 if [[ $? != 0 ]]; then
     echo TEST FAILED
     echo "$TEST_DATE $state are different"
@@ -22,8 +24,11 @@ fi
 done
 done 
 
-TEST_DATE=2016-01-03_18-00-00
+#TEST_DATE=2016-01-03_18-00-00
+for TEST_DATE in 2016-01-02_18-00-00 2016-01-03_18-00-00 
+do
 state='back'
+echo "testing ${state} on ${TEST_DATE}"
 cmp ${OUTDIR}/mem000/restarts/vector/ufs_land_restart_${state}.${TEST_DATE}.nc ${TEST_BASEDIR}/ufs_land_restart_${state}.${TEST_DATE}.nc
 
 if [[ $? != 0 ]]; then
@@ -31,6 +36,7 @@ if [[ $? != 0 ]]; then
     echo "$TEST_DATE $state are different"
     exit
 fi
+done
 
 echo "TEST PASSED"
 

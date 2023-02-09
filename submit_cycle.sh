@@ -1,11 +1,11 @@
 #!/bin/bash  
 #SBATCH --job-name=offline_noahmp
-#SBATCH --account=epic-ps
-#SBATCH --qos=windfall
+#SBATCH --account=da-cpu
+#SBATCH --qos=debug
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
 #SBATCH --cpus-per-task=1
-#SBATCH -t 00:04:00
+#SBATCH -t 00:06:00
 #SBATCH -o log_noahmp.%j.log
 #SBATCH -e err_noahmp.%j.err
 
@@ -14,6 +14,26 @@
 
 set -x
 export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
+
+if [[ ${USE_SINGULARITY} =~ yes ]]; then
+  EPICHOME=/opt
+  #use the python that is built into the container. It has all the pythonpaths set and can run the ioda converters
+  export PYTHON=$PWD/singularity/bin/python
+  #JEDI is installed under /opt in the container
+  export JEDI_INSTALL=/opt
+  #Scripts that launch containerized versions of the executables are in $PWD/singularity/bin They should be called
+  #from the host system to be run (e.g. mpiexec -n 6 $BUILDDIR/bin/fv3jedi_letkf.x )
+  export BUILDDIR=$PWD/singularity
+  export JEDI_EXECDIR=${LANDDAROOT}/land-offline_workflow/singularity/bin
+  #we need to have intelmpi loaded on the host system to run the workflow. Try to load it here.
+  #TODO--figure out a way to make sure we have intelmpi loaded or don't let the workflow start
+  module try-load impi
+  module try-load intel-oneapi-mpi
+  module try-load intelmpi
+  module try-load singularity
+  export SINGULARITYBIN=`which singularity`
+  sed -i 's/singularity exec/${SINGULARITYBIN} exec/g' run_container_executable.sh
+fi
 export BUILDDIR=${BUILDDIR:-${LANDDAROOT}/land-offline_workflow/build}
 export CYCLEDIR=$(pwd) 
 export PYTHON=`which python3`

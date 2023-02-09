@@ -31,7 +31,7 @@ find_package( NetCDF REQUIRED COMPONENTS Fortran)
 #find_package( ioda   1.0.0    REQUIRED)
 #find_package( ufo    1.0.0    REQUIRED)
 #find_package( crtm   2.2.3)
-find_package( fv3-bundle REQUIRED)
+#find_package( fv3-bundle REQUIRED)
 include_directories( ${NETCDF_INCLUDE_DIRS} )
 
 
@@ -50,7 +50,7 @@ if(ECBUILD_INSTALL_FORTRAN_MODULES)
 endif()
 
 execute_process(
-     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/DA_update/jedi/fv3-jedi/Data/make_links.sh ${fv3-bundle_BASE_DIR}/..
+     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/DA_update/jedi/fv3-jedi/Data/make_links.sh ${fv3-bundle_BASE_DIR}
      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/DA_update/jedi/fv3-jedi/Data
 )
 ################################################################################
