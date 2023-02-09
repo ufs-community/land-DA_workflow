@@ -7,9 +7,10 @@ ENDDATE=2016010318
 
 # temporary directory where experiment is run from
 #export WORKDIR=/scratch2/BMC/gsienkf/${USER}/workdir/
-export WORKDIR=/scratch1/NCEPDEV/stmp2/Mark.Potts/land-test/land-release/land-offline_workflow/workdir
+export WORKDIR=$LANDDAROOT/workdir
 # directory where output is saved
-export OUTDIR=/scratch1/NCEPDEV/stmp2/Mark.Potts/land-test/land-release/land-offline_workflow/cycle_land/${exp_name}/
+#export OUTDIR=/scratch1/NCEPDEV/stmp2/Mark.Potts/land-test/land-release/land-offline_workflow/cycle_land/${exp_name}/
+export OUTDIR=$LANDDAROOT/cycle_land/${exp_name}
 
 ############################
 
@@ -25,17 +26,19 @@ export atmos_forc=gdas
 
 #FV3 resolution
 export RES=96
-export TPATH="/scratch2/BMC/gsienkf/Clara.Draper/data_RnR/orog_files_Mike/" 
+#export TPATH="/scratch2/BMC/gsienkf/Clara.Draper/data_RnR/orog_files_Mike/" 
+export TPATH="$LANDDAROOT/inputs/forcing/C96/orog_files/"
 export TSTUB="oro_C96.mx100" # file stub for orography files in $TPATH
                              # oro_C${RES} for atm only, oro_C${RES}.mx100 for atm/ocean.
 
 # number of cycles to submit in a single job
 # on hera in the debug queue 20 is a good number.
-export cycles_per_job=2
+export cycles_per_job=1
 
 # directory with initial conditions
 # can find some here:/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/single
-export ICSDIR=/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/test_ICS/
+#export ICSDIR=/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/test_ICS/
+export ICSDIR=$LANDDAROOT/inputs/forcing/C96/orog_files/
 
 # namelist for do_landDA.sh
 # set to "openloop" to not call do_landDA.sh

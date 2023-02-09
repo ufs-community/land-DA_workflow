@@ -13,16 +13,18 @@
 # loop over time steps
 
 set -x
-#source ./$analdate 
-source ./settings_cycle_test
+export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
+export BUILDDIR=${BUILDDIR:-${LANDDAROOT}/land-offline_workflow/build}
 export CYCLEDIR=$(pwd) 
+export PYTHON=`which python3`
+export OBSDIR=${LANDDAROOT}/inputs/DA
+source ./settings_cycle_test
+
 export incdate=$PWD/incdate.sh
 export PATH=$PATH:./
 THISDATE=$STARTDATE
 date_count=0
 
-export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
-export BUILDDIR=${BUILDDIR:-${LANDDAROOT}/land-offline_workflow/build}
 vec2tileexec=${BUILDDIR}/bin/vector2tile_converter.exe
 LSMexec=${BUILDDIR}/bin/ufsLandDriver.exe
 DADIR=${CYCLEDIR}/DA_update/
@@ -83,15 +85,19 @@ while [ $date_count -lt $cycles_per_job ]; do
     MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
 
     mkdir -p $MEM_WORKDIR
-    mkdir -p $MEM_MODL_OUTDIR
+    mkdir -p $MEM_MODL_OUTDIR/restarts/vector
 
     cd $MEM_WORKDIR
 
     # copy restarts into work directory
     rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
+    rst_in_single=${LANDDAROOT}/inputs/single/output/modl/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
     rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-    cp $rst_in $rst_out 
-
+    if [[ ! -e ${rst_in} ]]; then 
+      cp $rst_in_single $rst_out 
+    else 
+      cp $rst_in $rst_out 
+    fi
     if [[ $do_jedi == "YES" ]]; then  
         echo '************************************************'
         echo 'calling tile2vector' 

@@ -96,18 +96,37 @@ ln -sf ${MEM_MODL_OUTDIR}/noahmp ${MEM_WORKDIR}/noahmp_output
 # copy ICS into restarts, if needed 
 rst_in=${ICSDIR}/${mem_ens}/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
 rst_out=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+rst_in_single=${LANDDAROOT}/inputs/single/output/modl/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
 
 # if restart not in experiment out directory, copy the restarts from the ICSDIR
-if [[ ! -e ${rst_out} ]]; then 
-    echo "Looking for ICS: ${rst_in}"
-    if [[ -e ${rst_in} ]]; then
-       echo "ICS found, copying" 
-       cp ${rst_in} ${rst_out}
-    else  
-       echo "ICS not found. Exiting" 
-       exit 10 
-    fi 
-fi 
+#if [[ ! -e ${rst_out} ]]; then 
+#    echo "Looking for ICS: ${rst_in}"
+#    if [[ -e ${rst_in} ]]; then
+#       echo "ICS found, copying" 
+#       cp ${rst_in} ${rst_out}
+#    else  
+#       echo "ICS not found. Exiting" 
+#       exit 10 
+#    fi 
+#fi 
+    # if restart not in experiment out directory, copy the restarts from the ICSDIR
+    if [[ ! -e ${rst_out} ]]; then
+        echo "Looking for ICS: ${rst_in}"
+        # if ensemble of restarts exists in ICSDIR, use these. Otherwise, use single restart.
+        if [[ -e ${rst_in} ]]; then
+           echo "ICS found, copying" 
+           cp ${rst_in} ${rst_out}
+        else  # use non-ensemble restart
+           echo "ICS not found. Checking for ensemble started from single member: ${rst_in_single}"
+           if [[ -e ${rst_in_single} ]]; then
+               echo "ICS found, copying" 
+               cp ${rst_in_single} ${rst_out}
+           else
+               echo "ICS not found. Exiting" 
+               exit 10
+           fi
+        fi
+    fi
 
 # create dates file 
 touch analdates.sh 
