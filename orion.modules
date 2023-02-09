@@ -1,6 +1,5 @@
 export JEDI_INSTALL=/work/noaa/epic-ps/role-epic-ps/contrib
 EPICHOME=/work/noaa/epic-ps/role-epic-ps
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${BUILDDIR}/lib
 
 module use ${EPICHOME}/miniconda3/modulefiles
 module use ${EPICHOME}/spack-stack/envs/landda-release-1.0-intel/install/modulefiles/Core
