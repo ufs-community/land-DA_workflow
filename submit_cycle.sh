@@ -1,7 +1,7 @@
 #!/bin/bash  
 #SBATCH --job-name=offline_noahmp
-#SBATCH --account=da-cpu
-#SBATCH --qos=debug
+#SBATCH --account=epic-ps
+#SBATCH --qos=windfall
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
 #SBATCH --cpus-per-task=1
