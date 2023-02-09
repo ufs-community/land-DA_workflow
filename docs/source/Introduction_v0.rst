@@ -4,21 +4,21 @@
 Introduction
 ================
 
-This User's Guide provides guidance for running the Unified Forecast System 
+This User's Guide provides guidance for running the offline Unified Forecast System 
 (:term:`UFS`) land model. This land model is the Multi-Physics (MP) version of the 
 Noah land surface model (LSM) used by NOAA (referred to as Noah-MP). Its data assimilation framework uses 
 the Joint Effort for Data assimilation Integration (:term:`JEDI`) software.
 Noah-MP is tightly coupled with the atmospheric component of the 
-`UFS Weather Model <https://github.com/ufs-community/ufs-weather-model>`__, 
+`UFS Weather Model <https://github.com/ufs-community/ufs-weather-model>`__ 
 and is essentially a module/subroutine within the `Common Community Physics Package
 (CCPP) <https://dtcenter.org/community-code/common-community-physics-package-ccpp>`__
-repository. The UFS Land Data Assimilation (DA) System currently only works with snow data. 
+repository. The offline UFS Land Data Assimilation (Land DA) System currently only works with snow data. 
 Thus, this User's Guide focuses primarily on the snow DA process.
 
 This User's Guide is organized as follows:
 
    * This chapter (Introduction) provides background information on the Unified Forecast System (:term:`UFS`) and the NoahMP model. 
-   * :numref:`Chapter %s <TechOverview>` (Technical Overview) outlines user support levels and describes the code repositories and directory structure. 
+   * :numref:`Chapter %s <TechOverview>` (Technical Overview) outlines prerequisites, user support levels, and directory structure. 
    * :numref:`Chapter %s <Model>` (Model) provides practical information on building and running the Noah-MP Land Surface Model (LSM) and using the Vector-to-Tile Converter.
    * :numref:`Chapter %s <Glossary>` (Glossary) lists important terms. 
 
@@ -66,27 +66,22 @@ For more information about the UFS, visit the `UFS Portal <https://ufscommunity
 
 .. _NoahMP:
 
-History of Noah MP
+History of Noah-MP
 --------------------
 
-Noah is a land surface model (LSM) that has evolved through community
+Noah-MP is a land surface model (LSM) that has evolved through community
 efforts to pursue and refine a modern-era LSM suitable for use in the
 National Centers for Environmental Prediction (NCEP) operational weather
-and climate prediction models. In the 1990s, NCEP compared four LSMs, 
-including (1) a simple bucket model, (2) the OSU LSM, (3) the
-simplified Simple Biosphere Model (SSiB) model, and (4) the Simple Water
-Balance model (SWB) of OH (:cite:t:`ChenEtAl1996`). The Environmental Modeling
-Center (EMC) of NCEP chose the OSU LSM (:cite:t:`Mahrt&Pan1984`) based on
-its performance and EMC staff members' previous experience with this LSM. 
+and climate prediction models. In the 1990s, NCEP compared four LSMs, and the results of this comparison are detailed in :cite:t:`ChenEtAl1996`. The Environmental Modeling
+Center (EMC) of NCEP chose the Oregon State University (OSU) LSM (:cite:t:`Mahrt&Pan1984`) based on its performance and EMC staff members' previous experience with 
+this LSM. 
 NCEP used this LSM to refine and implement NCEP regional and global
-coupled weather and climate models and their data assimilation
-systems. In 2000, a strong desire by EMC to better recognize its LSM 
-collaborators and a new NCEP goal to more strongly pursue and offer "Community Models"
-prompted EMC to coin the new name "NOAH" for the LSM that had emerged at NCEP
-during the 1990s. 
+coupled weather and climate models along with their data assimilation
+systems. In 2000, NCEP/EMC coined the name "Noah" for the LSM that had 
+emerged at NCEP during the 1990s. It stands for:
 
    * **N:** National Centers for Environmental Prediction (NCEP)
-   * **O:** Oregon State University (Dept of Atmospheric Sciences)
+   * **O:** Oregon State University (Department of Atmospheric Sciences)
    * **A:** Air Force (both Air Force Weather Agency (AFWA) and Air Force Research Lab (AFRL) --- formerly AFGL, PL)
    * **H:** Hydrology Lab –-- NWS (National Weather Service, formerly Office of Hydrology –-- OH)
 
@@ -108,7 +103,7 @@ presented by :cite:t:`EkEtAl2003` 2003 and :cite:t:`KorenEtAl1999` 1999.
 
 Noah-MP is currently used operationally by the NOAA National Water Model
 (NWM), which is built upon the legacy of the Noah model, but with 
-multiple new options for selected processes: 
+multiple new options for selected processes, including: 
    
    #. a separated vegetation canopy accounting for vegetation effects on surface energy and water balances, 
    #. a modified two-stream approximation scheme to include the effects of vegetation canopy gaps that vary with solar zenith angle and the canopy 3-D structure on radiation transfer, 
@@ -133,7 +128,7 @@ snowfall, snow surface albedo, supercooled liquid water in frozen soil,
 and frozen soil permeability, etc. A collaborative effort among NCAR,
 NCEP, NASA, and university groups has been established to develop and
 improve the community Noah-MP LSM. Details about the model's physical
-parameterizations can be referred to (:cite:t:`NiuEtAl2011`).
+parameterizations can be found in :cite:t:`NiuEtAl2011`.
 
 Disclaimer 
 ==============
