@@ -1,4 +1,4 @@
-#!/bin/bash -le 
+#!/bin/bash  
 #SBATCH --job-name=offline_noahmp
 #SBATCH --account=da-cpu
 #SBATCH --qos=debug
