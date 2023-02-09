@@ -15,6 +15,18 @@
 set -x
 export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
 
+`python -c 'import netCDF4'`
+if [[ $? != 0 ]]; then
+  echo 'no netcdf4, trying to install'
+  python -m pip install netCDF4 
+  `python -c 'import netCDF4'`
+  if [[ $? != 0 ]]; then
+    echo "could not install netCDF4 automatically. Please add netCDF4 module manually and re-run"
+    exit
+  fi
+fi
+echo $netcdf_installed
+
 if [[ ${USE_SINGULARITY} =~ yes ]]; then
   EPICHOME=/opt
   #use the python that is built into the container. It has all the pythonpaths set and can run the ioda converters
