@@ -1,4 +1,4 @@
-EPICHOME=/scratch1/NCEPDEV/nems/role.epic
+export EPICHOME=/scratch1/NCEPDEV/nems/role.epic
 export JEDI_INSTALL=/scratch1/NCEPDEV/nems/role.epic/contrib
 
 module use ${EPICHOME}/miniconda3/modulefiles
