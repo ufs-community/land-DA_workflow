@@ -1,7 +1,0 @@
-export EPICHOME=/scratch1/NCEPDEV/nems/role.epic
-export JEDI_INSTALL=/scratch1/NCEPDEV/nems/role.epic/contrib
-
-module use ${EPICHOME}/miniconda3/modulefiles
-module use ${EPICHOME}/spack-stack/envs/landda-release-1.0-intel/install/modulefiles/Core
-module load stack-intel stack-intel-oneapi-mpi netcdf-c netcdf-fortran cmake ecbuild stack-python
-
