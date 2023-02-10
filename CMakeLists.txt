@@ -11,6 +11,11 @@
 cmake_minimum_required( VERSION 3.12 )
 project( LandDA VERSION 0.0.0 LANGUAGES C CXX Fortran)
 
+if(DEFINED ENV{JEDI_INSTALL})
+  set( JEDI_INSTALL  $ENV{JEDI_INSTALL}/fv3-bundle)
+else()
+  message(FATAL_ERROR "Define the environment variable 'JEDI_INSTALL' to point to the parent directory of fv3-bundle on your system")
+endif()
 find_package(ecbuild 3.3.2 REQUIRED)
 include( ecbuild_system NO_POLICY_SCOPE )
 ecbuild_declare_project()
@@ -48,9 +53,8 @@ add_subdirectory( DA_update/add_jedi_incr )
 if(ECBUILD_INSTALL_FORTRAN_MODULES)
   install(DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR} DESTINATION ${INSTALL_INCLUDE_DIR} )
 endif()
-
 execute_process(
-     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/DA_update/jedi/fv3-jedi/Data/make_links.sh ${fv3-bundle_BASE_DIR}
+     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/DA_update/jedi/fv3-jedi/Data/make_links.sh ${JEDI_INSTALL}
      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/DA_update/jedi/fv3-jedi/Data
 )
 ################################################################################
