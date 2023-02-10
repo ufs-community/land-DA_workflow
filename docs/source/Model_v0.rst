@@ -24,7 +24,7 @@ Clone the Repository
 
    To build the Land DA system in a container, continue instead to :numref:`Chapter %s <Container>`. The Land DA container packages together the Land DA system with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform enviroment in which to build and run the SRW App. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Hera, Orion). 
 
-#. Create a test directory that will be ``$LANDDAROOT``. Then clone the UFS Land DA System into it:
+#. Create a directory that will be the Land DA root directory (``$LANDDAROOT``). Then clone the UFS Land DA System into it:
 
    .. code-block:: console
 
@@ -84,9 +84,17 @@ Build the Land DA System
 
       make -j 8
 
-   If the code successfully compiles, you will see ``ufsLand.exe`` in the ``run`` directory.
+   If the code successfully compiles, the console output should end with:
+   
+   .. code-block:: console
 
-   .. COMMENT: Probably should say the build directory, right?
+      [100%] Built target ufsLandDriver.exe
+   
+   Additionally, the ``build`` directory will contain several files and a ``bin`` subdirectory with three executables: 
+
+      * ``apply_incr.exe``
+      * ``ufsLandDriver.exe``
+      * ``vector2tile_converter.exe``
 
 .. _ConfigureExpt:
 
@@ -133,7 +141,7 @@ Navigate back to the ``land-offline_workflow`` directory and submit the experime
 .. code-block:: console
 
    cd ..
-   sbatch submit_cycle_release.sh settings_cycle_test_release
+   sbatch submit_cycle.sh
 
 .. COMMENT: Add info about changing account name and qos (windfall)?
 
@@ -151,7 +159,7 @@ To view progress, users can open the ``log`` and ``err`` files:
 
    tail -f log* err*
 
-Users will need to hit Ctrl+C to exit the file. Then, check for the 
+Users will need to hit ``Ctrl+C`` to exit the file. Then, check for the 
 background and analysis files in the ``cycle_land`` directory.
 
 .. code-block:: console
