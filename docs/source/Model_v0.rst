@@ -14,31 +14,6 @@ and the Noah-MP Land Surface Model (LSM), see :numref:`Section %s <Background>` 
 Building and Running the UFS Land Model
 ==========================================
 
-.. _GetData:
-
-Get Data
-----------
-
-Users should set up a fresh directory somewhere on their system and download the data 
-required to run a Land DA cycle. For example:
-
-.. code-block:: console
-
-   mkdir /path/to/land-da
-   cd /path/to/land-da
-   wget https://epic-sandbox-srw.s3.amazonaws.com/land-da-data.tar.gz
-
-.. COMMENT: Replace with path to actual data
-
-Users should substitute ``/path/to/land-da`` with the actual path to the directory where they want their Land DA data to reside. 
-
-Next, untar the data. 
-
-.. code-block:: console
-
-   tar xvfz land-da-data.tar.gz
-
-The data will be located in a directory called ``land-release``.
 
 .. _DownloadCode:
 
@@ -47,51 +22,66 @@ Clone the Repository
 
 .. attention::
 
-   To build the Land DA system in a container, continue instead to :numref:`Chapter %s <Container>`. The Land DA container packages together the Land DA system with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform enviroment in which to build and run the SRW App. This approach is recommended for users not running Land DA on a supported Level 1 system (e.g., Hera, Orion). 
+   To build the Land DA system in a container, continue instead to :numref:`Chapter %s <Container>`. The Land DA container packages together the Land DA system with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform enviroment in which to build and run the SRW App. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Hera, Orion). 
 
-.. COMMENT: Link to list of Level 1 systems. 
-
-#. Navigate to the ``land-release`` directory, and clone the UFS Land DA system from GitHub:
+#. Create a test directory that will be ``$LANDDAROOT``. Then clone the UFS Land DA System into it:
 
    .. code-block:: console
 
-      cd /path/to/land-release
-      git clone --recursive -b feature/release-v1.beta https://github.com/NOAA-EPIC/land-offline_workflow
+      mkdir land-da
+      cd land-da
+      git clone -b feature/release-v1.beta2 --recursive https://github.com/NOAA-EPIC/land-offline_workflow.git
+
+
+.. _GetData:
+
+Get Data
+----------
+
+From the ``land-da`` directory, users should download the data required to run the Land DA test experiment and untar the data. For example:
+
+.. code-block:: console
+
+   wget https://epic-sandbox-srw.s3.amazonaws.com/landda-data-2016.tar.gz
+   tar xvfz landda-data-2016.tar.gz
+
+The data will be located in a directory called ``inputs``.
+
+.. COMMENT: Check name of directory. 
 
 Build the Land DA System
 --------------------------
 
-#. ``cd`` into the new ``land-offline_workflow`` directory, and create a ``build`` directory. 
+#. ``cd`` into the workflow directory, and source the modulefiles. 
 
    .. code-block:: console
 
       cd land-offline_workflow
-      mkdir build
+      source <modulefiles>
 
-#. Load the modules required for the Land DA workflow. 
+   where ``<modulefiles>`` is either ``orion.modules`` or ``hera.modules``.
+
+   .. COMMENT: Need to make sure a hera.modules is there! 
+      Hera EPICHOME is: /scratch1/NCEPDEV/nems/role.epic  
+
+
+#. Create and navigate to a ``build`` directory. 
 
    .. code-block:: console
       
-      module use ${EPICHOME}/miniconda3/modulefiles
-      module use ${EPICHOME}/spack-stack/envs/landda-release-1.0-intel/install/modulefiles/Core
-      module try-load stack-intel stack-intel-oneapi-mpi netcdf-c netcdf-fortran cmake ecbuild stack-python
-   
-   where ``${EPICHOME}`` refers to the path where the different modulefiles (e.g., for miniconda, spack-stack) are installed. 
+      mkdir build
+      cd build
 
-   +--------------+-----------------------------------------------------------+
-   | System       | Path                                                      |
-   +==============+===========================================================+
-   | Hera         | /scratch1/NCEPDEV/nems/role.epic                          |
-   +--------------+-----------------------------------------------------------+
-   | Orion        | /work/noaa/epic-ps/role-epic-ps                           |
-   +--------------+-----------------------------------------------------------+
-   
-#. Compile the code to build the Land DA system.  
+#. Run the command to configure the build system.
 
    .. code-block:: console
 
-      cd build
-      ecbuild ..
+      ecbuild -DCMAKE_PREFIX_PATH="$EPICHOME/contrib/ioda-bundle/install/lib64/cmake;$EPICHOME/contrib/fv3-bundle/install/lib64/cmake" ..
+
+#. Build the Land DA system. 
+
+   .. code-block:: console
+
       make -j 8
 
    If the code successfully compiles, you will see ``ufsLand.exe`` in the ``run`` directory.
@@ -138,15 +128,35 @@ Coming soon!
 Submit the Experiment
 ------------------------
 
-Navigate back to the ``land-offline_workflow`` directory and submit the experiment using the ``sbatch`` command. It will run through a cycle.
+Navigate back to the ``land-offline_workflow`` directory and submit the experiment using the ``sbatch`` command. It will run through two cycles (two days).
 
 .. code-block:: console
 
    cd ..
    sbatch submit_cycle_release.sh settings_cycle_test_release
 
-The system will output a message such as ``Submitted batch job ########``, indicating that the job was successfully submitted. If all goes well, a full cycle will run with data assimilation (DA) and a forecast. To view progress, users can open the log file, 
-      
+.. COMMENT: Add info about changing account name and qos (windfall)?
+
+The system will output a message such as ``Submitted batch job ########``, indicating that the job was successfully submitted. If all goes well, a full cycle will run with data assimilation (DA) and a forecast. 
+
+To check on the job status, run: 
+
+.. code-block:: console
+
+   squeue -u $USER
+
+To view progress, users can open the ``log`` and ``err`` files:
+
+.. code-block:: console
+
+   tail -f log* err*
+
+Users will need to hit Ctrl+C to exit the file. Then, check for the 
+background and analysis files in the ``cycle_land`` directory.
+
+.. code-block:: console
+
+   ls -l ../cycle_land/DA_GHCN_test/mem000/restarts/vector/
 
 .. _InputFiles:
 
@@ -630,12 +640,6 @@ Noah-MP.4.0.1 Options
       +----------------+-----------------------------------------------------+
       | 4              | option 1 for non-snow; rsurf = rsurf_snow for snow  |
       +----------------+-----------------------------------------------------+
-
-.. COMMENT: Need citations
-   Also, what is the "evap" in the var name? Should the description say "Specifies the surface evaporation resistance option."
-   A. Henderson-Sellers, and A.J. Pitman, (1992), Land-surface schemes for future climate models: Specification, aggregation, and heterogeneity. Journal of Geophysical Research: Atmospheres, Vol 97, Issue D3.pp 2687-2696. https://doi.org/10.1029/91JD01697
-   OR
-   Sellers, P. J., M. D. Heiser, and F. G. Hall (1992), Relations between surface conductance and spectral vegetation indexes at intermediate (100 m2 to 15 km2) length scales, J. Geophys. Res., 97(D17), 19,033 – 19,059.
 
 ``rsurf``
    Ground surface resistance (s/m)
