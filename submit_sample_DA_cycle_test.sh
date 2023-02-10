@@ -14,18 +14,7 @@
 
 set -x
 export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
-
-`python -c 'import netCDF4'`
-if [[ $? != 0 ]]; then
-  echo 'no netcdf4, trying to install'
-  python -m pip install netCDF4 
-  `python -c 'import netCDF4'`
-  if [[ $? != 0 ]]; then
-    echo "could not install netCDF4 automatically. Please add netCDF4 module manually and re-run"
-    exit
-  fi
-fi
-echo $netcdf_installed
+export PYTHON=`which python3`
 
 if [[ ${USE_SINGULARITY} =~ yes ]]; then
   EPICHOME=/opt
@@ -48,9 +37,7 @@ if [[ ${USE_SINGULARITY} =~ yes ]]; then
 fi
 export BUILDDIR=${BUILDDIR:-${LANDDAROOT}/land-offline_workflow/build}
 export CYCLEDIR=$(pwd) 
-export PYTHON=`which python3`
-export OBSDIR=${LANDDAROOT}/inputs/DA
-source ./settings_cycle_test
+source ./settings_sample_DA_cycle_test
 
 export incdate=$PWD/incdate.sh
 export PATH=$PATH:./
@@ -60,7 +47,7 @@ date_count=0
 vec2tileexec=${BUILDDIR}/bin/vector2tile_converter.exe
 LSMexec=${BUILDDIR}/bin/ufsLandDriver.exe
 DADIR=${CYCLEDIR}/DA_update/
-DAscript=${DADIR}/do_landDA_release.sh
+DAscript=${DADIR}/do_sample_landDA_test.sh
 export MPIEXEC=`which mpiexec`
 
 while [ $date_count -lt $cycles_per_job ]; do

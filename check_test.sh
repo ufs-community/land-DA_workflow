@@ -4,7 +4,8 @@
 export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
 source ./settings_cycle_test
 
-TEST_BASEDIR=${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector
+EPICTESTS=${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector
+export TEST_BASEDIR=${TEST_BASEDIR:-${EPICTESTS}}
 
 for TEST_DATE in 2016-01-01_18-00-00 2016-01-02_18-00-00 
 do
