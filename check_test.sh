@@ -21,7 +21,7 @@ echo "testing ${state} on ${TEST_DATE}"
 if [[ $? != 0 ]]; then
     echo TEST FAILED
     echo "$TEST_DATE $state are different"
-    exit
+    exit 98
 fi
 
 done
@@ -37,7 +37,7 @@ cmp ${OUTDIR}/mem000/restarts/vector/ufs_land_restart_${state}.${TEST_DATE}.nc $
 if [[ $? != 0 ]]; then
     echo TEST FAILED
     echo "$TEST_DATE $state are different"
-    exit
+    exit 99
 fi
 done
 
