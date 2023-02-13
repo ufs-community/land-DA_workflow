@@ -159,8 +159,19 @@ To view progress, users can open the ``log`` and ``err`` files:
 
    tail -f log* err*
 
-Users will need to hit ``Ctrl+C`` to exit the file. Then, check for the 
-background and analysis files in the ``cycle_land`` directory.
+Users will need to hit ``Ctrl+C`` to exit the file. 
+
+.. attention::
+
+   If the log file contains a NetCDF error (e.g., ``ModuleNotFoundError: No module named 'netCDF4'``), run:
+   
+   .. code-block:: console
+      
+      python -m pip install netCDF4
+   
+   Then, resubmit the job (``sbatch submit_cycle.sh``).
+
+Next, check for the background and analysis files in the ``cycle_land`` directory.
 
 .. code-block:: console
 
@@ -748,142 +759,72 @@ Example of a ``ufs-land.namelist.noahmp`` Entry
    
    &run_setup
 
-   static_file =
-   "/scratch1/NCEPDEV/stmp2/Michael.Barlage/forcing/C96/static/ufs-land_C96_static_fields.nc"
-
-   init_file =
-   "/scratch1/NCEPDEV/stmp2/Michael.Barlage/forcing/C96/init/ufs-land_C96_init_fields_1hr.nc"
-
-   forcing_dir = "/scratch2/NCEPDEV/stmp3/Zhichang.Guo/GEFS/regrid/"
-
+   static_file = “/*/filename.nc”
+   init_file = “/*/filename.nc”
+   forcing_dir = "/ /"
    separate_output = .true.
-
    output_dir = "./noahmp_output/"
-
    restart_frequency_s = 86400
-
    restart_simulation = .true.
-
    restart_date = "XXYYYY-XXMM-XXDD XXHH:00:00"
-
    restart_dir = "./restarts/vector/"
-
    timestep_seconds = 3600
 
-   ! simulation_start is required
+   &simulation start and end
+   simulation_start = "2000-01-01 00:00:00" 
+   simulation_end = "1999-01-01 06:00:00" 
 
-   ! either set simulation_end or run\_\* or run_timesteps, priority
-
-   ! 1. simulation_end 2. run\_[days/hours/minutes/seconds] 3.
-   run_timesteps
-
-   simulation_start = "2000-01-01 00:00:00" ! start date [yyyy-mm-dd
-   hh:mm:ss]
-
-   ! simulation_end = "1999-01-01 06:00:00" ! end date [yyyy-mm-dd
-   hh:mm:ss]
-
-   run_days = 1 ! number of days to run
-
-   run_hours = 0 ! number of hours to run
-
-   run_minutes = 0 ! number of minutes to run
-
-   run_seconds = 0 ! number of seconds to run
-
-   run_timesteps = 0 ! number of timesteps to run
+   run_days = 1 
+   run_hours = 0 
+   run_minutes = 0 
+   run_seconds = 0 
+   run_timesteps = 0 
 
    begloc = 1
-
    endloc = 18360
 
-   /
-
    &land_model_option
-
-   land_model = 2 ! choose land model: 1=noah, 2=noahmp
-
-   /
+   land_model = 2 
 
    &structure
-
-   num_soil_levels = 4 ! number of soil levels
-
-   forcing_height = 6 ! forcing height [m]
-
-   /
+   num_soil_levels = 4 
+   forcing_height = 6 
 
    &soil_setup
-
-   soil_level_thickness = 0.10, 0.30, 0.60, 1.00 ! soil level thicknesses
-   [m]
-
-   soil_level_nodes = 0.05, 0.25, 0.70, 1.50 ! soil level centroids from
-   surface [m]
-
-   /
+   soil_level_thickness = 0.10, 0.30, 0.60, 1.00 
+   soil_level_nodes = 0.05, 0.25, 0.70, 1.50 
 
    &noahmp_options
-
    dynamic_vegetation_option = 4
-
    canopy_stomatal_resistance_option = 2
-
    soil_wetness_option = 1
-
    runoff_option = 1
-
    surface_exchange_option = 3
-
    supercooled_soilwater_option = 1
-
    frozen_soil_adjust_option = 1
-
    radiative_transfer_option = 3
-
    snow_albedo_option = 2
-
    precip_partition_option = 1
-
    soil_temp_lower_bdy_option = 2
-
    soil_temp_time_scheme_option = 3
-
    thermal_roughness_scheme_option = 2
-
    surface_evap_resistance_option = 1
-
    glacier_option = 1
 
-   /
-
    &forcing
-
    forcing_timestep_seconds = 10800
-
    forcing_type = "gswp3"
-
    forcing_filename = "C96_GEFS_forcing\_"
-
-   forcing_interp_solar = "gswp3_zenith" ! gswp3_zenith or linear
-
-   forcing_time_solar = "gswp3_average" ! gswp3_average or instantaneous
-
+   forcing_interp_solar = "gswp3_zenith" 
+   forcing_time_solar = "gswp3_average" 
    forcing_name_precipitation = "precipitationXXMEM"
-
    forcing_name_temperature = "temperatureXXMEM"
-
    forcing_name_specific_humidity = "specific_humidityXXMEM"
-
    forcing_name_wind_speed = "wind_speedXXMEM"
-
    forcing_name_pressure = "surface_pressureXXMEM"
-
    forcing_name_sw_radiation = "solar_radiationXXMEM"
-
    forcing_name_lw_radiation = "longwave_radiationXXMEM"
 
-   /
 
 .. _VectorTileConverter:
 
@@ -929,6 +870,23 @@ Building and Running the Vector-to-Tile Converter
 
       Vector2tile_converter.exe namelist.vector2tile
 
+Input File
+---------------------
+
+The input files containing grid information are listed in :numref:`Table %s <>`:
+
+.. table:: Input Files Containing Grid Information
+
+   +-----------------------------+--------------------------------------------------------------------------+
+   | Filename	                  | Description                                                              |
+   +=============================+==========================================================================+
+   | Cxx_grid.tile[1-6].nc       | Cxx grid information for tiles 1-6, where ``xx`` is the grid number.     |
+   +-----------------------------+--------------------------------------------------------------------------+
+   | Cxx_oro_data.tile[1-6].nc   | Model terrain (topographic/orographic information) for grid tiles 1-6.   |
+   +-----------------------------+--------------------------------------------------------------------------+
+   | oro_Cxx.mx100.tile[1-6].nc  |                                                                          |
+   +-----------------------------+--------------------------------------------------------------------------+
+
 Configuration File
 ---------------------
 
@@ -971,9 +929,7 @@ for restart/perturbation conversion.
    Specifies the path of tile location
 
 ``tile_fstub``
-   Specifies the name of orographic tile
-
-.. COMMENT: The "orographic tile" here is different from the tiles mentioned in the vars above.
+   Specifies the file stub for orography files in ``tile_path``. The file stub will be named ``oro_C${RES}`` for atmosphere-only and ``oro_C{RES}.mx100`` for atmosphere and ocean.
 
 Parameters for Restart Conversion
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1039,70 +995,39 @@ Example of a ``namelist.vector2tile`` Entry
 
    &run_setup
 
-   !------------------- common -------------------
-
-   ! Direction of conversion: either "vector2tile" or "tile2vector" for
-   restart file
-
-   ! "lndp2tile" or "lndp2vector" for perturbation
-
    direction = "vector2tile"
 
-   ! FV3 resolution and path to oro files for restart/perturbation
+   &FV3 resolution and path to oro files for restart/perturbation
    conversion
 
    tile_size = 96
-
-   tile_path =
-   "/scratch1/NCEPDEV/stmp2/Michael.Barlage/models/vector/v2t_data/tile_files/C96.mx100_frac/"
-
+   tile_path ="/ /"
    tile_fstub = "oro_C96.mx100"
 
    !------------------- only restart conversion -------------------
 
    ! Time stamp for conversion for restart conversion
-
    restart_date = "2019-09-30 23:00:00"
 
    ! Path for static file
-
-   static_filename="/scratch1/NCEPDEV/stmp2/Michael.Barlage/forcing/C96/static/ufs-land_C96_static_fields.nc"
+   static_filename="/*/filename.nc "
 
    ! Location of vector restart file (vector2tile direction)
-
-   vector_restart_path =
-   "/scratch1/NCEPDEV/stmp2/Michael.Barlage/models/vector/v2t_data/restart/"
+   vector_restart_path ="/ /"
 
    ! Location of tile restart files (tile2vector direction)
+   tile_restart_path ="/ /"
 
-   tile_restart_path =
-   "/scratch1/NCEPDEV/stmp2/Michael.Barlage/models/vector/v2t_data/workshop/"
-
-   ! Path for converted files; if same as tile/vector path, files may be
-   overwritten
-
-   output_path =
-   "/scratch1/NCEPDEV/stmp2/Michael.Barlage/models/vector/v2t_data/workshop/"
+   output_path ="/ /"
 
    !------------------- only perturbation mapping -------------------
-
-   ! layout, options: 1x4, 4x1, 2x2, an input settings for generating the
-   perturbation file
-
    lndp_layout = "1x4"
 
    ! input files
-
-   lndp_input_file =
-   "/scratch2/NCEPDEV/land/data/DA/ensemble_pert/workg_T162_984x488.tileXX.nc"
+   lndp_input_file ="/*/filename.nc "
 
    ! output files
-
    lndp_output_file = "./output.nc"
 
    ! land perturbation variable list
-
    lndp_var_list='vgf','smc'
-
-   /
-
