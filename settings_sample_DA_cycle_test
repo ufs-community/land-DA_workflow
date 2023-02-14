@@ -6,11 +6,11 @@ STARTDATE=2016010118
 ENDDATE=2016010318
 
 #Location of observations for DA
-export OBSDIR=${LANDDAROOT}/inputs/DA
+export OBSDIR=${LANDDA_INPUTS}/DA
 # temporary directory where experiment is run from
-export WORKDIR=$LANDDAROOT/workdir
+export WORKDIR=${WORKDIR:-${LANDDAROOT}/workdir}
 # directory where output is saved
-export OUTDIR=$LANDDAROOT/cycle_land/${exp_name}
+export OUTDIR=${CYCLE_LAND}/${exp_name}
 
 ############################
 

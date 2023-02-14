@@ -1,6 +1,6 @@
 #!/bin/bash  
 #SBATCH --job-name=offline_noahmp
-#SBATCH --account=da-cpu
+#SBATCH --account=epic-ps
 #SBATCH --qos=debug
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
@@ -14,6 +14,9 @@
 
 set -x
 export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
+export LANDDA_INPUTS=${LANDDA_INPUTS:-${LANDDAROOT}/inputs}
+export LAND_OFFLINE_WORKFLOW=${LAND_OFFLINE_WORKFLOW:-${LANDDAROOT}/land-offline_workflow}
+export CYCLE_LAND=${CYCLE_LAND:-${LANDDAROOT}/cycle_land}
 export PYTHON=`which python3`
 
 if [[ ${USE_SINGULARITY} =~ yes ]]; then
@@ -25,7 +28,7 @@ if [[ ${USE_SINGULARITY} =~ yes ]]; then
   #Scripts that launch containerized versions of the executables are in $PWD/singularity/bin They should be called
   #from the host system to be run (e.g. mpiexec -n 6 $BUILDDIR/bin/fv3jedi_letkf.x )
   export BUILDDIR=$PWD/singularity
-  export JEDI_EXECDIR=${LANDDAROOT}/land-offline_workflow/singularity/bin
+  export JEDI_EXECDIR=${LAND_OFFLINE_WORKFLOW}/singularity/bin
   #we need to have intelmpi loaded on the host system to run the workflow. Try to load it here.
   #TODO--figure out a way to make sure we have intelmpi loaded or don't let the workflow start
   module try-load impi
@@ -35,7 +38,7 @@ if [[ ${USE_SINGULARITY} =~ yes ]]; then
   export SINGULARITYBIN=`which singularity`
   sed -i 's/singularity exec/${SINGULARITYBIN} exec/g' run_container_executable.sh
 fi
-export BUILDDIR=${BUILDDIR:-${LANDDAROOT}/land-offline_workflow/build}
+export BUILDDIR=${BUILDDIR:-${LAND_OFFLINE_WORKFLOW}/build}
 export CYCLEDIR=$(pwd) 
 source ./settings_sample_DA_cycle_test
 
@@ -110,7 +113,7 @@ while [ $date_count -lt $cycles_per_job ]; do
 
     # copy restarts into work directory
     rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
-    rst_in_single=${LANDDAROOT}/inputs/single/output/modl/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    rst_in_single=${LANDDA_INPUTS}/single/output/modl/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
     rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
     if [[ ! -e ${rst_in} ]]; then 
       cp $rst_in_single $rst_out 
@@ -126,7 +129,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         # update vec2tile and tile2vec namelists
         cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
 
-        sed -i "s|LANDDAROOT|${LANDDAROOT}|g" vector2tile.namelist
+        sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" vector2tile.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
         sed -i -e "s/XXMM/${MM}/g" vector2tile.namelist
         sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
@@ -181,7 +184,7 @@ while [ $date_count -lt $cycles_per_job ]; do
 
         cp  ${CYCLEDIR}/template.tile2vector tile2vector.namelist
 
-        sed -i "s|LANDDAROOT|${LANDDAROOT}|g" tile2vector.namelist
+        sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" tile2vector.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
         sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
         sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
@@ -206,7 +209,7 @@ while [ $date_count -lt $cycles_per_job ]; do
     # update model namelist 
     cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.release.${atmos_forc}  ufs-land.namelist
 
-    sed -i "s|LANDDAROOT|${LANDDAROOT}|g" ufs-land.namelist 
+    sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs-land.namelist 
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
     sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
     sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
