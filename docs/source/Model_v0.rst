@@ -873,12 +873,15 @@ Building and Running the Vector-to-Tile Converter
 Input File
 ---------------------
 
-The input files containing grid information are listed in :numref:`Table %s <>`:
+The input files containing grid information are listed in :numref:`Table %s <GridInputFiles>`:
+
+
+.. _GridInputFiles:
 
 .. table:: Input Files Containing Grid Information
 
    +-----------------------------+--------------------------------------------------------------------------+
-   | Filename	                  | Description                                                              |
+   | Filename                    | Description                                                              |
    +=============================+==========================================================================+
    | Cxx_grid.tile[1-6].nc       | Cxx grid information for tiles 1-6, where ``xx`` is the grid number.     |
    +-----------------------------+--------------------------------------------------------------------------+
