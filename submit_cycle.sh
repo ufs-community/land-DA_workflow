@@ -12,46 +12,10 @@
 ############################
 # loop over time steps
 
-set -x
-export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
-export LANDDA_INPUTS=${LANDDA_INPUTS:-${LANDDAROOT}/inputs}
-export LAND_OFFLINE_WORKFLOW=${LAND_OFFLINE_WORKFLOW:-${LANDDAROOT}/land-offline_workflow}
-export CYCLE_LAND=${CYCLE_LAND:-${LANDDAROOT}/cycle_land}
-export PYTHON=`which python3`
+source $analdate 
 
-if [[ ${USE_SINGULARITY} =~ yes ]]; then
-  EPICHOME=/opt
-  #use the python that is built into the container. It has all the pythonpaths set and can run the ioda converters
-  export PYTHON=$PWD/singularity/bin/python
-  #JEDI is installed under /opt in the container
-  export JEDI_INSTALL=/opt
-  #Scripts that launch containerized versions of the executables are in $PWD/singularity/bin They should be called
-  #from the host system to be run (e.g. mpiexec -n 6 $BUILDDIR/bin/fv3jedi_letkf.x )
-  export BUILDDIR=$PWD/singularity
-  export JEDI_EXECDIR=${LAND_OFFLINE_WORKFLOW}/singularity/bin
-  #we need to have intelmpi loaded on the host system to run the workflow. Try to load it here.
-  #TODO--figure out a way to make sure we have intelmpi loaded or don't let the workflow start
-  module try-load impi
-  module try-load intel-oneapi-mpi
-  module try-load intelmpi
-  module try-load singularity
-  export SINGULARITYBIN=`which singularity`
-  sed -i 's/singularity exec/${SINGULARITYBIN} exec/g' run_container_executable.sh
-fi
-export BUILDDIR=${BUILDDIR:-${LAND_OFFLINE_WORKFLOW}/build}
-export CYCLEDIR=$(pwd) 
-source ./settings_sample_DA_cycle_test
-
-export incdate=$PWD/incdate.sh
-export PATH=$PATH:./
 THISDATE=$STARTDATE
 date_count=0
-
-vec2tileexec=${BUILDDIR}/bin/vector2tile_converter.exe
-LSMexec=${BUILDDIR}/bin/ufsLandDriver.exe
-DADIR=${CYCLEDIR}/DA_update/
-DAscript=${DADIR}/do_sample_landDA_test.sh
-export MPIEXEC=`which mpiexec`
 
 while [ $date_count -lt $cycles_per_job ]; do
 
@@ -252,10 +216,10 @@ done #  date_count -lt cycles_per_job
 ############################
 # resubmit script 
 
-#if [ $THISDATE -lt $ENDDATE ]; then
-#    echo "STARTDATE=${THISDATE}" > ${analdate}
-#    echo "ENDDATE=${ENDDATE}" >> ${analdate}
-#    cd ${CYCLEDIR}
-#    sbatch ${CYCLEDIR}/submit_cycle.sh
-#fi
+if [ $THISDATE -lt $ENDDATE ]; then
+    echo "STARTDATE=${THISDATE}" > ${analdate}
+    echo "ENDDATE=${ENDDATE}" >> ${analdate}
+    cd ${CYCLEDIR}
+    sbatch ${CYCLEDIR}/submit_cycle.sh
+fi
 

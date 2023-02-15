@@ -2,14 +2,11 @@
 
 # experiment name
 export exp_name=DA_GHCN_test
-#STARTDATE=2016010118
-#ENDDATE=2016010318
-STARTDATE=2020100118
-ENDDATE=2020100318
+STARTDATE=2016010118
+ENDDATE=2016010318
 
 #forcing options: gdas, gswp3, gefs_ens
-#export atmos_forc=gdas
-export atmos_forc=era5
+export atmos_forc=gdas
 
 
 #Location of observations for DA
