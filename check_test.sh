@@ -2,8 +2,8 @@
 
 # get OUTDIR
 export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
-export SETTINGS_FILE=${1:-"settings_sample_DA_cycle_test"}
-echo $SETTINGS_FILE
+export SETTINGS_FILE=${1:-"settings_DA_cycle_gdas"}
+export CYCLE_LAND=${CYCLE_LAND:-${LANDDAROOT}/cycle_land}
 source ./${SETTINGS_FILE}
 
 EPICTESTS=${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector

@@ -38,7 +38,7 @@ fi
 if [[ $# -gt 0 ]]; then 
     config_file=$1
 else
-    config_file=settings_sample_DA_cycle_test
+    config_file=settings_DA_cycle_gdas
 fi
 
 if [[ ! -e $config_file ]]; then
@@ -100,7 +100,7 @@ export RHH=$(( $FCSTHR % 24 ))
 #if [[ ! -e ${OUTDIR} ]]; then
 #    mkdir -p  ${OUTDIR}
 #fi 
-#
+
 ################################
 ## create dirs and copy in ICS if needed
 #
