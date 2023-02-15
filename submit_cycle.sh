@@ -70,9 +70,6 @@ while [ $date_count -lt $cycles_per_job ]; do
     MEM_WORKDIR=${WORKDIR}/${mem_ens}
     MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
 
-    mkdir -p $MEM_WORKDIR
-    mkdir -p $MEM_MODL_OUTDIR/restarts/vector
-
     cd $MEM_WORKDIR
 
     # copy restarts into work directory

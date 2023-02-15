@@ -90,47 +90,42 @@ export RHH=$(( $FCSTHR % 24 ))
 ############################
 # set up directories
 
-##workdir
-#if [[ -e ${WORKDIR} ]]; then 
-#    rm -rf ${WORKDIR}
-#fi
-#mkdir ${WORKDIR}
-#
-##outdir for model
-#if [[ ! -e ${OUTDIR} ]]; then
-#    mkdir -p  ${OUTDIR}
-#fi 
+#workdir
+if [[ -e ${WORKDIR} ]]; then 
+    rm -rf ${WORKDIR}
+fi
+mkdir ${WORKDIR}
 
-################################
-## create dirs and copy in ICS if needed
-#
-#mem_ens="mem000"  # single member, us ensemble 0
-#
-#MEM_WORKDIR=${WORKDIR}/${mem_ens}
-#if [[ ! -e $MEM_WORKDIR ]]; then
-#  mkdir $MEM_WORKDIR
-#fi
-#
-## ensemble outdir (model only)
-#MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
-#if [[ ! -e $MEM_MODL_OUTDIR ]]; then  #ensemble outdir
-#    mkdir -p $MEM_MODL_OUTDIR
-#fi 
-#
-## outdir subdirs
-#if [[ ! -e ${MEM_MODL_OUTDIR}/restarts/ ]]; then  # subdirectories
-#    mkdir -p ${MEM_MODL_OUTDIR}/restarts/vector/ 
-#    mkdir ${MEM_MODL_OUTDIR}/restarts/tile/
-#    mkdir -p ${MEM_MODL_OUTDIR}/noahmp/
-#fi
-#ln -sf ${MEM_MODL_OUTDIR}/noahmp ${MEM_WORKDIR}/noahmp_output 
-#
-## copy ICS into restarts, if needed 
-#rst_in=${ICSDIR}/${mem_ens}/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
-#rst_out=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
-#rst_in_single=${LANDDA_INPUTS}/single/output/modl/restarts/vector/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
-#
-## if restart not in experiment out directory, copy the restarts from the ICSDIR
+#outdir for model
+if [[ ! -e ${OUTDIR} ]]; then
+    mkdir -p  ${OUTDIR}
+fi 
+
+###############################
+# create dirs and copy in ICS if needed
+
+mem_ens="mem000"  # single member, us ensemble 0
+
+MEM_WORKDIR=${WORKDIR}/${mem_ens}
+if [[ ! -e $MEM_WORKDIR ]]; then
+  mkdir $MEM_WORKDIR
+fi
+
+# ensemble outdir (model only)
+MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
+if [[ ! -e $MEM_MODL_OUTDIR ]]; then  #ensemble outdir
+    mkdir -p $MEM_MODL_OUTDIR
+fi 
+
+# outdir subdirs
+if [[ ! -e ${MEM_MODL_OUTDIR}/restarts/ ]]; then  # subdirectories
+    mkdir -p ${MEM_MODL_OUTDIR}/restarts/vector/ 
+    mkdir ${MEM_MODL_OUTDIR}/restarts/tile/
+    mkdir -p ${MEM_MODL_OUTDIR}/noahmp/
+fi
+ln -sf ${MEM_MODL_OUTDIR}/noahmp ${MEM_WORKDIR}/noahmp_output 
+
+# if restart not in experiment out directory, copy the restarts from the ICSDIR
 #if [[ ! -e ${rst_out} ]]; then
 #   echo "Looking for ICS: ${rst_in}"
 #   # if ensemble of restarts exists in ICSDIR, use these. Otherwise, use single restart.
