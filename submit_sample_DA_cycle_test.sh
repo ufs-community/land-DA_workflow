@@ -109,11 +109,11 @@ while [ $date_count -lt $cycles_per_job ]; do
     cd $MEM_WORKDIR
 
     # copy restarts into work directory
-    rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
-    rst_in_single=${LANDDAROOT}/inputs/single/output/modl/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+#   rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
+    rst_in=${LANDDAROOT}/inputs/restarts/${atmos_forc}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
     rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
     if [[ ! -e ${rst_in} ]]; then 
-      cp $rst_in_single $rst_out 
+      echo "Missing restart file"
     else 
       cp $rst_in $rst_out 
     fi
@@ -132,6 +132,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
         sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
         sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
+        sed -i -e "s/MODELTYPE/${atmos_forc}/g" vector2tile.namelist
         sed -i -e "s/XXRES/${RES}/g" vector2tile.namelist
         sed -i -e "s/XXTSTUB/${TSTUB}/g" vector2tile.namelist
         sed -i -e "s#XXTPATH#${TPATH}#g" vector2tile.namelist
@@ -186,6 +187,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
         sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
         sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
+        sed -i -e "s/MODELTYPE/${atmos_forc}/g" vector2tile.namelist
         sed -i -e "s/XXRES/${RES}/g" tile2vector.namelist
         sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
         sed -i -e "s#XXTPATH#${TPATH}#g" tile2vector.namelist

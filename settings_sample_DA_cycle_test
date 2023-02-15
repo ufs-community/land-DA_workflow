@@ -2,8 +2,15 @@
 
 # experiment name
 export exp_name=DA_GHCN_test
-STARTDATE=2016010118
-ENDDATE=2016010318
+#STARTDATE=2016010118
+#ENDDATE=2016010318
+STARTDATE=2020100118
+ENDDATE=2020100318
+
+#forcing options: gdas, gswp3, gefs_ens
+#export atmos_forc=gdas
+export atmos_forc=era5
+
 
 #Location of observations for DA
 export OBSDIR=${LANDDAROOT}/inputs/DA
@@ -21,12 +28,9 @@ export ensemble_size=1
 # length of each forecast
 export FCSTHR=24
 
-#forcing options: gdas, gswp3, gefs_ens
-export atmos_forc=gdas
-
 #FV3 resolution
 export RES=96
-export TPATH="$LANDDAROOT/inputs/forcing/C96/orog_files/"
+export TPATH="$LANDDAROOT/inputs/forcing/${atmos_forc}/orog_files/"
 export TSTUB="oro_C96.mx100" # file stub for orography files in $TPATH
                              # oro_C${RES} for atm only, oro_C${RES}.mx100 for atm/ocean.
 
@@ -35,7 +39,7 @@ export cycles_per_job=2
 
 # directory with initial conditions
 # can find some here:/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/single
-export ICSDIR=$LANDDAROOT/inputs/forcing/C96/orog_files/
+export ICSDIR=$LANDDAROOT/inputs/forcing/${atmos_forc}/orog_files/
 
 # namelist for do_landDA.sh
 # set to "openloop" to not call do_landDA.sh
