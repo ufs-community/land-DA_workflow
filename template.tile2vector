@@ -18,7 +18,7 @@
   restart_date = "XXYYYY-XXMM-XXDD XXHH:00:00"
   
 ! Path for static file  
-  static_filename = "LANDDAROOT/inputs/forcing/MODELTYPE/static/ufs-land_CXXRES_static_fields.nc"
+  static_filename = "LANDDA_INPUTS/forcing/MODELTYPE/static/ufs-land_CXXRES_static_fields.nc"
   
 ! Location of vector restart file (vector2tile direction)
 

@@ -1,8 +1,8 @@
 &run_setup
 
-  static_file      = "/LANDDAROOT/inputs/forcing/gdas/static/ufs-land_C96_static_fields.nc"
-  init_file        = "/LANDDAROOT/inputs/forcing/gdas/init/ufs-land_C96_init_fields_1hr.nc"
-  forcing_dir      = "/LANDDAROOT/inputs/forcing/gdas/gdas/forcing"
+  static_file      = "/LANDDA_INPUTS/forcing/gdas/static/ufs-land_C96_static_fields.nc"
+  init_file        = "/LANDDA_INPUTS/forcing/gdas/init/ufs-land_C96_init_fields_1hr.nc"
+  forcing_dir      = "/LANDDA_INPUTS/forcing/gdas/gdas/forcing"
   
   separate_output = .false.
   output_dir       = "./"

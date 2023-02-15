@@ -13,11 +13,11 @@ export atmos_forc=era5
 
 
 #Location of observations for DA
-export OBSDIR=${LANDDAROOT}/inputs/DA
+export OBSDIR=${LANDDA_INPUTS}/DA
 # temporary directory where experiment is run from
-export WORKDIR=$LANDDAROOT/workdir
+export WORKDIR=${WORKDIR:-${LANDDAROOT}/workdir}
 # directory where output is saved
-export OUTDIR=$LANDDAROOT/cycle_land/${exp_name}
+export OUTDIR=${CYCLE_LAND}/${exp_name}
 
 ############################
 
@@ -30,7 +30,7 @@ export FCSTHR=24
 
 #FV3 resolution
 export RES=96
-export TPATH="$LANDDAROOT/inputs/forcing/${atmos_forc}/orog_files/"
+export TPATH="$LANDDA_INPUTS/forcing/${atmos_forc}/orog_files/"
 export TSTUB="oro_C96.mx100" # file stub for orography files in $TPATH
                              # oro_C${RES} for atm only, oro_C${RES}.mx100 for atm/ocean.
 
