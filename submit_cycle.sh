@@ -68,18 +68,32 @@ while [ $date_count -lt $cycles_per_job ]; do
     mem_ens="mem000" 
 
     MEM_WORKDIR=${WORKDIR}/${mem_ens}
-    MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
 
     cd $MEM_WORKDIR
 
     # copy restarts into work directory
     rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
+    rst_in_single=${LANDDA_INPUTS}/single/output/modl/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
     rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-    if [[ ! -e ${rst_in} ]]; then 
-      echo "Missing restart file"
-    else 
-      cp $rst_in $rst_out 
+    # if restart not in experiment out directory, copy the restarts from the ICSDIR
+    if [[ ! -e ${rst_out} ]]; then
+       echo "Looking for ICS: ${rst_in}"
+       # if ensemble of restarts exists in ICSDIR, use these. Otherwise, use single restart.
+       if [[ -e ${rst_in} ]]; then
+          echo "ICS found, copying" 
+          cp ${rst_in} ${rst_out}
+       else  # use non-ensemble restart
+          echo "ICS not found. Checking for ensemble started from single member: ${rst_in_single}"
+          if [[ -e ${rst_in_single} ]]; then
+              echo "ICS found, copying" 
+              cp ${rst_in_single} ${rst_out}
+          else
+              echo "ICS not found. Exiting" 
+              exit 10
+          fi
+       fi
     fi
+
     if [[ $do_jedi == "YES" ]]; then  
         echo '************************************************'
         echo 'calling tile2vector' 

@@ -125,25 +125,6 @@ if [[ ! -e ${MEM_MODL_OUTDIR}/restarts/ ]]; then  # subdirectories
 fi
 ln -sf ${MEM_MODL_OUTDIR}/noahmp ${MEM_WORKDIR}/noahmp_output 
 
-# if restart not in experiment out directory, copy the restarts from the ICSDIR
-#if [[ ! -e ${rst_out} ]]; then
-#   echo "Looking for ICS: ${rst_in}"
-#   # if ensemble of restarts exists in ICSDIR, use these. Otherwise, use single restart.
-#   if [[ -e ${rst_in} ]]; then
-#      echo "ICS found, copying" 
-#      cp ${rst_in} ${rst_out}
-#   else  # use non-ensemble restart
-#      echo "ICS not found. Checking for ensemble started from single member: ${rst_in_single}"
-#      if [[ -e ${rst_in_single} ]]; then
-#          echo "ICS found, copying" 
-#          cp ${rst_in_single} ${rst_out}
-#      else
-#          echo "ICS not found. Exiting" 
-#          exit 10
-#      fi
-#   fi
-#fi
-
 # create dates file 
 touch analdates.sh 
 cat << EOF > analdates.sh
