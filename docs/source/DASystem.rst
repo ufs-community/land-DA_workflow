@@ -227,76 +227,77 @@ Users may find the following example ``yaml`` configuration a helpful starting p
 Geometry
 ```````````
 
-**Geometry** is used in JEDI configuration files to specify the model grid's parallelization across compute nodes (horizontal and vertical). 
+``geometry``
+   **Geometry** is used in JEDI configuration files to specify the model grid's parallelization across compute nodes (horizontal and vertical). 
 
-``fms initialization``
-   This parameter contains two subparameters, ``namelist filename`` and ``field table filename``. 
+   ``fms initialization``
+      This section contains two parameters, ``namelist filename`` and ``field table filename``. 
 
-   .. COMMENT: Come up with better description^ !!!
+      .. COMMENT: Come up with better description^ !!!
 
-   ``namelist filename``
-      Specifies the path for the namelist filename.
+      ``namelist filename``
+         Specifies the path for the namelist filename.
 
-   ``field table filename``
-      Specifies the path for the field table filename.
+      ``field table filename``
+         Specifies the path for the field table filename.
 
-``akbk``
-   Specifies the path to a file containing the coefficients that define the hybrid sigma-pressure vertical coordinate used in FV3. Files are provided with the repository containing ``ak`` and ``bk`` for some common choices of vertical resolution for GEOS and GFS. 
+   ``akbk``
+      Specifies the path to a file containing the coefficients that define the hybrid sigma-pressure vertical coordinate used in FV3. Files are provided with the repository containing ``ak`` and ``bk`` for some common choices of vertical resolution for GEOS and GFS. 
 
-``npx``
-   Specifies the number of grid cells in the east-west direction.
+   ``npx``
+      Specifies the number of grid cells in the east-west direction.
 
-   .. COMMENT: "vertices" was used instead of cells originally... Are they vertices like in graph theory (where there are vertices and edges) or vertices like cells in a grid?
+      .. COMMENT: "vertices" was used instead of cells originally... Are they vertices like in graph theory (where there are vertices and edges) or vertices like cells in a grid?
 
-``npy``
-   Specifies the number of grid cells in the north-south direction
+   ``npy``
+      Specifies the number of grid cells in the north-south direction
 
-``npz``
-   Specifies the number of vertical layers.
+   ``npz``
+      Specifies the number of vertical layers.
 
-``field metadata override``
-   Specifies the path for file metadata.
+   ``field metadata override``
+      Specifies the path for file metadata.
 
-``time invariant state fields``
-   This parameter contains several subparameters listed below.
+   ``time invariant state fields``
+      This parameter contains several subparameters listed below.
 
 
-   ``datetime``
-      Specifies the time in YYYY-MM-DDTHH:00:00Z format, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
+      ``datetime``
+         Specifies the time in YYYY-MM-DDTHH:00:00Z format, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
 
-   ``filetype``
-      Specifies the type of file.
+      ``filetype``
+         Specifies the type of file.
 
-      .. COMMENT: What are the options?
+         .. COMMENT: What are the options?
 
-   ``skip coupler file``
-      Specifies whether to enable skipping coupler file. Valid values are: ``true`` | ``false``
+      ``skip coupler file``
+         Specifies whether to enable skipping coupler file. Valid values are: ``true`` | ``false``
 
-      +--------+-----------------+
-      | Value  | Description     |
-      +========+=================+
-      | true   | enable          |
-      +--------+-----------------+
-      | false  | do not enable   |
-      +--------+-----------------+
+         +--------+-----------------+
+         | Value  | Description     |
+         +========+=================+
+         | true   | enable          |
+         +--------+-----------------+
+         | false  | do not enable   |
+         +--------+-----------------+
 
-      .. COMMENT: Check whether ".true./.false."
+         .. COMMENT: Check whether ".true./.false."
 
-   ``state variables``
-      Specifies the list of state variables. Valid values: ``[orog_filt]``
+      ``state variables``
+         Specifies the list of state variables. Valid values: ``[orog_filt]``
 
-      .. COMMENT: Need a list of valid options! 
+         .. COMMENT: Need a list of valid options! 
 
-   ``datapath``
-      Specifies the path for state variables data.
+      ``datapath``
+         Specifies the path for state variables data.
 
-   ``filename_orog``
-      Specifies the name of orographic data file.
+      ``filename_orog``
+         Specifies the name of orographic data file.
 
 Window Begin, Window Length
 ```````````````````````````````
 
-These two top-level items define the assimilation window for many applications, including Land DA.
+These two items define the assimilation window for many applications, including Land DA.
 
 ``window begin``
    Specifies the beginning time window. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour.
@@ -307,93 +308,263 @@ These two top-level items define the assimilation window for many applications, 
    .. COMMENT: Sample file has a one-digit hour... What if someone wants to run a longer experiment (i.e. 120 hour forecast)? 
 
 
+Background
+`````````````
+
+``background``
+   .. COMMENT: Add summary of category
+
+   ``date``
+      Specifies the background date. The format is ``&date YYYY-MM-DDTHH:00:00Z``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. For example: ``&date 2016-01-02T18:00:00Z``
+
+   ``members``
+      Specifies information on background members. 
+      .. COMMENT: What are background members?!?!
+
+      ``datetime``
+         Specifies the time. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
+         .. COMMENT: Not the dat & time? And for what? Same as above?
+
+      ``filetype``
+         Specifies the type of file. Valid values: ``fms restart``
+         .. COMMENT: Other valid values?
+
+      ``state variables``
+         Specifies a list of state variables. Valid values: ``[snwdph,vtype,slmsk]``
+         .. COMMENT: Are there more?
+
+      ``datapath``
+         Specifies the path for state variables data. Valid values: ``mem_pos/`` | ``mem_neg/``
+         .. COMMENT: Other valid values?
+
+      ``filename_sfcd``
+         Specifies the name of surface data file. This usually takes the form ``YYYYMMDD.HHmmss.sfc_data.nc``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: ``20160102.180000.sfc_data.nc``
+         .. COMMENT: Check this!
+         
+      ``filename_cprl``
+         Specifies the name of file that contains metadata for the restart. This usually takes the form ``YYYYMMDD.HHmmss.coupler.res``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: ``20160102.180000.coupler.res``
+
+Driver
+`````````
+
+``driver``
+   .. COMMENT: Add description! 
+
+   ``save posterior mean``
+      Specifies whether to save the posterior mean. Valid values: ``true`` | ``false``
+
+      +--------+-----------------+
+      | Value  | Description     |
+      +========+=================+
+      | true   | save            |
+      +--------+-----------------+
+      | false  | do not save     |
+      +--------+-----------------+
+      
+      .. COMMENT: What is posterior mean?
+
+   ``save posterior mean increment``
+      Specifies whether to save the posterior mean increment. Valid values: ``true`` | ``false``
+
+      +--------+-----------------+
+      | Value  | Description     |
+      +========+=================+
+      | true   | enable          |
+      +--------+-----------------+
+      | false  | do not enable   |
+      +--------+-----------------+
+
+      .. COMMENT: What is posterior increment?
+
+   ``save posterior ensemble``
+      Specifies whether to save the posterior ensemble. Valid values: ``true`` | ``false``
+
+      +--------+-----------------+
+      | Value  | Description     |
+      +========+=================+
+      | true   | enable          |
+      +--------+-----------------+
+      | false  | do not enable   |
+      +--------+-----------------+
+
+      .. COMMENT: What is posterior ensemble?
+
+   ``run as observer only``
+      Specifies whether to run as observer only. Valid values: ``true`` | ``false``
+
+      +--------+-----------------+
+      | Value  | Description     |
+      +========+=================+
+      | true   | enable          |
+      +--------+-----------------+
+      | false  | do not enable   |
+      +--------+-----------------+
+
+      .. COMMENT: What does running as observer only DO?
+
+Local Ensemble DA
+`````````````````````
+
+``local ensemble DA``
+   .. COMMENT: Add definition!
+
+   ``solver``
+      Specifies the type of solver. Currently, ``LETKF`` is the only available option. See :cite:t:`HuntEtAl2007`.
+      .. COMMENT:
+         LETKF – Two Local Ensemble Transform Kalman Filter (Hunt et al 2007).
 
 
+   ``inflation``
+      .. COMMENT: Add definition!
 
+      ``rtps``
+         Relaxation to prior spread (:cite:t:`Whitaker&Hamill2012`). 
+         .. COMMENT: 0.0
+
+      ``rtpp``
+         Relaxation to prior perturbation. 
+         .. COMMENT: 0.0
+
+      ``multi``
+         Parameter of multiplicative inflation.
+         .. COMMENT: 1.0
+
+         .. COMMENT: Find better definitions and valid values for above variables!
+
+
+.. code-block:: console
+   
+   geometry:
+   background:
+   driver:
+   local ensemble DA:
+   output increment:
+     filetype: fms restart
+     filename_sfcd: xainc.sfc_data.nc
+
+Output Increment
+```````````````````
+
+``output increment``
+   .. COMMENT: Add definition!
+
+   ``filetype``
+      .. COMMENT: ``fms restart``
+   ``filename_sfcd``
+      .. COMMENT: ``xainc.sfc_data.nc``
+
+.. COMMENT: Add definitions for this section! 
 
 Observations
 ```````````````
 
-The **Observations** item describes one or more types of observations, each of which is a multi-level YAML/JSON object in and of itself. Each of these observation types is read into JEDI as an ``eckit::Configuration`` object (see `JEDI Documentation <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.0.0/using/building_and_running/config_content.html#observations>`__ for more details).
+``observations``
+   The **Observations** item describes one or more types of observations, each of which is a multi-level YAML/JSON object in and of itself. Each of these observation types is read into JEDI as an ``eckit::Configuration`` object (see `JEDI Documentation <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.0.0/using/building_and_running/config_content.html#observations>`__ for more details).
 
-``obs space``
-   Describes the configuration of the observation space. An observation space handles observation data for a single observation type. 
+   ``observers``
+      .. COMMENT: Need def!
 
-   ``name``
-      Specifies the name of observation space. Since the Land DA System uses IMS snow depth data, the sample configuration file uses the name ``SnowDepthIMS``. 
+      ``obs space``
+         Describes the configuration of the observation space. An observation space handles observation data for a single observation type. 
 
-      .. COMMENT: Chack whether this can be any name that makes sense to the user or whether there are particular values.
+         ``name``
+            Specifies the name of observation space. Since the Land DA System uses IMS snow depth data, the sample configuration file uses the name ``SnowDepthIMS``. 
 
-   ``distribution``
-      .. COMMENT Add def here!!
+            .. COMMENT: Chack whether this can be any name that makes sense to the user or whether there are particular values.
 
-      ``name``
-         Specifies the name of distribution.
+         ``distribution``
+            .. COMMENT Add def here!!
 
-      ``halo size``
-         Specifies the size of the halo distribution.
+            ``name``
+               Specifies the name of distribution. Valid values: ``Halo``
 
+               .. COMMENT: Other valid values?
 
-   ``simulated variables``
-      Specifies the list of variables that need to be simulated by observation operator. Valid values: ``[totalSnowDepth]``
+            ``halo size``
+               Specifies the size of the halo distribution. Valid values: ``250e3``
 
-   ``observed variables``
-      Specifies the list of observed variables. Valid values: ``[totalSnowDepth]``
+               .. COMMENT: Other valid values?
 
-      .. COMMENT: Add complete list of valid values to the 2 variables above!
+         ``simulated variables``
+            Specifies the list of variables that need to be simulated by observation operator. Valid values: ``[totalSnowDepth]``
 
-   ``obsdatain``
-      This section specifies information about the observation input data.
+         ``observed variables``
+            Specifies the list of observed variables. Valid values: ``[totalSnowDepth]``
 
-      ``engine``
-         This section specifies parameters required for the file matching engine.  
+            .. COMMENT: Add complete list of valid values to the 2 variables above!
 
-         ``type``
-            Specifies the type of input observation data. Valid values: ``H5File`` | ``OBS``
+         ``obsdatain``
+            This section specifies information about the observation input data.
 
-         ``obsfile``
-            Specifies the input filename.
+            ``engine``
+               This section specifies parameters required for the file matching engine.  
 
-   ``obsdataout``
-      This section specifies information about the observation output data.
+               ``type``
+                  Specifies the type of input observation data. Valid values: ``H5File`` | ``OBS``
 
-      ``engine``
-         This section specifies parameters required for the file matching engine. 
+               ``obsfile``
+                  Specifies the input filename.
+                  .. COMMENT: Add Valid/recommended value? ``ioda.IMSscf.20160102.oro_C96.mx100.nc``
 
-         ``type``
-            Specifies the type of output observation data. Valid values: ``H5File``
+         ``obsdataout``
+            This section contains information about the observation output data.
 
-         ``obsfile``
-            Specifies the output file path.
+            ``engine``
+               This section specifies parameters required for the file matching engine. 
 
+               ``type``
+                  Specifies the type of output observation data. Valid values: ``H5File``
 
-``obs operator``
-   Describes the observation operator and its options. 
+               ``obsfile``
+                  Specifies the output file path. 
 
-``name`` : specifies the name in the ObsOperator and LinearObsOperator factory, defined in the C++ code. Acceptable values are in JEDI Documentation.   
+                  .. COMMENT: Add Valid/recommended value? ``output/DA/hofx/letkf_hofx_ims_2016010218.nc``
 
-``observation error``: explains how to calculate the observation error covariance matrix and gives instructions (required for DA applications). The key covariance model, which describes how observation error covariances are created, is frequently the first item in this section. For diagonal observation error covariances, only the diagonal option is currently supported.
+      ``obs operator``
+         Describes the observation operator and its options. An observation operator is used for computing H(x).
+            .. COMMENT: Explain more!!! 
 
-``covariance model`` : specifies the covariance model. 
+         ``name``
+            Specifies the name in the ``ObsOperator`` and ``LinearObsOperator`` factory, defined in the C++ code. Valid values include: ``Identity`` | ``Composite`` | ``Categorical``. See `JEDI Documentation <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/ufo/obsops.html>`__ for more options. 
 
-observation localizations
+            .. COMMENT: There are a ton of options, but which ones will work? Is Identity the only valid one?
 
-``localization method``  : specifies the observation localization method. Acceptable values are:
+      ``obs error``
+         Observation error explains how to calculate the observation error covariance matrix and gives instructions (required for DA applications). The key covariance model, which describes how observation error covariances are created, is frequently the first item in this section. For diagonal observation error covariances, only the diagonal option is currently supported.
 
-+-----------------+-----------------+
-| Value           | Description     |
-+=================+=================+
-| Horizontal SOAR |                 |
-+-----------------+-----------------+
+         ``covariance model``
+            Specifies the covariance model. Valid values: ``diagonal``
 
+            .. COMMENT: Get other valid values! ``cross variable covariances``
 
-``lengthscale``  :
+      ``obs localizations``
+         .. COMMENT: Get def!!!
 
-``soar horizontal decay`` :
+         ``localization method``
+            Specifies the observation localization method. Valid values: ``Horizontal SOAR``
 
-``max nobs`` :
+            .. COMMENT: Are there other valid values???
 
-observation filters : have access to observation values and metadata, model values at observations locations, simulated observation value, and their own private data. 
+            +-----------------+-----------------+
+            | Value           | Description     |
+            +=================+=================+
+            | Horizontal SOAR |                 |
+            +-----------------+-----------------+
+
+         ``lengthscale``
+            .. COMMENT: Add definition!
+               Valid values: ``250e3``
+
+         ``soar horizontal decay``
+            .. COMMENT: Add definition!
+               Valid values: ``0.000021``
+
+         ``max nobs``
+            .. COMMENT: Add definition!
+               Valid values: 1
+
+      ``obs filters``
+         Observation filters are used to define Quality Control (QC) filters. They have access to observation values and metadata, model values at observations locations, simulated observation value, and their own private data. 
 
 
 .. code-block:: console
@@ -402,30 +573,9 @@ observation filters : have access to observation values and metadata, model valu
    background:
    observations:
      observers:
-     - obs space:
-       name: SnowDepthIMS
-       distribution:
-         name: Halo
-         halo size: 250e3
-       simulated variables: [totalSnowDepth]
-       observed variables: [totalSnowDepth]
-       obsdatain:
-         engine:
-           type: H5File
-           obsfile: ioda.IMSscf.20160102.oro_C96.mx100.nc
-       obsdataout:
-         engine:
-           type: H5File 
-           obsfile: output/DA/hofx/letkf_hofx_ims_2016010218.nc
      obs operator:
-       name: Identity
      obs error:
-       covariance model: diagonal
      obs localizations:
-     - localization method: Horizontal SOAR
-       lengthscale: 250e3
-       soar horizontal decay: 0.000021
-       max nobs: 1 
      obs filters:
      - filter: Bounds Check # negative / missing snow
        filter variables:
@@ -480,45 +630,6 @@ Initial Condition
 
 This establishes the starting point of a forecast or DA cycle. It frequently contains references to Fortran namelists and restart files that the model will utilize when it starts. Instead, it might define one of a number of idealized analytic states that can be utilized as a model initialization starting point. Based on the idealized standards established by the multi-institutional 2012 Dynamical Core Intercomparison Project sponsored by NOAA, NSF, DOE, NAR, and the University of Michigan, JEDI currently offers a number of alternatives for analytic initialization. 
 
-.. code-block:: console
-   
-   geometry:
-   background:
-     date: &date 2016-01-02T18:00:00Z
-     members:
-       - datetime: 2016-01-02T18:00:00Z
-         filetype: fms restart
-         state variables: [snwdph,vtype,slmsk]
-         datapath: mem_pos/
-         filename_sfcd: 20160102.180000.sfc_data.nc
-         filename_cplr: 20160102.180000.coupler.res
-       - datetime: 2016-01-02T18:00:00Z
-         filetype: fms restart
-         state variables: [snwdph,vtype,slmsk]
-         datapath: mem_neg/
-         filename_sfcd: 20160102.180000.sfc_data.nc
-         filename_cplr: 20160102.180000.coupler.res
-      
-   driver:
-     save posterior mean: false
-     save posterior mean increment: true
-     save posterior ensemble: false
-     run as observer only: false
-
-   local ensemble DA:
-     solver: LETKF
-     inflation:
-       rtps: 0.0
-       rtpp: 0.0
-       mult: 1.0
-
-   output increment:
-     filetype: fms restart
-     filename_sfcd: xainc.sfc_data.nc
-
-   observations:
-
-
 Cost Function
 `````````````````
 
@@ -534,85 +645,6 @@ Output
 Used to define the name, path, format, frequency, and additional characteristics of any input files that the application may create.
 
 
-
-Background
-`````````````
-
-``date`` : specifies the background date. The form is ‘&date YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a 2-digit month, DD is a 2-digit day, and HH is a 2-digit hour.
-
-Then, specifies the information of background members:
-
-``datetime`` : specifies the time. The form is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a 2-digit month, DD is a 2-digit day, and HH is a 2-digit hour. 
-
-``filetype`` : specifies the type of file.
-
-``state variables`` : specifies the list of state variables.
-``datapath`` : specifies the path for state variables data.
-
-``filename_sfcd`` : specifies the name of surface data file.  
-
-``filename_cprl`` : specifies the name of file that contains metadata for the restart.  
-
-Driver
-`````````
-
-``save posterior mean`` : specifies whether to save the posterior mean. Acceptable values are:
-
-+--------+-----------------+
-| Value  | Description     |
-+========+=================+
-| false  | do not save     |
-+--------+-----------------+
-| true   | save            |
-+--------+-----------------+
-
-
-``save posterior mean increment`` : specifies whether to save the posterior mean increment. Acceptable values are:
-
-+--------+-----------------+
-| Value  | Description     |
-+========+=================+
-| false  | do not enable   |
-+--------+-----------------+
-| true   | enable          |
-+--------+-----------------+
-
-
-``save posterior ensemble`` : specifies whether to save the posterior ensemble. Acceptable values are:
-
-+--------+-----------------+
-| Value  | Description     |
-+========+=================+
-| false  | do not enable   |
-+--------+-----------------+
-| true   | enable          |
-+--------+-----------------+
-
-
-``run as observer only`` : specifies whether to run as observer only. Acceptable values are:
-
-+--------+-----------------+
-| Value  | Description     |
-+========+=================+
-| false  | do not enable   |
-+--------+-----------------+
-| true   | enable          |
-+--------+-----------------+
-
-Local ensemble DA:
-
-``solver`` : specifies the type of solver. Currently, ‘LETKF’ is only available option.
-
-         LETKF – Two Local Ensemble Transform Kalman Filter (Hunt et al 2007).
-
-
-Inflation:
-
-``rtps`` : relaxation to prior spread, Whitaker and Hamill, 2012.
-
-``rtpp`` : relaxation to prior perturbation, 
-
-``multi`` : parameter of multiplicative inflation
 
 
 Set and Submit the DA cycle 
