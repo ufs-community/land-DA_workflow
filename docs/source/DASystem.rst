@@ -350,7 +350,8 @@ Driver
 `````````
 
 ``driver``
-   .. COMMENT: Add description! 
+   Describes optional modifications to the behavior of the LocalEnsembleDA driver. For details, refer to `Local Ensemble Data Assimilation in OOPS <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/oops/applications/localensembleda.html>`__ in the JEDI Documentation. 
+   .. COMMENT: Check that this is the same as what we're using. If not, note that it is a resource but not 100% the same. 
 
    ``save posterior mean``
       Specifies whether to save the posterior mean. Valid values: ``true`` | ``false``
@@ -414,18 +415,19 @@ Local Ensemble DA
       Specifies the type of solver. Currently, ``LETKF`` is the only available option. See :cite:t:`HuntEtAl2007`.
       
       .. COMMENT:
-         LETKF – Two Local Ensemble Transform Kalman Filter (Hunt et al 2007).
+         LETKF --- Two Local Ensemble Transform Kalman Filter (Hunt et al 2007).
 
 
    ``inflation``
-      .. COMMENT: Add definition!
+      Describes covariance inflation methods. 
+      .. COMMENT: Edit definition!
 
       ``rtps``
          Relaxation to prior spread (:cite:t:`Whitaker&Hamill2012`). 
          .. COMMENT: 0.0
 
       ``rtpp``
-         Relaxation to prior perturbation. 
+         Relaxation to prior perturbation (:cite:t:`ZhangEtAl2004`). 
          .. COMMENT: 0.0
 
       ``mult``
@@ -469,9 +471,9 @@ Observations
             .. COMMENT Add def here!!
 
             ``name``
-               Specifies the name of distribution. Valid values: ``Halo``
+               Specifies the name of distribution. Valid values: ``Halo`` | InefficientDistribution
 
-               .. COMMENT: Other valid values?
+               .. COMMENT: Other valid values? Can InefficientDistribution be used with Land DA?
 
             ``halo size``
                Specifies the size of the halo distribution. Valid values: ``250e3``
@@ -515,7 +517,7 @@ Observations
 
       ``obs operator``
          Describes the observation operator and its options. An observation operator is used for computing H(x).
-            .. COMMENT: Explain more!!! 
+         .. COMMENT: Explain more!!! 
 
          ``name``
             Specifies the name in the ``ObsOperator`` and ``LinearObsOperator`` factory, defined in the C++ code. Valid values include: ``Identity`` | ``Composite`` | ``Categorical``. See `JEDI Documentation <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/ufo/obsops.html>`__ for more options. 
@@ -536,7 +538,7 @@ Observations
          ``localization method``
             Specifies the observation localization method. Valid values: ``Horizontal SOAR``
 
-            .. COMMENT: Are there other valid values???
+            .. COMMENT: Are there other valid values??? Gaspari-Cohn?
 
             +-----------------+-----------------+
             | Value           | Description     |
@@ -545,16 +547,17 @@ Observations
             +-----------------+-----------------+
 
          ``lengthscale``
-            .. COMMENT: Add definition!
-               Valid values: ``250e3``
+            Localization distance in meters. Format is e-notation. For example: ``250e3``
+            .. COMMENT: Should "distance" say "radius" instead? 
 
          ``soar horizontal decay``
-            .. COMMENT: Add definition!
+            Second-order autoregressive (SOAR) horizontal decay.
+            .. COMMENT: Check/improve definition!
                Valid values: ``0.000021``
 
          ``max nobs``
-            .. COMMENT: Add definition!
-               Valid values: 1
+            Maximum number of observations. 
+            .. COMMENT: Check! This def is a guess. 
 
       ``obs filters``
          Observation filters are used to define Quality Control (QC) filters. They have access to observation values and metadata, model values at observation locations, simulated observation value, and their own private data. See `Observation Filters <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/ufo/qcfilters/introduction.html#observation-filters>`__ in the JEDI Documentation for more detail. 
