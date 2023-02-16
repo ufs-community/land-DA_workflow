@@ -52,8 +52,8 @@ export KEEPWORKDIR="YES"
 
 ############################
 # load modules 
-# TODO--Do we want to check to see if modules are loaded? Try to load them based on which host we are on?
-# Currently, the user must load modules before running
+
+./${LAND_OFFLINE_WORKFLOW}/module_check.sh
 
 ############################
 # set executables
