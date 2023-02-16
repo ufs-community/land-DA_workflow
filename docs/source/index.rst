@@ -14,6 +14,7 @@ Welcome to UFS Offline LandDA's documentation!
    Introduction_v0
    TechnicalOverview
    Model_v0
+   DASystem
    Glossary
 
 Indices and tables
