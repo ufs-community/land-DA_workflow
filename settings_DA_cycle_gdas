@@ -5,17 +5,48 @@ export exp_name=DA_GHCN_test
 STARTDATE=2016010118
 ENDDATE=2016010318
 
+#Set defaults
+export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
+export LANDDA_INPUTS=${LANDDA_INPUTS:-${LANDDAROOT}/inputs}
+export CYCLEDIR=$(pwd) 
+export LANDDA_EXPTS=${LANDDA_EXPTS:-${LANDDAROOT}/landda_expts}
+export PYTHON=`which python3`
+export BUILDDIR=${BUILDDIR:-${CYCLEDIR}/build}
+
+#Change some variables if working with a container
+if [[ ${USE_SINGULARITY} =~ yes ]]; then
+  EPICHOME=/opt
+  #use the python that is built into the container. It has all the pythonpaths set and can run the ioda converters
+  export PYTHON=$PWD/singularity/bin/python
+  #JEDI is installed under /opt in the container
+  export JEDI_INSTALL=/opt
+  #Scripts that launch containerized versions of the executables are in $PWD/singularity/bin They should be called
+  #from the host system to be run (e.g. mpiexec -n 6 $BUILDDIR/bin/fv3jedi_letkf.x )
+  export BUILDDIR=$PWD/singularity
+  export JEDI_EXECDIR=${CYCLEDIR}/singularity/bin
+  #we need to have intelmpi loaded on the host system to run the workflow. Try to load it here.
+  #TODO--figure out a way to make sure we have intelmpi loaded or don't let the workflow start
+  module try-load impi
+  module try-load intel-oneapi-mpi
+  module try-load intelmpi
+  module try-load singularity
+  export SINGULARITYBIN=`which singularity`
+  sed -i 's/singularity exec/${SINGULARITYBIN} exec/g' run_container_executable.sh
+fi
 #forcing options: gdas, gswp3, gefs_ens
 export atmos_forc=gdas
 
 
+export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
+export LANDDA_EXPTS=${LANDDA_EXPTS:-${LANDDAROOT}/landda_expts}
 #Location of observations for DA
 export OBSDIR=${LANDDA_INPUTS}/DA
 # temporary directory where experiment is run from
 export WORKDIR=${WORKDIR:-${LANDDAROOT}/workdir}
 # directory where output is saved
-export OUTDIR=${CYCLE_LAND}/${exp_name}
+export OUTDIR=${LANDDA_EXPTS}/${exp_name}
 
+export TEST_BASEDIR=${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector
 ############################
 
 # for LETKF, this is size of ensemble.

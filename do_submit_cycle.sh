@@ -4,12 +4,10 @@ set -x
 #Set defaults
 export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
 export LANDDA_INPUTS=${LANDDA_INPUTS:-${LANDDAROOT}/inputs}
-export LAND_OFFLINE_WORKFLOW=${LAND_OFFLINE_WORKFLOW:-${LANDDAROOT}/land-offline_workflow}
-export CYCLE_LAND=${CYCLE_LAND:-${LANDDAROOT}/cycle_land}
-export PYTHON=`which python3`
-export BUILDDIR=${BUILDDIR:-${LAND_OFFLINE_WORKFLOW}/build}
-export PATH=$PATH:./
 export CYCLEDIR=$(pwd) 
+export LANDDA_EXPTS=${LANDDA_EXPTS:-${LANDDAROOT}/landda_expts}
+export PYTHON=`which python3`
+export BUILDDIR=${BUILDDIR:-${CYCLEDIR}/build}
 
 #Change some variables if working with a container
 if [[ ${USE_SINGULARITY} =~ yes ]]; then
@@ -21,7 +19,7 @@ if [[ ${USE_SINGULARITY} =~ yes ]]; then
   #Scripts that launch containerized versions of the executables are in $PWD/singularity/bin They should be called
   #from the host system to be run (e.g. mpiexec -n 6 $BUILDDIR/bin/fv3jedi_letkf.x )
   export BUILDDIR=$PWD/singularity
-  export JEDI_EXECDIR=${LAND_OFFLINE_WORKFLOW}/singularity/bin
+  export JEDI_EXECDIR=${CYCLEDIR}/singularity/bin
   #we need to have intelmpi loaded on the host system to run the workflow. Try to load it here.
   #TODO--figure out a way to make sure we have intelmpi loaded or don't let the workflow start
   module try-load impi
@@ -38,7 +36,7 @@ fi
 if [[ $# -gt 0 ]]; then 
     config_file=$1
 else
-    config_file=settings_DA_cycle_gdas
+    config_file=settings
 fi
 
 if [[ ! -e $config_file ]]; then
@@ -60,8 +58,17 @@ export KEEPWORKDIR="YES"
 ############################
 # set executables
 
-export vec2tileexec=${BUILDDIR}/bin/vector2tile_converter.exe
-export LSMexec=${BUILDDIR}/bin/ufsLandDriver.exe
+if [[ -e ${BUILDDIR}/bin/vector2tile_converter.exe ]]; then #prefer cmake-built executables
+  export vec2tileexec=${BUILDDIR}/bin/vector2tile_converter.exe
+else 
+  export vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
+fi
+if [[ -e ${BUILDDIR}/bin/ufsLandDriver.exe ]]; then
+  export LSMexec=${BUILDDIR}/bin/ufsLandDriver.exe
+else
+  export LSMexec=${CYCLEDIR}/ufs-land-driver/driver/ufsLandDriver.exe
+fi
+
 export DADIR=${CYCLEDIR}/DA_update/
 export DAscript=${DADIR}/do_landDA.sh
 export MPIEXEC=`which mpiexec`
