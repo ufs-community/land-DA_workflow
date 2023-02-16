@@ -1,5 +1,5 @@
 help([[
-loads Land DA prerequisites for Hera/Intel
+loads Land DA prerequisites for Orion/Intel
 ]])
 
 setenv("EPICHOME", "/work/noaa/epic-ps/role-epic-ps")
