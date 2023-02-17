@@ -28,8 +28,8 @@
   
   run_timesteps    = 0       ! number of timesteps to run
   
-  begloc           = 1
-  endloc           = 18322
+  location_start   = 1
+  location_end     = 18322
   
 /
 
