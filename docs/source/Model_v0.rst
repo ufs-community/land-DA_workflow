@@ -22,7 +22,9 @@ Clone the Repository
 
 .. attention::
 
-   To build the Land DA system in a container, continue instead to :numref:`Chapter %s <Container>`. The Land DA container packages together the Land DA system with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform enviroment in which to build and run the SRW App. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Hera, Orion). 
+   To build the Land DA system in a container, continue instead to the Container Chapter. The Land DA container packages together the Land DA system with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform enviroment in which to build and run the SRW App. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Hera, Orion). 
+
+.. COMMENT: Add :numref:`Chapter %s <Container>` when chapter is ready.
 
 #. Create a directory that will be the Land DA root directory (``$LANDDAROOT``). Then clone the UFS Land DA System into it:
 

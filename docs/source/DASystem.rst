@@ -353,7 +353,7 @@ The ``local ensemble DA:`` section configures the local ensemble DA solver packa
 
       ``mult``
          Parameter of multiplicative inflation.
-         
+
          .. COMMENT: 1.0
 
          .. COMMENT: Find better definitions and valid values for above variables!
@@ -789,18 +789,16 @@ Example of ``${FILEDATE}.coupler.res``:
 DA Workflow 
 ---------------------
  
-The cycling Noah-MP offline DA run is initiated using two shell scripts for its repetitive run: ``do_submit_cycle.sh`` and ``submit_cycle.sh``. Note that, as explained in :numref:`Chapter %s <>`, the scripts run a cycling Noah-MP offline DA job using JEDI in cubed-sphere space, and offline Noah-MP model in vector space. 
+The cycling Noah-MP offline DA run is initiated using two shell scripts for its repetitive run: ``do_submit_cycle.sh`` and ``submit_cycle.sh``. Note that, as explained in :numref:`Section %s <VectorTileConverter>`, the scripts run a cycling Noah-MP offline DA job using JEDI in cubed-sphere space, and offline Noah-MP model in vector space. 
 
 .. COMMENT: What do we mean by repetitive run? Second cycle?
-   What section is being referenced?
 
 
-4.2.2.1. ``do_submit_cycle.sh``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``do_submit_cycle.sh``
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The script, ``do_submit_cycle.sh``, sets up the cycling job from the user's input settings. :numref:`Figure %s <DoSubmitCyclePng>` shows the flowchart of this script. First, this script reads a configuration file for its cycle setting. This file contains the information that requires for this run: the experiment name, start date, end date, the paths of the working directory and output directories, length of each forecast, atmospheric forcing, Finite-Volume Cubed-Sphere Dynamical Core (FV3) resolution and its paths, cycles per job, the directory with initial conditions, namelist for Land DA run, and different DA options. Then, the required modules are loaded and some executables are set for cycle running. The restart frequency and running day/hours are computed from inputs, and directories are created for running DA and saving the DA outputs. If restart files are not in the experiment out directory, the script is trying to copy the restart files from the ICSDIR. Finally, the existing restart file is copied into each ensemble directory and used for an ensemble or single restart run. The final step of this script is creating the dates file (‘analdates.sh’) and submitting the ‘submit_cycle.sh’ shell script.
+The ``do_submit_cycle.sh`` script sets up the cycling job based on the user's input settings. :numref:`Figure %s <DoSubmitCyclePng>` illustrates the steps in this process. 
 
-    
 .. _DoSubmitCyclePng:
 
 .. figure:: https://github.com/NOAA-EPIC/land-offline_workflow/wiki/do_submit_cycle.png
@@ -808,13 +806,15 @@ The script, ``do_submit_cycle.sh``, sets up the cycling job from the user's inpu
 
    *Flowchart of 'do_submit_cycle.sh'*
 
-.. COMMENT: ADD figure and alt tags!!!
+.. COMMENT: ADD alt tags!!!
+
+First, ``do_submit_cycle.sh`` reads in a configuration file for the cycle settings. This file contains the information required to run the cycle: the experiment name, start date, end date, the paths of the working directory and output directories, the length of each forecast, atmospheric forcing data, the Finite-Volume Cubed-Sphere Dynamical Core (FV3) resolution and its paths, the number of cycles per job, the directory with initial conditions, a namelist file for running Land DA, and different DA options. Then, the required modules are loaded, and some executables are set for running the cycle. The restart frequency and running day/hours are computed from the inputs, and directories are created for running DA and saving the DA outputs. If restart files are not in the experiment output directory, the script will try to copy the restart files from the ``ICSDIR`` directory, which should contain initial conditions files if restart files are not available. Then, the existing restart file is copied into each ensemble directory and used for an ensemble or single restart run. Finally, the script creates the dates file (``analdates.sh``) and submits the ``submit_cycle.sh`` script, which is described in detail in the next section.
 
 
-4.2.2.2. ``submit_cycle.sh``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  
+``submit_cycle.sh``
+^^^^^^^^^^^^^^^^^^^^^  
 
-The ‘submit_cycle.sh’ reads the dates file and runs the loop over this cycle if the count of dates is not greater than the cycles per job (see Figure 2). Inside this loop, the DA settings are read and the run type is decided between open-loop and DA. The example of required DA settings are: DA algorithm option, directory paths for JEDI and Land_DA where the ‘do_landDA.sh’ script is located, JEDI’s input observation options, DA window length, options for constructing YAMLS, and so on. Then the first ensemble loop is started. For each ensemble member, work and output directories are designated and the restarts are copied into the working directory. If the DA option is chosen, the script is calling the ‘vector2tile’ function and tries to convert the format of the Noah-MP model in vector space to the format of JEDI in cube sphere space.  After the ‘vector2tile’ is done, the script is calling the data assimilation job script (‘do_landDA.sh’) and runs this script. When this DA job is finished, the script starts the second ensemble loop. Inside this loop, the ‘tile2vector’ function is called and converts the output tiles of JEDI to the vector format for each ensemble member. The converted vector outputs are saved and the forecast model is run. Then, the script is checking the existing model outputs inside the third ensemble loop. Finally, this same procedure will be processed for the next cycle if the current date is less than the end date.
+The ``submit_cycle.sh`` script reads the dates file and runs the loop over this cycle if the count of dates is not greater than the cycles per job (see Figure 2). Inside this loop, the DA settings are read and the run type is decided between open-loop and DA. The example of required DA settings are: DA algorithm option, directory paths for JEDI and Land_DA where the ‘do_landDA.sh’ script is located, JEDI’s input observation options, DA window length, options for constructing YAMLS, and so on. Then the first ensemble loop is started. For each ensemble member, work and output directories are designated and the restarts are copied into the working directory. If the DA option is chosen, the script is calling the ‘vector2tile’ function and tries to convert the format of the Noah-MP model in vector space to the format of JEDI in cube sphere space.  After the ‘vector2tile’ is done, the script is calling the data assimilation job script (‘do_landDA.sh’) and runs this script. When this DA job is finished, the script starts the second ensemble loop. Inside this loop, the ‘tile2vector’ function is called and converts the output tiles of JEDI to the vector format for each ensemble member. The converted vector outputs are saved and the forecast model is run. Then, the script is checking the existing model outputs inside the third ensemble loop. Finally, this same procedure will be processed for the next cycle if the current date is less than the end date.
 
 .. _SubmitCyclePng:
 
