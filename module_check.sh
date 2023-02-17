@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to ensure required modules are loaded, define compiler wrapper env. vars, and set the JEDI bundle install path for the land DA system.
+# Script to ensure required modules are loaded for the land DA system.
 
 # find which machine we are on
 if [[ ${HOSTNAME} == *"Orion"* ]]; then
