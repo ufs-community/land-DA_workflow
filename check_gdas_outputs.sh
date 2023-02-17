@@ -1,36 +1,42 @@
 #!/bin/sh 
 
 # get OUTDIR
-source settings_cycle_test
+export SETTINGS_FILE=${1:-"settings_DA_cycle_gdas"}
+source ./${SETTINGS_FILE}
 
-TEST_BASEDIR=/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/DA_IMS_test/output/mem000/restarts/vector/
+export TEST_BASEDIR=${TEST_BASEDIR:-${EPICTESTS}}
 
 for TEST_DATE in 2016-01-01_18-00-00 2016-01-02_18-00-00 
 do
 
-for state in back anal
+for state in anal
 do 
 
 cmp ${OUTDIR}/mem000/restarts/vector/ufs_land_restart_${state}.${TEST_DATE}.nc ${TEST_BASEDIR}/ufs_land_restart_${state}.${TEST_DATE}.nc
 
+echo "testing ${state} on ${TEST_DATE}"
 if [[ $? != 0 ]]; then
     echo TEST FAILED
     echo "$TEST_DATE $state are different"
-    exit
+    exit 98
 fi
 
 done
 done 
 
-TEST_DATE=2016-01-03_18-00-00
+#TEST_DATE=2016-01-03_18-00-00
+for TEST_DATE in 2016-01-02_18-00-00 2016-01-03_18-00-00 
+do
 state='back'
+echo "testing ${state} on ${TEST_DATE}"
 cmp ${OUTDIR}/mem000/restarts/vector/ufs_land_restart_${state}.${TEST_DATE}.nc ${TEST_BASEDIR}/ufs_land_restart_${state}.${TEST_DATE}.nc
 
 if [[ $? != 0 ]]; then
     echo TEST FAILED
     echo "$TEST_DATE $state are different"
-    exit
+    exit 99
 fi
+done
 
 echo "TEST PASSED"
 

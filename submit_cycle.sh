@@ -46,9 +46,6 @@ while [ $date_count -lt $cycles_per_job ]; do
     # substringing to get yr, mon, day, hr info for previous cycle
     PREVDATE=`${incdate} $THISDATE -6`
     YYYP=`echo $PREVDATE | cut -c1-4`
-    MP=`echo $PREVDATE | cut -c5-6`
-    DP=`echo $PREVDATE | cut -c7-8`
-    HP=`echo $PREVDATE | cut -c9-10`
    
     # compute the restart frequency, run_days and run_hours
     FREQ=$(( 3600 * $FCSTHR ))
@@ -68,31 +65,16 @@ while [ $date_count -lt $cycles_per_job ]; do
     mem_ens="mem000" 
 
     MEM_WORKDIR=${WORKDIR}/${mem_ens}
-
+    MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
+    
     cd $MEM_WORKDIR
-
     # copy restarts into work directory
-    rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
-    rst_in_single=${LANDDA_INPUTS}/single/output/modl/restarts/vector/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
-    rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-    # if restart not in experiment out directory, copy the restarts from the ICSDIR
-    if [[ ! -e ${rst_out} ]]; then
-       echo "Looking for ICS: ${rst_in}"
-       # if ensemble of restarts exists in ICSDIR, use these. Otherwise, use single restart.
-       if [[ -e ${rst_in} ]]; then
-          echo "ICS found, copying" 
-          cp ${rst_in} ${rst_out}
-       else  # use non-ensemble restart
-          echo "ICS not found. Checking for ensemble started from single member: ${rst_in_single}"
-          if [[ -e ${rst_in_single} ]]; then
-              echo "ICS found, copying" 
-              cp ${rst_in_single} ${rst_out}
-          else
-              echo "ICS not found. Exiting" 
-              exit 10
-          fi
-       fi
+    rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    if [[ ! -e ${rst_in} ]]; then
+      rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
     fi
+    rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    cp ${rst_in} ${rst_out}
 
     if [[ $do_jedi == "YES" ]]; then  
         echo '************************************************'
@@ -109,7 +91,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
         sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
         sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
-        sed -i -e "s/MODELTYPE/${atmos_forc}/g" vector2tile.namelist
+        sed -i -e "s/MODEL_FORCING/${atmos_forc}/g" vector2tile.namelist
         sed -i -e "s/XXRES/${RES}/g" vector2tile.namelist
         sed -i -e "s/XXTSTUB/${TSTUB}/g" vector2tile.namelist
         sed -i -e "s#XXTPATH#${TPATH}#g" vector2tile.namelist
@@ -164,7 +146,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
         sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
         sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
-        sed -i -e "s/MODELTYPE/${atmos_forc}/g" vector2tile.namelist
+        sed -i -e "s/MODEL_FORCING/${atmos_forc}/g" vector2tile.namelist
         sed -i -e "s/XXRES/${RES}/g" tile2vector.namelist
         sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
         sed -i -e "s#XXTPATH#${TPATH}#g" tile2vector.namelist
@@ -183,7 +165,7 @@ while [ $date_count -lt $cycles_per_job ]; do
     # run the forecast model
     set -x 
     # update model namelist 
-    cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.release.${atmos_forc}  ufs-land.namelist
+    cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
 
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs-land.namelist 
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
