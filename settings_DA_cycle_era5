@@ -37,12 +37,21 @@ fi
 export atmos_forc=era5
 
 
+export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
+export LANDDA_EXPTS=${LANDDA_EXPTS:-${LANDDAROOT}/landda_expts}
 #Location of observations for DA
 export OBSDIR=${LANDDA_INPUTS}/DA
 # temporary directory where experiment is run from
 export WORKDIR=${WORKDIR:-${LANDDAROOT}/workdir}
 # directory where output is saved
 export OUTDIR=${LANDDA_EXPTS}/${exp_name}
+
+export TEST_BASEDIR=${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector
+
+# JEDI directories
+export JEDI_EXECDIR=${JEDI_EXECDIR:-"${JEDI_INSTALL}/fv3-bundle/build/bin"}
+export IODA_BUILD_DIR=${JEDI_INSTALL}/ioda-bundle/build
+export JEDI_STATICDIR=${JEDI_INSTALL}/fv3-bundle/fv3-jedi/test/Data
 
 ############################
 
