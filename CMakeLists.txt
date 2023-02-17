@@ -17,6 +17,7 @@ else()
   message(FATAL_ERROR "Define the environment variable 'JEDI_INSTALL' to point to the parent directory of fv3-bundle on your system")
 endif()
 find_package(ecbuild 3.3.2 REQUIRED)
+enable_testing()
 include( ecbuild_system NO_POLICY_SCOPE )
 ecbuild_declare_project()
 
@@ -38,6 +39,9 @@ set( LANDDA_LINKER_LANGUAGE CXX)
 add_subdirectory( vector2tile )
 add_subdirectory( ufs-land-driver )
 add_subdirectory( DA_update/add_jedi_incr )
+
+# Include testing.
+add_subdirectory(test)
 
 if(ECBUILD_INSTALL_FORTRAN_MODULES)
   install(DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/${CMAKE_CFG_INTDIR} DESTINATION ${INSTALL_INCLUDE_DIR} )
