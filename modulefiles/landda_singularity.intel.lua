@@ -1,5 +1,5 @@
 help([[
-loads Land DA prerequisites for Hera/Intel
+loads Land DA prerequisites for Singularity/Intel
 ]])
 
 setenv("EPICHOME", "/opt")
