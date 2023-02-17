@@ -51,9 +51,15 @@ source $config_file
 export KEEPWORKDIR="YES"
 
 ############################
-# load modules 
+# check that modules are loaded in the environment 
 
-./${LAND_OFFLINE_WORKFLOW}/module_check.sh
+${CYCLEDIR}/module_check.sh
+
+if [[ $? -ne 0 ]]; then
+  exit 1
+fi
+
+echo "All modules loaded! Continuing."
 
 ############################
 # set executables
