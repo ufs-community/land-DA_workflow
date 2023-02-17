@@ -6,8 +6,7 @@ setenv("EPICHOME", "/work/noaa/epic-ps/role-epic-ps")
 
 prepend_path("MODULEPATH", pathJoin(os.getenv("EPICHOME"),"miniconda3/modulefiles"))
 
-miniconda3_ver=os.getenv("miniconda3_ver") or "4.12.0"
-load(pathJoin("miniconda3", miniconda3_ver))
+load("miniconda3/4.12.0")
 
 prepend_path("MODULEPATH", pathJoin(os.getenv("EPICHOME"),"spack-stack/envs/landda-release-1.0-intel/install/modulefiles/Core"))
 
