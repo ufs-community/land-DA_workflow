@@ -599,7 +599,7 @@ The DA system requires grid description files and restart files.
 Grid Description Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The grid description files appear in :numref:`Section %s <V2TInputFiles>` and are also used as input files to the Vector-to-Tile COnverter. See :numref:`Table %s <GridInputFiles>` for a description of these files. 
+The grid description files appear in :numref:`Section %s <V2TInputFiles>` and are also used as input files to the Vector-to-Tile Converter. See :numref:`Table %s <GridInputFiles>` for a description of these files. 
 
 Restart Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -789,10 +789,11 @@ Example of ``${FILEDATE}.coupler.res``:
 DA Workflow 
 ---------------------
  
-The cycling Noah-MP offline DA run is initiated using two shell scripts for its repetitive run: ``do_submit_cycle.sh`` and ``submit_cycle.sh``. Note that, as explained in :numref:`Section %s <VectorTileConverter>`, the scripts run a cycling Noah-MP offline DA job using JEDI in cubed-sphere space, and offline Noah-MP model in vector space. 
+The cycling Noah-MP offline DA run is initiated using two shell scripts: ``do_submit_cycle.sh`` and ``submit_cycle.sh``. 
 
-.. COMMENT: What do we mean by repetitive run? Second cycle?
-
+.. note::
+   
+   The offline Noah-MP model runs in vector space, whereas a cycling Noah-MP offline DA job uses JEDI's tiled cubed-sphere (:term:`FV3`) format. :numref:`Section %s <VectorTileConverter>` describes the Vector-to-Tile Converter that maps between these two formats. 
 
 ``do_submit_cycle.sh``
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -808,13 +809,13 @@ The ``do_submit_cycle.sh`` script sets up the cycling job based on the user's in
 
 .. COMMENT: ADD alt tags!!!
 
-First, ``do_submit_cycle.sh`` reads in a configuration file for the cycle settings. This file contains the information required to run the cycle: the experiment name, start date, end date, the paths of the working directory and output directories, the length of each forecast, atmospheric forcing data, the Finite-Volume Cubed-Sphere Dynamical Core (FV3) resolution and its paths, the number of cycles per job, the directory with initial conditions, a namelist file for running Land DA, and different DA options. Then, the required modules are loaded, and some executables are set for running the cycle. The restart frequency and running day/hours are computed from the inputs, and directories are created for running DA and saving the DA outputs. If restart files are not in the experiment output directory, the script will try to copy the restart files from the ``ICSDIR`` directory, which should contain initial conditions files if restart files are not available. Then, the existing restart file is copied into each ensemble directory and used for an ensemble or single restart run. Finally, the script creates the dates file (``analdates.sh``) and submits the ``submit_cycle.sh`` script, which is described in detail in the next section.
+First, ``do_submit_cycle.sh`` reads in a configuration file for the cycle settings. This file contains the information required to run the cycle: the experiment name, start date, end date, the paths of the working directory and output directories, the length of each forecast, atmospheric forcing data, the Finite-Volume Cubed-Sphere Dynamical Core (:term:`FV3`) resolution and its paths, the number of cycles per job, the directory with initial conditions, a namelist file for running Land DA, and different DA options. Then, the required modules are loaded, and some executables are set for running the cycle. The restart frequency and running day/hours are computed from the inputs, and directories are created for running DA and saving the DA outputs. If restart files are not in the experiment output directory, the script will try to copy the restart files from the ``ICSDIR`` directory, which should contain initial conditions files if restart files are not available. Then, the existing restart file is copied into each ensemble directory and used for an ensemble or single restart run. Finally, the script creates the dates file (``analdates.sh``) and submits the ``submit_cycle.sh`` script, which is described in detail in the next section.
 
 
 ``submit_cycle.sh``
 ^^^^^^^^^^^^^^^^^^^^^  
 
-The ``submit_cycle.sh`` script reads the dates file and runs the loop over this cycle if the count of dates is not greater than the cycles per job (see Figure 2). Inside this loop, the DA settings are read and the run type is decided between open-loop and DA. The example of required DA settings are: DA algorithm option, directory paths for JEDI and Land_DA where the ‘do_landDA.sh’ script is located, JEDI’s input observation options, DA window length, options for constructing YAMLS, and so on. Then the first ensemble loop is started. For each ensemble member, work and output directories are designated and the restarts are copied into the working directory. If the DA option is chosen, the script is calling the ‘vector2tile’ function and tries to convert the format of the Noah-MP model in vector space to the format of JEDI in cube sphere space.  After the ‘vector2tile’ is done, the script is calling the data assimilation job script (‘do_landDA.sh’) and runs this script. When this DA job is finished, the script starts the second ensemble loop. Inside this loop, the ‘tile2vector’ function is called and converts the output tiles of JEDI to the vector format for each ensemble member. The converted vector outputs are saved and the forecast model is run. Then, the script is checking the existing model outputs inside the third ensemble loop. Finally, this same procedure will be processed for the next cycle if the current date is less than the end date.
+The ``submit_cycle.sh`` script first exports the required paths and loads the required modules. Then, it reads the dates file and runs through all the steps for submitting a cycle if the count of dates is less than or equal to the number of cycles per job (see :numref:`Figure %s <SubmitCyclePng>`). 
 
 .. _SubmitCyclePng:
 
@@ -822,6 +823,14 @@ The ``submit_cycle.sh`` script reads the dates file and runs the loop over this 
    :alt: 
 
    *Flowchart of 'submit_cycle.sh'*
+
+As the script loops through the steps in the process for each cycle, it reads in the DA settings and selects a run type --- either DA or ``openloop`` (which skips DA). Required DA settings include: DA algorithm choice, directory paths for JEDI, Land_DA (where the ``do_landDA.sh`` script is located), JEDI's input observation options, DA window length, options for constructing ``yaml`` files, etc. 
+
+Next, the system designates work and output directories and copies restart files into the working directory. If the DA option is selected, the script calls the ``vector2tile`` function and tries to convert the format of the Noah-MP model in vector space to the JEDI tile format used in :term:`FV3` cubed-sphere space. After the ``vector2tile`` is done, the script calls the data assimilation job script (``do_landDA.sh``) and runs this script. Then, the ``tile2vector`` function is called and converts the JEDI output tiles back to vector format. The converted vector outputs are saved, and the forecast model is run. Then, the script checks the existing model outputs. Finally, if the current date is less than the end date, this same procedure will be processed for the next cycle.
+
+.. note:: 
+
+   The v1.0.0 release of Land DA does not support ensemble runs. Thus, the first ensemble member is the only ensemble member. 
 
 Here is an example of configuration settings file, ``settings_cycle``, for the ``submit_cycle`` script:
 
@@ -863,43 +872,72 @@ Here is an example of configuration settings file, ``settings_cycle``, for the `
    export DA_config12=${DA_config}
    export DA_config18=${DA_config}
 
-   exp_name  : specifies the name of experiment.
+Parameters for ``submit_cycle.sh``
+``````````````````````````````````````
 
-   STARTDATE  : specifies the experiment start date. The form is YYYYMMDDHH, where YYYY is a 4-digit year, MM is a 2-digit month, DD is a 2-digit day, and HH is a 2-digit hour. 
+``exp_name``
+   Specifies the name of experiment.
 
-   ENDDATE  : specifies the experiment end date. The form is YYYYMMDDHH, where YYYY is a 4-digit year, MM is a 2-digit month, DD is a 2-digit day, and HH is a 2-digit hour. 
+``STARTDATE``
+   Specifies the experiment start date. The form is YYYYMMDDHH, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
 
-   WORKDIR  : specifies the path of temporary directory where the experiment is run from.
+``ENDDATE``
+   Specifies the experiment end date. The form is YYYYMMDDHH, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
 
-   OUTDIR  : specifies the path of directory where output is saved.
+``WORKDIR``
+   Specifies the path to a temporary directory from which the experiment is run.
 
-   ensemble_size  : specifies the size of ensemble. Use 1 for non-ensemble runs for this release.
+``OUTDIR``
+   Specifies the path to a directory where experiment output is saved.
 
-   FCSTHR  : specifies the length of each forecast. Unit is hour.
+``ensemble_size``
+   Specifies the size of the ensemble (i.e., number of ensemble members). Use ``1`` for non-ensemble runs.
 
-   atmos_forc : specifies the atmospheric forcing. 
+``FCSTHR``
+   Specifies the length of each forecast in hours.
 
-   RES  : specifies the resolution of FV3.
+``atmos_forc``
+   Specifies the atmospheric forcing. 
 
-   TPATH  : specifies the path of orography files.
+   .. COMMENT: Is this a file? What is this?
 
-   TSTUB  : specifies the file stub for orography files in ‘TPATH’. oro_C${RES} from atmosphere only, oro_C{RES}.mx100 for atmosphere and ocean.
+``RES``
+   Specifies the resolution of FV3. Valid values: ``C96``
 
-   cycles_per_job  : specifies the number of cycles to submit in a single job.
+   .. COMMENT: Check valid values!
 
-   ICSDIR : specifies the path of directory with initial conditions.
+``TPATH``
+   Specifies the path to the orography files.
 
-   DA_config : specifies the configuration setting file for ‘do_landDA.sh’. Set to “openloop to not call ‘do_landDA.sh’.
+   .. COMMENT: Or to the *directory* w/ the oro files? 
 
-   If users want different DA experiment at different time, list in this configuration setting file. For example, 
+``TSTUB``
+   Specifies the file stub/name for orography files in ``TPATH``. This file stub is named ``oro_C${RES}`` for atmosphere-only and ``oro_C{RES}.mx100`` for atmosphere and ocean.
 
-   DA_configXX : specifies the configuration setting file for ‘do_landDA.sh’ at XX hr. Set to “openloop to not call ‘do_landDA.sh’.
+   .. COMMENT: atmosphere-only WHAT? atm/ocn WHAT? forcing files?
+
+``cycles_per_job``
+   Specifies the number of cycles to submit in a single job.
+
+``ICSDIR``
+   Specifies the path to a directory containing initial conditions data.
+
+``DA_config``
+   Specifies the configuration setting file for ``do_landDA.sh``. Set ``DA_config`` to ``openloop`` to skip data assimilation (and prevent a call ``do_landDA.sh``).
+
+   .. COMMENT: What does this mean?:
+      If users want different DA experiment at different time, list in this configuration setting file. For example, 
+
+``DA_configXX``
+   Specifies the configuration setting file for ``do_landDA.sh`` at ``XX`` hr. Set to ``openloop`` to skip data assimilation (and prevent a call ``do_landDA.sh``).
 
 
-4.2.2.3. ``do_landDA.sh``   
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``do_landDA.sh``   
+^^^^^^^^^^^^^^^^^^^
 
-The ‘do_landDA.sh’ runs the data assimilation job inside the ‘sumbit_cycle.sh’ script. Note that currently, the only DA option is the snow Two Local Ensemble Transform Kalman Filter (LETKF, Hunt et al 2007). Figure 3 describes the workflow of this script. First, to run the DA job, the configuration file is read and the directories are set up. The date strings are formatted for the current date and previous date. For each tile, restarts are staged for applying the JEDI update. In this stage, all files will get directly updated. Then, the observation files are read and prepared for this job. Note that currently the Interactive Multisensor Snow and Ice Mapping System (IMS) data are only available. For pre-processing, fIMS is called to calculate fractional snow cover on the model grid, from IMS snow cover observation. Then, calculate SWE from fractional snow cover, assuming the snow depletion curve used by the Noah model. Once this pre-process job is done, the script is calling the JEDI Interface for Observation data Access (IODA) converter to provide the interfaces that bridge the external observation data to the components within JEDI that utilize those data. Once the JEDI type is determined, YAMLS files are constructed. Note that If YAML is specified by a user, the script uses that one. Otherwise, the script builds the YAMLS.  For LETKF, the pseudo-ensemble is created by running the python script (‘letkf_create_ens.py’). Once the ensemble is created, the script runs JEDI and applies increment to UFS restarts.
+The ``do_landDA.sh`` runs the data assimilation job inside the ``sumbit_cycle.sh`` script. Currently, the only DA option is the snow Two Local Ensemble Transform Kalman Filter (LETKF, :cite:t:`HuntEtAl2007`). :numref:`Figure %s <DoLandDAPng>` describes the workflow of this script. 
+
+.. COMMENT: Why TWO LETKF?
 
 .. _DoLandDAPng:
 
@@ -910,7 +948,13 @@ The ‘do_landDA.sh’ runs the data assimilation job inside the ‘sumbit_cycle
 
 .. COMMENT: ADD flowchart and alt tags!
 
-Here is an example of configuration settings file, ‘settings_DA’, for do_landDA script:
+First, to run the DA job, ``do_landDA.sh`` reads in the configuration file and sets up the directories. The date strings are formatted for the current date and previous date. For each tile, restarts are staged to apply the JEDI update. In this stage, all files will get directly updated. Then, the observation files are read and prepared for this job. Note that currently the Interactive Multisensor Snow and Ice Mapping System (IMS) data are the only data available. For pre-processing, fIMS is called to calculate fractional snow cover on the model grid from the IMS snow cover observations. Then, SWE is calculated from fractional snow cover, assuming the snow depletion curve used by the Noah model. Once this pre-processing job is complete, the script calls the JEDI Interface for Observation Data Access (IODA) converter to provide the interfaces that bridge the differences between the external observation data and the components within JEDI that utilize those data. Once the JEDI type is determined, ``yaml`` files are constructed. Note that if the user specifies a ``yaml`` file, the script uses that one. Otherwise, the script builds the ``yaml`` files.  For LETKF, a pseudo-ensemble is created by running the python script (``letkf_create_ens.py``). Once the ensemble is created, the script runs JEDI and applies increment to UFS restarts.
+
+.. COMMENT: What is SWE?
+   How does the script build the YAML itself?
+   What is a pseudo-ensemble?
+
+Below, users can find an example of a configuration settings file, ``settings_DA``, for the ``do_landDA.sh`` script:
 
 .. code-block:: console
 
@@ -931,14 +975,15 @@ Here is an example of configuration settings file, ‘settings_DA’, for do_lan
    JEDI_EXECDIR=   
    fv3bundle_vn=20230106_public 
 
-``LANDDADIR`` : specifies the path where do_landDA.sh script is.
+``LANDDADIR``
+   Specifies the path to the ``do_landDA.sh`` script.
 
-``OBS_TYPES`` : specifies the observation type. Format is “Obs1” “Obs2”. Currently, GHCN is an only available observation. 
+``OBS_TYPES``
+   Specifies the observation type. Format is "Obs1" "Obs2". Currently, only GHCN observation data is available. 
 
-``JEDI_TYPES`` : specifies the JEDI call type for each observation type above. Format is “type1” “type2”. Acceptable values are:
+``JEDI_TYPES``
+   Specifies the JEDI call type for each observation type above. Format is "type1" "type2". Valid values: ``DA`` | ``HOFX``
 
-.. table:: 
-   
    +--------+--------------------------------------------------------+
    | Value  | Description                                            |
    +========+========================================================+
@@ -948,9 +993,11 @@ Here is an example of configuration settings file, ‘settings_DA’, for do_lan
    |        | (or reading forecasts from file) and computing H(x)    |
    +--------+--------------------------------------------------------+
 
-``WINLEN`` : specifies the DA window length. It will generally be the same as the FCSTLEN.
+``WINLEN``
+   Specifies the DA window length. It is generally the same as the ``FCSTLEN``.
 
-``YAML_DA`` : specifies whether to construct the YAML name, based on requested observation types and their availabilities. Acceptable values are:
+``YAML_DA``
+   Specifies whether to construct the ``yaml`` name based on requested observation types and their availabilities. Valid values: ``construct`` | *desired YAML name*
 
    +--------------------+--------------------------------------------------------+
    | Value              | Description                                            |
@@ -960,10 +1007,15 @@ Here is an example of configuration settings file, ‘settings_DA’, for do_lan
    | desired YAML name  | Will not test for availability of observations         |
    +--------------------+--------------------------------------------------------+
 
+``JEDI_EXECDIR``
+   Specifies the JEDI FV3 build directory. If using different JEDI version, users will need to edit the ``yaml`` files.
 
-``JEDI_EXECDIR`` : specifies the JEDI FV3 build directory. If using different JEDI version, will need to edit the yamls.
+   .. COMMENT: The path to this directory or just the name of the directory?
 
-``fv3bundle_vn`` : specifies the date for JEDI fv3 bundle checkout (used to select correct yaml).
+``fv3bundle_vn``
+   Specifies the date for ``jedi-fv3`` bundle checkout (used to select correct yaml).
+
+   .. COMMENT: Clarify definition
 
 .. _ConfigureExpt:
 
@@ -1047,14 +1099,9 @@ Next, check for the background and analysis files in the ``cycle_land`` director
    ls -l ../cycle_land/DA_GHCN_test/mem000/restarts/vector/
 
 
-
-
-
-
-4.3. Interface for Observation Data Access (IODA)   
+Interface for Observation Data Access (IODA)   
 ====================================================
 
-
-The code base of the JEDI Unified Forward Operator (UFO) links observation operators with the Object Oriented Prediction System (OOPS) to generically implement the computation of a simulated observation given a known model state. There is no restriction to the observation operators with regard to model specific code structures or requirements. The UFO code structure provides generic classes for observation bias correction and quality control. Then the formats of observation data are converted into model specific formats to be ingested by each model’s data assimilation system. This involves model specific data conversion efforts. Requirements for observation files and I/O handling involved in different modeling and data assimilation workflows are diverse. Creating a common software system for organizing and storing the vast amounts of observation data is highly desirable to maintain current and future operational forecast systems in a sustainable way. 
+The code base of the JEDI Unified Forward Operator (UFO) links observation operators with the Object Oriented Prediction System (OOPS) to generically implement the computation of a simulated observation given a known model state. There is no restriction to the observation operators with regard to model specific code structures or requirements. The UFO code structure provides generic classes for observation bias correction and quality control. Then the formats of observation data are converted into model specific formats to be ingested by each model's data assimilation system. This involves model specific data conversion efforts. Requirements for observation files and I/O handling involved in different modeling and data assimilation workflows are diverse. Creating a common software system for organizing and storing the vast amounts of observation data is highly desirable to maintain current and future operational forecast systems in a sustainable way. 
 
 As part of a modernization effort of the ocean forecasting systems under the umbrella of the NOAA unified forecast system (UFS) program, a data unification project has been started with the Joint Effort for Data Assimilation Integration (JEDI) to establish a model agnostic method of sharing observation data and exchanging modeling and data assimilation results. The Interface for Observation Data Access (IODA) is a subsystem of JEDI that handles data processing and provides for a common data format in netCDF. This allows for the long-term storage of data and the creation of historical databases. The underlying structure of the IODA format is to represent the variables in columns and the locations in rows. Metadata tables are associated with each axis of the data tables and the location metadata hold the values describing each location, and which are appropriate for each observation type (e.g., latitude, longitude). Actual data values are contained in the third dimension of the IODA data table: observation values, observation error, quality control flags, and simulated observation values of H(x) at different stages of the data assimilation process. The python-based IODA converters for all the marine surface and profile observation data types described above have been successfully developed and merged into the JEDI repository. 
