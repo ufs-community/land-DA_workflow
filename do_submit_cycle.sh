@@ -1,34 +1,6 @@
 #!/bin/bash 
 
 set -x
-#Set defaults
-export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
-export LANDDA_INPUTS=${LANDDA_INPUTS:-${LANDDAROOT}/inputs}
-export CYCLEDIR=$(pwd) 
-export LANDDA_EXPTS=${LANDDA_EXPTS:-${LANDDAROOT}/landda_expts}
-export PYTHON=`which python3`
-export BUILDDIR=${BUILDDIR:-${CYCLEDIR}/build}
-
-#Change some variables if working with a container
-if [[ ${USE_SINGULARITY} =~ yes ]]; then
-  EPICHOME=/opt
-  #use the python that is built into the container. It has all the pythonpaths set and can run the ioda converters
-  export PYTHON=$PWD/singularity/bin/python
-  #JEDI is installed under /opt in the container
-  export JEDI_INSTALL=/opt
-  #Scripts that launch containerized versions of the executables are in $PWD/singularity/bin They should be called
-  #from the host system to be run (e.g. mpiexec -n 6 $BUILDDIR/bin/fv3jedi_letkf.x )
-  export BUILDDIR=$PWD/singularity
-  export JEDI_EXECDIR=${CYCLEDIR}/singularity/bin
-  #we need to have intelmpi loaded on the host system to run the workflow. Try to load it here.
-  #TODO--figure out a way to make sure we have intelmpi loaded or don't let the workflow start
-  module try-load impi
-  module try-load intel-oneapi-mpi
-  module try-load intelmpi
-  module try-load singularity
-  export SINGULARITYBIN=`which singularity`
-  sed -i 's/singularity exec/${SINGULARITYBIN} exec/g' run_container_executable.sh
-fi
 
 ############################
 # load config file 
@@ -49,6 +21,29 @@ echo "reading cycle settings from $config_file"
 source $config_file
 
 export KEEPWORKDIR="YES"
+
+
+############################
+# ensure necessary envars are set
+envars=("exp_name" "STARTDATE" "ENDDATE" "LANDDAROOT" "LANDDA_INPUTS" "CYCLEDIR" \
+        "LANDDA_EXPTS" "PYTHON" "BUILDDIR" "atmos_forc" "OBSDIR" "WORKDIR" \
+        "OUTDIR" "TEST_BASEDIR" "JEDI_EXECDIR" "JEDI_STATICDIR" "ensemble_size" \
+        "FCSTHR" "RES" "TPATH" "TSTUB" "cycles_per_job" "ICSDIR" "DA_config" \
+        "DA_config00" "DA_config06" "DA_config12" "DA_config18")
+
+
+for var in "${envars[@]}"; do
+  echo ${var}
+  if [ -z "${!var}" ]; then
+    unset_envars+=("$var")
+  fi
+done
+
+if [ ${#unset_envars[@]} -ne 0 ]; then
+  echo "ERROR: the following environmental variables have not been set: ${unset_envars[@]}."
+  exit 1
+fi
+
 
 ############################
 # check that modules are loaded in the environment 
