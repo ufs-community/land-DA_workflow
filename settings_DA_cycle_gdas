@@ -36,9 +36,6 @@ fi
 #forcing options: gdas, gswp3, gefs_ens
 export atmos_forc=gdas
 
-
-export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
-export LANDDA_EXPTS=${LANDDA_EXPTS:-${LANDDAROOT}/landda_expts}
 #Location of observations for DA
 export OBSDIR=${LANDDA_INPUTS}/DA
 # temporary directory where experiment is run from

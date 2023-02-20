@@ -4,7 +4,7 @@ set -x
 #Set defaults
 export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
 export LANDDA_INPUTS=${LANDDA_INPUTS:-${LANDDAROOT}/inputs}
-export CYCLEDIR=$(pwd) 
+export CYCLEDIR=$(pwd)
 export LANDDA_EXPTS=${LANDDA_EXPTS:-${LANDDAROOT}/landda_expts}
 export PYTHON=`which python3`
 export BUILDDIR=${BUILDDIR:-${CYCLEDIR}/build}
@@ -49,6 +49,28 @@ echo "reading cycle settings from $config_file"
 source $config_file
 
 export KEEPWORKDIR="YES"
+
+
+############################
+# ensure necessary envars are set
+envars=("exp_name" "STARTDATE" "ENDDATE" "LANDDAROOT" "LANDDA_INPUTS" "CYCLEDIR" \
+        "LANDDA_EXPTS" "PYTHON" "BUILDDIR" "atmos_forc" "OBSDIR" "WORKDIR" \
+        "OUTDIR" "TEST_BASEDIR" "JEDI_EXECDIR" "JEDI_STATICDIR" "ensemble_size" \
+        "FCSTHR" "RES" "TPATH" "TSTUB" "cycles_per_job" "ICSDIR" "DA_config" \
+        "DA_config00" "DA_config06" "DA_config12" "DA_config18")
+
+
+for var in "${envars[@]}"; do
+  if [ -z "${!var}" ]; then
+    unset_envars+=("$var")
+  fi
+done
+
+if [ ${#unset_envars[@]} -ne 0 ]; then
+  echo "ERROR: the following environmental variables have not been set: ${unset_envars[@]}."
+  exit 1
+fi
+
 
 ############################
 # check that modules are loaded in the environment 
