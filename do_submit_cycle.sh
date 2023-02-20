@@ -61,7 +61,6 @@ envars=("exp_name" "STARTDATE" "ENDDATE" "LANDDAROOT" "LANDDA_INPUTS" "CYCLEDIR"
 
 
 for var in "${envars[@]}"; do
-  echo ${var}
   if [ -z "${!var}" ]; then
     unset_envars+=("$var")
   fi
