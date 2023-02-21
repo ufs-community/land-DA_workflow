@@ -58,58 +58,50 @@ while [ $date_count -lt $cycles_per_job ]; do
     nHH=`echo $NEXTDATE | cut -c9-10`
 
     ############################
-    # copy restarts to workdir (all members, before DA)
+    # copy restarts to workdir, convert to vector for DA (all members) 
 
-    n_ens=1
-    while [ $n_ens -le $ensemble_size ]; do
+    mem_ens="mem000" 
 
-        if [ $ensemble_size == 1 ]; then 
-            mem_ens="mem000" 
-        else 
-            mem_ens="mem`printf %03i $n_ens`"
-        fi 
+    MEM_WORKDIR=${WORKDIR}/${mem_ens}
+    MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
 
-        MEM_WORKDIR=${WORKDIR}/${mem_ens}
-        MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
+    cd $MEM_WORKDIR
 
-        cd $MEM_WORKDIR
+    # copy restarts into work directory
+    rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
+    rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    cp $rst_in $rst_out 
 
-        # copy restarts into work directory
-        rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
-        rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-        cp $rst_in $rst_out 
+    if [[ $do_jedi == "YES" ]]; then  
+        echo '************************************************'
+        echo 'calling tile2vector' 
 
-        if [[ $do_jedi == "YES" ]]; then  
-            echo '************************************************'
-            echo 'calling tile2vector' 
+        export MEM_WORKDIR
 
-            export MEM_WORKDIR
+        # update vec2tile and tile2vec namelists
+        cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
 
-            # update vec2tile and tile2vec namelists
-            cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
+        sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
+        sed -i -e "s/XXMM/${MM}/g" vector2tile.namelist
+        sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
+        sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
+        sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
+        sed -i -e "s/XXRES/${RES}/g" vector2tile.namelist
+        sed -i -e "s/XXTSTUB/${TSTUB}/g" vector2tile.namelist
+        sed -i -e "s#XXTPATH#${TPATH}#g" vector2tile.namelist
 
-            sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
-            sed -i -e "s/XXMM/${MM}/g" vector2tile.namelist
-            sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
-            sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
-            sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
-            sed -i -e "s/XXRES/${RES}/g" vector2tile.namelist
-            sed -i -e "s/XXTSTUB/${TSTUB}/g" vector2tile.namelist
-            sed -i -e "s#XXTPATH#${TPATH}#g" vector2tile.namelist
+        # submit vec2tile 
+        echo '************************************************'
+        echo 'calling vector2tile' 
+        $vec2tileexec vector2tile.namelist
+        if [[ $? != 0 ]]; then
+            echo "vec2tile failed"
+            exit 
+        fi
+    fi # vector2tile for DA
 
-            # submit vec2tile 
-            echo '************************************************'
-            echo 'calling vector2tile' 
-            $vec2tileexec vector2tile.namelist
-            if [[ $? != 0 ]]; then
-                echo "vec2tile failed"
-                exit 
-            fi
-        fi # vector2tile for DA
-
-        n_ens=$((n_ens+1))
-
-    done # n_ens < ensemble_size
+    ############################
+    # do DA update
 
     if [[ $do_jedi == "YES" ]]; then  
 
@@ -127,103 +119,75 @@ while [ $date_count -lt $cycles_per_job ]; do
         fi   
     fi 
 
-    n_ens=1
-    while [ $n_ens -le $ensemble_size ]; do
+    ############################
+    #  convert back to vector, run model (all members) convert back to vector, run model (all members)
 
-        if [ $ensemble_size == 1 ]; then 
-            mem_ens="mem000" 
-            NNN="000"
-        else 
-            mem_ens="mem`printf %03i $n_ens`"
-            NNN="`printf %03i $n_ens`" 
-        fi 
+    mem_ens="mem000" 
 
-        MEM_WORKDIR=${WORKDIR}/${mem_ens}
-        MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
+    MEM_WORKDIR=${WORKDIR}/${mem_ens}
+    MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
 
-        cd $MEM_WORKDIR
+    cd $MEM_WORKDIR
 
-        if [[ $do_jedi == "YES" ]]; then  
-            echo '************************************************'
-            echo 'calling tile2vector' 
-
-            cp  ${CYCLEDIR}/template.tile2vector tile2vector.namelist
-
-            sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
-            sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
-            sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
-            sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
-            sed -i -e "s/XXRES/${RES}/g" tile2vector.namelist
-            sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
-            sed -i -e "s#XXTPATH#${TPATH}#g" tile2vector.namelist
-
-            $vec2tileexec tile2vector.namelist
-            if [[ $? != 0 ]]; then
-                echo "tile2vector failed"
-                exit 
-            fi
-
-            # save analysis restart
-            cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-        fi
-
-        ############################
-        # run the forecast model
-
-        # update model namelist 
-        cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
-
-        sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
-        sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
-        sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
-        sed -i -e "s/XXHH/${HH}/g" ufs-land.namelist
-        sed -i -e "s/XXFREQ/${FREQ}/g" ufs-land.namelist
-        sed -i -e "s/XXRDD/${RDD}/g" ufs-land.namelist
-        sed -i -e "s/XXRHH/${RHH}/g" ufs-land.namelist
-        sed -i -e "s/XXMEM/${NNN}/g" ufs-land.namelist
-
-        # submit model
+    if [[ $do_jedi == "YES" ]]; then  
         echo '************************************************'
-        echo "calling model for member ${NNN}"
-        echo $MEM_WORKDIR
-        srun -n 1 $LSMexec 
-        #PID=$!
-        #$LSMexec
+        echo 'calling tile2vector' 
 
-        # no error codes on exit from model, check for restart below instead
-        #    if [[ $? != 0 ]]; then
-        #        echo "model failed"
-        #        exit 
-        #    fi
+        cp  ${CYCLEDIR}/template.tile2vector tile2vector.namelist
 
-        n_ens=$((n_ens+1))
-    done # n_ens < ensemble_size
+        sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
+        sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
+        sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
+        sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
+        sed -i -e "s/XXRES/${RES}/g" tile2vector.namelist
+        sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
+        sed -i -e "s#XXTPATH#${TPATH}#g" tile2vector.namelist
 
-    # wait for model(s) to complete.
-    wait 
-
-    # check model ouput
-    n_ens=1
-    while [ $n_ens -le $ensemble_size ]; do
-
-        if [ $ensemble_size == 1 ]; then 
-            mem_ens="mem000" 
-        else 
-            mem_ens="mem`printf %03i $n_ens`"
-        fi 
-
-        MEM_WORKDIR=${WORKDIR}/${mem_ens}
-        MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
-
-        if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then 
-           cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
-        else 
-           echo "Something is wrong, probably the model, exiting" 
-           exit
+        $vec2tileexec tile2vector.namelist
+        if [[ $? != 0 ]]; then
+            echo "tile2vector failed"
+            exit 
         fi
 
-        n_ens=$((n_ens+1))
-    done # n_ens < ensemble_size
+        # save analysis restart
+        cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    fi
+
+    ############################
+    # run the forecast model
+
+    # update model namelist 
+    cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
+
+    sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
+    sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
+    sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
+    sed -i -e "s/XXHH/${HH}/g" ufs-land.namelist
+    sed -i -e "s/XXFREQ/${FREQ}/g" ufs-land.namelist
+    sed -i -e "s/XXRDD/${RDD}/g" ufs-land.namelist
+    sed -i -e "s/XXRHH/${RHH}/g" ufs-land.namelist
+
+    # submit model
+    echo '************************************************'
+    echo "calling model"
+    echo $MEM_WORKDIR
+    srun -n 1 $LSMexec 
+    # no error codes on exit from model, check for restart below instead
+
+    ############################
+    # check model ouput (all members)
+
+    mem_ens="mem000" 
+
+    MEM_WORKDIR=${WORKDIR}/${mem_ens}
+    MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
+
+    if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then 
+       cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
+    else 
+       echo "Something is wrong, probably the model, exiting" 
+       exit
+    fi
 
     echo "Finished job number, ${date_count},for  date: ${THISDATE}" >> $logfile
 
