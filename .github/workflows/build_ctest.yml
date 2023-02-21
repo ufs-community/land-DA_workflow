@@ -1,0 +1,41 @@
+name: Continuous Delivery of Land DA Container
+
+on:
+  push:
+    branches: [ "release/public-v1.0.0" ]
+  pull_request:
+    branches: [ "release/public-v1.0.0" ]
+
+jobs:
+  deploy:
+    name: Land DA CI/CD Workflow 
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+                 
+    - name: Build Docker Image
+      run: |
+        echo "maximize disk space on git-runner ..."
+        df -h 
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc
+        sudo rm -rf "/usr/local/share/boost"
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+        df -h
+        echo "docker image build ..."
+        docker build --file "./test/ci/Dockerfile" -t ufs-noahmp_landa:develop .
+        
+    - name: Check Docker Image
+      run: | 
+       docker images 
+       if [[ $(docker image inspect ufs-noahmp_landa:develop) ]]; then
+        echo "ufs-noahmp_landa:develop generated ..."
+       else
+        echo "ufs-noahmp_landa:develop was not generated ..."
+        exit 1
+       fi
