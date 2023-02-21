@@ -1,6 +1,10 @@
 name: Continuous Delivery of Land DA Container
 
-on: push
+on:
+  push:
+    branches: [ "feature/citest" ]
+  pull_request:
+    branches: [ "develop" ]
 
 jobs:
   deploy:
@@ -20,8 +24,8 @@ jobs:
         format: space-delimited
         token: ${{ secrets.GITHUB_TOKEN }}        
           
-    - name: Login to DockerHub Registry
-      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+   # - name: Login to DockerHub Registry
+   #   run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
     - name: Build Docker Image
       run: |
