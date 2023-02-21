@@ -24,8 +24,10 @@ jobs:
         format: space-delimited
         token: ${{ secrets.GITHUB_TOKEN }}        
           
-   # - name: Login to DockerHub Registry
-   #   run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+    - name: Login to DockerHub Registry
+      env:
+          DOCKER_TOKEN: ${{ env.DOCKER_TOKEN }}
+      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
     - name: Build Docker Image
       run: |
