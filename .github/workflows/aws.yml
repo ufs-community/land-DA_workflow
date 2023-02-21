@@ -24,8 +24,8 @@ jobs:
         format: space-delimited
         token: ${{ secrets.GITHUB_TOKEN }}        
           
-    - name: Login to DockerHub Registry
-      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+ #   - name: Login to DockerHub Registry
+ #     run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
     - name: Build Docker Image
       run: |
@@ -39,16 +39,16 @@ jobs:
         echo "docker build ..."
         docker build -t ufs-noahmp_landa:develop .
         df -h
-    - name: Docker Tag and Push ufs-noahmp_landa:develop to DockerHub
-      run: | 
-       docker images 
-       if [[ $(docker image inspect ufs-noahmp_landa:develop) ]]; then
-        echo "docker push tag ..."
-        docker tag ufs-noahmp_landa:develop jongkim2004/ufs-noahmp_landa:develop
-        docker push jongkim2004/ufs-noahmp_landa:develop
-       else
-        echo "ufs-noahmp_landa:develop was not generated ..."
-       fi
+#    - name: Docker Tag and Push ufs-noahmp_landa:develop to DockerHub
+#      run: | 
+#       docker images 
+#       if [[ $(docker image inspect ufs-noahmp_landa:develop) ]]; then
+#        echo "docker push tag ..."
+#        docker tag ufs-noahmp_landa:develop jongkim2004/ufs-noahmp_landa:develop
+#        docker push jongkim2004/ufs-noahmp_landa:develop
+#       else
+#        echo "ufs-noahmp_landa:develop was not generated ..."
+#       fi
        
     - name: Docker Logout
       run: |
