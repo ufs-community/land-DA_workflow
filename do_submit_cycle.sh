@@ -44,7 +44,7 @@ fi
 
 ############################
 # check that a valid account for job submission
-# is set in do_submit_cycle.sh
+# is set in submit_cycle.sh
 
 user_accounts=$(echo $(sacctmgr show assoc where user=$USER format=account) | sed 's|.*--- \(.*\)|\1|')
 preset_account=$(grep '#SBATCH --account=' submit_cycle.sh | cut -d= -f2)
