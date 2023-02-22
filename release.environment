@@ -1,0 +1,41 @@
+#Common environment variable settings for LandDA release v1.0.0
+
+#Set defaults
+export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
+export LANDDA_INPUTS=${LANDDA_INPUTS:-${LANDDAROOT}/inputs}
+export CYCLEDIR=$(pwd) 
+export LANDDA_EXPTS=${LANDDA_EXPTS:-${LANDDAROOT}/landda_expts}
+export PYTHON=`which python3`
+export BUILDDIR=${BUILDDIR:-${CYCLEDIR}/build}
+
+#Change some variables if working with a container
+if [[ ${USE_SINGULARITY} =~ yes ]]; then
+  EPICHOME=/opt
+  #use the python that is built into the container. It has all the pythonpaths set and can run the ioda converters
+  export PYTHON=$PWD/singularity/bin/python
+  #JEDI is installed under /opt in the container
+  export JEDI_INSTALL=/opt
+  #Scripts that launch containerized versions of the executables are in $PWD/singularity/bin They should be called
+  #from the host system to be run (e.g. mpiexec -n 6 $BUILDDIR/bin/fv3jedi_letkf.x )
+  export BUILDDIR=$PWD/singularity
+  export JEDI_EXECDIR=${CYCLEDIR}/singularity/bin
+  module try-load singularity
+  export SINGULARITYBIN=`which singularity`
+  sed -i 's/singularity exec/${SINGULARITYBIN} exec/g' run_container_executable.sh
+fi
+#forcing options: gdas, gswp3, gefs_ens
+export atmos_forc=gdas
+
+#Location of observations for DA
+export OBSDIR=${LANDDA_INPUTS}/DA
+# temporary directory where experiment is run from
+export WORKDIR=${WORKDIR:-${LANDDAROOT}/workdir}
+# directory where output is saved
+export OUTDIR=${LANDDA_EXPTS}/${exp_name}
+
+export TEST_BASEDIR=${TEST_BASEDIR:-${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector}
+
+# JEDI directories
+export JEDI_EXECDIR=${JEDI_EXECDIR:-"${JEDI_INSTALL}/fv3-bundle/build/bin"}
+export IODA_BUILD_DIR=${JEDI_INSTALL}/ioda-bundle/build
+export JEDI_STATICDIR=${JEDI_INSTALL}/fv3-bundle/fv3-jedi/test/Data

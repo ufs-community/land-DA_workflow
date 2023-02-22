@@ -1,6 +1,5 @@
 #!/bin/bash 
 
-set -x
 ############################
 # load config file 
 
