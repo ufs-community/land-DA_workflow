@@ -12,27 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
 
-    steps:
+    steps:        
     - name: Checkout
       uses: actions/checkout@v3
       with:
         submodules: recursive
-
-    - name: Build HTML
-      uses: ammaraskar/sphinx-action@master
-    
-#    - name: Upload artifacts
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: html-docs
-#        path: docs/build/html/
-    
-#    - name: Deploy
-#      uses: peaceiris/actions-gh-pages@v3
-#      if: github.ref == './test/ci/Dockerfile'
-#      with:
-#        github_token: ${{ secrets.GITHUB_TOKEN }}
-#        publish_dir: docs/build/html
         
     - uses: jitterbit/get-changed-files@v1
       id: abc
@@ -40,6 +24,7 @@ jobs:
         format: space-delimited
         token: ${{ secrets.GITHUB_TOKEN }}        
           
+# re-Actitave when Dockerhub env vars are set 
 #    - name: Login to DockerHub Registry
 #      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
@@ -59,12 +44,20 @@ jobs:
       run: | 
        docker images 
        if [[ $(docker image inspect ufs-noahmp_landa:develop) ]]; then
-        echo "ufs-noahmp_landa:develop generated ..."
+            echo "ufs-noahmp_landa:develop generated ..."
+        if [[ ${{ github.event_name }} == "push" ]]; then
+            # Push tag when PR get merged or directly push  
+            echo "docker push tag ..."
+            # re-Actitave when Dockerhub env vars are set 
+            #docker tag ufs-noahmp_landa:develop ufscommunity/ufs-noahmp_landa:develop
+            #docker push ufscommunity/ufs-noahmp_landa:develop
+        fi
        else
         echo "ufs-noahmp_landa:develop was not generated ..."
         exit 1
        fi
 
+# re-Actitave when Dockerhub env vars are set 
 #    - name: Docker Logout
 #      run: |
 #       docker logout
