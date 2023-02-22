@@ -7,8 +7,6 @@ if [[ ${HOSTNAME} == *"Orion"* ]]; then
   MACHINE=orion
 elif [[ ${HOSTNAME} == *"hfe"* ]]; then
   MACHINE=hera
-elif [[ ${USE_SINGULARITY} =~ yes ]]; then
-  MACHINE=singularity
 fi
 
 # check which modules are required and notify the user if they are not currently loaded in the environment.
@@ -30,4 +28,17 @@ if [[ ${#missing_mods[@]} -gt 0 ]]; then
 else 
  echo "All modules properly loaded in environment. Continuing!"
  exit 0
+fi
+
+# singularity checks
+if [[ ${USE_SINGULARITY} =~ yes ]]; then
+    if ! command -v mpiexec &> /dev/null; then
+      echo "Error: mpiexec is not in the current path. Please load an Intel MPI of version 2021 or newer."
+      exit 1
+    elif ! mpiexec --version | grep -Eq "Intel.*2021|202[2-9][0-9]*"; then
+      echo "Warning: loaded Intel MPI is a version older than 2021. Intel MPIs prior to 2021 have not been tested."
+      echo "Current loaded version is $(mpiexec --version)"
+    else
+      exit 0
+    fi
 fi
