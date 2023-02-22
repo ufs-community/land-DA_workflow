@@ -28,7 +28,9 @@ if [[ ${MACHINE} == "orion" || ${MACHINE} == "hera" && ${USE_SINGULARITY} != "ye
   else
     echo "All modules properly loaded in environment. Continuing!"
   fi
+  
 elif [[ ${USE_SINGULARITY} =~ "yes" ]]; then
+
   if ! command -v mpiexec &> /dev/null; then
     echo "Error: mpiexec is not in the current path. Please load an Intel MPI of version 2021 or newer."
     exit 1
@@ -38,4 +40,5 @@ elif [[ ${USE_SINGULARITY} =~ "yes" ]]; then
   else
     echo "Intel MPI properly set for Singularity. Continuing."
   fi
+  
 fi
