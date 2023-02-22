@@ -30,7 +30,6 @@ envars=("exp_name" "STARTDATE" "ENDDATE" "LANDDAROOT" "LANDDA_INPUTS" "CYCLEDIR"
         "FCSTHR" "RES" "TPATH" "TSTUB" "cycles_per_job" "ICSDIR" "DA_config" \
         "DA_config00" "DA_config06" "DA_config12" "DA_config18")
 
-
 for var in "${envars[@]}"; do
   if [ -z "${!var}" ]; then
     unset_envars+=("$var")
@@ -50,7 +49,7 @@ user_accounts=$(echo $(sacctmgr show assoc where user=$USER format=account) | se
 preset_account=$(grep '#SBATCH --account=' submit_cycle.sh | cut -d= -f2)
 
 # if the account set in submit_cycle matches any of ${user_accounts}, continue;
-# if not, suggest a compute account to which the user has access.
+# if not, esuggest a compute account to which the user has access and exit.
 if echo "$user_accounts" | grep -q -w "${preset_account}"; then
    echo "Account for sbatch submission set to ${preset_account}."
 else
