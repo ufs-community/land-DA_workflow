@@ -11,9 +11,9 @@ Welcome to UFS Offline LandDA's documentation!
    :maxdepth: 3
    :caption: Contents:
 
-   Introduction_v0
+   Introduction
    TechnicalOverview
-   Model_v0
+   Model
    DASystem
    Glossary
 

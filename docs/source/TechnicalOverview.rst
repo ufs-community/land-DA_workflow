@@ -1,14 +1,14 @@
 .. _TechOverview:
 
-=====================
+*********************
 Technical Overview
-=====================
+*********************
 
 Prerequisites
-===============
+***************
 
 Minimum System Requirements
---------------------------------
+==============================
 
 :term:`UFS` applications, models, and components require a UNIX-based operating system (i.e., Linux or MacOS). 
 
@@ -21,7 +21,7 @@ Additionally, users will need:
 .. COMMENT: Disk space: for spack-stack, Data, Land DA repo, running Land DA, etc.
 
 Software Prerequisites
-------------------------
+========================
 
 The Land DA System requires:
 
@@ -44,7 +44,7 @@ Before using the Land DA container, users will need to install `Singularity <htt
 .. _LevelsOfSupport:
 
 Supported Systems for Running Land DA
-========================================
+****************************************
 
 Four levels of support have been defined for :term:`UFS` applications, and the Land DA system operates under this paradigm: 
 
@@ -54,7 +54,7 @@ Four levels of support have been defined for :term:`UFS` applications, and the L
 * **Level 4** *(Build-only platforms)*: Libraries and code build, no tests with running the model
 
 Level 1 Systems
-------------------
+==================
 Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack`. Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them.
 
 +-----------+------------------+----------------------------------------------------------------------------+
@@ -70,7 +70,7 @@ Preconfigured (Level 1) systems for Land DA already have the required external l
 .. COMMENT: Add info about Gaea? Also, check compiler information.
 
 Level 2-4 Systems
--------------------
+===================
 
 On non-Level 1 platforms, the Land DA system can be run within a container that includes the prerequisite software; otherwise, the required libraries will need to be installed as part of the Land DA build process. Once these prerequisite libraries are installed, applications and models should build and run successfully. However, users may need to perform additional troubleshooting on Level 3 or 4 systems since little or no pre-release testing has been conducted on these systems.
 
@@ -79,10 +79,10 @@ On non-Level 1 platforms, the Land DA system can be run within a container that 
    Running on Jet, Cheyenne, and NOAA Cloud systems is supported via container. 
 
 Code Repositories and Directory Structure
-==============================================
+********************************************
 
 Directory Structure
-----------------------
+======================
 
 The main repository for the Land DA System is named ``land-offline_workflow``; 
 it is available on GitHub at https://github.com/NOAA-PSL/land-offline_workflow. 
@@ -111,7 +111,7 @@ to the example below. Some files and directories have been removed for brevity.
     └── README.md
 
 Land DA Components
----------------------
+=====================
 
 :numref:`Table %s <LandDAComponents>` describes the various subrepositories that form
 the UFS Land DA System. 
