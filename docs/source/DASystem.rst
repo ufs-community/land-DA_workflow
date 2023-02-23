@@ -587,6 +587,7 @@ Observation filters are used to define Quality Control (QC) filters. They have a
       ``maxvalue``
          Maximum value for variables in the ``where`` statement.
 
+.. _IODA:
 
 Interface for Observation Data Access (IODA)   
 ===============================================
@@ -858,11 +859,11 @@ The source code of the ``calcfIMS`` executable can be found `here <https://www.g
 IODA-Converted Observatons
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Before assimilating the IMS data, the intermediate (post-calcfIMS) observation files (i.e.: ``IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc`` -type files)  must be processed using a JEDI IODA converter to transform IMS file fields and attributes into IODA format. For the land DA system, the converter used is imsfv3_scf2ioda_obs40.py (https://github.com/NOAA-EPIC/land-DA_update/blob/develop/jedi/ioda/imsfv3_scf2ioda_obs40.py) 
+Before assimilating the IMS data, the intermediate (post-``calcfIMS``) observation files (i.e., ``IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc``-type files)  must be processed using a JEDI IODA converter to transform IMS file fields and attributes into IODA format. For the land DA system, the converter used is ``imsfv3_scf2ioda_obs40.py`` (available on GitHub `here <https://github.com/NOAA-EPIC/land-DA_update/blob/develop/jedi/ioda/imsfv3_scf2ioda_obs40.py>`__) 
 
-The primary component of this IODA converter is the imsFV3 class, which does the bulk of the observational file preparation and translation into IODA format. Snow cover fraction and snow depth observation location, timestamp, and magnitude are extracted from IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc and translated into the IODA variables "snowCoverFraction" and "totalSnowDepth" on the IODA-format dimension, "nlocs", with the additional metadata variables "datetime", "height", "latitude", and "longitude" also defined along the nlocs dimension. Each snow cover fraction and snow depth observation is also attributed error and quality control values at each point on nlocs. This conversion follows the 2-D/3-D data table paradigm outline in section "Brief Overview of JEDI IODA". 
+The primary component of this IODA converter is the ``imsFV3`` class, which does the bulk of the observational file preparation and translation into IODA format. Snow cover fraction and snow depth observation location, timestamp, and magnitude are extracted from ``IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc`` and translated into the IODA variables ``snowCoverFraction`` and ``totalSnowDepth`` on the IODA-format dimension (``nlocs``), with the additional metadata variables ``datetime``, ``height``, ``latitude``, and ``longitude`` also defined along the ``nlocs`` dimension. Each snow cover fraction and snow depth observation is also assigned error and quality control values at each point on ``nlocs``. This conversion follows the 2-D/3-D data table paradigm outline in `Section %s <IODA>`. 
 
-After conversion into the IODA format, the new fields/variables are written to netCDF format. The IODA-converted (or simply "IODA files") adhere to the following the naming convention : ioda.IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc, where again ${YYYY} is the cycle year, ${MM} is the cycle month, ${DD} is the cycle day, and ${TSTUB} is the orography type (C${RES} [atm] or C${RES}.mx100 [coupled atm/ocean], where ${RES} is the FV3 model resolution). In the example forecast/analysis used throughout this document, the resultant IODA file is called ioda.IMSscf.20160101.oro_C96.mx100.nc. Such IODA files have the following format/content:
+After conversion into the IODA format, the new fields/variables are written to netCDF format. The IODA-converted files adhere to the following naming convention: ``ioda.IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc``, where again ``${YYYY}`` is the cycle year, ``${MM}`` is the cycle month, ``${DD}`` is the cycle day, and ``${TSTUB}`` is the orography type (``C${RES}`` [atm] or ``C${RES}.mx100`` [coupled atm/ocean], where ``${RES}`` is the FV3 model resolution). In the example forecast/analysis used throughout this document, the resultant IODA file is called ``ioda.IMSscf.20160101.oro_C96.mx100.nc``. Such IODA files have the following format/content:
 
 .. code-block:: console
 
