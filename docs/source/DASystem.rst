@@ -604,11 +604,14 @@ Since the raw observational data come in various formats, a diverse set of "IODA
 .. COMMENT: Leave out?
    In the Land DA System, IODA provides data in a common format --- :term:`netCDF`. 
 
+Observation Data
+*******************
+
 Observation Types
---------------------
+====================
 
 IMS Snow and Ice Coverage
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------
 
 The Land DA System utilizes snow and ice coverage observations derived from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`__). The IMS includes data retrieved by several different platforms using several different sensors (see `here <https://nsidc.org/data/g02156/versions/1#anchor-1>`__ for specifics). 
 
@@ -644,7 +647,7 @@ The USNIC IMS provides daily analyses of Northern Hemisphere snow and ice covera
       ncdump -h </path_to_ims_netcdf_file/file_name.nc>
 
 GHCN Snow Depth
-^^^^^^^^^^^^^^^^^
+------------------
 
 Snow depth observations are taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`__, which provides daily climate summaries sourced from a global network of 100,000 stations. NOAA's `NCEI <https://www.ncei.noaa.gov/>`__ provides access to these snow depth and snowfall measurements through daily-generated, individual station ASCII files or GZipped tar files of full-network observations via the NCEI server or Climate Data Online. Alternatively, users may acquire yearly tarballs via ``wget``:
 
@@ -720,10 +723,10 @@ The IODA-formatted GHCN files are structured as follows (using 20160701 as an ex
 The primary observation variable is "totalSnowDepth", which, along with the metadata fields of "datetime", "latitude", "longitude", and "height" is defined along the ``nlocs`` dimension. Also present are "ObsError" and "PreQC" values corresponding to each  "totalSnowDepth" measurement on ``nlocs``. These values were attributed during the IODA conversion step. The magnitude of ``nlocs`` varies between files; this is due to the fact that the number of stations reporting snow depth observations for a given day can vary in the GHCN.
 
 Observation Location and Processing
---------------------------------------
+======================================
 
 GHCN
-^^^^^^
+-------
 
 GHCN files for 2016, 2020, and 2021 are already provided in IODA format. :numref:`Table %s <DataLocations>` indicates where users can find data on Level 1 platforms. Tar files containing the 2016 and 2020 data are located in the publicly-available `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html>`__ (there is currently no 2021 tar file). Once untarred, the snow depth files are located in ``/inputs/DA/snow_depth/GHCN/data_proc/<year>``.  These GHCN IODA files were provided by NOAA PSL (Clara Draper, Mike Barlage). Each file follows the naming convention of ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc``, where ``${YYYY}`` is the four-digit cycle year, ``${MM}`` is the two-digit cycle month, and ``${DD}`` is the two-digit cycle day. 
 
@@ -808,15 +811,15 @@ Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, th
 
 
 IMS
-^^^^^
+------
 
 Pre-processed/Raw Observations
-``````````````````````````````````
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The raw IMS observation file(s) (already in netCDF) for the Land DA System are located in ``/inputs/DA/snow_ice_cover/IMS/2016`` (``inputs`` is the top-level directory in the ``landda-data-2016.tar.gz`` tarball from the `Land DA Data Bucket <https://epic-sandbox-srw.s3.amazonaws.com/landda-data-2016.tar.gz>`__). 
 
 Processing steps in ``do_landDA.sh``
-```````````````````````````````````````````````
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Before the raw observations can be assimilated using JEDI LETKF, they must be processed (i.e., derived fields calculated, re-gridded, quality controlled/filtered). This processing is handled in the ``do_landDA.sh`` bash script through the call of two key components: (i) the ``IMS_proc`` ``calcfIMS`` executable and (ii) the IMS IODA converter (see ``do_landDA.sh`` lines 210-228, below).
 
@@ -853,9 +856,9 @@ The source code of the ``calcfIMS`` executable can be found `here <https://www.g
 
 
 IODA-Converted Observatons
-`````````````````````````````
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Before assimilating the IMS data, the intermediate (post-calcfIMS) observation files (i.e.: IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc -type files)  must be processed using a JEDI IODA converter to transform IMS file fields and attributes into IODA format. For the land DA system, the converter used is imsfv3_scf2ioda_obs40.py (https://github.com/NOAA-EPIC/land-DA_update/blob/develop/jedi/ioda/imsfv3_scf2ioda_obs40.py) 
+Before assimilating the IMS data, the intermediate (post-calcfIMS) observation files (i.e.: ``IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc`` -type files)  must be processed using a JEDI IODA converter to transform IMS file fields and attributes into IODA format. For the land DA system, the converter used is imsfv3_scf2ioda_obs40.py (https://github.com/NOAA-EPIC/land-DA_update/blob/develop/jedi/ioda/imsfv3_scf2ioda_obs40.py) 
 
 The primary component of this IODA converter is the imsFV3 class, which does the bulk of the observational file preparation and translation into IODA format. Snow cover fraction and snow depth observation location, timestamp, and magnitude are extracted from IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc and translated into the IODA variables "snowCoverFraction" and "totalSnowDepth" on the IODA-format dimension, "nlocs", with the additional metadata variables "datetime", "height", "latitude", and "longitude" also defined along the nlocs dimension. Each snow cover fraction and snow depth observation is also attributed error and quality control values at each point on nlocs. This conversion follows the 2-D/3-D data table paradigm outline in section "Brief Overview of JEDI IODA". 
 
