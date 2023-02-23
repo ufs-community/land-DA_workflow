@@ -66,69 +66,38 @@ For more information about the UFS, visit the `UFS Portal <https://ufscommunity
 
 .. _NoahMP:
 
-History of Noah-MP
-====================
+Noah-MP
+==========
 
-Noah-MP is a land surface model (LSM) that has evolved through community
-efforts to pursue and refine a modern-era LSM suitable for use in the
-National Centers for Environmental Prediction (NCEP) operational weather
-and climate prediction models. In the 1990s, NCEP compared four LSMs, and the results of this comparison are detailed in :cite:t:`ChenEtAl1996`. The Environmental Modeling
-Center (EMC) of NCEP chose the Oregon State University (OSU) LSM (:cite:t:`Mahrt&Pan1984`) based on its performance and EMC staff members' previous experience with 
-this LSM. 
-NCEP used this LSM to refine and implement NCEP regional and global
-coupled weather and climate models along with their data assimilation
-systems. In 2000, NCEP/EMC coined the name "Noah" for the LSM that had 
-emerged at NCEP during the 1990s. It stands for:
+The Noah-MP land surface model (LSM) is a stand-alone, uncoupled, single 
+column model used to execute single-site land surface simulations. 
+In this traditional one-dimensional (1-D) uncoupled mode, near-surface atmospheric 
+forcing data is required as input forcing. This LSM simulates soil moisture 
+(both liquid and frozen), soil temperature, skin temperature, snow depth, 
+snow water equivalent (SWE), snow density, canopy water content, and the energy 
+flux and water flux terms of the surface energy balance and surface water balance. 
 
-   * **N:** National Centers for Environmental Prediction (NCEP)
-   * **O:** Oregon State University (Department of Atmospheric Sciences)
-   * **A:** Air Force (both Air Force Weather Agency (AFWA) and Air Force Research Lab (AFRL) --- formerly AFGL, PL)
-   * **H:** Hydrology Lab --- NWS (National Weather Service, formerly Office of Hydrology --- OH)
+Noah-MP uses a big-leaf approach with a separated vegetation canopy accounting 
+for vegetation effects on surface energy and water balances, a modified two-stream 
+approximation scheme to include the effects of vegetation canopy gaps that vary 
+with solar zenith angle and the canopy 3-D structure on radiation transfer, 
+a 3-layer physically-based snow model, a more permeable frozen soil by separating 
+a grid cell into a permeable fraction and impermeable fraction, a simple 
+groundwater model with a TOPMODEL-based runoff scheme, and a short-term leaf 
+phenology model. Noah-MP LSM enables a modular framework for diagnosing differences 
+in process representation, facilitating ensemble forecasts and uncertainty 
+quantification, and choosing process presentations appropriate for the application. 
+Noah-MP developers designed multiple parameterization options for leaf dynamics, 
+radiation transfer, stomatal resistance, soil moisture stress factor for stomatal 
+resistance, aerodynamic resistance, runoff, snowfall, snow surface albedo, 
+supercooled liquid water in frozen soil, and frozen soil permeability. A 
+collaborative effort among NCAR, NCEP, NASA, and university groups has been 
+established to develop and improve the community Noah-MP LSM. Details about the 
+model's physical parameterizations can be found in :cite:t:`NiuEtAl2011` (2011).
 
-The "NOAH" acronym explicitly acknowledged both the multi-group heritage and
-informal "community" usage of this LSM, going back to the early 1980s.
-Since its inception, NOAH LSM has evolved due to significant ongoing development
-efforts by the above groups.
-
-Noah LSM is a stand-alone, uncoupled, one-dimensional (1-D) column model 
-used to execute single-site land surface simulations. In this traditional 1-D 
-uncoupled mode, near-surface atmospheric forcing data is required as input
-forcing. This LSM simulates soil moisture (both liquid and frozen), soil
-temperature, skin temperature, snow depth, snow water equivalent (SWE),
-snow density, canopy water content, and the energy flux and water flux
-terms of the surface energy balance and surface water balance. Noah LSM
-has been extensively evaluated in both the offline mode and the coupled
-mode. More detailed descriptions of Noah physics and developments are
-presented by :cite:t:`EkEtAl2003` 2003 and :cite:t:`KorenEtAl1999` 1999.
-
-Noah-MP is currently used operationally by the NOAA National Water Model
-(NWM), which is built upon the legacy of the Noah model, but with 
-multiple new options for selected processes, including: 
-   
-   #. a separated vegetation canopy accounting for vegetation effects on surface energy and water balances, 
-   #. a modified two-stream approximation scheme to include the effects of vegetation canopy gaps that vary with solar zenith angle and the canopy 3-D structure on radiation transfer, 
-   #. a 3-layer physically-based snow model, 
-   #. a more permeable frozen soil by separating a grid cell into a permeable fraction and impermeable fraction, 
-   #. a simple groundwater model with a TOPMODEL-based runoff scheme, and 
-   #. a short-term leaf phenology model.
-
-.. COMMENT: Is this section about the National Water Model relevant? It's not part of UFS, is it? 
-
-Multiple parameterizations are the key to treating
-hydrology-snow-vegetation processes in a single land modeling framework,
-and structural differences improve performance over heterogeneous
-surfaces. In addition, Noah-MP LSM enables a modular framework for
-diagnosing differences in process representation, facilitating ensemble
-forecasts and uncertainty quantification, and choosing process
-presentations appropriate for the application. On the basis of the
-modified Noah, the developers designed options of schemes for leaf
-dynamics, radiation transfer, stomatal resistance, soil moisture stress
-factor for stomatal resistance, aerodynamic resistance, runoff,
-snowfall, snow surface albedo, supercooled liquid water in frozen soil,
-and frozen soil permeability, etc. A collaborative effort among NCAR,
-NCEP, NASA, and university groups has been established to develop and
-improve the community Noah-MP LSM. Details about the model's physical
-parameterizations can be found in :cite:t:`NiuEtAl2011`.
+Noah-MP has been implemented in the UFS via the :term:`CCPP` physics package and 
+is currently being tested for operational use in GFSv17 and RRFS v2. Noah-MP has 
+also been used operationally in the NOAA National Water Model (NWM) since 2016. 
 
 Disclaimer 
 *************
