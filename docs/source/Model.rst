@@ -32,7 +32,7 @@ Clone the Repository
 
       mkdir land-da
       cd land-da
-      git clone -b feature/release-v1.beta2 --recursive https://github.com/NOAA-EPIC/land-offline_workflow.git
+      git clone -b release/public-v1.0.0 --recursive https://github.com/NOAA-EPIC/land-offline_workflow.git
 
 
 .. _GetData:
@@ -44,12 +44,10 @@ From the ``land-da`` directory, users should download the data required to run t
 
 .. code-block:: console
 
-   wget https://epic-sandbox-srw.s3.amazonaws.com/landda-data-2016.tar.gz
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/landda-data-2016.tar.gz
    tar xvfz landda-data-2016.tar.gz
 
 The data will be located in a directory called ``inputs``.
-
-.. COMMENT: Check name of directory. 
 
 Build the Land DA System
 ==========================
@@ -62,10 +60,6 @@ Build the Land DA System
       source <modulefiles>
 
    where ``<modulefiles>`` is either ``orion.modules`` or ``hera.modules``.
-
-   .. COMMENT: Need to make sure a hera.modules is there! 
-      Hera EPICHOME is: /scratch1/NCEPDEV/nems/role.epic  
-
 
 #. Create and navigate to a ``build`` directory. 
 
@@ -119,16 +113,16 @@ the forcing initial conditions file (``ufs-land_C96_init_fields_1hr.nc``),
 and the model configuration file (``ufs-land.namelist.noahmp``). 
 These files and their parameters are described in the following subsections. 
 They are publicly available as part of a tar file with Land DA data. 
-Users can download the data and untar the file via the command line:
+Users can download the data and untar the file via the command line, replacing 
+``{YEAR}`` with the year for the desired data. Release data is currently 
+available for 2016 and 2020:
 
 .. _TarFile:
 
 .. code-block:: console
    
-   wget https://epic-sandbox-srw.s3.amazonaws.com/land-da-data.tar.gz
-   tar xvfz land-da-data.tar.gz
-
-.. COMMENT: Change link/path after building S3 Bucket
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/landda-data-{YEAR}.tar.gz
+   tar xvfz landda-data-{YEAR}.tar.gz
 
 Static File (``ufs-land_C96_static_fields.nc``)
 =================================================
@@ -167,11 +161,13 @@ The static file is available in the ``land-release`` :ref:`tar file above <TarFi
    +---------------------------+------------------------------------------+
    | z0_monthly                | monthly ground roughness length          |
    +---------------------------+------------------------------------------+
-   | cube_tile                 |                                          |
+   | cube_tile                 | FV3 tile where the grid is located       |
    +---------------------------+------------------------------------------+
-   | cube_i                    |                                          |
+   | cube_i                    | i-location in the FV3 tile where the     |
+   |                           | grid is located                          |
    +---------------------------+------------------------------------------+
-   | cube_j                    |                                          |
+   | cube_j                    | j-location in the FV3 tile where the     |
+   |                           | grid is located                          |
    +---------------------------+------------------------------------------+
    | latitude                  | latitude                                 |
    +---------------------------+------------------------------------------+
@@ -206,7 +202,7 @@ Forcing Initial Conditions File (``ufs-land_C96_init_fields_1hr.nc``)
 Land DA currently only supports snow DA. 
 The forcing initial conditions file includes specific information on location, time, 
 soil layers, and other variables that are required for the UFS land snow DA cycling. 
-The data can be provided in :term:`netCDF` format.
+The data must be provided in :term:`netCDF` format.
 
 The forcing initial conditions file is available in the ``land-release`` :ref:`tar file above <TarFile>` at the following path:
 
@@ -602,76 +598,68 @@ Forcing Parameters
    Specifies the timestep of forcing in seconds.
 
 ``forcing_type``
-   Specifies the forcing type option. Valid values: ``single-point``
+   Specifies the forcing type option, which describes the frequency and length of forcing in each forcing file. Valid values: ``single-point`` | ``gswp3`` | ``gdas``
 
       +----------------+-----------------------------------------------------+
       | Value          | Description                                         |
       +================+=====================================================+
-      | single-point   |                                                     |
+      | single-point   | All times are in one file                           |
       +----------------+-----------------------------------------------------+
-      |                |                                                     |
+      | gswp3          | three-hourly forcing stored in monthly files        |
       +----------------+-----------------------------------------------------+
-      |                |                                                     |
-      +----------------+-----------------------------------------------------+
-      |                |                                                     |
+      | gdas           | hourly forcing stored in daily files                |
       +----------------+-----------------------------------------------------+
 
 ``forcing_filename``
-   Specifies the forcing file name. 
-   Valid values: ``C96__GDAS_forcing`` | ``C96_GEFS_forcing`` | ``C96_GSWP3_forcing``
+   Specifies the forcing file name prefix. A date will be appended to this prefix. For example: ``C96_ERA5_forcing_2020-10-01.nc``. The prefix merely indicates which grid (``C96``) and source (i.e., GDAS, GEFS) will be used. 
+   Common values include: ``C96_GDAS_forcing_`` | ``C96_ERA5_forcing_`` | ``C96_GEFS_forcing_`` | ``C96_GSWP3_forcing_``
 
-      +-------------------+-----------------------------------------------------+
-      | Value             | Description                                         |
-      +===================+=====================================================+
-      | C96__GDAS_forcing |                                                     |
-      +-------------------+-----------------------------------------------------+
-      | C96_GEFS_forcing  |                                                     |
-      +-------------------+-----------------------------------------------------+
-      | C96_GSWP3_forcing |                                                     |
-      +-------------------+-----------------------------------------------------+
+      +--------------------+--------------------------------------------+
+      | Value              | Description                                |
+      +====================+============================================+
+      | C96_GDAS_forcing_  | GDAS forcing data for a C96 grid           |
+      +--------------------+--------------------------------------------+
+      | C96_ERA5_forcing_  | ERA5 forcing data for a C96 grid           |
+      +--------------------+--------------------------------------------+
+      | C96_GEFS_forcing_  | GEFS forcing data for a C96 grid           |
+      +--------------------+--------------------------------------------+
+      | C96_GSWP3_forcing_ | GSWP3 forcing data for a C96 grid          |
+      +--------------------+--------------------------------------------+
 
-.. COMMENT: Are these variable names correct? They were split over two lines, 
-   and it's not clear whether underscores should be added or removed in some cases...
+.. COMMENT: From Mike: There are no requirements here, these names just help us know what the forcing grid (C96) and source (GDAS) are. For this specific application, we may want to just use the two names that are in the two data buckets (one for GDAS and one for ERA5)
 
 ``forcing_interp_solar``
-   Specifies the interpolation option for solar radiation. Valid values: ``linear``
+   Specifies the interpolation option for solar radiation. Valid values: ``linear`` | ``zenith``
 
-      +------------+-----------------------------------------------------+
-      | Value      | Description                                         |
-      +============+=====================================================+
-      | linear     |                                                     |
-      +------------+-----------------------------------------------------+
-      |            |                                                     |
-      +------------+-----------------------------------------------------+
-      |            |                                                     |
-      +------------+-----------------------------------------------------+
-      |            |                                                     |
-      +------------+-----------------------------------------------------+
+      +------------+-------------------------------------------------------+
+      | Value      | Description                                           |
+      +============+=======================================================+
+      | linear     | Performs a linear interpolation between forcing times |
+      +------------+-------------------------------------------------------+
+      | zenith     | Performs a cosine zenith angle interpolation between  |
+      |            | forcing times                                         |
+      +------------+-------------------------------------------------------+
 
 ``forcing_name_precipitation``
-   Specifies the name of forcing precipitation.
+   Specifies the variable name of forcing precipitation.
 
 ``forcing_name_temperature``
-   Specifies the name of forcing temperature.
+   Specifies the variable name of forcing temperature.
 
 ``forcing_name_specific_humidity``
-   Specifies the name of forcing specific-humidity.
+   Specifies the variable name of forcing specific-humidity.
 
 ``forcing_name_wind_speed``
-   Specifies the name of forcing wind speed.
+   Specifies the variable name of forcing wind speed.
 
 ``forcing_name_pressure``
-   Specifies the name of forcing surface pressure.
+   Specifies the variable name of forcing surface pressure.
 
 ``forcing_name_sw_radiation``
-   Specifies the name of forcing shortwave radiation.
+   Specifies the variable name of forcing shortwave radiation.
 
 ``forcing_name_lw_radiation``
-   Specifies the name of forcing longwave radiation.
-
-.. COMMENT: Are these "forcing_name_*" variables all *file* names? 
-   Or are there specific options that users should be choosing from...?
-   I'm not clear on what these variables are naming. 
+   Specifies the variable name of forcing longwave radiation.
 
 Example of a ``ufs-land.namelist.noahmp`` Entry
 --------------------------------------------------
