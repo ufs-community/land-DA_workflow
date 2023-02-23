@@ -4,7 +4,7 @@
 Land Data Assimilation System 
 ***************************************************
 
-This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which allows the Land DA System to perform cycling model forecasts with DA using the using the JEDI ``fv3-jedi`` bundle for land DA updates.
+This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which utilizes the UFS Noah-MP components and JEDI ``fv3-bundle`` to enable cycled model forecasts.
 
 .. COMMENT: Clarify above!
 
@@ -735,13 +735,13 @@ GHCN files for 2016, 2020, and 2021 are already provided in IODA format. :numref
 
 .. table:: Data Locations on Level 1 Systems
 
-   +-----------+----------------------------------------------------------------------------+
-   | Platform  | Data Path                                                                  |
-   +===========+============================================================================+
-   | Hera      | *Coming soon*                                                              |
-   +-----------+----------------------------------------------------------------------------+
-   | Orion     | /work/noaa/epic-ps/role-epic-ps/landda/inputs/DA/snow_depth/GHCN/data_proc |
-   +-----------+----------------------------------------------------------------------------+
+   +-----------+-----------------------------------------------------------------------------+
+   | Platform  | Data Path                                                                   |
+   +===========+=============================================================================+
+   | Hera      | /scratch1/NCEPDEV/nems/role.epic/landda/inputs/DA/snow_depth/GHCN/data_proc |
+   +-----------+-----------------------------------------------------------------------------+
+   | Orion     | /work/noaa/epic-ps/role-epic-ps/landda/inputs/DA/snow_depth/GHCN/data_proc  |
+   +-----------+-----------------------------------------------------------------------------+
 
 
 In each experiment, the ``DA_config`` file sets the name of the experiment configuration file. This configuration file is typically named ``settings_DA_test``. Before assimilation, if "GHCN" was specified as the observation type in the ``DA_config`` file, the ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` file corresponding to the specified cycle date is soft-linked to the JEDI working directory (``${JEDIWORKDIR}``) with a naming-convention change (i.e., ``GHCN_${YYYY}${MM}${DD}${HH}.nc``). Here, the GHCN IODA file is appended with the cycle hour, ``${HH}`` which is extracted from the ``${STARTDATE}`` variable defined in the relevant ``DA_config`` file. 
