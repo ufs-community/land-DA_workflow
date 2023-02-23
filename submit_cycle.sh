@@ -1,6 +1,6 @@
 #!/bin/bash  
 #SBATCH --job-name=offline_noahmp
-#SBATCH --account=marine-cpu
+#SBATCH --account=da-cpu
 #SBATCH --qos=debug
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
