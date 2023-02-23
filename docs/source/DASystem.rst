@@ -1247,14 +1247,14 @@ Parameters for ``submit_cycle.sh``
    Specifies the length of each forecast in hours.
 
 ``atmos_forc``
-   Specifies the directory location of the atmospheric forcing files. 
-
-   .. COMMENT: Is this a file? What is this?
+   Specifies the name of the atmospheric forcing data. Valid values include: ``GDAS`` | ``ERA5``
 
 ``RES``
    Specifies the resolution of FV3. Valid values: ``C96``
 
-   .. COMMENT: Check valid values!
+   .. note:: 
+
+      Other resolutions are possible but not supported for this release. 
 
 ``TPATH``
    Specifies the path to the orography files.
