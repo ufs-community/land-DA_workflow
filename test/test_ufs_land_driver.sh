@@ -8,6 +8,9 @@ project_source_dir=$2
 # Export runtime env. variables
 source ${project_source_dir}/test/runtime_vars.sh ${project_binary_dir} ${project_source_dir}
 
+# set baseline dir
+TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector"}
+
 # compute the restart frequency, run_days and run_hours
 FREQ=$(( 3600 * $FCSTHR ))
 RDD=$(( $FCSTHR / 24 ))
@@ -55,4 +58,13 @@ if [[ -e "./ufs_land_restart.${nYY}-${nMM}-${nDD}_${nHH}-00-00.nc" ]]; then
 else
     echo "run fcst failed"
     exit 10
+fi
+
+# check model rst with baseline
+echo "============================= baseline check"
+cmp ./ufs_land_restart.${nYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${TEST_BASEDIR}/ufs_land_restart_back.${nYY}-${nMM}-${nDD}_${nHH}-00-00.nc
+
+if [[ $? != 0 ]]; then
+    echo "baseline check failed!"
+    exit 20
 fi

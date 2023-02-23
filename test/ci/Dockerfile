@@ -12,8 +12,9 @@ COPY . $HOME/land-offline_workflow
 # set env vars
 ENV LANDDA_INPUTS=$HOME/landda-data/inputs
 ENV EPICHOME=/opt
-ENV JEDI_INSTALL=$EPICHOME
+ENV JEDI_INSTALL=${EPICHOME}
+ENV TEST_BASEDIR=${EPICHOME}/landda-data/cycle_land/DA_GHCN_test/mem000/restarts/vector
 
 #build & unit testing
 WORKDIR $HOME/land-offline_workflow
-RUN source /opt/spack-stack/.bashenv; mkdir build; cd build; pwd; ecbuild ..; make -j2; ctest --stop-on-failure
+RUN source /opt/spack-stack/.bashenv; mkdir build; cd build; pwd; ecbuild ..; make -j2; ctest -V --stop-on-failure
