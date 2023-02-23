@@ -23,8 +23,6 @@ if [[ ${USE_SINGULARITY} =~ yes ]]; then
   export SINGULARITYBIN=`which singularity`
   sed -i 's/singularity exec/${SINGULARITYBIN} exec/g' run_container_executable.sh
 fi
-#forcing options: gdas, gswp3, gefs_ens
-export atmos_forc=gdas
 
 #Location of observations for DA
 export OBSDIR=${LANDDA_INPUTS}/DA
