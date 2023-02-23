@@ -102,7 +102,7 @@ The UFS Land Model requires multiple input files to run: static datasets
 data), initial and boundary condition files, and model configuration
 files (such as namelists). Please see the `Noah-MP User's
 Guide <https://www.jsg.utexas.edu/noah-mp/files/Users_Guide_v0.pdf>`__
-for a detailed description of how to run the Noah-MP model.
+for a detailed technical description of how to run the Noah-MP model.
 
 .. COMMENT: We talk about "statics datasets" above but then a single 
    "static file" below, which could be confusing.
@@ -131,13 +131,13 @@ The static file includes the specific information on location, time,
 soil layers, and other parameters that are required for Noah-MP to run. The
 data can be provided in :term:`netCDF` format.
 
-The static file is available in the ``land-release`` :ref:`tar file above <TarFile>` at the following path:
+The static file is available in the ``inputs`` :ref:`tar file above <TarFile>` at the following path:
 
 .. code-block:: 
 
-   land-release/forcing/C96/static/ufs-land_C96_static_fields.nc
+   inputs/forcing/<source>/static/ufs-land_C96_static_fields.nc
 
-.. COMMENT: Change link/path after building S3 Bucket
+where ``<source>`` is either ``GDAS`` or ``ERA5``. 
 
 .. table:: Configuration variables specified in the static file (ufs-land_C96_static_fields.nc)
 
@@ -194,8 +194,6 @@ The static file is available in the ``land-release`` :ref:`tar file above <TarFi
    | soil_level_thickness      | soil level thickness                     |
    +---------------------------+------------------------------------------+
 
-.. COMMENT: Need description for cube_tile, cube_i, and cube_j
-
 Forcing Initial Conditions File (``ufs-land_C96_init_fields_1hr.nc``)
 ========================================================================
 
@@ -208,10 +206,11 @@ The forcing initial conditions file is available in the ``land-release`` :ref:`t
 
 .. code-block:: 
 
-   land-release/forcing/C96/init/ufs-land_C96_init_fields_1hr.nc
+   inputs/forcing/GDAS/init/ufs-land_C96_init_fields_1hr.nc
+   inputs/forcing/ERA5/init/ufs-land_C96_init_2010-12-31_23-00-00.nc
 
-.. COMMENT: Change link/path after building S3 Bucket
-
+.. COMMENT: Check!
+   where ``<source>`` is either ``GDAS`` or ``ERA5``. 
 
 .. table:: Configuration variables specified in the initial forcing file (ufs-land_C96_init_fields_1hr.nc)
 
@@ -257,15 +256,13 @@ Run Setup Parameters
 ----------------------
 
 ``static_file``
-   Specifies the UFS land static file.
+   Specifies the path to the UFS land static file. See the ``template.ufs-noahMP.namelist`` files for default options.
 
 ``init_file``
-   Specifies the UFS land initial condition file.
+   Specifies the path to the UFS land initial condition file. See the ``template.ufs-noahMP.namelist`` files for default options.
 
 ``forcing_dir``
-   Specifies the UFS land forcing directory.
-
-.. COMMENT: Add recommended values for the 3 variables above based on the data we provide (once it has been cleaned up/restructured). 
+   Specifies the path to the UFS land forcing directory. See the ``template.ufs-noahMP.namelist`` files for default options.
 
 ``separate_output``
    Specifies whether to enable a separate output directory. Valid values: ``.false.`` | ``.true.``
@@ -306,7 +303,7 @@ Run Setup Parameters
    Specifies the restart directory.
 
 ``timestep_seconds``
-   Specifies the timestep in seconds.
+   Specifies the land model timestep in seconds.
 
 ``simulation_start``
    Specifies the simulation start time. The form is ``YYYY-MM-DD HH:MM:SS``, where 
@@ -365,7 +362,7 @@ Soil Setup Parameters
 ``soil_level_nodes``
    Specifies the soil level centroids from the surface (in meters).
 
-Noah-MP.4.0.1 Options
+Noah-MP Options
 ------------------------
 
 ``dynamic_vegetation_option``
@@ -626,8 +623,6 @@ Forcing Parameters
       | C96_GSWP3_forcing_ | GSWP3 forcing data for a C96 grid          |
       +--------------------+--------------------------------------------+
 
-.. COMMENT: From Mike: There are no requirements here, these names just help us know what the forcing grid (C96) and source (GDAS) are. For this specific application, we may want to just use the two names that are in the two data buckets (one for GDAS and one for ERA5)
-
 ``forcing_interp_solar``
    Specifies the interpolation option for solar radiation. Valid values: ``linear`` | ``zenith``
 
@@ -661,78 +656,94 @@ Forcing Parameters
 ``forcing_name_lw_radiation``
    Specifies the variable name of forcing longwave radiation.
 
-Example of a ``ufs-land.namelist.noahmp`` Entry
+Example Namelist Entry
 --------------------------------------------------
+
+The ``ufs-land.namelist.noahmp`` should be similar to the following example, which comes from the ``template.ufs-noahMP.namelist.gdas`` file. 
 
 .. code-block:: console
    
    &run_setup
 
-   static_file = “/*/filename.nc”
-   init_file = “/*/filename.nc”
-   forcing_dir = "/ /"
-   separate_output = .true.
-   output_dir = "./noahmp_output/"
-   restart_frequency_s = 86400
-   restart_simulation = .true.
-   restart_date = "XXYYYY-XXMM-XXDD XXHH:00:00"
-   restart_dir = "./restarts/vector/"
-   timestep_seconds = 3600
+      static_file      = "/LANDDA_INPUTS/forcing/gdas/static/ufs-land_C96_static_fields.nc"
+      init_file        = "/LANDDA_INPUTS/forcing/gdas/init/ufs-land_C96_init_fields_1hr.nc"
+      forcing_dir      = "/LANDDA_INPUTS/forcing/gdas/gdas/forcing"
+      
+      separate_output = .false.
+      output_dir       = "./"
 
-   &simulation start and end
-   simulation_start = "2000-01-01 00:00:00" 
-   simulation_end = "1999-01-01 06:00:00" 
+      restart_frequency_s = XXFREQ
+      restart_simulation  = .true.
+      restart_date        = "XXYYYY-XXMM-XXDD XXHH:00:00"
+      restart_dir         = "./"
 
-   run_days = 1 
-   run_hours = 0 
-   run_minutes = 0 
-   run_seconds = 0 
-   run_timesteps = 0 
+      timestep_seconds = 3600
 
-   begloc = 1
-   endloc = 18360
+   ! simulation_start is required
+   ! either set simulation_end or run_* or run_timesteps, priority
+   !   1. simulation_end 2. run_[days/hours/minutes/seconds] 3. run_timesteps
+
+      simulation_start = "2000-01-01 00:00:00"   ! start date [yyyy-mm-dd hh:mm:ss]
+      ! simulation_end   = "1999-01-01 06:00:00"   !   end date [yyyy-mm-dd hh:mm:ss]
+
+      run_days         = XXRDD   ! number of days to run
+      run_hours        = XXRHH   ! number of hours to run
+      run_minutes      = 0       ! number of minutes to run
+      run_seconds      = 0       ! number of seconds to run
+      
+      run_timesteps    = 0       ! number of timesteps to run
+      
+      location_start   = 1
+      location_end     = 18360
+
+   /
 
    &land_model_option
-   land_model = 2 
+      land_model        = 2   ! choose land model: 1=noah, 2=noahmp
+   /
 
    &structure
-   num_soil_levels = 4 
-   forcing_height = 6 
+      num_soil_levels   = 4     ! number of soil levels
+      forcing_height    = 6     ! forcing height [m]
+   /
 
    &soil_setup
-   soil_level_thickness = 0.10, 0.30, 0.60, 1.00 
-   soil_level_nodes = 0.05, 0.25, 0.70, 1.50 
+      soil_level_thickness   =  0.10,    0.30,    0.60,    1.00      ! soil level thicknesses [m]
+      soil_level_nodes       =  0.05,    0.25,    0.70,    1.50      ! soil level centroids from surface [m]
+   /
 
    &noahmp_options
-   dynamic_vegetation_option = 4
-   canopy_stomatal_resistance_option = 2
-   soil_wetness_option = 1
-   runoff_option = 1
-   surface_exchange_option = 3
-   supercooled_soilwater_option = 1
-   frozen_soil_adjust_option = 1
-   radiative_transfer_option = 3
-   snow_albedo_option = 2
-   precip_partition_option = 1
-   soil_temp_lower_bdy_option = 2
-   soil_temp_time_scheme_option = 3
-   thermal_roughness_scheme_option = 2
-   surface_evap_resistance_option = 1
-   glacier_option = 1
+      dynamic_vegetation_option         = 4
+      canopy_stomatal_resistance_option = 2
+      soil_wetness_option               = 1
+      runoff_option                     = 1
+      surface_exchange_option           = 3
+      supercooled_soilwater_option      = 1
+      frozen_soil_adjust_option         = 1
+      radiative_transfer_option         = 3
+      snow_albedo_option                = 2
+      precip_partition_option           = 1
+      soil_temp_lower_bdy_option        = 2
+      soil_temp_time_scheme_option      = 3
+      thermal_roughness_scheme_option   = 2
+      surface_evap_resistance_option    = 1
+      glacier_option                    = 1
+   /
 
    &forcing
-   forcing_timestep_seconds = 10800
-   forcing_type = "gswp3"
-   forcing_filename = "C96_GEFS_forcing\_"
-   forcing_interp_solar = "gswp3_zenith" 
-   forcing_time_solar = "gswp3_average" 
-   forcing_name_precipitation = "precipitationXXMEM"
-   forcing_name_temperature = "temperatureXXMEM"
-   forcing_name_specific_humidity = "specific_humidityXXMEM"
-   forcing_name_wind_speed = "wind_speedXXMEM"
-   forcing_name_pressure = "surface_pressureXXMEM"
-   forcing_name_sw_radiation = "solar_radiationXXMEM"
-   forcing_name_lw_radiation = "longwave_radiationXXMEM"
+      forcing_timestep_seconds       = 3600
+      forcing_type                   = "gdas"
+      forcing_filename               = "C96_GDAS_forcing_"
+      forcing_interp_solar           = "linear"  ! gswp3_zenith or linear
+      forcing_time_solar             = "instantaneous"  ! gswp3_average or instantaneous
+      forcing_name_precipitation     = "precipitation_conserve"
+      forcing_name_temperature       = "temperature"
+      forcing_name_specific_humidity = "specific_humidity"
+      forcing_name_wind_speed        = "wind_speed"
+      forcing_name_pressure          = "surface_pressure"
+      forcing_name_sw_radiation      = "solar_radiation"
+      forcing_name_lw_radiation      = "longwave_radiation"
+   /
 
 
 .. _VectorTileConverter:
@@ -742,42 +753,9 @@ Vector-to-Tile Converter
 
 The Vector-to-Tile Converter is used for mapping between the vector format
 used by the Noah-MP offline driver, and the tile format used by the UFS
-atmospheric model. This is currently used to prepare input tile files
+atmospheric model. This converter is currently used to prepare input tile files
 for JEDI. Note that these files include only those fields required by
 JEDI, rather than the full restart.
-
-Building and Running the Vector-to-Tile Converter
-====================================================
-
-#. Clone the UFS land model from GitHub:
-
-   .. code-block:: console
-      
-      git clone --recurse-submodules https://github.com/NOAA-PSL/land-vector2tile
-
-#. Navigate to the land vector to tile:
-
-   .. code-block:: console
-
-      cd land-vector2tile
-
-#. Configure
-
-   .. code-block:: console
-
-      ./configure
-
-#. To compile:
-
-   .. code-block:: console
-      
-      make
-
-#. To run:
-
-   .. code-block:: console
-
-      Vector2tile_converter.exe namelist.vector2tile
 
 .. _V2TInputFiles:
 
@@ -785,7 +763,6 @@ Input File
 =============
 
 The input files containing grid information are listed in :numref:`Table %s <GridInputFiles>`:
-
 
 .. _GridInputFiles:
 
@@ -866,7 +843,7 @@ These parameters apply *only* to restart conversion.
 Perturbation Mapping Parameters
 ----------------------------------
 
-These parameters are *only* relevant for perturbation mapping. 
+These parameters are *only* relevant for perturbation mapping in ensembles. Support for ensembles is *not* provided for the Land DA v1.0.0 release. 
 
 ``lndp_layout``
    Specifies the layout options. Valid values: ``1x4`` | ``4x1`` | ``2x2``
@@ -886,21 +863,18 @@ These parameters are *only* relevant for perturbation mapping.
    Specifies the path for input file.
 
 ``output files``
-   Specifies the path for output file
+   Specifies the path for output file.
 
 ``lndp_var_list``
    Specifies the land perturbation variable options. Valid values: ``vgf`` | ``smc``
 
-      +-------+-----------------------------------------------------+
-      | Value | Description                                         |
-      +=======+=====================================================+
-      | vgf   |                                                     |
-      +-------+-----------------------------------------------------+
-      | smc   |                                                     |
-      +-------+-----------------------------------------------------+
-      |       |                                                     |
-      +-------+-----------------------------------------------------+
-
+      +-------+------------------------------------------+
+      | Value | Description                              |
+      +=======+==========================================+
+      | vgf   | Perturbs the vegetation green fraction   |
+      +-------+------------------------------------------+
+      | smc   | Perturbs the soil moisture               |
+      +-------+------------------------------------------+
 
 Example of a ``namelist.vector2tile`` Entry
 ----------------------------------------------
