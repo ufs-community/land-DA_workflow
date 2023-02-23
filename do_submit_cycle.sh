@@ -41,23 +41,7 @@ if [ ${#unset_envars[@]} -ne 0 ]; then
 fi
 
 ############################
-# check that a valid account for job submission
-# is set in submit_cycle.sh
-
-user_accounts=$(echo $(sacctmgr show assoc where user=$USER format=account) | sed 's|.*--- \(.*\)|\1|')
-preset_account=$(grep '#SBATCH --account=' submit_cycle.sh | cut -d= -f2)
-
-# if the account set in submit_cycle matches any of ${user_accounts}, continue;
-# if not, esuggest a compute account to which the user has access and exit.
-if echo "$user_accounts" | grep -q -w "${preset_account}"; then
-   echo "Account for sbatch submission set to ${preset_account}."
-else
-    echo "Warning: You don't have access to the ${preset_account} compute account. You might try setting the #SBATCH --account in submit_cycle.sh to one of the following accounts instead before re-submitting: ${user_acceunts}."
-    exit 1
-fi
-
-############################
-# check that modules are loaded in the environment 
+# check that modules are loaded in the environment
 
 ${CYCLEDIR}/module_check.sh
 
@@ -65,7 +49,23 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 
-echo "All modules loaded! Continuing."
+############################
+# check that a valid account for job submission
+# is set in submit_cycle.sh (only on Orion/Hera)
+
+if [[ ${HOSTNAME} == *"Orion"* || ${HOSTNAME} == *"hfe"* ]]; then
+  user_accounts=$(echo $(sacctmgr show assoc where user=$USER format=account) | sed 's|.*--- \(.*\)|\1|')
+  preset_account=$(grep '#SBATCH --account=' submit_cycle.sh | cut -d= -f2)
+
+  # if the account set in submit_cycle matches any of ${user_accounts}, continue;
+  # if not, esuggest a compute account to which the user has access and exit.
+  if echo "$user_accounts" | grep -q -w "${preset_account}"; then
+    echo "Account for sbatch submission set to ${preset_account}."
+  else
+    echo "Warning: You don't have access to the ${preset_account} compute account. You might try setting the #SBATCH --account in submit_cycle.sh to one of the following accounts instead before re-submitting: ${user_acceunts}."
+    exit 1
+  fi
+fi
 
 ############################
 # set executables
