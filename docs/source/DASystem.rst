@@ -614,9 +614,9 @@ Observation Types
 IMS Snow and Ice Coverage
 ----------------------------
 
-The Land DA System utilizes snow and ice coverage observations derived from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`__). The IMS includes data retrieved by several different platforms using several different sensors (see `here <https://nsidc.org/data/g02156/versions/1#anchor-1>`__ for specifics). 
+The Land DA System utilizes snow and ice coverage observations derived from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`__). The IMS includes data retrieved by several different platforms using several different sensors (see `here <https://nsidc.org/data/g02156/versions/1>`__ for specifics). 
 
-The USNIC IMS provides daily analyses of Northern Hemisphere snow and ice coverage at 1-km and 4-km resolutions in ASCII, GRIB, and GeoTIFF format. The geographic domain covered by the data is 0-90ºN and 180ºE to -180ºW. According to the :cite:t:`NSIDC2008`, "Data are in a polar stereographic projection centered at 90° N with the vertical longitude from the Pole at 80° W and the standard parallel at 60° N." For ingestion into the Land DA System, the 4-km analyses (6144 x 6144 grid cells) in ASCII format are first converted to :term:`netCDF` format (``.nc``) and then processed by JCSDA's JEDI IODA component. (Specifically, the Land DA example forecast uses ``ims2016002_4km_v1.3.nc``, which was converted from ``NIC.IMS_v3_201600200_4km.asc``). The IMS snow and ice cover netCDF files contain the following primary fields (:cite:t:`NSIDC2008`, p. 9): 
+The USNIC IMS provides daily analyses of Northern Hemisphere snow and ice coverage at 1-km and 4-km resolutions in ASCII, GRIB, and GeoTIFF format. The geographic domain covered by the data is 0-90ºN and 180ºE to -180ºW. According to the :cite:t:`NSIDC2008`, "Data are in a polar stereographic projection centered at 90° N with the vertical longitude from the Pole at 80° W and the standard parallel at 60° N." For ingestion into the Land DA System, the 4-km analyses (6144 x 6144 grid cells) in ASCII format are first converted to :term:`netCDF` format (``.nc``) and then processed by JEDI's IODA component. (Specifically, the Land DA example forecast uses ``ims2016002_4km_v1.3.nc``, which was converted from ``NIC.IMS_v3_201600200_4km.asc``). The IMS snow and ice cover netCDF files contain the following primary fields (:cite:t:`NSIDC2008`, p. 9): 
 
    * ``IMS_Surface_Values``: The surface types in the IMS product: open water, land, sea/lake ice, and snow cover. 
       
@@ -634,7 +634,7 @@ The USNIC IMS provides daily analyses of Northern Hemisphere snow and ice covera
       | 4         | Snow-Covered Land        |
       +-----------+--------------------------+
 
-   * ``projection``: Projection description for the data
+   * ``projection``: Projection description for the data.
    * ``time``: The time stamp for the data in seconds since 1970-01-01T00:00:00Z. This is the 00Z reference time. Note that products are nowcasted to be valid specifically at the time given here. 
    * ``x``: X coordinate of grid cell. Values, in meters, are the centers of the grid cells.
    * ``y``: Y coordinate of grid cell. Values, in meters, are the centers of the grid cells.
@@ -672,7 +672,7 @@ The IODA-formatted GHCN files are structured as follows (using 20160701 as an ex
       int nlocs(nlocs) ;
          nlocs:suggested_chunk_dim = 7573LL ;
 
-   // global attributes:
+      // global attributes:
          string :_ioda_layout = "ObsGroup" ;
          :_ioda_layout_version = 0 ;
          string :converter = "ghcn_snod2ioda_newV2.py" ;
@@ -711,7 +711,7 @@ The IODA-formatted GHCN files are structured as follows (using 20160701 as an ex
             totalSnowDepth:_FillValue = 9.96921e+36f ;
             string totalSnowDepth:coordinates = "longitude latitude" ;
             string totalSnowDepth:units = "mm" ;
-   } // group ObsValue
+      } // group ObsValue
 
    group: PreQC {
       variables:
@@ -721,7 +721,7 @@ The IODA-formatted GHCN files are structured as follows (using 20160701 as an ex
       } // group PreQC
    }
 
-The primary observation variable is "totalSnowDepth", which, along with the metadata fields of "datetime", "latitude", "longitude", and "height" is defined along the ``nlocs`` dimension. Also present are "ObsError" and "PreQC" values corresponding to each  "totalSnowDepth" measurement on ``nlocs``. These values were attributed during the IODA conversion step. The magnitude of ``nlocs`` varies between files; this is due to the fact that the number of stations reporting snow depth observations for a given day can vary in the GHCN.
+The primary observation variable is ``totalSnowDepth``, which, along with the metadata fields of ``datetime``, ``latitude``, ``longitude``, and ``height`` is defined along the ``nlocs`` dimension. Also present are ``ObsError`` and ``PreQC`` values corresponding to each ``totalSnowDepth`` measurement on ``nlocs``. These values were attributed during the IODA conversion step. The magnitude of ``nlocs`` varies between files; this is due to the fact that the number of stations reporting snow depth observations for a given day can vary in the GHCN.
 
 Observation Location and Processing
 ======================================
@@ -738,7 +738,7 @@ GHCN files for 2016, 2020, and 2021 are already provided in IODA format. :numref
    +-----------+----------------------------------------------------------------------------+
    | Platform  | Data Path                                                                  |
    +===========+============================================================================+
-   | Hera      |                                                                            |
+   | Hera      | *Coming soon*                                                              |
    +-----------+----------------------------------------------------------------------------+
    | Orion     | /work/noaa/epic-ps/role-epic-ps/landda/inputs/DA/snow_depth/GHCN/data_proc |
    +-----------+----------------------------------------------------------------------------+
@@ -895,7 +895,7 @@ After conversion into the IODA format, the new fields/variables are written to n
          float longitude(nlocs) ;
             longitude:_FillValue = 9.96921e+36f ;
             string longitude:units = "degrees_east" ;
-   } // group MetaData
+      } // group MetaData
 
    group: ObsError {
       variables:
@@ -907,7 +907,7 @@ After conversion into the IODA format, the new fields/variables are written to n
             totalSnowDepth:_FillValue = -999.f ;
             string totalSnowDepth:coordinates = "longitude latitude" ;
             string totalSnowDepth:units = "mm" ;
-   } // group ObsError
+      } // group ObsError
 
    group: ObsValue {
       variables:
@@ -919,7 +919,7 @@ After conversion into the IODA format, the new fields/variables are written to n
             totalSnowDepth:_FillValue = -999.f ;
             string totalSnowDepth:coordinates = "longitude latitude" ;
             string totalSnowDepth:units = "mm" ;
-   } // group ObsValue
+      } // group ObsValue
 
    group: PreQC {
       variables:
@@ -931,7 +931,7 @@ After conversion into the IODA format, the new fields/variables are written to n
             totalSnowDepth:_FillValue = -999 ;
             string totalSnowDepth:coordinates = "longitude latitude" ;
             string totalSnowDepth:units = "unitless" ;
-   } // group PreQC
+      } // group PreQC
    }
 
 .. COMMENT: Check spacing/indentation
