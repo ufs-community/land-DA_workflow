@@ -809,7 +809,7 @@ IMS
 Pre-processed/Raw Observations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The raw IMS observation file(s) (already in netCDF) for the Land DA System are located in ``/inputs/DA/snow_ice_cover/IMS/2016`` (``inputs`` is the top-level directory in the ``landda-data-2016.tar.gz`` tarball from the `Land DA Data Bucket <https://epic-sandbox-srw.s3.amazonaws.com/landda-data-2016.tar.gz>`__). 
+The raw IMS observation file(s) (already in netCDF) for the Land DA System are located in ``/inputs/DA/snow_ice_cover/IMS/2016`` (``inputs`` is the top-level directory in the ``landda-data-2016.tar.gz`` tarball from the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html#current_land_da_release_data/>`__). 
 
 Processing steps in ``do_landDA.sh``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
