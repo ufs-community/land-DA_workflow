@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5. Glossary &mdash; UFS Offline Land DA Develop Branch Documentation documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="4. Land Data Assimilation System" href="DASystem.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            UFS Offline Land DA
+          </a>
+              <div class="version">
+                develop
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TechnicalOverview.html">2. Technical Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Model.html">3. Noah-MP Land Surface Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DASystem.html">4. Land Data Assimilation System</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UFS Offline Land DA</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">5. </span>Glossary</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Glossary.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="glossary">
+<span id="id1"></span><h1><span class="section-number">5. </span>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline"></a></h1>
+<dl class="glossary">
+<dt id="term-ccpp">CCPP</dt><dd><p>The <a class="reference external" href="https://dtcenter.org/community-code/common-community-physics-package-ccpp">Common Community Physics Package</a> is a forecast-model agnostic, vetted collection of code containing atmospheric physical parameterizations and suites of parameterizations for use in Numerical Weather Prediction (NWP) along with a framework that connects the physics to the host forecast model.</p>
+</dd>
+<dt id="term-container">container</dt><dd><p><a class="reference external" href="https://www.docker.com/resources/what-container">Docker</a> describes a container as “a standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another.”</p>
+</dd>
+<dt id="term-cycle">cycle</dt><dd><p>An hour of the day on which a forecast is started. In the Land DA System, is usually follows YYYYMMDD-HHmmss format.</p>
+</dd>
+<dt id="term-data-assimilation">data assimilation</dt><dd><p>One of the major sources of error in weather and climate forecasts is uncertainty related to the initial conditions that are used to generate future predictions. Even the most precise instruments have a small range of unavoidable measurement error, which means that tiny measurement errors (e.g., related to atmospheric conditions and instrument location) can compound over time. These small differences result in very similar forecasts in the short term (i.e., minutes, hours), but they cause widely divergent forecasts in the long term. Errors in weather and climate forecasts can also arise because models are imperfect representations of reality. Data assimilation systems seek to mitigate these problems by combining the most timely observational data with a “first guess” of the atmospheric state (usually a previous forecast) and other sources of data to provide a “best guess” analysis of the atmospheric state to start a weather or climate simulation. When combined with an “ensemble” of model runs (many forecasts with slightly different conditions), data assimilation helps predict a range of possible atmospheric states, giving an overall measure of uncertainty in a given forecast.</p>
+</dd>
+<dt id="term-forcing-data">forcing data</dt><dd><p>In coupled mode, data that are generated by one component of a model can be fed into another component to provide required input describing the state of the earth system. When models are run in offline, or “uncoupled” mode, the model does not receive this input from another active component, so “forcing” files are provided. These may consist of observational data or data gathered when running other components separately.</p>
+</dd>
+<dt id="term-fv3">FV3</dt><dd><p>The Finite-Volume Cubed-Sphere dynamical core (dycore). Developed at NOAA’s <a class="reference external" href="https://www.gfdl.noaa.gov/fv3/">Geophysical Fluid Dynamics Laboratory</a> (GFDL), it is a scalable and flexible dycore capable of both hydrostatic and non-hydrostatic atmospheric simulations. It is the dycore used in the UFS Weather Model.</p>
+</dd>
+<dt id="term-jedi">JEDI</dt><dd><p>The Joint Effort for Data assimilation Integration (<a class="reference external" href="https://www.jcsda.org/jcsda-project-jedi">JEDI</a>) is a unified and versatile data assimilation (DA) system for Earth System Prediction. It aims to enable efficient research and accelerated transition from research to operations by providing a framework that takes into account all components of the Earth system in a consistent manner. The JEDI software package can run on a variety of platforms and for a variety of purposes, and it is designed to readily accommodate new atmospheric and oceanic models and new observation systems. The <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/">JEDI User’s Guide</a> contains extensive information on the software.</p>
+<p>JEDI is developed and distributed by the <a class="reference external" href="https://www.jcsda.org/">Joint Center for Satellite Data Assimilation</a>, a multi-agency research center hosted by the University Corporation for Atmospheric Research (<a class="reference external" href="https://www.ucar.edu/">UCAR</a>). JCSDA is dedicated to improving and accelerating the quantitative use of research and operational satellite data in weather, ocean, climate, and environmental analysis and prediction systems.</p>
+</dd>
+<dt id="term-hpc">HPC</dt><dd><p>High-Performance Computing.</p>
+</dd>
+<dt id="term-mpi">MPI</dt><dd><p>MPI stands for Message Passing Interface. An MPI is a standardized communication system used in parallel programming. It establishes portable and efficient syntax for the exchange of messages and data between multiple processors that are used by a single computer program. An MPI is required for high-performance computing (HPC) systems.</p>
+</dd>
+<dt id="term-netcdf">netCDF</dt><dd><p>NetCDF (<a class="reference external" href="https://www.unidata.ucar.edu/software/netcdf/">Network Common Data Form</a>) is a file format and community standard for storing multidimensional scientific data. It includes a set of software libraries and machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.</p>
+</dd>
+<dt id="term-nwp">NWP</dt><dd><p>Numerical Weather Prediction (NWP) takes current observations of weather and processes them with computer models to forecast the future state of the weather.</p>
+</dd>
+<dt id="term-spack">Spack</dt><dd><p><a class="reference external" href="https://spack.readthedocs.io/en/latest/">Spack</a> is a package management tool designed to support multiple versions and configurations of software on a wide variety of platforms and environments. It was designed for large supercomputing centers, where many users and application teams share common installations of software on clusters with exotic architectures.</p>
+</dd>
+<dt id="term-spack-stack">spack-stack</dt><dd><p>The <a class="reference external" href="https://github.com/NOAA-EMC/spack-stack">spack-stack</a> is a collaborative effort between the NOAA Environmental Modeling Center (EMC), the UCAR Joint Center for Satellite Data Assimilation (JCSDA), and the Earth Prediction Innovation Center (EPIC). <em>spack-stack</em> is a repository that provides a <a class="reference internal" href="#term-spack"><span class="xref std std-term">Spack</span></a>-based method for building the software stack required for numerical weather prediction (NWP) tools such as the <a class="reference external" href="https://ufscommunity.org/">Unified Forecast System (UFS)</a> and the <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/">Joint Effort for Data assimilation Integration (JEDI)</a> framework. <em>spack-stack</em> uses the Spack package manager along with custom Spack configuration files and Python scripts to simplify installation of the libraries required to run various applications. The <em>spack-stack</em> can be installed on a range of platforms and comes pre-configured for many systems. Users can install the necessary packages for a particular application and later add the missing packages for another application without having to rebuild the entire stack.</p>
+</dd>
+<dt id="term-ufs">UFS</dt><dd><p>The Unified Forecast System (UFS) is a community-based, coupled, comprehensive Earth modeling system consisting of several applications (apps). These apps span regional to global domains and sub-hourly to seasonal time scales. The UFS is designed to support the <a class="reference internal" href="#term-weather-enterprise"><span class="xref std std-term">Weather Enterprise</span></a> and to be the source system for NOAA’s operational numerical weather prediction applications. For more information, visit <a class="reference external" href="https://ufscommunity.org/">https://ufscommunity.org/</a>.</p>
+</dd>
+<dt id="term-weather-enterprise">Weather Enterprise</dt><dd><p>Individuals and organizations from public, private, and academic sectors that contribute to the research, development, and production of weather forecast products; primary consumers of these weather forecast products.</p>
+</dd>
+</dl>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="DASystem.html" class="btn btn-neutral float-left" title="4. Land Data Assimilation System" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
