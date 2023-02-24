@@ -362,7 +362,8 @@ The ``local ensemble DA:`` section configures the local ensemble DA solver packa
 Output Increment
 ^^^^^^^^^^^^^^^^^^^
 
-The ``output increment:`` section...
+   .. COMMENT:
+      The ``output increment:`` section...
    
    .. COMMENT: Add definition!
 
@@ -469,8 +470,8 @@ The ``obs error:`` section explains how to calculate the observation error covar
 
 ``obs localizations:``
 ````````````````````````
-   
-The ``obs localizations:`` section describes...
+   .. COMMENT:
+      The ``obs localizations:`` section describes...
 
    .. COMMENT: Get def!!!
 
