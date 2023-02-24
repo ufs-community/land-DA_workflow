@@ -12,7 +12,7 @@ source ./release.environment
 ############################
 
 #forcing options: gdas, era5
-export atmos_forc=era5
+export atmos_forc=gdas
 
 # for LETKF, this is size of ensemble.
 # for LETKF-OI pseudo ensemble, or non-ensemble runs use 1 
