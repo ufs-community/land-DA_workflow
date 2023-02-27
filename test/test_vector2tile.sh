@@ -10,6 +10,9 @@ prefix=$4 #bkg or ana
 # Export runtime env. variables
 source ${project_source_dir}/test/runtime_vars.sh ${project_binary_dir} ${project_source_dir}
 
+# set baseline dir
+TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector"}
+
 # set executables
 TEST_EXEC="vector2tile_converter.exe"
 NPROC=1
@@ -56,6 +59,8 @@ case $DIRECTION in
     VECTOR_PATH=junk
     TILE_PATH=./PREFIX/restarts/tile/
     OUTPUT_PATH=./PREFIX/restarts/vector/
+    # if prefix = ana, turn on baseline check
+    [[ ${prefix} == "ana" ]] && BASELINE_CHECK="true"
     ;;
 
   *)
@@ -85,3 +90,14 @@ sed -i -e "s/XXTSTUB/${TSTUB}/g" vector2tile.namelist
 # run test
 echo "============================= calling ${TEST_EXEC}"
 ${MPIRUN} -n ${NPROC} ${EXECDIR}/${TEST_EXEC} vector2tile.namelist
+
+# check anal rst with baseline
+if [[ ${BASELINE_CHECK} == "true" ]]; then
+  echo "============================= baseline check"
+  cmp ./${prefix}/restarts/vector/ufs_land_restart.${YY}-${MM}-${DD}_${HH}-00-00.nc ${TEST_BASEDIR}/ufs_land_restart_anal.${YY}-${MM}-${DD}_${HH}-00-00.nc
+
+  if [[ $? != 0 ]]; then
+      echo "baseline check failed!"
+      exit 20
+  fi
+fi
