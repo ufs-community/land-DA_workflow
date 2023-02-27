@@ -1,85 +1,12 @@
-Script to run cycling DA using JEDI in cube sphere space, and offline Noah-MP model in vector space. 
+# UFS offline Land Data Assimilation System
 
-Clara Draper, Nov, 2021.
+The Unified Forecast System (UFS) is a community-based, coupled, comprehensive Earth modeling system. It is designed to be the source system for NOAA's operational numerical weather prediction applications while enabling research, development, and contribution opportunities for the broader Weather Enterprise. For more information about the UFS, visit the UFS Portal at https://ufscommunity.org/.
 
-History 
-Apr, 2022. Draper:  Moved to PSL repo, restructuring and renaming of repos.
+The UFS includes [multiple applications](https://ufscommunity.org/science/aboutapps/) that support different forecast durations and spatial domains. This repository hosts the source code for the UFS Land Data Assimilation (DA) System. Land DA is an offline version of the Noah Multi-Physics (Noah-MP) land surface model (LSM) used in the UFS Weather Model (WM). Its data assimilation framework uses the Joint Effort for Data assimilation Integration (JEDI) software stack. The offline Noah-MP LSM is a stand-alone, uncoupled model used to execute land surface simulations. In this traditional uncoupled mode, near-surface atmospheric forcing data is required as input forcing. This LSM simulates soil moisture (both liquid and frozen), soil temperature, skin temperature, snow depth, snow water equivalent (SWE), snow density, canopy water content, and the energy flux and water flux terms of the surface energy balance and surface water balance.
 
-#############################
+The Noah-MP LSM has evolved through community efforts to pursue and refine a modern-era LSM suitable for use in the National Centers for Environmental Prediction (NCEP) operational weather and climate prediction models. This collaborative effort continues with participation from entities such as NCAR, NCEP, NASA, and university groups. The development branch of the Land DA System is continually evolving as the system undergoes open development. The latest Land DA release (v1.0.0) represents a snapshot of this continuously evolving system. 
 
-COMPILING and TESTING.
+The Land DA System User's Guide associated with the development branch is at: https://land-da.readthedocs.io/en/develop/, while the guide specific to the Land DA v1.0.0 release can be found at: https://land-da.readthedocs.io/en/release-public-v1.0.0/. Users may download data for use with the most recent release from the [Land DA data bucket](https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html#current_land_da_release_data/). The [Land DA Docker Hub](https://hub.docker.com/r/noaaepic/ubuntu20.04-intel-landda) hosts Land DA containers. These containers package the Land DA System together with all its software dependencies for an easier experience building and running Land DA.
 
-1. Fetch sub-modules.
->git submodule update --init --recursive
+UFS Development Team. (2023, March 2). Unified Forecast System (UFS) Land Data Assimilation System Land Data Assimilation System (Land DA) (Version v1.0.0). Zenodo. https://doi.org/10.5281/zenodo.7675721
 
-2. Compile sub-modules.
-
-2a. 
-> cd vector2tile 
-  then follow instructions in README. 
-> cd .. 
-
-2b. 
-> cd ufs-land-driver
-
-> git submodule update --init (if did not use --recursive flag above) 
-
-> configure 
-   
-  select hera, load indicated modules 
-
-> make 
-
-2c.
-> cd DA_update
-> build_all.sh 
-
-3. Run the test.
-
- in settings_cycle_test check WORKDIR and OUTDIR are OK
- create OUTDIR
- in submit_cycle.sh change #SBATCH --account=gsienkf to point to your own account.
-
-> do_submit_test.sh 
-
-Once completed:
-
-> check_test.sh
-
-RUNNING YOUR OWN EXPERIMENTS 
-
-1. Prepare a settings file, using settings_template. Must fill in all variables, unless otherwise commented. 
-
-2. Set start and end dates in analdates.sh 
-
-3. Make sure there is a restart in your ICSDIR.
-
-restart filename example:ufs_land_restart.2015-09-02_18-00-00.nc 
-ICSDIR points to the experiment directory with the restart. If creating a new dircetory, the structure is: 
-$ICSDIR/output/mem000/restarts/vector/ufs_land_restart.2015-09-02_18-00-00.nc 
-
-4. in submit_cycle.sh change #SBATCH --account=gsienkf to point to your own account.
-
-5. Submit your job 
-
->do_submit_cycle.sh your-settings-filename
-
-#############################
-
-build steps with cmake: jedi stack works ok on orion but need to follow up jedi stack on hera.
-
-1. git clone -b feature/bundle-cmake https://github.com/jkbk2004/land-offline_workflow-1
-
-2. cd land-offline_workflow-1/
-
-3. git submodule update --init --recursive
-
-4. mkdir build
-
-5. source configures/machine.orion.intel
-
-6. cd build/
-
-7. ecbuild ..
-
-8. make -j 1
