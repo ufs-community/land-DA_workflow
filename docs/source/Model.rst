@@ -4,93 +4,10 @@
 Noah-MP Land Surface Model
 ********************************
 
-This chapter provides practical information on building and running the Noah-MP Land Surface Model (LSM). 
-It also contains information on required input files and the Vector-to-Tile Converter.
-For background information on the evolution of the Unified Forecast System (:term:`UFS`) 
-and the Noah-MP Land Surface Model (LSM), see :numref:`Section %s <Background>` of the Introduction. 
+This chapter provides practical information on input files and parameters for the Noah-MP Land Surface Model (LSM). 
+It also contains information on required input files and the Vector-to-Tile Converter component.
+For background information on the Noah-MP Land Surface Model (LSM), see :numref:`Section %s <NoahMP>` of the Introduction. 
 
-.. _BuildRun:
-
-Building and Running the UFS Land Model
-******************************************
-
-
-.. _DownloadCode:
-
-Clone the Repository
-=======================
-
-.. attention::
-
-   To build the Land DA system in a container, continue instead to the Container Chapter. The Land DA container packages together the Land DA system with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform enviroment in which to build and run the SRW App. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Hera, Orion). 
-
-.. COMMENT: Add :numref:`Chapter %s <Container>` when chapter is ready.
-
-#. Create a directory that will be the Land DA root directory (``$LANDDAROOT``). Then clone the UFS Land DA System into it:
-
-   .. code-block:: console
-
-      mkdir land-da
-      cd land-da
-      git clone -b release/public-v1.0.0 --recursive https://github.com/NOAA-EPIC/land-offline_workflow.git
-
-
-.. _GetData:
-
-Get Data
-----------
-
-From the ``land-da`` directory, users should download the data required to run the Land DA test experiment and untar the data. For example:
-
-.. code-block:: console
-
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/landda-data-2016.tar.gz
-   tar xvfz landda-data-2016.tar.gz
-
-The data will be located in a directory called ``inputs``.
-
-Build the Land DA System
-==========================
-
-#. ``cd`` into the workflow directory, and source the modulefiles. 
-
-   .. code-block:: console
-
-      cd land-offline_workflow
-      source <modulefiles>
-
-   where ``<modulefiles>`` is either ``orion.modules`` or ``hera.modules``.
-
-#. Create and navigate to a ``build`` directory. 
-
-   .. code-block:: console
-      
-      mkdir build
-      cd build
-
-#. Run the command to configure the build system.
-
-   .. code-block:: console
-
-      ecbuild -DCMAKE_PREFIX_PATH="$EPICHOME/contrib/ioda-bundle/install/lib64/cmake;$EPICHOME/contrib/fv3-bundle/install/lib64/cmake" ..
-
-#. Build the Land DA system. 
-
-   .. code-block:: console
-
-      make -j 8
-
-   If the code successfully compiles, the console output should end with:
-   
-   .. code-block:: console
-
-      [100%] Built target ufsLandDriver.exe
-   
-   Additionally, the ``build`` directory will contain several files and a ``bin`` subdirectory with three executables: 
-
-      * ``apply_incr.exe``
-      * ``ufsLandDriver.exe``
-      * ``vector2tile_converter.exe``
 
 .. _InputFiles:
 
@@ -107,22 +24,23 @@ for a detailed technical description of how to run the Noah-MP model.
 .. COMMENT: We talk about "statics datasets" above but then a single 
    "static file" below, which could be confusing.
 
+.. COMMENT: Is the above info about data correct?
+
 There are several important files used to specify model parameters: 
 the static file (``ufs-land_C96_static_fields.nc``), 
 the forcing initial conditions file (``ufs-land_C96_init_fields_1hr.nc``), 
 and the model configuration file (``ufs-land.namelist.noahmp``). 
 These files and their parameters are described in the following subsections. 
-They are publicly available as part of a tar file with Land DA data. 
-Users can download the data and untar the file via the command line, replacing 
+They are publicly available withint via the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/>`__. Users can download the data and untar the file via the command line, replacing 
 ``{YEAR}`` with the year for the desired data. Release data is currently 
-available for 2016 and 2020:
+available for 2016 and 2020-2021:
 
 .. _TarFile:
 
 .. code-block:: console
    
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/landda-data-{YEAR}.tar.gz
-   tar xvfz landda-data-{YEAR}.tar.gz
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/landda-input-data-{YEAR}.tar.gz
+   tar xvfz landda-input-data-{YEAR}.tar.gz
 
 Static File (``ufs-land_C96_static_fields.nc``)
 =================================================
@@ -611,17 +529,17 @@ Forcing Parameters
    Specifies the forcing file name prefix. A date will be appended to this prefix. For example: ``C96_ERA5_forcing_2020-10-01.nc``. The prefix merely indicates which grid (``C96``) and source (i.e., GDAS, GEFS) will be used. 
    Common values include: ``C96_GDAS_forcing_`` | ``C96_ERA5_forcing_`` | ``C96_GEFS_forcing_`` | ``C96_GSWP3_forcing_``
 
-      +--------------------+--------------------------------------------+
-      | Value              | Description                                |
-      +====================+============================================+
-      | C96_GDAS_forcing_  | GDAS forcing data for a C96 grid           |
-      +--------------------+--------------------------------------------+
-      | C96_ERA5_forcing_  | ERA5 forcing data for a C96 grid           |
-      +--------------------+--------------------------------------------+
-      | C96_GEFS_forcing_  | GEFS forcing data for a C96 grid           |
-      +--------------------+--------------------------------------------+
-      | C96_GSWP3_forcing_ | GSWP3 forcing data for a C96 grid          |
-      +--------------------+--------------------------------------------+
+      +-----------------------+--------------------------------------------+
+      | Value                 | Description                                |
+      +=======================+============================================+
+      | ``C96_GDAS_forcing_`` | GDAS forcing data for a C96 grid           |
+      +-----------------------+--------------------------------------------+
+      | ``C96_ERA5_forcing_`` | ERA5 forcing data for a C96 grid           |
+      +-----------------------+--------------------------------------------+
+      | ``C96_GEFS_forcing_`` | GEFS forcing data for a C96 grid           |
+      +-----------------------+--------------------------------------------+
+      | ``C96_GSWP3_forcing_``| GSWP3 forcing data for a C96 grid          |
+      +-----------------------+--------------------------------------------+
 
 ``forcing_interp_solar``
    Specifies the interpolation option for solar radiation. Valid values: ``linear`` | ``zenith``
