@@ -62,3 +62,6 @@ if [ $GFSv17 == "YES" ]; then
 else
     export SNOWDEPTHVAR="snwdph"
 fi
+
+# BASELINE TOL
+export TOL=${TOL:-"1e-8"}

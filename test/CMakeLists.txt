@@ -40,7 +40,8 @@ add_test(NAME test_tile2vector
 set_tests_properties(test_tile2vector
     PROPERTIES
     DEPENDS "test_apply_jediincr" 
-    ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS}")
+    ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS};
+                 TOL=$ENV{TOL}")
 
 # test for ufs-land-driver
 add_test(NAME test_land_driver
@@ -49,4 +50,5 @@ add_test(NAME test_land_driver
 set_tests_properties(test_land_driver
     PROPERTIES
     DEPENDS "test_tile2vector"
-    ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS}")
+    ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS};
+                 TOL=$ENV{TOL}")

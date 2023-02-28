@@ -93,11 +93,10 @@ ${MPIRUN} -n ${NPROC} ${EXECDIR}/${TEST_EXEC} vector2tile.namelist
 
 # check anal rst with baseline
 if [[ ${BASELINE_CHECK} == "true" ]]; then
-  echo "============================= baseline check"
-  cmp ./${prefix}/restarts/vector/ufs_land_restart.${YY}-${MM}-${DD}_${HH}-00-00.nc ${TEST_BASEDIR}/ufs_land_restart_anal.${YY}-${MM}-${DD}_${HH}-00-00.nc
-
+  echo "============================= baseline check with tol= ${TOL}"
+  ${project_source_dir}/test/compare.py ./${prefix}/restarts/vector/ufs_land_restart.${YY}-${MM}-${DD}_${HH}-00-00.nc ${TEST_BASEDIR}/ufs_land_restart_anal.${YY}-${MM}-${DD}_${HH}-00-00.nc ${TOL}
   if [[ $? != 0 ]]; then
-      echo "baseline check failed!"
+      echo "baseline check fail!"
       exit 20
   fi
 fi

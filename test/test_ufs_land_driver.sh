@@ -61,10 +61,9 @@ else
 fi
 
 # check model rst with baseline
-echo "============================= baseline check"
-cmp ./ufs_land_restart.${nYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${TEST_BASEDIR}/ufs_land_restart_back.${nYY}-${nMM}-${nDD}_${nHH}-00-00.nc
-
+echo "============================= baseline check with tol= ${TOL}"
+${project_source_dir}/test/compare.py ./ufs_land_restart.${nYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${TEST_BASEDIR}/ufs_land_restart_back.${nYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${TOL}
 if [[ $? != 0 ]]; then
-    echo "baseline check failed!"
+    echo "baseline check fail!"
     exit 20
 fi
