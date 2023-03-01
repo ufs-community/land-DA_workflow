@@ -112,15 +112,15 @@ where ``<source>`` is either ``GDAS`` or ``ERA5``.
    | soil_level_thickness      | soil level thickness                     |
    +---------------------------+------------------------------------------+
 
-Forcing Initial Conditions File (``ufs-land_C96_init_fields_1hr.nc``)
+Initial Condition File (``ufs-land_C96_init_fields_1hr.nc``)
 ========================================================================
 
 Land DA currently only supports snow DA. 
-The forcing initial conditions file includes specific information on location, time, 
-soil layers, and other variables that are required for the UFS land snow DA cycling. 
+The initial condition file includes specific invariant information on location, time, 
+soil layers, and initial state variables that are required for the UFS land snow DA to begin a cycling run. 
 The data must be provided in :term:`netCDF` format.
 
-The forcing initial conditions file is available in the ``land-release`` :ref:`tar file above <TarFile>` at the following path:
+The initial conditions file is available in the ``land-release`` :ref:`tar file above <TarFile>` at the following path:
 
 .. code-block:: 
 
@@ -180,23 +180,22 @@ Run Setup Parameters
    Specifies the path to the UFS land initial condition file. See the ``template.ufs-noahMP.namelist`` files for default options.
 
 ``forcing_dir``
-   Specifies the path to the UFS land forcing directory. See the ``template.ufs-noahMP.namelist`` files for default options.
+   Specifies the path to the UFS land forcing directory where atmospheric forcing files are located. See the ``template.ufs-noahMP.namelist`` files for default options.
 
 ``separate_output``
-   Specifies whether to enable a separate output directory. Valid values: ``.false.`` | ``.true.``
+   Specifies whether to enable the separate output files for each output time. Valid values: ``.false.`` | ``.true.``
 
-      +----------+----------------+
-      | Value    | Description    |
-      +==========+================+
-      | .false.  | do not enable  |
-      +----------+----------------+
-      | .true.   | enable         |
-      +----------+----------------+
+      +----------+---------------------------------------+
+      | Value    | Description                           |
+      +==========+=======================================+
+      | .false.  | do not enable (should only be used    |
+      |          | for single point or short simulations)|
+      +----------+---------------------------------------+
+      | .true.   | enable                                |
+      +----------+---------------------------------------+
 
 ``output_dir``
-   Specifies the output directory.
-
-.. COMMENT: Is this required if "separate_output=.true."?
+   Specifies the output directory where output files will be saved. If ``separate_output=.true.``, but no ``output_dir`` is specified, it will default to the directory where the executable is run.
 
 ``restart_frequency_s``
    Specifies the restart frequency (in seconds) for the UFS land model.
@@ -730,15 +729,18 @@ for restart/perturbation conversion.
    Could use a little clarification.
 
 ``tile_size``
-   Specifies the size of tile
-
-.. COMMENT: What are the units (# grid/tile cells?)? Are there set tile sizes? Or can it be any number?
+   Specifies the size (horizontal resolution) of the FV3 tile. Valid values: ``96``. 
+   
+   .. note:: 
+      
+      * The ``C96`` grid files correspond to approximately 1º latitude/longitude. 
+      * Additional resolutions (e.g., ``192``, ``384``, ``768``) are under development. 
 
 ``tile_path``
-   Specifies the path of tile location
+   Specifies the path to the orographic tile files.
 
 ``tile_fstub``
-   Specifies the file stub for orography files in ``tile_path``. The file stub will be named ``oro_C${RES}`` for atmosphere-only and ``oro_C{RES}.mx100`` for atmosphere and ocean.
+   Specifies the name (file stub) of orographic tile files. The file stub will be named ``oro_C${RES}`` for atmosphere-only and ``oro_C{RES}.mx100`` for atmosphere and ocean. 
 
 Parameters for Restart Conversion
 ------------------------------------
@@ -765,17 +767,6 @@ These parameters are *only* relevant for perturbation mapping in ensembles. Supp
 
 ``lndp_layout``
    Specifies the layout options. Valid values: ``1x4`` | ``4x1`` | ``2x2``
-
-      +-------+-----------------------------------------------------+
-      | Value | Description                                         |
-      +=======+=====================================================+
-      | 1x4   |                                                     |
-      +-------+-----------------------------------------------------+
-      | 4x1   |                                                     |
-      +-------+-----------------------------------------------------+
-      | 2x2   |                                                     |
-      +-------+-----------------------------------------------------+
-
 
 ``lndp_input_file``
    Specifies the path for input file.
