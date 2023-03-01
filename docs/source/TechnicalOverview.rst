@@ -15,7 +15,6 @@ Minimum System Requirements
 Additionally, users will need:
 
    * Disk space: ~23GB (11GB for Land DA container image file, 11GB for Land DA data, and ~1G for staging and output) 
-   * Memory: TBD
    * 6 CPU cores (or option to run with "oversubscribe")
 
 .. COMMENT: Memory?
@@ -37,7 +36,7 @@ The Land DA System requires:
       .. COMMENT: What's the minimum version of Python & NetCDF?
       .. COMMENT: What about Perl, git, curl, wget, Lmod
 
-These software prerequisites are pre-installed in the Land DA :term:`container` and on Level 1 systems (see :ref:`below <LevelsOfSupport>` for details). However, users on other systems will need to install them.
+These software prerequisites are pre-installed in the Land DA :term:`container` and on other Level 1 systems (see :ref:`below <LevelsOfSupport>` for details). However, users on non-Level 1 systems will need to install them.
 
 Before using the Land DA container, users will need to install `Singularity <https://docs.sylabs.io/guides/latest/user-guide/>`__ and an **Intel** MPI (available `free here <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`__). 
 
@@ -49,26 +48,30 @@ Supported Systems for Running Land DA
 
 Four levels of support have been defined for :term:`UFS` applications, and the Land DA system operates under this paradigm: 
 
-* **Level 1** *(Pre-configured)*: Prerequisite software libraries are pre-built and available in a central location; code builds; full testing of model
-* **Level 2** *(Configurable)*: Prerequisite libraries are not available in a centralized location but are expected to install successfully; code builds; full testing of model
-* **Level 3** *(Limited-test platforms)*: Libraries and code build on these systems, but there is limited testing of the model
-* **Level 4** *(Build-only platforms)*: Libraries and code build, no tests with running the model
+* **Level 1** *(Pre-configured)*: Prerequisite software libraries are pre-built and available in a central location; code builds; full testing of model.
+* **Level 2** *(Configurable)*: Prerequisite libraries are not available in a centralized location but are expected to install successfully; code builds; full testing of model.
+* **Level 3** *(Limited-test platforms)*: Libraries and code build on these systems, but there is limited testing of the model.
+* **Level 4** *(Build-only platforms)*: Libraries and code build, but running the model is not tested.
 
 Level 1 Systems
 ==================
 Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and :term:`JEDI`'s fv3-bundle. Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them.
 
-+-----------+------------------+----------------------------------------------------------------------------+
-| Platform  | Compilers        | spack-stack Installation                                                   |
-+===========+==================+============================================================================+
-| Hera      | Intel 18.0.5.274 | /scratch1/NCEPDEV/nems/role.epic/spack-stack/envs/landda-release-1.0-intel |
-+-----------+------------------+----------------------------------------------------------------------------+
-| Orion     | Intel 18.0.5     | /work/noaa/epic-ps/role-epic-ps/spack-stack/envs/landda-release-1.0-intel  |
-+-----------+------------------+----------------------------------------------------------------------------+
-| Container | Intel            | /opt/spack-stack/ (inside the container)                                   |
-+-----------+------------------+----------------------------------------------------------------------------+
-
-.. COMMENT: Add info about Gaea? Also, check compiler information.
++-----------+-----------------------------------+----------------------------------------------------------------------------+
+| Platform  | Compiler/MPI                      | spack-stack & fv3-bundle Installations                                     |
++===========+===================================+============================================================================+
+| Hera      | intel/2022.1.2 /                  | /scratch1/NCEPDEV/nems/role.epic/spack-stack/envs/landda-release-1.0-intel |
+|           |                                   |                                                                            |
+|           | impi/2022.1.2                     | /scratch1/NCEPDEV/nems/role.epic/contrib/fv3-bundle                        |
++-----------+-----------------------------------+----------------------------------------------------------------------------+
+| Orion     | intel/2022.1.2 /                  | /work/noaa/epic-ps/role-epic-ps/spack-stack/envs/landda-release-1.0-intel  |
+|           |                                   |                                                                            |
+|           | impi/2022.1.2                     | /work/noaa/epic-ps/role-epic-ps/contrib/fv3-bundle                         |
++-----------+-----------------------------------+----------------------------------------------------------------------------+
+| Container | intel-oneapi-compilers/2021.8.0 / | /opt/spack-stack/ (inside the container)                                   |
+|           |                                   |                                                                            |
+|           | intel-oneapi-mpi/2021.8.0         | /opt/fv3-bundle (inside the container)                                     |
++-----------+-----------------------------------+----------------------------------------------------------------------------+
 
 Level 2-4 Systems
 ===================
@@ -86,30 +89,36 @@ Directory Structure
 ======================
 
 The main repository for the Land DA System is named ``land-offline_workflow``; 
-it is available on GitHub at https://github.com/NOAA-PSL/land-offline_workflow. 
+it is available on GitHub at https://github.com/NOAA-EPIC/land-offline_workflow/. 
 A number of submodules are nested under the main ``land-offline_workflow`` directory. 
-When the ``land-offline_workflow`` repository is cloned with the 
-``--recurse-submodules`` argument, the basic directory structure will be similar 
-to the example below. Some files and directories have been removed for brevity. 
-
-.. COMMENT: Update GitHub link later to reflect NOAA-EPIC location.
+When the ``release/public-v1.0.0`` branch of the ``land-offline_workflow`` repository 
+is cloned with the ``--recursive`` argument, the basic directory structure will be 
+similar to the example below. Some files and directories have been removed for brevity. 
 
 .. code-block:: console
 
    land-offline_workflow
     ├── DA_update
-    │     ├── IMS_proc
     │     ├── add_jedi_incr
-    │     └── jedi
+    │     ├── jedi/fv3-jedi
+    │     └── do_LandDA.sh
     ├── cmake
     ├── configures
     ├── docs 
     ├── ensemble_pert
+    ├── modulefiles
+    ├── test
     ├── ufs-land-driver
     │     └── ccpp-physics
     ├── vector2tile
     ├── CMakeLists.txt
-    └── README.md
+    ├── README.md
+    ├── LICENSE
+    ├── do_submit_cycle.sh
+    ├── release.environment
+    ├── settings_DA_*
+    ├── submit_cycle.sh
+    └── template.*
 
 Land DA Components
 =====================
@@ -124,7 +133,7 @@ the UFS Land DA System.
    +--------------------------+-----------------------------------------+------------------------------------------------------+
    | Repository Name          | Repository Description                  | Authoritative repository URL                         |
    +==========================+=========================================+======================================================+
-   | land-DA_update           | Contains scripts and components for     | https://github.com/NOAA-PSL/land-DA_update           |
+   | land-DA_update           | Contains scripts and components for     | https://github.com/NOAA-EPIC/land-DA_update          |
    |                          | performing data assimilation (DA)       |                                                      |
    |                          | procedures.                             |                                                      |
    +--------------------------+-----------------------------------------+------------------------------------------------------+
@@ -132,11 +141,7 @@ the UFS Land DA System.
    |                          | JEDI-generated DA increment to UFS      |                                                      |
    |                          | ``sfc_data`` restart                    |                                                      |
    +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | *-- land-IMS_proc*       | Contains code for processing Ice        | https://github.com/NOAA-PSL/land-IMS_proc            |
-   |                          | Mapping Data (IMS) ASCII input files    |                                                      |
-   |                          | on the UFS model grid.                  |                                                      |
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | ufs-land-driver          | Repository for the UFS Land             | https://github.com/barlage/ufs-land-driver           | 
+   | ufs-land-driver          | Repository for the UFS Land             | https://github.com/NOAA-EMC/ufs-land-driver          | 
    |                          | Driver                                  |                                                      |
    +--------------------------+-----------------------------------------+------------------------------------------------------+
    | *-- ccpp-physics*        | Repository for the Common               | https://github.com/NCAR/ccpp-physics                 |
