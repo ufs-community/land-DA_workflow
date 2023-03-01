@@ -13,8 +13,8 @@ This User's Guide is organized as follows:
 
    * This chapter (Introduction) provides background information on the Unified Forecast System (:term:`UFS`) and the NoahMP model. 
    * :numref:`Chapter %s <TechOverview>` (Technical Overview) outlines prerequisites, user support levels, and directory structure. 
-   * :numref:`Chapter %s <BuildRunLandDA>` (Build and Run Instructions) explains how to build and run the Land DA System on :ref:`Level 1 <LevelsOfSupport>` systems (currently Hera and Orion).
-   * :numref:`Chapter %s <Container>` (Containerized Build and Run Option) explains how to build and run the containerized Land DA System on non-Level 1 systems. 
+   * :numref:`Chapter %s <BuildRunLandDA>` (Land DA Workflow [Hera & Orion]) explains how to build and run the Land DA System on :ref:`Level 1 <LevelsOfSupport>` systems (currently Hera and Orion).
+   * :numref:`Chapter %s <Container>` (Land DA Workflow [in a Container]) explains how to build and run the containerized Land DA System on non-Level 1 systems. 
    * :numref:`Chapter %s <Model>` (Model) provides information on input data and configuration parameters in the Noah-MP LSM and its Vector-to-Tile Converter.
    * :numref:`Chapter %s <DASystem>` (DA Framework) provides information on the DA system, required data, and configuration parameters. 
    * :numref:`Chapter %s <Glossary>` (Glossary) lists important terms. 
