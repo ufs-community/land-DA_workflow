@@ -17,8 +17,6 @@ Additionally, users will need:
    * Disk space: ~23GB (11GB for Land DA container image file, 11GB for Land DA data, and ~1G for staging and output) 
    * 6 CPU cores (or option to run with "oversubscribe")
 
-.. COMMENT: Memory?
-
 Software Prerequisites
 ========================
 
@@ -104,8 +102,7 @@ similar to the example below. Some files and directories have been removed for b
     │     └── do_LandDA.sh
     ├── cmake
     ├── configures
-    ├── docs 
-    ├── ensemble_pert
+    ├── docs
     ├── modulefiles
     ├── test
     ├── ufs-land-driver
