@@ -4,10 +4,8 @@
 Noah-MP Land Surface Model
 ********************************
 
-This chapter provides practical information on input files and parameters for the Noah-MP Land Surface Model (LSM). 
-It also contains information on required input files and the Vector-to-Tile Converter component.
+This chapter provides practical information on input files and parameters for the Noah-MP Land Surface Model (LSM) and its Vector-to-Tile Converter component.
 For background information on the Noah-MP Land Surface Model (LSM), see :numref:`Section %s <NoahMP>` of the Introduction. 
-
 
 .. _InputFiles:
 
