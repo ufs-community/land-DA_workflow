@@ -227,6 +227,16 @@ When using a Singularity container, Intel compilers and Intel :term:`MPI` (prefe
 
    module load intel/2022.1.2 impi/2022.1.2
 
+.. note:: 
+
+   :term:`Spack-stack` uses lua modules, which require Lmod to be initialized for the ``module load`` command to work. If for some reason, Lmod is not initialized, users can source the ``init/bash`` file on their system before running the command above. For example, users can modify and run the following command: 
+
+   .. code-block:: console
+
+      source /path/to/init/bash
+   
+   Then they should be able to load the appropriate modules.
+
 .. _ConfigureExptC:
 
 Configure the Experiment
