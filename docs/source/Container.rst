@@ -225,13 +225,13 @@ Run the Container
 
 To run the container, users must:
 
-   #. :ref:`Set up the container <SetUpContainer>`
-   #. :ref:`Allocate a compute node <AllocateComputeNode>`
-   #. :ref:`Submit the experiment <SubmitExpt>`
+   #. :ref:`Set up the container <SetUpContainerC>`
+   #. :ref:`Allocate a compute node <ConfigureExptC>`
+   #. :ref:`Run the experiment <RunExptC>`
 
 .. COMMENT: Update!
 
-.. _SetUpContainer:
+.. _SetUpContainerC:
 
 Set Up the Container
 =======================
@@ -278,6 +278,7 @@ When using a Singularity container, Intel compilers and Intel MPI (``mpiexec`` c
 
    module load intel/2022.1.2 impi/2022.1.2
 
+.. _ConfigureExptC:
 
 Configure the Experiment
 ===========================
@@ -313,4 +314,161 @@ The ``do_submit_cycle.sh`` script will read the ``settings_DA_cycle_*`` file as 
 
    landda_expts/DA_GHCN_test/DA/
    landda_expts/DA_GHCN_test/mem000/restarts/vector/
+
+
+
+.. COMMENT: 
+   .. code-block:: console
+
+      singularity shell -e -B /<local_base_dir>:/<container_dir> /path/to/ubuntu20.04-intel-spack-landda.img
+
+.. COMMENT: What is the -e for?
+
+   .. code-block:: console
+      
+      singularity exec -B /<local_base_dir>:/<container_dir> ./<container_name> cp /opt/ufs-srweather-app/container-scripts/stage-srw.sh .
+
+.. COMMENT:
+
+   All the modules built into the container can be loaded up by sourcing
+   the ``/opt/spack-stack/.bashenv`` file. After you source it, you can run
+   ``module list`` to check:
+
+   .. code-block:: console
+
+   source /opt/spack-stack/.bashenv
+
+   Copy out the land-offline_workflow directory from the container to
+   your host system alongside all the data directories
+
+   .. code-block:: console
+
+      cp -R /opt/land-offline_workflow .
+
+   Exit from the container now (type: exit), and enter into the newly copied land-offline_workflow directory
+
+   .. code-block:: console
+
+   cd land-offline_workflow/
+
+
+
+
+.. COMMENT: Delete? 
+   Copy out the ``land-offline_workflow`` directory from the container to the host file system. 
+
+   .. code-block:: console
+
+      singularity exec $img cp -r /opt/land-offline_workflow .
+
+   Navigate to the new ``land-offline_workflow`` directory before setting environment variables.
+
+   .. code-block:: console
+
+      cd land-offline_workflow
+
+
+
+
+
+
+
+
+
+
+
+
+.. 
+
+   Replace the path to ``ubuntu20.04-intel-spack-landda.img`` with the appropriate path on your system. 
+   Change the ``/<local_base_dir>:/<container_dir>`` with the root of your 
+   current filesystem. This allows you to copy files from the container to 
+   the ``land-release`` directory on your host system.
+
+.. COMMENT: Fix 2nd person
+
+   For example:
+
+   .. code-block:: console
+
+      singularity shell -e -B /lustre:/lustre /lustre/ubuntu20.04-intel-spack-landda.img
+
+   All the modules built into the container can be loaded up by sourcing the ``/opt/spack-stack/.bashenv`` file. After you source it, you can run ``module list`` to check that the modules are available. 
+
+.. SUBMIT CYCLE ACCOUNT --> DA-CPU
+
+.. 
+   .. code-block:: console
+
+      source /opt/spack-stack/.bashenv
+
+   Copy out the ``land-offline_workflow`` directory from the container to your host system alongside all the data directories
+
+   .. code-block:: console
+      
+      cp -r /opt/land-offline_workflow .
+
+   Navigate into the newly copied ``land-offline_workflow`` directory.
+
+   .. code-block:: console
+
+      cd land-offline_workflow/
+
+   Open ``submit_cycle.sh`` and look for the line that starts with ``"export 
+   LANDDAROOT=...."`` Change the path to whatever is just above your 
+   ``land-release`` directory. For example:
+
+   .. code-block:: console
+
+      vi submit_cycle.sh
+      # Change export LANDDAROOT=${LANDDAROOT:-`dirname $dirup`} to:
+      export LANDDAROOT=/Users/Jane.Doe/LandDA
+      :wq
+
+.. COMMENT: 
+   Check whether any of this will be relevant:
+   On `Level 1 <https://github.com/ufs-community/ufs-srweather-app/wiki/Supported-Platforms-and-Compilers>`__ systems, ``<local_base_dir>`` is usually the topmost directory (e.g., ``/lustre``, ``/contrib``, ``/work``, or ``/home``). Additional directories can be bound by adding another ``-B /<local_base_dir>:/<container_dir>`` argument before the name of the container. In general, it is recommended that the local base directory and container directory have the same name. For example, if the host system's top-level directory is ``/user1234``, the user can create a ``user1234`` directory in the container sandbox and then bind it:
+
+   .. code-block:: console
+
+      mkdir <path/to/container>/user1234
+      singularity exec -B /user1234:/user1234 ./ubuntu20.04-intel-srwapp cp /opt/ufs-srweather-app/container-scripts/stage-srw.sh .
+
+   .. attention::
+      Be sure to bind the directory that contains the experiment data! 
+
+   To explore the container and view available directories, users can either ``cd`` into the container and run ``ls`` (if it was built as a sandbox) or run the following commands:
+
+   .. code-block:: console
+
+      singularity shell ./ubuntu20.04-intel-srwapp-develop.img
+      cd /
+      ls 
+
+   The list of directories printed will be similar to this: 
+
+   .. code-block:: console
+
+      bin      discover       lfs   lib     media  run         singularity    usr
+      boot     environment    lfs1  lib32   mnt    sbin        srv            var
+      contrib  etc            lfs2  lib64   opt    scratch     sys            work
+      data     glade          lfs3  libx32  proc   scratch1    tmp
+      dev      home           lfs4  lustre  root   scratch2    u
+
+   Users can run ``exit`` to exit the shell. 
+
+
+
+
+
+.. 
+   | #############################################################################
+   
+
+   
+   New Experiment
+   *****************
+
+   To run a new experiment in the container at a later time, users will need to rerun the commands in :numref:`Section %s <SetUpPythonEnvC>` to reactivate the regional workflow. Then, users can configure a new experiment by updating the environment variables in ``config.yaml`` to reflect the desired experiment configuration. Basic instructions appear in :numref:`Section %s <SetUpConfigFileC>` above, and detailed instructions can be viewed in :numref:`Section %s <UserSpecificConfig>`. After adjusting the configuration file, regenerate the experiment by running ``./generate_FV3LAM_wflow.py``.
+
 

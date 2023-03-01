@@ -14,11 +14,11 @@ Minimum System Requirements
 
 Additionally, users will need:
 
-   * Disk space: TBD 
+   * Disk space: ~23GB (11GB for Land DA container image file, 11GB for Land DA data, and ~1G for staging and output) 
    * Memory: TBD
    * 6 CPU cores (or option to run with "oversubscribe")
 
-.. COMMENT: Disk space: for spack-stack, Data, Land DA repo, running Land DA, etc.
+.. COMMENT: Memory?
 
 Software Prerequisites
 ========================
@@ -30,9 +30,10 @@ The Land DA System requires:
    * Python
    * :term:`NetCDF`
    * `spack-stack <https://spack-stack.readthedocs.io/en/latest/>`__
-   * `FV3 bundle <https://github.com/JCSDA/fv3-bundle/wiki>`__
+   * `FV3-bundle <https://github.com/JCSDA/fv3-bundle/wiki>`__
    * `IODA <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/ioda/index.html>`__ bundle
-
+   * Lmod 
+   
       .. COMMENT: What's the minimum version of Python & NetCDF?
       .. COMMENT: What about Perl, git, curl, wget, Lmod
 
@@ -55,7 +56,7 @@ Four levels of support have been defined for :term:`UFS` applications, and the L
 
 Level 1 Systems
 ==================
-Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack`. Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them.
+Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and JEDI's :term:`fv3-bundle`. Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them.
 
 +-----------+------------------+----------------------------------------------------------------------------+
 | Platform  | Compilers        | spack-stack Installation                                                   |
