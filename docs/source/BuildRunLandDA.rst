@@ -1,8 +1,8 @@
 .. _BuildRunLandDA:
 
-*********************************
-Build & Run the Land DA System 
-*********************************
+************************************
+Land DA Workflow (Hera & Orion)
+************************************
 
 This chapter provides basic instructions for building and running a basic Land DA case for the Unified Forecast System (:term:`UFS`) Land Data Assimilation System (Land DA). This "out-of-the-box" Land DA case builds a weather forecast for January 1-2, 2016. These steps will work on Hera and Orion systems. It is recommended that users on other systems run the containerized version of Land DA. Users may reference :numref:`Chapter %s: Running Land DA in a Container <Container>` for instructions. The Land DA container packages together the Land DA system with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform enviroment in which to build and run the Land DA System. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Hera, Orion). 
 
@@ -17,14 +17,14 @@ This chapter provides basic instructions for building and running a basic Land D
       export LANDDAROOT=`pwd`
 
 #. Get data. On Level 1 NOAA RDHPCS systems (i.e., Hera and Orion), users must can either set the ``LANDDA_INPUTS`` variable to the location of their system's pre-staged data (see :numref:`Table %s <Level1Data>`) or use a soft link to the data. For example, on Hera, users may set: 
+   
+   .. COMMENT: Check whether we can user $EPICHOME at this point!
 
    .. code-block:: console
 
       export LANDDA_INPUTS=/scratch1/NCEPDEV/nems/role.epic/landda/inputs
 
-.. COMMENT: Check whether we can user $EPICHOME at this point!
-
-.. _Level1Data:
+   .. _Level1Data:
 
    .. table:: Level 1 RDHPCS System Data
 

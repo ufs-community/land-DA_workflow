@@ -1,8 +1,8 @@
 .. _Container:
 
-**********************************
-Running Land DA in a Container
-**********************************
+***********************************
+Land DA Workflow (in a Container)
+***********************************
 
 .. attention::
 
@@ -152,7 +152,7 @@ On many NOAA RDHPCS systems, a container named ``ubuntu20.04-intel-spack-landda.
 Non-NOAA RDHPCS Systems
 --------------------------
 
-On other systems, users can build the singularity container from a public :term:`Docker` container image. 
+On other systems, users can build the singularity container from a public Docker :term:`container` image. 
 
 .. code-block:: console
 
