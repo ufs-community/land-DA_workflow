@@ -155,7 +155,8 @@ Model Configuration File (``ufs-land.namelist.noahmp``)
 The UFS land model uses a series of template files combined with 
 user-selected settings to create required namelists and parameter
 files needed by the UFS Land DA workflow. This section describes the
-options in the ``ufs-land.namelist.noahmp`` file, which is generated from the ``template.ufs-noahMP.namelist.*`` file. 
+options in the ``ufs-land.namelist.noahmp`` file, which is generated 
+from the ``template.ufs-noahMP.namelist.*`` file. 
 
 .. note:: 
 
@@ -468,8 +469,19 @@ Noah-MP Options
    Surface temperature
 
 ``thermal_roughness_scheme_option``: (Default: ``2``)
+   Specifies the method/scheme used to calculate the thermal roughness length. Valid values: ``1`` | ``2`` | ``3`` | ``4``
 
-.. COMMENT: Add!
+      +--------+--------------------------------------------------------------------+
+      | Value  | Description                                                        |
+      +========+====================================================================+
+      | 1      | z0h=z, thermal roughness length = momentum roughness length        |
+      +--------+--------------------------------------------------------------------+
+      | 2      | czil, use canopy height method based on (:cite:t:`Chen&Zhang2009`) |
+      +--------+--------------------------------------------------------------------+
+      | 3      | European Center method                                             |
+      +--------+--------------------------------------------------------------------+
+      | 4      | kb inverse method                                                  |
+      +--------+--------------------------------------------------------------------+
 
 ``surface_evap_resistance_option``: (Default: ``1``)
    Specifies the surface evaporation resistance option. Valid values: ``1`` | ``2`` | ``3`` | ``4``
@@ -723,15 +735,11 @@ Run Setup Parameters
       | lndp2vector  | land perturbation to vector                 |
       +--------------+---------------------------------------------+
 
-Tile-Related Parameters for Restart/Perturbation Conversion
+FV3 Tile-Related Parameters for Restart/Perturbation Conversion
 ---------------------------------------------------------------
 
 Parameters in this section include the FV3 resolution and path to orographic files 
 for restart/perturbation conversion. 
-
-.. COMMENT: I took this description above from the original section title, but it seems 
-   like it all has more to do with tiles than orographic files... 
-   Could use a little clarification.
 
 ``tile_size``
    Specifies the size (horizontal resolution) of the FV3 tile. Valid values: ``96``. 
@@ -768,16 +776,17 @@ These parameters apply *only* to restart conversion.
 Perturbation Mapping Parameters
 ----------------------------------
 
-These parameters are *only* relevant for perturbation mapping in ensembles. Support for ensembles is *not* provided for the Land DA v1.0.0 release. 
+These parameters are *only* relevant for perturbation mapping in ensembles. 
+Support for ensembles is *not* provided for the Land DA v1.0.0 release. 
 
 ``lndp_layout``
    Specifies the layout options. Valid values: ``1x4`` | ``4x1`` | ``2x2``
 
 ``lndp_input_file``
-   Specifies the path for input file.
+   Specifies the path for the input file.
 
 ``output files``
-   Specifies the path for output file.
+   Specifies the path for the output file.
 
 ``lndp_var_list``
    Specifies the land perturbation variable options. Valid values: ``vgf`` | ``smc``
