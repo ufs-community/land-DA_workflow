@@ -6,8 +6,6 @@ Land Data Assimilation System
 
 This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which utilizes the UFS Noah-MP components and JEDI ``fv3-bundle`` to enable cycled model forecasts.
 
-.. COMMENT: Clarify above!
-
 Joint Effort for Data Assimilation Integration (JEDI)
 ********************************************************
 
@@ -34,8 +32,6 @@ JEDI Configuration Files
 
 To create the DA experiment, the user should create or modify an experiment-specific configuration ``yaml`` file. This ``yaml`` file should contain certain fundamental components: geometry, window begin, window length, background, driver, local ensemble DA, output increment, and observations. These components can be implemented differently for different models and observations types, so they frequently contain distinct parameters and variable names depending on the use case. Therefore, this section of the User's Guide focuses on assisting users with understanding and customizing these top-level configuration items in order to run Land DA experiments. Users may also reference the `JEDI Documentation <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/using/building_and_running/config_content.html>`__ for additional information. 
 
-.. COMMENT: What about: state; model, linear model; model aux control, model aux error; background error (rather than background); initial condition (is this basically included in the backgroun section?); cost function; minimizer; and output
-
 Users may find the following example ``yaml`` configuration file to be a helpful starting point. This file (with user-appropriate modifications) is required by JEDI for snow data assimilation. The following subsections will explain the variables within each top-level item of the ``yaml`` file. 
 
 .. code-block:: console
@@ -44,23 +40,23 @@ Users may find the following example ``yaml`` configuration file to be a helpful
      fms initialization:
        namelist filename: Data/fv3files/fmsmpp.nml
        field table filename: Data/fv3files/field_table
-     akbk: Data/fv3files/akbk64.nc4
+     akbk: Data/fv3files/akbk127.nc4
      npx: 97
      npy: 97
-     npz: 64
+     npz: 127
      field metadata override: Data/fieldmetadata/gfs-land.yaml
-          
-     time invariant state fields:
-       datetime: 2016-01-02T12:00:00Z
-       filetype: fms restart
-       skip coupler file: true
-       state variables: [orog_filt]
-       datapath: /*/
-       filename_orog: oro_C96.mx100.nc
-    
+     time invariant fields:
+       state fields:
+         datetime: 2016-01-02T18:00:00Z
+         filetype: fms restart
+         skip coupler file: true
+         state variables: [orog_filt]
+         datapath: /mnt/lfs4/HFIP/hfv3gfs/role.epic/landda/inputs/forcing/gdas/orog_files
+         filename_orog: oro_C96.mx100.nc
+
    window begin: 2016-01-02T12:00:00Z
    window length: PT6H
-    
+
    background:
      date: &date 2016-01-02T18:00:00Z
      members:
@@ -76,7 +72,7 @@ Users may find the following example ``yaml`` configuration file to be a helpful
          datapath: mem_neg/
          filename_sfcd: 20160102.180000.sfc_data.nc
          filename_cplr: 20160102.180000.coupler.res
-      
+
    driver:
      save posterior mean: false
      save posterior mean increment: true
@@ -97,40 +93,52 @@ Users may find the following example ``yaml`` configuration file to be a helpful
    observations:
      observers:
      - obs space:
-       name: SnowDepthIMS
-       distribution:
-         name: Halo
-         halo size: 250e3
-       simulated variables: [totalSnowDepth]
-       observed variables: [totalSnowDepth]
-       obsdatain:
-         engine:
-           type: H5File
-           obsfile: ioda.IMSscf.20160102.oro_C96.mx100.nc
-       obsdataout:
-         engine:
-           type: H5File 
-           obsfile: output/DA/hofx/letkf_hofx_ims_2016010218.nc
-     obs operator:
-       name: Identity
-     obs error:
-       covariance model: diagonal
-     obs localizations:
-     - localization method: Horizontal SOAR
-       lengthscale: 250e3
-       soar horizontal decay: 0.000021
-       max nobs: 1 
-     obs filters:
-     - filter: Bounds Check # negative / missing snow
-       filter variables:
-       - name: totalSnowDepth
+         name: Simulate
+         distribution:
+           name: Halo
+           halo size: 250e3
+         simulated variables: [totalSnowDepth]
+         obsdatain:
+           engine:
+             type: H5File
+             obsfile: GHCN_2016010218.nc
+         obsdataout:
+           engine:
+             type: H5File
+             obsfile: output/DA/hofx/letkf_hofx_ghcn_2016010218.nc
+       obs operator:
+         name: Identity
+       obs error:
+         covariance model: diagonal
+       obs localizations:
+       - localization method: Horizontal SOAR
+         lengthscale: 250e3
+         soar horizontal decay: 0.000021
+         max nobs: 50
+       - localization method: Vertical Brasnett
+         vertical lengthscale: 700
+       obs filters:
+       - filter: Bounds Check # negative / missing snow
+         filter variables:
+         - name: totalSnowDepth
          minvalue: 0.0
-     - filter: Domain Check # land only
-       where:
-       - variable:
+       - filter: Domain Check # missing station elevation (-999.9)
+         where:
+         - variable:
+             name: height@MetaData
+           minvalue: -999.0
+       - filter: Domain Check # land only
+         where:
+         - variable:
              name: slmsk@GeoVaLs
            minvalue: 0.5
            maxvalue: 1.5
+       # GFSv17 only.
+       #- filter: Domain Check # no sea ice
+       #  where:
+       #  - variable:
+       #      name: fraction_of_ice@GeoVaLs
+       #    maxvalue: 0.0
        - filter: RejectList  # no land-ice
          where:
          - variable:
@@ -144,7 +152,6 @@ Users may find the following example ``yaml`` configuration file to be a helpful
          action:
            name: reject
 
-
 Geometry
 ^^^^^^^^^^^
 
@@ -152,8 +159,6 @@ The ``geometry:`` section is used in JEDI configuration files to specify the mod
 
    ``fms initialization``
       This section contains two parameters, ``namelist filename`` and ``field table filename``. 
-
-      .. COMMENT: Come up with better description^ !!!
 
       ``namelist filename``
          Specifies the path for the namelist filename.
@@ -166,8 +171,6 @@ The ``geometry:`` section is used in JEDI configuration files to specify the mod
 
    ``npx``
       Specifies the number of grid cells in the east-west direction.
-
-      .. COMMENT: "vertices" was used instead of cells originally... Are they vertices like in graph theory (where there are vertices and edges) or vertices like cells in a grid?
 
    ``npy``
       Specifies the number of grid cells in the north-south direction
@@ -186,9 +189,7 @@ The ``geometry:`` section is used in JEDI configuration files to specify the mod
          Specifies the time in YYYY-MM-DDTHH:00:00Z format, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
 
       ``filetype``
-         Specifies the type of file.
-
-         .. COMMENT: What are the options?
+         Specifies the type of file. Valid values include: ``fms restart``
 
       ``skip coupler file``
          Specifies whether to enable skipping coupler file. Valid values are: ``true`` | ``false``
@@ -201,12 +202,8 @@ The ``geometry:`` section is used in JEDI configuration files to specify the mod
          | false  | do not enable   |
          +--------+-----------------+
 
-         .. COMMENT: Check whether ".true./.false."
-
       ``state variables``
-         Specifies the list of state variables. Valid values: ``[orog_filt]``
-
-         .. COMMENT: Need a list of valid options! 
+         Specifies the list of state variables. Valid values include: ``[orog_filt]``
 
       ``datapath``
          Specifies the path for state variables data.
@@ -223,10 +220,9 @@ These two items define the assimilation window for many applications, including 
    Specifies the beginning time window. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour.
 
 ``window length:``
-   Specifies the time window length. The form is PTXXH, where XX is a 2-digit hour.
+   Specifies the time window length. The form is PTXXH, where XX is a 1- or 2-digit hour. For example: ``PT6H``
 
-   .. COMMENT: Sample file has a one-digit hour... What if someone wants to run a longer experiment (i.e. 120 hour forecast)? 
-
+   .. COMMENT: Clarify if possible. 
 
 Background
 ^^^^^^^^^^^^^^
@@ -241,29 +237,21 @@ The ``background:`` section includes information on the analysis file(s) (also k
       .. COMMENT: Verify accuracy
 
       ``datetime``
-         Specifies the time. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
+         Specifies the date and time. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
 
-         .. COMMENT: Not the dat & time? And for what? Same as above?
+         .. COMMENT: Not the date & time? And for what? Same as above?
 
       ``filetype``
-         Specifies the type of file. Valid values: ``fms restart``
-
-         .. COMMENT: Other valid values?
+         Specifies the type of file. Valid values include: ``fms restart``
 
       ``state variables``
          Specifies a list of state variables. Valid values: ``[snwdph,vtype,slmsk]``
 
-         .. COMMENT: Are there more?
-
       ``datapath``
-         Specifies the path for state variables data. Valid values: ``mem_pos/`` | ``mem_neg/``
-
-         .. COMMENT: Other valid values?
+         Specifies the path for state variables data. Valid values: ``mem_pos/`` | ``mem_neg/``. (With default experiment values, the full path will be ``workdir/mem000/jedi/$datapath``.)
 
       ``filename_sfcd``
          Specifies the name of surface data file. This usually takes the form ``YYYYMMDD.HHmmss.sfc_data.nc``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: ``20160102.180000.sfc_data.nc``
-
-         .. COMMENT: Check this!
          
       ``filename_cprl``
          Specifies the name of file that contains metadata for the restart. This usually takes the form ``YYYYMMDD.HHmmss.coupler.res``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: ``20160102.180000.coupler.res``
@@ -331,8 +319,6 @@ Local Ensemble DA
 ^^^^^^^^^^^^^^^^^^^^^
 
 The ``local ensemble DA:`` section configures the local ensemble DA solver package. 
-   
-   .. COMMENT: Edit/clarify definition?
 
    ``solver``
       Specifies the type of solver. Currently, ``LETKF`` is the only available option. See :cite:t:`HuntEtAl2007`.
@@ -368,14 +354,10 @@ Output Increment
    .. COMMENT: Add definition!
 
    ``filetype``
-      Type of file provided for the output increment. Valid values: ``fms restart``
-      
-      .. COMMENT: Other valid values?
+      Type of file provided for the output increment. Valid values include: ``fms restart``
 
    ``filename_sfcd``
       Name of the file provided for the output increment. For example: ``xainc.sfc_data.nc``
-      
-      .. COMMENT: Other valid values? 
 
 Observations
 ^^^^^^^^^^^^^^^
@@ -392,7 +374,7 @@ The ``observations:`` item describes one or more types of observations, each of 
 The ``obs space:`` section of the ``yaml`` comes under the ``observations.observers:`` section and describes the configuration of the observation space. An observation space handles observation data for a single observation type. 
 
    ``name``
-      Specifies the name of observation space. Since the Land DA System uses IMS snow depth data, the sample configuration file uses the name ``SnowDepthIMS``. 
+      Specifies the name of observation space. The Land DA System uses ``Simulate`` for the default case. 
 
       .. COMMENT: Check whether this can be any name that makes sense to the user or whether there are particular values.
 
@@ -401,22 +383,13 @@ The ``obs space:`` section of the ``yaml`` comes under the ``observations.observ
       .. COMMENT Add def here!!
 
       ``name``
-         Specifies the name of distribution. Valid values: ``Halo`` | InefficientDistribution
-
-         .. COMMENT: Other valid values? Can InefficientDistribution be used with Land DA?
+         Specifies the name of distribution. Valid values include: ``Halo`` 
 
       ``halo size``
-         Specifies the size of the halo distribution. Valid values: ``250e3``
-
-         .. COMMENT: Other valid values?
+         Specifies the size of the halo distribution. Format is e-notation. For example: ``250e3``
 
    ``simulated variables``
       Specifies the list of variables that need to be simulated by observation operator. Valid values: ``[totalSnowDepth]``
-
-   ``observed variables``
-      Specifies the list of observed variables. Valid values: ``[totalSnowDepth]``
-
-      .. COMMENT: Add complete list of valid values to the 2 variables above!
 
    ``obsdatain``
       This section specifies information about the observation input data.
@@ -430,8 +403,6 @@ The ``obs space:`` section of the ``yaml`` comes under the ``observations.observ
          ``obsfile``
             Specifies the input filename.
 
-            .. COMMENT: Add Valid/recommended value? ``ioda.IMSscf.20160102.oro_C96.mx100.nc``
-
    ``obsdataout``
       This section contains information about the observation output data.
 
@@ -444,8 +415,6 @@ The ``obs space:`` section of the ``yaml`` comes under the ``observations.observ
          ``obsfile``
             Specifies the output file path. 
 
-            .. COMMENT: Add Valid/recommended value? ``output/DA/hofx/letkf_hofx_ims_2016010218.nc``
-
 ``obs operator:``
 ````````````````````
 
@@ -454,9 +423,7 @@ The ``obs operator:`` section describes the observation operator and its options
    .. COMMENT: Explain more!!! 
 
    ``name``
-      Specifies the name in the ``ObsOperator`` and ``LinearObsOperator`` factory, defined in the C++ code. Valid values include: ``Identity`` | ``Composite`` | ``Categorical``. See `JEDI Documentation <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/ufo/obsops.html>`__ for more options. 
-
-      .. COMMENT: There are a ton of options, but which ones will work? Is Identity the only valid one?
+      Specifies the name in the ``ObsOperator`` and ``LinearObsOperator`` factory, defined in the C++ code. Valid values include: ``Identity``. See `JEDI Documentation <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/ufo/obsops.html>`__ for more options. 
 
 ``obs error:``
 ``````````````````
@@ -464,9 +431,7 @@ The ``obs operator:`` section describes the observation operator and its options
 The ``obs error:`` section explains how to calculate the observation error covariance matrix and gives instructions (required for DA applications). The key covariance model, which describes how observation error covariances are created, is frequently the first item in this section. For diagonal observation error covariances, only the diagonal option is currently supported.
 
    ``covariance model``
-      Specifies the covariance model. Valid values: ``diagonal``
-
-      .. COMMENT: Get other valid values! ``cross variable covariances``
+      Specifies the covariance model. Valid values include: ``diagonal``
 
 ``obs localizations:``
 ````````````````````````
@@ -478,12 +443,14 @@ The ``obs error:`` section explains how to calculate the observation error covar
    ``localization method``
       Specifies the observation localization method. Valid values include: ``Horizontal SOAR``
 
-      +-----------------+-----------------------------------------------+
-      | Value           | Description                                   |
-      +=================+===============================================+
-      | Horizontal SOAR | Second Order Auto-Regressive localization in  |
-      |                 | the horizontal direction.                     |
-      +-----------------+-----------------------------------------------+
+      +--------------------+-----------------------------------------------+
+      | Value              | Description                                   |
+      +====================+===============================================+
+      | Horizontal SOAR    | Second Order Auto-Regressive localization in  |
+      |                    | the horizontal direction.                     |
+      +--------------------+-----------------------------------------------+
+      | Vertical Brasnett  |
+      +--------------------+-----------------------------------------------+
 
    ``lengthscale``
       Radius of influence (i.e., maximum distance of observations from the location being updated) in meters. Format is e-notation. For example: ``250e3``
@@ -533,9 +500,7 @@ Observation filters are used to define Quality Control (QC) filters. They have a
       Limit the action of a QC filter to a subset of variables or to specific channels. 
 
       ``name``
-         Name of the filter variable. Users may indicate additional filter variables using the ``name`` field on consecutive lines (see code snippet below). Valid values: ``totalSnowDepth``
-
-         .. COMMENT: Are there other valid values? Add code snippet with example of multiple names or delete comment. 
+         Name of the filter variable. Users may indicate additional filter variables using the ``name`` field on consecutive lines (see code snippet below). Valid values include: ``totalSnowDepth``
 
          .. code-block:: console
 
@@ -654,7 +619,7 @@ where ``${YYYY}`` should be replaced with the year of interest. Note that these 
 
 As with the raw IMS data, these raw snow depth observations need to be converted into IODA-formatted netCDF files for ingestion into the JEDI LETKF system. However, this process was preemptively handled outside of the Land DA workflow, and the initial GHCN IODA files for 2016, 2020, and 2021 were provided by NOAA PSL (Clara Draper, Mike Barlage).
 
-The IODA-formatted GHCN files are structured as follows (using 20160701 as an example):
+The IODA-formatted GHCN files are structured as follows (using 20160102 as an example):
 
 .. code-block:: console
    
@@ -947,11 +912,7 @@ The grid description files appear in :numref:`Section %s <V2TInputFiles>` and ar
 Restart Files
 ------------------
 
-To restart the ``ufs-land-driver`` successfully after land model execution, all parameters, states, and fluxes that are used in the subsequent time iteration are stored in a restart file. The Noah-MP offline Land DA System reads the to-be-updated states from the restart file and replaces them after the DA step with the updated analysis. Within the ufs-land-driver, read/write of the restart file is performed in ``ufsLandNoahMPRestartModule.f90``. 
-
-The Noah-MP Offline Land DA System reads a restart file named ``ufs_land_restart.{FILEDATE}.nc`` where ``FILEDATE`` is in YYYY-MM-DD_HH-mm-SS format (e.g., ``ufs_land_restart.2016-01-02_18-00-00.nc``). The restart file contains all the model fields and their values at a specific point in time; this information can be used to restart the model immediately to run the next cycle. :numref:`Table %s <RestartFiles>` lists the fields in the Land DA System restart file. 
-
-.. COMMENT: Combine two paragraphs above cohesively!
+To restart the ``ufs-land-driver`` successfully after land model execution, all parameters, states, and fluxes used for a subsequent time iteration are stored in a restart file. This restart file is named ``ufs_land_restart.{FILEDATE}.nc`` where ``FILEDATE`` is in YYYY-MM-DD_HH-mm-SS format (e.g., ``ufs_land_restart.2016-01-02_18-00-00.nc``). The restart file contains all the model fields and their values at a specific point in time; this information can be used to restart the model immediately to run the next cycle. The Land DA System reads the states from the restart file and replaces them after the DA step with the updated analysis. :numref:`Table %s <RestartFiles>` lists the fields in the Land DA System restart file. Within the ``ufs-land-driver``, read/write of the restart file is performed in ``ufsLandNoahMPRestartModule.f90``. 
 
 .. _RestartFiles:
 
@@ -1136,7 +1097,7 @@ Example of ``${FILEDATE}.coupler.res``:
 DA Workflow 
 ==============
  
-The cycling Noah-MP offline DA run is initiated using two shell scripts: ``do_submit_cycle.sh`` and ``submit_cycle.sh``. ``submit_cycle.sh`` calls a third script (``do_landDA.sh``) if DA has been activated in the experiment. 
+The cycling Noah-MP offline DA run is initiated using ``do_submit_cycle.sh`` to call the ``submit_cycle.sh`` script. ``submit_cycle.sh`` calls a third script (``do_landDA.sh``) if DA has been activated in the experiment. 
 
 .. note::
    
@@ -1156,7 +1117,7 @@ The ``do_submit_cycle.sh`` script sets up the cycling job based on the user's in
 
 .. COMMENT: ADD alt tags!!!
 
-First, ``do_submit_cycle.sh`` reads in a configuration file for the cycle settings. This file contains the information required to run the cycle: the experiment name, start date, end date, the paths of the working directory and output directories, the length of each forecast, atmospheric forcing data, the Finite-Volume Cubed-Sphere Dynamical Core (:term:`FV3`) resolution and its paths, the number of cycles per job, the directory with initial conditions, a namelist file for running Land DA, and different DA options. Then, the required modules are loaded, and some executables are set for running the cycle. The restart frequency and running day/hours are computed from the inputs, and directories are created for running DA and saving the DA outputs. If restart files are not in the experiment output directory, the script will try to copy the restart files from the ``ICSDIR`` directory, which should contain initial conditions files if restart files are not available. Finally, the script creates the dates file (``analdates.sh``) and submits the ``submit_cycle.sh`` script, which is described in detail in the next section.
+First, ``do_submit_cycle.sh`` reads in a configuration file for the cycle settings. This file contains the information required to run the cycle: the experiment name, start date, end date, the paths of the working directory (i.e., ``workdir``) and output directories, the length of each forecast, atmospheric forcing data, the Finite-Volume Cubed-Sphere Dynamical Core (:term:`FV3`) resolution and its paths, the number of cycles per job, the directory with initial conditions, a namelist file for running Land DA, and different DA options. Then, the required modules are loaded, and some executables are set for running the cycle. The restart frequency and running day/hours are computed from the inputs, and directories are created for running DA and saving the DA outputs. If restart files are not in the experiment output directory, the script will try to copy the restart files from the ``ICSDIR`` directory, which should contain initial conditions files if restart files are not available. Finally, the script creates the dates file (``analdates.sh``) and submits the ``submit_cycle.sh`` script, which is described in detail in the next section.
 
 
 ``submit_cycle.sh``
@@ -1177,7 +1138,7 @@ Next, the system designates work and output directories and copies restart files
 
 .. note:: 
 
-   The v1.0.0 release of Land DA does not support ensemble runs. Thus, the first ensemble member is the only ensemble member. 
+   The v1.0.0 release of Land DA does not support ensemble runs. Thus, the first ensemble member (``mem000``) is the only ensemble member. 
 
 Here is an example of configuration settings file, ``settings_cycle``, for the ``submit_cycle`` script:
 
@@ -1244,7 +1205,7 @@ Parameters for ``submit_cycle.sh``
    Specifies the length of each forecast in hours.
 
 ``atmos_forc``
-   Specifies the name of the atmospheric forcing data. Valid values include: ``GDAS`` | ``ERA5``
+   Specifies the name of the atmospheric forcing data. Valid values include: ``gdas`` | ``era5``
 
 ``RES``
    Specifies the resolution of FV3. Valid values: ``C96``
@@ -1266,11 +1227,10 @@ Parameters for ``submit_cycle.sh``
    Specifies the path to a directory containing initial conditions data.
 
 ``DA_config``
-   Specifies the configuration setting file for ``do_landDA.sh``. Set ``DA_config`` to ``openloop`` to skip data assimilation (and prevent a call ``do_landDA.sh``).
+   Configuration setting file for ``do_landDA.sh``. Set ``DA_config`` to ``openloop`` to skip data assimilation (and prevent a call ``do_landDA.sh``).
 
 ``DA_configXX``
-   Specifies the configuration setting file for ``do_landDA.sh`` at ``XX`` hr. Set to ``openloop`` to skip data assimilation (and prevent a call ``do_landDA.sh``).
-
+   Configuration setting file for ``do_landDA.sh`` at ``XX`` hr. If users want to perform DA experiment at different times, list these in the configuration setting file. Set to ``openloop`` to skip data assimilation (and prevent a call ``do_landDA.sh``).
 
 ``do_landDA.sh``   
 ------------------
@@ -1358,7 +1318,7 @@ Below, users can find an example of a configuration settings file, ``settings_DA
    .. COMMENT: The path to this directory or just the name of the directory?
 
 ``fv3bundle_vn``
-   Specifies the date for ``jedi-fv3`` bundle checkout (used to select correct yaml).
+   Specifies the date for JEDI ``fv3-bundle`` checkout (used to select correct yaml).
 
    .. COMMENT: Clarify definition
 
