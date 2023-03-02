@@ -23,7 +23,7 @@ Users and developers may post questions and exchange information on the Land DA 
 
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
 
-UFS Development Team. (2023, March 2). Unified Forecast System (UFS) Land Data Assimilation System (Land DA) (Version v1.0.0). Zenodo. https://doi.org/10.5281/zenodo.7675721
+UFS Development Team. (2023, March 6). Unified Forecast System (UFS) Land Data Assimilation (DA) System (Version v1.0.0). Zenodo. https://doi.org/10.5281/zenodo.7675721
 
 
 .. _Background:
