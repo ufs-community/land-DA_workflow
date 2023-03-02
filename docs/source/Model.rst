@@ -14,24 +14,20 @@ Input Files
 
 The UFS Land Model requires multiple input files to run: static datasets
 (fix files containing climatological information, terrain, and land use
-data), initial and boundary condition files, and model configuration
-files (such as namelists). Please see the `Noah-MP User's
+data), initial conditions and forcing files, and model configuration
+files (such as namelists). Users may reference the `Community Noah-MP User's
 Guide <https://www.jsg.utexas.edu/noah-mp/files/Users_Guide_v0.pdf>`__
-for a detailed technical description of how to run the Noah-MP model.
-
-.. COMMENT: We talk about "statics datasets" above but then a single 
-   "static file" below, which could be confusing.
-
-.. COMMENT: Is the above info about data correct?
+for a detailed technical description of certain elements of the Noah-MP model.
 
 There are several important files used to specify model parameters: 
 the static file (``ufs-land_C96_static_fields.nc``), 
-the forcing initial conditions file (``ufs-land_C96_init_fields_1hr.nc``), 
+the initial conditions file (``ufs-land_C96_init_*.nc``), 
 and the model configuration file (``ufs-land.namelist.noahmp``). 
 These files and their parameters are described in the following subsections. 
-They are publicly available withint via the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/>`__. Users can download the data and untar the file via the command line, replacing 
+They are publicly available via the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/>`__. 
+Users can download the data and untar the file via the command line, replacing 
 ``{YEAR}`` with the year for the desired data. Release data is currently 
-available for 2016 and 2020-2021:
+available for 2016 and 2020:
 
 .. _TarFile:
 
@@ -43,17 +39,15 @@ available for 2016 and 2020-2021:
 Static File (``ufs-land_C96_static_fields.nc``)
 =================================================
 
-The static file includes the specific information on location, time,
-soil layers, and other parameters that are required for Noah-MP to run. The
-data can be provided in :term:`netCDF` format.
+The static file includes specific information on location, time, soil layers, and fixed (invariant) experiment parameters that are required for Noah-MP to run. The data must be provided in :term:`netCDF` format.
 
-The static file is available in the ``inputs`` :ref:`tar file above <TarFile>` at the following path:
+The static file is available in the ``inputs`` data directory (downloaded :ref:`above <InputFiles>`) at the following path:
 
 .. code-block:: 
 
    inputs/forcing/<source>/static/ufs-land_C96_static_fields.nc
 
-where ``<source>`` is either ``GDAS`` or ``ERA5``. 
+where ``<source>`` is either ``gdas`` or ``era5``. 
 
 .. table:: Configuration variables specified in the static file (ufs-land_C96_static_fields.nc)
 
@@ -110,23 +104,18 @@ where ``<source>`` is either ``GDAS`` or ``ERA5``.
    | soil_level_thickness      | soil level thickness                     |
    +---------------------------+------------------------------------------+
 
-Initial Condition File (``ufs-land_C96_init_fields_1hr.nc``)
-========================================================================
+Initial Conditions File (``ufs-land_C96_init_*.nc``)
+=================================================================
 
-Land DA currently only supports snow DA. 
-The initial condition file includes specific invariant information on location, time, 
-soil layers, and initial state variables that are required for the UFS land snow DA to begin a cycling run. 
-The data must be provided in :term:`netCDF` format.
+The offline Land DA System currently only supports snow DA. 
+The initial conditions file includes the initial state variables that are required for the UFS land snow DA to begin a cycling run. The data must be provided in :term:`netCDF` format.
 
-The initial conditions file is available in the ``land-release`` :ref:`tar file above <TarFile>` at the following path:
+The initial conditions file is available in the ``inputs`` data directory (downloaded :ref:`above <TarFile>`) at the following path:
 
 .. code-block:: 
 
    inputs/forcing/GDAS/init/ufs-land_C96_init_fields_1hr.nc
    inputs/forcing/ERA5/init/ufs-land_C96_init_2010-12-31_23-00-00.nc
-
-.. COMMENT: Check!
-   where ``<source>`` is either ``GDAS`` or ``ERA5``. 
 
 .. table:: Configuration variables specified in the initial forcing file (ufs-land_C96_init_fields_1hr.nc)
 
@@ -163,25 +152,29 @@ The initial conditions file is available in the ``land-release`` :ref:`tar file 
 Model Configuration File (``ufs-land.namelist.noahmp``)
 ==========================================================
 
-The UFS land model uses a series of template files, combined with
-user-selected settings, to create required namelists and parameter
+The UFS land model uses a series of template files combined with 
+user-selected settings to create required namelists and parameter
 files needed by the UFS Land DA workflow. This section describes the
-options in the ``ufs-land.namelist.noahmp`` file.
+options in the ``ufs-land.namelist.noahmp`` file, which is generated from the ``template.ufs-noahMP.namelist.*`` file. 
+
+.. note:: 
+
+   Any default values indicated are the defaults set in the ``template.ufs-noahMP.namelist.*`` files. 
 
 Run Setup Parameters
 ----------------------
 
 ``static_file``
-   Specifies the path to the UFS land static file. See the ``template.ufs-noahMP.namelist`` files for default options.
+   Specifies the path to the UFS land static file. 
 
 ``init_file``
-   Specifies the path to the UFS land initial condition file. See the ``template.ufs-noahMP.namelist`` files for default options.
+   Specifies the path to the UFS land initial condition file. 
 
 ``forcing_dir``
-   Specifies the path to the UFS land forcing directory where atmospheric forcing files are located. See the ``template.ufs-noahMP.namelist`` files for default options.
+   Specifies the path to the UFS land forcing directory where atmospheric forcing files are located. 
 
 ``separate_output``
-   Specifies whether to enable the separate output files for each output time. Valid values: ``.false.`` | ``.true.``
+   Specifies whether to enable separate output files for each output time. Valid values: ``.false.`` | ``.true.``
 
       +----------+---------------------------------------+
       | Value    | Description                           |
@@ -280,7 +273,7 @@ Soil Setup Parameters
 Noah-MP Options
 ------------------------
 
-``dynamic_vegetation_option``
+``dynamic_vegetation_option``: (Default: ``4``)
    Specifies the dynamic vegetation model option. Valid values: ``1`` | ``2`` | ``3`` | ``4`` | ``5`` | ``6`` | ``7`` | ``8`` | ``9`` | ``10``
 
       +-------+------------------------------------------------------------+
@@ -316,7 +309,7 @@ Noah-MP Options
 ``SHDFAC``
    Greenness vegetation (shaded) fraction
 
-``canopy_stomatal_resistance_option`` 
+``canopy_stomatal_resistance_option``: (Default: ``2``)
    Specifies the canopy stomatal resistance option. Valid values: ``1`` | ``2``
 
       +--------+--------------+
@@ -327,7 +320,7 @@ Noah-MP Options
       | 2      | Jarvis       |
       +--------+--------------+
       
-``soil_wetness_option`` 
+``soil_wetness_option``: (Default: ``1``)
    Specifies the soil moisture factor for the stomatal resistance option. Valid values: ``1`` | ``2`` | ``3``
 
       +--------+-------------------------+
@@ -340,7 +333,7 @@ Noah-MP Options
       | 3      | SSiB (matric potential) |
       +--------+-------------------------+
 
-``runoff_option`` 
+``runoff_option``: (Default: ``1``)
    Specifies the runoff option. Valid values: ``1`` | ``2`` | ``3`` | ``4`` | ``5``
 
       +--------+-----------------------------------------------------------------------+
@@ -360,7 +353,7 @@ Noah-MP Options
       |        | :cite:t:`FanEtAl2007`)                                                |
       +--------+-----------------------------------------------------------------------+
 
-``surface_exchange_option``
+``surface_exchange_option``: (Default: ``3``)
    Specifies the surface layer drag coefficient option. Valid values: ``1`` | ``2``
 
       +--------+---------------------------+
@@ -371,7 +364,7 @@ Noah-MP Options
       | 2      | original Noah (Chen 1997) |
       +--------+---------------------------+
 
-``supercooled_soilwater_option``
+``supercooled_soilwater_option``: (Default: ``1``)
    Specifies the supercooled liquid water option. Valid values: ``1`` | ``2``
 
       +--------+---------------------------------------------+
@@ -382,7 +375,7 @@ Noah-MP Options
       | 2      | Koren's iteration (:cite:t:`KorenEtAl1999`) |
       +--------+---------------------------------------------+
 
-``frozen_soil_adjust_option``
+``frozen_soil_adjust_option``: (Default: ``1``)
    Specifies the frozen soil permeability option. Valid values: ``1`` | ``2``
 
       +--------+-------------------------------------------------------------+
@@ -393,7 +386,7 @@ Noah-MP Options
       | 2      | nonlinear effects, less permeable (:cite:t:`KorenEtAl1999`) |
       +--------+-------------------------------------------------------------+
 
-``radiative_transfer_option``
+``radiative_transfer_option``: (Default: ``3``)
    Specifies the radiation transfer option. Valid values: ``1`` | ``2`` | ``3``
 
       +--------+--------------------------------------------------------------------+
@@ -406,7 +399,7 @@ Noah-MP Options
       | 3      | two-stream applied to a vegetated fraction (gap=1-FVEG)            |
       +--------+--------------------------------------------------------------------+
 
-``snow_albedo_option``
+``snow_albedo_option``: (Default: ``2``)
    Specifies the snow surface albedo option. Valid values: ``1`` | ``2``
 
       +--------+--------------+
@@ -417,7 +410,7 @@ Noah-MP Options
       | 2      | CLASS        |
       +--------+--------------+
 
-``precip_partition_option``
+``precip_partition_option``: (Default: ``1``)
    Specifies the option for partitioning precipitation into rainfall and snowfall. Valid values: ``1`` | ``2`` | ``3`` | ``4``
 
       +--------+-----------------------------+
@@ -438,7 +431,7 @@ Noah-MP Options
 ``TFRZ``
    Freezing/melting point (K)
 
-``soil_temp_lower_bdy_option``
+``soil_temp_lower_bdy_option``: (Default: ``2``)
    Specifies the lower boundary condition of soil temperature option. Valid values: ``1`` | ``2``
 
       +--------+---------------------------------------------------------+
@@ -455,7 +448,7 @@ Noah-MP Options
 ``ZBOT``
    Depth[m] of lower boundary soil temperature (TBOT)
 
-``soil_temp_time_scheme_option``
+``soil_temp_time_scheme_option``: (Default: ``3``)
    Specifies the snow and soil temperature time scheme. Valid values: ``1`` | ``2`` | ``3``
 
       +--------+------------------------------------------------------------------------+
@@ -474,7 +467,11 @@ Noah-MP Options
 ``TS``
    Surface temperature
 
-``surface_evap_resistance_option``
+``thermal_roughness_scheme_option``: (Default: ``2``)
+
+.. COMMENT: Add!
+
+``surface_evap_resistance_option``: (Default: ``1``)
    Specifies the surface evaporation resistance option. Valid values: ``1`` | ``2`` | ``3`` | ``4``
 
       +----------------+-----------------------------------------------------+
@@ -492,7 +489,7 @@ Noah-MP Options
 ``rsurf``
    Ground surface resistance (s/m)
 
-``glacier_option``
+``glacier_option``: (Default: ``1``)
    Specifies the glacier model option. Valid values: ``1`` | ``2``
 
       +--------+------------------------------------------------+
@@ -506,8 +503,8 @@ Noah-MP Options
 Forcing Parameters
 ---------------------
 
-``forcing_timestep_seconds``
-   Specifies the timestep of forcing in seconds.
+``forcing_timestep_seconds``: (Default: ``3600``)
+   Specifies the forcing timestep in seconds.
 
 ``forcing_type``
    Specifies the forcing type option, which describes the frequency and length of forcing in each forcing file. Valid values: ``single-point`` | ``gswp3`` | ``gdas``
@@ -539,36 +536,41 @@ Forcing Parameters
       +-----------------------+--------------------------------------------+
 
 ``forcing_interp_solar``
-   Specifies the interpolation option for solar radiation. Valid values: ``linear`` | ``zenith``
+   Specifies the interpolation option for solar radiation. Valid values: ``linear`` | ``gswp3_zenith``
 
-      +------------+-------------------------------------------------------+
-      | Value      | Description                                           |
-      +============+=======================================================+
-      | linear     | Performs a linear interpolation between forcing times |
-      +------------+-------------------------------------------------------+
-      | zenith     | Performs a cosine zenith angle interpolation between  |
-      |            | forcing times                                         |
-      +------------+-------------------------------------------------------+
+      +--------------+-------------------------------------------------------+
+      | Value        | Description                                           |
+      +==============+=======================================================+
+      | linear       | Performs a linear interpolation between forcing times |
+      +--------------+-------------------------------------------------------+
+      | gswp3_zenith | Performs a cosine zenith angle interpolation between  |
+      |              | forcing times                                         |
+      +--------------+-------------------------------------------------------+
+
+``forcing_time_solar``
+   Valid values include: ``"instantaneous"`` | ``"gswp3_average"``
+
+   .. COMMENT: Add definition!
 
 ``forcing_name_precipitation``
-   Specifies the variable name of forcing precipitation.
+   Specifies the variable name of forcing precipitation. Valid values include: ``"precipitation_conserve"`` | ``"precipitation_bilinear"``
 
-``forcing_name_temperature``
+``forcing_name_temperature``(Default: ``"temperature"``)
    Specifies the variable name of forcing temperature.
 
-``forcing_name_specific_humidity``
+``forcing_name_specific_humidity``: (Default: ``"specific_humidity"``)
    Specifies the variable name of forcing specific-humidity.
 
-``forcing_name_wind_speed``
+``forcing_name_wind_speed``: (Default: ``"wind_speed"``)
    Specifies the variable name of forcing wind speed.
 
-``forcing_name_pressure``
+``forcing_name_pressure``: (Default: ``"surface_pressure"``)
    Specifies the variable name of forcing surface pressure.
 
-``forcing_name_sw_radiation``
+``forcing_name_sw_radiation``: (Default: ``"solar_radiation"``)
    Specifies the variable name of forcing shortwave radiation.
 
-``forcing_name_lw_radiation``
+``forcing_name_lw_radiation``: (Default: ``"longwave_radiation"``)
    Specifies the variable name of forcing longwave radiation.
 
 Example Namelist Entry
