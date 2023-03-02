@@ -512,12 +512,17 @@ Forcing Parameters
       +----------------+-----------------------------------------------------+
       | Value          | Description                                         |
       +================+=====================================================+
-      | single-point   | All times are in one file                           |
+      | single-point   | All forcing times are in one file                   |
       +----------------+-----------------------------------------------------+
       | gswp3          | three-hourly forcing stored in monthly files        |
       +----------------+-----------------------------------------------------+
       | gdas           | hourly forcing stored in daily files                |
       +----------------+-----------------------------------------------------+
+
+      .. note:: 
+
+         There is no separate ``era5`` format. It is the same as the ``gdas`` format, 
+         so users should select ``gdas`` for this parameter when using ``era5`` forcing. 
 
 ``forcing_filename``
    Specifies the forcing file name prefix. A date will be appended to this prefix. For example: ``C96_ERA5_forcing_2020-10-01.nc``. The prefix merely indicates which grid (``C96``) and source (i.e., GDAS, GEFS) will be used. 
@@ -688,11 +693,11 @@ The input files containing grid information are listed in :numref:`Table %s <Gri
    +-----------------------------+--------------------------------------------------------------------------+
    | Filename                    | Description                                                              |
    +=============================+==========================================================================+
-   | Cxx_grid.tile[1-6].nc       | Cxx grid information for tiles 1-6, where ``xx`` is the grid number.     |
+   | Cxx_grid.tile[1-6].nc       | Cxx grid information for tiles 1-6, where ``xx`` is the grid resolution. |
    +-----------------------------+--------------------------------------------------------------------------+
-   | Cxx_oro_data.tile[1-6].nc   | Model terrain (topographic/orographic information) for grid tiles 1-6.   |
-   +-----------------------------+--------------------------------------------------------------------------+
-   | oro_Cxx.mx100.tile[1-6].nc  |                                                                          |
+   | Cxx_oro_data.tile[1-6].nc   | Orography files that contain grid and land mask information. Cxx refers  |
+   |                             | to the atmospheric resolution, and mx100 refers to the ocean resolution  |
+   | oro_Cxx.mx100.tile[1-6].nc  | (100=1º).                                                                |
    +-----------------------------+--------------------------------------------------------------------------+
 
 Configuration File
