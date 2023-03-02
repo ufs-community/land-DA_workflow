@@ -45,8 +45,6 @@ Get Data
    +-----------+--------------------------------------------------+
 
 Users can either set the ``LANDDA_INPUTS`` environment variable to the location of their system's pre-staged data or use a soft link to the data. For example, on Hera, users may set: 
-   
-.. COMMENT: Check whether we can user $EPICHOME at this point!
 
 .. code-block:: console
 
@@ -59,7 +57,7 @@ Alternatively, users can add a soft link to the data. For example, on Orion:
    cd $LANDDAROOT
    ln -s /work/noaa/epic-ps/role-epic-ps/landda/inputs .
 
-Users with access to data for additional experiments may use the same process to point or link to that data by modifying the path to the data appropriately. 
+Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetData>`. Users with access to data for additional experiments may use the same process described above to point or link to that data by modifying the path to the data appropriately. 
 
 Users who are not using Land DA on Hera or Orion should view :numref:`Chapter %s <Container>` for instructions on running the containerized version of Land DA. :numref:`Section %s <GetData>` explains options for downloading the sample data onto their system. 
 
