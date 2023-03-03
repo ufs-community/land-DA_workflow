@@ -17,9 +17,6 @@ The NOAH-MP offline Land DA System uses three JEDI components:
    * The Interface for Observation Data Access (`IODA <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.0.0/inside/jedi-components/ioda/index.html>`__) for the observation formatting and processing
    * The Unified Forward Operator (`UFO <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.0.0/inside/jedi-components/ufo/index.html>`__) for comparing model forecasts and observations 
 
-.. COMMENT: And FV3-JEDI bundle? https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.0.0/inside/jedi-components/fv3-jedi/index.html 
-   "FV3-JEDI is the interface between the generic components of the JEDI system and models that are based on the FV3 (Finite Volume Cubed-Sphere) dynamical core."
-
 JEDI's Unified Forward Operator (UFO) links observation operators with the Object Oriented Prediction System (OOPS) to compute a simulated observation given a known model state. It does not restrict observation operators based on model-specific code structures or requirements. The UFO code structure provides generic classes for observation bias correction and quality control. Within this system, IODA converts the observation data into model-specific formats to be ingested by each model's data assimilation system. This involves model-specific data conversion efforts. 
 
 Object-Oriented Prediction System (OOPS)
@@ -274,8 +271,6 @@ The ``driver:`` section describes optional modifications to the behavior of the 
       | false  | do not save     |
       +--------+-----------------+
       
-      .. COMMENT: What is posterior mean?
-
    ``save posterior mean increment``
       Specifies whether to save the posterior mean increment. Valid values: ``true`` | ``false``
 
@@ -287,8 +282,6 @@ The ``driver:`` section describes optional modifications to the behavior of the 
       | false  | do not enable   |
       +--------+-----------------+
 
-      .. COMMENT: What is posterior increment?
-
    ``save posterior ensemble``
       Specifies whether to save the posterior ensemble. Valid values: ``true`` | ``false``
 
@@ -299,8 +292,6 @@ The ``driver:`` section describes optional modifications to the behavior of the 
       +--------+-----------------+
       | false  | do not enable   |
       +--------+-----------------+
-
-      .. COMMENT: What is posterior ensemble?
 
    ``run as observer only``
       Specifies whether to run as observer only. Valid values: ``true`` | ``false``
@@ -324,35 +315,23 @@ The ``local ensemble DA:`` section configures the local ensemble DA solver packa
       Specifies the type of solver. Currently, ``LETKF`` is the only available option. See :cite:t:`HuntEtAl2007`.
 
    ``inflation``
-      Describes covariance inflation methods. 
+      Describes ensemble inflation methods. 
 
-      .. COMMENT: Edit definition!
-
-      ``rtps``
+      ``rtps``: (Default: ``0.0``)
          Relaxation to prior spread (:cite:t:`Whitaker&Hamill2012`). 
 
-         .. COMMENT: 0.0
-
-      ``rtpp``
+      ``rtpp``(Default: ``0.0``)
          Relaxation to prior perturbation (:cite:t:`ZhangEtAl2004`). 
 
-         .. COMMENT: 0.0
-
-      ``mult``
+      ``mult`` (Default: ``1.0``)
          Parameter of multiplicative inflation.
-
-         .. COMMENT: 1.0
 
          .. COMMENT: Find better definitions and valid values for above variables!
 
 Output Increment
 ^^^^^^^^^^^^^^^^^^^
 
-   .. COMMENT:
-      The ``output increment:`` section...
-   
-   .. COMMENT: Add definition!
-
+``output increment:``
    ``filetype``
       Type of file provided for the output increment. Valid values include: ``fms restart``
 
@@ -364,10 +343,6 @@ Observations
 
 The ``observations:`` item describes one or more types of observations, each of which is a multi-level YAML/JSON object in and of itself. Each of these observation types is read into JEDI as an ``eckit::Configuration`` object (see `JEDI Documentation <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.0.0/using/building_and_running/config_content.html#observations>`__ for more details).
 
-   ``observers``
-
-      .. COMMENT: Need def!
-
 ``obs space:``
 ````````````````
 
@@ -376,12 +351,7 @@ The ``obs space:`` section of the ``yaml`` comes under the ``observations.observ
    ``name``
       Specifies the name of observation space. The Land DA System uses ``Simulate`` for the default case. 
 
-      .. COMMENT: Check whether this can be any name that makes sense to the user or whether there are particular values.
-
-   ``distribution``
-
-      .. COMMENT Add def here!!
-
+   ``distribution:``
       ``name``
          Specifies the name of distribution. Valid values include: ``Halo`` 
 
@@ -420,8 +390,6 @@ The ``obs space:`` section of the ``yaml`` comes under the ``observations.observ
 
 The ``obs operator:`` section describes the observation operator and its options. An observation operator is used for computing H(x).
 
-   .. COMMENT: Explain more!!! 
-
    ``name``
       Specifies the name in the ``ObsOperator`` and ``LinearObsOperator`` factory, defined in the C++ code. Valid values include: ``Identity``. See `JEDI Documentation <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/ufo/obsops.html>`__ for more options. 
 
@@ -435,11 +403,8 @@ The ``obs error:`` section explains how to calculate the observation error covar
 
 ``obs localizations:``
 ````````````````````````
-   .. COMMENT:
-      The ``obs localizations:`` section describes...
 
-   .. COMMENT: Get def!!!
-
+``obs localizations:``
    ``localization method``
       Specifies the observation localization method. Valid values include: ``Horizontal SOAR``
 
@@ -456,10 +421,7 @@ The ``obs error:`` section explains how to calculate the observation error covar
       Radius of influence (i.e., maximum distance of observations from the location being updated) in meters. Format is e-notation. For example: ``250e3``
       
    ``soar horizontal decay``
-      Decay scale of SOAR localization function.
-               
-      .. COMMENT: Check/improve definition!
-         Valid values: ``0.000021``
+      Decay scale of SOAR localization function. Recommended value: ``0.000021``. Users may adjust based on need/preference. 
 
    ``max nobs``
       Maximum number of observations used to update each location. 
@@ -1318,7 +1280,5 @@ Below, users can find an example of a configuration settings file, ``settings_DA
    .. COMMENT: The path to this directory or just the name of the directory?
 
 ``fv3bundle_vn``
-   Specifies the date for JEDI ``fv3-bundle`` checkout (used to select correct yaml).
-
-   .. COMMENT: Clarify definition
+   Specifies the date for JEDI ``fv3-bundle`` checkout (used to select correct ``yaml``).
 
