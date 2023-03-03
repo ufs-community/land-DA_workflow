@@ -88,8 +88,6 @@ NOAA RDHPCS Systems
 
 On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-landda.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
 
-.. COMMENT: Ensure that name is updated before the release!!!
-
 .. _PreBuiltContainers:
 
 .. table:: Locations of Pre-Built Containers

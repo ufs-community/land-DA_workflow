@@ -30,8 +30,6 @@ The Land DA System requires:
    * `spack-stack <https://spack-stack.readthedocs.io/en/latest/>`__
    * `FV3-bundle <https://github.com/JCSDA/fv3-bundle/wiki>`__   
 
-      .. COMMENT: What about Perl, git, curl, wget
-
 These software prerequisites are pre-installed in the Land DA :term:`container` and on other Level 1 systems (see :ref:`below <LevelsOfSupport>` for details). However, users on non-Level 1 systems will need to install them.
 
 Before using the Land DA container, users will need to install `Singularity <https://docs.sylabs.io/guides/latest/user-guide/>`__ and an **Intel** MPI (available `free here <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`__). 
