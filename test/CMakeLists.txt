@@ -1,3 +1,23 @@
+#
+set( python_scripts
+  ${CMAKE_CURRENT_SOURCE_DIR}/comparelib.py
+  ${CMAKE_CURRENT_SOURCE_DIR}/compare.py
+  ${CMAKE_CURRENT_SOURCE_DIR}/test_compare.py
+)
+
+# cp python scripts 
+foreach(FILENAME ${python_scripts})
+     get_filename_component(filename ${FILENAME} NAME )
+     execute_process( COMMAND ${CMAKE_COMMAND} -E copy
+         ${FILENAME}
+         ${CMAKE_CURRENT_BINARY_DIR}/${filename} )
+endforeach()
+
+# test python comparefunction
+add_test(NAME test_compare_mae
+         COMMAND ./test_compare.py -v
+         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
+
 # test for vector2tile for use in jedi-fv3
 add_test(NAME test_vector2tile
          COMMAND ${PROJECT_SOURCE_DIR}/test/test_vector2tile.sh ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR} vector2tile bkg
