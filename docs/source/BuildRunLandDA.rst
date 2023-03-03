@@ -23,6 +23,8 @@ Create a directory for the Land DA experiment (``$LANDDAROOT``):
 
 where ``/path/to/landda`` is the path to the directory where the user plans to run Land DA experiments. 
 
+.. _GetData:
+
 Get Data
 ***********
 
@@ -57,9 +59,9 @@ Alternatively, users can add a soft link to the data. For example, on Orion:
    cd $LANDDAROOT
    ln -s /work/noaa/epic-ps/role-epic-ps/landda/inputs .
 
-Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetData>`. Users with access to data for additional experiments may use the same process described above to point or link to that data by modifying the path to the data appropriately. 
+Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetDataC>`. Users with access to data for additional experiments may use the same process described above to point or link to that data by modifying the path to the data appropriately. 
 
-Users who are not using Land DA on Hera or Orion should view :numref:`Chapter %s <Container>` for instructions on running the containerized version of Land DA. :numref:`Section %s <GetData>` explains options for downloading the sample data onto their system. 
+Users who are not using Land DA on Hera or Orion should view :numref:`Chapter %s <Container>` for instructions on running the containerized version of Land DA. :numref:`Section %s <GetDataC>` explains options for downloading the sample data onto their system. 
 
 Get Code
 ***********

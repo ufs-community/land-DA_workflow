@@ -530,44 +530,33 @@ Since the raw observational data come in various formats, a diverse set of "IODA
 Observation Data
 *******************
 
+Observation data from 2016 and 2020 are provided in NetCDF format. Instructions for downloading the data are provided in :numref:`Section %s <GetDataC>`, and instructions for accessing the data on :ref:`Level 1 Systems <LevelsOfSupport>` are provided in :numref:`Section %s <GetData>`. Currently, data is taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`__ (GHCN), but eventually, data from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`__) will also be available. 
+
+Viewing NetCDF Files
+=======================
+
+Users can view file information and notes for NetCDF files using the ``ncdump`` module. First, load a compiler, MPI, and NetCDF modules. 
+
+.. code-block:: console
+
+   # To see available modules:
+   module avail
+   # To load modules:
+   module load intel/2022.2.0 impi/2022.2.0 netcdf/4.7.0
+
+Users may need to modify the module load command to reflect modules that are available on their system. 
+
+Then, run ``ncdump -h``. For example, on Hera, users can run: 
+
+.. code-block:: console
+
+   ncdump -h /scratch1/NCEPDEV/nems/role.epic/landda/inputs/DA/snow_depth/GHCN/data_proc/2016/ghcn_snwd_ioda_20160102.nc
+
+to see the contents of the 2016-01-02 GHCN file. 
+
+
 Observation Types
 ====================
-
-IMS Snow and Ice Coverage
-----------------------------
-
-The Land DA System utilizes snow and ice coverage observations derived from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`__). The IMS includes data retrieved by several different platforms using several different sensors (see `here <https://nsidc.org/data/g02156/versions/1>`__ for specifics). 
-
-The USNIC IMS provides daily analyses of Northern Hemisphere snow and ice coverage at 1-km and 4-km resolutions in ASCII, GRIB, and GeoTIFF format. The geographic domain covered by the data is 0-90ºN and 180ºE to -180ºW. According to the :cite:t:`NSIDC2008`, "Data are in a polar stereographic projection centered at 90° N with the vertical longitude from the Pole at 80° W and the standard parallel at 60° N." For ingestion into the Land DA System, the 4-km analyses (6144 x 6144 grid cells) in ASCII format are first converted to :term:`netCDF` format (``.nc``) and then processed by JEDI's IODA component. (Specifically, the Land DA example forecast uses ``ims2016002_4km_v1.3.nc``, which was converted from ``NIC.IMS_v3_201600200_4km.asc``). The IMS snow and ice cover netCDF files contain the following primary fields (:cite:t:`NSIDC2008`, p. 9): 
-
-   * ``IMS_Surface_Values``: The surface types in the IMS product: open water, land, sea/lake ice, and snow cover. 
-      
-      +-----------+--------------------------+
-      | Variable  | Description              |
-      +===========+==========================+
-      | 0         | Outside Coverage Area    |
-      +-----------+--------------------------+
-      | 1         | Open Water               |
-      +-----------+--------------------------+
-      | 2         | Land Without Snow        |
-      +-----------+--------------------------+
-      | 3         | Sea Ice or Lake Ice      |
-      +-----------+--------------------------+
-      | 4         | Snow-Covered Land        |
-      +-----------+--------------------------+
-
-   * ``projection``: Projection description for the data.
-   * ``time``: The time stamp for the data in seconds since 1970-01-01T00:00:00Z. This is the 00Z reference time. Note that products are nowcasted to be valid specifically at the time given here. 
-   * ``x``: X coordinate of grid cell. Values, in meters, are the centers of the grid cells.
-   * ``y``: Y coordinate of grid cell. Values, in meters, are the centers of the grid cells.
-
-.. note::
-
-   Users can view additional file information and notes using the ``ncdump`` module. For example: 
-
-   .. code-block:: console
-
-      ncdump -h </path_to_ims_netcdf_file/file_name.nc>
 
 GHCN Snow Depth
 ------------------
@@ -576,37 +565,37 @@ Snow depth observations are taken from the `Global Historical Climatology Networ
 
 .. code-block:: console
 
-   wget https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/{YYYY}.csv.gz ,
-
+   wget https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/{YYYY}.csv.gz 
 
 where ``${YYYY}`` should be replaced with the year of interest. Note that these yearly tarballs contain all measurement types from the daily GHCN output, and thus, snow depth must be manually extracted from this broader data set.
 
-As with the raw IMS data, these raw snow depth observations need to be converted into IODA-formatted netCDF files for ingestion into the JEDI LETKF system. However, this process was preemptively handled outside of the Land DA workflow, and the initial GHCN IODA files for 2016, 2020, and 2021 were provided by NOAA PSL (Clara Draper, Mike Barlage).
+These raw snow depth observations need to be converted into IODA-formatted netCDF files for ingestion into the JEDI LETKF system. However, this process was preemptively handled outside of the Land DA workflow, and the initial GHCN IODA files for 2016 and 2020 were provided by NOAA PSL (Clara Draper, Mike Barlage).
 
 The IODA-formatted GHCN files are structured as follows (using 20160102 as an example):
 
 .. code-block:: console
    
-   netcdf ghcn_snwd_ioda_20160701 {
+   netcdf ghcn_snwd_ioda_20160102 {
    dimensions:
-      nlocs = UNLIMITED ; // (7573 currently)
+      nlocs = UNLIMITED ; // (9946 currently)
    variables:
       int nlocs(nlocs) ;
-         nlocs:suggested_chunk_dim = 7573LL ;
+		   nlocs:suggested_chunk_dim = 9946LL ;
 
-      // global attributes:
+   // global attributes:
          string :_ioda_layout = "ObsGroup" ;
          :_ioda_layout_version = 0 ;
          string :converter = "ghcn_snod2ioda_newV2.py" ;
-         string :date_time_string = "2016-07-01T18:00:00Z" ;
-         :nlocs = 7573 ;
-         :history = "Fri Aug 12 21:10:02 2022: ncrename -O -v altitude,height ./data_proc_test/nc4_ghcn_snwd_ioda_20160701.nc ./data_proc_Update/ghcn_snwd_ioda_20160701.nc" ;
-         :NCO = "netCDF Operators version 4.9.1 (Homepage = http://nco.sf.net, Code = http://github.com/nco/nco)" ;
+         string :date_time_string = "2016-01-02T18:00:00Z" ;
+         :nlocs = 9946 ;
 
    group: MetaData {
       variables:
          string datetime(nlocs) ;
             string datetime:_FillValue = "" ;
+         float height(nlocs) ;
+            height:_FillValue = 9.96921e+36f ;
+            string height:units = "m" ;
          float latitude(nlocs) ;
             latitude:_FillValue = 9.96921e+36f ;
             string latitude:units = "degrees_north" ;
@@ -615,12 +604,10 @@ The IODA-formatted GHCN files are structured as follows (using 20160102 as an ex
             string longitude:units = "degrees_east" ;
          string stationIdentification(nlocs) ;
             string stationIdentification:_FillValue = "" ;
-         float height(nlocs) ;
-            height:_FillValue = 9.96921e+36f ;
       } // group MetaData
 
    group: ObsError {
-   variables:
+      variables:
          float totalSnowDepth(nlocs) ;
             totalSnowDepth:_FillValue = 9.96921e+36f ;
             string totalSnowDepth:coordinates = "longitude latitude" ;
@@ -651,7 +638,7 @@ Observation Location and Processing
 GHCN
 -------
 
-GHCN files for 2016, 2020, and 2021 are already provided in IODA format. :numref:`Table %s <DataLocations>` indicates where users can find data on Level 1 platforms. Tar files containing the 2016 and 2020 data are located in the publicly-available `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html>`__ (there is currently no 2021 tar file). Once untarred, the snow depth files are located in ``/inputs/DA/snow_depth/GHCN/data_proc/<year>``.  These GHCN IODA files were provided by NOAA PSL (Clara Draper, Mike Barlage). Each file follows the naming convention of ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc``, where ``${YYYY}`` is the four-digit cycle year, ``${MM}`` is the two-digit cycle month, and ``${DD}`` is the two-digit cycle day. 
+GHCN files for 2016 and 2020 are already provided in IODA format for the ``release/public-v1.0.0`` release. :numref:`Table %s <GetData>` indicates where users can find data on NOAA :term:`RDHPCS` platforms. Tar files containing the 2016 and 2020 data are located in the publicly-available `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html>`__. Once untarred, the snow depth files are located in ``/inputs/DA/snow_depth/GHCN/data_proc/{YEAR}``. These GHCN IODA files were provided by Clara Draper (NOAA PSL) and Mike Barlage (NOAA EMC). Each file follows the naming convention of ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc``, where ``${YYYY}`` is the four-digit cycle year, ``${MM}`` is the two-digit cycle month, and ``${DD}`` is the two-digit cycle day. 
 
 .. _DataLocations:
 
@@ -731,132 +718,6 @@ Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, th
          threshold: 6.25
          action:
          name: reject
-
-
-IMS
-------
-
-Pre-processed/Raw Observations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The raw IMS observation file(s) (already in netCDF) for the Land DA System are located in ``/inputs/DA/snow_ice_cover/IMS/2016`` (``inputs`` is the top-level directory in the ``landda-data-2016.tar.gz`` tarball from the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html#current_land_da_release_data/>`__). 
-
-Processing steps in ``do_landDA.sh``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Before the raw observations can be assimilated using JEDI LETKF, they must be processed (i.e., derived fields calculated, re-gridded, quality controlled/filtered). This processing is handled in the ``do_landDA.sh`` bash script through the call of two key components: (i) the ``IMS_proc`` ``calcfIMS`` executable and (ii) the IMS IODA converter (see ``do_landDA.sh`` lines 210-228, below).
-
-.. COMMENT: Are these line numbers still valid...?
-
-.. code-block:: console
-
-      echo 'do_landDA: calling fIMS'
-   #  source ${LANDDADIR}/land_mods_hera
-      ${calcfIMS_EXEC}
-      if [[ $? != 0 ]]; then
-         echo "fIMS failed"
-         exit 10
-      fi
-
-      IMS_IODA=imsfv3_scf2ioda_obs40.py
-      cp ${LANDDADIR}/jedi/ioda/${IMS_IODA} $WORKDIR
-
-      echo 'do_landDA: calling ioda converter'
-   #  source ${LANDDADIR}/ioda_mods_hera
-
-      ${PYTHON} ${IMS_IODA} -i IMSscf.${YYYY}${MM} {DD}.${TSTUB}.nc -o ${WORKDIR}ioda.IMSscf. {YYYY}${MM}${DD}.${TSTUB}.nc
-      if [[ $? != 0 ]]; then
-         echo "IMS IODA converter failed"
-         exit 10
-      fi
-
-``calcfIMS``
-^^^^^^^^^^^^^^^
-
-Before being passed through an IODA converter, the raw IMS netCDF files are first called by the ``calcfIMS`` executable which, through the application of various subroutines, calculates (i) snow cover fraction over land, (ii) snow water equivalent (SWE), and (iii) snow depth based upon the snow-cover fraction/SWE through an inversion of the NoahMP snow depletion curve. These fields are determined on the model grid (UFS NoahMP) and written to an intermediate file called ``IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc``, where ``${YYYY}`` is the cycle year, ``${MM}`` is the cycle month, ``${DD}`` is the cycle day, and ``${TSTUB}`` is the orography type (``C${RES}`` [atm] or ``C${RES}.mx100`` [coupled atm/ocean], where ``${RES}`` is the FV3 model resolution). 
-
-The source code of the ``calcfIMS`` executable can be found `here <https://www.google.com/url?q=https://github.com/NOAA-PSL/land-IMS_proc/tree/develop/sorc&sa=D&source=docs&ust=1677116607366107&usg=AOvVaw3QCUpymGRdD-fHeVEZKI91>`__ and is located locally in ``land-offline_workflow/DA_update/IMS_proc/sorc`` (see ``driver_fIMS.f90`` and ``IMSaggregate_mod.f90``). After building (compiling) the Land DA System, the ``calcfIMS.exe`` can be found in ``${PATH_TO_LAND_OFFLINE_WORKLOW}/build/bin``. 
-
-
-IODA-Converted Observatons
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Before assimilating the IMS data, the intermediate (post-``calcfIMS``) observation files (i.e., ``IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc``-type files)  must be processed using a JEDI IODA converter to transform IMS file fields and attributes into IODA format. For the land DA system, the converter used is ``imsfv3_scf2ioda_obs40.py`` (available on GitHub `here <https://github.com/NOAA-EPIC/land-DA_update/blob/develop/jedi/ioda/imsfv3_scf2ioda_obs40.py>`__) 
-
-The primary component of this IODA converter is the ``imsFV3`` class, which does the bulk of the observational file preparation and translation into IODA format. Snow cover fraction and snow depth observation location, timestamp, and magnitude are extracted from ``IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc`` and translated into the IODA variables ``snowCoverFraction`` and ``totalSnowDepth`` on the IODA-format dimension (``nlocs``), with the additional metadata variables ``datetime``, ``height``, ``latitude``, and ``longitude`` also defined along the ``nlocs`` dimension. Each snow cover fraction and snow depth observation is also assigned error and quality control values at each point on ``nlocs``. This conversion follows the 2-D/3-D data table paradigm outline in `Section %s <IODA>`. 
-
-After conversion into the IODA format, the new fields/variables are written to netCDF format. The IODA-converted files adhere to the following naming convention: ``ioda.IMSscf.${YYYY}${MM}${DD}.${TSTUB}.nc``, where again ``${YYYY}`` is the cycle year, ``${MM}`` is the cycle month, ``${DD}`` is the cycle day, and ``${TSTUB}`` is the orography type (``C${RES}`` [atm] or ``C${RES}.mx100`` [coupled atm/ocean], where ``${RES}`` is the FV3 model resolution). In the example forecast/analysis used throughout this document, the resultant IODA file is called ``ioda.IMSscf.20160101.oro_C96.mx100.nc``. Such IODA files have the following format/content:
-
-.. code-block:: console
-
-   netcdf ioda.IMSscf.20160101.oro_C96.mx100 {
-   dimensions:
-      nlocs = UNLIMITED ; // (12283 currently)
-   variables:
-      int nlocs(nlocs) ;
-         nlocs:suggested_chunk_dim = 10000LL ;
-
-   // global attributes:
-         string :_ioda_layout = "ObsGroup" ;
-         :_ioda_layout_version = 0 ;
-         string :converter = "imsfv3_scf2ioda_obs40.py" ;
-         string :sensor = "IMS Multisensor" ;
-         string :date_time_string = "2016-01-01T18:00:00Z" ;
-         :nlocs = 12283 ;
-
-   group: MetaData {
-      variables:
-         string datetime(nlocs) ;
-            string datetime:_FillValue = "" ;
-         float height(nlocs) ;
-            height:_FillValue = 9.96921e+36f ;
-            string height:units = "m" ;
-         float latitude(nlocs) ;
-            latitude:_FillValue = 9.96921e+36f ;
-            string latitude:units = "degrees_north" ;
-         float longitude(nlocs) ;
-            longitude:_FillValue = 9.96921e+36f ;
-            string longitude:units = "degrees_east" ;
-      } // group MetaData
-
-   group: ObsError {
-      variables:
-         float snowCoverFraction(nlocs) ;
-            snowCoverFraction:_FillValue = -999.f ;
-            string snowCoverFraction:coordinates = "longitude latitude" ;
-            string snowCoverFraction:units = "1" ;
-         float totalSnowDepth(nlocs) ;
-            totalSnowDepth:_FillValue = -999.f ;
-            string totalSnowDepth:coordinates = "longitude latitude" ;
-            string totalSnowDepth:units = "mm" ;
-      } // group ObsError
-
-   group: ObsValue {
-      variables:
-         float snowCoverFraction(nlocs) ;
-            snowCoverFraction:_FillValue = -999.f ;
-            string snowCoverFraction:coordinates = "longitude latitude" ;
-            string snowCoverFraction:units = "1" ;
-         float totalSnowDepth(nlocs) ;
-            totalSnowDepth:_FillValue = -999.f ;
-            string totalSnowDepth:coordinates = "longitude latitude" ;
-            string totalSnowDepth:units = "mm" ;
-      } // group ObsValue
-
-   group: PreQC {
-      variables:
-         int snowCoverFraction(nlocs) ;
-            snowCoverFraction:_FillValue = -999 ;
-            string snowCoverFraction:coordinates = "longitude latitude" ;
-            string snowCoverFraction:units = "unitless" ;
-         int totalSnowDepth(nlocs) ;
-            totalSnowDepth:_FillValue = -999 ;
-            string totalSnowDepth:coordinates = "longitude latitude" ;
-            string totalSnowDepth:units = "unitless" ;
-      } // group PreQC
-   }
-
-.. COMMENT: Check spacing/indentation
 
 Set and Submit the DA Cycle 
 ****************************** 

@@ -130,7 +130,7 @@ This process may take several hours depending on the system.
 
    Some users may need to issue the ``singularity build`` command with ``sudo`` (i.e., ``sudo singularity build...``). Whether ``sudo`` is required is system-dependent. 
 
-.. _GetData:
+.. _GetDataC:
 
 Get Data
 ***********
