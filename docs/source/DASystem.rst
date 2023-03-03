@@ -312,18 +312,18 @@ Local Ensemble DA
 The ``local ensemble DA:`` section configures the local ensemble DA solver package. 
 
    ``solver``
-      Specifies the type of solver. Currently, ``LETKF`` is the only available option. See :cite:t:`HuntEtAl2007`.
+      Specifies the type of solver. Currently, ``LETKF`` is the only available option. See :cite:t:`HuntEtAl2007` (2007).
 
    ``inflation``
       Describes ensemble inflation methods. 
 
       ``rtps``: (Default: ``0.0``)
-         Relaxation to prior spread (:cite:t:`Whitaker&Hamill2012`). 
+         Relaxation to prior spread (:cite:t:`Whitaker&Hamill2012`, 2012). 
 
-      ``rtpp``(Default: ``0.0``)
-         Relaxation to prior perturbation (:cite:t:`ZhangEtAl2004`). 
+      ``rtpp``: (Default: ``0.0``)
+         Relaxation to prior perturbation (:cite:t:`ZhangEtAl2004`, 2004). 
 
-      ``mult`` (Default: ``1.0``)
+      ``mult``: (Default: ``1.0``)
          Parameter of multiplicative inflation.
 
          .. COMMENT: Find better definitions and valid values for above variables!
@@ -408,14 +408,16 @@ The ``obs error:`` section explains how to calculate the observation error covar
    ``localization method``
       Specifies the observation localization method. Valid values include: ``Horizontal SOAR``
 
-      +--------------------+-----------------------------------------------+
-      | Value              | Description                                   |
-      +====================+===============================================+
-      | Horizontal SOAR    | Second Order Auto-Regressive localization in  |
-      |                    | the horizontal direction.                     |
-      +--------------------+-----------------------------------------------+
-      | Vertical Brasnett  |
-      +--------------------+-----------------------------------------------+
+      +--------------------+--------------------------------------------------+
+      | Value              | Description                                      |
+      +====================+==================================================+
+      | Horizontal SOAR    | Second Order Auto-Regressive localization in     |
+      |                    | the horizontal direction.                        |
+      +--------------------+--------------------------------------------------+
+      | Vertical Brasnett  | Vertical component of the localization scheme    |
+      |                    | defined in :cite:t:`Brasnett1999` (1999)         |
+      |                    | and used in the snow DA.                         |
+      +--------------------+--------------------------------------------------+
 
    ``lengthscale``
       Radius of influence (i.e., maximum distance of observations from the location being updated) in meters. Format is e-notation. For example: ``250e3``
@@ -1197,7 +1199,7 @@ Parameters for ``submit_cycle.sh``
 ``do_landDA.sh``   
 ------------------
 
-The ``do_landDA.sh`` runs the data assimilation job inside the ``sumbit_cycle.sh`` script. Currently, the only DA option is the snow Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI, :cite:t:`FrolovEtAl2022`). :numref:`Figure %s <DoLandDAPng>` describes the workflow of this script. 
+The ``do_landDA.sh`` runs the data assimilation job inside the ``sumbit_cycle.sh`` script. Currently, the only DA option is the snow Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI, :cite:t:`FrolovEtAl2022`, 2022). :numref:`Figure %s <DoLandDAPng>` describes the workflow of this script. 
 
 .. _DoLandDAPng:
 
