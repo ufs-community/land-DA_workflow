@@ -693,10 +693,10 @@ Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, th
        action:
          name: reject
 
-Set and Submit the DA Cycle 
+DA Cycle Overview
 ****************************** 
 
-This chapter explains how to set up and run the Noah-MP offline DA system. Users should expect to run the given snow data assimilation example using the Global Historical Climatology Network (GHCN) snow depth observations and also create their own experiment by modifying the set-up to suit user goals.
+This section provides information an overview of the DA cycle, including information on input files and a summary of the workflow. 
 
 Input Files
 ==============
@@ -711,7 +711,7 @@ The grid description files appear in :numref:`Section %s <V2TInputFiles>` and ar
 Restart Files
 ------------------
 
-To restart the ``ufs-land-driver`` successfully after land model execution, all parameters, states, and fluxes used for a subsequent time iteration are stored in a restart file. This restart file is named ``ufs_land_restart.{FILEDATE}.nc`` where ``FILEDATE`` is in YYYY-MM-DD_HH-mm-SS format (e.g., ``ufs_land_restart.2016-01-02_18-00-00.nc``). The restart file contains all the model fields and their values at a specific point in time; this information can be used to restart the model immediately to run the next cycle. The Land DA System reads the states from the restart file and replaces them after the DA step with the updated analysis. :numref:`Table %s <RestartFiles>` lists the fields in the Land DA System restart file. Within the ``ufs-land-driver``, read/write of the restart file is performed in ``ufsLandNoahMPRestartModule.f90``. 
+To restart the ``ufs-land-driver`` successfully after land model execution, all parameters, states, and fluxes used for a subsequent time iteration are stored in a restart file. This restart file is named ``ufs_land_restart.{FILEDATE}.nc`` where ``FILEDATE`` is in YYYY-MM-DD_HH-mm-SS format (e.g., ``ufs_land_restart.2016-01-02_18-00-00.nc``). The restart file contains all the model fields and their values at a specific point in time; this information can be used to restart the model immediately to run the next cycle. The Land DA System reads the states from the restart file and replaces them after the DA step with the updated analysis. :numref:`Table %s <RestartFiles>` lists the fields in the Land DA restart file. Within the ``ufs-land-driver``, read/write of the restart file is performed in ``ufsLandNoahMPRestartModule.f90``. 
 
 .. _RestartFiles:
 

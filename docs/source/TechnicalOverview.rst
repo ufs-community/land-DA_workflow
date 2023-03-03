@@ -26,13 +26,11 @@ The Land DA System requires:
    * Fortran compiler
    * Python
    * :term:`NetCDF`
-   * `spack-stack <https://spack-stack.readthedocs.io/en/latest/>`__
-   * `FV3-bundle <https://github.com/JCSDA/fv3-bundle/wiki>`__
-   * `IODA <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/ioda/index.html>`__ bundle
    * Lmod 
+   * `spack-stack <https://spack-stack.readthedocs.io/en/latest/>`__
+   * `FV3-bundle <https://github.com/JCSDA/fv3-bundle/wiki>`__   
 
-      .. COMMENT: What's the minimum version of Python & NetCDF?
-      .. COMMENT: What about Perl, git, curl, wget, Lmod
+      .. COMMENT: What about Perl, git, curl, wget
 
 These software prerequisites are pre-installed in the Land DA :term:`container` and on other Level 1 systems (see :ref:`below <LevelsOfSupport>` for details). However, users on non-Level 1 systems will need to install them.
 
