@@ -706,8 +706,11 @@ The input files containing grid information are listed in :numref:`Table %s <Gri
    | Cxx_grid.tile[1-6].nc       | Cxx grid information for tiles 1-6, where ``xx`` is the grid resolution. |
    +-----------------------------+--------------------------------------------------------------------------+
    | Cxx_oro_data.tile[1-6].nc   | Orography files that contain grid and land mask information. Cxx refers  |
+   |                             | to the atmospheric resolution.                                           |
+   +-----------------------------+--------------------------------------------------------------------------+
+   | oro_Cxx.mx100.tile[1-6].nc  | Orography files that contain grid and land mask information. Cxx refers  |
    |                             | to the atmospheric resolution, and mx100 refers to the ocean resolution  |
-   | oro_Cxx.mx100.tile[1-6].nc  | (100=1º).                                                                |
+   |                             | (100=1º).                                                                |
    +-----------------------------+--------------------------------------------------------------------------+
 
 Configuration File
