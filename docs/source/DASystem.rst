@@ -817,10 +817,10 @@ To restart the ``ufs-land-driver`` successfully after land model execution, all 
    +--------------------------+-----------------------------------+-----------------------+
    | canopy_liquid            | canopy liquid                     | "mm"                  |
    +--------------------------+-----------------------------------+-----------------------+
-   | vapor_pres_canopy_air    | water vapor pressure in canopy    |                       |
+   | vapor_pres_canopy_air    | water vapor pressure in canopy    | "Pa"                  |
    |                          | air space                         |                       |
    +--------------------------+-----------------------------------+-----------------------+
-   | temperature_canopy_air   | temperature in canopy air space   |                       |
+   | temperature_canopy_air   | temperature in canopy air space   | "K"                   |
    +--------------------------+-----------------------------------+-----------------------+
    | canopy_wet_fraction      | fraction of canopy covered by     | "-"                   |
    |                          | water                             |                       |
@@ -832,7 +832,7 @@ To restart the ``ufs-land-driver`` successfully after land model execution, all 
    +--------------------------+-----------------------------------+-----------------------+
    | snowfall                 | snowfall                          | "mm/s"                |
    +--------------------------+-----------------------------------+-----------------------+
-   | lake_water               | depth of water in lake            |                       |
+   | lake_water               | depth of water in lake            | "mm"                  |
    +--------------------------+-----------------------------------+-----------------------+
    | depth_water_table        | depth to water table              | "m"                   |
    +--------------------------+-----------------------------------+-----------------------+
