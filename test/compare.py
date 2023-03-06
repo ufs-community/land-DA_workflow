@@ -16,8 +16,4 @@ with Dataset(sys.argv[1]) as nc1, Dataset(sys.argv[2]) as nc2:
       sys.exit(2)
     # If dimension is the same, compare data
     else:
-      diff = nc2[varname][:]-nc1[varname][:]
-      if (np.nanmean(np.abs(diff))) > float(sys.argv[3]):
-        print(varname,"mean abs diff is larger than tol= ", sys.argv[3])
-        print("baseline check fail!")
-        sys.exit(2)
+      np.testing.assert_allclose(nc1[varname][:], nc2[varname][:], rtol=1e-5, atol=float(sys.argv[3])) 

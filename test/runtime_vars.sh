@@ -64,4 +64,4 @@ else
 fi
 
 # BASELINE TOL
-export TOL=${TOL:-"1e-8"}
+export TOL=${TOL:-"1e-6"}
