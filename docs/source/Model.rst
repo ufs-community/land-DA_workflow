@@ -12,7 +12,7 @@ For background information on the Noah-MP Land Surface Model (LSM), see :numref:
 Input Files 
 **************
 
-The UFS Land Model requires multiple input files to run: static datasets
+The UFS land model requires multiple input files to run: static datasets
 (fix files containing climatological information, terrain, and land use
 data), initial conditions and forcing files, and model configuration
 files (such as namelists). Users may reference the `Community Noah-MP User's
@@ -417,7 +417,7 @@ Noah-MP Options
       +--------+-----------------------------+
       | Value  | Description                 |
       +========+=============================+
-      | 1      | :cite:t:`Jordan1991`        |
+      | 1      | :cite:t:`Jordan1991` (1991) |
       +--------+-----------------------------+
       | 2      | BATS: when SFCTMP<TFRZ+2.2  |
       +--------+-----------------------------+
@@ -684,7 +684,7 @@ Vector-to-Tile Converter
 ***************************
 
 The Vector-to-Tile Converter is used for mapping between the vector format
-used by the Noah-MP offline driver, and the tile format used by the UFS
+used by the Noah-MP offline driver and the tile format used by the UFS
 atmospheric model. This converter is currently used to prepare input tile files
 for JEDI. Note that these files include only those fields required by
 JEDI, rather than the full restart.
