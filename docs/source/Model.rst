@@ -567,8 +567,6 @@ Forcing Parameters
 ``forcing_time_solar``
    Valid values include: ``"instantaneous"`` | ``"gswp3_average"``
 
-   .. COMMENT: Add definition!
-
 ``forcing_name_precipitation``
    Specifies the variable name of forcing precipitation. Valid values include: ``"precipitation_conserve"`` | ``"precipitation_bilinear"``
 

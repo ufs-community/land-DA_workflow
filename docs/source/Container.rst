@@ -176,8 +176,6 @@ Save the location of the container in an environment variable.
 
    export img=path/to/ubuntu20.04-intel-landda.img
 
-.. COMMENT: Check name of container!
-
 Set the ``USE_SINGULARITY`` environment variable to "yes". 
 
 .. code-block:: console
