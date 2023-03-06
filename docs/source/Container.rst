@@ -248,7 +248,7 @@ When using a Singularity container, Intel compilers and Intel :term:`MPI` (prefe
 Configure the Experiment
 ===========================
 
-Users on a system with a Slurm job scheduler will need to make some minor changes to the ``submit_cycle.sh`` file. Open the file and change the account and queue (qos) to match the desired account and qos on the system. Users may also need to add the following line to the script to specify the partition. For example, on Jet, users can set: 
+Users on a system with a Slurm job scheduler will need to make some minor changes to the ``submit_cycle.sh`` file. Open the file and change the account and queue (qos) to match the desired account and qos on the system. Users may also need to add the following line to the script to specify the partition. For example, on Jet, users should set: 
 
 .. code-block:: console
 

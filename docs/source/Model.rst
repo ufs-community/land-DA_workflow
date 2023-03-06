@@ -591,7 +591,7 @@ Forcing Parameters
 Example Namelist Entry
 --------------------------------------------------
 
-The ``ufs-land.namelist.noahmp`` should be similar to the following example, which comes from the ``template.ufs-noahMP.namelist.gdas`` file. 
+The ``ufs-land.namelist.noahmp`` file should be similar to the following example, which comes from the ``template.ufs-noahMP.namelist.gdas`` file. 
 
 .. code-block:: console
    
