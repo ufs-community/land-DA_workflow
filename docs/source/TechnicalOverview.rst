@@ -14,7 +14,7 @@ Minimum System Requirements
 
 Additionally, users will need:
 
-   * Disk space: ~23GB (11GB for Land DA System [or 6.5GB for Land DA container], 11GB for Land DA data, and ~1G for staging and output) 
+   * Disk space: ~23GB (11GB for Land DA System [or 6.5GB for Land DA container], 11GB for Land DA data, and ~1GB for staging and output) 
    * 6 CPU cores (or option to run with "oversubscribe")
 
 Software Prerequisites
