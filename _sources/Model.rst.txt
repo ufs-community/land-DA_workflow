@@ -4,115 +4,27 @@
 Noah-MP Land Surface Model
 ********************************
 
-This chapter provides practical information on building and running the Noah-MP Land Surface Model (LSM). 
-It also contains information on required input files and the Vector-to-Tile Converter.
-For background information on the evolution of the Unified Forecast System (:term:`UFS`) 
-and the Noah-MP Land Surface Model (LSM), see :numref:`Section %s <Background>` of the Introduction. 
-
-.. _BuildRun:
-
-Building and Running the UFS Land Model
-******************************************
-
-
-.. _DownloadCode:
-
-Clone the Repository
-=======================
-
-.. attention::
-
-   To build the Land DA system in a container, continue instead to the Container Chapter. The Land DA container packages together the Land DA system with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform enviroment in which to build and run the SRW App. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Hera, Orion). 
-
-.. COMMENT: Add :numref:`Chapter %s <Container>` when chapter is ready.
-
-#. Create a directory that will be the Land DA root directory (``$LANDDAROOT``). Then clone the UFS Land DA System into it:
-
-   .. code-block:: console
-
-      mkdir land-da
-      cd land-da
-      git clone -b release/public-v1.0.0 --recursive https://github.com/NOAA-EPIC/land-offline_workflow.git
-
-
-.. _GetData:
-
-Get Data
-----------
-
-From the ``land-da`` directory, users should download the data required to run the Land DA test experiment and untar the data. For example:
-
-.. code-block:: console
-
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/landda-data-2016.tar.gz
-   tar xvfz landda-data-2016.tar.gz
-
-The data will be located in a directory called ``inputs``.
-
-Build the Land DA System
-==========================
-
-#. ``cd`` into the workflow directory, and source the modulefiles. 
-
-   .. code-block:: console
-
-      cd land-offline_workflow
-      source <modulefiles>
-
-   where ``<modulefiles>`` is either ``orion.modules`` or ``hera.modules``.
-
-#. Create and navigate to a ``build`` directory. 
-
-   .. code-block:: console
-      
-      mkdir build
-      cd build
-
-#. Run the command to configure the build system.
-
-   .. code-block:: console
-
-      ecbuild -DCMAKE_PREFIX_PATH="$EPICHOME/contrib/ioda-bundle/install/lib64/cmake;$EPICHOME/contrib/fv3-bundle/install/lib64/cmake" ..
-
-#. Build the Land DA system. 
-
-   .. code-block:: console
-
-      make -j 8
-
-   If the code successfully compiles, the console output should end with:
-   
-   .. code-block:: console
-
-      [100%] Built target ufsLandDriver.exe
-   
-   Additionally, the ``build`` directory will contain several files and a ``bin`` subdirectory with three executables: 
-
-      * ``apply_incr.exe``
-      * ``ufsLandDriver.exe``
-      * ``vector2tile_converter.exe``
+This chapter provides practical information on input files and parameters for the Noah-MP Land Surface Model (LSM) and its Vector-to-Tile Converter component.
+For background information on the Noah-MP Land Surface Model (LSM), see :numref:`Section %s <NoahMP>` of the Introduction. 
 
 .. _InputFiles:
 
 Input Files 
 **************
 
-The UFS Land Model requires multiple input files to run: static datasets
+The UFS land model requires multiple input files to run: static datasets
 (fix files containing climatological information, terrain, and land use
-data), initial and boundary condition files, and model configuration
-files (such as namelists). Please see the `Noah-MP User's
+data), initial conditions and forcing files, and model configuration
+files (such as namelists). Users may reference the `Community Noah-MP User's
 Guide <https://www.jsg.utexas.edu/noah-mp/files/Users_Guide_v0.pdf>`__
-for a detailed technical description of how to run the Noah-MP model.
-
-.. COMMENT: We talk about "statics datasets" above but then a single 
-   "static file" below, which could be confusing.
+for a detailed technical description of certain elements of the Noah-MP model.
 
 There are several important files used to specify model parameters: 
 the static file (``ufs-land_C96_static_fields.nc``), 
-the forcing initial conditions file (``ufs-land_C96_init_fields_1hr.nc``), 
+the initial conditions file (``ufs-land_C96_init_*.nc``), 
 and the model configuration file (``ufs-land.namelist.noahmp``). 
 These files and their parameters are described in the following subsections. 
-They are publicly available as part of a tar file with Land DA data. 
+They are publicly available via the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/>`__. 
 Users can download the data and untar the file via the command line, replacing 
 ``{YEAR}`` with the year for the desired data. Release data is currently 
 available for 2016 and 2020:
@@ -121,23 +33,21 @@ available for 2016 and 2020:
 
 .. code-block:: console
    
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/landda-data-{YEAR}.tar.gz
-   tar xvfz landda-data-{YEAR}.tar.gz
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/landda-input-data-{YEAR}.tar.gz
+   tar xvfz landda-input-data-{YEAR}.tar.gz
 
 Static File (``ufs-land_C96_static_fields.nc``)
 =================================================
 
-The static file includes the specific information on location, time,
-soil layers, and other parameters that are required for Noah-MP to run. The
-data can be provided in :term:`netCDF` format.
+The static file includes specific information on location, time, soil layers, and fixed (invariant) experiment parameters that are required for Noah-MP to run. The data must be provided in :term:`netCDF` format.
 
-The static file is available in the ``inputs`` :ref:`tar file above <TarFile>` at the following path:
+The static file is available in the ``inputs`` data directory (downloaded :ref:`above <InputFiles>`) at the following path:
 
 .. code-block:: 
 
    inputs/forcing/<source>/static/ufs-land_C96_static_fields.nc
 
-where ``<source>`` is either ``GDAS`` or ``ERA5``. 
+where ``<source>`` is either ``gdas`` or ``era5``. 
 
 .. table:: Configuration variables specified in the static file (ufs-land_C96_static_fields.nc)
 
@@ -194,23 +104,18 @@ where ``<source>`` is either ``GDAS`` or ``ERA5``.
    | soil_level_thickness      | soil level thickness                     |
    +---------------------------+------------------------------------------+
 
-Forcing Initial Conditions File (``ufs-land_C96_init_fields_1hr.nc``)
-========================================================================
+Initial Conditions File (``ufs-land_C96_init_*.nc``)
+=================================================================
 
-Land DA currently only supports snow DA. 
-The forcing initial conditions file includes specific information on location, time, 
-soil layers, and other variables that are required for the UFS land snow DA cycling. 
-The data must be provided in :term:`netCDF` format.
+The offline Land DA System currently only supports snow DA. 
+The initial conditions file includes the initial state variables that are required for the UFS land snow DA to begin a cycling run. The data must be provided in :term:`netCDF` format.
 
-The forcing initial conditions file is available in the ``land-release`` :ref:`tar file above <TarFile>` at the following path:
+The initial conditions file is available in the ``inputs`` data directory (downloaded :ref:`above <TarFile>`) at the following path:
 
 .. code-block:: 
 
    inputs/forcing/GDAS/init/ufs-land_C96_init_fields_1hr.nc
    inputs/forcing/ERA5/init/ufs-land_C96_init_2010-12-31_23-00-00.nc
-
-.. COMMENT: Check!
-   where ``<source>`` is either ``GDAS`` or ``ERA5``. 
 
 .. table:: Configuration variables specified in the initial forcing file (ufs-land_C96_init_fields_1hr.nc)
 
@@ -247,38 +152,42 @@ The forcing initial conditions file is available in the ``land-release`` :ref:`t
 Model Configuration File (``ufs-land.namelist.noahmp``)
 ==========================================================
 
-The UFS land model uses a series of template files, combined with
-user-selected settings, to create required namelists and parameter
+The UFS land model uses a series of template files combined with 
+user-selected settings to create required namelists and parameter
 files needed by the UFS Land DA workflow. This section describes the
-options in the ``ufs-land.namelist.noahmp`` file.
+options in the ``ufs-land.namelist.noahmp`` file, which is generated 
+from the ``template.ufs-noahMP.namelist.*`` file. 
+
+.. note:: 
+
+   Any default values indicated are the defaults set in the ``template.ufs-noahMP.namelist.*`` files. 
 
 Run Setup Parameters
 ----------------------
 
 ``static_file``
-   Specifies the path to the UFS land static file. See the ``template.ufs-noahMP.namelist`` files for default options.
+   Specifies the path to the UFS land static file. 
 
 ``init_file``
-   Specifies the path to the UFS land initial condition file. See the ``template.ufs-noahMP.namelist`` files for default options.
+   Specifies the path to the UFS land initial condition file. 
 
 ``forcing_dir``
-   Specifies the path to the UFS land forcing directory. See the ``template.ufs-noahMP.namelist`` files for default options.
+   Specifies the path to the UFS land forcing directory where atmospheric forcing files are located. 
 
 ``separate_output``
-   Specifies whether to enable a separate output directory. Valid values: ``.false.`` | ``.true.``
+   Specifies whether to enable separate output files for each output time. Valid values: ``.false.`` | ``.true.``
 
-      +----------+----------------+
-      | Value    | Description    |
-      +==========+================+
-      | .false.  | do not enable  |
-      +----------+----------------+
-      | .true.   | enable         |
-      +----------+----------------+
+      +----------+---------------------------------------+
+      | Value    | Description                           |
+      +==========+=======================================+
+      | .false.  | do not enable (should only be used    |
+      |          | for single point or short simulations)|
+      +----------+---------------------------------------+
+      | .true.   | enable                                |
+      +----------+---------------------------------------+
 
 ``output_dir``
-   Specifies the output directory.
-
-.. COMMENT: Is this required if "separate_output=.true."?
+   Specifies the output directory where output files will be saved. If ``separate_output=.true.``, but no ``output_dir`` is specified, it will default to the directory where the executable is run.
 
 ``restart_frequency_s``
    Specifies the restart frequency (in seconds) for the UFS land model.
@@ -365,7 +274,7 @@ Soil Setup Parameters
 Noah-MP Options
 ------------------------
 
-``dynamic_vegetation_option``
+``dynamic_vegetation_option``: (Default: ``4``)
    Specifies the dynamic vegetation model option. Valid values: ``1`` | ``2`` | ``3`` | ``4`` | ``5`` | ``6`` | ``7`` | ``8`` | ``9`` | ``10``
 
       +-------+------------------------------------------------------------+
@@ -401,7 +310,7 @@ Noah-MP Options
 ``SHDFAC``
    Greenness vegetation (shaded) fraction
 
-``canopy_stomatal_resistance_option`` 
+``canopy_stomatal_resistance_option``: (Default: ``2``)
    Specifies the canopy stomatal resistance option. Valid values: ``1`` | ``2``
 
       +--------+--------------+
@@ -412,7 +321,7 @@ Noah-MP Options
       | 2      | Jarvis       |
       +--------+--------------+
       
-``soil_wetness_option`` 
+``soil_wetness_option``: (Default: ``1``)
    Specifies the soil moisture factor for the stomatal resistance option. Valid values: ``1`` | ``2`` | ``3``
 
       +--------+-------------------------+
@@ -425,7 +334,7 @@ Noah-MP Options
       | 3      | SSiB (matric potential) |
       +--------+-------------------------+
 
-``runoff_option`` 
+``runoff_option``: (Default: ``1``)
    Specifies the runoff option. Valid values: ``1`` | ``2`` | ``3`` | ``4`` | ``5``
 
       +--------+-----------------------------------------------------------------------+
@@ -445,7 +354,7 @@ Noah-MP Options
       |        | :cite:t:`FanEtAl2007`)                                                |
       +--------+-----------------------------------------------------------------------+
 
-``surface_exchange_option``
+``surface_exchange_option``: (Default: ``3``)
    Specifies the surface layer drag coefficient option. Valid values: ``1`` | ``2``
 
       +--------+---------------------------+
@@ -456,7 +365,7 @@ Noah-MP Options
       | 2      | original Noah (Chen 1997) |
       +--------+---------------------------+
 
-``supercooled_soilwater_option``
+``supercooled_soilwater_option``: (Default: ``1``)
    Specifies the supercooled liquid water option. Valid values: ``1`` | ``2``
 
       +--------+---------------------------------------------+
@@ -467,7 +376,7 @@ Noah-MP Options
       | 2      | Koren's iteration (:cite:t:`KorenEtAl1999`) |
       +--------+---------------------------------------------+
 
-``frozen_soil_adjust_option``
+``frozen_soil_adjust_option``: (Default: ``1``)
    Specifies the frozen soil permeability option. Valid values: ``1`` | ``2``
 
       +--------+-------------------------------------------------------------+
@@ -478,7 +387,7 @@ Noah-MP Options
       | 2      | nonlinear effects, less permeable (:cite:t:`KorenEtAl1999`) |
       +--------+-------------------------------------------------------------+
 
-``radiative_transfer_option``
+``radiative_transfer_option``: (Default: ``3``)
    Specifies the radiation transfer option. Valid values: ``1`` | ``2`` | ``3``
 
       +--------+--------------------------------------------------------------------+
@@ -491,7 +400,7 @@ Noah-MP Options
       | 3      | two-stream applied to a vegetated fraction (gap=1-FVEG)            |
       +--------+--------------------------------------------------------------------+
 
-``snow_albedo_option``
+``snow_albedo_option``: (Default: ``2``)
    Specifies the snow surface albedo option. Valid values: ``1`` | ``2``
 
       +--------+--------------+
@@ -502,13 +411,13 @@ Noah-MP Options
       | 2      | CLASS        |
       +--------+--------------+
 
-``precip_partition_option``
+``precip_partition_option``: (Default: ``1``)
    Specifies the option for partitioning precipitation into rainfall and snowfall. Valid values: ``1`` | ``2`` | ``3`` | ``4``
 
       +--------+-----------------------------+
       | Value  | Description                 |
       +========+=============================+
-      | 1      | :cite:t:`Jordan1991`        |
+      | 1      | :cite:t:`Jordan1991` (1991) |
       +--------+-----------------------------+
       | 2      | BATS: when SFCTMP<TFRZ+2.2  |
       +--------+-----------------------------+
@@ -523,7 +432,7 @@ Noah-MP Options
 ``TFRZ``
    Freezing/melting point (K)
 
-``soil_temp_lower_bdy_option``
+``soil_temp_lower_bdy_option``: (Default: ``2``)
    Specifies the lower boundary condition of soil temperature option. Valid values: ``1`` | ``2``
 
       +--------+---------------------------------------------------------+
@@ -540,7 +449,7 @@ Noah-MP Options
 ``ZBOT``
    Depth[m] of lower boundary soil temperature (TBOT)
 
-``soil_temp_time_scheme_option``
+``soil_temp_time_scheme_option``: (Default: ``3``)
    Specifies the snow and soil temperature time scheme. Valid values: ``1`` | ``2`` | ``3``
 
       +--------+------------------------------------------------------------------------+
@@ -559,7 +468,22 @@ Noah-MP Options
 ``TS``
    Surface temperature
 
-``surface_evap_resistance_option``
+``thermal_roughness_scheme_option``: (Default: ``2``)
+   Specifies the method/scheme used to calculate the thermal roughness length. Valid values: ``1`` | ``2`` | ``3`` | ``4``
+
+      +--------+--------------------------------------------------------------------+
+      | Value  | Description                                                        |
+      +========+====================================================================+
+      | 1      | z0h=z, thermal roughness length = momentum roughness length        |
+      +--------+--------------------------------------------------------------------+
+      | 2      | czil, use canopy height method based on (:cite:t:`Chen&Zhang2009`) |
+      +--------+--------------------------------------------------------------------+
+      | 3      | European Center method                                             |
+      +--------+--------------------------------------------------------------------+
+      | 4      | kb inverse method                                                  |
+      +--------+--------------------------------------------------------------------+
+
+``surface_evap_resistance_option``: (Default: ``1``)
    Specifies the surface evaporation resistance option. Valid values: ``1`` | ``2`` | ``3`` | ``4``
 
       +----------------+-----------------------------------------------------+
@@ -577,7 +501,7 @@ Noah-MP Options
 ``rsurf``
    Ground surface resistance (s/m)
 
-``glacier_option``
+``glacier_option``: (Default: ``1``)
    Specifies the glacier model option. Valid values: ``1`` | ``2``
 
       +--------+------------------------------------------------+
@@ -591,8 +515,8 @@ Noah-MP Options
 Forcing Parameters
 ---------------------
 
-``forcing_timestep_seconds``
-   Specifies the timestep of forcing in seconds.
+``forcing_timestep_seconds``: (Default: ``3600``)
+   Specifies the forcing timestep in seconds.
 
 ``forcing_type``
    Specifies the forcing type option, which describes the frequency and length of forcing in each forcing file. Valid values: ``single-point`` | ``gswp3`` | ``gdas``
@@ -600,66 +524,74 @@ Forcing Parameters
       +----------------+-----------------------------------------------------+
       | Value          | Description                                         |
       +================+=====================================================+
-      | single-point   | All times are in one file                           |
+      | single-point   | All forcing times are in one file                   |
       +----------------+-----------------------------------------------------+
       | gswp3          | three-hourly forcing stored in monthly files        |
       +----------------+-----------------------------------------------------+
       | gdas           | hourly forcing stored in daily files                |
       +----------------+-----------------------------------------------------+
 
+      .. note:: 
+
+         There is no separate ``era5`` format. It is the same as the ``gdas`` format, 
+         so users should select ``gdas`` for this parameter when using ``era5`` forcing. 
+
 ``forcing_filename``
    Specifies the forcing file name prefix. A date will be appended to this prefix. For example: ``C96_ERA5_forcing_2020-10-01.nc``. The prefix merely indicates which grid (``C96``) and source (i.e., GDAS, GEFS) will be used. 
    Common values include: ``C96_GDAS_forcing_`` | ``C96_ERA5_forcing_`` | ``C96_GEFS_forcing_`` | ``C96_GSWP3_forcing_``
 
-      +--------------------+--------------------------------------------+
-      | Value              | Description                                |
-      +====================+============================================+
-      | C96_GDAS_forcing_  | GDAS forcing data for a C96 grid           |
-      +--------------------+--------------------------------------------+
-      | C96_ERA5_forcing_  | ERA5 forcing data for a C96 grid           |
-      +--------------------+--------------------------------------------+
-      | C96_GEFS_forcing_  | GEFS forcing data for a C96 grid           |
-      +--------------------+--------------------------------------------+
-      | C96_GSWP3_forcing_ | GSWP3 forcing data for a C96 grid          |
-      +--------------------+--------------------------------------------+
+      +-----------------------+--------------------------------------------+
+      | Value                 | Description                                |
+      +=======================+============================================+
+      | ``C96_GDAS_forcing_`` | GDAS forcing data for a C96 grid           |
+      +-----------------------+--------------------------------------------+
+      | ``C96_ERA5_forcing_`` | ERA5 forcing data for a C96 grid           |
+      +-----------------------+--------------------------------------------+
+      | ``C96_GEFS_forcing_`` | GEFS forcing data for a C96 grid           |
+      +-----------------------+--------------------------------------------+
+      | ``C96_GSWP3_forcing_``| GSWP3 forcing data for a C96 grid          |
+      +-----------------------+--------------------------------------------+
 
 ``forcing_interp_solar``
-   Specifies the interpolation option for solar radiation. Valid values: ``linear`` | ``zenith``
+   Specifies the interpolation option for solar radiation. Valid values: ``linear`` | ``gswp3_zenith``
 
-      +------------+-------------------------------------------------------+
-      | Value      | Description                                           |
-      +============+=======================================================+
-      | linear     | Performs a linear interpolation between forcing times |
-      +------------+-------------------------------------------------------+
-      | zenith     | Performs a cosine zenith angle interpolation between  |
-      |            | forcing times                                         |
-      +------------+-------------------------------------------------------+
+      +--------------+-------------------------------------------------------+
+      | Value        | Description                                           |
+      +==============+=======================================================+
+      | linear       | Performs a linear interpolation between forcing times |
+      +--------------+-------------------------------------------------------+
+      | gswp3_zenith | Performs a cosine zenith angle interpolation between  |
+      |              | forcing times                                         |
+      +--------------+-------------------------------------------------------+
+
+``forcing_time_solar``
+   Valid values include: ``"instantaneous"`` | ``"gswp3_average"``
 
 ``forcing_name_precipitation``
-   Specifies the variable name of forcing precipitation.
+   Specifies the variable name of forcing precipitation. Valid values include: ``"precipitation_conserve"`` | ``"precipitation_bilinear"``
 
-``forcing_name_temperature``
+``forcing_name_temperature``(Default: ``"temperature"``)
    Specifies the variable name of forcing temperature.
 
-``forcing_name_specific_humidity``
+``forcing_name_specific_humidity``: (Default: ``"specific_humidity"``)
    Specifies the variable name of forcing specific-humidity.
 
-``forcing_name_wind_speed``
+``forcing_name_wind_speed``: (Default: ``"wind_speed"``)
    Specifies the variable name of forcing wind speed.
 
-``forcing_name_pressure``
+``forcing_name_pressure``: (Default: ``"surface_pressure"``)
    Specifies the variable name of forcing surface pressure.
 
-``forcing_name_sw_radiation``
+``forcing_name_sw_radiation``: (Default: ``"solar_radiation"``)
    Specifies the variable name of forcing shortwave radiation.
 
-``forcing_name_lw_radiation``
+``forcing_name_lw_radiation``: (Default: ``"longwave_radiation"``)
    Specifies the variable name of forcing longwave radiation.
 
 Example Namelist Entry
 --------------------------------------------------
 
-The ``ufs-land.namelist.noahmp`` should be similar to the following example, which comes from the ``template.ufs-noahMP.namelist.gdas`` file. 
+The ``ufs-land.namelist.noahmp`` file should be similar to the following example, which comes from the ``template.ufs-noahMP.namelist.gdas`` file. 
 
 .. code-block:: console
    
@@ -752,7 +684,7 @@ Vector-to-Tile Converter
 ***************************
 
 The Vector-to-Tile Converter is used for mapping between the vector format
-used by the Noah-MP offline driver, and the tile format used by the UFS
+used by the Noah-MP offline driver and the tile format used by the UFS
 atmospheric model. This converter is currently used to prepare input tile files
 for JEDI. Note that these files include only those fields required by
 JEDI, rather than the full restart.
@@ -771,13 +703,14 @@ The input files containing grid information are listed in :numref:`Table %s <Gri
    +-----------------------------+--------------------------------------------------------------------------+
    | Filename                    | Description                                                              |
    +=============================+==========================================================================+
-   | Cxx_grid.tile[1-6].nc       | Cxx grid information for tiles 1-6, where ``xx`` is the grid number.     |
+   | Cxx_grid.tile[1-6].nc       | Cxx grid information for tiles 1-6, where ``xx`` is the grid resolution. |
    +-----------------------------+--------------------------------------------------------------------------+
-   | Cxx_oro_data.tile[1-6].nc   | Model terrain (topographic/orographic information) for grid tiles 1-6.   |
+   | Cxx_oro_data.tile[1-6].nc / | Orography files that contain grid and land mask information. Cxx refers  |
+   |                             | to the atmospheric resolution, and mx100 refers to the ocean resolution  |
+   | oro_Cxx.mx100.tile[1-6].nc  | (100=1º). Both file names refer to the same file; there are symbolic     |
+   |                             | links between them.                                                      |
    +-----------------------------+--------------------------------------------------------------------------+
-   | oro_Cxx.mx100.tile[1-6].nc  |                                                                          |
-   +-----------------------------+--------------------------------------------------------------------------+
-
+   
 Configuration File
 ======================
 
@@ -801,26 +734,25 @@ Run Setup Parameters
       | lndp2vector  | land perturbation to vector                 |
       +--------------+---------------------------------------------+
 
-Tile-Related Parameters for Restart/Perturbation Conversion
+FV3 Tile-Related Parameters for Restart/Perturbation Conversion
 ---------------------------------------------------------------
 
 Parameters in this section include the FV3 resolution and path to orographic files 
 for restart/perturbation conversion. 
 
-.. COMMENT: I took this description above from the original section title, but it seems 
-   like it all has more to do with tiles than orographic files... 
-   Could use a little clarification.
-
 ``tile_size``
-   Specifies the size of tile
-
-.. COMMENT: What are the units (# grid/tile cells?)? Are there set tile sizes? Or can it be any number?
+   Specifies the size (horizontal resolution) of the FV3 tile. Valid values: ``96``. 
+   
+   .. note:: 
+      
+      * The ``C96`` grid files correspond to approximately 1º latitude/longitude. 
+      * Additional resolutions (e.g., ``192``, ``384``, ``768``) are under development. 
 
 ``tile_path``
-   Specifies the path of tile location
+   Specifies the path to the orographic tile files.
 
 ``tile_fstub``
-   Specifies the file stub for orography files in ``tile_path``. The file stub will be named ``oro_C${RES}`` for atmosphere-only and ``oro_C{RES}.mx100`` for atmosphere and ocean.
+   Specifies the name (file stub) of orographic tile files. The file stub will be named ``oro_C${RES}`` for atmosphere-only and ``oro_C{RES}.mx100`` for atmosphere and ocean. 
 
 Parameters for Restart Conversion
 ------------------------------------
@@ -843,27 +775,17 @@ These parameters apply *only* to restart conversion.
 Perturbation Mapping Parameters
 ----------------------------------
 
-These parameters are *only* relevant for perturbation mapping in ensembles. Support for ensembles is *not* provided for the Land DA v1.0.0 release. 
+These parameters are *only* relevant for perturbation mapping in ensembles. 
+Support for ensembles is *not* provided for the Land DA v1.0.0 release. 
 
 ``lndp_layout``
    Specifies the layout options. Valid values: ``1x4`` | ``4x1`` | ``2x2``
 
-      +-------+-----------------------------------------------------+
-      | Value | Description                                         |
-      +=======+=====================================================+
-      | 1x4   |                                                     |
-      +-------+-----------------------------------------------------+
-      | 4x1   |                                                     |
-      +-------+-----------------------------------------------------+
-      | 2x2   |                                                     |
-      +-------+-----------------------------------------------------+
-
-
 ``lndp_input_file``
-   Specifies the path for input file.
+   Specifies the path for the input file.
 
 ``output files``
-   Specifies the path for output file.
+   Specifies the path for the output file.
 
 ``lndp_var_list``
    Specifies the land perturbation variable options. Valid values: ``vgf`` | ``smc``

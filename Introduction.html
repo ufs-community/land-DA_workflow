@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>1. Introduction &mdash; UFS Offline Land DA Develop Branch Documentation documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>1. Introduction &mdash; UFS Offline Land DA User&#39;s Guide v1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
       <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
@@ -31,10 +31,10 @@
           
           
           <a href="index.html" class="icon icon-home">
-            UFS Offline Land DA
+            UFS Offline Land DA User's Guide
           </a>
               <div class="version">
-                develop
+                v1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -57,9 +57,11 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="TechnicalOverview.html">2. Technical Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Model.html">3. Noah-MP Land Surface Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="DASystem.html">4. Land Data Assimilation System</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Glossary.html">5. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BuildRunLandDA.html">3. Land DA Workflow (Hera &amp; Orion)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Container.html">4. Containerized Land DA Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Model.html">5. Noah-MP Land Surface Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DASystem.html">6. Land Data Assimilation System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">7. Glossary</a></li>
 </ul>
 
         </div>
@@ -68,7 +70,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">UFS Offline Land DA</a>
+          <a href="index.html">UFS Offline Land DA User's Guide</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -88,70 +90,40 @@
              
   <div class="section" id="introduction">
 <span id="intro"></span><h1><span class="section-number">1. </span>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h1>
-<p>This User’s Guide provides guidance for running the offline Unified Forecast System
-(<a class="reference internal" href="Glossary.html#term-ufs"><span class="xref std std-term">UFS</span></a>) land model. This land model is the Multi-Physics (MP) version of the
-Noah land surface model (LSM) used by NOAA (referred to as Noah-MP). Its data assimilation framework uses
-the Joint Effort for Data assimilation Integration (<a class="reference internal" href="Glossary.html#term-jedi"><span class="xref std std-term">JEDI</span></a>) software.
-Noah-MP is tightly coupled with the atmospheric component of the
-<a class="reference external" href="https://github.com/ufs-community/ufs-weather-model">UFS Weather Model</a>
-and is essentially a module/subroutine within the <a class="reference external" href="https://dtcenter.org/community-code/common-community-physics-package-ccpp">Common Community Physics Package
-(CCPP)</a>
-repository. The offline UFS Land Data Assimilation (Land DA) System currently only works with snow data.
+<p>This User’s Guide provides guidance for running the Unified Forecast System
+(<a class="reference internal" href="Glossary.html#term-ufs"><span class="xref std std-term">UFS</span></a>) offline Land Data Assimilation (DA) System. Land DA is an offline version of the Noah Multi-Physics (Noah-MP) land surface model (LSM) used in the <a class="reference external" href="https://github.com/ufs-community/ufs-weather-model">UFS Weather Model</a> (WM). Its data assimilation framework uses
+the Joint Effort for Data assimilation Integration (<a class="reference internal" href="Glossary.html#term-jedi"><span class="xref std std-term">JEDI</span></a>) software. The offline UFS Land Data Assimilation (Land DA) System currently only works with snow data.
 Thus, this User’s Guide focuses primarily on the snow DA process.</p>
 <p>This User’s Guide is organized as follows:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>This chapter (Introduction) provides background information on the Unified Forecast System (<a class="reference internal" href="Glossary.html#term-ufs"><span class="xref std std-term">UFS</span></a>) and the NoahMP model.</p></li>
 <li><p><a class="reference internal" href="TechnicalOverview.html#techoverview"><span class="std std-numref">Chapter 2</span></a> (Technical Overview) outlines prerequisites, user support levels, and directory structure.</p></li>
-<li><p><a class="reference internal" href="Model.html#model"><span class="std std-numref">Chapter 3</span></a> (Model) provides practical information on building and running the Noah-MP Land Surface Model (LSM) and using the Vector-to-Tile Converter.</p></li>
-<li><p><a class="reference internal" href="Glossary.html#glossary"><span class="std std-numref">Chapter 5</span></a> (Glossary) lists important terms.</p></li>
+<li><p><a class="reference internal" href="BuildRunLandDA.html#buildrunlandda"><span class="std std-numref">Chapter 3</span></a> (Land DA Workflow [Hera &amp; Orion]) explains how to build and run the Land DA System on <a class="reference internal" href="TechnicalOverview.html#levelsofsupport"><span class="std std-ref">Level 1</span></a> systems (currently Hera and Orion).</p></li>
+<li><p><a class="reference internal" href="Container.html#container"><span class="std std-numref">Chapter 4</span></a> (Land DA Workflow [in a Container]) explains how to build and run the containerized Land DA System on non-Level 1 systems.</p></li>
+<li><p><a class="reference internal" href="Model.html#model"><span class="std std-numref">Chapter 5</span></a> (Model) provides information on input data and configuration parameters in the Noah-MP LSM and its Vector-to-Tile Converter.</p></li>
+<li><p><a class="reference internal" href="DASystem.html#dasystem"><span class="std std-numref">Chapter 6</span></a> (DA Framework) provides information on the DA system, required data, and configuration parameters.</p></li>
+<li><p><a class="reference internal" href="Glossary.html#glossary"><span class="std std-numref">Chapter 7</span></a> (Glossary) lists important terms.</p></li>
 </ul>
 </div></blockquote>
+<p>Users and developers may post questions and exchange information on the Land DA System’s <a class="reference external" href="https://github.com/NOAA-EPIC/land-offline_workflow/discussions/categories/q-a">GitHub Discussions</a> forum if their concerns are not addressed in this User’s Guide.</p>
+<p>The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:</p>
+<p>UFS Development Team. (2023, March 6). Unified Forecast System (UFS) Land Data Assimilation (DA) System (Version v1.0.0). Zenodo. <a class="reference external" href="https://doi.org/10.5281/zenodo.7675721">https://doi.org/10.5281/zenodo.7675721</a></p>
 <div class="section" id="background-information">
 <span id="background"></span><h2><span class="section-number">1.1. </span>Background Information<a class="headerlink" href="#background-information" title="Permalink to this headline"></a></h2>
 <div class="section" id="unified-forecast-system-ufs">
 <h3><span class="section-number">1.1.1. </span>Unified Forecast System (UFS)<a class="headerlink" href="#unified-forecast-system-ufs" title="Permalink to this headline"></a></h3>
-<p>The UFS is a community-based, coupled, comprehensive Earth modeling system. NOAA’s operational model suite for numerical weather prediction (<a class="reference internal" href="Glossary.html#term-nwp"><span class="xref std std-term">NWP</span></a>) is quickly transitioning to the UFS from many different modeling systems. For example, the UFS-based Global Forecast System
+<p>The UFS is a community-based, coupled, comprehensive Earth modeling system. It includes <a class="reference external" href="https://ufscommunity.org/science/aboutapps/">multiple applications</a> that support different forecast durations and spatial domains. NOAA’s operational model suite for numerical weather prediction (<a class="reference internal" href="Glossary.html#term-nwp"><span class="xref std std-term">NWP</span></a>) is quickly transitioning to the UFS from many different modeling systems. For example, the UFS-based Global Forecast System
 (<a class="reference external" href="https://www.emc.ncep.noaa.gov/emc/pages/numerical_forecast_systems/gfs.php">GFS</a>)
 and the Global Ensemble Forecast System
 (<a class="reference external" href="https://www.emc.ncep.noaa.gov/emc/pages/numerical_forecast_systems/gefs.php">GEFS</a>) are currently in operational use.
-The UFS enables research, development, and contribution
+The UFS is designed to enable research, development, and contribution
 opportunities within the broader <a class="reference internal" href="Glossary.html#term-weather-enterprise"><span class="xref std std-term">Weather Enterprise</span></a> (including
-government, industry, and academia).</p>
-<p>Currently, the UFS Weather Model includes:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>The <a class="reference external" href="https://www.gfdl.noaa.gov/fv3/">FV3</a> dynamical core with the Common Community Physics Package (<a class="reference external" href="https://dtcenter.ucar.edu/gmtb/users/ccpp/docs/sci_doc_v2/">CCPP</a>) for atmospheric modeling,</p></li>
-<li><p>The <a class="reference external" href="https://github.com/NOAA-GFDL/MOM6">MOM6</a> ocean model,</p></li>
-<li><p>The <a class="reference external" href="https://gmao.gsfc.nasa.gov/research/aerosol/modeling/">GOCART</a> aerosols model,</p></li>
-<li><p>The <a class="reference external" href="https://github.com/CICE-Consortium/CICE">CICE6</a> sea ice model, and</p></li>
-<li><p>The <a class="reference external" href="https://polar.ncep.noaa.gov/waves/wavewatch/">WW3</a> ocean wave model.</p></li>
-</ul>
-</div></blockquote>
-<p>Noah, Noah-MP, and Rapid Update Cycle (RUC) land models are
-currently available options within the CCPP framework, and the CCPP
-modules are assumed to be one-dimensional (1-D) column models.
-Since the GFSv17 updates, Noah LSM (widely used, bulk surface treatment) has been replaced with Noah-MP LSM (explicit canopy, process-based, see details in <a class="reference internal" href="#noahmp"><span class="std std-numref">Section 1.1.2</span></a>).
-This transition will contribute to:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>improving surface forecasts when significant heterogeneities exist,</p></li>
-<li><p>looking beyond the LSM as a boundary condition,</p></li>
-<li><p>providing multiple land surface process-level information, and</p></li>
-<li><p>increasing both atmospheric and land surface DA.</p></li>
-</ol>
-</div></blockquote>
-<p>For more information about the UFS, visit the <a class="reference external" href="https://ufscommunity.org/">UFS Portal</a>.</p>
+government, industry, and academia). For more information about the UFS, visit the <a class="reference external" href="https://ufscommunity.org/">UFS Portal</a>.</p>
 </div>
 <div class="section" id="noah-mp">
 <span id="noahmp"></span><h3><span class="section-number">1.1.2. </span>Noah-MP<a class="headerlink" href="#noah-mp" title="Permalink to this headline"></a></h3>
-<p>The Noah-MP land surface model (LSM) is a stand-alone, uncoupled, single
-column model used to execute single-site land surface simulations.
-In this traditional one-dimensional (1-D) uncoupled mode, near-surface atmospheric
-forcing data is required as input forcing. This LSM simulates soil moisture
-(both liquid and frozen), soil temperature, skin temperature, snow depth,
-snow water equivalent (SWE), snow density, canopy water content, and the energy
-flux and water flux terms of the surface energy balance and surface water balance.</p>
+<p>The offline Noah-MP LSM is a stand-alone, uncoupled model used to execute land surface simulations. In this traditional uncoupled mode, near-surface atmospheric forcing data is required as input forcing. This LSM simulates soil moisture (both liquid and frozen), soil temperature, skin temperature, snow depth, snow water equivalent (SWE), snow density, canopy water content, and the energy flux and water flux terms of the surface energy balance and surface water balance.</p>
 <p>Noah-MP uses a big-leaf approach with a separated vegetation canopy accounting
 for vegetation effects on surface energy and water balances, a modified two-stream
 approximation scheme to include the effects of vegetation canopy gaps that vary
@@ -165,13 +137,11 @@ quantification, and choosing process presentations appropriate for the applicati
 Noah-MP developers designed multiple parameterization options for leaf dynamics,
 radiation transfer, stomatal resistance, soil moisture stress factor for stomatal
 resistance, aerodynamic resistance, runoff, snowfall, snow surface albedo,
-supercooled liquid water in frozen soil, and frozen soil permeability. A
-collaborative effort among NCAR, NCEP, NASA, and university groups has been
-established to develop and improve the community Noah-MP LSM. Details about the
-model’s physical parameterizations can be found in <span id="id1">Niu <em>et al.</em> [<a class="reference internal" href="#id12" title="G.-Y. Niu, Z.-L. Yang, K.E. Mitchell, F. Chen, M.B. Ek, M. Barlage, A. Kumar, K. Manning, D. Niyogi, E. Rosero, M. Tewari, and Y. Xia. Simple water balance model for estimating runoff at different spatial and temporal scales. Journal of Geophysical Research, 2011. doi:10.1029/2010JD015139.">NYM+11</a>]</span> (2011).</p>
+supercooled liquid water in frozen soil, and frozen soil permeability.</p>
+<p>The Noah-MP LSM has evolved through community efforts to pursue and refine a modern-era LSM suitable for use in the National Centers for Environmental Prediction (NCEP) operational weather and climate prediction models. This collaborative effort continues with participation from entities such as NCAR, NCEP, NASA, and university groups.</p>
 <p>Noah-MP has been implemented in the UFS via the <a class="reference internal" href="Glossary.html#term-ccpp"><span class="xref std std-term">CCPP</span></a> physics package and
 is currently being tested for operational use in GFSv17 and RRFS v2. Noah-MP has
-also been used operationally in the NOAA National Water Model (NWM) since 2016.</p>
+also been used operationally in the NOAA National Water Model (NWM) since 2016. Details about the model’s physical parameterizations can be found in <span id="id1">Niu <em>et al.</em> [<a class="reference internal" href="#id12" title="G.-Y. Niu, Z.-L. Yang, K.E. Mitchell, F. Chen, M.B. Ek, M. Barlage, A. Kumar, K. Manning, D. Niyogi, E. Rosero, M. Tewari, and Y. Xia. Simple water balance model for estimating runoff at different spatial and temporal scales. Journal of Geophysical Research, 2011. doi:10.1029/2010JD015139.">NYM+11</a>]</span> (2011).</p>
 </div>
 </div>
 <div class="section" id="disclaimer">
@@ -194,6 +164,12 @@ commercial product or activity by DOC or the United States Government.</p>
 <h2><span class="section-number">1.3. </span>References<a class="headerlink" href="#references" title="Permalink to this headline"></a></h2>
 <div class="docutils container" id="id2">
 <dl class="citation">
+<dt class="label" id="id24"><span class="brackets">Bra99</span></dt>
+<dd><p>B. Brasnett. A global analysis of snow depth for numerical weather prediction. <em>J. Appl. Meteorol.</em>, 38(6):726–740, 1999. <a class="reference external" href="https://doi.org/10.1175/1520-0450(1999)038&lt;0726:AGAOSD&gt;2.0.CO;2">doi:10.1175/1520-0450(1999)038&lt;0726:AGAOSD&gt;2.0.CO;2</a>.</p>
+</dd>
+<dt class="label" id="id23"><span class="brackets">CZ09</span></dt>
+<dd><p>F. Chen and Y. Zhang. On the coupling strength between the land surface and the atmosphere: from viewpoint of surface exchange coefficients. <em>Geophys. Res. Lett.</em>, 2009. <a class="reference external" href="https://doi.org/10.1029/2009GL037980">doi:10.1029/2009GL037980</a>.</p>
+</dd>
 <dt class="label" id="id10"><span class="brackets">FMMW+07</span></dt>
 <dd><p>Y. Fan, G. Miguez-Macho, C.P. Weaver, R. Walko, and A. Robock. Incorporating water table dynamics in climate modeling: 1. water table observations and equilibrium water table simulations. <em>Journal of Geophysical Research</em>, 112(D10):19569–19585, 2007. <a class="reference external" href="https://doi.org/10.1029/2006JD008111">doi:10.1029/2006JD008111</a>.</p>
 </dd>
@@ -209,7 +185,7 @@ commercial product or activity by DOC or the United States Government.</p>
 <dt class="label" id="id18"><span class="brackets">HEJKS07</span></dt>
 <dd><p>B.R. Hunt, E.J. Kostelich, and I. Szunyogh. Efficient data assimilation for spatiotemporal chaos: a local ensemble transform kalman filter. <em>Physica D: Nonlinear Phenomena</em>, 230(1–2):112–126, 2007. <a class="reference external" href="https://doi.org/10.1016/j.physd.2006.11.008">doi:10.1016/j.physd.2006.11.008</a>.</p>
 </dd>
-<dt class="label" id="id23"><span class="brackets">Jor91</span></dt>
+<dt class="label" id="id25"><span class="brackets">Jor91</span></dt>
 <dd><p>R. Jordan. A one-dimensional temperature model for a snow cover: technical documentation for sntherm.89. Technical Report Special Rep. 91-16, U.S. Army Cold Regions Research and Engineering Laboratory, Hanover, NH, October 1991.</p>
 </dd>
 <dt class="label" id="id5"><span class="brackets">KSM+99</span></dt>
@@ -218,17 +194,17 @@ commercial product or activity by DOC or the United States Government.</p>
 <dt class="label" id="id9"><span class="brackets">MMFW+07</span></dt>
 <dd><p>G. Miguez-Macho, Y. Fan, C.P. Weaver, R. Walko, and A. Robock. Incorporating water table dynamics in climate modeling: 2. formulation, validation, and soil moisture simulation. <em>Journal of Geophysical Research</em>, 2007. <a class="reference external" href="https://doi.org/10.1029/2006JD008112">doi:10.1029/2006JD008112</a>.</p>
 </dd>
+<dt class="label" id="id13"><span class="brackets">NY06</span></dt>
+<dd><p>G.-Y. Niu and Z.-L. Yang. Effects of frozen soil on snowmelt runoff and soil water storage at a continental scale. <em>Journal of Hydrometeorology</em>, 7(5):937–952, 2006. <a class="reference external" href="https://doi.org/10.1175/JHM538.1">doi:10.1175/JHM538.1</a>.</p>
+</dd>
 <dt class="label" id="id8"><span class="brackets">NYD+07</span></dt>
-<dd><p>G. Y. Niu, Z. L. Yang, R. E. Dickinson, L. E. Gulden, and H. Su. Development of a simple groundwater model for use in climate models and evaluation with gravity recovery and climate experiment data. <em>Journal of Geophysical Research</em>, 2007. <a class="reference external" href="https://doi.org/10.1029/2006JD007522">doi:10.1029/2006JD007522</a>.</p>
+<dd><p>G.-Y. Niu, Z.-L. Yang, R.E. Dickinson, L.E. Gulden, and H. Su. Development of a simple groundwater model for use in climate models and evaluation with gravity recovery and climate experiment data. <em>Journal of Geophysical Research</em>, 2007. <a class="reference external" href="https://doi.org/10.1029/2006JD007522">doi:10.1029/2006JD007522</a>.</p>
 </dd>
 <dt class="label" id="id12"><span class="brackets"><a class="fn-backref" href="#id1">NYM+11</a></span></dt>
 <dd><p>G.-Y. Niu, Z.-L. Yang, K.E. Mitchell, F. Chen, M.B. Ek, M. Barlage, A. Kumar, K. Manning, D. Niyogi, E. Rosero, M. Tewari, and Y. Xia. Simple water balance model for estimating runoff at different spatial and temporal scales. <em>Journal of Geophysical Research</em>, 2011. <a class="reference external" href="https://doi.org/10.1029/2010JD015139">doi:10.1029/2010JD015139</a>.</p>
 </dd>
 <dt class="label" id="id7"><span class="brackets">NYREDG05</span></dt>
 <dd><p>G.-Y. Niu, Z.-L. Yang, R.E. Dickinson, and L.E. Gulden. A simple topmodel-based runoff parameterization (simtop) for use in gcms. <em>Journal of Geophysical Research</em>, 2005. <a class="reference external" href="https://doi.org/10.1029/2005JD006111">doi:10.1029/2005JD006111</a>.</p>
-</dd>
-<dt class="label" id="id13"><span class="brackets">NY06</span></dt>
-<dd><p>G.Y. Niu and Z.L. Yang. Effects of frozen soil on snowmelt runoff and soil water storage at a continental scale. <em>Journal of Hydrometeorology</em>, 7(5):937–952, 2006. <a class="reference external" href="https://doi.org/10.1175/JHM538.1">doi:10.1175/JHM538.1</a>.</p>
 </dd>
 <dt class="label" id="id14"><span class="brackets">SZ09</span></dt>
 <dd><p>K. Sakaguchi and X. Zeng. Effects of soil wetness, plant litter, and under-canopy atmospheric stability on ground evaporation in the community land model (clm3.5). <em>Journal of Geophysical Research</em>, 2009. <a class="reference external" href="https://doi.org/10.1029/2008JD010834">doi:10.1029/2008JD010834</a>.</p>
@@ -240,16 +216,13 @@ commercial product or activity by DOC or the United States Government.</p>
 <dd><p>P.J. Sellers, M.D. Heiser, and F.G. Hall. Relations between surface conductance and spectral vegetation indices at intermediate (100 m2 to 15 km2) length scales. <em>Journal of Geophysical Research</em>, 97(D17):19033–19059, 1992. <a class="reference external" href="https://doi.org/10.1029/92JD01096">doi:10.1029/92JD01096</a>.</p>
 </dd>
 <dt class="label" id="id20"><span class="brackets">TA20</span></dt>
-<dd><p>Trémolet, Y. and T. Auligné. The joint effort for data assimilation integration (jedi). <em>JCSDA Quarterly Newsletter</em>, 66:1–5, 2020. <a class="reference external" href="https://doi.org/10.25923/RB19-0Q26">doi:10.25923/RB19-0Q26</a>.</p>
+<dd><p>Y. Trémolet and T. Auligné. The joint effort for data assimilation integration (jedi). <em>JCSDA Quarterly Newsletter</em>, 66:1–5, 2020. <a class="reference external" href="https://doi.org/10.25923/RB19-0Q26">doi:10.25923/RB19-0Q26</a>.</p>
 </dd>
 <dt class="label" id="id21"><span class="brackets">WH12</span></dt>
-<dd><p>Whitaker, J.S. and T.M. Hamill. Evaluating methods to account for system errors in ensemble data assimilation. <em>Monthly Weather Review</em>, 140(9):3078–3089, 2012. <a class="reference external" href="https://doi.org/10.1175/MWR-D-11-00276.1">doi:10.1175/MWR-D-11-00276.1</a>.</p>
+<dd><p>J.S. Whitaker and T.M. Hamill. Evaluating methods to account for system errors in ensemble data assimilation. <em>Monthly Weather Review</em>, 140(9):3078–3089, 2012. <a class="reference external" href="https://doi.org/10.1175/MWR-D-11-00276.1">doi:10.1175/MWR-D-11-00276.1</a>.</p>
 </dd>
 <dt class="label" id="id22"><span class="brackets">ZCSS04</span></dt>
 <dd><p>F. Zhang, C. Snyder, and J. Sun. Impacts of initial estimate and observation availability on convective-scale data assimilation with an ensemble kalman filter. <em>Monthly Weather Review</em>, 132(5):1238–1253, 2004. <a class="reference external" href="https://doi.org/10.1175/1520-0493(2004)132%3C1238:IOIEAO%3E2.0.CO;2">doi:10.1175/1520-0493(2004)132%3C1238:IOIEAO%3E2.0.CO;2</a>.</p>
-</dd>
-<dt class="label" id="id24"><span class="brackets">USNICenter08</span></dt>
-<dd><p>U.S. National Ice Center. <em>User's Guide: IMS Daily Northern Hemisphere Snow and Ice Analysis at 1 km, 4 km, and 24 km Resolutions, Version 1</em>. National Snow and Ice Data Center, Boulder, Colorado, USA, 2008. <a class="reference external" href="https://doi.org/https://doi.org/10.7265/N52R3PMC">doi:https://doi.org/10.7265/N52R3PMC</a>.</p>
 </dd>
 </dl>
 </div>
@@ -267,7 +240,7 @@ commercial product or activity by DOC or the United States Government.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023.</p>
+    <p>&#169; Copyright 2023, .</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

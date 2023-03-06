@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to UFS Offline LandDA’s documentation! &mdash; UFS Offline Land DA Develop Branch Documentation documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Welcome to UFS Offline LandDA’s documentation! &mdash; UFS Offline Land DA User&#39;s Guide v1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
       <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
@@ -30,10 +30,10 @@
           
           
           <a href="#" class="icon icon-home">
-            UFS Offline Land DA
+            UFS Offline Land DA User's Guide
           </a>
               <div class="version">
-                develop
+                v1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -47,9 +47,11 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TechnicalOverview.html">2. Technical Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Model.html">3. Noah-MP Land Surface Model</a></li>
-<li class="toctree-l1"><a class="reference internal" href="DASystem.html">4. Land Data Assimilation System</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Glossary.html">5. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BuildRunLandDA.html">3. Land DA Workflow (Hera &amp; Orion)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Container.html">4. Containerized Land DA Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Model.html">5. Noah-MP Land Surface Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DASystem.html">6. Land Data Assimilation System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">7. Glossary</a></li>
 </ul>
 
         </div>
@@ -58,7 +60,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">UFS Offline Land DA</a>
+          <a href="#">UFS Offline Land DA User's Guide</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -109,46 +111,70 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Model.html">3. Noah-MP Land Surface Model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Model.html#building-and-running-the-ufs-land-model">3.1. Building and Running the UFS Land Model</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Model.html#clone-the-repository">3.1.1. Clone the Repository</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Model.html#build-the-land-da-system">3.1.2. Build the Land DA System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BuildRunLandDA.html">3. Land DA Workflow (Hera &amp; Orion)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="BuildRunLandDA.html#create-a-working-directory">3.1. Create a Working Directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BuildRunLandDA.html#get-data">3.2. Get Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BuildRunLandDA.html#get-code">3.3. Get Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BuildRunLandDA.html#build-the-land-da-system">3.4. Build the Land DA System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BuildRunLandDA.html#configure-the-experiment">3.5. Configure the Experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BuildRunLandDA.html#run-an-experiment">3.6. Run an Experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="BuildRunLandDA.html#check-progress">3.7. Check Progress</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Model.html#input-files">3.2. Input Files</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Model.html#static-file-ufs-land-c96-static-fields-nc">3.2.1. Static File (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_static_fields.nc</span></code>)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Model.html#forcing-initial-conditions-file-ufs-land-c96-init-fields-1hr-nc">3.2.2. Forcing Initial Conditions File (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_init_fields_1hr.nc</span></code>)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Model.html#model-configuration-file-ufs-land-namelist-noahmp">3.2.3. Model Configuration File (<code class="docutils literal notranslate"><span class="pre">ufs-land.namelist.noahmp</span></code>)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Container.html">4. Containerized Land DA Workflow</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Container.html#prerequisites">4.1. Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Container.html#install-singularity">4.1.1. Install Singularity</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Model.html#vector-to-tile-converter">3.3. Vector-to-Tile Converter</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Model.html#input-file">3.3.1. Input File</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Model.html#configuration-file">3.3.2. Configuration File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Container.html#build-the-container">4.2. Build the Container</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Container.html#set-environment-variables">4.2.1. Set Environment Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Container.html#containerbuild">4.2.2. Build the Container</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="DASystem.html">4. Land Data Assimilation System</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="DASystem.html#joint-effort-for-data-assimilation-integration-jedi">4.1. Joint Effort for Data Assimilation Integration (JEDI)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="DASystem.html#object-oriented-prediction-system-oops">4.1.1. Object-Oriented Prediction System (OOPS)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="DASystem.html#interface-for-observation-data-access-ioda">4.1.2. Interface for Observation Data Access (IODA)</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="DASystem.html#observation-data">4.2. Observation Data</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="DASystem.html#observation-types">4.2.1. Observation Types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="DASystem.html#observation-location-and-processing">4.2.2. Observation Location and Processing</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="DASystem.html#set-and-submit-the-da-cycle">4.3. Set and Submit the DA Cycle</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="DASystem.html#input-files">4.3.1. Input Files</a></li>
-<li class="toctree-l3"><a class="reference internal" href="DASystem.html#da-workflow">4.3.2. DA Workflow</a></li>
-<li class="toctree-l3"><a class="reference internal" href="DASystem.html#configure-the-experiment">4.3.3. Configure the Experiment</a></li>
-<li class="toctree-l3"><a class="reference internal" href="DASystem.html#submit-the-experiment">4.3.4. Submit the Experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Container.html#get-data">4.3. Get Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Container.html#run-the-container">4.4. Run the Container</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Container.html#set-up-the-container">4.4.1. Set Up the Container</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Container.html#configure-the-experiment">4.4.2. Configure the Experiment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Container.html#run-the-experiment">4.4.3. Run the Experiment</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="Glossary.html">5. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Model.html">5. Noah-MP Land Surface Model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Model.html#input-files">5.1. Input Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Model.html#static-file-ufs-land-c96-static-fields-nc">5.1.1. Static File (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_static_fields.nc</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Model.html#initial-conditions-file-ufs-land-c96-init-nc">5.1.2. Initial Conditions File (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_init_*.nc</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Model.html#model-configuration-file-ufs-land-namelist-noahmp">5.1.3. Model Configuration File (<code class="docutils literal notranslate"><span class="pre">ufs-land.namelist.noahmp</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Model.html#vector-to-tile-converter">5.2. Vector-to-Tile Converter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Model.html#input-file">5.2.1. Input File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Model.html#configuration-file">5.2.2. Configuration File</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DASystem.html">6. Land Data Assimilation System</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="DASystem.html#joint-effort-for-data-assimilation-integration-jedi">6.1. Joint Effort for Data Assimilation Integration (JEDI)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DASystem.html#object-oriented-prediction-system-oops">6.1.1. Object-Oriented Prediction System (OOPS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DASystem.html#interface-for-observation-data-access-ioda">6.1.2. Interface for Observation Data Access (IODA)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DASystem.html#input-files">6.2. Input Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DASystem.html#grid-description-files">6.2.1. Grid Description Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DASystem.html#observation-data">6.2.2. Observation Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="DASystem.html#restart-files">6.2.3. Restart Files</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DASystem.html#da-workflow-overview">6.3. DA Workflow Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="DASystem.html#do-submit-cycle-sh">6.3.1. <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="DASystem.html#submit-cycle-sh">6.3.2. <code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="DASystem.html#do-landda-sh">6.3.3. <code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">7. Glossary</a></li>
 </ul>
 </div>
 </div>
@@ -171,7 +197,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023.</p>
+    <p>&#169; Copyright 2023, .</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
