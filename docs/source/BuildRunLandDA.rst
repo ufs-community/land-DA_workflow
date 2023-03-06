@@ -92,7 +92,7 @@ Build the Land DA System
       mkdir build
       cd build
 
-#. Build the Land DA system.
+#. Build the Land DA System.
 
    .. code-block:: console
 
@@ -146,7 +146,7 @@ Configure the Experiment
 Run an Experiment
 ********************
 
-The Land DA system uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. This script requires an input file that details all the specifics of a given experiment.
+The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. This script requires an input file that details all the specifics of a given experiment.
 
 .. code-block:: console
 
