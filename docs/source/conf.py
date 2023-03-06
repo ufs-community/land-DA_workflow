@@ -6,14 +6,14 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'UFS Offline Land DA'
-copyright = '2023'
+project = "UFS Offline Land DA User's Guide"
+copyright = '2023, '
 author = ' '
 
 # The short X.Y version
-version = 'develop'
+version = 'v1.0'
 # The full version, including alpha/beta/rc tags
-release = 'Develop Branch Documentation'
+release = 'v1.0.0'
 
 numfig = True
 
