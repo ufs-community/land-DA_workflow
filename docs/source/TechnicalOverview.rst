@@ -23,7 +23,7 @@ Software Prerequisites
 The Land DA System requires:
 
    * An :term:`MPI` implementation
-   * Fortran compiler
+   * A Fortran compiler
    * Python
    * :term:`NetCDF`
    * Lmod 
@@ -40,7 +40,7 @@ Before using the Land DA container, users will need to install `Singularity <htt
 Supported Systems for Running Land DA
 ****************************************
 
-Four levels of support have been defined for :term:`UFS` applications, and the Land DA system operates under this paradigm: 
+Four levels of support have been defined for :term:`UFS` applications, and the Land DA System operates under this paradigm: 
 
 * **Level 1** *(Pre-configured)*: Prerequisite software libraries are pre-built and available in a central location; code builds; full testing of model.
 * **Level 2** *(Configurable)*: Prerequisite libraries are not available in a centralized location but are expected to install successfully; code builds; full testing of model.
@@ -49,7 +49,7 @@ Four levels of support have been defined for :term:`UFS` applications, and the L
 
 Level 1 Systems
 ==================
-Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and :term:`JEDI`'s fv3-bundle. Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them.
+Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and :term:`JEDI`'s ``fv3-bundle``. Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them.
 
 +-----------+-----------------------------------+----------------------------------------------------------------------------+
 | Platform  | Compiler/MPI                      | spack-stack & fv3-bundle Installations                                     |
