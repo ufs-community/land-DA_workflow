@@ -10,5 +10,7 @@ The Noah-MP LSM has evolved through community efforts to pursue and refine a mod
 
 The Land DA System User's Guide associated with the development branch is at: https://land-da.readthedocs.io/en/develop/, while the guide specific to the Land DA v1.0.0 release can be found at: https://land-da.readthedocs.io/en/release-public-v1.0.0/. Users may download data for use with the most recent release from the [Land DA data bucket](https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html#current_land_da_release_data/). The [Land DA Docker Hub](https://hub.docker.com/r/noaaepic/ubuntu20.04-intel-landda) hosts Land DA containers. These containers package the Land DA System together with all its software dependencies for an easier experience building and running Land DA.
 
+For any publications based on work with the UFS Offline Land Data Assimilation System, please include a citation to the DOI below:
+
 UFS Development Team. (2023, March 6). Unified Forecast System (UFS) Land Data Assimilation (DA) System (Version v1.0.0). Zenodo. https://doi.org/10.5281/zenodo.7675721
 
