@@ -1,0 +1,64 @@
+module test_jediincr
+
+  ! Tests of module. Note that the module name (test_jediincr here) can be anything
+  ! you want.
+
+  ! Always need to use funit
+  use funit
+
+  ! Always need to use the module you're testing
+  use NoahMPdisag_module, only : noahmp_type, UpdateAllLayers
+
+  implicit none
+
+contains
+
+  ! Tests need to have the '@Test' macro in order for pFUnit to recognize them as tests
+  ! that it should run.
+  @Test
+  subroutine apply_incr_noahmp_snow()
+     !
+     type(noahmp_type)  :: noahmp_state
+     double precision, allocatable :: increment(:)
+     double precision, parameter :: swe_ref = 10.95
+     integer, parameter :: len_land_vec = 1
+
+     ! SET-UP THE NOAH-MP STATE  AND INCREMENT
+     noahmp_state%name_snow_depth =  'snwdph    '
+     noahmp_state%name_swe =         'sheleg    '
+
+     allocate(noahmp_state%swe                (len_land_vec)) ! values over land only
+     allocate(noahmp_state%snow_depth         (len_land_vec)) ! values over land only 
+     allocate(noahmp_state%active_snow_layers (len_land_vec)) 
+     allocate(noahmp_state%swe_previous       (len_land_vec))
+     allocate(noahmp_state%snow_soil_interface(len_land_vec,7))
+     allocate(noahmp_state%temperature_snow   (len_land_vec,3))
+     allocate(noahmp_state%snow_ice_layer     (len_land_vec,3))
+     allocate(noahmp_state%snow_liq_layer     (len_land_vec,3))
+     allocate(noahmp_state%temperature_soil   (len_land_vec))
+     allocate(increment   (len_land_vec)) ! increment to snow depth over land
+
+     ! set values
+     noahmp_state%swe = 7.30
+     noahmp_state%snow_depth = 2.00
+     noahmp_state%active_snow_layers = 0.0
+     noahmp_state%swe_previous = 7.37 
+     noahmp_state%temperature_soil = 273.15
+     noahmp_state%snow_liq_layer = 0.44
+     noahmp_state%snow_ice_layer = 6.98 
+     noahmp_state%temperature_snow = 260.0 
+     noahmp_state%snow_soil_interface = -2.0 
+     increment = 1.00
+
+     !
+     call UpdateAllLayers(len_land_vec, increment, noahmp_state)
+     write(*,*)noahmp_state%swe(1)
+
+     ! Verify
+     !
+     ! Generally use one of pFUnit's @assert macros
+     @assertRelativelyEqual(swe_ref, noahmp_state%swe(1), tolerance=1e-6)
+
+  end subroutine apply_incr_noahmp_snow
+
+end module test_jediincr

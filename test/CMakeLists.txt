@@ -1,3 +1,22 @@
+#
+set( python_scripts
+  ${CMAKE_CURRENT_SOURCE_DIR}/compare.py
+)
+
+# cp python scripts 
+foreach(FILENAME ${python_scripts})
+     get_filename_component(filename ${FILENAME} NAME )
+     execute_process( COMMAND ${CMAKE_COMMAND} -E copy
+         ${FILENAME}
+         ${CMAKE_CURRENT_BINARY_DIR}/${filename} )
+endforeach()
+
+# test jedi incr module
+add_pfunit_ctest(test_jediincr_module
+  TEST_SOURCES test_jediincr.pf
+  LINK_LIBRARIES jediincr
+  )
+
 # test for vector2tile for use in jedi-fv3
 add_test(NAME test_vector2tile
          COMMAND ${PROJECT_SOURCE_DIR}/test/test_vector2tile.sh ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR} vector2tile bkg
