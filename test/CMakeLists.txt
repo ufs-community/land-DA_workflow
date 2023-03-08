@@ -1,14 +1,22 @@
-# test jedi incr module
+# test fortran jedi incr module
 add_pfunit_ctest(test_jediincr_module
   TEST_SOURCES test_jediincr.pf
   LINK_LIBRARIES jediincr
   )
 
 # test python compare function
-add_test(NAME test_compare
+ecbuild_add_test( TARGET  test_python_compare_ecbuild
+                  TYPE    PYTHON
+                  COMMAND ${PROJECT_SOURCE_DIR}/test/test_compare.py
+                  ENVIRONMENT "PYTHONPATH=${PROJECT_SOURCE_DIR}/test:$ENV{PYTHONPATH}"
+                  WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test  
+                  ARGS    -v)
+
+# test python compare function using ctest
+add_test(NAME test_python_compare_ctest
          COMMAND ${PROJECT_SOURCE_DIR}/test/test_compare.py -v
          WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
-set_tests_properties(test_compare
+set_tests_properties(test_python_compare_ctest
     PROPERTIES
     ENVIRONMENT "PYTHONPATH=${PROJECT_SOURCE_DIR}/test:$ENV{PYTHONPATH}")
 
