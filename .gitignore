@@ -4,3 +4,4 @@ log_noahmp.*
 *.namelist
 exp_out/*
 analdates.sh
+test/__pycache__/

@@ -2,6 +2,7 @@
 import sys
 import numpy as np
 from netCDF4 import Dataset
+import comparelib as comparelib
 
 with Dataset(sys.argv[1]) as nc1, Dataset(sys.argv[2]) as nc2:
   # Check if the list of variables are the same
@@ -16,4 +17,4 @@ with Dataset(sys.argv[1]) as nc1, Dataset(sys.argv[2]) as nc2:
       sys.exit(2)
     # If dimension is the same, compare data
     else:
-      np.testing.assert_allclose(nc1[varname][:], nc2[varname][:], rtol=1e-5, atol=float(sys.argv[3])) 
+      comparelib.check_diff(nc1[varname][:], nc2[varname][:], 1e-5, float(sys.argv[3]))

@@ -1,21 +1,16 @@
-#
-set( python_scripts
-  ${CMAKE_CURRENT_SOURCE_DIR}/compare.py
-)
-
-# cp python scripts 
-foreach(FILENAME ${python_scripts})
-     get_filename_component(filename ${FILENAME} NAME )
-     execute_process( COMMAND ${CMAKE_COMMAND} -E copy
-         ${FILENAME}
-         ${CMAKE_CURRENT_BINARY_DIR}/${filename} )
-endforeach()
-
 # test jedi incr module
 add_pfunit_ctest(test_jediincr_module
   TEST_SOURCES test_jediincr.pf
   LINK_LIBRARIES jediincr
   )
+
+# test python compare function
+add_test(NAME test_compare
+         COMMAND ${PROJECT_SOURCE_DIR}/test/test_compare.py -v
+         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
+set_tests_properties(test_compare
+    PROPERTIES
+    ENVIRONMENT "PYTHONPATH=${PROJECT_SOURCE_DIR}/test:$ENV{PYTHONPATH}")
 
 # test for vector2tile for use in jedi-fv3
 add_test(NAME test_vector2tile
@@ -23,7 +18,8 @@ add_test(NAME test_vector2tile
          WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 set_tests_properties(test_vector2tile
     PROPERTIES
-    ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS}")
+    ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS};
+                PYTHONPATH=${PROJECT_SOURCE_DIR}/test:$ENV{PYTHONPATH}")
 
 # test for creating pseudo ensemble for use in letkfoi
 add_test(NAME test_create_ens
@@ -60,6 +56,7 @@ set_tests_properties(test_tile2vector
     PROPERTIES
     DEPENDS "test_apply_jediincr" 
     ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS};
+                 PYTHONPATH=${PROJECT_SOURCE_DIR}/test:$ENV{PYTHONPATH}; 
                  TOL=$ENV{TOL}")
 
 # test for ufs-land-driver
@@ -70,4 +67,5 @@ set_tests_properties(test_land_driver
     PROPERTIES
     DEPENDS "test_tile2vector"
     ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS};
+                 PYTHONPATH=${PROJECT_SOURCE_DIR}/test:$ENV{PYTHONPATH};
                  TOL=$ENV{TOL}")
