@@ -2,7 +2,7 @@ name: Continuous Delivery of Land DA Container
 
 on:
   push:
-    branches: [ "release/public-v1.0.0" ]
+    branches: [ "unit_test_demo" ]
   pull_request:
     branches: [ "release/public-v1.0.0" ]
 
@@ -48,7 +48,7 @@ jobs:
             # Push tag when PR get merged or directly push  
             echo "docker push tag ..."
             docker tag ufs-noahmp_landa:develop ufscommunity/ufs-noahmp_landa:develop
-            docker push ufscommunity/ufs-noahmp_landa:develop
+            #docker push ufscommunity/ufs-noahmp_landa:develop
         fi
        else
         echo "ufs-noahmp_landa:develop was not generated ..."
