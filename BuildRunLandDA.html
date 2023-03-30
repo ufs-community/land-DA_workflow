@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3. Land DA Workflow (Hera &amp; Orion) &mdash; UFS Offline Land DA User&#39;s Guide v1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="4. Containerized Land DA Workflow" href="Container.html" />
+    <link rel="prev" title="2. Technical Overview" href="TechnicalOverview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            UFS Offline Land DA User's Guide
+          </a>
+              <div class="version">
+                v1.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TechnicalOverview.html">2. Technical Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Land DA Workflow (Hera &amp; Orion)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-a-working-directory">3.1. Create a Working Directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-data">3.2. Get Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-code">3.3. Get Code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-the-land-da-system">3.4. Build the Land DA System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configure-the-experiment">3.5. Configure the Experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-an-experiment">3.6. Run an Experiment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#check-progress">3.7. Check Progress</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Container.html">4. Containerized Land DA Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Model.html">5. Noah-MP Land Surface Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DASystem.html">6. Land Data Assimilation System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Glossary.html">7. Glossary</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">UFS Offline Land DA User's Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">3. </span>Land DA Workflow (Hera &amp; Orion)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/BuildRunLandDA.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="land-da-workflow-hera-orion">
+<span id="buildrunlandda"></span><h1><span class="section-number">3. </span>Land DA Workflow (Hera &amp; Orion)<a class="headerlink" href="#land-da-workflow-hera-orion" title="Permalink to this headline"></a></h1>
+<p>This chapter provides instructions for building and running a basic Land DA case for the Unified Forecast System (<a class="reference internal" href="Glossary.html#term-ufs"><span class="xref std std-term">UFS</span></a>) Land DA System. This out-of-the-box Land DA case builds a weather forecast for January 1, 2016 at 18z to January 3, 2016 at 18z.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>These steps are designed for use on <a class="reference internal" href="TechnicalOverview.html#levelsofsupport"><span class="std std-ref">Level 1</span></a> systems (i.e., Hera and Orion) and may require significant changes on other systems. It is recommended that users on other systems run the containerized version of Land DA. Users may reference <a class="reference internal" href="Container.html#container"><span class="std std-numref">Chapter 4: Containerized Land DA Workflow</span></a> for instructions.</p>
+</div>
+<div class="section" id="create-a-working-directory">
+<h2><span class="section-number">3.1. </span>Create a Working Directory<a class="headerlink" href="#create-a-working-directory" title="Permalink to this headline"></a></h2>
+<p>Create a directory for the Land DA experiment (<code class="docutils literal notranslate"><span class="pre">$LANDDAROOT</span></code>):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mkdir /path/to/landda</span>
+<span class="go">cd /path/to/landda</span>
+<span class="go">export LANDDAROOT=`pwd`</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">/path/to/landda</span></code> is the path to the directory where the user plans to run Land DA experiments.</p>
+</div>
+<div class="section" id="get-data">
+<span id="getdata"></span><h2><span class="section-number">3.2. </span>Get Data<a class="headerlink" href="#get-data" title="Permalink to this headline"></a></h2>
+<p><a class="reference internal" href="#level1data"><span class="std std-numref">Table 3.1</span></a> shows the locations of pre-staged data on NOAA <a class="reference internal" href="Glossary.html#term-rdhpcs"><span class="xref std std-term">RDHPCS</span></a> (i.e., Hera and Orion).</p>
+<span id="level1data"></span><table class="docutils align-default" id="id1">
+<caption><span class="caption-number">Table 3.1 </span><span class="caption-text">Level 1 RDHPCS Data</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 82%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Platform</p></th>
+<th class="head"><p>Data Location</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Hera</p></td>
+<td><p>/scratch1/NCEPDEV/nems/role.epic/landda/inputs</p></td>
+</tr>
+<tr class="row-odd"><td><p>Orion</p></td>
+<td><p>/work/noaa/epic-ps/role-epic-ps/landda/inputs</p></td>
+</tr>
+<tr class="row-even"><td><p>Jet</p></td>
+<td><p>/mnt/lfs4/HFIP/hfv3gfs/role.epic/landda/inputs</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cheyenne</p></td>
+<td><p>/glade/work/epicufsrt/contrib/landda/inputs</p></td>
+</tr>
+</tbody>
+</table>
+<p>Users can either set the <code class="docutils literal notranslate"><span class="pre">LANDDA_INPUTS</span></code> environment variable to the location of their system’s pre-staged data or use a soft link to the data. For example, on Hera, users may set:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export LANDDA_INPUTS=/scratch1/NCEPDEV/nems/role.epic/landda/inputs</span>
+</pre></div>
+</div>
+<p>Alternatively, users can add a soft link to the data. For example, on Orion:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $LANDDAROOT</span>
+<span class="go">ln -s /work/noaa/epic-ps/role-epic-ps/landda/inputs .</span>
+</pre></div>
+</div>
+<p>Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in <a class="reference internal" href="Container.html#getdatac"><span class="std std-numref">Section 4.3</span></a>. Users with access to data for additional experiments may use the same process described above to point or link to that data by modifying the path to the data appropriately.</p>
+<p>Users who are not using Land DA on Hera or Orion should view <a class="reference internal" href="Container.html#container"><span class="std std-numref">Chapter 4</span></a> for instructions on running the containerized version of Land DA. <a class="reference internal" href="Container.html#getdatac"><span class="std std-numref">Section 4.3</span></a> explains options for downloading the sample data onto their system.</p>
+</div>
+<div class="section" id="get-code">
+<h2><span class="section-number">3.3. </span>Get Code<a class="headerlink" href="#get-code" title="Permalink to this headline"></a></h2>
+<p>Clone the Land DA repository.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone -b release/public-v1.0.0 --recursive https://github.com/NOAA-EPIC/land-offline_workflow.git</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="build-the-land-da-system">
+<h2><span class="section-number">3.4. </span>Build the Land DA System<a class="headerlink" href="#build-the-land-da-system" title="Permalink to this headline"></a></h2>
+<ol class="arabic">
+<li><p>Navigate to the workflow directory, and source the modulefiles.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $LANDDAROOT/land-offline_workflow</span>
+<span class="go">module use modulefiles</span>
+<span class="go">module load landda_&lt;machine&gt;.intel</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;machine&gt;</span></code> is either <code class="docutils literal notranslate"><span class="pre">hera</span></code> or <code class="docutils literal notranslate"><span class="pre">orion</span></code>.</p>
+</li>
+<li><p>Create and navigate to a <code class="docutils literal notranslate"><span class="pre">build</span></code> directory.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mkdir build</span>
+<span class="go">cd build</span>
+</pre></div>
+</div>
+</li>
+<li><p>Build the Land DA System.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecbuild ..</span>
+<span class="go">make -j 8</span>
+</pre></div>
+</div>
+<p>If the code successfully compiles, the console output should end with:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[100%] Built target ufsLandDriver.exe</span>
+</pre></div>
+</div>
+<p>Additionally, the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory will contain several files and a <code class="docutils literal notranslate"><span class="pre">bin</span></code> subdirectory with three executables:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">apply_incr.exe</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ufsLandDriver.exe</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vector2tile_converter.exe</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</div>
+<div class="section" id="configure-the-experiment">
+<h2><span class="section-number">3.5. </span>Configure the Experiment<a class="headerlink" href="#configure-the-experiment" title="Permalink to this headline"></a></h2>
+<ol class="arabic">
+<li><p>Navigate back to the <code class="docutils literal notranslate"><span class="pre">land-offline_workflow</span></code> directory and check that the account/partition is correct in <code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd ..</span>
+<span class="go">vi submit_cycle.sh</span>
+</pre></div>
+</div>
+<p>If necessary, modify lines 3 and 4 to include the correct account and queue (qos) for the system. It may also be necessary to add the following line to the script to specify the partition:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span>SBATCH --partition<span class="o">=</span>my_partition
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">my_partition</span></code> is the name of the partition on the user’s system.</p>
+</li>
+<li><p>Configure other elements of the experiment if desired. The v1.0.0 release includes four scripts with default experiment settings:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_gdas</span></code> for running the Jan. 1-3, 2016 sample case.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_era5</span></code> for running a Jan. 1-3, 2020 sample case.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_gdas_restart</span></code> for running the Jan. 3-4, 2016 sample case.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_era5_restart</span></code> for running a Jan. 3-4, 2020 sample case.</p></li>
+</ul>
+<p>These files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Chapters <a class="reference internal" href="Model.html#model"><span class="std std-numref">5</span></a> &amp; <a class="reference internal" href="DASystem.html#dasystem"><span class="std std-numref">6</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">*restart</span></code> settings files will only work after an experiment with the corresponding non-restart settings file has been run. These settings files are designed to use the restart files created by the first experiment cycle to pick up where it left off. For example, <code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_gdas</span></code> runs from 2016-01-01 at 18z to 2016-01-03 at 18z. The <code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_gdas_restart</span></code> will run from 2016-01-03 at 18z to 2016-01-04 at 18z.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="run-an-experiment">
+<h2><span class="section-number">3.6. </span>Run an Experiment<a class="headerlink" href="#run-an-experiment" title="Permalink to this headline"></a></h2>
+<p>The Land DA System uses a script-based workflow that is launched using the <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code> script. This script requires an input file that details all the specifics of a given experiment.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./do_submit_cycle.sh settings_DA_cycle_gdas</span>
+</pre></div>
+</div>
+<p>The system will output a message such as <code class="docutils literal notranslate"><span class="pre">Submitted</span> <span class="pre">batch</span> <span class="pre">job</span> <span class="pre">########</span></code>, indicating that the job was successfully submitted. If all goes well, two full cycles will run with data assimilation (DA) and a forecast.</p>
+</div>
+<div class="section" id="check-progress">
+<span id="verifysuccess"></span><h2><span class="section-number">3.7. </span>Check Progress<a class="headerlink" href="#check-progress" title="Permalink to this headline"></a></h2>
+<p>Verify that the experiment ran successfully:</p>
+<p>To check on the job status, users on a system with a Slurm job scheduler may run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">squeue -u $USER</span>
+</pre></div>
+</div>
+<p>To view progress, users can open the <code class="docutils literal notranslate"><span class="pre">log*</span></code> and <code class="docutils literal notranslate"><span class="pre">err*</span></code> files once they have been generated:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">tail -f log* err*</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">log*</span></code> file for a successful experiment will end with an exit code of <code class="docutils literal notranslate"><span class="pre">0:0</span></code> and a message like:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Job 42442720 (not serial) finished for user User.Name in partition hera with exit code 0:0</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">err*</span></code> file for a successful experiment will end with something similar to:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">+ THISDATE=2016010318</span>
+<span class="go">+ date_count=2</span>
+<span class="go">+ &#39;[&#39; 2 -lt 2 &#39;]&#39;</span>
+<span class="go">+ &#39;[&#39; 2016010318 -lt 2016010318 &#39;]&#39;</span>
+</pre></div>
+</div>
+<p>Users will need to hit <code class="docutils literal notranslate"><span class="pre">Ctrl+C</span></code> to exit the files.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>If the log file contains a NetCDF error (e.g., <code class="docutils literal notranslate"><span class="pre">ModuleNotFoundError:</span> <span class="pre">No</span> <span class="pre">module</span> <span class="pre">named</span> <span class="pre">'netCDF4'</span></code>), run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install netCDF4</span>
+</pre></div>
+</div>
+<p>Then, resubmit the job (<code class="docutils literal notranslate"><span class="pre">sbatch</span> <span class="pre">submit_cycle.sh</span></code>).</p>
+</div>
+<p>Next, check for the background and analysis files in the <code class="docutils literal notranslate"><span class="pre">cycle_land</span></code> directory.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ls -l ../cycle_land/DA_GHCN_test/mem000/restarts/vector/</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="TechnicalOverview.html" class="btn btn-neutral float-left" title="2. Technical Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Container.html" class="btn btn-neutral float-right" title="4. Containerized Land DA Workflow" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
