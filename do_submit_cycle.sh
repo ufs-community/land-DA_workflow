@@ -24,10 +24,13 @@ export KEEPWORKDIR="YES"
 ############################
 # ensure necessary envars are set
 envars=("exp_name" "STARTDATE" "ENDDATE" "LANDDAROOT" "LANDDA_INPUTS" "CYCLEDIR" \
-        "LANDDA_EXPTS" "PYTHON" "BUILDDIR" "atmos_forc" "OBSDIR" "WORKDIR" \
+        "LANDDA_EXPTS" "BUILDDIR" "atmos_forc" "OBSDIR" "WORKDIR" \
         "OUTDIR" "TEST_BASEDIR" "JEDI_EXECDIR" "JEDI_STATICDIR" "ensemble_size" \
         "FCSTHR" "RES" "TPATH" "TSTUB" "cycles_per_job" "ICSDIR" "DA_config" \
-        "DA_config00" "DA_config06" "DA_config12" "DA_config18")
+        "DA_config00" "DA_config06" "DA_config12" "DA_config18" "BASELINE")
+if [[ ! $BASELINE =~ 'hera.internal' ]]; then
+  envars=("PYTHON")
+fi
 
 for var in "${envars[@]}"; do
   if [ -z "${!var}" ]; then
@@ -43,7 +46,9 @@ fi
 ############################
 # check that modules are loaded in the environment
 
-${CYCLEDIR}/module_check.sh
+if [[ ! $BASELINE =~ 'hera.internal' ]]; then
+  ${CYCLEDIR}/module_check.sh
+fi
 
 if [[ $? -ne 0 ]]; then
   exit 1
@@ -83,11 +88,18 @@ fi
 
 export DADIR=${CYCLEDIR}/DA_update/
 export DAscript=${DADIR}/do_landDA.sh
-export MPIEXEC=`which mpiexec`
+export MPIEXEC='srun'
+export LANDDADIR=${DADIR}
 
 export analdate=${CYCLEDIR}/analdates.sh
 export incdate=${CYCLEDIR}/incdate.sh
 
+export BUILDDIR=${CYCLEDIR}/build
+if [[ $BASELINE =~ 'hera.internal' ]]; then
+  export JEDI_EXECDIR='/scratch2/NCEPDEV/land/data/jedi/fv3-bundle/build/bin'
+fi
+export JEDI_STATICDIR=${DADIR}/jedi/fv3-jedi/Data/
+export INCR_EXECDIR=${DADIR}/add_jedi_incr/exec/
 ############################
 # read in dates  
 

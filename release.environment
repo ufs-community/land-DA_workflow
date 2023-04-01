@@ -5,7 +5,9 @@ export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
 export LANDDA_INPUTS=${LANDDA_INPUTS:-${LANDDAROOT}/inputs}
 export CYCLEDIR=$(pwd) 
 export LANDDA_EXPTS=${LANDDA_EXPTS:-${LANDDAROOT}/landda_expts}
-export PYTHON=`which python3`
+if [[ ! $BASELINE =~ 'hera.internal' ]]; then
+  export PYTHON=`which python`
+fi
 export BUILDDIR=${BUILDDIR:-${CYCLEDIR}/build}
 
 #Change some variables if working with a container
