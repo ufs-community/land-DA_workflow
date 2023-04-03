@@ -29,7 +29,7 @@ OBS_TYPES=("GHCN" )   # format: ("OBS1" "OBS2")
 JEDI_TYPES=("DA" )   # format ("DA" "HOFX") 
 
 #  DA window lenth. Will generally be the same as the FCSTLEN 
-WINLEN=6
+WINLEN=24
 
 # YAMLS. Options, either:
 # 1. "construct" to construct the YAML name, based on requested obs types and their availability 
