@@ -88,7 +88,7 @@ fi
 
 export DADIR=${CYCLEDIR}/DA_update/
 export DAscript=${DADIR}/do_landDA.sh
-export MPIEXEC='srun'
+export MPIEXEC=`which mpiexec`
 export LANDDADIR=${DADIR}
 
 export analdate=${CYCLEDIR}/analdates.sh
