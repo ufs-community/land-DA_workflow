@@ -21,6 +21,14 @@ enable_testing()
 include( ecbuild_system NO_POLICY_SCOPE )
 ecbuild_declare_project()
 
+# Inlcude externalproject
+# -----------------------
+include(ExternalProject)
+
+# Initialize bundle
+# -----------------
+ecbuild_bundle_initialize()
+
 list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include( landda_compiler_flags )
 
@@ -35,6 +43,16 @@ include_directories( ${NETCDF_INCLUDE_DIRS} )
 # Sources
 ################################################################################
 set( LANDDA_LINKER_LANGUAGE CXX)
+
+ExternalProject_Add(ufs-weather-model
+  PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
+  GIT_REPOSITORY https://github.com/ufs-community/ufs-weather-model
+  GIT_SUBMODULES_RECURSE TRUE
+  GIT_TAG develop
+  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
+  CMAKE_ARGS ${SOURCE_DIR} -DAPP=LND -DMPI=ON -DCMAKE_BUILD_TYPE=Release
+  INSTALL_COMMAND cmake
+  )
 
 add_subdirectory( vector2tile )
 add_subdirectory( ufs-land-driver )
