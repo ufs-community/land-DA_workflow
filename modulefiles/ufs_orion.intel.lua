@@ -27,4 +27,7 @@ setenv("CXX", "mpiicpc")
 setenv("FC", "mpiifort")
 setenv("CMAKE_Platform", "orion.intel")
 
+setenv("EPICHOME", "/work/noaa/epic-ps/role-epic-ps")
+setenv("JEDI_INSTALL", pathJoin(os.getenv("EPICHOME"),"contrib"))
+
 whatis("Description: UFS build environment")
