@@ -19,7 +19,7 @@ This User's Guide is organized as follows:
    * :numref:`Chapter %s <DASystem>` (DA Framework) provides information on the DA system, required data, and configuration parameters. 
    * :numref:`Chapter %s <Glossary>` (Glossary) lists important terms. 
 
-Users and developers may post questions and exchange information on the Land DA System's `GitHub Discussions <https://github.com/NOAA-EPIC/land-offline_workflow/discussions/categories/q-a>`__ forum if their concerns are not addressed in this User's Guide.
+Users and developers may post questions and exchange information on the Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__ forum if their concerns are not addressed in this User's Guide.
 
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
 
