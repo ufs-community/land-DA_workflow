@@ -126,7 +126,7 @@ the UFS Land DA System.
    +--------------------------+-----------------------------------------+------------------------------------------------------+
    | Repository Name          | Repository Description                  | Authoritative repository URL                         |
    +==========================+=========================================+======================================================+
-   | land-DA_update           | Contains scripts and components for     | https://github.com/NOAA-EPIC/land-DA_update          |
+   | land-DA_update           | Contains scripts and components for     | https://github.com/ufs-community/land-DA/            |
    |                          | performing data assimilation (DA)       |                                                      |
    |                          | procedures.                             |                                                      |
    +--------------------------+-----------------------------------------+------------------------------------------------------+
