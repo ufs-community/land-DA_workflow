@@ -82,10 +82,10 @@ Code Repositories and Directory Structure
 Directory Structure
 ======================
 
-The main repository for the Land DA System is named ``land-offline_workflow``; 
-it is available on GitHub at https://github.com/NOAA-EPIC/land-offline_workflow/. 
-A number of submodules are nested under the main ``land-offline_workflow`` directory. 
-When the ``release/public-v1.0.0`` branch of the ``land-offline_workflow`` repository 
+The main repository for the Land DA System is named ``land-DA_workflow``; 
+it is available on GitHub at https://github.com/ufs-community/land-DA_workflow. 
+A number of submodules are nested under the main ``land-DA_workflow`` directory. 
+When the ``release/public-v1.0.0`` branch of the ``land-DA_workflow`` repository 
 is cloned with the ``--recursive`` argument, the basic directory structure will be 
 similar to the example below. Some files and directories have been removed for brevity. 
 
