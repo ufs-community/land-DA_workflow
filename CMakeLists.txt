@@ -12,7 +12,7 @@ cmake_minimum_required( VERSION 3.12 )
 project( LandDA VERSION 0.0.0 LANGUAGES C CXX Fortran)
 
 if(DEFINED ENV{JEDI_INSTALL})
-  set( JEDI_INSTALL  $ENV{JEDI_INSTALL}/fv3-bundle)
+  set( JEDI_INSTALL  $ENV{JEDI_INSTALL}/jedi-bundle)
 else()
   message(FATAL_ERROR "Define the environment variable 'JEDI_INSTALL' to point to the parent directory of fv3-bundle on your system")
 endif()
