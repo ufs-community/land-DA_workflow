@@ -36,6 +36,6 @@ export OUTDIR=${LANDDA_EXPTS}/${exp_name}
 export TEST_BASEDIR=${TEST_BASEDIR:-${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector}
 
 # JEDI directories
-export JEDI_EXECDIR=${JEDI_EXECDIR:-"${JEDI_INSTALL}/fv3-bundle/build/bin"}
-export IODA_BUILD_DIR=${JEDI_INSTALL}/ioda-bundle/build
-export JEDI_STATICDIR=${JEDI_INSTALL}/fv3-bundle/fv3-jedi/test/Data
+export JEDI_EXECDIR=${JEDI_EXECDIR:-"${JEDI_INSTALL}/jedi-bundle/build/bin"}
+export IODA_BUILD_DIR=${JEDI_INSTALL}/jedi-bundle/build
+export JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
