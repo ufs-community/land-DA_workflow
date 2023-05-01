@@ -6,7 +6,7 @@ export LANDDA_INPUTS=${LANDDA_INPUTS:-${LANDDAROOT}/inputs}
 export CYCLEDIR=$(pwd) 
 export LANDDA_EXPTS=${LANDDA_EXPTS:-${LANDDAROOT}/landda_expts}
 if [[ ! $BASELINE =~ 'hera.internal' ]]; then
-  export PYTHON=`which python`
+  export PYTHON=`/usr/bin/which python`
 fi
 export BUILDDIR=${BUILDDIR:-${CYCLEDIR}/build}
 
@@ -14,15 +14,15 @@ export BUILDDIR=${BUILDDIR:-${CYCLEDIR}/build}
 if [[ ${USE_SINGULARITY} =~ yes ]]; then
   EPICHOME=/opt
   #use the python that is built into the container. It has all the pythonpaths set and can run the ioda converters
-  export PYTHON=$PWD/singularity/bin/python
+  export PYTHON=$PWD/build/bin/python
   #JEDI is installed under /opt in the container
   export JEDI_INSTALL=/opt
   #Scripts that launch containerized versions of the executables are in $PWD/singularity/bin They should be called
   #from the host system to be run (e.g. mpiexec -n 6 $BUILDDIR/bin/fv3jedi_letkf.x )
-  export BUILDDIR=$PWD/singularity
-  export JEDI_EXECDIR=${CYCLEDIR}/singularity/bin
+  export BUILDDIR=$PWD/build
+  export JEDI_EXECDIR=${CYCLEDIR}/build/bin
   module try-load singularity
-  export SINGULARITYBIN=`which singularity`
+  export SINGULARITYBIN=`/usr/bin/which singularity`
   sed -i 's/singularity exec/${SINGULARITYBIN} exec/g' run_container_executable.sh
 fi
 
