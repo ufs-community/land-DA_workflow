@@ -1,26 +1,97 @@
 help([[
-loads Land DA prerequisites for Singularity/Intel
+loads UFS Model prerequisites for Hera/Intel
 ]])
 
 setenv("EPICHOME", "/opt")
 
---prepend_path("MODULEPATH", pathJoin(os.getenv("EPICHOME"),"miniconda3/modulefiles"))
---miniconda3_ver=os.getenv("miniconda3_ver") or "4.12.0"
---load(pathJoin("miniconda3", miniconda3_ver))
+prepend_path("MODULEPATH", pathJoin(os.getenv("EPICHOME"),"spack-stack/spack-stack-1.3.0/envs/unified-dev/install/modulefiles/Core"))
 
-prepend_path("MODULEPATH", pathJoin(os.getenv("EPICHOME"),"spack-stack/envs/landda-release-1.0-intel/install/modulefiles/Core"))
+stack_intel_ver=os.getenv("stack_intel_ver") or "2021.8.0"
+load(pathJoin("stack-intel", stack_intel_ver))
 
-load("stack-intel")
-load("stack-intel-oneapi-mpi")
-load("netcdf-c")
-load("netcdf-fortran")
-load("cmake")
-load("ecbuild")
-load("stack-python")
+load("intel-oneapi-mpi/2021.8.0")
+stack_impi_ver=os.getenv("stack_impi_ver") or "2021.8.0"
+load(pathJoin("stack-intel-oneapi-mpi", stack_impi_ver))
+
+stack_python_ver=os.getenv("stack_python_ver") or "3.8.10"
+load(pathJoin("stack-python", stack_python_ver))
+
+cmake_ver=os.getenv("cmake_ver") or "3.23.1"
+load(pathJoin("cmake", cmake_ver))
+
+ecbuild_ver=os.getenv("ecbuild_ver") or "3.6.5"
+load(pathJoin("ecbuild", ecbuild_ver))
+
+jasper_ver=os.getenv("jasper_ver") or "2.0.32"
+load(pathJoin("jasper", jasper_ver))
+
+zlib_ver=os.getenv("zlib_ver") or "1.2.13"
+load(pathJoin("zlib", zlib_ver))
+
+libpng_ver=os.getenv("libpng_ver") or "1.6.37"
+load(pathJoin("libpng", libpng_ver))
+
+hdf5_ver=os.getenv("hdf5_ver") or "1.14.0"
+load(pathJoin("hdf5", hdf5_ver))
+
+netcdf_c_ver=os.getenv("netcdf_ver") or "4.9.2"
+load(pathJoin("netcdf-c", netcdf_c_ver))
+
+netcdf_fortran_ver=os.getenv("netcdf_fortran_ver") or "4.6.0"
+load(pathJoin("netcdf-fortran", netcdf_fortran_ver))
+
+pio_ver=os.getenv("pio_ver") or "2.5.9"
+load(pathJoin("parallelio", pio_ver))
+
+esmf_ver=os.getenv("esmf_ver") or "8.3.0b09"
+load(pathJoin("esmf", esmf_ver))
+
+fms_ver=os.getenv("fms_ver") or "2022.04"
+load(pathJoin("fms",fms_ver))
+
+bacio_ver=os.getenv("bacio_ver") or "2.4.1"
+load(pathJoin("bacio", bacio_ver))
+
+crtm_ver=os.getenv("crtm_ver") or "2.4.0"
+load(pathJoin("crtm", crtm_ver))
+
+g2_ver=os.getenv("g2_ver") or "3.4.5"
+load(pathJoin("g2", g2_ver))
+
+g2tmpl_ver=os.getenv("g2tmpl_ver") or "1.10.2"
+load(pathJoin("g2tmpl", g2tmpl_ver))
+
+ip_ver=os.getenv("ip_ver") or "3.3.3"
+load(pathJoin("ip", ip_ver))
+
+sp_ver=os.getenv("sp_ver") or "2.3.3"
+load(pathJoin("sp", sp_ver))
+
+w3emc_ver=os.getenv("w3emc_ver") or "2.9.2"
+load(pathJoin("w3emc", w3emc_ver))
+
+gftl_shared_ver=os.getenv("gftl_shared_ver") or "1.5.0"
+load(pathJoin("gftl-shared", gftl_shared_ver))
+
+mapl_ver=os.getenv("mapl_ver") or "2.22.0-esmf-8.3.0b09"
+load(pathJoin("mapl", mapl_ver))
+
+load("py-cftime/1.0.3.4")
+load("py-cython/0.29.32")
+load("py-f90nml/1.4.3")
+load("py-jinja2/3.1.2")
+load("py-netcdf4/1.5.3")
+load("py-numpy/1.22.3")
+load("py-pandas/1.4.0")
+load("py-python-dateutil/2.8.2")
+load("py-pyyaml/6.0")
+
+load("atlas")
 
 setenv("CC", "mpiicc")
 setenv("CXX", "mpiicpc")
 setenv("FC", "mpiifort")
+
 setenv("JEDI_INSTALL", pathJoin(os.getenv("EPICHOME"),""))
 
-whatis("Description: Land DA build environment")
+whatis("Description: UFS build environment")
