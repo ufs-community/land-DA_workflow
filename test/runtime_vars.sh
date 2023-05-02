@@ -36,12 +36,12 @@ export EXECDIR=${EXECDIR:-$project_binary_dir/bin}
 export LANDDA_INPUTS=${LANDDA_INPUTS:-"`dirname $project_source_dir`/inputs"}
 
 # set IODA path
-export IODA_BUILD_DIR=${IODA_BUILD_DIR:-"${JEDI_INSTALL}/ioda-bundle/build"}
+export IODA_BUILD_DIR=${IODA_BUILD_DIR:-"${JEDI_INSTALL}/jedi-bundle/build"}
 export PYTHON_VERSION=`python -c 'import sys; version=sys.version_info[:3]; print("{0}.{1}".format(*version))'`
 export PYTHONPATH=$PYTHONPATH:${IODA_BUILD_DIR}/lib/python${PYTHON_VERSION}/pyioda:${IODA_BUILD_DIR}/lib/pyiodaconv
 
 # JEDI directories
-export JEDI_EXECDIR=${JEDI_EXECDIR:-"${JEDI_INSTALL}/fv3-bundle/build/bin"}
+export JEDI_EXECDIR=${JEDI_EXECDIR:-"${JEDI_INSTALL}/jedi-bundle/build/bin"}
 export JEDI_STATICDIR=${JEDI_STATICDIR:-"${JEDI_EXECDIR}/../fv3-jedi/test/Data"}
 
 # set executables

@@ -1,10 +1,10 @@
 #!/bin/bash -e
 
-source settings_cycle_test
+source settings_DA_cycle_gdas
 
 rm -rf ${OUTDIR}
 
-do_submit_cycle.sh settings_cycle_test
+./do_submit_cycle.sh settings_DA_cycle_gdas
 
 
 
