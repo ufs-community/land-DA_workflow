@@ -2,9 +2,9 @@ name: Continuous Delivery of Land DA Container
 
 on:
   push:
-    branches: [ "release/public-v1.0.0" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "release/public-v1.0.0" ]
+    branches: [ "develop" ]
 
 jobs:
   deploy:
