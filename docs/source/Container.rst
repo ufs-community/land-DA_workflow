@@ -145,7 +145,7 @@ Get Data
 
 In order to run the Land DA System, users will need input data in the form of fix files, model forcing files, restart files, and observations for data assimilation. These files are already present on NOAA RDHPCS systems (see :numref:`Section %s <Level1Data>` for details). 
 
-Users on any system may download and untar the data from the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com>`__ into their ``$LANDDAROOT`` directory. 
+Users on any system may download and untar the data from the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html>`__ into their ``$LANDDAROOT`` directory. 
 
 .. code-block:: console
 
@@ -261,7 +261,7 @@ Save and close the file.
 Run the Experiment
 =====================
 
-The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided four sample ``settings_*`` files as examples: ``settings_DA_cycle_gdas``, ``settings_DA_cycle_era5``, ``settings_DA_cycle_gdas_restart``, and ``settings_DA_cycle_era5_restart``. The ``*restart`` settings files will only work after an experiment with the corresponding non-restart settings file has been run. This is because they are designed to use the restart files created by the first experiment cycle to pick up where it left off. (e.g., ``settings_DA_cycle_gdas`` runs from 2016-01-01 at 18z to 2016-01-03 at 18z. The ``settings_DA_cycle_gdas_restart`` will run from 2016-01-03 at 18z to 2016-01-04 at 18z.)
+The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided four sample ``settings_*`` files as examples: ``settings_DA_cycle_gdas``, ``settings_DA_cycle_era5``, ``settings_DA_cycle_gdas_restart``, and ``settings_DA_cycle_era5_restart``. The ``*restart`` settings files will only work after an experiment with the corresponding non-restart settings file has been run. This is because they are designed to use the restart files created by the first experiment cycle to pick up where it left off. (For example, ``settings_DA_cycle_gdas`` runs from 2016-01-01 at 18z to 2016-01-03 at 18z. The ``settings_DA_cycle_gdas_restart`` will run from 2016-01-03 at 18z to 2016-01-04 at 18z.)
 
 To start the experiment, run: 
 

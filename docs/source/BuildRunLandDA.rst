@@ -79,7 +79,7 @@ Build the Land DA System
 
    .. code-block:: console
 
-      cd $LANDDAROOT/land-offline_workflow
+      cd $LANDDAROOT/land-da_workflow
       module use modulefiles
       module load landda_<machine>.intel
    
@@ -114,7 +114,7 @@ Build the Land DA System
 Configure the Experiment
 ***************************
 
-#. Navigate back to the ``land-offline_workflow`` directory and check that the account/partition is correct in ``submit_cycle.sh``. 
+#. Navigate back to the ``land-da_workflow`` directory and check that the account/partition is correct in ``submit_cycle.sh``. 
 
    .. code-block:: console
 

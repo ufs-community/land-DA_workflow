@@ -151,7 +151,7 @@ Users may find the following example ``yaml`` configuration file to be a helpful
 
 .. note::
 
-   Any default values indicated in the sections below are the defaults set in ``letkfoi_snow.yaml`` or ``GHCN.yaml`` (found within the ``land-offline_workflow/DA_update/jedi/fv3-jedi/yaml_files/release-v1.0/`` directory).
+   Any default values indicated in the sections below are the defaults set in ``letkfoi_snow.yaml`` or ``GHCN.yaml`` (found within the ``land-DA_workflow/DA_update/jedi/fv3-jedi/yaml_files/release-v1.0/`` directory).
 
 Geometry
 ^^^^^^^^^^^
@@ -471,7 +471,7 @@ Observation filters are used to define Quality Control (QC) filters. They have a
       Maximum value for variables in the filter. 
 
    ``threshold``
-      This variable may function differently depending on the filter it is used in. In the `Background Check Filter <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/ufo/qcfilters/GenericQC.html#background-check-filter>`__, an observation is rejected when the difference between the observation value (*y*) and model simulated value (*H(x)*) is larger than the ``threshold`` * *observation error*. 
+      This variable may function differently depending on the filter it is used in. In the `Background Check Filter <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/ufo/qcfilters/GenericQC.html#background-check-filter>`__, an observation is rejected when the difference between the observation value (*y*) and model simulated value (*H(x)*) is larger than the (``threshold`` * *observation error*). 
 
    ``action``
       Indicates which action to take once an observation has been flagged by a filter. See `Filter Actions <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/inside/jedi-components/ufo/qcfilters/FilterOptions.html#filter-actions>`__ in the JEDI documentation for a full explanation and list of valid values. 
