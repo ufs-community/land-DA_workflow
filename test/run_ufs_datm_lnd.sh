@@ -10,6 +10,7 @@ echo ${project_binary_dir}
 echo ${project_source_dir}
 
 #
+export MACHINE_ID=${MACHINE_ID:-linux}
 TEST_NAME=datm_cdeps_lnd_gswp3
 PATHRT=${project_source_dir}/ufs-weather-model/tests
 RT_COMPILER=${RT_COMPILER:-intel}
@@ -27,7 +28,7 @@ if [[ $MACHINE_ID = orion.* ]]; then
 elif [[ $MACHINE_ID = hera.* ]]; then
   DISKNM=/scratch1/NCEPDEV/nems/emc.nemspara/RT
 else
-  echo "Warning: undified machine, users will have to define MACHINE_ID, INPUTDATA_ROOT and RTPWD by themselives"
+  echo "Warning: MACHINE_ID is default, users will have to define INPUTDATA_ROOT and RTPWD by themselives"
 fi
 BL_DATE=20230413
 RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-${BL_DATE}/${RT_COMPILER^^}}
@@ -92,9 +93,7 @@ if [[ $DATM_CDEPS = 'true' ]]; then
   atparse < ${PATHRT}/parm/${DATM_STREAM_CONFIGURE:-datm.streams.IN} > datm.streams
 fi
 
-# load modules and start runs
-module use ${project_source_dir}/modulefiles
-module load landda_${MACHINE_ID}
+# start runs
 echo "Start ufs-cdeps-land model run with TASKS: ${TASKS}"
 mpiexec -n ${TASKS} ./ufs_model
 

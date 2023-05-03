@@ -2,8 +2,7 @@
 set -e
 ################################################
 # pass arguments
-project_binary_dir=$1
-project_source_dir=$2
+project_source_dir=$1
 
 # first retrieve test data for landda system
 cd ${project_source_dir}/../
@@ -16,13 +15,9 @@ cd ${project_source_dir}
 # First load modules
 PATHRT=${project_source_dir}/ufs-weather-model/tests
 RT_COMPILER=${RT_COMPILER:-intel}
-source ${PATHRT}/detect_machine.sh
-echo ${MACHINE_ID}
-module purge
-module use ${project_source_dir}/modulefiles
-module load landda_${MACHINE_ID}
 
 # install aws
+# users have to load modules before running the script
 pip3 install awscli --upgrade --user
 export PATH=${HOME}/.local/bin:${PATH}
 
