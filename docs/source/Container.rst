@@ -122,7 +122,7 @@ If users prefer, they may copy the container to their local working directory. F
 Other Systems
 ----------------
 
-On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-landda.img`` container from the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html#current_land_da_release_data/>`__. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.0.0`` container rather than the updated release branch container. 
+On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-landda.img`` container from the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html#current_land_da_release_data/>`__. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.0.0`` container rather than the updated ``develop`` branch container. 
 
 To download from the data bucket, users can run:
 
@@ -267,7 +267,7 @@ Run the Experiment
 
 The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided four sample ``settings_*`` files as examples: ``settings_DA_cycle_gdas``, ``settings_DA_cycle_era5``, ``settings_DA_cycle_gdas_restart``, and ``settings_DA_cycle_era5_restart``. The ``*restart`` settings files will only work after an experiment with the corresponding non-restart settings file has been run. This is because they are designed to use the restart files created by the first experiment cycle to pick up where it left off. (e.g., ``settings_DA_cycle_gdas`` runs from 2016-01-01 at 18z to 2016-01-03 at 18z. The ``settings_DA_cycle_gdas_restart`` will run from 2016-01-03 at 18z to 2016-01-04 at 18z.)
 
-First, update ``$BASELINE`` environment variable in the selected ``settings_DA_*`` file to say ``singularity.internal`` instead of ``hera.internal``:
+First, update the ``$BASELINE`` environment variable in the selected ``settings_DA_*`` file to say ``singularity.internal`` instead of ``hera.internal``:
 
 .. code-block:: console
 

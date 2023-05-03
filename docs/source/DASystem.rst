@@ -4,7 +4,7 @@
 Land Data Assimilation System 
 ***************************************************
 
-This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which utilizes the UFS Noah-MP components with JEDI's ``jedi-bundle`` to enable cycled model forecasts. The data assimilation framework applies the Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm to combine the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007).
+This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which utilizes the UFS Noah-MP component together with JEDI's ``jedi-bundle`` (Skylab v3.0) to enable cycled model forecasts. The data assimilation framework applies the Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm to combine the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007).
 
 Joint Effort for Data Assimilation Integration (JEDI)
 ********************************************************
@@ -622,7 +622,7 @@ GHCN files for 2016 and 2020 are already provided in IODA format for the v1.0.0 
 
 In each experiment, the ``DA_config`` file sets the name of the experiment configuration file. This configuration file is typically named ``settings_DA_test``. Before assimilation, if "GHCN" was specified as the observation type in the ``DA_config`` file, the ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` file corresponding to the specified cycle date is soft-linked to the JEDI working directory (``${JEDIWORKDIR}``) with a naming-convention change (i.e., ``GHCN_${YYYY}${MM}${DD}${HH}.nc``). Here, the GHCN IODA file is appended with the cycle hour, ``${HH}`` which is extracted from the ``${STARTDATE}`` variable defined in the relevant ``DA_config`` file. 
 
-Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, the observations are further quality controlled and checked using ``letkf_land.yaml`` (itself a concatenation of ``GHCN.yaml`` and ``letkfoi_snow.yaml``; see the `GitHub yaml files <https://github.com/ufs-community/land-DA/tree/0ffe9e2f3669940854211a6b45a52ce0704a06fa/jedi/fv3-jedi/yaml_files/release-v1.0>`__ for more detail). The GHCN-specific observation filters, domain checks, and quality control parameters from ``GHCN.yaml`` ensure that only snow depth observations which meet specific criteria are assimilated (the rest are rejected). The contents of this YAML are listed below:
+Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, the observations are further quality controlled and checked using ``letkf_land.yaml`` (itself a concatenation of ``GHCN.yaml`` and ``letkfoi_snow.yaml``; see the `GitHub yaml files <https://github.com/ufs-community/land-DA/tree/660d64da52bbe6fd5ccf29dad05fe6be3f10e749/jedi/fv3-jedi/yaml_files>`__ for more detail). The GHCN-specific observation filters, domain checks, and quality control parameters from ``GHCN.yaml`` ensure that only snow depth observations which meet specific criteria are assimilated (the rest are rejected). The contents of this YAML are listed below:
 
 .. code-block:: console
 
@@ -1102,5 +1102,3 @@ Below, users can find an example of a configuration settings file, ``settings_DA
 
 ``fv3bundle_vn``
    Specifies the date for JEDI ``fv3-bundle`` checkout (used to select correct ``yaml``).
-
-.. COMMENT: Jong says fv3bundle_vn is just a "script variable to point to jedi config and yaml files. not much to do with jedi-bundle itself. We will clean up when we refactor the script."

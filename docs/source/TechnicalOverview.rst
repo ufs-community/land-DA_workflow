@@ -67,8 +67,6 @@ Preconfigured (Level 1) systems for Land DA already have the required external l
 |           | intel-oneapi-mpi/2021.8.0         | /opt/jedi-bundle (inside the container)                                           |
 +-----------+-----------------------------------+-----------------------------------------------------------------------------------+
 
-.. COMMENT: Update stack/bundle locations!
-
 Level 2-4 Systems
 ===================
 
