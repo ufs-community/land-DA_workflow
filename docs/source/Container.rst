@@ -203,17 +203,17 @@ When making a writable sandbox on NOAA RDHPCS systems, the following warnings co
    WARNING: integrity: signature not found for object group 1
    WARNING: Bootstrap image could not be verified, but build will continue.
 
-From within the ``$LANDDAROOT`` directory, copy the ``land-offline_workflow`` directory out of the container. 
+From within the ``$LANDDAROOT`` directory, copy the ``land-DA_workflow`` directory out of the container. 
 
 .. code-block:: console
 
-   singularity exec -H $PWD $img cp -r /opt/land-offline_workflow .
+   singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
 
-There should now be a ``land-offline_workflow`` directory in the ``$LANDDAROOT`` directory. Navigate into the ``land-offline_workflow`` directory. If for some reason, this is unsuccessful, users may try a version of the following command instead: 
+There should now be a ``land-DA_workflow`` directory in the ``$LANDDAROOT`` directory. Navigate into the ``land-DA_workflow`` directory. If for some reason, this is unsuccessful, users may try a version of the following command instead: 
 
 .. code-block:: console
 
-   singularity exec -B /<local_base_dir>:/<container_dir> $img cp -r /opt/land-offline_workflow .
+   singularity exec -B /<local_base_dir>:/<container_dir> $img cp -r /opt/land-DA_workflow .
 
 where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level directory on the local system and in the container, respectively. Additional directories can be bound by adding another ``-B /<local_base_dir>:/<container_dir>`` argument before the container location (``$img``). 
 
@@ -225,11 +225,11 @@ where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level
 
    Sometimes binding directories with different names can cause problems. In general, it is recommended that the local base directory and the container directory have the same name. For example, if the host system's top-level directory is ``/user1234``, the user may want to convert the ``.img`` file to a writable sandbox and create a ``user1234`` directory in the sandbox to bind to. 
 
-Navigate to the ``land-offline_workflow`` directory after it has been successfully copied into ``$LANDDAROOT``.
+Navigate to the ``land-DA_workflow`` directory after it has been successfully copied into ``$LANDDAROOT``.
 
 .. code-block:: console
 
-   cd land-offline_workflow
+   cd land-DA_workflow
 
 When using a Singularity container, Intel compilers and Intel :term:`MPI` (preferably 2020 versions or newer) need to be available on the host system to properly launch MPI jobs. Generally, this is accomplished by loading a module with a recent Intel compiler and then loading the corresponding Intel MPI. For example, users can modify the following commands to load their system's compiler/MPI combination:
 
@@ -273,7 +273,7 @@ To start the experiment, run:
    
    ./do_submit_cycle.sh settings_DA_cycle_gdas
 
-The ``do_submit_cycle.sh`` script will read the ``settings_DA_cycle_*`` file and the ``release.environment`` file, which contain sensible experiment default values to simplify the process of running the workflow for the first time. Advanced users will wish to modify the parameters in ``do_submit_cycle.sh`` to fit their particular needs. After reading the defaults and other variables from the settings files, ``do_submit_cycle.sh`` creates a working directory (named ``workdir`` by default) and an output directory called ``landda_expts`` in the parent directory of ``land-offline_workflow`` and then submits a job (``submit_cycle.sh``) to the queue that will run through the workflow. If all succeeds, users will see ``log`` and ``err`` files created in ``land-offline_workflow`` along with a ``cycle.log`` file, which will show where the cycle has ended. The ``landda_expts`` directory will also be populated with data in the following directories:
+The ``do_submit_cycle.sh`` script will read the ``settings_DA_cycle_*`` file and the ``release.environment`` file, which contain sensible experiment default values to simplify the process of running the workflow for the first time. Advanced users will wish to modify the parameters in ``do_submit_cycle.sh`` to fit their particular needs. After reading the defaults and other variables from the settings files, ``do_submit_cycle.sh`` creates a working directory (named ``workdir`` by default) and an output directory called ``landda_expts`` in the parent directory of ``land-DA_workflow`` and then submits a job (``submit_cycle.sh``) to the queue that will run through the workflow. If all succeeds, users will see ``log`` and ``err`` files created in ``land-DA_workflow`` along with a ``cycle.log`` file, which will show where the cycle has ended. The ``landda_expts`` directory will also be populated with data in the following directories:
 
 .. code-block:: console
 
