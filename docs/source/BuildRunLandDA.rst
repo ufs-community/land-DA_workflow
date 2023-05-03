@@ -131,7 +131,7 @@ Configure the Experiment
    where ``my_partition`` is the name of the partition on the user's system. 
 
 
-#. Configure other elements of the experiment if desired. The v1.0.0 release includes four scripts with default experiment settings: 
+#. Configure other elements of the experiment if desired. The ``develop`` branch includes four scripts with default experiment settings: 
 
    * ``settings_DA_cycle_gdas`` for running the Jan. 1-3, 2016 sample case. 
    * ``settings_DA_cycle_era5`` for running a Jan. 1-3, 2020 sample case.
