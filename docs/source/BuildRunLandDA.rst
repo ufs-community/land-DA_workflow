@@ -103,7 +103,8 @@ Build the Land DA System
    
    .. code-block:: console
 
-      [100%] Built target ufsLandDriver.exe
+      [100%] Completed 'ufs-weather-model'
+      [100%] Built target ufs-weather-model
    
    Additionally, the ``build`` directory will contain several files and a ``bin`` subdirectory with three executables: 
 

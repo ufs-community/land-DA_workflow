@@ -4,7 +4,7 @@
 Land Data Assimilation System 
 ***************************************************
 
-This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which utilizes the UFS Noah-MP components with the JEDI ``fv3-bundle`` to enable cycled model forecasts. The data assimilation framework applies the Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm to combine the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007).
+This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which utilizes the UFS Noah-MP components with JEDI's ``jedi-bundle`` to enable cycled model forecasts. The data assimilation framework applies the Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm to combine the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007).
 
 Joint Effort for Data Assimilation Integration (JEDI)
 ********************************************************
@@ -1103,3 +1103,4 @@ Below, users can find an example of a configuration settings file, ``settings_DA
 ``fv3bundle_vn``
    Specifies the date for JEDI ``fv3-bundle`` checkout (used to select correct ``yaml``).
 
+.. COMMENT: Jong says fv3bundle_vn is just a "script variable to point to jedi config and yaml files. not much to do with jedi-bundle itself. We will clean up when we refactor the script."

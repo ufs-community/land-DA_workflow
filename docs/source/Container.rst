@@ -86,7 +86,7 @@ where ``/path/to/landda`` is the path to this top-level directory (e.g., ``/User
 NOAA RDHPCS Systems
 ----------------------
 
-On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-landda.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
+On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-ue-landda.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
 
 .. _PreBuiltContainers:
 
@@ -113,12 +113,12 @@ If users prefer, they may copy the container to their local working directory. F
 
 .. code-block:: console
 
-   cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-landda.img .
+   cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-ue-landda.img .
 
 Other Systems
 ----------------
 
-On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the container from the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html#current_land_da_release_data/>`__. Downloading may be faster depending on the download speed on the user's system. 
+On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``release/land-da-public-v1.0.0`` container from the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html#current_land_da_release_data/>`__. Downloading may be faster depending on the download speed on the user's system. 
 
 To download from the data bucket, users can run:
 
@@ -130,7 +130,7 @@ To build the container from a Docker image, users can run:
 
 .. code-block:: console
 
-   singularity build ubuntu20.04-intel-landda.img docker://noaaepic/ubuntu20.04-intel-landda:release-public-v1.0.0
+   singularity build ubuntu20.04-intel-ue-landda.img docker://noaaepic/ubuntu20.04-intel-ue-landda:develop
 
 This process may take several hours depending on the system. 
 
@@ -174,7 +174,7 @@ Save the location of the container in an environment variable.
 
 .. code-block:: console
 
-   export img=path/to/ubuntu20.04-intel-landda.img
+   export img=path/to/ubuntu20.04-intel-ue-landda.img
 
 Set the ``USE_SINGULARITY`` environment variable to "yes". 
 
@@ -188,14 +188,14 @@ Users may convert a container ``.img`` file to a writable sandbox. This step is 
 
 .. code-block:: console
 
-   singularity build --sandbox ubuntu20.04-intel-landda $img
+   singularity build --sandbox ubuntu20.04-intel-ue-landda $img
 
 When making a writable sandbox on NOAA RDHPCS systems, the following warnings commonly appear and can be ignored:
 
 .. code-block:: console
 
    INFO:    Starting build...
-   INFO:    Verifying bootstrap image ubuntu20.04-intel-landda.img
+   INFO:    Verifying bootstrap image ubuntu20.04-intel-ue-landda.img
    WARNING: integrity: signature not found for object group 1
    WARNING: Bootstrap image could not be verified, but build will continue.
 
