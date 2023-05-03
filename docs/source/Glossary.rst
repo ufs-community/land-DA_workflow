@@ -52,7 +52,7 @@ Glossary
 
    NUOPC Layer
       The :term:`NUOPC` Layer "defines conventions and a set of generic components for building coupled models using the Earth System Modeling Framework (:term:`ESMF`)." 
-      NUOPC applications are built on four generic components: driver, model, :term:`mediator`, and connector. For more information, visit the `NUOPC website <https://earthsystemmodeling.org/nuopc/>`__.
+      NUOPC applications are built on four generic components: driver, model, mediator, and connector. For more information, visit the `NUOPC website <https://earthsystemmodeling.org/nuopc/>`__.
 
    NUOPC Cap
    NUOPC Model Cap
