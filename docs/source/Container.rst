@@ -107,7 +107,11 @@ On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-ue-la
 .. note::
    Singularity is not available on Gaea, and therefore, container use is not supported on Gaea. 
 
-Users can simply set an environment variable to point to the container, as described in :numref:`Section %s <SetUpContainerC>`. 
+Users can simply set an environment variable to point to the container: 
+
+.. code-block:: console
+
+   export img=path/to/ubuntu20.04-intel-ue-landda.img
 
 If users prefer, they may copy the container to their local working directory. For example, on Jet:
 
@@ -118,7 +122,7 @@ If users prefer, they may copy the container to their local working directory. F
 Other Systems
 ----------------
 
-On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``release/land-da-public-v1.0.0`` container from the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html#current_land_da_release_data/>`__. Downloading may be faster depending on the download speed on the user's system. 
+On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-landda.img`` container from the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html#current_land_da_release_data/>`__. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.0.0`` container rather than the updated release branch container. 
 
 To download from the data bucket, users can run:
 
@@ -130,7 +134,7 @@ To build the container from a Docker image, users can run:
 
 .. code-block:: console
 
-   singularity build ubuntu20.04-intel-ue-landda.img docker://noaaepic/ubuntu20.04-intel-ue-landda:develop
+   singularity build --force ubuntu20.04-intel-ue-landda.img docker://noaaepic/ubuntu20.04-intel-ue-landda:unified-dev-testmp
 
 This process may take several hours depending on the system. 
 
