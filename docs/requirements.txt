@@ -1,3 +1,4 @@
 sphinxcontrib-bibtex
 sphinx_rtd_theme
 docutils==0.16
+requests>=2.5.0
