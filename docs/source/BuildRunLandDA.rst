@@ -70,7 +70,7 @@ Clone the Land DA repository.
 
 .. code-block:: console
 
-   git clone -b release/public-v1.0.0 --recursive https://github.com/NOAA-EPIC/land-offline_workflow.git
+   git clone -b develop --recursive https://github.com/ufs-community/land-DA_workflow.git
 
 Build the Land DA System
 ***************************
@@ -79,7 +79,7 @@ Build the Land DA System
 
    .. code-block:: console
 
-      cd $LANDDAROOT/land-offline_workflow
+      cd $LANDDAROOT/land-DA_workflow
       module use modulefiles
       module load landda_<machine>.intel
    
@@ -103,7 +103,8 @@ Build the Land DA System
    
    .. code-block:: console
 
-      [100%] Built target ufsLandDriver.exe
+      [100%] Completed 'ufs-weather-model'
+      [100%] Built target ufs-weather-model
    
    Additionally, the ``build`` directory will contain several files and a ``bin`` subdirectory with three executables: 
 
@@ -114,7 +115,7 @@ Build the Land DA System
 Configure the Experiment
 ***************************
 
-#. Navigate back to the ``land-offline_workflow`` directory and check that the account/partition is correct in ``submit_cycle.sh``. 
+#. Navigate back to the ``land-DA_workflow`` directory and check that the account/partition is correct in ``submit_cycle.sh``. 
 
    .. code-block:: console
 
@@ -130,7 +131,7 @@ Configure the Experiment
    where ``my_partition`` is the name of the partition on the user's system. 
 
 
-#. Configure other elements of the experiment if desired. The v1.0.0 release includes four scripts with default experiment settings: 
+#. Configure other elements of the experiment if desired. The ``develop`` branch includes four scripts with default experiment settings: 
 
    * ``settings_DA_cycle_gdas`` for running the Jan. 1-3, 2016 sample case. 
    * ``settings_DA_cycle_era5`` for running a Jan. 1-3, 2020 sample case.
