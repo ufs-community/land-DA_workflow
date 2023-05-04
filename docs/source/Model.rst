@@ -24,7 +24,7 @@ the static file (``ufs-land_C96_static_fields.nc``),
 the initial conditions file (``ufs-land_C96_init_*.nc``), 
 and the model configuration file (``ufs-land.namelist.noahmp``). 
 These files and their parameters are described in the following subsections. 
-They are publicly available via the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/>`__. 
+They are publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. 
 Users can download the data and untar the file via the command line, replacing 
 ``{YEAR}`` with the year for the desired data. Release data is currently 
 available for 2016 and 2020:

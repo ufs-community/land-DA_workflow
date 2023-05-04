@@ -86,7 +86,7 @@ where ``/path/to/landda`` is the path to this top-level directory (e.g., ``/User
 NOAA RDHPCS Systems
 ----------------------
 
-On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-landda.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
+On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-ue-landda.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
 
 .. _PreBuiltContainers:
 
@@ -107,18 +107,22 @@ On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-landd
 .. note::
    Singularity is not available on Gaea, and therefore, container use is not supported on Gaea. 
 
-Users can simply set an environment variable to point to the container, as described in :numref:`Section %s <SetUpContainerC>`. 
+Users can simply set an environment variable to point to the container: 
+
+.. code-block:: console
+
+   export img=path/to/ubuntu20.04-intel-ue-landda.img
 
 If users prefer, they may copy the container to their local working directory. For example, on Jet:
 
 .. code-block:: console
 
-   cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-landda.img .
+   cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-ue-landda.img .
 
 Other Systems
 ----------------
 
-On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the container from the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html#current_land_da_release_data/>`__. Downloading may be faster depending on the download speed on the user's system. 
+On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-landda.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.0.0`` container rather than the updated ``develop`` branch container. 
 
 To download from the data bucket, users can run:
 
@@ -130,7 +134,7 @@ To build the container from a Docker image, users can run:
 
 .. code-block:: console
 
-   singularity build ubuntu20.04-intel-landda.img docker://noaaepic/ubuntu20.04-intel-landda:release-public-v1.0.0
+   singularity build --force ubuntu20.04-intel-ue-landda.img docker://noaaepic/ubuntu20.04-intel-ue-landda:unified-dev-testmp
 
 This process may take several hours depending on the system. 
 
@@ -145,7 +149,7 @@ Get Data
 
 In order to run the Land DA System, users will need input data in the form of fix files, model forcing files, restart files, and observations for data assimilation. These files are already present on NOAA RDHPCS systems (see :numref:`Section %s <Level1Data>` for details). 
 
-Users on any system may download and untar the data from the `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com>`__ into their ``$LANDDAROOT`` directory. 
+Users on any system may download and untar the data from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__ into their ``$LANDDAROOT`` directory. 
 
 .. code-block:: console
 
@@ -174,7 +178,7 @@ Save the location of the container in an environment variable.
 
 .. code-block:: console
 
-   export img=path/to/ubuntu20.04-intel-landda.img
+   export img=path/to/ubuntu20.04-intel-ue-landda.img
 
 Set the ``USE_SINGULARITY`` environment variable to "yes". 
 
@@ -188,28 +192,28 @@ Users may convert a container ``.img`` file to a writable sandbox. This step is 
 
 .. code-block:: console
 
-   singularity build --sandbox ubuntu20.04-intel-landda $img
+   singularity build --sandbox ubuntu20.04-intel-ue-landda $img
 
 When making a writable sandbox on NOAA RDHPCS systems, the following warnings commonly appear and can be ignored:
 
 .. code-block:: console
 
    INFO:    Starting build...
-   INFO:    Verifying bootstrap image ubuntu20.04-intel-landda.img
+   INFO:    Verifying bootstrap image ubuntu20.04-intel-ue-landda.img
    WARNING: integrity: signature not found for object group 1
    WARNING: Bootstrap image could not be verified, but build will continue.
 
-From within the ``$LANDDAROOT`` directory, copy the ``land-offline_workflow`` directory out of the container. 
+From within the ``$LANDDAROOT`` directory, copy the ``land-DA_workflow`` directory out of the container. 
 
 .. code-block:: console
 
-   singularity exec -H $PWD $img cp -r /opt/land-offline_workflow .
+   singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
 
-There should now be a ``land-offline_workflow`` directory in the ``$LANDDAROOT`` directory. Navigate into the ``land-offline_workflow`` directory. If for some reason, this is unsuccessful, users may try a version of the following command instead: 
+There should now be a ``land-DA_workflow`` directory in the ``$LANDDAROOT`` directory. Navigate into the ``land-DA_workflow`` directory. If for some reason, this is unsuccessful, users may try a version of the following command instead: 
 
 .. code-block:: console
 
-   singularity exec -B /<local_base_dir>:/<container_dir> $img cp -r /opt/land-offline_workflow .
+   singularity exec -B /<local_base_dir>:/<container_dir> $img cp -r /opt/land-DA_workflow .
 
 where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level directory on the local system and in the container, respectively. Additional directories can be bound by adding another ``-B /<local_base_dir>:/<container_dir>`` argument before the container location (``$img``). 
 
@@ -221,11 +225,11 @@ where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level
 
    Sometimes binding directories with different names can cause problems. In general, it is recommended that the local base directory and the container directory have the same name. For example, if the host system's top-level directory is ``/user1234``, the user may want to convert the ``.img`` file to a writable sandbox and create a ``user1234`` directory in the sandbox to bind to. 
 
-Navigate to the ``land-offline_workflow`` directory after it has been successfully copied into ``$LANDDAROOT``.
+Navigate to the ``land-DA_workflow`` directory after it has been successfully copied into ``$LANDDAROOT``.
 
 .. code-block:: console
 
-   cd land-offline_workflow
+   cd land-DA_workflow
 
 When using a Singularity container, Intel compilers and Intel :term:`MPI` (preferably 2020 versions or newer) need to be available on the host system to properly launch MPI jobs. Generally, this is accomplished by loading a module with a recent Intel compiler and then loading the corresponding Intel MPI. For example, users can modify the following commands to load their system's compiler/MPI combination:
 
@@ -263,13 +267,19 @@ Run the Experiment
 
 The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided four sample ``settings_*`` files as examples: ``settings_DA_cycle_gdas``, ``settings_DA_cycle_era5``, ``settings_DA_cycle_gdas_restart``, and ``settings_DA_cycle_era5_restart``. The ``*restart`` settings files will only work after an experiment with the corresponding non-restart settings file has been run. This is because they are designed to use the restart files created by the first experiment cycle to pick up where it left off. (e.g., ``settings_DA_cycle_gdas`` runs from 2016-01-01 at 18z to 2016-01-03 at 18z. The ``settings_DA_cycle_gdas_restart`` will run from 2016-01-03 at 18z to 2016-01-04 at 18z.)
 
+First, update the ``$BASELINE`` environment variable in the selected ``settings_DA_*`` file to say ``singularity.internal`` instead of ``hera.internal``:
+
+.. code-block:: console
+
+   export BASELINE=singularity.internal
+
 To start the experiment, run: 
 
 .. code-block:: console
    
    ./do_submit_cycle.sh settings_DA_cycle_gdas
 
-The ``do_submit_cycle.sh`` script will read the ``settings_DA_cycle_*`` file and the ``release.environment`` file, which contain sensible experiment default values to simplify the process of running the workflow for the first time. Advanced users will wish to modify the parameters in ``do_submit_cycle.sh`` to fit their particular needs. After reading the defaults and other variables from the settings files, ``do_submit_cycle.sh`` creates a working directory (named ``workdir`` by default) and an output directory called ``landda_expts`` in the parent directory of ``land-offline_workflow`` and then submits a job (``submit_cycle.sh``) to the queue that will run through the workflow. If all succeeds, users will see ``log`` and ``err`` files created in ``land-offline_workflow`` along with a ``cycle.log`` file, which will show where the cycle has ended. The ``landda_expts`` directory will also be populated with data in the following directories:
+The ``do_submit_cycle.sh`` script will read the ``settings_DA_cycle_*`` file and the ``release.environment`` file, which contain sensible experiment default values to simplify the process of running the workflow for the first time. Advanced users will wish to modify the parameters in ``do_submit_cycle.sh`` to fit their particular needs. After reading the defaults and other variables from the settings files, ``do_submit_cycle.sh`` creates a working directory (named ``workdir`` by default) and an output directory called ``landda_expts`` in the parent directory of ``land-DA_workflow`` and then submits a job (``submit_cycle.sh``) to the queue that will run through the workflow. If all succeeds, users will see ``log`` and ``err`` files created in ``land-DA_workflow`` along with a ``cycle.log`` file, which will show where the cycle has ended. The ``landda_expts`` directory will also be populated with data in the following directories:
 
 .. code-block:: console
 
