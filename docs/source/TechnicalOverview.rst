@@ -76,8 +76,6 @@ On non-Level 1 platforms, the Land DA System can be run within a container that 
 
    Running on Jet, Cheyenne, and NOAA Cloud systems is supported via container. 
 
-.. COMMENT: Has NOAA Cloud support been added natively? If so, add to table above!
-
 Code Repositories and Directory Structure
 ********************************************
 
