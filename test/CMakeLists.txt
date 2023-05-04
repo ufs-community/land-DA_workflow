@@ -52,3 +52,8 @@ set_tests_properties(test_land_driver
     DEPENDS "test_tile2vector"
     ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS};
                  TOL=$ENV{TOL}")
+
+# test for ufs-datm-lnd model
+add_test(NAME test_ufs_datm_land
+         COMMAND ${PROJECT_SOURCE_DIR}/test/run_ufs_datm_lnd.sh ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
+         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
