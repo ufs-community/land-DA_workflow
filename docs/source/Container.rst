@@ -280,6 +280,8 @@ Alternatively, users can make the change via ``sed`` command. For example, on Je
 
    sed -i 's/hera.internal/jet.singularity/g' settings_DA_cycle_gdas
 
+The user can choose any value to replace ``hera.internal`` in the ``$BASELINE`` environment variable. 
+
 .. _RunExptC:
 
 Run the Experiment
