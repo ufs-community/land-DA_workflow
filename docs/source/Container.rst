@@ -268,7 +268,7 @@ Save and close the file.
 
 The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided four sample ``settings_*`` files as examples: ``settings_DA_cycle_gdas``, ``settings_DA_cycle_era5``, ``settings_DA_cycle_gdas_restart``, and ``settings_DA_cycle_era5_restart``. The ``*restart`` settings files will only work after an experiment with the corresponding non-restart settings file has been run. This is because they are designed to use the restart files created by the first experiment cycle to pick up where it left off. (For example, ``settings_DA_cycle_gdas`` runs from 2016-01-01 at 18z to 2016-01-03 at 18z. The ``settings_DA_cycle_gdas_restart`` will run from 2016-01-03 at 18z to 2016-01-04 at 18z.)
 
-First, update the ``$BASELINE`` environment variable in the selected ``settings_DA_*`` file to say ``singularity.internal`` instead of ``hera.internal``:
+Users must update the ``$BASELINE`` environment variable in the selected ``settings_DA_*`` file with a value other than ``hera.internal``. For example:
 
 .. code-block:: console
 
@@ -280,7 +280,8 @@ Alternatively, users can make the change via ``sed`` command. For example, on Je
 
    sed -i 's/hera.internal/jet.singularity/g' settings_DA_cycle_gdas
 
-The user can choose any value to replace ``hera.internal`` in the ``$BASELINE`` environment variable. 
+.. note:: 
+   The user can choose any value to replace ``hera.internal`` in the ``$BASELINE`` environment variable. 
 
 .. _RunExptC:
 
