@@ -86,7 +86,7 @@ where ``/path/to/landda`` is the path to this top-level directory (e.g., ``/User
 NOAA RDHPCS Systems
 ----------------------
 
-On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-ue-landda.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
+On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-ue-landda-v1.1.0.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
 
 .. _PreBuiltContainers:
 
@@ -111,30 +111,30 @@ Users can simply set an environment variable to point to the container:
 
 .. code-block:: console
 
-   export img=path/to/ubuntu20.04-intel-ue-landda.img
+   export img=path/to/ubuntu20.04-intel-ue-landda-v1.1.0.img
 
 If users prefer, they may copy the container to their local working directory. For example, on Jet:
 
 .. code-block:: console
 
-   cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-ue-landda.img .
+   cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-ue-landda-v1.1.0.img .
 
 Other Systems
 ----------------
 
-On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-landda.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.0.0`` container rather than the updated ``develop`` branch container. 
+On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-ue-landda-v1.1.0.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. Downloading may be faster depending on the download speed on the user's system.  
 
 To download from the data bucket, users can run:
 
 .. code-block:: console
 
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/ubuntu20.04-intel-landda.img
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/ubuntu20.04-intel-ue-landda-v1.1.0.img
 
 To build the container from a Docker image, users can run:
 
 .. code-block:: console
 
-   singularity build --force ubuntu20.04-intel-ue-landda.img docker://noaaepic/ubuntu20.04-intel-ue-landda:unified-dev-testmp
+   singularity build --force ubuntu20.04-intel-ue-landda-v1.1.0.img docker://noaaepic/ubuntu20.04-intel-ue-landda:release-public-v1.1.0
 
 This process may take several hours depending on the system. 
 
@@ -178,7 +178,7 @@ Save the location of the container in an environment variable.
 
 .. code-block:: console
 
-   export img=path/to/ubuntu20.04-intel-ue-landda.img
+   export img=path/to/ubuntu20.04-intel-ue-landda-v1.1.0.img
 
 Set the ``USE_SINGULARITY`` environment variable to "yes". 
 
@@ -192,14 +192,14 @@ Users may convert a container ``.img`` file to a writable sandbox. This step is 
 
 .. code-block:: console
 
-   singularity build --sandbox ubuntu20.04-intel-ue-landda $img
+   singularity build --sandbox ubuntu20.04-intel-ue-landda-v1.1.0 $img
 
 When making a writable sandbox on NOAA RDHPCS systems, the following warnings commonly appear and can be ignored:
 
 .. code-block:: console
 
    INFO:    Starting build...
-   INFO:    Verifying bootstrap image ubuntu20.04-intel-ue-landda.img
+   INFO:    Verifying bootstrap image ubuntu20.04-intel-ue-landda-v1.1.0.img
    WARNING: integrity: signature not found for object group 1
    WARNING: Bootstrap image could not be verified, but build will continue.
 
@@ -252,6 +252,9 @@ When using a Singularity container, Intel compilers and Intel :term:`MPI` (prefe
 Configure the Experiment
 ===========================
 
+``submit_cycle.sh``
+----------------------
+
 Users on a system with a Slurm job scheduler will need to make some minor changes to the ``submit_cycle.sh`` file. Open the file and change the account and queue (qos) to match the desired account and qos on the system. Users may also need to add the following line to the script to specify the partition. For example, on Jet, users should set: 
 
 .. code-block:: console
@@ -260,26 +263,40 @@ Users on a system with a Slurm job scheduler will need to make some minor change
    
 Save and close the file.
 
-.. _RunExptC:
+``settings_DA_cycle_*``
+--------------------------
 
-Run the Experiment
-=====================
+The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided four sample ``settings_*`` files as examples: ``settings_DA_cycle_gdas``, ``settings_DA_cycle_era5``, ``settings_DA_cycle_gdas_restart``, and ``settings_DA_cycle_era5_restart``. The ``*restart`` settings files will only work after an experiment with the corresponding non-restart settings file has been run. This is because they are designed to use the restart files created by the first experiment cycle to pick up where it left off. (For example, ``settings_DA_cycle_gdas`` runs from 2016-01-01 at 18z to 2016-01-03 at 18z. The ``settings_DA_cycle_gdas_restart`` will run from 2016-01-03 at 18z to 2016-01-04 at 18z.)
 
-The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided four sample ``settings_*`` files as examples: ``settings_DA_cycle_gdas``, ``settings_DA_cycle_era5``, ``settings_DA_cycle_gdas_restart``, and ``settings_DA_cycle_era5_restart``. The ``*restart`` settings files will only work after an experiment with the corresponding non-restart settings file has been run. This is because they are designed to use the restart files created by the first experiment cycle to pick up where it left off. (e.g., ``settings_DA_cycle_gdas`` runs from 2016-01-01 at 18z to 2016-01-03 at 18z. The ``settings_DA_cycle_gdas_restart`` will run from 2016-01-03 at 18z to 2016-01-04 at 18z.)
-
-First, update the ``$BASELINE`` environment variable in the selected ``settings_DA_*`` file to say ``singularity.internal`` instead of ``hera.internal``:
+Users must update the ``$BASELINE`` environment variable in the selected ``settings_DA_*`` file with a value other than ``hera.internal``. For example:
 
 .. code-block:: console
 
    export BASELINE=singularity.internal
 
+Alternatively, users can make the change via ``sed`` command. For example, on Jet, users could run: 
+
+.. code-block:: console
+
+   sed -i 's/hera.internal/jet.singularity/g' settings_DA_cycle_gdas
+
+.. note:: 
+   The user can choose any value to replace ``hera.internal`` in the ``$BASELINE`` environment variable. 
+
+.. _RunExptC:
+
+Run the Experiment
+=====================
+
 To start the experiment, run: 
 
 .. code-block:: console
    
-   ./do_submit_cycle.sh settings_DA_cycle_gdas
+   source do_submit_test.sh
 
-The ``do_submit_cycle.sh`` script will read the ``settings_DA_cycle_*`` file and the ``release.environment`` file, which contain sensible experiment default values to simplify the process of running the workflow for the first time. Advanced users will wish to modify the parameters in ``do_submit_cycle.sh`` to fit their particular needs. After reading the defaults and other variables from the settings files, ``do_submit_cycle.sh`` creates a working directory (named ``workdir`` by default) and an output directory called ``landda_expts`` in the parent directory of ``land-DA_workflow`` and then submits a job (``submit_cycle.sh``) to the queue that will run through the workflow. If all succeeds, users will see ``log`` and ``err`` files created in ``land-DA_workflow`` along with a ``cycle.log`` file, which will show where the cycle has ended. The ``landda_expts`` directory will also be populated with data in the following directories:
+This script will source ``settings_DA_cycle_gdas`` file, remove any previous output directory, and run the ``do_submit_cycle.sh`` script with ``settings_DA_cycle_gdas`` as input. If users prefer to run the experiment with a different settings file, they can specify it in the ``do_submit_test.sh`` script. 
+
+The ``do_submit_cycle.sh`` script reads the ``settings_DA_cycle_*`` file and the ``release.environment`` file, which contain sensible experiment default values to simplify the process of running the workflow for the first time. Advanced users will wish to modify the parameters in ``do_submit_cycle.sh`` to fit their particular needs. After reading the defaults and other variables from the settings files, ``do_submit_cycle.sh`` creates a working directory (named ``workdir`` by default) and an output directory called ``landda_expts`` in the parent directory of ``land-DA_workflow`` and then submits a job (``submit_cycle.sh``) to the queue that will run through the workflow. If all succeeds, users will see ``log`` and ``err`` files created in ``land-DA_workflow`` along with a ``cycle.log`` file, which will show where the cycle has ended. The ``landda_expts`` directory will also be populated with data in the following directories:
 
 .. code-block:: console
 

@@ -70,7 +70,7 @@ Clone the Land DA repository.
 
 .. code-block:: console
 
-   git clone -b develop --recursive https://github.com/ufs-community/land-DA_workflow.git
+   git clone -b release/public-v1.1.0 --recursive https://github.com/ufs-community/land-DA_workflow.git
 
 Build the Land DA System
 ***************************
