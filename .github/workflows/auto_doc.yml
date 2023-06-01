@@ -2,9 +2,9 @@ name: Land DA automatic documentation build
 
 on:
   push:
-    branches: [ "release/public-v1.0.0" ]
+    branches: [ "release/public-v1.1.0" ]
   pull_request:
-    branches: [ "release/public-v1.0.0" ]
+    branches: [ "release/public-v1.1.0" ]
 
 jobs:
   build:
