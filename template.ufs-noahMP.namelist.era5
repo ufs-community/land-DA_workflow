@@ -1,11 +1,15 @@
 &run_setup
 
-  static_file      = "/LANDDA_INPUTS/forcing/era5/static/ufs-land_C96_static_fields.nc"
-  init_file        = "/LANDDA_INPUTS/forcing/era5/init/ufs-land_C96_init_2010-12-31_23-00-00.nc"
-  forcing_dir      = "/LANDDA_INPUTS/forcing/era5/datm/C96/"
+   static_file      = "/scratch2/NCEPDEV/land/data/forcing/era5/static/ufs-land_C96_static_fields.nc"
+   init_file        = "/scratch2/NCEPDEV/land/data/forcing/era5/init/ufs-land_C96_init_2010-12-31_23-00-00.nc"
+   forcing_dir      = "/scratch2/NCEPDEV/land/data/forcing/era5/datm/C96/"
+!   static_file      = "/LANDDA_INPUTS/forcing/era5/static/ufs-land_C96_static_fields.nc"
+!   init_file        = "/LANDDA_INPUTS/forcing/era5/init/ufs-land_C96_init_2010-12-31_23-00-00.nc"
+!   forcing_dir      = "/LANDDA_INPUTS/forcing/era5/datm/C96/"
   
   separate_output = .false.
-  output_dir       = "./"
+  output_dir       = "./noahmp_output/"
+  output_frequency_s = 0
 
   restart_frequency_s = XXFREQ
   restart_simulation  = .true.
@@ -18,7 +22,7 @@
 ! either set simulation_end or run_* or run_timesteps, priority
 !   1. simulation_end 2. run_[days/hours/minutes/seconds] 3. run_timesteps
 
-  simulation_start = "2000-01-01 00:00:00"   ! start date [yyyy-mm-dd hh:mm:ss]
+  simulation_start = "2011-01-01 00:00:00"   ! start date [yyyy-mm-dd hh:mm:ss]
 !  simulation_end   = "1999-01-01 06:00:00"   !   end date [yyyy-mm-dd hh:mm:ss]
 
   run_days         = XXRDD   ! number of days to run
@@ -67,7 +71,9 @@
 
 &forcing
  forcing_timestep_seconds       = 3600
- forcing_type                   = "gdas"
+ forcing_regrid                 = "none"
+ forcing_regrid_weights_filename= ""
+ forcing_type                   = "dd_1h"
  forcing_filename               = "C96_ERA5_forcing_"
  forcing_interp_solar           = "linear"  ! gswp3_zenith or linear
  forcing_time_solar             = "instantaneous"  ! gswp3_average or instantaneous
@@ -79,3 +85,18 @@
  forcing_name_sw_radiation      = "solar_radiation"
  forcing_name_lw_radiation      = "longwave_radiation"
 /
+
+&io
+ output_names  =      "snow_water_equiv",
+                      "snow_depth",
+                      "soil_moisture_vol",
+                      "temperature_soil",
+                      "soil_liquid_vol",
+                      "sensible_heat_total",
+                      "temperature_snow"
+ daily_mean_names   = ""
+ monthly_mean_names = ""
+ solar_noon_names =   ""
+ restart_names = ""
+/
+
