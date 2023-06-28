@@ -83,7 +83,7 @@ fi
 if [[ -e ${BUILDDIR}/bin/ufsLandDriver.exe ]]; then
   export LSMexec=${BUILDDIR}/bin/ufsLandDriver.exe
 else
-  export LSMexec=${CYCLEDIR}/ufs-land-driver/driver/ufsLandDriver.exe
+  export LSMexec=${CYCLEDIR}/ufs-land-driver/run/ufsLand.exe
 fi
 
 export DADIR=${CYCLEDIR}/DA_update/
@@ -155,6 +155,21 @@ if [[ ! -e ${MEM_MODL_OUTDIR}/restarts/ ]]; then  # subdirectories
     mkdir -p ${MEM_MODL_OUTDIR}/noahmp/
 fi
 ln -sf ${MEM_MODL_OUTDIR}/noahmp ${MEM_WORKDIR}/noahmp_output 
+
+# copy ICS into restarts, if needed 
+rst_out=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+# if restart not in experiment out directory, copy the restarts from the ICSDIR
+if [[ ! -e ${rst_out} ]]; then
+    echo "Looking for ICS: ${rst_in}"
+    if [[ -e ${rst_in} ]]; then
+       echo "ICS found, copying" 
+       cp ${rst_in} ${rst_out}
+    else
+       echo "ICS not found. Exiting" 
+       exit 10
+    fi
+fi
 
 # create dates file 
 touch analdates.sh 
