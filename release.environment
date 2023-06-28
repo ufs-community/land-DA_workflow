@@ -27,7 +27,12 @@ if [[ ${USE_SINGULARITY} =~ yes ]]; then
 fi
 
 #Location of observations for DA
-export OBSDIR=${LANDDA_INPUTS}/DA
+if [[ $BASELINE =~ 'hera.internal' ]]; then
+   OBSDIR=${OBSDIR:-"/scratch2/NCEPDEV/land/data/DA/"}
+else
+   export OBSDIR=${LANDDA_INPUTS}/DA   
+fi
+
 # temporary directory where experiment is run from
 export WORKDIR=${WORKDIR:-${LANDDAROOT}/workdir}
 # directory where output is saved
@@ -36,6 +41,17 @@ export OUTDIR=${LANDDA_EXPTS}/${exp_name}
 export TEST_BASEDIR=${TEST_BASEDIR:-${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector}
 
 # JEDI directories
-export JEDI_EXECDIR=${JEDI_EXECDIR:-"${JEDI_INSTALL}/jedi-bundle/build/bin"}
-export IODA_BUILD_DIR=${JEDI_INSTALL}/jedi-bundle/build
-export JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
+if [[ $BASELINE =~ 'hera.internal' ]]; then
+   JEDI_EXECDIR=${JEDI_EXECDIR:-"/scratch2/NCEPDEV/land/data/jedi/fv3-bundle/build/bin/"}
+else
+   export JEDI_EXECDIR=${JEDI_EXECDIR:-"${JEDI_INSTALL}/jedi-bundle/build/bin"}
+fi
+
+if [[ $BASELINE =~ 'hera.internal' ]]; then
+   JEDI_STATICDIR=${LANDDADIR}/jedi/fv3-jedi/Data/
+else
+   export JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
+fi
+
+
+
