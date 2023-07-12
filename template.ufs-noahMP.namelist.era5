@@ -89,10 +89,6 @@
 &io
  output_names  =      "snow_water_equiv",
                       "snow_depth",
-                      "soil_moisture_vol",
-                      "temperature_soil",
-                      "soil_liquid_vol",
-                      "sensible_heat_total",
                       "temperature_snow"
  daily_mean_names   = ""
  monthly_mean_names = ""
