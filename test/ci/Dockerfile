@@ -1,4 +1,4 @@
-From noaaepic/ubuntu20.04-intel-landda:develop
+From noaaepic/ubuntu20.04-intel-ue-landda:develop
 
 CMD ["/bin/bash"]
 
