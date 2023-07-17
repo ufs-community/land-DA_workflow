@@ -1,214 +1,135 @@
 pipeline {
     agent none
-
-    options {
-        disableConcurrentBuilds()
-        overrideIndexTriggers(false)
-        skipDefaultCheckout(true)
-    }
-
-    parameters {
-        
-    }
-
     stages {
-        // Uncomment the following block to re-enable PW clusters
-        /*
-        // Start the NOAA Parallel Works clusters, if necessary
-        stage('Start Parallel Works Clusters') {
-            matrix {
-                //
-                when {
-                    anyOf {
-                     
-                    }
-                }
-
-                axes {
-                    axis {
-                        name ''
-                        values 'pclusternoaav2use1' //, 'azclusternoaav2eus1', 'gclusternoaav2usc1'
-                    }
-                }
-
-                stages {
-                  
-                    stage('Start Cluster') {
-                        steps {
-                            build job: 'parallel-works-jenkins-client/start-cluster', parameters: [string(name: 'PW_CLUSTER_NAME', value: env.), string(name: 'PW_CLUSTER_SSH_KEY', value: '~/.ssh/id_rsa'), string(name: 'JAVA_VERSION', value: '11')]
-                        }
-                    }
-                }
+        stage('Build') {
+            agent { 
+                label 'Orion'
+            }
+            steps {
+                export img=/contrib/EPIC/containers/ubuntu20.04-intel-ue-landda-v1.1.0.img
+                mkdir sandbox
+                cd sandbox/
+                ln -s /contrib/EPIC/landda/inputs .
+                module load intel/2022.1.2 impi/2022.1.2
+                singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
+                cd land-DA_workflow/
             }
         }
-        */
+        stage('Test on Orion') {
+            agent { 
+                label 'Orion'
+            }
+            steps {
+                sed -i 's|hera.internal|orion.sing|g' settings_DA_cycle_gdas
+                sed -i 's/da-cpu/epic/g' submit_cycle.sh
+                export USE_SINGULARITY=yes
+                source do_submit_test.sh
 
-        // Build and test the application on all supported platforms using the supported compilers for each platform
-        stage('Build and Test') {
-            matrix {
-                // Run on all platform/compiler combinations by default or build and test only on the platform(s) and
-                // compiler(s) specified by PLATFORM_FILTER and COMPILER_FILTER
-                when {
-                    allOf {
-                        anyOf {
-                            expression {  }
-                            expression {  }
-                        }
-
-                        anyOf {
-                            expression { }
-                            expression {  }
-                        }
-                    }
                 }
-
-                axes {
-                    axis {
-                        name 'PLATFORM'
-                        // values 'cheyenne', 'gaea', 'hera', 'jet', 'orion' //, 'pclusternoaav2use1', 'azclusternoaav2eus1', 'gclusternoaav2usc1'
-                        values 'cheyenne', 'hera', 'jet', 'orion' //, 'pclusternoaav2use1', 'azclusternoaav2eus1', 'gclusternoaav2usc1'
-                    }
-
-                    axis {
-                        name 'COMPILER'
-                        values 'gnu', 'intel'
-                    }
+            }
+        stage('Build') {
+            agent { 
+                label 'Hera'
+            }
+            steps {
+                export img=/scratch1/NCEPDEV/nems/role.epic/containers/ubuntu20.04-intel-ue-landda-v1.1.0.img
+                mkdir sandbox
+                cd sandbox/
+                ln -s /scratch1/NCEPDEV/nems/role.epic/landda/inputs .
+                module load intel/2022.1.2 impi/2022.1.2
+                singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
+                cd land-DA_workflow/
+            }
+        }
+        stage('Test on Hera') {
+            agent { 
+                label 'Hera'
+            }
+            steps {
+                sed -i 's|hera.internal|hera.sing|g' settings_DA_cycle_gdas
+                sed -i 's/da-cpu/nems/g' submit_cycle.sh
+                export USE_SINGULARITY=yes
+                source do_submit_test.sh
                 }
-
-                excludes {
-                    // Exclude GNU from platforms that don't support it
-                    exclude {
-                            axis {
-                            name 'PLATFORM'
-                            // values 'gaea', 'jet', 'orion' //, 'pclusternoaav2use1' , 'azclusternoaav2eus1', 'gclusternoaav2usc1'
-                            values 'jet', 'orion' //, 'pclusternoaav2use1' , 'azclusternoaav2eus1', 'gclusternoaav2usc1'
-                        }
-
-                        axis {
-                            name 'COMPILER'
-                            values 'gnu'
-                        }
-                    }
+            }
+        stage('Build') {
+            agent { 
+                label 'Jet'
+            }
+            steps {
+                export img=/mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-ue-landda-v1.1.0.img
+                mkdir sandbox
+                cd sandbox/
+                ln -s /mnt/lfs4/HFIP/hfv3gfs/role.epic/landda/inputs .
+                module load intel/2022.1.2 impi/2022.1.2
+                singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
+                cd land-DA_workflow/
+            }
+        }
+        stage('Test on Jet') {
+            agent { 
+                label 'Jet'
+            }
+            steps {
+                sed -i 's|hera.internal|jet.sing|g' settings_DA_cycle_gdas
+                sed -i 's/da-cpu/h-nems/g' submit_cycle.sh
+                export USE_SINGULARITY=yes
+                source do_submit_test.sh
                 }
-
-                agent {
-                    label env.PLATFORM
+            }
+        stage('Build') {
+            agent { 
+                label 'Hercules'
+            }
+            steps {
+                export img=/contrib/EPIC/containers/ubuntu20.04-intel-ue-landda-v1.1.0.img
+                mkdir sandbox
+                cd sandbox/
+                ln -s /contrib/EPIC/landda/inputs .
+                module load intel/2022.1.2 impi/2022.1.2
+                singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
+                cd land-DA_workflow/
+            }
+        }
+        stage('Test on Hercules') {
+            agent { 
+                label 'Hercules'
+            }
+            steps {
+                sed -i 's|hera.internal|hercules.sing|g' settings_DA_cycle_gdas
+                sed -i 's/da-cpu/epic/g' submit_cycle.sh
+                export USE_SINGULARITY=yes
+                source do_submit_test.sh
                 }
-
-                environment {
-                    BRANCH_NAME_ESCAPED = env.BRANCH_NAME.replace('/', '_')
-                    BUILD_VERSION = "${env.SRW_PLATFORM}-${env.SRW_COMPILER}-${env.BRANCH_NAME_ESCAPED}-${env.BUILD_NUMBER}"
-                    BUILD_NAME = "${env.BUILD_VERSION}"
-                    INSTALL_NAME = "install_${env.COMPILER}"
+            }
+        stage('Build') {
+            agent { 
+                label 'noaacloud'
+            }
+            steps {
+                export img=/contrib/EPIC/containers/ubuntu20.04-intel-ue-landda-v1.1.0.img
+                mkdir sandbox
+                cd sandbox/
+                ln -s /contrib/EPIC/landda/inputs .
+                module load intel/2022.1.2 impi/2022.1.2
+                singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
+                cd land-DA_workflow/
+            }
+        }
+        stage('Test on noaacloud') {
+            agent { 
+                label 'noaacloud'
+            }
+            steps {
+                sed -i 's|hera.internal|noaacloud.sing|g' settings_DA_cycle_gdas
+                sed -i 's/da-cpu/sg-epic/g' submit_cycle.sh
+                export USE_SINGULARITY=yes
+                source do_submit_test.sh
                 }
-
-                stages {
-                    // Clean the workspace, checkout the repository, and run checkout_externals
-                    stage('Initialize') {
-                        steps {
-                            echo "Initializing Land DA (${env.COMPILER}) build environment on ${env.PLATFORM} (using ${env.WORKSPACE})"
-                            cleanWs()
-                            checkout scm
-                            sh '"${WORKSPACE}/manage_externals/checkout_externals"'
-                        }
-                    }
-
-                    // Run the unittest functional tests that require an HPC platform
-                    stage('Functional Tests') {
-                        steps {
-                            echo "Running unittest on retrieve_data.py"
-                            sh 'bash --login "${WORKSPACE}/.cicd/scripts/unittest.sh"'
-                        }
-                    }
-                    // Run the unified build script; if successful create a tarball of the build and upload to S3
-                    stage('Build') {
-                        steps {
-                            echo "Building SRW (${env.COMPILER}) on ${env.PLATFORM} (using ${env.WORKSPACE})"
-                            sh 'bash --login "${WORKSPACE}/.cicd/"'
-                        }
-
-                        post {
-                            success {
-                                sh 'cd "${WORKSPACE}/${INSTALL_NAME}" && tar --create --gzip --verbose --file "${WORKSPACE}/${BUILD_NAME}.tgz" *'
-                                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: true, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.BUILD_NAME}.tgz", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false], [bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: true, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "build_${env.SRW_COMPILER}/srw_build-${env.SRW_PLATFORM}-${env.SRW_COMPILER}.txt", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
-                            }
-                        }
-                    }
-
-                    // Run the unified test script
-                    stage('Test') {
-                        environment {
-                            EXPERIMENT_BASE_DIR = "${env.WORKSPACE}/expt_dirs"
-                        }
-
-                        steps {
-                            echo "Testing Land DA (${env.COMPILER}) on ${env.PLATFORM} (using ${env.WORKSPACE})"
-
-                            // Remove the following line to re-enable comprehensive tests
-                            sh '=false bash --login "${WORKSPACE}/.cicd/scripts/srw_test.sh"'
-
-                            // Uncomment the following block to re-enable comprehensive tests
-                            /*
-                          
-                            script {
-                                def
-                                def
-                               
-
-                                if (env.CHANGE_ID) {
-                                    pullRequest.labels.each {
-                                        if (it == ) {
-                                             = true
-                                        }
-                                    }
-                                }
-
-                                sh "COMPREHENSIVE_TESTS=${}" + ' bash --login "${WORKSPACE}/.cicd/scripts/test.sh"'
-                            }
-                            */
-                        }
-
-                        post {
-                            always {
-                                // Archive the test log files
-                                sh 'cd "${EXPERIMENT_BASE_DIR}" && tar --create --gzip --verbose --dereference --file "${WORKSPACE}/we2e_test_logs-${PLATFORM}-${COMPILER}.tgz" */log.generate_FV3LAM_wflow */log/* ${WORKSPACE}/tests/ summary*txt ${WORKSPACE}/tests/log.*'
-                                // Remove the data sets from the experiments directory to conserve disk space
-                                sh 'find "${EXPERIMENT_BASE_DIR}" -regextype posix-extended -regex "^.*(orog|[0-9]{10})$" -type d | xargs rm -rf'
-                                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: 'we2e_test_results-*-*.txt', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false], [bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: 'we2e_test_logs-*-*.tgz', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
-                            }
-                        }
-                    }
+            }
+            
                 }
             }
         }
     }
-
-    // Uncomment the following block to re-enable PW clusters
-    /*
-    post {
-        always {
-            // Stop any Parallel Works clusters that were started during the pipeline execution
-            script {
-                // def pw_clusters = ['pclusternoaav2use1', 'azclusternoaav2eus1', 'gclusternoaav2usc1']
-                def pw_clusters = ['pclusternoaav2use1']
-                def clusters = []
-
-                // Determine which clusters need to be stopped, if any
-                if (params.PLATFORM_FILTER == 'all') {
-                    clusters = pw_clusters
-                } else if (params.PLATFORM_FILTER in pw_clusters) {
-                    clusters = [params.PLATFORM_FILTER]
-                } else {
-                    echo 'No Parallel Works clusters were used in build'
-                }
-
-                for (int i = 0; i < clusters.size(); ++i) {
-                    // Call the parallel-works-jenkins-client/stop-cluster job using clusters[i] for the
-                    // PW_CLUSTER_NAME parameter
-                    build job: 'parallel-works-jenkins-client/stop-cluster', parameters: [string(name: 'PW_CLUSTER_NAME', value: clusters[i])]
-                }
-            }
-        }
-    }
-    */
 }
