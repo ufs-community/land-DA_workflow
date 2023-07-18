@@ -102,31 +102,3 @@ pipeline {
                 source do_submit_test.sh
                 }
             }
-        stage('Build') {
-            agent { 
-                label 'noaacloud'
-            }
-            steps {
-                export img=/contrib/EPIC/containers/ubuntu20.04-intel-ue-landda-v1.1.0.img
-                mkdir sandbox
-                cd sandbox/
-                ln -s /contrib/EPIC/landda/inputs .
-                module load intel/2022.1.2 impi/2022.1.2
-                singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
-                cd land-DA_workflow/
-            }
-        }
-        stage('Test on noaacloud') {
-            agent { 
-                label 'noaacloud'
-            }
-            steps {
-                sed -i 's|hera.internal|noaacloud.sing|g' settings_DA_cycle_gdas
-                sed -i 's/da-cpu/sg-epic/g' submit_cycle.sh
-                export USE_SINGULARITY=yes
-                source do_submit_test.sh
-                }
-            }
-            
-                }
-            }
