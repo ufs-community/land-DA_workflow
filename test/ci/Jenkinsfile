@@ -103,3 +103,5 @@ pipeline {
                 source do_submit_test.sh
                 }
             }
+        }
+    } 
