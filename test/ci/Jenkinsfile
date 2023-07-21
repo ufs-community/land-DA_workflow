@@ -6,6 +6,7 @@ pipeline {
                 label 'Orion'
             }
             steps {
+            }
                 cd /work/noaa/nems/zshrader
                 export img=/work/noaa/epic-ps/role-epic-ps/containers/ubuntu20.04-intel-ue-landda-v1.1.0.img
                 mkdir sandbox
@@ -14,6 +15,7 @@ pipeline {
                 module load intel/2022.1.2 impi/2022.1.2
                 singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
                 cd land-DA_workflow/
+             }
             }
         }
         stage('Test on Orion') {
