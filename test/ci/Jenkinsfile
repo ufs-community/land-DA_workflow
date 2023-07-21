@@ -48,19 +48,7 @@ pipeline {
         NODE_PATH = '/work/noaa/nems/zshrader/'
       }
       steps {
-          script {
-            for (label in pullRequest.labels) {
-            if ((label.matches("LandDA_workflow"))) {
-               env.CHOICE_NODE='orion'
-            } 
-            else {
-               env.CHOICE_NODE='hera'
-            }
-            else {
-               env.CHOICE_NODE='jet'
-             } 
-          }
-        }
+          
         cleanWs()
         checkout scm
         sh '''
