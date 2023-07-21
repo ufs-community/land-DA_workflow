@@ -7,7 +7,7 @@ pipeline {
             }
             steps {
                 cd /work/noaa/nems/zshrader
-                export img=/contrib/EPIC/containers/ubuntu20.04-intel-ue-landda-v1.1.0.img
+                export img=/work/noaa/epic-ps/role-epic-ps/containers/ubuntu20.04-intel-ue-landda-v1.1.0.img
                 mkdir sandbox
                 cd sandbox/
                 ln -s /contrib/EPIC/landda/inputs .
