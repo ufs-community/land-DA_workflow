@@ -8,13 +8,13 @@ pipeline {
       steps {
         script {
           for (label in pullRequest.labels) {
-            if ((label.matches("LandDA_workflow"))) {
+            if ((label.matches("orion"))) {
                  env.CHOICE_NODE='orion'
             }  
-            else if ((label.matches("LandDA_workflow"))) { 
+            else if ((label.matches("hera"))) { 
                 env.CHOICE_NODE='hera'
             }  
-            else if ((label.matches("LandDA_workflow"))) {
+            else if ((label.matches("jet"))) {
                 env.CHOICE_NODE='jet'
             } 
             else { 
