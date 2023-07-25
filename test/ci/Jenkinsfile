@@ -66,7 +66,6 @@ pipeline {
         export USE_SINGULARITY=yes
         pwd
         ./do_submit_cycle.sh settings_DA_cycle_gdas
-        fi
         '''
       }
         }    
