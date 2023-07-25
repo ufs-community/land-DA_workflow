@@ -39,9 +39,9 @@ pipeline {
        }    
     }
   } 
-  stage('Run Land DA Workflow') {
+  stage('Run Land DA Workflow on Orion') {
         agent {
-          label "LandDA_workflow"
+          label "orion"
         }
         environment {
         ACCNR = 'nems'
