@@ -64,6 +64,7 @@ pipeline {
         sed -i 's|hera.internal|orion.sing|g' settings_DA_cycle_gdas
         sed -i 's/da-cpu/epic/g' submit_cycle.sh
         export USE_SINGULARITY=yes
+        pwd
         source do_submit_test.sh
         fi
         '''
