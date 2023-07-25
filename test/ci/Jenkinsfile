@@ -52,7 +52,6 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        cd /work/noaa/nems/zshrader/
         pwd
         export img=/work/noaa/epic-ps/role-epic-ps/containers/ubuntu20.04-intel-ue-landda-v1.1.0.img
         mkdir sandbox
@@ -63,7 +62,7 @@ pipeline {
         singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
         cd land-DA_workflow/
         sed -i 's|hera.internal|orion.sing|g' settings_DA_cycle_gdas
-        sed -i 's/da-cpu/nems/g' submit_cycle.sh
+        sed -i 's/da-cpu/epic/g' submit_cycle.sh
         export USE_SINGULARITY=yes
         source do_submit_test.sh
         fi
