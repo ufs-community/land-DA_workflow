@@ -65,7 +65,7 @@ pipeline {
         sed -i 's/da-cpu/epic/g' submit_cycle.sh
         export USE_SINGULARITY=yes
         pwd
-        source do_submit_test.sh
+        ./do_submit_cycle.sh settings_DA_cycle_gdas
         fi
         '''
       }
