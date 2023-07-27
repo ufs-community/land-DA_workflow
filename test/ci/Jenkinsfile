@@ -74,7 +74,7 @@ pipeline {
           label "jet"
         }
         environment {
-        ACCNR = 'h-nems'
+        ACCNR = 'hfv3gfs'
         NODE_PATH = '/mnt/lfs4/HFIP/hfv3gfs/Zachary.Shrader/'
       }
       steps {
