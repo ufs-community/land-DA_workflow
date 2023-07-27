@@ -91,7 +91,7 @@ pipeline {
         singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
         cd land-DA_workflow/
         sed -i 's|hera.internal|jet.sing|g' settings_DA_cycle_gdas
-        sed -i 's/da-cpu/h-nems/g' submit_cycle.sh
+        sed -i 's/da-cpu/hfv3gfs/g' submit_cycle.sh
         export USE_SINGULARITY=yes
         pwd
         ./do_submit_cycle.sh settings_DA_cycle_gdas
