@@ -126,6 +126,39 @@ pipeline {
         ./do_submit_cycle.sh settings_DA_cycle_gdas
         '''
       }
+    }    
+    stage('Run Land DA Workflow on Hercules') {
+        agent {
+          label "hercules"
+        }
+        environment {
+        ACCNR = 'epic'
+        NODE_PATH = '/work/noaa/nems/zshrader'
+      }
+      steps {
+          
+        cleanWs()
+        checkout scm
+        sh '''
+        pwd
+        export img=/work/noaa/epic-ps/role-epic-ps/containers/ubuntu20.04-intel-ue-landda-release-public-v1.1.0.img
+        mkdir sandbox
+        cd sandbox/
+        ln -s /work/noaa/epic-ps/role-epic-ps/landda/inputs .
+        module use /work/noaa/epic-ps/role-epic-ps/spack-stack/spack-stack-1.3.1-hercules/envs/unified-env/install/modulefiles/Core
+        module load stack-intel/2021.7.1
+        module load stack-intel-oneapi-mpi/2021.7.1
+        module load singularity/3.8.7 
+        singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
+        cd land-DA_workflow/
+        sed -i 's|hera.internal|hercules.sing|g' settings_DA_cycle_gdas
+        sed -i 's/da-cpu/epic/g' submit_cycle.sh
+        sed -i 's/debug/windfall/g' submit_cycle.sh
+        export USE_SINGULARITY=yes
+        pwd
+        ./do_submit_cycle.sh settings_DA_cycle_gdas
+        ''' 
+      }
     }
   }  
 }
