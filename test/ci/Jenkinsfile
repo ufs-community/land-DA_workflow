@@ -45,7 +45,7 @@ pipeline {
         }
         environment {
         ACCNR = 'nems'
-        NODE_PATH = '/work/noaa/nems/zshrader/'
+        NODE_PATH = '/work/noaa/epic/role-epic/'
       }
       steps {
           
@@ -75,7 +75,7 @@ pipeline {
         }
         environment {
         ACCNR = 'hfv3gfs'
-        NODE_PATH = '/mnt/lfs4/HFIP/hfv3gfs/Zachary.Shrader/'
+        NODE_PATH = '/mnt/lfs4/HFIP/hfv3gfs/role.epic/'
       }
       steps {
           
@@ -104,7 +104,7 @@ pipeline {
         }
         environment {
         ACCNR = 'nems'
-        NODE_PATH = '/scratch1/NCEPDEV/nems/Zachary.Shrader/'
+        NODE_PATH = '/scratch1/NCEPDEV/stmp2/role.epic/'
       }
       steps {
           
@@ -133,7 +133,7 @@ pipeline {
         }
         environment {
         ACCNR = 'epic'
-        NODE_PATH = '/work/noaa/nems/zshrader'
+        NODE_PATH = '/work/noaa/epic/role-epic/'
       }
       steps {
           
