@@ -59,7 +59,29 @@ pipeline {
         ln -s /scratch1/NCEPDEV/nems/role.epic/landda/inputs .
         module load intel/2022.1.2 impi/2022.1.2
         singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
-        cd land-DA_workflow/
+        cd ..
+        ln -s /scratch1/NCEPDEV/nems/role.epic/landda/inputs .
+        git clone -b Jenkins_Pipeline --recursive https://github.com/ufs-community/land-DA_workflow.git
+        mv land-DA_workflow/  PR_land-DA_workflow
+        cd land-DA_workflow
+        mkdir build && cd build
+        export JEDI_EXECDIR=${JEDI_INSTALL}/fv3-bundle/build/bin
+        export RTPWD=/work/noaa/nems/emc.nemspara/RT/NEMSfv3gfs/develop-20230728
+        export INPUTDATA_ROOT=/work/noaa/nems/emc.nemspara/RT/NEMSfv3gfs/input-data-20221101
+        module use modulefiles
+        module load landda_hera.intel
+        ecbuild ../ && make -j4
+        cd ..
+        cd ..
+        cd sandbox/land-DA_workflow/build/bin/
+        cp calcfIMS.exe /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/and-da_Land_DA_Jenkinsfile_PR-25/PR_land-DA_workflow/build/bin/
+        cp fv3jedi_letkf.x /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/and-da_Land_DA_Jenkinsfile_PR-25/PR_land-DA_workflow/build/bin/
+        cp python /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/and-da_Land_DA_Jenkinsfile_PR-25/PR_land-DA_workflow/build/bin/
+        cd ..
+        cd ..
+        cd ..
+        cd ..
+        cd PR_land-DA_workflow/
         sed -i 's|hera.internal|hera.sing|g' settings_DA_cycle_gdas
         sed -i 's/da-cpu/nems/g' submit_cycle.sh
         export USE_SINGULARITY=yes
