@@ -67,9 +67,7 @@ pipeline {
         export JEDI_EXECDIR=${JEDI_INSTALL}/fv3-bundle/build/bin
         export RTPWD=/work/noaa/nems/emc.nemspara/RT/NEMSfv3gfs/develop-20230728
         export INPUTDATA_ROOT=/work/noaa/nems/emc.nemspara/RT/NEMSfv3gfs/input-data-20221101
-        module use modulefiles
-        module spider landda_hera.intel
-        module load landda_hera.intel
+        module load intel/2022.1.2 impi/2022.1.2
         ecbuild ../ && make -j4
         cd ..
         cd ..
