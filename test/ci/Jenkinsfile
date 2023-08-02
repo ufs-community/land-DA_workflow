@@ -57,6 +57,7 @@ pipeline {
         mkdir sandbox
         cd sandbox/
         ln -s /scratch1/NCEPDEV/nems/role.epic/landda/inputs .
+        module load intel/2022.1.2 impi/2022.1.2
         singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
         cd ..
         ln -s /scratch1/NCEPDEV/nems/role.epic/landda/inputs .
@@ -67,7 +68,8 @@ pipeline {
         export JEDI_EXECDIR=${JEDI_INSTALL}/fv3-bundle/build/bin
         export RTPWD=/work/noaa/nems/emc.nemspara/RT/NEMSfv3gfs/develop-20230728
         export INPUTDATA_ROOT=/work/noaa/nems/emc.nemspara/RT/NEMSfv3gfs/input-data-20221101
-        module load intel/2022.1.2 impi/2022.1.2
+        module use ../modulefiles
+        module load landda_hera.intel
         ecbuild ../ && make -j4
         cd ..
         cd ..
