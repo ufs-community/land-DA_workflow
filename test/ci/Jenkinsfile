@@ -57,7 +57,6 @@ pipeline {
         mkdir sandbox
         cd sandbox/
         ln -s /scratch1/NCEPDEV/nems/role.epic/landda/inputs .
-        module load intel/2022.1.2 impi/2022.1.2
         singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
         cd ..
         ln -s /scratch1/NCEPDEV/nems/role.epic/landda/inputs .
