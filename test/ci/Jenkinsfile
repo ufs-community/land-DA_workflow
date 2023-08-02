@@ -63,7 +63,7 @@ pipeline {
         ln -s /scratch1/NCEPDEV/nems/role.epic/landda/inputs .
         git clone -b Jenkins_Pipeline --recursive https://github.com/ufs-community/land-DA_workflow.git
         mv land-DA_workflow/  PR_land-DA_workflow
-        cd land-DA_workflow
+        cd PR_land-DA_workflow
         mkdir build && cd build
         export JEDI_EXECDIR=${JEDI_INSTALL}/fv3-bundle/build/bin
         export RTPWD=/work/noaa/nems/emc.nemspara/RT/NEMSfv3gfs/develop-20230728
