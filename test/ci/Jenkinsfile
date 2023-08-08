@@ -69,42 +69,22 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        pwd
-        export img=/work/noaa/epic-ps/role-epic-ps/containers/ubuntu20.04-intel-ue-landda-v1.1.0.img
-        mkdir sandbox
-        cd sandbox/
-        ln -s /work/noaa/epic-ps/role-epic-ps/landda/inputs .
         module load intel/2022.1.2 impi/2022.1.2
         module load singularity/3.8.3 
-        singularity exec -H $PWD $img cp -r /opt/land-DA_workflow .
-        cd ..
-        ln -s /scratch1/NCEPDEV/nems/role.epic/landda/inputs .
-        git clone -b Jenkins_Pipeline --recursive https://github.com/ufs-community/land-DA_workflow.git
-        mv land-DA_workflow/  PR_land-DA_workflow
-        cd PR_land-DA_workflow
-        mkdir build && cd build
-        export JEDI_EXECDIR=${JEDI_INSTALL}/fv3-bundle/build/bin
-        export RTPWD=/work/noaa/nems/emc.nemspara/RT/NEMSfv3gfs/develop-20230728
-        export INPUTDATA_ROOT=/work/noaa/nems/emc.nemspara/RT/NEMSfv3gfs/input-data-20221101
+        module load git/2.28.0 
+        git submodule update --init --recursive
         module use ../modulefiles
-        module load landda_orion.intel
+        module use modulefiles
+        module load  landda_orion.intel
+        mkdir build && cd build
         ecbuild ../ && make -j4
         cd ..
-        cd ..
-        cd sandbox/land-DA_workflow/build/bin/
-        cp calcfIMS.exe /work/noaa/epic/role-epic/jenkins/workspace/and-da_Land_DA_Jenkinsfile_PR-25/PR_land-DA_workflow/build/bin/
-        cp fv3jedi_letkf.x /work/noaa/epic/role-epic/jenkins/workspace/and-da_Land_DA_Jenkinsfile_PR-25/PR_land-DA_workflow/build/bin/
-        cp python /work/noaa/epic/role-epic/jenkins/workspace/and-da_Land_DA_Jenkinsfile_PR-25PR_land-DA_workflow/build/bin/
-        cd ..
-        cd ..
-        cd ..
-        cd ..
-        cd PR_land-DA_workflow/
-        sed -i 's|hera.internal|orion.sing|g' settings_DA_cycle_gdas
-        sed -i 's/da-cpu/nems/g' submit_cycle.sh
-        export USE_SINGULARITY=yes
-        pwd
-        ./do_submit_cycle.sh settings_DA_cycle_gdas
+        ./test/retrieve_data.sh $PWD/test/
+        cd build/
+        export JEDI_EXECDIR=${JEDI_INSTALL}/fv3-bundle/build/bin
+        export INPUTDATA_ROOT=/work/noaa/nems/zshrader/inputs/NEMSfv3gfs/input-data-20221101
+        export RTPWD=/work/noaa/nems/zshrader/inputs/NEMSfv3gfs/develop-20230413/INTEL
+        ctest
         '''
       }
     }    
