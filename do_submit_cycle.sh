@@ -80,8 +80,8 @@ if [[ -e ${BUILDDIR}/bin/vector2tile_converter.exe ]]; then #prefer cmake-built 
 else 
   export vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
 fi
-if [[ -e ${BUILDDIR}/bin/ufsLandDriver.exe ]]; then
-  export LSMexec=${BUILDDIR}/bin/ufsLandDriver.exe
+if [[ -e ${BUILDDIR}/bin/ufsLand.exe ]]; then
+  export LSMexec=${BUILDDIR}/bin/ufsLand.exe
 else
   export LSMexec=${CYCLEDIR}/ufs-land-driver/run/ufsLand.exe
 fi
