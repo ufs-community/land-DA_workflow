@@ -98,7 +98,8 @@ cp ${PATHRT}/parm/noahmptable.tbl noahmptable.tbl
 
 # start runs
 echo "Start ufs-cdeps-land model run with TASKS: ${TASKS}"
-mpiexec -n ${TASKS} ./ufs_model
+export MPIRUN=${MPIRUN:-`which mpiexec`}
+${MPIRUN} -n ${TASKS} ./ufs_model
 
 #
 echo "Now check model output with ufs-wm baseline!"
