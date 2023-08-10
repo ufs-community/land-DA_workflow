@@ -24,7 +24,7 @@ export PATH=${HOME}/.local/bin:${PATH}
 # set envs
 DATA_ROOT=${project_source_dir}/../inputs
 INPUTDATA_ROOT=${DATA_ROOT}/NEMSfv3gfs
-BL_DATE=20230413
+source ${PATHRT}/bl_date.conf
 INPUTDATA_DATE=20221101
 [[ ! -d ${INPUTDATA_ROOT}/develop-${BL_DATE}/${RT_COMPILER^^} ]] && mkdir -p ${INPUTDATA_ROOT}/develop-${BL_DATE}/${RT_COMPILER^^}
 [[ ! -d ${INPUTDATA_ROOT}/input-data-${INPUTDATA_DATE} ]] && mkdir -p ${INPUTDATA_ROOT}/input-data-${INPUTDATA_DATE}
@@ -38,7 +38,7 @@ DES_DIR=${RTPWD}/datm_cdeps_lnd_gswp3
 [[ ! -d ${DES_DIR} ]] && mkdir -p ${DES_DIR}
 echo ${DES_DIR}
 cd $DES_DIR
-aws s3 sync --no-sign-request ${AWS_URL}/develop-${BL_DATE}/${RT_COMPILER^^}/datm_cdeps_lnd_gswp3 .
+aws s3 sync --no-sign-request ${AWS_URL}/develop-${BL_DATE}/datm_cdeps_lnd_gswp3_${RT_COMPILER,,} .
 cd ${project_source_dir}
 
 # DATM data
