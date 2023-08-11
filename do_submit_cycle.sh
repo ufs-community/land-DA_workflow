@@ -95,9 +95,7 @@ export analdate=${CYCLEDIR}/analdates.sh
 export incdate=${CYCLEDIR}/incdate.sh
 
 export BUILDDIR=${CYCLEDIR}/build
-if [[ $BASELINE =~ 'hera.internal' ]]; then
-  export JEDI_EXECDIR='/scratch2/NCEPDEV/land/data/jedi/fv3-bundle/build/bin'
-fi
+export JEDI_EXECDIR='/scratch2/NCEPDEV/land/data/jedi/fv3-bundle/build/bin'
 export JEDI_STATICDIR=${DADIR}/jedi/fv3-jedi/Data/
 export INCR_EXECDIR=${DADIR}/add_jedi_incr/exec/
 ############################
