@@ -52,9 +52,19 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        
-
-        
+        module load intel/2022.1.2 impi/2022.1.2
+        module use modulefiles
+        module load landda_hera.intel 
+        mkdir build && cd build
+        ecbuild ../ && make -j4
+        cd ..
+        ./test/retrieve_data.sh $PWD
+        cd build
+        export JEDI_EXECDIR=${JEDI_INSTALL}/fv3-bundle/build/bin
+        export RTPWD=/scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/inputs/NEMSfv3gfs/develop-20230804/INTEL
+        export INPUTDATA_ROOT=/scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/inputs/NEMSfv3gfs/input-data-20221101
+        module use modulefiles &&  module load landda_hera.intel
+        ctest
         '''
       }
     }        
@@ -71,7 +81,20 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-
+        module load intel/2022.1.2 impi/2022.1.2
+        module load git/2.28.0
+        module use modulefiles
+        module load landda_orion.intel
+        mkdir build && cd build
+        ecbuild ../ && make -j4
+        cd ..
+        ./test/retrieve_data.sh $PWD
+        cd build/
+        module use ../modulefiles && module load landda_orion.intel
+        export JEDI_EXECDIR=${JEDI_INSTALL}/fv3-bundle/build/bin
+        export INPUTDATA_ROOT=/work/noaa/epic/role-epic/jenkins/workspace/inputs/NEMSfv3gfs/input-data-20221101
+        export RTPWD=/work/noaa/epic/role-epic/jenkins/workspace/inputs/NEMSfv3gfs/develop-20230804/INTEL
+        ctest
         '''
       }
     }    
