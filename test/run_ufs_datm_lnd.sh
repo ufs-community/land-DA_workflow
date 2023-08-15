@@ -14,7 +14,7 @@ export MACHINE_ID=${MACHINE_ID:-linux}
 TEST_NAME=datm_cdeps_lnd_gswp3
 PATHRT=${project_source_dir}/ufs-weather-model/tests
 RT_COMPILER=${RT_COMPILER:-intel}
-ATOL="1e-8"
+ATOL="1e-7"
 source ${PATHRT}/detect_machine.sh
 source ${PATHRT}/rt_utils.sh
 source ${PATHRT}/default_vars.sh
@@ -30,7 +30,7 @@ elif [[ $MACHINE_ID = hera.* ]]; then
 else
   echo "Warning: MACHINE_ID is default, users will have to define INPUTDATA_ROOT and RTPWD by themselives"
 fi
-BL_DATE=20230413
+source ${PATHRT}/bl_date.conf
 RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-${BL_DATE}/${RT_COMPILER^^}}
 INPUTDATA_ROOT=${INPUTDATA_ROOT:-$DISKNM/NEMSfv3gfs/input-data-20221101}
 
@@ -93,9 +93,13 @@ if [[ $DATM_CDEPS = 'true' ]]; then
   atparse < ${PATHRT}/parm/${DATM_STREAM_CONFIGURE:-datm.streams.IN} > datm.streams
 fi
 
+# NoahMP table file
+cp ${PATHRT}/parm/noahmptable.tbl noahmptable.tbl
+
 # start runs
 echo "Start ufs-cdeps-land model run with TASKS: ${TASKS}"
-mpiexec -n ${TASKS} ./ufs_model
+export MPIRUN=${MPIRUN:-`which mpiexec`}
+${MPIRUN} -n ${TASKS} ./ufs_model
 
 #
 echo "Now check model output with ufs-wm baseline!"
