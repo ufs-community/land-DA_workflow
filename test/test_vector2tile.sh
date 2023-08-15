@@ -11,7 +11,9 @@ prefix=$4 #bkg or ana
 source ${project_source_dir}/test/runtime_vars.sh ${project_binary_dir} ${project_source_dir}
 
 # set baseline dir
-TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector"}
+#TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector"}
+
+TEST_BASEDIR=${TEST_BASEDIR:-"/scratch1/NCEPDEV/stmp2/Rhaesung.Kim/rhaesung/sync/landda_expts/DA_pr23_hera_default_test2/mem000/restarts/vector"}
 
 # set executables
 TEST_EXEC="vector2tile_converter.exe"
