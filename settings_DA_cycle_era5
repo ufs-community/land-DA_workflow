@@ -2,11 +2,11 @@
 
 # experiment name
 export exp_name=DA_GHCN_test
-export BASELINE=hera.internal
+#export BASELINE=hera.internal
 
 #ERA5 forcing is available for 2020-2021
 STARTDATE=2019122100
-ENDDATE=2019122300
+ENDDATE=2019122200
 
 # Get commmon variables
 source ./release.environment
