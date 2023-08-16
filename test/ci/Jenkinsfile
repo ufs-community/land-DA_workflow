@@ -62,7 +62,7 @@ pipeline {
         ./test/retrieve_data.sh $PWD
         cd build
         export JEDI_EXECDIR=${JEDI_INSTALL}/fv3-bundle/build/bin
-        export RTPWD=/scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/inputs/NEMSfv3gfs/develop-20230815/INTEL
+        export RTPWD=/scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/inputs/NEMSfv3gfs/develop-20230804/INTEL
         export INPUTDATA_ROOT=/scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/inputs/NEMSfv3gfs/input-data-20221101
         module use modulefiles &&  module load landda_hera.intel
         ctest
