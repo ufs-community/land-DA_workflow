@@ -52,6 +52,7 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
+        git submodule update --init --recursive
         module load intel/2022.1.2 impi/2022.1.2
         module use modulefiles
         module load landda_hera.intel 
@@ -83,6 +84,7 @@ pipeline {
         sh '''
         module load intel/2022.1.2 impi/2022.1.2
         module load git/2.28.0
+        git submodule update --init --recursive
         module use modulefiles
         module load landda_orion.intel
         mkdir build && cd build
