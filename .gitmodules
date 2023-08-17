@@ -1,8 +1,9 @@
 [submodule "ufs-land-driver"]
 	path = ufs-land-driver
-        url = https://github.com/NOAA-EMC/ufs-land-driver.git
-        branch = main
-       # branch = release/land-da-public-v1.0.0
+        url = https://github.com/rhaesung/ufs-land-driver.git
+       #url = https://github.com/NOAA-EMC/ufs-land-driver.git
+        branch = new_era5_baseline
+       #branch = main
 [submodule "DA_update"]
 	path = DA_update
         url = https://github.com/rhaesung/land-DA.git
