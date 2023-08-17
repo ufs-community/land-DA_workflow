@@ -1,7 +1,7 @@
 [submodule "ufs-land-driver-emc-dev"]
 	path = ufs-land-driver-emc-dev
-        url = https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev.git
-        branch = new_baseline
+	url = https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev.git
+	branch = new_baseline
 [submodule "DA_update"]
 	path = DA_update
         url = https://github.com/rhaesung/land-DA.git
