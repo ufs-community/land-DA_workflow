@@ -27,7 +27,7 @@ if [[ ${USE_SINGULARITY} =~ yes ]]; then
 fi
 
 #Location of observations for DA
-OBSDIR=${OBSDIR:-"/scratch2/NCEPDEV/land/data/DA/"}
+export OBSDIR=${LANDDA_INPUTS}/DA
 
 # temporary directory where experiment is run from
 export WORKDIR=${WORKDIR:-${LANDDAROOT}/workdir}
