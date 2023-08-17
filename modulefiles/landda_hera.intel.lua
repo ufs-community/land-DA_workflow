@@ -76,7 +76,6 @@ load(pathJoin("mapl", mapl_ver))
 
 load("ufs-pyenv")
 load("atlas")
-load("netcdf-hdf5parallel/4.7.4")
 
 setenv("CC", "mpiicc")
 setenv("CXX", "mpiicpc")
