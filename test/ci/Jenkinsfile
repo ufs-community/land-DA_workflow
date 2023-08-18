@@ -1,0 +1,124 @@
+pipeline {
+  agent none
+  stages {
+    stage('Land DA workflow') {
+       agent {
+        label 'built-in'   
+       }
+      steps {
+        script {
+          for (label in pullRequest.labels) {
+            if ((label.matches("orion"))) {
+                 env.CHOICE_NODE='orion'
+            }  
+            else if ((label.matches("hera"))) { 
+                env.CHOICE_NODE='hera'
+            }  
+            else if ((label.matches("hercules"))) { 
+                env.CHOICE_NODE='hercules'
+            }  
+            else if ((label.matches("jet"))) {
+                env.CHOICE_NODE='jet'
+            } 
+            else { 
+                env.CHOICE_NODE='none'
+            }
+         }
+// Why do I need another if..block, because it just works this way.
+
+            if (CHOICE_NODE == 'orion') {
+                echo "Starting up orion ${CHOICE_NODE}...this might take 5-10 minutes...please be patient."
+               
+            } 
+             else if (CHOICE_NODE == 'jet') {
+                echo "Starting up jet ${CHOICE_NODE}...this might take 5-10 minutes...please be patient."
+            }
+             else if (CHOICE_NODE == 'hercules') {
+                 echo "Starting up hera ${CHOICE_NODE}...this might take 5-10 minutes...please be patient."
+            }
+             else if (CHOICE_NODE == 'hera') {
+                 echo "Starting up hera ${CHOICE_NODE}...this might take 5-10 minutes...please be patient."
+            }
+             else {
+                echo "${CHOICE_NODE} is NOT a platform, moving on..."
+            }
+       }    
+    }
+  } 
+  stage('Run Land DA Workflow on Hera') {
+        agent {
+          label "hera"
+        }
+        environment {
+        ACCNR = 'nems'
+        NODE_PATH = '/scratch1/NCEPDEV/stmp2/role.epic/'
+      }
+      steps {
+          
+        cleanWs()
+        checkout scm
+        sh '''
+        git submodule update --init --recursive
+        ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/
+        module use modulefiles && module load landda_hera.intel
+        mkdir build && cd build
+        ecbuild ../ && make -j4
+        salloc --qos=debug --tasks-per-node=6 --account=epic --time=00:30:00
+        module use ../modulefiles && module load landda_hera.intel
+        ctest
+        '''
+      }
+    }        
+    stage('Run Land DA Workflow on Orion') {
+        agent {
+          label "orion"
+        }
+        environment {
+        ACCNR = 'nems'
+        NODE_PATH = '/work/noaa/epic/role-epic/'
+      }
+      steps {
+          
+        cleanWs()
+        checkout scm
+        sh '''
+        
+        '''
+      }
+    }    
+    stage('Run Land DA Workflow on Hercules') {
+        agent {
+          label "hercules"
+        }
+        environment {
+        ACCNR = 'epic'
+        NODE_PATH = '/work/noaa/epic/role-epic/'
+      }
+      steps {
+          
+        cleanWs()
+        checkout scm
+        sh '''
+        
+        ''' 
+        }
+    } 
+        stage('Run Land DA Workflow on Jet') {
+        agent {
+          label "jet"
+        }
+        environment {
+        ACCNR = 'hfv3gfs'
+        NODE_PATH = '/mnt/lfs4/HFIP/hfv3gfs/role.epic/'
+      }
+      steps {
+          
+        cleanWs()
+        checkout scm
+        sh '''
+        
+        '''
+      }
+    }
+  }  
+}
