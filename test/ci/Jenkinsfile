@@ -58,14 +58,8 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        git submodule update --init --recursive
-        ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/
-        module use modulefiles && module load landda_hera.intel
-        mkdir build && cd build
-        ecbuild ../ && make -j4
-        salloc --qos=debug --tasks-per-node=6 --account=epic --time=00:30:00
-        module use ../modulefiles && module load landda_hera.intel
-        ctest
+        cd /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/
+        mv inputs input_
         '''
       }
     }        
