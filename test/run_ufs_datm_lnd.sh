@@ -30,8 +30,9 @@ elif [[ $MACHINE_ID = hera.* ]]; then
 else
   echo "Warning: MACHINE_ID is default, users will have to define INPUTDATA_ROOT and RTPWD by themselives"
 fi
-source ${PATHRT}/bl_date.conf
-RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-${BL_DATE}/${RT_COMPILER^^}}
+#source ${PATHRT}/bl_date.conf
+BL_DATE=20230815
+RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-${BL_DATE}/${TEST_NAME}_${RT_COMPILER}}
 INPUTDATA_ROOT=${INPUTDATA_ROOT:-$DISKNM/NEMSfv3gfs/input-data-20221101}
 
 if [[ ! -d ${INPUTDATA_ROOT} ]] || [[ ! -d ${RTPWD} ]]; then
