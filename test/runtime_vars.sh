@@ -7,7 +7,7 @@ project_source_dir=$2
 
 # Prepare runtime environement
 # set date
-export CYMDH=2016010118
+export CYMDH=2019122100
 export YY=`echo $CYMDH | cut -c1-4`
 export MM=`echo $CYMDH | cut -c5-6`
 export DD=`echo $CYMDH | cut -c7-8`
@@ -17,7 +17,7 @@ export DOY=$(date +%j -d "$YY$MM$DD + 1 day")
 
 export FILEDATE=$YY$MM$DD.${HH}0000
 
-export PYMDH=$(date +%Y%m%d%H -d "$YY$MM$DD $HH - 6 hours")
+export PYMDH=$(date +%Y%m%d%H -d "$YY$MM$DD $HH - 24 hours")
 export YP=`echo $PYMDH | cut -c1-4`
 export MP=`echo $PYMDH | cut -c5-6`
 export DP=`echo $PYMDH | cut -c7-8`
@@ -41,7 +41,8 @@ export PYTHON_VERSION=`python -c 'import sys; version=sys.version_info[:3]; prin
 export PYTHONPATH=$PYTHONPATH:${IODA_BUILD_DIR}/lib/python${PYTHON_VERSION}/pyioda:${IODA_BUILD_DIR}/lib/pyiodaconv
 
 # JEDI directories
-export JEDI_EXECDIR=${JEDI_EXECDIR:-"${JEDI_INSTALL}/jedi-bundle/build/bin"}
+#export JEDI_EXECDIR=${JEDI_EXECDIR:-"${JEDI_INSTALL}/jedi-bundle/build/bin"}
+export JEDI_EXECDIR=${JEDI_EXECDIR:-"/scratch2/NCEPDEV/land/data/jedi/fv3-bundle/build/bin/"}
 export JEDI_STATICDIR=${JEDI_STATICDIR:-"${JEDI_EXECDIR}/../fv3-jedi/test/Data"}
 
 # set executables
@@ -50,12 +51,13 @@ export PYTHON_EXEC=${PYTHON_EXEC:-`which python`}
 
 # configurations
 export RES=96
-export atmos_forc=gdas
+export atmos_forc=era5
 export TPATH="$LANDDA_INPUTS/forcing/${atmos_forc}/orog_files/"
 export TSTUB="oro_C${RES}.mx100"
 export GFSv17=NO
 export OBS_TYPES=("GHCN")
 export DAtype=letkfoi_snow
+export fv3bundle_vn=psl_develop
 export B=30  # background error std for LETKFOI
 if [ $GFSv17 == "YES" ]; then
     export SNOWDEPTHVAR="snodl"

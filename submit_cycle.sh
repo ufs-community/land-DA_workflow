@@ -46,11 +46,9 @@ while [ $date_count -lt $cycles_per_job ]; do
     # substringing to get yr, mon, day, hr info for previous cycle
     PREVDATE=`${incdate} $THISDATE -6`
     YYYP=`echo $PREVDATE | cut -c1-4`
-   
-    # compute the restart frequency, run_days and run_hours
-    FREQ=$(( 3600 * $FCSTHR ))
-    RDD=$(( $FCSTHR / 24 ))
-    RHH=$(( $FCSTHR % 24 ))
+    MP=`echo $PREVDATE | cut -c5-6`
+    DP=`echo $PREVDATE | cut -c7-8`
+    HP=`echo $PREVDATE | cut -c9-10`
  
     # substring for next cycle
     NEXTDATE=`${incdate} $THISDATE $FCSTHR`
@@ -99,6 +97,10 @@ while [ $date_count -lt $cycles_per_job ]; do
         # submit vec2tile 
         echo '************************************************'
         echo 'calling vector2tile' 
+        
+        if [[ $BASELINE =~ 'hera.internal' ]]; then
+           source ${CYCLEDIR}/land_mods
+        fi 
         $vec2tileexec vector2tile.namelist
         if [[ $? != 0 ]]; then
             echo "vec2tile failed"
@@ -138,9 +140,13 @@ while [ $date_count -lt $cycles_per_job ]; do
     if [[ $do_jedi == "YES" ]]; then  
         echo '************************************************'
         echo 'calling tile2vector' 
-
+   
+        if [[ $BASELINE =~ 'hera.internal' ]]; then
+           source ${CYCLEDIR}/land_mods
+        fi 
+        
         cp  ${CYCLEDIR}/template.tile2vector tile2vector.namelist
-
+         
         sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" tile2vector.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
         sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
@@ -180,7 +186,17 @@ while [ $date_count -lt $cycles_per_job ]; do
     echo '************************************************'
     echo "calling model"
     echo $MEM_WORKDIR
-    ${MPIEXEC} -n 1 $LSMexec 
+    
+    nt=$SLURM_NTASKS
+    if [[ $BASELINE =~ 'hera.internal' ]]; then
+           source ${CYCLEDIR}/land_mods
+    fi 
+    
+    if [[ $BASELINE =~ 'hera.internal' ]]; then
+           srun '--export=ALL' --label -K -n $nt $LSMexec
+    else 
+           ${MPIEXEC} -n 1 $LSMexec
+    fi        
     # no error codes on exit from model, check for restart below instead
 
     ############################

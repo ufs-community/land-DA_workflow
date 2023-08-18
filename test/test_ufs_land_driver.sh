@@ -9,7 +9,8 @@ project_source_dir=$2
 source ${project_source_dir}/test/runtime_vars.sh ${project_binary_dir} ${project_source_dir}
 
 # set baseline dir
-TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector"}
+#TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector"}
+TEST_BASEDIR=${TEST_BASEDIR:-"/scratch2/NAGAPE/epic/UFS_Land-DA/test_base/mem000/restarts/vector"}
 
 # compute the restart frequency, run_days and run_hours
 FREQ=$(( 3600 * $FCSTHR ))
@@ -17,7 +18,7 @@ RDD=$(( $FCSTHR / 24 ))
 RHH=$(( $FCSTHR % 24 ))
 
 # set executables
-TEST_EXEC="ufsLandDriver.exe"
+TEST_EXEC="ufsLand.exe"
 NPROC=1
 
 # move to work directory

@@ -1,12 +1,12 @@
-[submodule "ufs-land-driver"]
-	path = ufs-land-driver
-        url = https://github.com/NOAA-EMC/ufs-land-driver.git
-        branch = release/land-da-public-v1.0.0
+[submodule "ufs-land-driver-emc-dev"]
+	path = ufs-land-driver-emc-dev
+	url = https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev.git
+	branch = new_baseline
 [submodule "DA_update"]
 	path = DA_update
-	url = https://github.com/ufs-community/land-DA.git
+        url = https://github.com/ufs-community/land-DA.git
         branch = develop
 [submodule "vector2tile"]
 	path = vector2tile
 	url = https://github.com/NOAA-PSL/land-vector2tile.git
-        branch = release/EPIC1.0
+        branch = develop

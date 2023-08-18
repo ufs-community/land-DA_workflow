@@ -12,7 +12,7 @@ cmake_minimum_required( VERSION 3.12 )
 project( LandDA VERSION 0.0.0 LANGUAGES C CXX Fortran)
 
 if(DEFINED ENV{JEDI_INSTALL})
-  set( JEDI_INSTALL  $ENV{JEDI_INSTALL}/jedi-bundle)
+ set( JEDI_INSTALL  $ENV{JEDI_INSTALL}/jedi-bundle)
 else()
   message(FATAL_ERROR "Define the environment variable 'JEDI_INSTALL' to point to the parent directory of fv3-bundle on your system")
 endif()
@@ -55,7 +55,7 @@ ExternalProject_Add(ufs-weather-model
   )
 
 add_subdirectory( vector2tile )
-add_subdirectory( ufs-land-driver )
+add_subdirectory( ufs-land-driver-emc-dev )
 add_subdirectory( DA_update/add_jedi_incr )
 
 # Include testing.
