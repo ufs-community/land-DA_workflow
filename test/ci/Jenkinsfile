@@ -58,6 +58,7 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
+        git submodule update --init --recursive
         cd ..
         mv inputs input_
         '''
