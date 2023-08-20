@@ -85,7 +85,8 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        
+        groups
+        git submodule update --init --recursive
         '''
       }
     }    
@@ -102,7 +103,8 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        
+        groups
+        git submodule update --init --recursive
         ''' 
         }
     } 
@@ -119,7 +121,8 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        
+        groups
+        git submodule update --init --recursive
         '''
       }
     }
