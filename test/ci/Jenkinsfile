@@ -68,14 +68,8 @@ pipeline {
         cp job_card build/
         cd build
         module use ../modulefiles && module load landda_hera.intel
-        sbatch job_card
-        cd ..
-        cd ..
-        git clone -b develop https://github.com/ufs-community/land-DA_workflow/
-        cd land-DA_workflow/
-        git submodule update --init --recursive
-        mkdir build && cd build
-        squeue -u role.epic
+        salloc --tasks-per-node=6 --account=nems --time=00:30:00 nodes=$(squeue --user=$USER --Format=NODELIST | sed '2q;d') ssh $nodes
+        ctest
         '''
       }
     }        
