@@ -59,9 +59,13 @@ pipeline {
         checkout scm
         sh '''
         git submodule update --init --recursive
+        ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/
+        module use modulefiles && module load landda_hera.intel
         mkdir build
         cp hera_ctest.sh build/
         cd build/
+        module use ../modulefiles && module load landda_hera.intel
+        ecbuild ../ && make -j4
         echo $(pwd)
         salloc --account=nems --nodes=1 --ntasks-per-node=6 --time=00:00:30 bash -c ./hera_ctest.sh
         '''
