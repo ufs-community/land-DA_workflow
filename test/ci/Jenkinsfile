@@ -62,7 +62,7 @@ pipeline {
         mkdir build
         cp hera_ctest.sh build/
         cd build/
-        salloc --account=nems --nodes=1 --ntasks-per-node=6 --time=00:30:00 bash -c 'hera_ctest.sh'
+        salloc --account=nems --nodes=1 --ntasks-per-node=6 --time=00:30:00 && sbatch hera_ctest.sh
         '''
       }
     }        
