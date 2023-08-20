@@ -68,7 +68,7 @@ pipeline {
         cp job_card build/
         cd build
         module use ../modulefiles && module load landda_hera.intel
-        salloc --tasks-per-node=6 --account=nems --time=00:30:00 && nodes=$(squeue --user=$USER --Format=NODELIST | sed '2q;d')\ && ssh $nodes
+        salloc --tasks-per-node=6 --account=nems --time=00:30:00 && nodes=$(squeue --user=$USER --Format=NODELIST | sed '2q;d') && ssh $nodes
         ctest
         '''
       }
