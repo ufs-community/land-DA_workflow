@@ -1,5 +1,14 @@
 #!/bin/bash
-set -eux
-echo $USER
+#SBATCH --job-name=offline_noahmp
+#SBATCH --account=nems
+#SBATCH --qos=debug
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=6
+#SBATCH --cpus-per-task=1
+#SBATCH -t 00:30:00
+#SBATCH -o log_noahmp.%j.log
+#SBATCH -e err_noahmp.%j.err
 
-ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/ && module use modulefiles && module load landda_hera.intel && mkdir build && cd build && ecbuild ../ && make -j4 && ctest
+############################
+
+ctest
