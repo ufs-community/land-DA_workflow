@@ -58,9 +58,7 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        groups
-        git submodule update --init --recursive
-        salloc --account=nems --nodes=1 --ntasks-per-node=6 --time=00:00:30 bash -c 'hera_ctest.sh'
+        salloc --account=nems --nodes=1 --ntasks-per-node=6 --time=00:30:00 bash -c 'hera_ctest.sh'
         '''
       }
     }        
