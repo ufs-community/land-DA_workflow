@@ -63,7 +63,7 @@ pipeline {
         cp hera_ctest.sh build/
         cd build/
         echo $(pwd)
-        salloc --account=nems --nodes=1 --ntasks-per-node=6 --time=00:00:30 ls
+        salloc --account=nems --nodes=1 --ntasks-per-node=6 --time=00:00:30 bash -c ./hera_ctest.sh
         '''
       }
     }        
