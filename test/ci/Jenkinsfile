@@ -60,23 +60,7 @@ pipeline {
         sh '''
         groups
         git submodule update --init --recursive
-        salloc --account=nems --nodes=1 --ntasks-per-node=6 --time=00:00:30 bash -c 'echo $USER'
-        ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/
-        module use modulefiles && module load landda_hera.intel
-        mkdir build && cd build
-        ecbuild ../ && make -j4
-        module use ../modulefiles && module load landda_hera.intel
-        cd ..
-        cp job_card build/
-        cd build
-        sbatch job_card
-        cd ..
-        cd ..
-        git clone -b develop https://github.com/ufs-community/land-DA_workflow/
-        cd land-DA_workflow
-        git submodule update --init --recursive
-        mkdir build && cd build
-        ecbuild ../ && make -j4
+        salloc --account=nems --nodes=1 --ntasks-per-node=6 --time=00:00:30 bash -c 'hera_ctest.sh'
         '''
       }
     }        
