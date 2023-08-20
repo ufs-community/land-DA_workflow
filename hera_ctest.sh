@@ -1,4 +1,7 @@
 #!/bin/bash
+#SBATCH --job-name=offline_noahmp
+#SBATCH --account=nems
+#SBATCH --qos=debug
 set -eux
 echo $USER
 
