@@ -13,6 +13,4 @@
 
 ulimit -s unlimited
 
-module use ../modulefiles && module load landda_hera.intel
-ecbuild ../ && make -j4
 ctest
