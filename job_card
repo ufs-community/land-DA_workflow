@@ -3,7 +3,7 @@
 #SBATCH --account=nems
 #SBATCH --qos=batch
 #SBATCH --nodes=3
-#SBATCH --tasks-per-node=6
+#SBATCH --tasks-per-node=7
 #SBATCH --cpus-per-task=1
 #SBATCH -t 00:30:00
 #SBATCH -o log_noahmp.%j.log
