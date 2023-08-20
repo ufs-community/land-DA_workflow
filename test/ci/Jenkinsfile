@@ -60,15 +60,12 @@ pipeline {
         sh '''
         groups
         git submodule update --init --recursive
+        salloc --qos=debug --tasks-per-node=6 --account=nems --time=00:30:00
         ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/
         module use modulefiles && module load landda_hera.intel
         mkdir build && cd build
         ecbuild ../ && make -j4
-        cd ..
-        cp job_card build/
-        cd build
         module use ../modulefiles && module load landda_hera.intel
-        salloc --tasks-per-node=6 --account=nems --time=00:30:00 && nodes=$(squeue --user=$USER --Format=NODELIST | sed '2q;d') && ssh $nodes
         ctest
         '''
       }
