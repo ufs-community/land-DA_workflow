@@ -64,9 +64,11 @@ pipeline {
         module use modulefiles && module load landda_hera.intel
         mkdir build && cd build
         ecbuild ../ && make -j4
-        salloc --qos=debug --tasks-per-node=6 --account=nems --time=00:30:00
         module use ../modulefiles && module load landda_hera.intel
-        ctest
+        cd ..
+        cp job_card build/
+        cd build
+        sbatch job_card
         '''
       }
     }        
