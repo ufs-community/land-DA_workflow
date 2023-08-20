@@ -2,7 +2,7 @@
 #SBATCH --job-name=offline_noahmp
 #SBATCH --account=nems
 #SBATCH --qos=batch
-#SBATCH --nodes=1
+#SBATCH --nodes=3
 #SBATCH --tasks-per-node=6
 #SBATCH --cpus-per-task=1
 #SBATCH -t 00:30:00
