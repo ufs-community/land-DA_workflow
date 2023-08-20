@@ -60,7 +60,7 @@ pipeline {
         sh '''
         groups
         git submodule update --init --recursive
-        salloc --qos=debug --nodes=1 --ntasks-per-node=6 --account=nems --time=00:00:30 bash -c 'sleep 10'
+        salloc --qos=debug --nodes=1 --ntasks-per-node=6 --account=nems --time=00:30:00 bash
         ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/
         module use modulefiles && module load landda_hera.intel
         mkdir build && cd build
