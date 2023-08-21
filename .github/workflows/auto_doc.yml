@@ -6,8 +6,6 @@ on:
   pull_request:
     branches: [ "develop" ]
 
-/usr/local/bin/python -m pip install --upgrade pip
-
 jobs:
   build:
     runs-on: ubuntu-latest
