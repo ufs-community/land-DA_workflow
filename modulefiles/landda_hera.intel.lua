@@ -82,7 +82,7 @@ setenv("CXX", "mpiicpc")
 setenv("FC", "mpiifort")
 setenv("CMAKE_Platform", "hera.intel")
 
-setenv("EPICHOME", "/scratch1/NCEPDEV/nems/role.epic")
-setenv("JEDI_INSTALL", pathJoin(os.getenv("EPICHOME"),"contrib/v1.1"))
+setenv("EPICHOME", "/scratch2/NAGAPE/epic/UFS_Land-DA")
+setenv("JEDI_INSTALL", pathJoin(os.getenv("EPICHOME"),"jedi"))
 
 whatis("Description: UFS build environment")
