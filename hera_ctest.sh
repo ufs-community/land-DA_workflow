@@ -1,10 +1,13 @@
 #!/bin/bash
+#SBATCH -o out.ctest
+#SBATCH --account=nems
 set -eux
 
-
-ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/
 module use ../modulefiles && module load landda_hera.intel
-ecbuild ../
-make -j4
+
 ctest
+
+wait
+
+echo "ctest is done"
 
