@@ -10,7 +10,7 @@ source ${project_source_dir}/test/runtime_vars.sh ${project_binary_dir} ${projec
 
 # set extra paths
 OROG_PATH=$TPATH
-OBSDIR=${LANDDA_INPUTS}/DA/snow_depth
+OBSDIR=${LANDDA_INPUTS}/DA/
 
 # set executables
 JEDI_EXEC=${JEDI_EXEC:-$JEDI_EXECDIR/fv3jedi_letkf.x}
