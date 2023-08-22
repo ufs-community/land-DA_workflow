@@ -63,11 +63,13 @@ pipeline {
         module use modulefiles && module load landda_hera.intel
         mkdir build
         cp hera_ctest.sh build/
+        cp run_ctest.sh build/
+        cp check_ctest.sh build/
         cd build/
         module use ../modulefiles && module load landda_hera.intel
         ecbuild ../ && make -j4
         echo $(pwd)
-        salloc --account=nems --nodes=1 --ntasks-per-node=6 --time=00:30:00 bash -c ./hera_ctest.sh
+        ./run_ctest.sh
         '''
       }
     }        
@@ -84,10 +86,7 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        groups
-        git clone -b develop https://github.com/ufs-community/land-DA_workflow/
-        cd land-DA_workflow/
-        git submodule update --init --recursive
+        
         '''
       }
     }    
@@ -104,10 +103,7 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        groups
-        git clone -b develop https://github.com/ufs-community/land-DA_workflow/
-        cd land-DA_workflow/
-        git submodule update --init --recursive
+      
         ''' 
         }
     } 
@@ -124,10 +120,7 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        groups
-        git clone -b develop https://github.com/ufs-community/land-DA_workflow/
-        cd land-DA_workflow/
-        git submodule update --init --recursive
+        
         '''
       }
     }
