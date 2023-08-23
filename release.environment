@@ -36,10 +36,8 @@ export WORKDIR=${WORKDIR:-${LANDDAROOT}/workdir}
 export OUTDIR=${LANDDA_EXPTS}/${exp_name}
 
 # directory where ctest base dataset is located
-export TEST_BASEDIR=${TEST_BASEDIR:-${EPICHOME}/test_base/mem000/restarts/vector"}
+export TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/test_base/mem000/restarts/vector"}
 
 # JEDI directories
 export JEDI_EXECDIR=${JEDI_EXECDIR:-"${JEDI_INSTALL}/build/bin"}
 export JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
-
-
