@@ -6,8 +6,8 @@ project_source_dir=$1
 
 # first retrieve test data for landda system
 cd ${project_source_dir}/../
-[[ ! -f landda-test-inps.tar.gz ]] &&  wget https://epic-sandbox-srw.s3.amazonaws.com/landda-test-inps.tar.gz
-[[ ! -d inputs ]] && tar xvfz landda-test-inps.tar.gz
+[[ ! -f landda-test-inps.tar.gz ]] && wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/landda_inputs.tar.gz
+[[ ! -d inputs ]] && tar xvfz landda_inputs.tar.gz
 cd ${project_source_dir}
 
 # Then retrieve data for ufs-datm-lnd model test (RT: datm_cdeps_lnd_gswp3)
