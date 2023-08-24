@@ -9,8 +9,7 @@ project_source_dir=$2
 source ${project_source_dir}/test/runtime_vars.sh ${project_binary_dir} ${project_source_dir}
 
 # set baseline dir
-#TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/landda/cycle_land/DA_GHCN_test/mem000/restarts/vector"}
-TEST_BASEDIR=${TEST_BASEDIR:-"/scratch2/NAGAPE/epic/UFS_Land-DA/test_base/mem000/restarts/vector"}
+export TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/test_base/mem000/restarts/vector"}
 
 # compute the restart frequency, run_days and run_hours
 FREQ=$(( 3600 * $FCSTHR ))
@@ -51,7 +50,7 @@ ln -fs ${WORKDIR}/ana/restarts/vector/ufs_land_restart.${YY}-${MM}-${DD}_${HH}-0
 
 # submit model
 echo "============================= calling model" 
-$MPIRUN -n $NPROC ${EXECDIR}/${TEST_EXEC} 
+${MPIRUN} -n $NPROC ${EXECDIR}/${TEST_EXEC} 
 
 # check if new restart exits
 if [[ -e "./ufs_land_restart.${nYY}-${nMM}-${nDD}_${nHH}-00-00.nc" ]]; then
