@@ -86,7 +86,7 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        
+        pwd
         '''
       }
     }    
