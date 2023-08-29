@@ -10,8 +10,7 @@ source ${project_source_dir}/test/runtime_vars.sh ${project_binary_dir} ${projec
 
 # set extra paths
 OROG_PATH=$TPATH
-#OBSDIR=${LANDDA_INPUTS}/DA/snow_depth
-OBSDIR=${OBSDIR:-"/scratch2/NCEPDEV/land/data/DA/"}
+OBSDIR=${LANDDA_INPUTS}/DA/
 
 # set executables
 JEDI_EXEC=${JEDI_EXEC:-$JEDI_EXECDIR/fv3jedi_letkf.x}
@@ -73,5 +72,4 @@ ln -fs $JEDI_STATICDIR ./
 
 #
 echo "============================= calling ${JEDI_EXEC}"
-srun -n $NPROC ${JEDI_EXEC} letkf_land.yaml
-#${MPIRUN} -n $NPROC ${JEDI_EXEC} letkf_land.yaml
+${MPIRUN} -n $NPROC ${JEDI_EXEC} letkf_land.yaml
