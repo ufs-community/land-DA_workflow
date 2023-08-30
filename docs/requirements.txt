@@ -1,5 +1,4 @@
 sphinxcontrib-bibtex
 sphinx_rtd_theme
-docutils==0.16
+docutils>=0.18.1
 urllib3==1.26.15
--e .
