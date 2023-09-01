@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>3. Land DA Workflow (Hera &amp; Orion) &mdash; UFS Offline Land DA User&#39;s Guide v1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>3. Land DA Workflow (Hera &amp; Orion) &mdash; UFS Offline Land DA User&#39;s Guide v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
       <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=0ec76b63"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -44,7 +47,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TechnicalOverview.html">2. Technical Overview</a></li>
@@ -88,15 +91,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="land-da-workflow-hera-orion">
-<span id="buildrunlandda"></span><h1><span class="section-number">3. </span>Land DA Workflow (Hera &amp; Orion)<a class="headerlink" href="#land-da-workflow-hera-orion" title="Permalink to this headline"></a></h1>
-<p>This chapter provides instructions for building and running a basic Land DA case for the Unified Forecast System (<a class="reference internal" href="Glossary.html#term-ufs"><span class="xref std std-term">UFS</span></a>) Land DA System. This out-of-the-box Land DA case builds a weather forecast for January 1, 2016 at 18z to January 3, 2016 at 18z.</p>
+  <section id="land-da-workflow-hera-orion">
+<span id="buildrunlandda"></span><h1><span class="section-number">3. </span>Land DA Workflow (Hera &amp; Orion)<a class="headerlink" href="#land-da-workflow-hera-orion" title="Permalink to this heading"></a></h1>
+<p>This chapter provides instructions for building and running a basic Land DA case for the Unified Forecast System (<a class="reference internal" href="Glossary.html#term-UFS"><span class="xref std std-term">UFS</span></a>) Land DA System. This out-of-the-box Land DA case builds a weather forecast for January 1, 2016 at 18z to January 3, 2016 at 18z.</p>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
 <p>These steps are designed for use on <a class="reference internal" href="TechnicalOverview.html#levelsofsupport"><span class="std std-ref">Level 1</span></a> systems (i.e., Hera and Orion) and may require significant changes on other systems. It is recommended that users on other systems run the containerized version of Land DA. Users may reference <a class="reference internal" href="Container.html#container"><span class="std std-numref">Chapter 4: Containerized Land DA Workflow</span></a> for instructions.</p>
 </div>
-<div class="section" id="create-a-working-directory">
-<h2><span class="section-number">3.1. </span>Create a Working Directory<a class="headerlink" href="#create-a-working-directory" title="Permalink to this headline"></a></h2>
+<section id="create-a-working-directory">
+<h2><span class="section-number">3.1. </span>Create a Working Directory<a class="headerlink" href="#create-a-working-directory" title="Permalink to this heading"></a></h2>
 <p>Create a directory for the Land DA experiment (<code class="docutils literal notranslate"><span class="pre">$LANDDAROOT</span></code>):</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mkdir /path/to/landda</span>
 <span class="go">cd /path/to/landda</span>
@@ -104,16 +107,12 @@
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">/path/to/landda</span></code> is the path to the directory where the user plans to run Land DA experiments.</p>
-</div>
-<div class="section" id="get-data">
-<span id="getdata"></span><h2><span class="section-number">3.2. </span>Get Data<a class="headerlink" href="#get-data" title="Permalink to this headline"></a></h2>
-<p><a class="reference internal" href="#level1data"><span class="std std-numref">Table 3.1</span></a> shows the locations of pre-staged data on NOAA <a class="reference internal" href="Glossary.html#term-rdhpcs"><span class="xref std std-term">RDHPCS</span></a> (i.e., Hera and Orion).</p>
+</section>
+<section id="get-data">
+<span id="getdata"></span><h2><span class="section-number">3.2. </span>Get Data<a class="headerlink" href="#get-data" title="Permalink to this heading"></a></h2>
+<p><a class="reference internal" href="#level1data"><span class="std std-numref">Table 3.1</span></a> shows the locations of pre-staged data on NOAA <a class="reference internal" href="Glossary.html#term-RDHPCS"><span class="xref std std-term">RDHPCS</span></a> (i.e., Hera and Orion).</p>
 <span id="level1data"></span><table class="docutils align-default" id="id1">
 <caption><span class="caption-number">Table 3.1 </span><span class="caption-text">Level 1 RDHPCS Data</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 82%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Platform</p></th>
 <th class="head"><p>Data Location</p></th>
@@ -145,19 +144,19 @@
 </div>
 <p>Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in <a class="reference internal" href="Container.html#getdatac"><span class="std std-numref">Section 4.3</span></a>. Users with access to data for additional experiments may use the same process described above to point or link to that data by modifying the path to the data appropriately.</p>
 <p>Users who are not using Land DA on Hera or Orion should view <a class="reference internal" href="Container.html#container"><span class="std std-numref">Chapter 4</span></a> for instructions on running the containerized version of Land DA. <a class="reference internal" href="Container.html#getdatac"><span class="std std-numref">Section 4.3</span></a> explains options for downloading the sample data onto their system.</p>
-</div>
-<div class="section" id="get-code">
-<h2><span class="section-number">3.3. </span>Get Code<a class="headerlink" href="#get-code" title="Permalink to this headline"></a></h2>
+</section>
+<section id="get-code">
+<h2><span class="section-number">3.3. </span>Get Code<a class="headerlink" href="#get-code" title="Permalink to this heading"></a></h2>
 <p>Clone the Land DA repository.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone -b release/public-v1.0.0 --recursive https://github.com/NOAA-EPIC/land-offline_workflow.git</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone -b develop --recursive https://github.com/ufs-community/land-DA_workflow.git</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="build-the-land-da-system">
-<h2><span class="section-number">3.4. </span>Build the Land DA System<a class="headerlink" href="#build-the-land-da-system" title="Permalink to this headline"></a></h2>
+</section>
+<section id="build-the-land-da-system">
+<h2><span class="section-number">3.4. </span>Build the Land DA System<a class="headerlink" href="#build-the-land-da-system" title="Permalink to this heading"></a></h2>
 <ol class="arabic">
 <li><p>Navigate to the workflow directory, and source the modulefiles.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $LANDDAROOT/land-offline_workflow</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $LANDDAROOT/land-DA_workflow</span>
 <span class="go">module use modulefiles</span>
 <span class="go">module load landda_&lt;machine&gt;.intel</span>
 </pre></div>
@@ -176,7 +175,8 @@
 </pre></div>
 </div>
 <p>If the code successfully compiles, the console output should end with:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[100%] Built target ufsLandDriver.exe</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[100%] Completed &#39;ufs-weather-model&#39;</span>
+<span class="go">[100%] Built target ufs-weather-model</span>
 </pre></div>
 </div>
 <p>Additionally, the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory will contain several files and a <code class="docutils literal notranslate"><span class="pre">bin</span></code> subdirectory with three executables:</p>
@@ -189,22 +189,22 @@
 </div></blockquote>
 </li>
 </ol>
-</div>
-<div class="section" id="configure-the-experiment">
-<h2><span class="section-number">3.5. </span>Configure the Experiment<a class="headerlink" href="#configure-the-experiment" title="Permalink to this headline"></a></h2>
+</section>
+<section id="configure-the-experiment">
+<h2><span class="section-number">3.5. </span>Configure the Experiment<a class="headerlink" href="#configure-the-experiment" title="Permalink to this heading"></a></h2>
 <ol class="arabic">
-<li><p>Navigate back to the <code class="docutils literal notranslate"><span class="pre">land-offline_workflow</span></code> directory and check that the account/partition is correct in <code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code>.</p>
+<li><p>Navigate back to the <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code> directory and check that the account/partition is correct in <code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code>.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd ..</span>
 <span class="go">vi submit_cycle.sh</span>
 </pre></div>
 </div>
 <p>If necessary, modify lines 3 and 4 to include the correct account and queue (qos) for the system. It may also be necessary to add the following line to the script to specify the partition:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span>SBATCH --partition<span class="o">=</span>my_partition
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span>SBATCH<span class="w"> </span>--partition<span class="o">=</span>my_partition
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">my_partition</span></code> is the name of the partition on the user’s system.</p>
 </li>
-<li><p>Configure other elements of the experiment if desired. The v1.0.0 release includes four scripts with default experiment settings:</p>
+<li><p>Configure other elements of the experiment if desired. The <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch includes four scripts with default experiment settings:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_gdas</span></code> for running the Jan. 1-3, 2016 sample case.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_era5</span></code> for running a Jan. 1-3, 2020 sample case.</p></li>
@@ -218,17 +218,17 @@
 </div>
 </li>
 </ol>
-</div>
-<div class="section" id="run-an-experiment">
-<h2><span class="section-number">3.6. </span>Run an Experiment<a class="headerlink" href="#run-an-experiment" title="Permalink to this headline"></a></h2>
+</section>
+<section id="run-an-experiment">
+<h2><span class="section-number">3.6. </span>Run an Experiment<a class="headerlink" href="#run-an-experiment" title="Permalink to this heading"></a></h2>
 <p>The Land DA System uses a script-based workflow that is launched using the <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code> script. This script requires an input file that details all the specifics of a given experiment.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./do_submit_cycle.sh settings_DA_cycle_gdas</span>
 </pre></div>
 </div>
 <p>The system will output a message such as <code class="docutils literal notranslate"><span class="pre">Submitted</span> <span class="pre">batch</span> <span class="pre">job</span> <span class="pre">########</span></code>, indicating that the job was successfully submitted. If all goes well, two full cycles will run with data assimilation (DA) and a forecast.</p>
-</div>
-<div class="section" id="check-progress">
-<span id="verifysuccess"></span><h2><span class="section-number">3.7. </span>Check Progress<a class="headerlink" href="#check-progress" title="Permalink to this headline"></a></h2>
+</section>
+<section id="check-progress">
+<span id="verifysuccess"></span><h2><span class="section-number">3.7. </span>Check Progress<a class="headerlink" href="#check-progress" title="Permalink to this heading"></a></h2>
 <p>Verify that the experiment ran successfully:</p>
 <p>To check on the job status, users on a system with a Slurm job scheduler may run:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">squeue -u $USER</span>
@@ -262,8 +262,8 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ls -l ../cycle_land/DA_GHCN_test/mem000/restarts/vector/</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

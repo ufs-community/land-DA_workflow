@@ -4,7 +4,7 @@
 Land Data Assimilation System 
 ***************************************************
 
-This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which utilizes the UFS Noah-MP components with the JEDI ``fv3-bundle`` to enable cycled model forecasts. The data assimilation framework applies the Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm to combine the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007).
+This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which utilizes the UFS Noah-MP component together with JEDI's ``jedi-bundle`` (Skylab v3.0) to enable cycled model forecasts. The data assimilation framework applies the Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm to combine the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007).
 
 Joint Effort for Data Assimilation Integration (JEDI)
 ********************************************************
@@ -622,7 +622,7 @@ GHCN files for 2016 and 2020 are already provided in IODA format for the v1.0.0 
 
 In each experiment, the ``DA_config`` file sets the name of the experiment configuration file. This configuration file is typically named ``settings_DA_test``. Before assimilation, if "GHCN" was specified as the observation type in the ``DA_config`` file, the ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` file corresponding to the specified cycle date is soft-linked to the JEDI working directory (``${JEDIWORKDIR}``) with a naming-convention change (i.e., ``GHCN_${YYYY}${MM}${DD}${HH}.nc``). Here, the GHCN IODA file is appended with the cycle hour, ``${HH}`` which is extracted from the ``${STARTDATE}`` variable defined in the relevant ``DA_config`` file. 
 
-Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, the observations are further quality controlled and checked using ``letkf_land.yaml`` (itself a concatenation of ``GHCN.yaml`` and ``letkfoi_snow.yaml``; see the `GitHub yaml files <https://github.com/NOAA-EPIC/land-DA_update/tree/31191c913a624d7fab479dc429d44ff102cd3809/jedi/fv3-jedi/yaml_files>`__ for more detail). The GHCN-specific observation filters, domain checks, and quality control parameters from ``GHCN.yaml`` ensure that only snow depth observations which meet specific criteria are assimilated (the rest are rejected). The contents of this YAML are listed below:
+Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, the observations are further quality controlled and checked using ``letkf_land.yaml`` (itself a concatenation of ``GHCN.yaml`` and ``letkfoi_snow.yaml``; see the `GitHub yaml files <https://github.com/ufs-community/land-DA/tree/660d64da52bbe6fd5ccf29dad05fe6be3f10e749/jedi/fv3-jedi/yaml_files>`__ for more detail). The GHCN-specific observation filters, domain checks, and quality control parameters from ``GHCN.yaml`` ensure that only snow depth observations which meet specific criteria are assimilated (the rest are rejected). The contents of this YAML are listed below:
 
 .. code-block:: console
 
@@ -910,7 +910,7 @@ The ``do_submit_cycle.sh`` script sets up the cycling job based on the user's in
 
 .. _DoSubmitCyclePng:
 
-.. figure:: https://github.com/NOAA-EPIC/land-offline_workflow/wiki/do_submit_cycle.png
+.. figure:: https://github.com/ufs-community/land-DA_workflow/wiki/do_submit_cycle.png
    :alt: The do submit cycle shell script starts by loading configuration files and modules. Then it proceeds to set executables, read in dates, compute forecast run variables, and setup work and output directories for the model. If a restart directory is available in the model output directory, it creates the dates file and submits the submit cycle shell script. If there is no output file, the script will try to copy restart files from an initial conditions directory before creating the dates file and submitting the submit cycle shell script. 
 
    *Flowchart of 'do_submit_cycle.sh'*
@@ -925,7 +925,7 @@ The ``submit_cycle.sh`` script first exports the required paths and loads the re
 
 .. _SubmitCyclePng:
 
-.. figure:: https://github.com/NOAA-EPIC/land-offline_workflow/wiki/submit_cycle.png
+.. figure:: https://github.com/ufs-community/land-DA_workflow/wiki/submit_cycle.png
    :alt: The submit cycle shell script starts by exporting paths and loading required modules. Then it starts a loop for the cycle. For each cycle in the experiment, it gets the data assimilation settings and date/time info; computes the restart frequency, run days, and run hours; and copies the restarts into the work directory. If the user is running a DA experiment, the script updates and submits the vector to tile namelists and submits the snow data assimilation. Then it submits the tile to vector namelists and saves the analysis restart. Regardless of whether DA is being used, the script runs the forecast model, updates the model namelist, and submits the land surface model. It checks existing model output, and then the loop ends. If there are more cycles to run, the script will run through this loop until they are complete. 
 
    *Flowchart of 'submit_cycle.sh'*
@@ -1037,7 +1037,7 @@ The ``do_landDA.sh`` runs the data assimilation job inside the ``sumbit_cycle.sh
 
 .. _DoLandDAPng:
 
-.. figure:: https://github.com/NOAA-EPIC/land-offline_workflow/wiki/do_landDA.png
+.. figure:: https://github.com/ufs-community/land-DA_workflow/wiki/do_landDA.png
    :alt: The do land da shell script starts by reading in the configuration file and setting up directories. Then it formats date strings, stages restart files, and prepares the observation files. It constructs yaml files based on requested JEDI type and then proceeds to create the background ensembles using LETKF-OI. Next, the script runs JEDI and applies the increment to use restarts. Lastly, it performs clean-up operations. 
 
    *Flowchart of 'do_landDA.sh'*
@@ -1102,4 +1102,3 @@ Below, users can find an example of a configuration settings file, ``settings_DA
 
 ``fv3bundle_vn``
    Specifies the date for JEDI ``fv3-bundle`` checkout (used to select correct ``yaml``).
-

@@ -19,7 +19,7 @@ This User's Guide is organized as follows:
    * :numref:`Chapter %s <DASystem>` (DA Framework) provides information on the DA system, required data, and configuration parameters. 
    * :numref:`Chapter %s <Glossary>` (Glossary) lists important terms. 
 
-Users and developers may post questions and exchange information on the Land DA System's `GitHub Discussions <https://github.com/NOAA-EPIC/land-offline_workflow/discussions/categories/q-a>`__ forum if their concerns are not addressed in this User's Guide.
+Users and developers may post questions and exchange information on the Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__ forum if their concerns are not addressed in this User's Guide.
 
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
 
@@ -48,7 +48,7 @@ government, industry, and academia). For more information about the UFS, visit t
 Noah-MP
 ==========
 
-The offline Noah-MP LSM is a stand-alone, uncoupled model used to execute land surface simulations. In this traditional uncoupled mode, near-surface atmospheric forcing data is required as input forcing. This LSM simulates soil moisture (both liquid and frozen), soil temperature, skin temperature, snow depth, snow water equivalent (SWE), snow density, canopy water content, and the energy flux and water flux terms of the surface energy balance and surface water balance.
+The offline Noah-MP LSM is a stand-alone, uncoupled model used to execute land surface simulations. In this traditional uncoupled mode, near-surface atmospheric :term:`forcing data` are required as input forcing. This LSM simulates soil moisture (both liquid and frozen), soil temperature, skin temperature, snow depth, snow water equivalent (SWE), snow density, canopy water content, and the energy flux and water flux terms of the surface energy balance and surface water balance.
 
 Noah-MP uses a big-leaf approach with a separated vegetation canopy accounting 
 for vegetation effects on surface energy and water balances, a modified two-stream 

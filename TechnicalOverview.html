@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2. Technical Overview &mdash; UFS Offline Land DA User&#39;s Guide v1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>2. Technical Overview &mdash; UFS Offline Land DA User&#39;s Guide v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
       <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=0ec76b63"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -44,7 +47,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Introduction.html">1. Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">2. Technical Overview</a><ul>
@@ -61,6 +64,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#code-repositories-and-directory-structure">2.3. Code Repositories and Directory Structure</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#directory-structure">2.3.1. Directory Structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#land-da-components">2.3.2. Land DA Components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-ufs-land-component">2.3.3. The UFS Land Component</a></li>
 </ul>
 </li>
 </ul>
@@ -96,13 +100,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="technical-overview">
-<span id="techoverview"></span><h1><span class="section-number">2. </span>Technical Overview<a class="headerlink" href="#technical-overview" title="Permalink to this headline"></a></h1>
-<div class="section" id="prerequisites">
-<h2><span class="section-number">2.1. </span>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline"></a></h2>
-<div class="section" id="minimum-system-requirements">
-<h3><span class="section-number">2.1.1. </span>Minimum System Requirements<a class="headerlink" href="#minimum-system-requirements" title="Permalink to this headline"></a></h3>
-<p><a class="reference internal" href="Glossary.html#term-ufs"><span class="xref std std-term">UFS</span></a> applications, models, and components require a UNIX-based operating system (i.e., Linux or MacOS).</p>
+  <section id="technical-overview">
+<span id="techoverview"></span><h1><span class="section-number">2. </span>Technical Overview<a class="headerlink" href="#technical-overview" title="Permalink to this heading"></a></h1>
+<section id="prerequisites">
+<h2><span class="section-number">2.1. </span>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
+<section id="minimum-system-requirements">
+<h3><span class="section-number">2.1.1. </span>Minimum System Requirements<a class="headerlink" href="#minimum-system-requirements" title="Permalink to this heading"></a></h3>
+<p><a class="reference internal" href="Glossary.html#term-UFS"><span class="xref std std-term">UFS</span></a> applications, models, and components require a UNIX-based operating system (i.e., Linux or MacOS).</p>
 <p>Additionally, users will need:</p>
 <blockquote>
 <div><ul class="simple">
@@ -110,47 +114,42 @@
 <li><p>6 CPU cores (or option to run with “oversubscribe”)</p></li>
 </ul>
 </div></blockquote>
-</div>
-<div class="section" id="software-prerequisites">
-<h3><span class="section-number">2.1.2. </span>Software Prerequisites<a class="headerlink" href="#software-prerequisites" title="Permalink to this headline"></a></h3>
+</section>
+<section id="software-prerequisites">
+<h3><span class="section-number">2.1.2. </span>Software Prerequisites<a class="headerlink" href="#software-prerequisites" title="Permalink to this heading"></a></h3>
 <p>The Land DA System requires:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>An <a class="reference internal" href="Glossary.html#term-mpi"><span class="xref std std-term">MPI</span></a> implementation</p></li>
+<li><p>An <a class="reference internal" href="Glossary.html#term-MPI"><span class="xref std std-term">MPI</span></a> implementation</p></li>
 <li><p>A Fortran compiler</p></li>
 <li><p>Python</p></li>
-<li><p><a class="reference internal" href="Glossary.html#term-netcdf"><span class="xref std std-term">NetCDF</span></a></p></li>
+<li><p><a class="reference internal" href="Glossary.html#term-netCDF"><span class="xref std std-term">NetCDF</span></a></p></li>
 <li><p>Lmod</p></li>
 <li><p><a class="reference external" href="https://spack-stack.readthedocs.io/en/latest/">spack-stack</a></p></li>
-<li><p><a class="reference external" href="https://github.com/JCSDA/fv3-bundle/wiki">FV3-bundle</a></p></li>
+<li><p><a class="reference external" href="https://github.com/JCSDA/jedi-bundle/wiki">jedi-bundle</a> (Skylab v3.0.)</p></li>
 </ul>
 </div></blockquote>
 <p>These software prerequisites are pre-installed in the Land DA <a class="reference internal" href="Glossary.html#term-container"><span class="xref std std-term">container</span></a> and on other Level 1 systems (see <a class="reference internal" href="#levelsofsupport"><span class="std std-ref">below</span></a> for details). However, users on non-Level 1 systems will need to install them.</p>
 <p>Before using the Land DA container, users will need to install <a class="reference external" href="https://docs.sylabs.io/guides/latest/user-guide/">Singularity</a> and an <strong>Intel</strong> MPI (available <a class="reference external" href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html">free here</a>).</p>
-</div>
-</div>
-<div class="section" id="supported-systems-for-running-land-da">
-<span id="levelsofsupport"></span><h2><span class="section-number">2.2. </span>Supported Systems for Running Land DA<a class="headerlink" href="#supported-systems-for-running-land-da" title="Permalink to this headline"></a></h2>
-<p>Four levels of support have been defined for <a class="reference internal" href="Glossary.html#term-ufs"><span class="xref std std-term">UFS</span></a> applications, and the Land DA System operates under this paradigm:</p>
+</section>
+</section>
+<section id="supported-systems-for-running-land-da">
+<span id="levelsofsupport"></span><h2><span class="section-number">2.2. </span>Supported Systems for Running Land DA<a class="headerlink" href="#supported-systems-for-running-land-da" title="Permalink to this heading"></a></h2>
+<p>Four levels of support have been defined for <a class="reference internal" href="Glossary.html#term-UFS"><span class="xref std std-term">UFS</span></a> applications, and the Land DA System operates under this paradigm:</p>
 <ul class="simple">
 <li><p><strong>Level 1</strong> <em>(Pre-configured)</em>: Prerequisite software libraries are pre-built and available in a central location; code builds; full testing of model.</p></li>
 <li><p><strong>Level 2</strong> <em>(Configurable)</em>: Prerequisite libraries are not available in a centralized location but are expected to install successfully; code builds; full testing of model.</p></li>
 <li><p><strong>Level 3</strong> <em>(Limited-test platforms)</em>: Libraries and code build on these systems, but there is limited testing of the model.</p></li>
 <li><p><strong>Level 4</strong> <em>(Build-only platforms)</em>: Libraries and code build, but running the model is not tested.</p></li>
 </ul>
-<div class="section" id="level-1-systems">
-<h3><span class="section-number">2.2.1. </span>Level 1 Systems<a class="headerlink" href="#level-1-systems" title="Permalink to this headline"></a></h3>
-<p>Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via <a class="reference internal" href="Glossary.html#term-spack-stack"><span class="xref std std-term">spack-stack</span></a> and <a class="reference internal" href="Glossary.html#term-jedi"><span class="xref std std-term">JEDI</span></a>’s <code class="docutils literal notranslate"><span class="pre">fv3-bundle</span></code>. Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them.</p>
+<section id="level-1-systems">
+<h3><span class="section-number">2.2.1. </span>Level 1 Systems<a class="headerlink" href="#level-1-systems" title="Permalink to this heading"></a></h3>
+<p>Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via the <a class="reference internal" href="Glossary.html#term-spack-stack"><span class="xref std std-term">spack-stack</span></a> Unified Environment (UE) and the <code class="docutils literal notranslate"><span class="pre">jedi-bundle</span></code> (Skylab v3.0). Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 9%" />
-<col style="width: 29%" />
-<col style="width: 62%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Platform</p></th>
 <th class="head"><p>Compiler/MPI</p></th>
-<th class="head"><p>spack-stack &amp; fv3-bundle Installations</p></th>
+<th class="head"><p>spack-stack &amp; jedi-bundle Installations</p></th>
 </tr>
 </thead>
 <tbody>
@@ -158,16 +157,16 @@
 <td><p>intel/2022.1.2 /</p>
 <p>impi/2022.1.2</p>
 </td>
-<td><p>/scratch1/NCEPDEV/nems/role.epic/spack-stack/envs/landda-release-1.0-intel</p>
-<p>/scratch1/NCEPDEV/nems/role.epic/contrib/fv3-bundle</p>
+<td><p>/scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.3.0/envs/unified-env</p>
+<p>/scratch1/NCEPDEV/nems/role.epic/contrib/jedi-bundle</p>
 </td>
 </tr>
 <tr class="row-odd"><td><p>Orion</p></td>
 <td><p>intel/2022.1.2 /</p>
 <p>impi/2022.1.2</p>
 </td>
-<td><p>/work/noaa/epic-ps/role-epic-ps/spack-stack/envs/landda-release-1.0-intel</p>
-<p>/work/noaa/epic-ps/role-epic-ps/contrib/fv3-bundle</p>
+<td><p>/work/noaa/epic-ps/role-epic-ps/spack-stack/spack-stack-1.3.0/envs/unified-env</p>
+<p>/work/noaa/epic-ps/role-epic-ps/contrib/jedi-bundle</p>
 </td>
 </tr>
 <tr class="row-even"><td><p>Container</p></td>
@@ -175,31 +174,32 @@
 <p>intel-oneapi-mpi/2021.8.0</p>
 </td>
 <td><p>/opt/spack-stack/ (inside the container)</p>
-<p>/opt/fv3-bundle (inside the container)</p>
+<p>/opt/jedi-bundle (inside the container)</p>
 </td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="level-2-4-systems">
-<h3><span class="section-number">2.2.2. </span>Level 2-4 Systems<a class="headerlink" href="#level-2-4-systems" title="Permalink to this headline"></a></h3>
+</section>
+<section id="level-2-4-systems">
+<h3><span class="section-number">2.2.2. </span>Level 2-4 Systems<a class="headerlink" href="#level-2-4-systems" title="Permalink to this heading"></a></h3>
 <p>On non-Level 1 platforms, the Land DA System can be run within a container that includes the prerequisite software; otherwise, the required libraries will need to be installed as part of the Land DA build process. Once these prerequisite libraries are installed, applications and models should build and run successfully. However, users may need to perform additional troubleshooting on Level 3 or 4 systems since little or no pre-release testing has been conducted on these systems.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Running on Jet, Cheyenne, and NOAA Cloud systems is supported via container.</p>
 </div>
-</div>
-</div>
-<div class="section" id="code-repositories-and-directory-structure">
-<h2><span class="section-number">2.3. </span>Code Repositories and Directory Structure<a class="headerlink" href="#code-repositories-and-directory-structure" title="Permalink to this headline"></a></h2>
-<div class="section" id="directory-structure">
-<h3><span class="section-number">2.3.1. </span>Directory Structure<a class="headerlink" href="#directory-structure" title="Permalink to this headline"></a></h3>
-<p>The main repository for the Land DA System is named <code class="docutils literal notranslate"><span class="pre">land-offline_workflow</span></code>;
-it is available on GitHub at <a class="reference external" href="https://github.com/NOAA-EPIC/land-offline_workflow/">https://github.com/NOAA-EPIC/land-offline_workflow/</a>.
-A number of submodules are nested under the main <code class="docutils literal notranslate"><span class="pre">land-offline_workflow</span></code> directory.
-When the <code class="docutils literal notranslate"><span class="pre">release/public-v1.0.0</span></code> branch of the <code class="docutils literal notranslate"><span class="pre">land-offline_workflow</span></code> repository
+</section>
+</section>
+<section id="code-repositories-and-directory-structure">
+<h2><span class="section-number">2.3. </span>Code Repositories and Directory Structure<a class="headerlink" href="#code-repositories-and-directory-structure" title="Permalink to this heading"></a></h2>
+<section id="directory-structure">
+<h3><span class="section-number">2.3.1. </span>Directory Structure<a class="headerlink" href="#directory-structure" title="Permalink to this heading"></a></h3>
+<p>The main repository for the Land DA System is named <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code>;
+it is available on GitHub at <a class="reference external" href="https://github.com/ufs-community/land-DA_workflow">https://github.com/ufs-community/land-DA_workflow</a>.
+A number of submodules are nested under the main <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code> directory.
+When the <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch of the <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code> repository
 is cloned with the <code class="docutils literal notranslate"><span class="pre">--recursive</span></code> argument, the basic directory structure will be
-similar to the example below. Some files and directories have been removed for brevity.</p>
+similar to the example below. Some files and directories have been removed for brevity.
+Directories in parentheses () are only visible after the build step.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">land-offline_workflow</span>
 <span class="go"> ├── DA_update</span>
 <span class="go"> │     ├── add_jedi_incr</span>
@@ -212,10 +212,12 @@ similar to the example below. Some files and directories have been removed for b
 <span class="go"> ├── test</span>
 <span class="go"> ├── ufs-land-driver</span>
 <span class="go"> │     └── ccpp-physics</span>
+<span class="go"> ├── (ufs-weather-model)</span>
 <span class="go"> ├── vector2tile</span>
 <span class="go"> ├── CMakeLists.txt</span>
 <span class="go"> ├── README.md</span>
 <span class="go"> ├── LICENSE</span>
+<span class="go"> ├── check_*</span>
 <span class="go"> ├── do_submit_cycle.sh</span>
 <span class="go"> ├── release.environment</span>
 <span class="go"> ├── settings_DA_*</span>
@@ -223,18 +225,13 @@ similar to the example below. Some files and directories have been removed for b
 <span class="go"> └── template.*</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="land-da-components">
-<h3><span class="section-number">2.3.2. </span>Land DA Components<a class="headerlink" href="#land-da-components" title="Permalink to this headline"></a></h3>
+</section>
+<section id="land-da-components">
+<h3><span class="section-number">2.3.2. </span>Land DA Components<a class="headerlink" href="#land-da-components" title="Permalink to this heading"></a></h3>
 <p><a class="reference internal" href="#landdacomponents"><span class="std std-numref">Table 2.1</span></a> describes the various subrepositories that form
 the UFS Land DA System.</p>
 <span id="landdacomponents"></span><table class="docutils align-default" id="id1">
 <caption><span class="caption-number">Table 2.1 </span><span class="caption-text">UFS Land DA System Components</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 21%" />
-<col style="width: 34%" />
-<col style="width: 45%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Repository Name</p></th>
 <th class="head"><p>Repository Description</p></th>
@@ -246,7 +243,7 @@ the UFS Land DA System.</p>
 <td><p>Contains scripts and components for
 performing data assimilation (DA)
 procedures.</p></td>
-<td><p><a class="reference external" href="https://github.com/NOAA-EPIC/land-DA_update">https://github.com/NOAA-EPIC/land-DA_update</a></p></td>
+<td><p><a class="reference external" href="https://github.com/ufs-community/land-DA/">https://github.com/ufs-community/land-DA/</a></p></td>
 </tr>
 <tr class="row-odd"><td><p><em>– land-apply_jedi_incr</em></p></td>
 <td><p>Contains code that applies the
@@ -273,9 +270,16 @@ UFS atmospheric model.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-</div>
+</section>
+<section id="the-ufs-land-component">
+<h3><span class="section-number">2.3.3. </span>The UFS Land Component<a class="headerlink" href="#the-ufs-land-component" title="Permalink to this heading"></a></h3>
+<p>The UFS Land DA System has been updated to build the UFS Noah-MP land component as part of the build process.
+Updates allowing the Land DA System to run with the land component are underway.</p>
+<p>The land component makes use of a National Unified Operational Prediction Capability (<a class="reference internal" href="Glossary.html#term-NUOPC"><span class="xref std std-term">NUOPC</span></a>) cap to interface with a coupled modeling system.
+Unlike the standalone Noah-MP land driver, the Noah-MP <a class="reference internal" href="Glossary.html#term-NUOPC-Cap"><span class="xref std std-term">NUOPC cap</span></a> is able to create an <a class="reference internal" href="Glossary.html#term-ESMF"><span class="xref std std-term">ESMF</span></a> multi-tile grid by reading in a mosaic grid file. For the domain, the <a class="reference internal" href="Glossary.html#term-FMS"><span class="xref std std-term">FMS</span></a> initializes reading and writing of the cubed-sphere tiled output. Then, the Noah-MP land component reads static information and initial conditions (e.g., surface albedo) and interpolates the data to the date of the simulation. The solar zenith angle is calculated based on the time information.</p>
+</section>
+</section>
+</section>
 
 
            </div>

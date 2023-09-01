@@ -1,20 +1,23 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>5. Noah-MP Land Surface Model &mdash; UFS Offline Land DA User&#39;s Guide v1.0.0 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>5. Noah-MP Land Surface Model &mdash; UFS Offline Land DA User&#39;s Guide v1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
       <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=0ec76b63"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -44,7 +47,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Introduction.html">1. Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="TechnicalOverview.html">2. Technical Overview</a></li>
@@ -108,12 +111,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="noah-mp-land-surface-model">
-<span id="model"></span><h1><span class="section-number">5. </span>Noah-MP Land Surface Model<a class="headerlink" href="#noah-mp-land-surface-model" title="Permalink to this headline"></a></h1>
+  <section id="noah-mp-land-surface-model">
+<span id="model"></span><h1><span class="section-number">5. </span>Noah-MP Land Surface Model<a class="headerlink" href="#noah-mp-land-surface-model" title="Permalink to this heading"></a></h1>
 <p>This chapter provides practical information on input files and parameters for the Noah-MP Land Surface Model (LSM) and its Vector-to-Tile Converter component.
 For background information on the Noah-MP Land Surface Model (LSM), see <a class="reference internal" href="Introduction.html#noahmp"><span class="std std-numref">Section 1.1.2</span></a> of the Introduction.</p>
-<div class="section" id="input-files">
-<span id="inputfiles"></span><h2><span class="section-number">5.1. </span>Input Files<a class="headerlink" href="#input-files" title="Permalink to this headline"></a></h2>
+<section id="input-files">
+<span id="inputfiles"></span><h2><span class="section-number">5.1. </span>Input Files<a class="headerlink" href="#input-files" title="Permalink to this heading"></a></h2>
 <p>The UFS land model requires multiple input files to run: static datasets
 (fix files containing climatological information, terrain, and land use
 data), initial conditions and forcing files, and model configuration
@@ -125,7 +128,7 @@ the static file (<code class="docutils literal notranslate"><span class="pre">uf
 the initial conditions file (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_init_*.nc</span></code>),
 and the model configuration file (<code class="docutils literal notranslate"><span class="pre">ufs-land.namelist.noahmp</span></code>).
 These files and their parameters are described in the following subsections.
-They are publicly available via the <a class="reference external" href="https://noaa-ufs-land-da-pds.s3.amazonaws.com/">Land DA Data Bucket</a>.
+They are publicly available via the <a class="reference external" href="https://registry.opendata.aws/noaa-ufs-land-da/">Land DA Data Bucket</a>.
 Users can download the data and untar the file via the command line, replacing
 <code class="docutils literal notranslate"><span class="pre">{YEAR}</span></code> with the year for the desired data. Release data is currently
 available for 2016 and 2020:</p>
@@ -133,9 +136,9 @@ available for 2016 and 2020:</p>
 <span class="go">tar xvfz landda-input-data-{YEAR}.tar.gz</span>
 </pre></div>
 </div>
-<div class="section" id="static-file-ufs-land-c96-static-fields-nc">
-<h3><span class="section-number">5.1.1. </span>Static File (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_static_fields.nc</span></code>)<a class="headerlink" href="#static-file-ufs-land-c96-static-fields-nc" title="Permalink to this headline"></a></h3>
-<p>The static file includes specific information on location, time, soil layers, and fixed (invariant) experiment parameters that are required for Noah-MP to run. The data must be provided in <a class="reference internal" href="Glossary.html#term-netcdf"><span class="xref std std-term">netCDF</span></a> format.</p>
+<section id="static-file-ufs-land-c96-static-fields-nc">
+<h3><span class="section-number">5.1.1. </span>Static File (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_static_fields.nc</span></code>)<a class="headerlink" href="#static-file-ufs-land-c96-static-fields-nc" title="Permalink to this heading"></a></h3>
+<p>The static file includes specific information on location, time, soil layers, and fixed (invariant) experiment parameters that are required for Noah-MP to run. The data must be provided in <a class="reference internal" href="Glossary.html#term-netCDF"><span class="xref std std-term">netCDF</span></a> format.</p>
 <p>The static file is available in the <code class="docutils literal notranslate"><span class="pre">inputs</span></code> data directory (downloaded <a class="reference internal" href="#inputfiles"><span class="std std-ref">above</span></a>) at the following path:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inputs</span><span class="o">/</span><span class="n">forcing</span><span class="o">/&lt;</span><span class="n">source</span><span class="o">&gt;/</span><span class="n">static</span><span class="o">/</span><span class="n">ufs</span><span class="o">-</span><span class="n">land_C96_static_fields</span><span class="o">.</span><span class="n">nc</span>
 </pre></div>
@@ -143,10 +146,6 @@ available for 2016 and 2020:</p>
 <p>where <code class="docutils literal notranslate"><span class="pre">&lt;source&gt;</span></code> is either <code class="docutils literal notranslate"><span class="pre">gdas</span></code> or <code class="docutils literal notranslate"><span class="pre">era5</span></code>.</p>
 <table class="docutils align-default" id="id15">
 <caption><span class="caption-number">Table 5.1 </span><span class="caption-text">Configuration variables specified in the static file (ufs-land_C96_static_fields.nc)</span><a class="headerlink" href="#id15" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 39%" />
-<col style="width: 61%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Configuration Variables</p></th>
 <th class="head"><p>Description</p></th>
@@ -227,11 +226,11 @@ grid is located</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="initial-conditions-file-ufs-land-c96-init-nc">
-<h3><span class="section-number">5.1.2. </span>Initial Conditions File (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_init_*.nc</span></code>)<a class="headerlink" href="#initial-conditions-file-ufs-land-c96-init-nc" title="Permalink to this headline"></a></h3>
+</section>
+<section id="initial-conditions-file-ufs-land-c96-init-nc">
+<h3><span class="section-number">5.1.2. </span>Initial Conditions File (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_init_*.nc</span></code>)<a class="headerlink" href="#initial-conditions-file-ufs-land-c96-init-nc" title="Permalink to this heading"></a></h3>
 <p>The offline Land DA System currently only supports snow DA.
-The initial conditions file includes the initial state variables that are required for the UFS land snow DA to begin a cycling run. The data must be provided in <a class="reference internal" href="Glossary.html#term-netcdf"><span class="xref std std-term">netCDF</span></a> format.</p>
+The initial conditions file includes the initial state variables that are required for the UFS land snow DA to begin a cycling run. The data must be provided in <a class="reference internal" href="Glossary.html#term-netCDF"><span class="xref std std-term">netCDF</span></a> format.</p>
 <p>The initial conditions file is available in the <code class="docutils literal notranslate"><span class="pre">inputs</span></code> data directory (downloaded <a class="reference internal" href="#tarfile"><span class="std std-ref">above</span></a>) at the following path:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inputs</span><span class="o">/</span><span class="n">forcing</span><span class="o">/</span><span class="n">GDAS</span><span class="o">/</span><span class="n">init</span><span class="o">/</span><span class="n">ufs</span><span class="o">-</span><span class="n">land_C96_init_fields_1hr</span><span class="o">.</span><span class="n">nc</span>
 <span class="n">inputs</span><span class="o">/</span><span class="n">forcing</span><span class="o">/</span><span class="n">ERA5</span><span class="o">/</span><span class="n">init</span><span class="o">/</span><span class="n">ufs</span><span class="o">-</span><span class="n">land_C96_init_2010</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">31_23</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="mf">00.</span><span class="n">nc</span>
@@ -239,10 +238,6 @@ The initial conditions file includes the initial state variables that are requir
 </div>
 <table class="docutils align-default" id="id16">
 <caption><span class="caption-number">Table 5.2 </span><span class="caption-text">Configuration variables specified in the initial forcing file (ufs-land_C96_init_fields_1hr.nc)</span><a class="headerlink" href="#id16" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 42%" />
-<col style="width: 58%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Configuration Variables</p></th>
 <th class="head"><p>Units</p></th>
@@ -290,9 +285,9 @@ The initial conditions file includes the initial state variables that are requir
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="model-configuration-file-ufs-land-namelist-noahmp">
-<h3><span class="section-number">5.1.3. </span>Model Configuration File (<code class="docutils literal notranslate"><span class="pre">ufs-land.namelist.noahmp</span></code>)<a class="headerlink" href="#model-configuration-file-ufs-land-namelist-noahmp" title="Permalink to this headline"></a></h3>
+</section>
+<section id="model-configuration-file-ufs-land-namelist-noahmp">
+<h3><span class="section-number">5.1.3. </span>Model Configuration File (<code class="docutils literal notranslate"><span class="pre">ufs-land.namelist.noahmp</span></code>)<a class="headerlink" href="#model-configuration-file-ufs-land-namelist-noahmp" title="Permalink to this heading"></a></h3>
 <p>The UFS land model uses a series of template files combined with
 user-selected settings to create required namelists and parameter
 files needed by the UFS Land DA workflow. This section describes the
@@ -302,8 +297,8 @@ from the <code class="docutils literal notranslate"><span class="pre">template.u
 <p class="admonition-title">Note</p>
 <p>Any default values indicated are the defaults set in the <code class="docutils literal notranslate"><span class="pre">template.ufs-noahMP.namelist.*</span></code> files.</p>
 </div>
-<div class="section" id="run-setup-parameters">
-<h4><span class="section-number">5.1.3.1. </span>Run Setup Parameters<a class="headerlink" href="#run-setup-parameters" title="Permalink to this headline"></a></h4>
+<section id="run-setup-parameters">
+<h4><span class="section-number">5.1.3.1. </span>Run Setup Parameters<a class="headerlink" href="#run-setup-parameters" title="Permalink to this heading"></a></h4>
 <dl>
 <dt><code class="docutils literal notranslate"><span class="pre">static_file</span></code></dt><dd><p>Specifies the path to the UFS land static file.</p>
 </dd>
@@ -314,10 +309,6 @@ from the <code class="docutils literal notranslate"><span class="pre">template.u
 <dt><code class="docutils literal notranslate"><span class="pre">separate_output</span></code></dt><dd><p>Specifies whether to enable separate output files for each output time. Valid values: <code class="docutils literal notranslate"><span class="pre">.false.</span></code> | <code class="docutils literal notranslate"><span class="pre">.true.</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 80%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -342,10 +333,6 @@ for single point or short simulations)</p></td>
 <dt><code class="docutils literal notranslate"><span class="pre">restart_simulation</span></code></dt><dd><p>Specifies whether to enable the restart simulation. Valid values: <code class="docutils literal notranslate"><span class="pre">.false.</span></code> | <code class="docutils literal notranslate"><span class="pre">.true.</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 38%" />
-<col style="width: 62%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -389,17 +376,13 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">run_timesteps</span></code></dt><dd><p>Specifies the number of timesteps to run.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="land-model-options">
-<h4><span class="section-number">5.1.3.2. </span>Land Model Options<a class="headerlink" href="#land-model-options" title="Permalink to this headline"></a></h4>
+</section>
+<section id="land-model-options">
+<h4><span class="section-number">5.1.3.2. </span>Land Model Options<a class="headerlink" href="#land-model-options" title="Permalink to this heading"></a></h4>
 <dl>
 <dt><code class="docutils literal notranslate"><span class="pre">land_model</span></code></dt><dd><p>Specifies which land surface model to use. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 38%" />
-<col style="width: 62%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -417,35 +400,31 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 </div></blockquote>
 </dd>
 </dl>
-</div>
-<div class="section" id="structure-related-parameters">
-<h4><span class="section-number">5.1.3.3. </span>Structure-Related Parameters<a class="headerlink" href="#structure-related-parameters" title="Permalink to this headline"></a></h4>
+</section>
+<section id="structure-related-parameters">
+<h4><span class="section-number">5.1.3.3. </span>Structure-Related Parameters<a class="headerlink" href="#structure-related-parameters" title="Permalink to this heading"></a></h4>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">num_soil_levels</span></code></dt><dd><p>Specifies the number of soil levels.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">forcing_height</span></code></dt><dd><p>Specifies the forcing height in meters.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="soil-setup-parameters">
-<h4><span class="section-number">5.1.3.4. </span>Soil Setup Parameters<a class="headerlink" href="#soil-setup-parameters" title="Permalink to this headline"></a></h4>
+</section>
+<section id="soil-setup-parameters">
+<h4><span class="section-number">5.1.3.4. </span>Soil Setup Parameters<a class="headerlink" href="#soil-setup-parameters" title="Permalink to this heading"></a></h4>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">soil_level_thickness</span></code></dt><dd><p>Specifies the thickness (in meters) of each of the soil layers (top layer to bottom layer).</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">soil_level_nodes</span></code></dt><dd><p>Specifies the soil level centroids from the surface (in meters).</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="noah-mp-options">
-<h4><span class="section-number">5.1.3.5. </span>Noah-MP Options<a class="headerlink" href="#noah-mp-options" title="Permalink to this headline"></a></h4>
+</section>
+<section id="noah-mp-options">
+<h4><span class="section-number">5.1.3.5. </span>Noah-MP Options<a class="headerlink" href="#noah-mp-options" title="Permalink to this heading"></a></h4>
 <dl>
 <dt><code class="docutils literal notranslate"><span class="pre">dynamic_vegetation_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">4</span></code>)</dt><dd><p>Specifies the dynamic vegetation model option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code> | <code class="docutils literal notranslate"><span class="pre">4</span></code> | <code class="docutils literal notranslate"><span class="pre">5</span></code> | <code class="docutils literal notranslate"><span class="pre">6</span></code> | <code class="docutils literal notranslate"><span class="pre">7</span></code> | <code class="docutils literal notranslate"><span class="pre">8</span></code> | <code class="docutils literal notranslate"><span class="pre">9</span></code> | <code class="docutils literal notranslate"><span class="pre">10</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -495,10 +474,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">canopy_stomatal_resistance_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">2</span></code>)</dt><dd><p>Specifies the canopy stomatal resistance option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 36%" />
-<col style="width: 64%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -518,10 +493,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">soil_wetness_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the soil moisture factor for the stomatal resistance option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 76%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -544,10 +515,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">runoff_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the runoff option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code> | <code class="docutils literal notranslate"><span class="pre">4</span></code> | <code class="docutils literal notranslate"><span class="pre">5</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -579,10 +546,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">surface_exchange_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">3</span></code>)</dt><dd><p>Specifies the surface layer drag coefficient option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 23%" />
-<col style="width: 77%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -602,10 +565,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">supercooled_soilwater_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the supercooled liquid water option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 85%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -625,10 +584,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">frozen_soil_adjust_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the frozen soil permeability option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 88%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -648,10 +603,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">radiative_transfer_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">3</span></code>)</dt><dd><p>Specifies the radiation transfer option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 11%" />
-<col style="width: 89%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -674,10 +625,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">snow_albedo_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">2</span></code>)</dt><dd><p>Specifies the snow surface albedo option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 36%" />
-<col style="width: 64%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -697,10 +644,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">precip_partition_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the option for partitioning precipitation into rainfall and snowfall. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code> | <code class="docutils literal notranslate"><span class="pre">4</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 22%" />
-<col style="width: 78%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -730,10 +673,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">soil_temp_lower_bdy_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">2</span></code>)</dt><dd><p>Specifies the lower boundary condition of soil temperature option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 88%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -757,10 +696,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">soil_temp_time_scheme_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">3</span></code>)</dt><dd><p>Specifies the snow and soil temperature time scheme. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -787,10 +722,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">thermal_roughness_scheme_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">2</span></code>)</dt><dd><p>Specifies the method/scheme used to calculate the thermal roughness length. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code> | <code class="docutils literal notranslate"><span class="pre">4</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 11%" />
-<col style="width: 89%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -816,10 +747,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">surface_evap_resistance_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the surface evaporation resistance option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code> | <code class="docutils literal notranslate"><span class="pre">4</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 23%" />
-<col style="width: 77%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -847,10 +774,6 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 <dt><code class="docutils literal notranslate"><span class="pre">glacier_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the glacier model option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 14%" />
-<col style="width: 86%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -868,19 +791,15 @@ HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-di
 </div></blockquote>
 </dd>
 </dl>
-</div>
-<div class="section" id="forcing-parameters">
-<h4><span class="section-number">5.1.3.6. </span>Forcing Parameters<a class="headerlink" href="#forcing-parameters" title="Permalink to this headline"></a></h4>
+</section>
+<section id="forcing-parameters">
+<h4><span class="section-number">5.1.3.6. </span>Forcing Parameters<a class="headerlink" href="#forcing-parameters" title="Permalink to this heading"></a></h4>
 <dl>
 <dt><code class="docutils literal notranslate"><span class="pre">forcing_timestep_seconds</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">3600</span></code>)</dt><dd><p>Specifies the forcing timestep in seconds.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">forcing_type</span></code></dt><dd><p>Specifies the forcing type option, which describes the frequency and length of forcing in each forcing file. Valid values: <code class="docutils literal notranslate"><span class="pre">single-point</span></code> | <code class="docutils literal notranslate"><span class="pre">gswp3</span></code> | <code class="docutils literal notranslate"><span class="pre">gdas</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 23%" />
-<col style="width: 77%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -909,10 +828,6 @@ so users should select <code class="docutils literal notranslate"><span class="p
 Common values include: <code class="docutils literal notranslate"><span class="pre">C96_GDAS_forcing_</span></code> | <code class="docutils literal notranslate"><span class="pre">C96_ERA5_forcing_</span></code> | <code class="docutils literal notranslate"><span class="pre">C96_GEFS_forcing_</span></code> | <code class="docutils literal notranslate"><span class="pre">C96_GSWP3_forcing_</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 34%" />
-<col style="width: 66%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -938,10 +853,6 @@ Common values include: <code class="docutils literal notranslate"><span class="p
 <dt><code class="docutils literal notranslate"><span class="pre">forcing_interp_solar</span></code></dt><dd><p>Specifies the interpolation option for solar radiation. Valid values: <code class="docutils literal notranslate"><span class="pre">linear</span></code> | <code class="docutils literal notranslate"><span class="pre">gswp3_zenith</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 80%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -976,9 +887,9 @@ forcing times</p></td>
 <dt><code class="docutils literal notranslate"><span class="pre">forcing_name_lw_radiation</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">&quot;longwave_radiation&quot;</span></code>)</dt><dd><p>Specifies the variable name of forcing longwave radiation.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="example-namelist-entry">
-<h4><span class="section-number">5.1.3.7. </span>Example Namelist Entry<a class="headerlink" href="#example-namelist-entry" title="Permalink to this headline"></a></h4>
+</section>
+<section id="example-namelist-entry">
+<h4><span class="section-number">5.1.3.7. </span>Example Namelist Entry<a class="headerlink" href="#example-namelist-entry" title="Permalink to this heading"></a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">ufs-land.namelist.noahmp</span></code> file should be similar to the following example, which comes from the <code class="docutils literal notranslate"><span class="pre">template.ufs-noahMP.namelist.gdas</span></code> file.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&amp;run_setup</span>
 
@@ -1063,25 +974,21 @@ forcing times</p></td>
 <span class="go">/</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
-<div class="section" id="vector-to-tile-converter">
-<span id="vectortileconverter"></span><h2><span class="section-number">5.2. </span>Vector-to-Tile Converter<a class="headerlink" href="#vector-to-tile-converter" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+</section>
+<section id="vector-to-tile-converter">
+<span id="vectortileconverter"></span><h2><span class="section-number">5.2. </span>Vector-to-Tile Converter<a class="headerlink" href="#vector-to-tile-converter" title="Permalink to this heading"></a></h2>
 <p>The Vector-to-Tile Converter is used for mapping between the vector format
 used by the Noah-MP offline driver and the tile format used by the UFS
 atmospheric model. This converter is currently used to prepare input tile files
 for JEDI. Note that these files include only those fields required by
 JEDI, rather than the full restart.</p>
-<div class="section" id="input-file">
-<span id="v2tinputfiles"></span><h3><span class="section-number">5.2.1. </span>Input File<a class="headerlink" href="#input-file" title="Permalink to this headline"></a></h3>
+<section id="input-file">
+<span id="v2tinputfiles"></span><h3><span class="section-number">5.2.1. </span>Input File<a class="headerlink" href="#input-file" title="Permalink to this heading"></a></h3>
 <p>The input files containing grid information are listed in <a class="reference internal" href="#gridinputfiles"><span class="std std-numref">Table 5.3</span></a>:</p>
 <span id="gridinputfiles"></span><table class="docutils align-default" id="id17">
 <caption><span class="caption-number">Table 5.3 </span><span class="caption-text">Input Files Containing Grid Information</span><a class="headerlink" href="#id17" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 28%" />
-<col style="width: 72%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Filename</p></th>
 <th class="head"><p>Description</p></th>
@@ -1101,20 +1008,16 @@ links between them.</p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="configuration-file">
-<h3><span class="section-number">5.2.2. </span>Configuration File<a class="headerlink" href="#configuration-file" title="Permalink to this headline"></a></h3>
+</section>
+<section id="configuration-file">
+<h3><span class="section-number">5.2.2. </span>Configuration File<a class="headerlink" href="#configuration-file" title="Permalink to this heading"></a></h3>
 <p>This section describes the options in the <code class="docutils literal notranslate"><span class="pre">namelist.vector2tile</span></code> file.</p>
-<div class="section" id="id14">
-<h4><span class="section-number">5.2.2.1. </span>Run Setup Parameters<a class="headerlink" href="#id14" title="Permalink to this headline"></a></h4>
+<section id="id14">
+<h4><span class="section-number">5.2.2.1. </span>Run Setup Parameters<a class="headerlink" href="#id14" title="Permalink to this heading"></a></h4>
 <dl>
 <dt><code class="docutils literal notranslate"><span class="pre">direction</span></code></dt><dd><p>Specifies the conversion option. Valid values: <code class="docutils literal notranslate"><span class="pre">vector2tile</span></code> | <code class="docutils literal notranslate"><span class="pre">tile2vector</span></code> | <code class="docutils literal notranslate"><span class="pre">lndp2tile</span></code> | <code class="docutils literal notranslate"><span class="pre">lndp2vector</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 76%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -1138,9 +1041,9 @@ links between them.</p></td>
 </div></blockquote>
 </dd>
 </dl>
-</div>
-<div class="section" id="fv3-tile-related-parameters-for-restart-perturbation-conversion">
-<h4><span class="section-number">5.2.2.2. </span>FV3 Tile-Related Parameters for Restart/Perturbation Conversion<a class="headerlink" href="#fv3-tile-related-parameters-for-restart-perturbation-conversion" title="Permalink to this headline"></a></h4>
+</section>
+<section id="fv3-tile-related-parameters-for-restart-perturbation-conversion">
+<h4><span class="section-number">5.2.2.2. </span>FV3 Tile-Related Parameters for Restart/Perturbation Conversion<a class="headerlink" href="#fv3-tile-related-parameters-for-restart-perturbation-conversion" title="Permalink to this heading"></a></h4>
 <p>Parameters in this section include the FV3 resolution and path to orographic files
 for restart/perturbation conversion.</p>
 <dl>
@@ -1158,9 +1061,9 @@ for restart/perturbation conversion.</p>
 <dt><code class="docutils literal notranslate"><span class="pre">tile_fstub</span></code></dt><dd><p>Specifies the name (file stub) of orographic tile files. The file stub will be named <code class="docutils literal notranslate"><span class="pre">oro_C${RES}</span></code> for atmosphere-only and <code class="docutils literal notranslate"><span class="pre">oro_C{RES}.mx100</span></code> for atmosphere and ocean.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="parameters-for-restart-conversion">
-<h4><span class="section-number">5.2.2.3. </span>Parameters for Restart Conversion<a class="headerlink" href="#parameters-for-restart-conversion" title="Permalink to this headline"></a></h4>
+</section>
+<section id="parameters-for-restart-conversion">
+<h4><span class="section-number">5.2.2.3. </span>Parameters for Restart Conversion<a class="headerlink" href="#parameters-for-restart-conversion" title="Permalink to this heading"></a></h4>
 <p>These parameters apply <em>only</em> to restart conversion.</p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">static_filename</span></code></dt><dd><p>Specifies the path for static file.</p>
@@ -1173,9 +1076,9 @@ for restart/perturbation conversion.</p>
 as tile/vector path, the files may be overwritten.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="perturbation-mapping-parameters">
-<h4><span class="section-number">5.2.2.4. </span>Perturbation Mapping Parameters<a class="headerlink" href="#perturbation-mapping-parameters" title="Permalink to this headline"></a></h4>
+</section>
+<section id="perturbation-mapping-parameters">
+<h4><span class="section-number">5.2.2.4. </span>Perturbation Mapping Parameters<a class="headerlink" href="#perturbation-mapping-parameters" title="Permalink to this heading"></a></h4>
 <p>These parameters are <em>only</em> relevant for perturbation mapping in ensembles.
 Support for ensembles is <em>not</em> provided for the Land DA v1.0.0 release.</p>
 <dl>
@@ -1188,10 +1091,6 @@ Support for ensembles is <em>not</em> provided for the Land DA v1.0.0 release.</
 <dt><code class="docutils literal notranslate"><span class="pre">lndp_var_list</span></code></dt><dd><p>Specifies the land perturbation variable options. Valid values: <code class="docutils literal notranslate"><span class="pre">vgf</span></code> | <code class="docutils literal notranslate"><span class="pre">smc</span></code></p>
 <blockquote>
 <div><table class="docutils align-default">
-<colgroup>
-<col style="width: 14%" />
-<col style="width: 86%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Value</p></th>
 <th class="head"><p>Description</p></th>
@@ -1209,9 +1108,9 @@ Support for ensembles is <em>not</em> provided for the Land DA v1.0.0 release.</
 </div></blockquote>
 </dd>
 </dl>
-</div>
-<div class="section" id="example-of-a-namelist-vector2tile-entry">
-<h4><span class="section-number">5.2.2.5. </span>Example of a <code class="docutils literal notranslate"><span class="pre">namelist.vector2tile</span></code> Entry<a class="headerlink" href="#example-of-a-namelist-vector2tile-entry" title="Permalink to this headline"></a></h4>
+</section>
+<section id="example-of-a-namelist-vector2tile-entry">
+<h4><span class="section-number">5.2.2.5. </span>Example of a <code class="docutils literal notranslate"><span class="pre">namelist.vector2tile</span></code> Entry<a class="headerlink" href="#example-of-a-namelist-vector2tile-entry" title="Permalink to this heading"></a></h4>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&amp;run_setup</span>
 
 <span class="go">direction = &quot;vector2tile&quot;</span>
@@ -1252,10 +1151,10 @@ Support for ensembles is <em>not</em> provided for the Land DA v1.0.0 release.</
 <span class="go">lndp_var_list=&#39;vgf&#39;,&#39;smc&#39;</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
+</section>
 
 
            </div>
