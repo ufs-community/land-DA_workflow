@@ -2,9 +2,9 @@ name: Land DA automatic documentation build
 
 on:
   push:
-    branches: [ "release/public-v1.0.0" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "release/public-v1.0.0" ]
+    branches: [ "develop" ]
 
 jobs:
   build:
@@ -24,7 +24,7 @@ jobs:
         
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
-      if: github.ref == 'refs/heads/release/public-v1.0.0'
+      if: github.ref == 'refs/heads/develop'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: docs/build/html/

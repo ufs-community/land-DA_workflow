@@ -46,7 +46,7 @@ done
 
 echo "============================= calling apply snow increment"
 #
-$MPIRUN -n $NPROC ${EXECDIR}/${TEST_EXEC}
+${MPIRUN} -n $NPROC ${EXECDIR}/${TEST_EXEC}
 
 # move ana tile to ./restarts/ana/tile
 mkdir -p ana/restarts/tile
