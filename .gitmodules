@@ -8,5 +8,5 @@
         branch = develop
 [submodule "vector2tile"]
 	path = vector2tile
-	url = https://github.com/NOAA-PSL/land-vector2tile.git
-        branch = develop
+	url = https://github.com/rhaesung/land-vector2tile.git
+        branch = porting
