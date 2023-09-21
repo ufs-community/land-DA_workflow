@@ -6,7 +6,7 @@
 	path = DA_update
         url = https://github.com/ufs-community/land-DA.git
         branch = develop
-[submodule "vector2tile"]
-	path = vector2tile
-	url = https://github.com/rhaesung/land-vector2tile.git
-        branch = porting
+[submodule "tile2tile"]
+	path = tile2tile
+	url = https://github.com/rhaesung/land-tile2tile.git
+        branch = feature/porting
