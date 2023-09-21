@@ -1,6 +1,6 @@
 #!/bin/bash  
 #SBATCH --job-name=offline_noahmp
-#SBATCH --account=da-cpu
+#SBATCH --account=epic
 #SBATCH --qos=debug
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
@@ -58,7 +58,7 @@ while [ $date_count -lt $cycles_per_job ]; do
     nHH=`echo $NEXTDATE | cut -c9-10`
 
     ############################
-    # copy restarts to workdir, convert to vector for DA (all members) 
+    # copy restarts to workdir, convert to UFS tile for DA (all members) 
 
     mem_ens="mem000" 
 
@@ -67,46 +67,47 @@ while [ $date_count -lt $cycles_per_job ]; do
     
     cd $MEM_WORKDIR
     # copy restarts into work directory
-    rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-    if [[ ! -e ${rst_in} ]]; then
-      rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc 
+
+    for tile in 1 2 3 4 5 6
+    do
+    rst_in=${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc
+    if [[ ! -e ${rst_in} ]]; then  
+      rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc 
     fi
-    rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc
     cp ${rst_in} ${rst_out}
+    done
 
     if [[ $do_jedi == "YES" ]]; then  
-        echo '************************************************'
-        echo 'calling tile2vector' 
-
         export MEM_WORKDIR
 
-        # update vec2tile and tile2vec namelists
-        cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
+       # update tile2tile namelist
+        cp  ${CYCLEDIR}/template.tile2tile tile2tile.namelist
 
-        sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" vector2tile.namelist
-        sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
-        sed -i -e "s/XXMM/${MM}/g" vector2tile.namelist
-        sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
-        sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
-        sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
-        sed -i -e "s/MODEL_FORCING/${atmos_forc}/g" vector2tile.namelist
-        sed -i -e "s/XXRES/${RES}/g" vector2tile.namelist
-        sed -i -e "s/XXTSTUB/${TSTUB}/g" vector2tile.namelist
-        sed -i -e "s#XXTPATH#${TPATH}#g" vector2tile.namelist
+        sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" tile2tile.namelist
+        sed -i -e "s/XXYYYY/${YYYY}/g" tile2tile.namelist
+        sed -i -e "s/XXMM/${MM}/g" tile2tile.namelist
+        sed -i -e "s/XXDD/${DD}/g" tile2tile.namelist
+        sed -i -e "s/XXHH/${HH}/g" tile2tile.namelist
+        sed -i -e "s/XXHH/${HH}/g" tile2tile.namelist
+        sed -i -e "s/MODEL_FORCING/${atmos_forc}/g" tile2tile.namelist
+        sed -i -e "s/XXRES/${RES}/g" tile2tile.namelist
+        sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2tile.namelist
+        sed -i -e "s#XXTPATH#${TPATH}#g" tile2tile.namelist
 
-        # submit vec2tile 
+       # submit tile2tile 
         echo '************************************************'
-        echo 'calling vector2tile' 
-        
+        echo 'calling tile2tile' 
+       
         if [[ $BASELINE =~ 'hera.internal' ]]; then
            source ${CYCLEDIR}/land_mods
         fi 
-        $vec2tileexec vector2tile.namelist
+        $tile2tileexec tile2tile.namelist
         if [[ $? != 0 ]]; then
-            echo "vec2tile failed"
+            echo "tile2tile failed"
             exit 
         fi
-    fi # vector2tile for DA
+    fi # tile2tile for DA
 
     ############################
     # do DA update
@@ -126,9 +127,10 @@ while [ $date_count -lt $cycles_per_job ]; do
             exit
         fi   
     fi 
-
+ 
+    exit    
     ############################
-    #  convert back to vector, run model (all members) convert back to vector, run model (all members)
+    #  convert back to UFS tile, run model (all members)
 
     mem_ens="mem000" 
 
@@ -139,7 +141,7 @@ while [ $date_count -lt $cycles_per_job ]; do
 
     if [[ $do_jedi == "YES" ]]; then  
         echo '************************************************'
-        echo 'calling tile2vector' 
+        echo 'calling tile2tile' 
    
         if [[ $BASELINE =~ 'hera.internal' ]]; then
            source ${CYCLEDIR}/land_mods
