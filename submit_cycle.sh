@@ -82,18 +82,18 @@ while [ $date_count -lt $cycles_per_job ]; do
         export MEM_WORKDIR
 
        # update tile2tile namelist
-        cp  ${CYCLEDIR}/template.tile2tile tile2tile.namelist
+        cp  ${CYCLEDIR}/template.ufs2jedi ufs2jedi.namelist
 
-        sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" tile2tile.namelist
-        sed -i -e "s/XXYYYY/${YYYY}/g" tile2tile.namelist
-        sed -i -e "s/XXMM/${MM}/g" tile2tile.namelist
-        sed -i -e "s/XXDD/${DD}/g" tile2tile.namelist
-        sed -i -e "s/XXHH/${HH}/g" tile2tile.namelist
-        sed -i -e "s/XXHH/${HH}/g" tile2tile.namelist
-        sed -i -e "s/MODEL_FORCING/${atmos_forc}/g" tile2tile.namelist
-        sed -i -e "s/XXRES/${RES}/g" tile2tile.namelist
-        sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2tile.namelist
-        sed -i -e "s#XXTPATH#${TPATH}#g" tile2tile.namelist
+        sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs2jedi.namelist
+        sed -i -e "s/XXYYYY/${YYYY}/g" ufs2jedi.namelist
+        sed -i -e "s/XXMM/${MM}/g" ufs2jedi.namelist
+        sed -i -e "s/XXDD/${DD}/g" ufs2jedi.namelist
+        sed -i -e "s/XXHH/${HH}/g" ufs2jedi.namelist
+        sed -i -e "s/XXHH/${HH}/g" ufs2jedi.namelist
+        sed -i -e "s/MODEL_FORCING/${atmos_forc}/g" ufs2jedi.namelist
+        sed -i -e "s/XXRES/${RES}/g" ufs2jedi.namelist
+        sed -i -e "s/XXTSTUB/${TSTUB}/g" ufs2jedi.namelist
+        sed -i -e "s#XXTPATH#${TPATH}#g" ufs2jedi.namelist
 
        # submit tile2tile 
         echo '************************************************'
@@ -102,7 +102,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         if [[ $BASELINE =~ 'hera.internal' ]]; then
            source ${CYCLEDIR}/land_mods
         fi 
-        $tile2tileexec tile2tile.namelist
+        $tile2tileexec ufs2jedi.namelist
         if [[ $? != 0 ]]; then
             echo "tile2tile failed"
             exit 
@@ -128,7 +128,6 @@ while [ $date_count -lt $cycles_per_job ]; do
         fi   
     fi 
  
-    exit    
     ############################
     #  convert back to UFS tile, run model (all members)
 
@@ -147,28 +146,33 @@ while [ $date_count -lt $cycles_per_job ]; do
            source ${CYCLEDIR}/land_mods
         fi 
         
-        cp  ${CYCLEDIR}/template.tile2vector tile2vector.namelist
+        cp  ${CYCLEDIR}/template.jedi2ufs jedi2ufs.namelist
          
-        sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" tile2vector.namelist
-        sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
-        sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
-        sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
-        sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
-        sed -i -e "s/MODEL_FORCING/${atmos_forc}/g" vector2tile.namelist
-        sed -i -e "s/XXRES/${RES}/g" tile2vector.namelist
-        sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
-        sed -i -e "s#XXTPATH#${TPATH}#g" tile2vector.namelist
+        sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" jedi2ufs.namelist
+        sed -i -e "s/XXYYYY/${YYYY}/g" jedi2ufs.namelist
+        sed -i -e "s/XXMM/${MM}/g" jedi2ufs.namelist
+        sed -i -e "s/XXDD/${DD}/g" jedi2ufs.namelist
+        sed -i -e "s/XXHH/${HH}/g" jedi2ufs.namelist
+        sed -i -e "s/MODEL_FORCING/${atmos_forc}/g" jedi2ufs.namelist
+        sed -i -e "s/XXRES/${RES}/g" jedi2ufs.namelist
+        sed -i -e "s/XXTSTUB/${TSTUB}/g" jedi2ufs.namelist
+        sed -i -e "s#XXTPATH#${TPATH}#g" jedi2ufs.namelist
 
-        $vec2tileexec tile2vector.namelist
+        $tile2tileexec jedi2ufs.namelist
         if [[ $? != 0 ]]; then
-            echo "tile2vector failed"
+            echo "tile2tile failed"
             exit 
         fi
 
         # save analysis restart
-        cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+        for tile in 1 2 3 4 5 6
+        do
+            cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc    
+        done  
+
     fi
 
+    exit
     ############################
     # run the forecast model
     set -x 
