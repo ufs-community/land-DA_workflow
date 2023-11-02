@@ -172,37 +172,115 @@ while [ $date_count -lt $cycles_per_job ]; do
 
     fi
 
-    exit
     ############################
     # run the forecast model
-    set -x 
-    # update model namelist 
-    cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
-
-    sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs-land.namelist 
-    sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
-    sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
-    sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
-    sed -i -e "s/XXHH/${HH}/g" ufs-land.namelist
-    sed -i -e "s/XXFREQ/${FREQ}/g" ufs-land.namelist
-    sed -i -e "s/XXRDD/${RDD}/g" ufs-land.namelist
-    sed -i -e "s/XXRHH/${RHH}/g" ufs-land.namelist
-
-    # submit model
+    set -e     
+    
     echo '************************************************'
-    echo "calling model"
-    echo $MEM_WORKDIR
+    echo 'running the forecast model' 
     
-    nt=$SLURM_NTASKS
-    if [[ $BASELINE =~ 'hera.internal' ]]; then
-           source ${CYCLEDIR}/land_mods
-    fi 
-    
-    if [[ $BASELINE =~ 'hera.internal' ]]; then
-           srun '--export=ALL' --label -K -n $nt $LSMexec
-    else 
-           ${MPIEXEC} -n 1 $LSMexec
-    fi        
+    export MACHINE_ID=${MACHINE_ID:-hera}
+    TEST_NAME=datm_cdeps_lnd_gswp3
+    TEST_NAME_RST=datm_cdeps_lnd_gswp3_rst
+    PATHRT=${CYCLEDIR}/ufs-weather-model/tests
+    RT_COMPILER=${RT_COMPILER:-intel}
+    ATOL="1e-7"
+    source ${PATHRT}/detect_machine.sh
+    source ${PATHRT}/rt_utils.sh
+    source ${PATHRT}/default_vars.sh
+    source ${PATHRT}/tests/$TEST_NAME
+    source ${PATHRT}/atparse.bash
+
+    # Set inputdata location for each machines
+    echo "MACHINE_ID: $MACHINE_ID"
+    if [[ $MACHINE_ID = orion ]]; then
+      DISKNM=/work/noaa/nems/emc.nemspara/RT
+    elif [[ $MACHINE_ID = hera ]]; then
+      DISKNM=/scratch2/NAGAPE/epic/UFS-WM_RT
+    else
+      echo "Warning: MACHINE_ID is default, users will have to define INPUTDATA_ROOT and RTPWD by themselves"
+    fi
+
+    source ${PATHRT}/bl_date.conf
+    #BL_DATE=20230815
+    RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-${BL_DATE}/${TEST_NAME}_${RT_COMPILER}}
+    INPUTDATA_ROOT=${INPUTDATA_ROOT:-$DISKNM/NEMSfv3gfs/input-data-20221101}
+
+    echo "RTPWD= $RTPWD"
+    echo "INPUTDATA_ROOT= $INPUTDATA_ROOT"
+
+    if [[ ! -d ${INPUTDATA_ROOT} ]] || [[ ! -d ${RTPWD} ]]; then
+    echo "Error: cannot find either folder for INPUTDATA_ROOT or RTPWD, please check!"
+    exit 1
+    fi
+
+    # create test folder
+    RUNDIR=${MEM_MODL_OUTDIR}/noahmp/${TEST_NAME}
+    [[ -d ${RUNDIR} ]] && echo "Warning: remove old test folder!" && rm -rf ${RUNDIR}
+    mkdir -p ${RUNDIR}
+    cd ${RUNDIR}
+
+    echo "NoahMP run dir= $RUNDIR"
+
+    # modify some env variables - reduce core usage
+    export ATM_compute_tasks=0
+    export ATM_io_tasks=1
+    export LND_tasks=6
+    export layout_x=1
+    export layout_y=1
+
+    # FV3 executable:
+    cp ${CYCLEDIR}/build/ufs-weather-model/src/ufs-weather-model-build/ufs_model ./ufs_model 
+
+    #set multiple input files
+    for i in ${FV3_RUN:-fv3_run.IN}
+    do
+      atparse < ${PATHRT}/fv3_conf/${i} >> fv3_run  # Need to Update for warm start option, R.K, 11/2/2023
+    done
+
+    if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then
+      if [[ $HAFS = 'false' ]] || [[ $FV3 = 'true' && $HAFS = 'true' ]]; then
+        atparse < ${PATHRT}/parm/${INPUT_NML:-input.nml.IN} > input.nml
+      fi
+    fi
+
+    atparse < ${PATHRT}/parm/${MODEL_CONFIGURE:-model_configure.IN} > model_configure
+
+    compute_petbounds_and_tasks
+
+    atparse < ${PATHRT}/parm/${NEMS_CONFIGURE:-nems.configure} > nems.configure
+  
+    # diag table
+    if [[ "Q${DIAG_TABLE:-}" != Q ]] ; then
+      atparse < ${PATHRT}/parm/diag_table/${DIAG_TABLE} > diag_table
+    fi
+
+    # Field table
+    if [[ "Q${FIELD_TABLE:-}" != Q ]] ; then
+      cp ${PATHRT}/parm/field_table/${FIELD_TABLE} field_table
+    fi
+
+    # Field Dictionary
+    cp ${PATHRT}/parm/fd_nems.yaml fd_nems.yaml 
+
+    # Set up the run directory
+    source ./fv3_run
+
+    if [[ $DATM_CDEPS = 'true' ]]; then
+      atparse < ${PATHRT}/parm/${DATM_IN_CONFIGURE:-datm_in} > datm_in
+      atparse < ${PATHRT}/parm/${DATM_STREAM_CONFIGURE:-datm.streams.IN} > datm.streams
+    fi
+
+    # NoahMP table file
+    cp ${PATHRT}/parm/noahmptable.tbl noahmptable.tbl
+
+    # start runs
+    echo "Start ufs-cdeps-land model run with TASKS: ${TASKS}"
+    export MPIRUN=${MPIRUN:-`which mpiexec`}
+    ${MPIRUN} -n ${TASKS} ./ufs_model
+
+    exit 
+
     # no error codes on exit from model, check for restart below instead
 
     ############################
