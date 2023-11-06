@@ -171,7 +171,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         done  
 
     fi
-
+    
     ############################
     # run the forecast model
     set -e     
@@ -188,7 +188,7 @@ while [ $date_count -lt $cycles_per_job ]; do
     source ${PATHRT}/detect_machine.sh
     source ${PATHRT}/rt_utils.sh
     source ${PATHRT}/default_vars.sh
-    source ${PATHRT}/tests/$TEST_NAME
+    source ${PATHRT}/tests/$TEST_NAME_RST
     source ${PATHRT}/atparse.bash
 
     # Set inputdata location for each machines
@@ -214,9 +214,9 @@ while [ $date_count -lt $cycles_per_job ]; do
     exit 1
     fi
 
-    # create test folder
-    RUNDIR=${MEM_MODL_OUTDIR}/noahmp/${TEST_NAME}
-    [[ -d ${RUNDIR} ]] && echo "Warning: remove old test folder!" && rm -rf ${RUNDIR}
+    # create run folder
+    RUNDIR=${MEM_MODL_OUTDIR}/noahmp/${TEST_NAME_RST}
+    [[ -d ${RUNDIR} ]] && echo "Warning: remove old run folder!" && rm -rf ${RUNDIR}
     mkdir -p ${RUNDIR}
     cd ${RUNDIR}
 
@@ -233,11 +233,13 @@ while [ $date_count -lt $cycles_per_job ]; do
     cp ${CYCLEDIR}/build/ufs-weather-model/src/ufs-weather-model-build/ufs_model ./ufs_model 
 
     #set multiple input files
-    for i in ${FV3_RUN:-fv3_run.IN}
-    do
-      atparse < ${PATHRT}/fv3_conf/${i} >> fv3_run  # Need to Update for warm start option, R.K, 11/2/2023
-    done
+    #for i in ${FV3_RUN:-fv3_run.IN}
+    #do
+    #  atparse < ${PATHRT}/fv3_conf/${i} >> fv3_run  # Need to Update for warm start option, R.K, 11/2/2023
+    #done
 
+    cp ${LANDDA_INPUTS}/restarts/fv3_run ./fv3_run
+ 
     if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then
       if [[ $HAFS = 'false' ]] || [[ $FV3 = 'true' && $HAFS = 'true' ]]; then
         atparse < ${PATHRT}/parm/${INPUT_NML:-input.nml.IN} > input.nml
