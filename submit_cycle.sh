@@ -4,7 +4,7 @@
 #SBATCH --qos=debug
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=5
 #SBATCH -t 00:06:00
 #SBATCH -o log_noahmp.%j.log
 #SBATCH -e err_noahmp.%j.err
