@@ -10,3 +10,7 @@
 	path = tile2tile
 	url = https://github.com/rhaesung/land-tile2tile.git
         branch = feature/porting
+[submodule "vector2tile"]
+	path = vector2tile
+	url = https://github.com/NOAA-PSL/land-vector2tile.git
+        branch = develop
