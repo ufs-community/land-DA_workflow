@@ -66,20 +66,68 @@ while [ $date_count -lt $cycles_per_job ]; do
     MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
     
     cd $MEM_WORKDIR
-    # copy restarts into work directory
 
-    for tile in 1 2 3 4 5 6
-    do
-    rst_in=${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc
-    if [[ ! -e ${rst_in} ]]; then  
-      rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc 
-    fi
-    rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc
-    cp ${rst_in} ${rst_out}
-    done
+    if [[ $do_jedi == "YES" && $atmos_forc == "era5" ]]; then
+        
+        # copy restarts into work directory
+    	rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    	if [[ ! -e ${rst_in} ]]; then
+      	rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    	fi
+    	rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    	cp ${rst_in} ${rst_out}
 
-    if [[ $do_jedi == "YES" ]]; then  
+        echo '************************************************'
+        echo 'calling vector2tile' 
+
         export MEM_WORKDIR
+
+        # update vec2tile and tile2vec namelists
+        cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
+
+        sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" vector2tile.namelist
+        sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
+        sed -i -e "s/XXMM/${MM}/g" vector2tile.namelist
+        sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
+        sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
+        sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
+        sed -i -e "s/MODEL_FORCING/${atmos_forc}/g" vector2tile.namelist
+        sed -i -e "s/XXRES/${RES}/g" vector2tile.namelist
+        sed -i -e "s/XXTSTUB/${TSTUB}/g" vector2tile.namelist
+        sed -i -e "s#XXTPATH#${TPATH}#g" vector2tile.namelist
+
+        # submit vec2tile 
+        echo '************************************************'
+        echo 'calling vector2tile' 
+
+        if [[ $BASELINE =~ 'hera.internal' ]]; then
+           source ${CYCLEDIR}/land_mods
+        fi
+        $vec2tileexec vector2tile.namelist
+        if [[ $? != 0 ]]; then
+            echo "vec2tile failed"
+            exit
+        fi
+    fi # vector2tile for DA
+
+    if [[ $do_jedi == "YES" && $atmos_forc == "gswp3" ]]; then
+
+    	echo '************************************************'
+   	echo 'calling tile2tile'    
+ 
+    	export MEM_WORKDIR
+       
+       # copy restarts into work directory
+
+    	for tile in 1 2 3 4 5 6
+    	do
+    	rst_in=${MEM_MODL_OUTDIR}/restarts/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
+    	if [[ ! -e ${rst_in} ]]; then  
+      	rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
+    	fi
+    	rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc
+    	cp ${rst_in} ${rst_out}
+    	done
 
        # update tile2tile namelist
         cp  ${CYCLEDIR}/template.ufs2jedi ufs2jedi.namelist
@@ -96,8 +144,6 @@ while [ $date_count -lt $cycles_per_job ]; do
         sed -i -e "s#XXTPATH#${TPATH}#g" ufs2jedi.namelist
 
        # submit tile2tile 
-        echo '************************************************'
-        echo 'calling tile2tile' 
        
         if [[ $BASELINE =~ 'hera.internal' ]]; then
            source ${CYCLEDIR}/land_mods
@@ -129,7 +175,7 @@ while [ $date_count -lt $cycles_per_job ]; do
     fi 
  
     ############################
-    #  convert back to UFS tile, run model (all members)
+    #  convert back to vector/tile
 
     mem_ens="mem000" 
 
@@ -138,7 +184,39 @@ while [ $date_count -lt $cycles_per_job ]; do
 
     cd $MEM_WORKDIR
 
-    if [[ $do_jedi == "YES" ]]; then  
+    #  convert back to vector, run model (all members) convert back to vector, run model (all members)
+    if [[ $do_jedi == "YES" && $atmos_forc == "era5" ]]; then
+        echo '************************************************'
+        echo 'calling tile2vector' 
+
+        if [[ $BASELINE =~ 'hera.internal' ]]; then
+           source ${CYCLEDIR}/land_mods
+        fi
+
+        cp  ${CYCLEDIR}/template.tile2vector tile2vector.namelist
+
+        sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" tile2vector.namelist
+        sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
+        sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
+        sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
+        sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
+        sed -i -e "s/MODEL_FORCING/${atmos_forc}/g" vector2tile.namelist
+        sed -i -e "s/XXRES/${RES}/g" tile2vector.namelist
+        sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
+        sed -i -e "s#XXTPATH#${TPATH}#g" tile2vector.namelist
+
+        $vec2tileexec tile2vector.namelist
+        if [[ $? != 0 ]]; then
+            echo "tile2vector failed"
+            exit
+        fi
+
+        # save analysis restart
+        cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    fi
+
+    #  convert back to UFS tile, run model (all members)
+    if [[ $do_jedi == "YES" && $atmos_forc == "gswp3" ]]; then  
         echo '************************************************'
         echo 'calling tile2tile' 
    
@@ -168,120 +246,150 @@ while [ $date_count -lt $cycles_per_job ]; do
         for tile in 1 2 3 4 5 6
         do
             cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc    
+            cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
         done  
-
     fi
     
     ############################
     # run the forecast model
-    set -e     
+
+    if [[ $do_jedi == "YES" && $atmos_forc == "era5" ]]; then 
+        echo '************************************************'
+        echo 'running the forecast model'
+
+        set -x 
+    	
+        # update model namelist 
+        cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
+
+    	sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs-land.namelist
+    	sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
+    	sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
+    	sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
+   	sed -i -e "s/XXHH/${HH}/g" ufs-land.namelist
+    	sed -i -e "s/XXFREQ/${FREQ}/g" ufs-land.namelist
+    	sed -i -e "s/XXRDD/${RDD}/g" ufs-land.namelist
+    	sed -i -e "s/XXRHH/${RHH}/g" ufs-land.namelist
+
+    	# submit model
+    	echo $MEM_WORKDIR
+
+    	nt=$SLURM_NTASKS
+    	if [[ $BASELINE =~ 'hera.internal' ]]; then
+            source ${CYCLEDIR}/land_mods
+    	fi
+
+    	if [[ $BASELINE =~ 'hera.internal' ]]; then
+            srun '--export=ALL' --label -K -n $nt $LSMexec
+    	else
+            ${MPIEXEC} -n 1 $LSMexec
+    	fi
+    fi 
+    # no error codes on exit from model, check for restart below instead
+
+
+    if [[ $do_jedi == "YES" && $atmos_forc == "gswp3" ]]; then
+	set -e     
     
-    echo '************************************************'
-    echo 'running the forecast model' 
+   	echo '************************************************'
+    	echo 'running the forecast model' 
     
-    export MACHINE_ID=${MACHINE_ID:-hera}
-    TEST_NAME=datm_cdeps_lnd_gswp3
-    TEST_NAME_RST=datm_cdeps_lnd_gswp3_rst
-    PATHRT=${CYCLEDIR}/ufs-weather-model/tests
-    RT_COMPILER=${RT_COMPILER:-intel}
-    ATOL="1e-7"
-    source ${PATHRT}/detect_machine.sh
-    source ${PATHRT}/rt_utils.sh
-    source ${PATHRT}/default_vars.sh
-    source ${PATHRT}/tests/$TEST_NAME_RST
-    source ${PATHRT}/atparse.bash
+    	export MACHINE_ID=${MACHINE_ID:-hera}
+    	TEST_NAME=datm_cdeps_lnd_gswp3
+    	TEST_NAME_RST=datm_cdeps_lnd_gswp3_rst
+    	PATHRT=${CYCLEDIR}/ufs-weather-model/tests
+    	RT_COMPILER=${RT_COMPILER:-intel}
+    	ATOL="1e-7"
+    	source ${PATHRT}/detect_machine.sh
+    	source ${PATHRT}/rt_utils.sh
+    	source ${PATHRT}/default_vars.sh
+    	source ${PATHRT}/tests/$TEST_NAME_RST
+    	source ${PATHRT}/atparse.bash
 
-    # Set inputdata location for each machines
-    echo "MACHINE_ID: $MACHINE_ID"
-    if [[ $MACHINE_ID = orion ]]; then
-      DISKNM=/work/noaa/nems/emc.nemspara/RT
-    elif [[ $MACHINE_ID = hera ]]; then
-      DISKNM=/scratch2/NAGAPE/epic/UFS-WM_RT
-    else
-      echo "Warning: MACHINE_ID is default, users will have to define INPUTDATA_ROOT and RTPWD by themselves"
-    fi
+    	# Set inputdata location for each machines
+    	echo "MACHINE_ID: $MACHINE_ID"
+    	if [[ $MACHINE_ID = orion ]]; then
+      		DISKNM=/work/noaa/nems/emc.nemspara/RT
+    	elif [[ $MACHINE_ID = hera ]]; then
+      		DISKNM=/scratch2/NAGAPE/epic/UFS-WM_RT
+    	else
+      		echo "Warning: MACHINE_ID is default, users will have to define INPUTDATA_ROOT and RTPWD by themselves"
+    	fi
 
-    source ${PATHRT}/bl_date.conf
-    #BL_DATE=20230815
-    RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-${BL_DATE}/${TEST_NAME}_${RT_COMPILER}}
-    INPUTDATA_ROOT=${INPUTDATA_ROOT:-$DISKNM/NEMSfv3gfs/input-data-20221101}
+    	source ${PATHRT}/bl_date.conf
+    	#BL_DATE=20230815
+    	RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-${BL_DATE}/${TEST_NAME}_${RT_COMPILER}}
+    	INPUTDATA_ROOT=${INPUTDATA_ROOT:-$DISKNM/NEMSfv3gfs/input-data-20221101}
 
-    echo "RTPWD= $RTPWD"
-    echo "INPUTDATA_ROOT= $INPUTDATA_ROOT"
+    	echo "RTPWD= $RTPWD"
+    	echo "INPUTDATA_ROOT= $INPUTDATA_ROOT"
 
-    if [[ ! -d ${INPUTDATA_ROOT} ]] || [[ ! -d ${RTPWD} ]]; then
-    echo "Error: cannot find either folder for INPUTDATA_ROOT or RTPWD, please check!"
-    exit 1
-    fi
+    	if [[ ! -d ${INPUTDATA_ROOT} ]] || [[ ! -d ${RTPWD} ]]; then
+    		echo "Error: cannot find either folder for INPUTDATA_ROOT or RTPWD, please check!"
+    		exit 1
+    	fi
 
-    # create run folder
-    RUNDIR=${MEM_MODL_OUTDIR}/noahmp/${TEST_NAME_RST}
-    [[ -d ${RUNDIR} ]] && echo "Warning: remove old run folder!" && rm -rf ${RUNDIR}
-    mkdir -p ${RUNDIR}
-    cd ${RUNDIR}
+    	# create run folder
+    	RUNDIR=${MEM_MODL_OUTDIR}/noahmp/${TEST_NAME_RST}
+    	[[ -d ${RUNDIR} ]] && echo "Warning: remove old run folder!" && rm -rf ${RUNDIR}
+    	mkdir -p ${RUNDIR}
+   	cd ${RUNDIR}
 
-    echo "NoahMP run dir= $RUNDIR"
+    	echo "NoahMP run dir= $RUNDIR"
 
-    # modify some env variables - reduce core usage
-    export ATM_compute_tasks=0
-    export ATM_io_tasks=1
-    export LND_tasks=6
-    export layout_x=1
-    export layout_y=1
+    	# modify some env variables - reduce core usage
+    	export ATM_compute_tasks=0
+    	export ATM_io_tasks=1
+    	export LND_tasks=6
+    	export layout_x=1
+    	export layout_y=1
 
-    # FV3 executable:
-    cp ${CYCLEDIR}/build/ufs-weather-model/src/ufs-weather-model-build/ufs_model ./ufs_model 
-
-    #set multiple input files
-    #for i in ${FV3_RUN:-fv3_run.IN}
-    #do
-    #  atparse < ${PATHRT}/fv3_conf/${i} >> fv3_run  # Need to Update for warm start option, R.K, 11/2/2023
-    #done
-
-    cp ${LANDDA_INPUTS}/restarts/fv3_run ./fv3_run
+    	# FV3 executable:
+    	cp ${CYCLEDIR}/build/ufs-weather-model/src/ufs-weather-model-build/ufs_model ./ufs_model 
+        cp ${LANDDA_INPUTS}/restarts/fv3_run ./fv3_run
  
-    if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then
-      if [[ $HAFS = 'false' ]] || [[ $FV3 = 'true' && $HAFS = 'true' ]]; then
-        atparse < ${PATHRT}/parm/${INPUT_NML:-input.nml.IN} > input.nml
-      fi
-    fi
+    	if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then
+      	if [[ $HAFS = 'false' ]] || [[ $FV3 = 'true' && $HAFS = 'true' ]]; then
+        	atparse < ${PATHRT}/parm/${INPUT_NML:-input.nml.IN} > input.nml
+      	fi
+    	fi
 
-    atparse < ${PATHRT}/parm/${MODEL_CONFIGURE:-model_configure.IN} > model_configure
+    	atparse < ${PATHRT}/parm/${MODEL_CONFIGURE:-model_configure.IN} > model_configure
 
-    compute_petbounds_and_tasks
+    	compute_petbounds_and_tasks
 
-    atparse < ${PATHRT}/parm/${NEMS_CONFIGURE:-nems.configure} > nems.configure
+    	atparse < ${PATHRT}/parm/${UFS_CONFIGURE:-ufs.configure} > ufs.configure
   
-    # diag table
-    if [[ "Q${DIAG_TABLE:-}" != Q ]] ; then
-      atparse < ${PATHRT}/parm/diag_table/${DIAG_TABLE} > diag_table
+    	# diag table
+    	if [[ "Q${DIAG_TABLE:-}" != Q ]] ; then
+      	atparse < ${PATHRT}/parm/diag_table/${DIAG_TABLE} > diag_table
+    	fi
+
+    	# Field table
+    	if [[ "Q${FIELD_TABLE:-}" != Q ]] ; then
+      		cp ${PATHRT}/parm/field_table/${FIELD_TABLE} field_table
+    	fi
+
+   	# Field Dictionary
+    	cp ${PATHRT}/parm/fd_ufs.yaml fd_ufs.yaml 
+
+    	# Set up the run directory
+    	source ./fv3_run
+
+    	if [[ $DATM_CDEPS = 'true' ]]; then
+      		atparse < ${PATHRT}/parm/${DATM_IN_CONFIGURE:-datm_in} > datm_in
+      		atparse < ${PATHRT}/parm/${DATM_STREAM_CONFIGURE:-datm.streams.IN} > datm.streams
+    	fi
+
+    	# NoahMP table file
+    	cp ${PATHRT}/parm/noahmptable.tbl noahmptable.tbl
+
+    	# start runs
+    	echo "Start ufs-cdeps-land model run with TASKS: ${TASKS}"
+    	export MPIRUN=${MPIRUN:-`which mpiexec`}
+    	${MPIRUN} -n ${TASKS} ./ufs_model
+
     fi
-
-    # Field table
-    if [[ "Q${FIELD_TABLE:-}" != Q ]] ; then
-      cp ${PATHRT}/parm/field_table/${FIELD_TABLE} field_table
-    fi
-
-    # Field Dictionary
-    cp ${PATHRT}/parm/fd_nems.yaml fd_nems.yaml 
-
-    # Set up the run directory
-    source ./fv3_run
-
-    if [[ $DATM_CDEPS = 'true' ]]; then
-      atparse < ${PATHRT}/parm/${DATM_IN_CONFIGURE:-datm_in} > datm_in
-      atparse < ${PATHRT}/parm/${DATM_STREAM_CONFIGURE:-datm.streams.IN} > datm.streams
-    fi
-
-    # NoahMP table file
-    cp ${PATHRT}/parm/noahmptable.tbl noahmptable.tbl
-
-    # start runs
-    echo "Start ufs-cdeps-land model run with TASKS: ${TASKS}"
-    export MPIRUN=${MPIRUN:-`which mpiexec`}
-    ${MPIRUN} -n ${TASKS} ./ufs_model
-
-    exit 
 
     # no error codes on exit from model, check for restart below instead
 
@@ -293,9 +401,19 @@ while [ $date_count -lt $cycles_per_job ]; do
     MEM_WORKDIR=${WORKDIR}/${mem_ens}
     MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
 
-    if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then 
-       cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
+    if [[ $atmos_forc == "era5" && -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then 
+        cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
     else 
+       echo "Something is wrong, probably the model, exiting" 
+       exit
+    fi
+
+    if [[ $atmos_forc == "gswp3" && -e ${MEM_WORKDIR}/noahmp_output/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile1.nc ]]; then   
+       for tile in 1 2 3 4 5 6
+       do
+           cp ${MEM_WORKDIR}/noahmp_output/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
+        done      
+    else
        echo "Something is wrong, probably the model, exiting" 
        exit
     fi
