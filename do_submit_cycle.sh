@@ -75,6 +75,11 @@ fi
 ############################
 # set executables
 
+if [[ -e ${BUILDDIR}/bin/vector2tile_converter.exe ]]; then #prefer cmake-built executables
+  export vec2tileexec=${BUILDDIR}/bin/vector2tile_converter.exe
+else
+  export vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
+fi
 if [[ -e ${BUILDDIR}/bin/tile2tile_converter.exe ]]; then #prefer cmake-built executables
   export tile2tileexec=${BUILDDIR}/bin/tile2tile_converter.exe
 else 
@@ -154,22 +159,41 @@ fi
 ln -sf ${MEM_MODL_OUTDIR}/noahmp ${MEM_WORKDIR}/noahmp_output 
 
 # copy ICS into restarts, if needed 
-for tile in 1 2 3 4 5 6
-do
-rst_out=${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.tile${tile}.nc
-rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.tile${tile}.nc
-# if restart not in experiment out directory, copy the restarts from the ICSDIR
- if [[ ! -e ${rst_out} ]]; then
-    echo "Looking for ICS: ${rst_in}"
-    if [[ -e ${rst_in} ]]; then
-       echo "ICS found, copying" 
-       cp ${rst_in} ${rst_out}
-    else
-       echo "ICS not found. Exiting" 
-       exit 10
+if [[ $atmos_forc == "era5" ]]; then
+    rst_out=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+    rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs_land_restart.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.nc
+    # if restart not in experiment out directory, copy the restarts from the ICSDIR
+    if [[ ! -e ${rst_out} ]]; then
+        echo "Looking for ICS: ${rst_in}"
+    	if [[ -e ${rst_in} ]]; then
+            echo "ICS found, copying" 
+            cp ${rst_in} ${rst_out}
+        else
+            echo "ICS not found. Exiting" 
+            exit 10
+        fi
     fi
- fi
-done
+fi
+
+if [[ $atmos_forc == "gswp3" ]]; then
+
+   for tile in 1 2 3 4 5 6
+   do
+   rst_out=${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${sYYYY}-${sMM}-${sDD}_${sHH}-00-00.tile${tile}.nc
+   rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs.cpld.lnd.out.${sYYYY}-${sMM}-${sDD}-00000.tile${tile}.nc
+   # if restart not in experiment out directory, copy the restarts from the ICSDIR
+   if [[ ! -e ${rst_out} ]]; then
+       echo "Looking for ICS: ${rst_in}"
+       if [[ -e ${rst_in} ]]; then
+           echo "ICS found, copying" 
+           cp ${rst_in} ${rst_out}
+       else
+           echo "ICS not found. Exiting" 
+           exit 10
+       fi
+   fi
+   done
+fi
 
 # create dates file 
 touch analdates.sh 
