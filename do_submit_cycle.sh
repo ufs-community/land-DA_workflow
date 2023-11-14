@@ -20,7 +20,6 @@ source $config_file
 
 export KEEPWORKDIR="YES"
 
-
 ############################
 # ensure necessary envars are set
 envars=("exp_name" "STARTDATE" "ENDDATE" "LANDDAROOT" "LANDDA_INPUTS" "CYCLEDIR" \
