@@ -1,7 +1,7 @@
 # Settings file for submit_cycle, for running the DA_GHCN_test 
 
 # experiment name
-export exp_name=DA_GHCN_test
+export exp_name=DA_ERA5_test
 #export BASELINE=hera.internal
 
 #ERA5 forcing is available for 2020-2021
@@ -12,7 +12,7 @@ ENDDATE=2019122200
 source ./release.environment
 ############################
 
-#forcing options: gdas, era5
+#forcing options: gswp3, era5
 export atmos_forc=era5
 
 # for LETKF, this is size of ensemble.
