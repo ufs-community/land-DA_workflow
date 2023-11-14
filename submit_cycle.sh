@@ -1,5 +1,5 @@
 #!/bin/bash  
-#SBATCH --job-name=offline_noahmp
+#SBATCH --job-name=ufs_land_da
 #SBATCH --account=epic
 #SBATCH --qos=debug
 #SBATCH --nodes=1
@@ -121,7 +121,7 @@ while [ $date_count -lt $cycles_per_job ]; do
 
     	for tile in 1 2 3 4 5 6
     	do
-    	rst_in=${MEM_MODL_OUTDIR}/restarts/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
+    	rst_in=${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
     	if [[ ! -e ${rst_in} ]]; then  
       	rst_in=${LANDDA_INPUTS}/restarts/${atmos_forc}/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
     	fi
@@ -249,7 +249,7 @@ while [ $date_count -lt $cycles_per_job ]; do
             cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
         done  
     fi
-    
+ 
     ############################
     # run the forecast model
 
@@ -287,10 +287,9 @@ while [ $date_count -lt $cycles_per_job ]; do
     fi 
     # no error codes on exit from model, check for restart below instead
 
-
     if [[ $do_jedi == "YES" && $atmos_forc == "gswp3" ]]; then
 	set -e     
-    
+ 
    	echo '************************************************'
     	echo 'running the forecast model' 
     
@@ -300,7 +299,9 @@ while [ $date_count -lt $cycles_per_job ]; do
     	PATHRT=${CYCLEDIR}/ufs-weather-model/tests
     	RT_COMPILER=${RT_COMPILER:-intel}
     	ATOL="1e-7"
-    	source ${PATHRT}/detect_machine.sh
+
+        cp ${LANDDA_INPUTS}/restarts/$TEST_NAME_RST ${PATHRT}/tests/$TEST_NAME_RST 
+       	source ${PATHRT}/detect_machine.sh
     	source ${PATHRT}/rt_utils.sh
     	source ${PATHRT}/default_vars.sh
     	source ${PATHRT}/tests/$TEST_NAME_RST
@@ -388,7 +389,6 @@ while [ $date_count -lt $cycles_per_job ]; do
     	echo "Start ufs-cdeps-land model run with TASKS: ${TASKS}"
     	export MPIRUN=${MPIRUN:-`which mpiexec`}
     	${MPIRUN} -n ${TASKS} ./ufs_model
-
     fi
 
     # no error codes on exit from model, check for restart below instead
@@ -396,30 +396,21 @@ while [ $date_count -lt $cycles_per_job ]; do
     ############################
     # check model ouput (all members)
 
-    mem_ens="mem000" 
+    mem_ens="mem000"
 
     MEM_WORKDIR=${WORKDIR}/${mem_ens}
     MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
-
-    if [[ $atmos_forc == "era5" && -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then 
-        cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
-    else 
-       echo "Something is wrong, probably the model, exiting" 
-       exit
-    fi
-
-    if [[ $atmos_forc == "gswp3" && -e ${MEM_WORKDIR}/noahmp_output/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile1.nc ]]; then   
-       for tile in 1 2 3 4 5 6
-       do
-           cp ${MEM_WORKDIR}/noahmp_output/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
-        done      
+  
+    if [[ $atmos_forc == "era5" ]]; then
+  #  if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then
+       cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
     else
-       echo "Something is wrong, probably the model, exiting" 
-       exit
+       for tile in 1 2 3 4 5 6
+        do
+           cp ${MEM_WORKDIR}/noahmp_output/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
+        done
     fi
-
-#   echo "Finished job number, ${date_count},for  date: ${THISDATE}" >> $logfile
-
+    
     THISDATE=$NEXTDATE
     date_count=$((date_count+1))
 
