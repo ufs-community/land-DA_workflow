@@ -1,10 +1,10 @@
 # Settings file for submit_cycle, for running the DA_GHCN_test 
 
 # experiment name
-export exp_name=DA_gswp3
+export exp_name=DA_GSWP3_test
 #export BASELINE=hera.internal
 
-# experiment period
+# experiment period 
 STARTDATE=2000010300
 ENDDATE=2000010400
 
