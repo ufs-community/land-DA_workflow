@@ -4,6 +4,9 @@
 export exp_name=DA_GSWP3_test
 #export BASELINE=hera.internal
 
+#Machine options: orion, hera
+export MACHINE_ID=hera
+
 # experiment period 
 STARTDATE=2000010300
 ENDDATE=2000010400
