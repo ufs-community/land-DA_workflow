@@ -110,6 +110,7 @@ pipeline {
         module use ../modulefiles && module load landda_orion.intel.lua
         ecbuild ../ && make -j4
         echo $(pwd)
+	groups
         ./run_orion_ctest.sh
         '''
       }
