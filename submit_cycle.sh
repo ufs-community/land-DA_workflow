@@ -293,7 +293,6 @@ while [ $date_count -lt $cycles_per_job ]; do
    	echo '************************************************'
     	echo 'running the forecast model' 
     
-    	export MACHINE_ID=${MACHINE_ID:-hera}
     	TEST_NAME=datm_cdeps_lnd_gswp3
     	TEST_NAME_RST=datm_cdeps_lnd_gswp3_rst
     	PATHRT=${CYCLEDIR}/ufs-weather-model/tests
