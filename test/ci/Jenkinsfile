@@ -74,12 +74,12 @@ pipeline {
         mkdir build
         cp test/hera_ctest.sh build/
         cp test/check_ctest.sh build/
-        cp test/run_ctest.sh build/
+        cp test/run_hera_ctest.sh build/
         cd build/
         module use ../modulefiles && module load landda_hera.intel
         ecbuild ../ && make -j4
         echo $(pwd)
-        ./run_ctest.sh
+        ./run_hera_ctest.sh
         '''
       }
     }        
@@ -102,15 +102,16 @@ pipeline {
         mkdir build
         cp test/orion_ctest.sh build/
         cp test/check_ctest.sh build/
-        cp test/run_ctest.sh build/
-	      cd test/
-	      sed -i 's|export MACHINE_ID=${MACHINE_ID:-hera}|export MACHINE_ID=${MACHINE_ID:-orion}|g' run_ufs_datm_lnd.sh
-	      cd ..
+        cp test/run_orion_ctest.sh build/
+	cd test/
+	sed -i 's|export MACHINE_ID=${MACHINE_ID:-hera}|export MACHINE_ID=${MACHINE_ID:-orion}|g' run_ufs_datm_lnd.sh
+	cd ..
         cd build/
         module use ../modulefiles && module load landda_orion.intel.lua
         ecbuild ../ && make -j4
         echo $(pwd)
-        ./run_ctest.sh
+	groups
+        ./run_orion_ctest.sh
         '''
       }
     }    
