@@ -24,7 +24,7 @@ source ${PATHRT}/atparse.bash
 # Set inputdata location for each machines
 echo "MACHINE_ID: $MACHINE_ID"
 if [[ $MACHINE_ID = orion ]]; then
-  DISKNM=/work/noaa/nems/emc.nemspara/RT
+  DISKNM=/work/noaa/epic/UFS-WM_RT
 elif [[ $MACHINE_ID = hera ]]; then
   DISKNM=/scratch2/NAGAPE/epic/UFS-WM_RT
 else
