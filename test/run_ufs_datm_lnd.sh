@@ -10,6 +10,7 @@ echo ${project_binary_dir}
 echo ${project_source_dir}
 
 #
+MACHINE_ID=${MACHINE_ID:-hera}
 TEST_NAME=datm_cdeps_lnd_gswp3
 PATHRT=${project_source_dir}/ufs-weather-model/tests
 RT_COMPILER=${RT_COMPILER:-intel}
