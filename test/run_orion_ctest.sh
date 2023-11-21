@@ -1,5 +1,4 @@
-#!/bin/bash
-set -eux
+et -eux
 
 JOB_ID=$(sbatch --job-name=ctest --account=epic --qos=debug --ntasks-per-node=6 --nodes=1 --time=00:30:00 ./orion_ctest.sh | awk '{print $4}')
 
