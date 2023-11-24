@@ -10,7 +10,7 @@ echo ${project_binary_dir}
 echo ${project_source_dir}
 
 #
-export MACHINE_ID=${MACHINE_ID:-hera}
+MACHINE_ID=${MACHINE_ID:-hera}
 TEST_NAME=datm_cdeps_lnd_gswp3
 PATHRT=${project_source_dir}/ufs-weather-model/tests
 RT_COMPILER=${RT_COMPILER:-intel}
@@ -24,15 +24,15 @@ source ${PATHRT}/atparse.bash
 # Set inputdata location for each machines
 echo "MACHINE_ID: $MACHINE_ID"
 if [[ $MACHINE_ID = orion ]]; then
-  DISKNM=/work/noaa/nems/emc.nemspara/RT
+  DISKNM=/work/noaa/epic/UFS-WM_RT
 elif [[ $MACHINE_ID = hera ]]; then
-  DISKNM=/scratch1/NCEPDEV/nems/emc.nemspara/RT
+  DISKNM=/scratch2/NAGAPE/epic/UFS-WM_RT
 else
   echo "Warning: MACHINE_ID is default, users will have to define INPUTDATA_ROOT and RTPWD by themselves"
 fi
 
-#source ${PATHRT}/bl_date.conf
-BL_DATE=20230815
+source ${PATHRT}/bl_date.conf
+#BL_DATE=20230815
 RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-${BL_DATE}/${TEST_NAME}_${RT_COMPILER}}
 INPUTDATA_ROOT=${INPUTDATA_ROOT:-$DISKNM/NEMSfv3gfs/input-data-20221101}
 
@@ -73,7 +73,7 @@ atparse < ${PATHRT}/parm/${MODEL_CONFIGURE:-model_configure.IN} > model_configur
 
 compute_petbounds_and_tasks
 
-atparse < ${PATHRT}/parm/${NEMS_CONFIGURE:-nems.configure} > nems.configure
+atparse < ${PATHRT}/parm/${UFS_CONFIGURE:-ufs.configure} > ufs.configure
 
 # diag table
 if [[ "Q${DIAG_TABLE:-}" != Q ]] ; then
@@ -85,7 +85,7 @@ if [[ "Q${FIELD_TABLE:-}" != Q ]] ; then
 fi
 
 # Field Dictionary
-cp ${PATHRT}/parm/fd_nems.yaml fd_nems.yaml
+cp ${PATHRT}/parm/fd_ufs.yaml fd_ufs.yaml
 
 # Set up the run directory
 source ./fv3_run

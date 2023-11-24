@@ -1,6 +1,16 @@
 pipeline {
   agent none
   stages {
+    stage('Launch SonarQube') {
+            steps {
+                script {
+                    build job: '/land-da/land-da-sonarqube', parameters: [
+                        string(name: 'BRANCH_NAME', value: env.CHANGE_BRANCH ?: 'develop'),
+                        string(name: 'FORK_NAME', value: env.CHANGE_FORK ?: '')
+                    ], wait: false
+                }
+            }
+        }
     stage('Land DA workflow') {
        agent {
         label 'built-in'   
@@ -51,7 +61,7 @@ pipeline {
         }
         environment {
         ACCNR = 'nems'
-        NODE_PATH = '/scratch1/NCEPDEV/stmp2/role.epic/'
+        NODE_PATH = '/scratch2/NAGAPE/epic/role.epic/'
       }
       steps {
           
@@ -59,17 +69,17 @@ pipeline {
         checkout scm
         sh '''
         git submodule update --init --recursive
-        ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch1/NCEPDEV/stmp2/role.epic/jenkins/workspace/
+        ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch2/NAGAPE/epic/role.epic/jenkins/workspace/
         module use modulefiles && module load landda_hera.intel
         mkdir build
         cp test/hera_ctest.sh build/
         cp test/check_ctest.sh build/
-        cp test/run_ctest.sh build/
+        cp test/run_hera_ctest.sh build/
         cd build/
         module use ../modulefiles && module load landda_hera.intel
         ecbuild ../ && make -j4
         echo $(pwd)
-        ./run_ctest.sh
+        ./run_hera_ctest.sh
         '''
       }
     }        
@@ -86,7 +96,21 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        
+        git submodule update --init --recursive
+        ln -fs /work/noaa/epic/UFS_Land-DA/inputs /work/noaa/epic/role-epic/jenkins/workspace/
+        module use modulefiles && module load landda_orion.intel.lua
+        mkdir build
+        cp test/orion_ctest.sh build/
+        cp test/check_ctest.sh build/
+        cp test/run_orion_ctest.sh build/
+	      cd test/
+	      sed -i 's|MACHINE_ID=${MACHINE_ID:-hera}|MACHINE_ID=${MACHINE_ID:-orion}|g' run_ufs_datm_lnd.sh
+	      cd ..
+        cd build/
+        module use ../modulefiles && module load landda_orion.intel.lua
+        ecbuild ../ && make -j4
+        echo $(pwd)
+        ctest
         '''
       }
     }    

@@ -1,0 +1,11 @@
+
+#===============================================================================
+#  Placeholder options for Mac gfortran
+#===============================================================================
+
+ COMPILERF90    =       /opt/local/bin/gfortran-mp-11
+ FREESOURCE     =       
+ F90FLAGS       =       
+ NETCDFMOD      =       -I/opt/local/include
+ NETCDFLIB      =       -L/opt/local/lib -lnetcdf -lnetcdff
+
