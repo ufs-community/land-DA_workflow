@@ -9,22 +9,47 @@ This User's Guide provides guidance for running the Unified Forecast System
 the Joint Effort for Data assimilation Integration (:term:`JEDI`) software. The offline UFS Land Data Assimilation (Land DA) System currently only works with snow data. 
 Thus, this User's Guide focuses primarily on the snow DA process.
 
-This User's Guide is organized as follows:
+Since the last release, developers have added a variety of features:
 
-   * This chapter (Introduction) provides background information on the Unified Forecast System (:term:`UFS`) and the NoahMP model. 
-   * :numref:`Chapter %s <TechOverview>` (Technical Overview) outlines prerequisites, user support levels, and directory structure. 
-   * :numref:`Chapter %s <BuildRunLandDA>` (Land DA Workflow [Hera & Orion]) explains how to build and run the Land DA System on :ref:`Level 1 <LevelsOfSupport>` systems (currently Hera and Orion).
-   * :numref:`Chapter %s <Container>` (Land DA Workflow [in a Container]) explains how to build and run the containerized Land DA System on non-Level 1 systems. 
-   * :numref:`Chapter %s <Model>` (Model) provides information on input data and configuration parameters in the Noah-MP LSM and its Vector-to-Tile Converter.
-   * :numref:`Chapter %s <DASystem>` (DA Framework) provides information on the DA system, required data, and configuration parameters. 
-   * :numref:`Chapter %s <Glossary>` (Glossary) lists important terms. 
-
-Users and developers may post questions and exchange information on the Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__ forum if their concerns are not addressed in this User's Guide.
+* 
+* 
 
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
 
 UFS Development Team. (2023, March 6). Unified Forecast System (UFS) Land Data Assimilation (DA) System (Version v1.0.0). Zenodo. https://doi.org/10.5281/zenodo.7675721
 
+
+Organization
+**************
+
+This User's Guide is organized into four sections: (1) *Background Information*; (2) *Building, Running, and Testing* the Land DA System; (3) *Customizing the Workflow*; and (4) *Reference*.
+
+Background Information
+========================
+   * This chapter (Introduction) provides background information on the Unified Forecast System (:term:`UFS`) and the NoahMP model. 
+   * :numref:`Chapter %s <TechOverview>` (Technical Overview) outlines prerequisites, user support levels, and directory structure. 
+
+Building, Running, and Testing the Land DA System
+===================================================
+
+   * :numref:`Chapter %s: Land DA Workflow (for Hera & Orion) <BuildRunLandDA>` explains how to build and run the Land DA System on :ref:`Level 1 <LevelsOfSupport>` systems (currently Hera and Orion).
+   * :numref:`Chapter %s: Containerized Land DA Workflow <Container>` (Land DA Workflow [in a Container]) explains how to build and run the containerized Land DA System on non-Level 1 systems. 
+
+Customizing the Workflow
+=========================
+
+   * :numref:`Chapter %s:Model <Model>` provides information on input data and configuration parameters in the Noah-MP LSM and its Vector-to-Tile Converter.
+   * :numref:`Chapter %s: DA Framework <DASystem>` provides information on the DA system, required data, and configuration parameters. 
+
+Reference
+===========
+
+   * :numref:`Chapter %s: Glossary <Glossary>` lists important terms. 
+
+User Support and Documentation
+********************************
+
+Users and developers may post questions and exchange information on the Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__ forum if their concerns are not addressed in this User's Guide.
 
 .. _Background:
 
@@ -91,4 +116,4 @@ commercial product or activity by DOC or the United States Government.
 References
 *************
 
-.. bibliography:: references.bib
+.. bibliography:: ../references.bib

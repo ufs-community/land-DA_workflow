@@ -40,6 +40,9 @@ Glossary
    HPC
       High-Performance Computing.
 
+   LETKF-OI
+      Local Ensemble Transform Kalman Filter-Optimal Interpolation (see :cite:t:`HuntEtAl2007`, 2007).
+
    MPI
       MPI stands for Message Passing Interface. An MPI is a standardized communication system used in parallel programming. It establishes portable and efficient syntax for the exchange of messages and data between multiple processors that are used by a single computer program. An MPI is required for high-performance computing (HPC) systems.
 

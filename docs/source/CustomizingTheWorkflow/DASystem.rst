@@ -13,9 +13,9 @@ The Joint Effort for Data assimilation Integration (:term:`JEDI`) is a unified a
 
 The NOAH-MP offline Land DA System uses three JEDI components: 
    
-   * The Object-Oriented Prediction System (`OOPS <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.0.0/inside/jedi-components/oops/index.html>`__) for the data assimilation algorithm 
-   * The Interface for Observation Data Access (`IODA <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.0.0/inside/jedi-components/ioda/index.html>`__) for the observation formatting and processing
-   * The Unified Forward Operator (`UFO <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.0.0/inside/jedi-components/ufo/index.html>`__) for comparing model forecasts and observations 
+   * The Object-Oriented Prediction System (:ref:`OOPS <jedi-oops:top-oops>`) for the data assimilation algorithm 
+   * The Interface for Observation Data Access (`IODA <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ioda/index.html>`__) for the observation formatting and processing
+   * The Unified Forward Operator (`UFO <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ufo/index.html>`__) for comparing model forecasts and observations 
 
 JEDI's Unified Forward Operator (UFO) links observation operators with the Object Oriented Prediction System (OOPS) to compute a simulated observation given a known model state. It does not restrict observation operators based on model-specific code structures or requirements. The UFO code structure provides generic classes for observation bias correction and quality control. Within this system, IODA converts the observation data into model-specific formats to be ingested by each model's data assimilation system. This involves model-specific data conversion efforts. 
 
