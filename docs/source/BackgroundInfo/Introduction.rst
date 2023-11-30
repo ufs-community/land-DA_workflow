@@ -11,8 +11,19 @@ Thus, this User's Guide focuses primarily on the snow DA process.
 
 Since the last release, developers have added a variety of features:
 
-* 
-* 
+* Capability to use the Noah-MP land component of the UFS rather than the Common Community Physics Package (CCPP) Noah-MP LSM implementation
+* Updated model forcing options for use of the UFS land component 
+   * Provided a new analysis option in the cubed-sphere native grid using GSWP3 forcing 
+   * Provided an artificial GHCN snow depth observation
+* Added a new sample configuration (``settings_DA_cycle_gswp3``)
+* Included an additional ECMWF ERA5 reanalysis forcing option (for 2019-12-21) in the existing vector-to-tile conversion analysis process
+* Established global land grid-point consistency with the head of the UFS WM baseline test cases
+   * New global land grid point is changed from 18360 to 18322
+* Updated the JEDI :term:`DA <data assimilation>` framework analysis code base to use JEDI Skylab v4.0
+* Updated the Singularity container (ubuntu20.04-intel-ue-landda-v1.2.0.img) to support the changes described above
+* Updated the CTest suite
+* Updated sample datasets for the release (see the `Land DA data bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__)
+* Updated documentation to reflect the changes above 
 
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
 
@@ -49,7 +60,32 @@ Reference
 User Support and Documentation
 ********************************
 
-Users and developers may post questions and exchange information on the Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__ forum if their concerns are not addressed in this User's Guide.
+Questions
+==========
+
+The Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__ forum provides online support for UFS users and developers to post questions and exchange information. When users encounter difficulties running the Land DA System, this is the place to post. Users can expect an initial response within two business days. 
+
+When posting a question, it is recommended that users provide the following information: 
+
+* The platform or system being used (e.g., Hera, Orion, MacOS, Linux)
+* The version of the Land DA System being used (e.g., ``develop``, ``release/public-v1.1.0``). (To determine this, users can run ``git branch``, and the name of the branch with an asterisk ``*`` in front of it is the name of the branch they are working on.) Note that the Land DA version being used and the version of the documentation being used should match, or users will run into difficulties.
+* Stage of the application when the issue appeared (i.e., build/compilation, configuration, or forecast run)
+* Contents of relevant configuration files
+* Full error message (preferably in text form rather than a screenshot)
+* Current shell (e.g., bash, csh) and modules loaded
+* Compiler + MPI combination being used
+* Run directory and code directory, if available on supported platforms
+
+Bug Reports
+============
+
+If users (especially new users) believe they have identified a bug in the system, it is recommended that they first ask about the problem in `GitHub Discussions <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__, since many "bugs" do not require a code change/fix --- instead, the user may be unfamiliar with the system and/or may have misunderstood some component of the system or the instructions, which is causing the problem. Asking for assistance in a `GitHub Discussion <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__ post can help clarify whether there is a simple adjustment to fix the problem or whether there is a genuine bug in the code. Users are also encouraged to search `open issues <https://github.com/ufs-community/land-DA_workflow/issues>`__ to see if their bug has already been identified. If there is a genuine bug, and there is no open issue to address it, users can report the bug by filing a `GitHub Issue <https://github.com/ufs-community/land-DA_workflow/issues/new>`__. 
+
+Feature Requests and Enhancements
+==================================
+
+Users who want to request a feature enhancement or the addition of a new feature can file a `GitHub Issue <https://github.com/ufs-community/land-DA_workflow/issues/new>`__ and add (or request that a code manager add) the ``EPIC Support Requested`` label. These feature requests will be forwarded to the Earth Prediction Innovation Center (`EPIC <https://epic.noaa.gov/>`__) management team for prioritization and eventual addition to the Land DA System. 
+
 
 .. _Background:
 
