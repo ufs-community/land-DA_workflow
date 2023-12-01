@@ -4,7 +4,10 @@
 Land DA Workflow (Hera & Orion)
 ************************************
 
-This chapter provides instructions for building and running a basic Land DA case for the Unified Forecast System (:term:`UFS`) Land DA System. This out-of-the-box Land DA case builds a weather forecast for January 1, 2016 at 18z to January 3, 2016 at 18z. 
+This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (:term:`UFS`) Land DA System. Users can choose between two options: 
+
+   * A Dec. 21, 2019 00z sample case using ERA5 data with the UFS Land Driver (``settings_DA_cycle_era5``)
+   * A Jan. 3, 2000 00z sample case using GSWP3 data with the UFS Noah-MP land component (``settings_DA_cycle_gswp3``). 
 
 .. attention::
    
@@ -37,27 +40,23 @@ Get Data
    +-----------+--------------------------------------------------+
    | Platform  | Data Location                                    |
    +===========+==================================================+
-   | Hera      | /scratch1/NCEPDEV/nems/role.epic/landda/inputs   |
+   | Hera      | /scratch2/NAGAPE/epic/UFS_Land-DA/inputs         |
    +-----------+--------------------------------------------------+
-   | Orion     | /work/noaa/epic-ps/role-epic-ps/landda/inputs    |
-   +-----------+--------------------------------------------------+
-   | Jet       | /mnt/lfs4/HFIP/hfv3gfs/role.epic/landda/inputs   |
-   +-----------+--------------------------------------------------+
-   | Cheyenne  | /glade/work/epicufsrt/contrib/landda/inputs      |
+   | Orion     | /work/noaa/epic/UFS_Land-DA/inputs               |
    +-----------+--------------------------------------------------+
 
 Users can either set the ``LANDDA_INPUTS`` environment variable to the location of their system's pre-staged data or use a soft link to the data. For example, on Hera, users may set: 
 
 .. code-block:: console
 
-   export LANDDA_INPUTS=/scratch1/NCEPDEV/nems/role.epic/landda/inputs
+   export LANDDA_INPUTS=/scratch2/NAGAPE/epic/UFS_Land-DA/inputs
 
 Alternatively, users can add a soft link to the data. For example, on Orion:
 
 .. code-block:: console
 
    cd $LANDDAROOT
-   ln -s /work/noaa/epic-ps/role-epic-ps/landda/inputs .
+   ln -fs /work/noaa/epic/UFS_Land-DA/inputs
 
 Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetDataC>`. Users with access to data for additional experiments may use the same process described above to point or link to that data by modifying the path to the data appropriately. 
 
@@ -66,11 +65,17 @@ Users who are not using Land DA on Hera or Orion should view :numref:`Chapter %s
 Get Code
 ***********
 
-Clone the Land DA repository.
+Clone the Land DA repository. To clone the ``develop`` branch, run: 
 
 .. code-block:: console
 
    git clone -b develop --recursive https://github.com/ufs-community/land-DA_workflow.git
+
+To clone the most recent release, run the same command with ``ufs-land-da-v1.2.0`` in place of ``develop``: 
+
+.. code-block:: console
+
+   git clone -b ufs-land-da-v1.2.0 --recursive https://github.com/ufs-community/land-DA_workflow.git
 
 Build the Land DA System
 ***************************
@@ -97,7 +102,7 @@ Build the Land DA System
    .. code-block:: console
 
       ecbuild ..
-      make -j 8
+      make -j4
 
    If the code successfully compiles, the console output should end with:
    
@@ -106,16 +111,25 @@ Build the Land DA System
       [100%] Completed 'ufs-weather-model'
       [100%] Built target ufs-weather-model
    
-   Additionally, the ``build`` directory will contain several files and a ``bin`` subdirectory with three executables: 
+   Additionally, the ``build`` directory will contain several files and directories along with a ``bin`` subdirectory with four executables: 
 
       * ``apply_incr.exe``
-      * ``ufsLandDriver.exe``
+      * ``ufsLand.exe``
       * ``vector2tile_converter.exe``
+      * ``tile2tile_converter.exe``
+
 
 Configure the Experiment
 ***************************
 
-#. Navigate back to the ``land-DA_workflow`` directory and check that the account/partition is correct in ``submit_cycle.sh``. 
+The ``develop`` branch includes two scripts with default experiment settings: 
+
+   * ``settings_DA_cycle_era5`` for running a Dec. 21, 2019 00z sample case with the UFS Land Driver.
+   * ``settings_DA_cycle_gswp3`` for running a Jan. 3, 2000 00z sample case with the UFS Noah-MP land component. 
+
+To configure an experiment: 
+
+#. Navigate back to the ``land-DA_workflow`` directory and check that the account, queue, and partition are correct in ``submit_cycle.sh``. 
 
    .. code-block:: console
 
@@ -130,30 +144,34 @@ Configure the Experiment
    
    where ``my_partition`` is the name of the partition on the user's system. 
 
+   When using the GSWP3 forcing option, users will need to update line 7 to say ``#SBATCH --cpus-per-task=4``. Users can perform this change manually in a code editor or run: 
 
-#. Configure other elements of the experiment if desired. The ``develop`` branch includes four scripts with default experiment settings: 
+   .. code-block:: console
+      
+      sed -i 's/--cpus-per-task=1/--cpus-per-task=4/g' submit_cycle.sh 
 
-   * ``settings_DA_cycle_gdas`` for running the Jan. 1-3, 2016 sample case. 
-   * ``settings_DA_cycle_era5`` for running a Jan. 1-3, 2020 sample case.
-   * ``settings_DA_cycle_gdas_restart`` for running the Jan. 3-4, 2016 sample case. 
-   * ``settings_DA_cycle_era5_restart`` for running a Jan. 3-4, 2020 sample case.
+   .. COMMENT: 4, or 5? Both are in the doc provided to me...
 
-   These files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Chapters :numref:`%s <Model>` & :numref:`%s <DASystem>`. 
+#. When using GSWP3 forcing option, users may also have to alter ``MACHINE_ID`` in line 8 of ``settings_DA_cycle_gswp3``. The default value is ``hera``, but ``orion`` is another option:
 
-   .. note::
+   .. code-block:: console
 
-      The ``*restart`` settings files will only work after an experiment with the corresponding non-restart settings file has been run. These settings files are designed to use the restart files created by the first experiment cycle to pick up where it left off. For example, ``settings_DA_cycle_gdas`` runs from 2016-01-01 at 18z to 2016-01-03 at 18z. The ``settings_DA_cycle_gdas_restart`` will run from 2016-01-03 at 18z to 2016-01-04 at 18z.
+      export MACHINE_ID=orion
+   
+   Users running the ERA5 case do not need to make this change. 
+
+#. Configure other elements of the experiment if desired. The ``settings_*`` files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Sections :numref:`%s <Model>` & :numref:`%s <DASystem>`. 
 
 Run an Experiment
 ********************
 
-The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. This script requires an input file that details all the specifics of a given experiment.
+The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. This script requires a ``settings_DA_cycle_*`` input file that details all the specifics of a given experiment. For example, to run the ERA5 case, users would run:
 
 .. code-block:: console
 
-   ./do_submit_cycle.sh settings_DA_cycle_gdas
+   ./do_submit_cycle.sh settings_DA_cycle_era5
       
-The system will output a message such as ``Submitted batch job ########``, indicating that the job was successfully submitted. If all goes well, two full cycles will run with data assimilation (DA) and a forecast. 
+Users can replace ``settings_DA_cycle_era5`` with a different settings file to run a different default experiment. Regardless of the file selected, the system will output a message such as ``Submitted batch job ########``, indicating that the job was successfully submitted. If all goes well, one full cycle will run with data assimilation (DA) and a forecast. 
 
 .. _VerifySuccess:
 
@@ -184,12 +202,12 @@ The ``err*`` file for a successful experiment will end with something similar to
 
 .. code-block:: console
 
-   + THISDATE=2016010318
-   + date_count=2
-   + '[' 2 -lt 2 ']'
-   + '[' 2016010318 -lt 2016010318 ']'
+   + THISDATE=2019122200
+   + date_count=1
+   + '[' 1 -lt 1 ']'
+   + '[' 2019122200 -lt 2019122200 ']'
 
-Users will need to hit ``Ctrl+C`` to exit the files. 
+Users will need to type ``Ctrl+C`` to exit the files. 
 
 .. attention::
 

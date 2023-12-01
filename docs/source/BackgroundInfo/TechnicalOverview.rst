@@ -27,12 +27,12 @@ The Land DA System requires:
    * Python
    * :term:`NetCDF`
    * Lmod 
-   * `spack-stack <https://spack-stack.readthedocs.io/en/latest/>`__
-   * `jedi-bundle <https://github.com/JCSDA/jedi-bundle/wiki>`__ (Skylab v3.0.)
+   * `spack-stack <https://github.com/JCSDA/spack-stack>`__
+   * `jedi-bundle <https://github.com/JCSDA/jedi-bundle/wiki>`__ (Skylab v4.0)
 
 These software prerequisites are pre-installed in the Land DA :term:`container` and on other Level 1 systems (see :ref:`below <LevelsOfSupport>` for details). However, users on non-Level 1 systems will need to install them.
 
-Before using the Land DA container, users will need to install `Singularity <https://docs.sylabs.io/guides/latest/user-guide/>`__ and an **Intel** MPI (available `free here <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`__). 
+Before using the Land DA container, users will need to install `Singularity/Apptainer <https://apptainer.org/docs/user/latest/>`__ and an **Intel** MPI (available `free here <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`__). 
 
 
 .. _LevelsOfSupport:
@@ -49,23 +49,23 @@ Four levels of support have been defined for :term:`UFS` applications, and the L
 
 Level 1 Systems
 ==================
-Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via the :term:`spack-stack` Unified Environment (UE) and the ``jedi-bundle`` (Skylab v3.0). Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them. 
+Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via the :term:`spack-stack` Unified Environment (UE) and the ``jedi-bundle`` (Skylab v4.0). Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them. 
 
-+-----------+-----------------------------------+-----------------------------------------------------------------------------------+
-| Platform  | Compiler/MPI                      | spack-stack & jedi-bundle Installations                                           |
-+===========+===================================+===================================================================================+
-| Hera      | intel/2022.1.2 /                  | /scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.3.0/envs/unified-env   |
-|           |                                   |                                                                                   |
-|           | impi/2022.1.2                     | /scratch1/NCEPDEV/nems/role.epic/contrib/jedi-bundle                              |
-+-----------+-----------------------------------+-----------------------------------------------------------------------------------+
-| Orion     | intel/2022.1.2 /                  | /work/noaa/epic-ps/role-epic-ps/spack-stack/spack-stack-1.3.0/envs/unified-env    |
-|           |                                   |                                                                                   |
-|           | impi/2022.1.2                     | /work/noaa/epic-ps/role-epic-ps/contrib/jedi-bundle                               |
-+-----------+-----------------------------------+-----------------------------------------------------------------------------------+
-| Container | intel-oneapi-compilers/2021.8.0 / | /opt/spack-stack/ (inside the container)                                          |
-|           |                                   |                                                                                   |
-|           | intel-oneapi-mpi/2021.8.0         | /opt/jedi-bundle (inside the container)                                           |
-+-----------+-----------------------------------+-----------------------------------------------------------------------------------+
++-----------+-----------------------------------+-----------------------------------------------------------------+
+| Platform  | Compiler/MPI                      | spack-stack & jedi-bundle Installations                         |
++===========+===================================+=================================================================+
+| Hera      | intel/2022.1.2 /                  | /scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.3.0  |
+|           |                                   |                                                                 |
+|           | impi/2022.1.2                     | /scratch2/NAGAPE/epic/UFS_Land-DA/jedi/jedi-bundle              |
++-----------+-----------------------------------+-----------------------------------------------------------------+
+| Orion     | intel/2022.1.2 /                  | /work/noaa/epic/role-epic/spack-stack/orion/spack-stack-1.3.0   |
+|           |                                   |                                                                 |
+|           | impi/2022.1.2                     | /work/noaa/epic/UFS_Land-DA/jedi/jedi-bundle                    |
++-----------+-----------------------------------+-----------------------------------------------------------------+
+| Container | intel-oneapi-compilers/2021.8.0 / | /opt/spack-stack/ (inside the container)                        |
+|           |                                   |                                                                 |
+|           | intel-oneapi-mpi/2021.8.0         | /opt/jedi-bundle (inside the container)                         |
++-----------+-----------------------------------+-----------------------------------------------------------------+
 
 Level 2-4 Systems
 ===================
@@ -79,8 +79,8 @@ On non-Level 1 platforms, the Land DA System can be run within a container that 
 Code Repositories and Directory Structure
 ********************************************
 
-Directory Structure
-======================
+File & Directory Structure
+============================
 
 The main repository for the Land DA System is named ``land-DA_workflow``; 
 it is available on GitHub at https://github.com/ufs-community/land-DA_workflow. 
@@ -102,7 +102,8 @@ Directories in parentheses () are only visible after the build step.
     ├── docs
     ├── modulefiles
     ├── test
-    ├── ufs-land-driver
+    ├── tile2tile
+    ├── ufs-land-driver-emc-dev
     │     └── ccpp-physics
     ├── (ufs-weather-model)
     ├── vector2tile
