@@ -43,6 +43,11 @@ exclude_patterns = []
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
+# Documentation-wide substitutions
+
+rst_prolog = """
+.. |latestr| replace:: v1.2.0
+"""
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -79,4 +84,5 @@ intersphinx_mapping = {
    'jedi-ufo': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/', None),
    'spack-stack': ('https://spack-stack.readthedocs.io/en/1.3.0/', None),
    'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/latest/', None),
+   'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/', None),
 }

@@ -153,6 +153,8 @@ Users may find the following example ``yaml`` configuration file to be a helpful
 
    Any default values indicated in the sections below are the defaults set in ``letkfoi_snow.yaml`` or ``GHCN.yaml`` (found within the ``land-offline_workflow/DA_update/jedi/fv3-jedi/yaml_files/release-v1.0/`` directory).
 
+.. COMMENT: Update example file?
+
 Geometry
 ^^^^^^^^^^^
 
@@ -533,7 +535,7 @@ The grid description files appear in :numref:`Section %s <V2TInputFiles>` and ar
 Observation Data
 ====================
 
-Observation data from 2016 and 2020 are provided in NetCDF format for the v1.0.0 release. Instructions for downloading the data are provided in :numref:`Section %s <GetDataC>`, and instructions for accessing the data on :ref:`Level 1 Systems <LevelsOfSupport>` are provided in :numref:`Section %s <GetData>`. Currently, data is taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`__ (GHCN), but eventually, data from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`__) will also be available for use. 
+Observation data from 2000 and 2019 are provided in NetCDF format for the |latestr| release. Instructions for downloading the data are provided in :numref:`Section %s <GetDataC>`, and instructions for accessing the data on :ref:`Level 1 Systems <LevelsOfSupport>` are provided in :numref:`Section %s <GetData>`. Currently, data is taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`__ (GHCN), but eventually, data from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`__) will also be available for use. 
 
 Observation Types
 --------------------
@@ -549,7 +551,9 @@ Snow depth observations are taken from the `Global Historical Climatology Networ
 
 where ``${YYYY}`` should be replaced with the year of interest. Note that these yearly tarballs contain all measurement types from the daily GHCN output, and thus, snow depth must be manually extracted from this broader data set.
 
-These raw snow depth observations need to be converted into IODA-formatted netCDF files for ingestion into the JEDI LETKF system. However, this process was preemptively handled outside of the Land DA workflow, and the initial GHCN IODA files for 2016 and 2020 were provided by NOAA PSL (Clara Draper).
+These raw snow depth observations need to be converted into IODA-formatted netCDF files for ingestion into the JEDI LETKF system. However, this process was preemptively handled outside of the Land DA workflow, and initial GHCN IODA files for 2016 and 2020 were provided by NOAA PSL (Clara Draper).
+
+.. COMMENT: Update where files are from? 
 
 The IODA-formatted GHCN files are structured as follows (using 20160102 as an example):
 
@@ -618,7 +622,7 @@ Observation Location and Processing
 GHCN
 ^^^^^^
 
-GHCN files for 2016 and 2020 are already provided in IODA format for the v1.0.0 release. :numref:`Table %s <GetData>` indicates where users can find data on NOAA :term:`RDHPCS` platforms. Tar files containing the 2016 and 2020 data are located in the publicly-available `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html>`__. Once untarred, the snow depth files are located in ``/inputs/DA/snow_depth/GHCN/data_proc/{YEAR}``. These GHCN IODA files were provided by Clara Draper (NOAA PSL). Each file follows the naming convention of ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc``, where ``${YYYY}`` is the four-digit cycle year, ``${MM}`` is the two-digit cycle month, and ``${DD}`` is the two-digit cycle day. 
+GHCN files for 2000 and 2019 are already provided in IODA format for the |latestr| release. :numref:`Table %s <GetData>` indicates where users can find data on NOAA :term:`RDHPCS` platforms. Tar files containing the 2000 and 2019 data are located in the publicly-available `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html>`__. Once untarred, the snow depth files are located in ``/inputs/DA/snow_depth/GHCN/data_proc/{YEAR}``. These GHCN IODA files were provided by Clara Draper (NOAA PSL). Each file follows the naming convention of ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc``, where ``${YYYY}`` is the four-digit cycle year, ``${MM}`` is the two-digit cycle month, and ``${DD}`` is the two-digit cycle day. 
 
 In each experiment, the ``DA_config`` file sets the name of the experiment configuration file. This configuration file is typically named ``settings_DA_test``. Before assimilation, if "GHCN" was specified as the observation type in the ``DA_config`` file, the ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` file corresponding to the specified cycle date is soft-linked to the JEDI working directory (``${JEDIWORKDIR}``) with a naming-convention change (i.e., ``GHCN_${YYYY}${MM}${DD}${HH}.nc``). Here, the GHCN IODA file is appended with the cycle hour, ``${HH}`` which is extracted from the ``${STARTDATE}`` variable defined in the relevant ``DA_config`` file. 
 
@@ -689,29 +693,24 @@ Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, th
 Viewing NetCDF Files
 -----------------------
 
-Users can view file information and notes for NetCDF files using the ``ncdump`` module. First, load a compiler, MPI, and NetCDF modules: 
+Users can view file information and notes for NetCDF files using the instructions in :numref:`Section %s <view-netcdf-files>`. For example:
 
 .. code-block:: console
 
-   # To see available modules:
-   module avail
-   # To load modules:
+   # Load modules:
    module load intel/2022.2.0 impi/2022.2.0 netcdf/4.7.0
-
-Users may need to modify the module load command to reflect modules that are available on their system. 
-
-Then, run ``ncdump -h path/to/file``. For example, on Hera, users can run: 
-
-.. code-block:: console
-
    ncdump -h /scratch1/NCEPDEV/nems/role.epic/landda/inputs/DA/snow_depth/GHCN/data_proc/2016/ghcn_snwd_ioda_20160102.nc
 
-to see the contents of the 2016-01-02 GHCN file. 
+to see the contents of the 2016-01-02 GHCN file on Hera. Users may need to modify the module load command and the file path to reflect module versions/file paths that are available on their system. 
+
+.. COMMENT: Change to new snow DA file?
 
 Restart Files
 ================
 
 To restart the ``ufs-land-driver`` successfully after land model execution, all parameters, states, and fluxes used for a subsequent time iteration are stored in a restart file. This restart file is named ``ufs_land_restart.{FILEDATE}.nc`` where ``FILEDATE`` is in YYYY-MM-DD_HH-mm-SS format (e.g., ``ufs_land_restart.2016-01-02_18-00-00.nc``). The restart file contains all the model fields and their values at a specific point in time; this information can be used to restart the model immediately to run the next cycle. The Land DA System reads the states from the restart file and replaces them after the DA step with the updated analysis. :numref:`Table %s <RestartFiles>` lists the fields in the Land DA restart file. Within the ``ufs-land-driver``, read/write of the restart file is performed in ``ufsLandNoahMPRestartModule.f90``. 
+
+.. COMMENT: Update above?
 
 .. _RestartFiles:
 
@@ -894,6 +893,8 @@ Example of ``${FILEDATE}.coupler.res``:
    2016     1     2    18     0     0    Model start time:   year, month, day, hour, minute, second
    2016     1     2    18     0     0    Current model time: year, month, day, hour, minute, second
 
+.. COMMENT: update example?
+
 DA Workflow Overview
 ************************
  
@@ -977,6 +978,8 @@ Here is an example of configuration settings file, ``settings_cycle``, for the `
    export DA_config06=${DA_config}
    export DA_config12=${DA_config}
    export DA_config18=${DA_config}
+
+.. COMMENT: Update script?
 
 Parameters for ``submit_cycle.sh``
 -------------------------------------

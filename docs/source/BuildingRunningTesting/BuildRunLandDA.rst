@@ -77,6 +77,8 @@ To clone the most recent release, run the same command with ``ufs-land-da-v1.2.0
 
    git clone -b ufs-land-da-v1.2.0 --recursive https://github.com/ufs-community/land-DA_workflow.git
 
+.. _build-land-da:
+
 Build the Land DA System
 ***************************
 
