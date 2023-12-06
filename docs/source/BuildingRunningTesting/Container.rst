@@ -171,10 +171,14 @@ Users on any system may download and untar the data from the `Land DA Data Bucke
 
 .. code-block:: console
 
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/landda-input-data-{YEAR}.tar.gz
-   tar xvfz landda-input-data-{YEAR}.tar.gz
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/Landdav1.2.0_input_data.tar.gz
+   tar xvfz Landdav1.2.0_input_data.tar.gz
 
-replacing ``{YEAR}`` with either ``2016`` or ``2020``. The default name for the untarred file is ``inputs``. 
+If users choose to add data in a location other than ``$LANDDAROOT``, they can link to the data from ``$LANDDAROOT`` by running:
+
+.. code-block:: console
+
+   ln -fs /path/to/inputs
 
 .. _RunContainer:
 
@@ -276,14 +280,26 @@ Users on a system with a Slurm job scheduler will need to make some minor change
 
    #SBATCH --partition=xjet
    
+When using the GSWP3 forcing option, users will need to update line 7 to say ``#SBATCH --cpus-per-task=4``. Users can perform this change manually in a code editor or run:
+
+.. code-block:: console
+
+   sed -i 's/--cpus-per-task=1/--cpus-per-task=4/g' submit_cycle.sh
+
 Save and close the file.
+
+Users must also update the ``MACHINE_ID`` to Orion in ``settings_DA_cycle_gswp3`` if running on Orion. 
+
+.. note::
+   
+   Note that the GSWP3 option will only run as-is on Hera and Orion. Users on other systems may need to make significant changes to configuration files, which is not supported for the |latestr| release. It is recommended that users on these systems use the UFS land driver ERA5 sample experiment set in ``settings_DA_cycle_era5``.
 
 .. _RunExptC:
 
 Run the Experiment
 =====================
 
-The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided four sample ``settings_*`` files as examples: ``settings_DA_cycle_gdas``, ``settings_DA_cycle_era5``, ``settings_DA_cycle_gdas_restart``, and ``settings_DA_cycle_era5_restart``. The ``*restart`` settings files will only work after an experiment with the corresponding non-restart settings file has been run. This is because they are designed to use the restart files created by the first experiment cycle to pick up where it left off. (e.g., ``settings_DA_cycle_gdas`` runs from 2016-01-01 at 18z to 2016-01-03 at 18z. The ``settings_DA_cycle_gdas_restart`` will run from 2016-01-03 at 18z to 2016-01-04 at 18z.)
+The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided two sample ``settings_*`` files as examples: ``settings_DA_cycle_era5`` and ``settings_DA_cycle_gswp3``. 
 
 First, update the ``$BASELINE`` environment variable in the selected ``settings_DA_*`` file to say ``singularity.internal`` instead of ``hera.internal``:
 
@@ -295,7 +311,7 @@ To start the experiment, run:
 
 .. code-block:: console
    
-   ./do_submit_cycle.sh settings_DA_cycle_gdas
+   ./do_submit_cycle.sh settings_DA_cycle_era5
 
 The ``do_submit_cycle.sh`` script will read the ``settings_DA_cycle_*`` file and the ``release.environment`` file, which contain sensible experiment default values to simplify the process of running the workflow for the first time. Advanced users will wish to modify the parameters in ``do_submit_cycle.sh`` to fit their particular needs. After reading the defaults and other variables from the settings files, ``do_submit_cycle.sh`` creates a working directory (named ``workdir`` by default) and an output directory called ``landda_expts`` in the parent directory of ``land-DA_workflow`` and then submits a job (``submit_cycle.sh``) to the queue that will run through the workflow. If all succeeds, users will see ``log`` and ``err`` files created in ``land-DA_workflow`` along with a ``cycle.log`` file, which will show where the cycle has ended. The ``landda_expts`` directory will also be populated with data in the following directories:
 
@@ -305,3 +321,5 @@ The ``do_submit_cycle.sh`` script will read the ``settings_DA_cycle_*`` file and
    landda_expts/DA_GHCN_test/mem000/restarts/vector/
 
 Users can check experiment progress/success according to the instructions in :numref:`Section %s <VerifySuccess>`, which apply to both containerized and non-containerized versions of the Land DA System. 
+
+.. COMMENT: Check that this is still true. 
