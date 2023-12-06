@@ -1,19 +1,22 @@
 # Settings file for submit_cycle, for running the DA_GHCN_test 
 
 # experiment name
-export exp_name=DA_ERA5_test
+export exp_name=DA_GSWP3_test
 #export BASELINE=hera.internal
 
-#ERA5 forcing is available for 2020-2021
-STARTDATE=2019122100
-ENDDATE=2019122200
+#Machine options: orion, hera
+export MACHINE_ID=hera
+
+# experiment period 
+STARTDATE=2000010300
+ENDDATE=2000010400
 
 # Get commmon variables
 source ./release.environment
 ############################
 
 #forcing options: gswp3, era5
-export atmos_forc=era5
+export atmos_forc=gswp3
 
 # for LETKF, this is size of ensemble.
 # for LETKF-OI pseudo ensemble, or non-ensemble runs use 1 

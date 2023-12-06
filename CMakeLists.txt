@@ -55,6 +55,7 @@ ExternalProject_Add(ufs-weather-model
   )
 
 add_subdirectory( vector2tile )
+add_subdirectory( tile2tile )
 add_subdirectory( ufs-land-driver-emc-dev )
 add_subdirectory( DA_update/add_jedi_incr )
 
