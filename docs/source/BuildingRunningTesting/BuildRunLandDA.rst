@@ -71,7 +71,7 @@ Clone the Land DA repository. To clone the ``develop`` branch, run:
 
    git clone -b develop --recursive https://github.com/ufs-community/land-DA_workflow.git
 
-To clone the most recent release, run the same command with ``ufs-land-da-v1.2.0`` in place of ``develop``: 
+To clone the most recent release, run the same command with |tag| in place of ``develop``: 
 
 .. code-block:: console
 
@@ -180,9 +180,7 @@ Users can replace ``settings_DA_cycle_era5`` with a different settings file to r
 Check Progress
 *****************
 
-Verify that the experiment ran successfully:
-   
-To check on the job status, users on a system with a Slurm job scheduler may run: 
+To check on the experiment status, users on a system with a Slurm job scheduler may run: 
 
 .. code-block:: console
 
@@ -194,22 +192,7 @@ To view progress, users can open the ``log*`` and ``err*`` files once they have 
 
    tail -f log* err*
 
-The ``log*`` file for a successful experiment will end with an exit code of ``0:0`` and a message like:
-
-.. code-block:: console
-
-   Job 42442720 (not serial) finished for user User.Name in partition hera with exit code 0:0
-   
-The ``err*`` file for a successful experiment will end with something similar to:
-
-.. code-block:: console
-
-   + THISDATE=2019122200
-   + date_count=1
-   + '[' 1 -lt 1 ']'
-   + '[' 2019122200 -lt 2019122200 ']'
-
-Users will need to type ``Ctrl+C`` to exit the files. 
+Users will need to type ``Ctrl+C`` to exit the files. For examples of what the log and error files should look like in a successful experiment, reference :ref:`ERA5 Experiment Logs <era5-log-output>` or :ref:`GSWP3 Experiment Logs <gswp3-log-output>` below. 
 
 .. attention::
 
@@ -221,8 +204,63 @@ Users will need to type ``Ctrl+C`` to exit the files.
       
    Then, resubmit the job (``sbatch submit_cycle.sh``).
 
-Next, check for the background and analysis files in the ``cycle_land`` directory.
+Next, check for the background and analysis files in the test directory.
 
 .. code-block:: console
 
-   ls -l ../cycle_land/DA_GHCN_test/mem000/restarts/vector/
+   ls -l ../landda_expts/DA_<data_source>_test/mem000/restarts/<vector/tile>``
+
+where: 
+
+   * ``<data_source>`` is either ``era5`` or ``gswp3``, and
+   * ``<vector/tile>`` is either ``vector`` or ``tile`` depending on whether ERA5 or GSWP3 forcing data was used, respectively. 
+
+The experiment should generate several files. 
+
+.. _era5-log-output:
+
+ERA5 Experiment Logs
+=====================
+
+For the ERA5 experiment, the ``log*`` file for a successful experiment will a message like:
+
+.. code-block:: console
+
+   Creating: .//ufs_land_restart.2019-12-22_00-00-00.nc
+   Searching for forcing at time: 2019-12-22 01:00:00
+   
+The ``err*`` file for a successful experiment will end with something similar to:
+
+.. code-block:: console
+
+   + THISDATE=2019122200
+   + date_count=1
+   + '[' 1 -lt 1 ']'
+   + '[' 2019122200 -lt 2019122200 ']'
+
+.. _gswp3-log-output:
+
+GSWP3 Experiment Logs
+=======================
+
+For the GSWP3 experiment, the ``log*`` file for a successful experiment will end with a list of resource statistics. For example:
+
+.. code-block:: console
+
+   Number of times filesystem performed OUTPUT          = 250544
+   Number of Voluntary Context Switches                 = 3252
+   Number of InVoluntary Context Switches               = 183
+   *****************END OF RESOURCE STATISTICS*************************
+   
+The ``err*`` file for a successful experiment will end with something similar to:
+
+.. code-block:: console
+
+   + echo 'do_landDA: calling apply snow increment'
+   + [[ '' =~ hera\.internal ]]
+   + /apps/intel-2022.1.2/intel-2022.1.2/mpi/2021.5.1/bin/mpiexec -n 6 /path/to/land-DA_workflow/build/bin/apply_incr.exe /path/to/landda_expts/DA_GSWP3_test/DA/logs//apply_incr.log
+   + [[ 0 != 0 ]]
+   + '[' YES == YES ']'
+   + '[' YES == YES ']'
+   + cp /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile1.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile2.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile3.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile4.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile5.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile6.nc /path/to/landda_expts/DA_GSWP3_test/DA/jedi_incr/
+   + [[ YES == \N\O ]]
