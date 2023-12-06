@@ -36,7 +36,7 @@ Install Singularity/Apptainer
 
 To build and run Land DA using a Singularity/Apptainer container, first install the software according to the `Apptainer Installation Guide <https://apptainer.org/docs/admin/1.2/installation.html>`__. This will include the installation of all dependencies. 
 
-.. note:: 
+.. attention:: 
    Docker containers can only be run with root privileges, and users generally do not have root privileges on :term:`HPCs <HPC>`. However, a Singularity image may be built directly from a Docker image for use on the system.
 
 .. _DownloadContainer:
@@ -85,19 +85,15 @@ Set a top-level directory location for Land DA work, and navigate to it. For exa
    cd /path/to/landda
    export LANDDAROOT=`pwd`
 
-where ``/path/to/landda`` is the path to this top-level directory (e.g., ``/Users/Joe.Schmoe/landda``). The second line will create the directory if it does not exist yet. 
+where ``/path/to/landda`` is the path to this top-level directory (e.g., ``/Users/Joe.Schmoe/landda``). 
 
 .. hint::
-   If a ``singularity: command not found`` error message appears in any of the following steps, try running: ``module load singularity``.
+   If a ``singularity: command not found`` error message appears in any of the following steps, try running: ``module load singularity`` or (on Derecho) ``module load apptainer``.
 
 NOAA RDHPCS Systems
 ----------------------
 
 On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-landda-release-public-v1.2.0.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
-
-.. note::
-
-   The |latestr| release container is named 
 
 .. _PreBuiltContainers:
 
@@ -106,18 +102,16 @@ On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-landd
    +--------------+--------------------------------------------------------+
    | Machine      | File location                                          |
    +==============+========================================================+
-   | Derecho      | /glade/scratch/epicufsrt/containers                    |
+   | Derecho      | /glade/work/epicufsrt/contrib/containers               |
    +--------------+--------------------------------------------------------+
-   | Gaea         |                                                        |
+   | Gaea         | /lustre/f2/dev/role.epic/contrib/containers            |
    +--------------+--------------------------------------------------------+
    | Hera         | /scratch1/NCEPDEV/nems/role.epic/containers            |
    +--------------+--------------------------------------------------------+
    | Jet          | /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers            |
    +--------------+--------------------------------------------------------+
-   | Orion        | /work/noaa/epic/role-epic-ps/containers                |
+   | Orion        | /work/noaa/epic/role-epic/contrib/containers           |
    +--------------+--------------------------------------------------------+
-
-.. COMMENT: Update!
 
 Users can simply set an environment variable to point to the container: 
 
@@ -131,8 +125,6 @@ If users prefer, they may copy the container to their local working directory. F
 
    cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-landda-release-public-v1.2.0.img .
 
-.. COMMENT: Check that dev container will be on Jet...
-
 Other Systems
 ----------------
 
@@ -144,15 +136,11 @@ To download from the data bucket, users can run:
 
    wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/ubuntu20.04-intel-landda-release-public-v1.2.0.img
 
-.. COMMENT: Update path!
-
 To build the container from a Docker image, users can run:
 
 .. code-block:: console
 
-   singularity build --force ubuntu20.04-intel-landda-release-public-v1.2.0.img docker://noaaepic/ubuntu20.04-intel-landda:develop
-
-.. COMMENT: Check/fix pull command to reflect v1.2.0 instead of develop!
+   singularity build --force ubuntu20.04-intel-landda-release-public-v1.2.0.img docker://noaaepic/ubuntu20.04-intel-landda:release-public-v1.2.0
 
 This process may take several hours depending on the system. 
 
@@ -165,7 +153,7 @@ This process may take several hours depending on the system.
 Get Data
 ***********
 
-In order to run the Land DA System, users will need input data in the form of fix files, model forcing files, restart files, and observations for data assimilation. These files are already present on NOAA RDHPCS systems (see :numref:`Section %s <Level1Data>` for details). 
+In order to run the Land DA System, users will need input data in the form of fix files, model forcing files, restart files, and observations for data assimilation. These files are already present on Level 1 systems (see :numref:`Section %s <Level1Data>` for details). 
 
 Users on any system may download and untar the data from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__ into their ``$LANDDAROOT`` directory. 
 
@@ -178,7 +166,9 @@ If users choose to add data in a location other than ``$LANDDAROOT``, they can l
 
 .. code-block:: console
 
-   ln -fs /path/to/inputs
+   ln -fs /path/to/input/data
+
+where ``/path/to/input/data`` is replaced by the absolute path to the location of their Land DA input data. 
 
 .. _RunContainer:
 
@@ -210,7 +200,7 @@ Set the ``USE_SINGULARITY`` environment variable to "yes".
 
 This variable tells the workflow to use the containerized version of all the executables (including python) when running a cycle. 
 
-Users may convert a container ``.img`` file to a writable sandbox. This step is required when running on Cheyenne but is optional on most other systems:
+Users may convert a container ``.img`` file to a writable sandbox. This step is optional on most systems:
 
 .. code-block:: console
 

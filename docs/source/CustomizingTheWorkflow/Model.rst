@@ -51,7 +51,7 @@ Users can view file information and notes for NetCDF files using the ``ncdump`` 
 
 .. code-block:: console
 
-   module load intel/2022.2.0 impi/2022.2.0 netcdf/4.7.0
+   module load intel/2022.1.2 impi/2022.1.2 netcdf/4.7.4
 
 To view information on the variables contained in a :term:`netCDF` file, users can run ``ncdump -h filename.nc``. Users will need to replace ``filename.nc`` with the actual name of the file they want to view. For example: 
 

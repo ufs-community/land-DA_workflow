@@ -141,6 +141,8 @@ the UFS Land DA System.
    |                          | Community Physics Package (CCPP)        |                                                      |
    |                          |                                         |                                                      |
    +--------------------------+-----------------------------------------+------------------------------------------------------+
+   | land-vector2tile         | Contains code to map between the vector | https://github.com/NOAA-PSL/land-vector2tile         |
+   +--------------------------+-----------------------------------------+------------------------------------------------------+
 
 The UFS Land Component
 =========================
