@@ -79,9 +79,7 @@ def setup(app):
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-   'jedi-oops': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0', None),
-   'jedi-ioda': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/', None),
-   'jedi-ufo': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/', None),
+   'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0', None),
    'spack-stack': ('https://spack-stack.readthedocs.io/en/1.3.0/', None),
    'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/latest/', None),
    'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/', None),

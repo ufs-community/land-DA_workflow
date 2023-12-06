@@ -108,8 +108,10 @@ On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-ue-la
    +--------------+--------------------------------------------------------+
    | Jet          | /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers            |
    +--------------+--------------------------------------------------------+
-   | Orion        | /work/noaa/epic-ps/role-epic-ps/containers             |
+   | Orion        | /work/noaa/epic/role-epic-ps/containers                |
    +--------------+--------------------------------------------------------+
+
+.. COMMENT: Update!
 
 .. note::
    Singularity is not available on Gaea, and therefore, container use is not supported on Gaea. 
@@ -118,7 +120,7 @@ Users can simply set an environment variable to point to the container:
 
 .. code-block:: console
 
-   export img=path/to/ubuntu20.04-intel-ue-landda.img
+   export img=path/to/ubuntu20.04-intel-ue-1.3.0-landda-dev.img
 
 If users prefer, they may copy the container to their local working directory. For example, on Jet:
 
@@ -129,13 +131,15 @@ If users prefer, they may copy the container to their local working directory. F
 Other Systems
 ----------------
 
-On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-landda.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.0.0`` container rather than the updated ``develop`` branch container. 
+On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-landda.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.2.0`` container rather than the updated ``develop`` branch container. 
 
 To download from the data bucket, users can run:
 
 .. code-block:: console
 
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/ubuntu20.04-intel-landda.img
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/ubuntu20.04-intel-ue-1.3.0-landda-dev.img
+
+.. COMMENT: Update path!
 
 To build the container from a Docker image, users can run:
 
