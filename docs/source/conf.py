@@ -47,6 +47,7 @@ pygments_style = 'sphinx'
 
 rst_prolog = """
 .. |latestr| replace:: v1.2.0
+.. |tag| replace:: ``ufs-land-da-v1.2.0``
 """
 
 # -- Options for HTML output -------------------------------------------------

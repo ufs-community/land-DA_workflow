@@ -159,14 +159,15 @@ Users on any system may download and untar the data from the `Land DA Data Bucke
 
 .. code-block:: console
 
+   cd $LANDDAROOT
    wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/Landdav1.2.0_input_data.tar.gz
    tar xvfz Landdav1.2.0_input_data.tar.gz
 
-If users choose to add data in a location other than ``$LANDDAROOT``, they can link to the data from ``$LANDDAROOT`` by running:
+If users choose to add data in a location other than ``$LANDDAROOT``, they can set the input data directory by running:
 
 .. code-block:: console
 
-   ln -fs /path/to/input/data
+   export LANDDA_INPUTS=/path/to/input/data
 
 where ``/path/to/input/data`` is replaced by the absolute path to the location of their Land DA input data. 
 
@@ -264,6 +265,9 @@ When using a Singularity container, Intel compilers and Intel :term:`MPI` (prefe
 Configure the Experiment
 ===========================
 
+Modify Machine Settings
+------------------------
+
 Users on a system with a Slurm job scheduler will need to make some minor changes to the ``submit_cycle.sh`` file. Open the file and change the account and queue (qos) to match the desired account and qos on the system. Users may also need to add the following line to the script to specify the partition. For example, on Jet, users should set: 
 
 .. code-block:: console
@@ -278,24 +282,27 @@ When using the GSWP3 forcing option, users will need to update line 7 to say ``#
 
 Save and close the file.
 
-Users must also update the ``MACHINE_ID`` to Orion in ``settings_DA_cycle_gswp3`` if running on Orion. 
-
-.. note::
-   
-   Note that the GSWP3 option will only run as-is on Hera and Orion. Users on other systems may need to make significant changes to configuration files, which is not supported for the |latestr| release. It is recommended that users on these systems use the UFS land driver ERA5 sample experiment set in ``settings_DA_cycle_era5``.
-
-.. _RunExptC:
-
-Run the Experiment
-=====================
+Modify Experiment Settings
+---------------------------
 
 The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided two sample ``settings_*`` files as examples: ``settings_DA_cycle_era5`` and ``settings_DA_cycle_gswp3``. 
+
+.. attention::
+   
+   Note that the GSWP3 option will only run as-is on Hera and Orion. Users on other systems may need to make significant changes to configuration files, which is not a supported option for the |latestr| release. It is recommended that users on these systems use the UFS land driver ERA5 sample experiment set in ``settings_DA_cycle_era5``.
 
 First, update the ``$BASELINE`` environment variable in the selected ``settings_DA_*`` file to say ``singularity.internal`` instead of ``hera.internal``:
 
 .. code-block:: console
 
    export BASELINE=singularity.internal
+
+When using the GSWP3 forcing option, users must also update the ``MACHINE_ID`` to ``orion`` in ``settings_DA_cycle_gswp3`` if running on Orion. 
+
+.. _RunExptC:
+
+Run the Experiment
+=====================
 
 To start the experiment, run: 
 
@@ -309,7 +316,8 @@ The ``do_submit_cycle.sh`` script will read the ``settings_DA_cycle_*`` file and
 
    landda_expts/DA_GHCN_test/DA/
    landda_expts/DA_GHCN_test/mem000/restarts/vector/
+   landda_expts/DA_GHCN_test/mem000/restarts/tile/
+
+Depending on the experiment, either the ``vector`` or the ``tile`` directory will have data, but not both. 
 
 Users can check experiment progress/success according to the instructions in :numref:`Section %s <VerifySuccess>`, which apply to both containerized and non-containerized versions of the Land DA System. 
-
-.. COMMENT: Check that this is still true. 

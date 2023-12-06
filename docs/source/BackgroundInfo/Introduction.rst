@@ -11,18 +11,18 @@ Thus, this User's Guide focuses primarily on the snow DA process.
 
 Since the last release, developers have added a variety of features:
 
-* Integration of the UFS Noah-MP land component into the Land DA System for use as an alternative to the Common Community Physics Package (CCPP) Noah-MP LSM land driver
+* Integration of the UFS Noah-MP land component into the Land DA System for use as an alternative to the Common Community Physics Package (:term:`CCPP`) Noah-MP LSM land driver
 * Model forcing options for use with the UFS land component:
 
-   * Provided a new analysis option in the cubed-sphere native grid using GSWP3 forcing
+   * Provided a new analysis option in the cubed-sphere native grid using :term:`GSWP3` forcing
    * Established global land grid-point consistency with the head of the UFS WM baseline test cases (New global land grid point is changed from 18360 to 18322.)
    * Added a new sample configuration file (``settings_DA_cycle_gswp3``)
-   * Included an additional ECMWF ERA5 reanalysis forcing option in the existing vector-to-tile conversion analysis process
+   * Included a new ECMWF :term:`ERA5` reanalysis forcing option in the existing vector-to-tile conversion analysis process
 
 * CTest suite upgrades --- the ERA5 CTests now test the operability of seven major components of Land DA: vector2tile, create_ens, letkfoi_snowda, apply_jediincr, tile2vector, land_driver, and UFS datm_land.
 * Upgrade of JEDI :term:`DA <data assimilation>` framework to use JEDI Skylab v4.0 (`PR #28 <https://github.com/ufs-community/land-DA_workflow/pull/28>`__)
 * Updates to sample datasets for the release (see the `Land DA data bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__)
-* Singularity/Apptainer container (``ubuntu20.04-intel-ue-landda-v1.2.0.img``) updates to support the changes described above
+* Singularity/Apptainer container (``ubuntu20.04-intel-landda-release-public-v1.2.0``) updates to support the changes described above
 * Documentation updates to reflect the changes above
 
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
@@ -43,7 +43,7 @@ Background Information
 Building, Running, and Testing the Land DA System
 ===================================================
 
-   * :numref:`Chapter %s: Land DA Workflow (for Hera & Orion) <BuildRunLandDA>` explains how to build and run the Land DA System on :ref:`Level 1 <LevelsOfSupport>` systems (currently Hera and Orion).
+   * :numref:`Chapter %s: Land DA Workflow <BuildRunLandDA>` explains how to build and run the Land DA System on :ref:`Level 1 <LevelsOfSupport>` systems (currently Hera and Orion).
    * :numref:`Chapter %s: Containerized Land DA Workflow <Container>` explains how to build and run the containerized Land DA System on non-Level 1 systems. 
    * :numref:`Chapter %s: Testing the Land DA Workflow <TestingLandDA>` explains how to run the Land DA CTests. 
 
@@ -68,7 +68,7 @@ The Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-
 
 When posting a question, it is recommended that users provide the following information: 
 
-* The platform or system being used (e.g., Hera, Orion, MacOS, Linux)
+* The platform or system being used (e.g., Hera, Orion, container, MacOS, Linux)
 * The version of the Land DA System being used (e.g., ``develop``, ``release/public-v1.1.0``). (To determine this, users can run ``git branch``, and the name of the branch with an asterisk ``*`` in front of it is the name of the branch or tag they are working with.) Note that the Land DA version being used and the version of the documentation being used should match, or users will run into difficulties.
 * Stage of the application when the issue appeared (i.e., build/compilation, configuration, or forecast run)
 * Contents of relevant configuration files
@@ -99,10 +99,7 @@ Background Information
 Unified Forecast System (UFS)
 ===============================
 
-The UFS is a community-based, coupled, comprehensive Earth modeling system. It includes `multiple applications <https://ufscommunity.org/science/aboutapps/>`__ that support different forecast durations and spatial domains. NOAA's operational model suite for numerical weather prediction (:term:`NWP`) is quickly transitioning to the UFS from many different modeling systems. For example, the UFS-based Global Forecast System
-(`GFS <https://www.emc.ncep.noaa.gov/emc/pages/numerical_forecast_systems/gfs.php>`__)
-and the Global Ensemble Forecast System
-(`GEFS <https://www.emc.ncep.noaa.gov/emc/pages/numerical_forecast_systems/gefs.php>`__) are currently in operational use.
+The UFS is a community-based, coupled, comprehensive Earth modeling system. It includes `multiple applications <https://ufscommunity.org/science/aboutapps/>`__ that support different forecast durations and spatial domains. NOAA's operational model suite for numerical weather prediction (:term:`NWP`) is quickly transitioning to the UFS from many different modeling systems. 
 The UFS is designed to enable research, development, and contribution
 opportunities within the broader :term:`Weather Enterprise` (including
 government, industry, and academia). For more information about the UFS, visit the `UFS Portal <https://ufscommunity.org/>`__.
