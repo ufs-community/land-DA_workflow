@@ -35,8 +35,6 @@ Users can download the data and untar the file via the command line:
    wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/Landdav1.2.0_input_data.tar.gz
    tar xvfz Landdav1.2.0_input_data.tar.gz
 
-.. COMMENT: Make sure data is moved!!!
-
 These files and their parameters are described in the following subsections.
 
 .. note::
@@ -70,7 +68,15 @@ Alternatively, users on Level 1 platforms can load the Land DA environment, whic
 Input Files for the ``DATM`` + ``LND`` Configuration with GSWP3 data
 ======================================================================
 
+With the integration of the UFS Noah-MP land component into the Land DA System in the v1.2.0 release, model forcing options have been enhanced so that users can run the UFS land component (:term:`LND`) with the data atmosphere component (:term:`DATM`). Updates provide a new analysis option on the cubed-sphere native grid using :term:`GSWP3` forcing data to run a single-day experiment for 2000-01-03. An artificial GHCN snow depth observation is provided for data assimilation (see :numref:`Section %s <observation-data>` for more on GHCN files). The GHCN observations will be extended in the near future. A new configuration setting file is also provided (``settings_DA_cycle_gswp3``). 
+
 On Level 1 platforms, the requisite data is pre-staged at the locations listed in :numref:`Section %s <Level1Data>`. The data are also publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. 
+
+.. attention::
+
+   The DATM + LND option is only supported on Level 1 systems (i.e., Hera and Orion). It is not tested or supported using a container. 
+
+.. COMMENT: Check that this is true... 
 
 Forcing Files
 ---------------
