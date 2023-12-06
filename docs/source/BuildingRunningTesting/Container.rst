@@ -8,8 +8,8 @@ These instructions will help users build and run a basic case for the Unified Fo
 
 This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (:term:`UFS`) Land DA System. Users can choose between two options: 
 
-   * A Dec. 21, 2019 00z sample case using ERA5 data with the UFS Land Driver (``settings_DA_cycle_era5``)
-   * A Jan. 3, 2000 00z sample case using GSWP3 data with the UFS Noah-MP land component (``settings_DA_cycle_gswp3``). 
+   * A Dec. 21, 2019 00z sample case using :term:`ERA5` data with the UFS Land Driver (``settings_DA_cycle_era5``)
+   * A Jan. 3, 2000 00z sample case using :term:`GSWP3` data with the UFS Noah-MP land component (``settings_DA_cycle_gswp3``). 
 
 .. attention::
 
@@ -81,9 +81,9 @@ Set a top-level directory location for Land DA work, and navigate to it. For exa
 
 .. code-block:: console 
 
-   export LANDDAROOT=/path/to/landda
-   [[ -d $LANDDAROOT ]] || mkdir -p $LANDDAROOT 
-   cd $LANDDAROOT
+   mkdir /path/to/landda
+   cd /path/to/landda
+   export LANDDAROOT=`pwd`
 
 where ``/path/to/landda`` is the path to this top-level directory (e.g., ``/Users/Joe.Schmoe/landda``). The second line will create the directory if it does not exist yet. 
 
@@ -93,7 +93,11 @@ where ``/path/to/landda`` is the path to this top-level directory (e.g., ``/User
 NOAA RDHPCS Systems
 ----------------------
 
-On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-ue-landda.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
+On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-landda-release-public-v1.2.0.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
+
+.. note::
+
+   The |latestr| release container is named 
 
 .. _PreBuiltContainers:
 
@@ -102,7 +106,9 @@ On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-ue-la
    +--------------+--------------------------------------------------------+
    | Machine      | File location                                          |
    +==============+========================================================+
-   | Cheyenne     | /glade/scratch/epicufsrt/containers                    |
+   | Derecho      | /glade/scratch/epicufsrt/containers                    |
+   +--------------+--------------------------------------------------------+
+   | Gaea         |                                                        |
    +--------------+--------------------------------------------------------+
    | Hera         | /scratch1/NCEPDEV/nems/role.epic/containers            |
    +--------------+--------------------------------------------------------+
@@ -113,31 +119,30 @@ On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-ue-la
 
 .. COMMENT: Update!
 
-.. note::
-   Singularity is not available on Gaea, and therefore, container use is not supported on Gaea. 
-
 Users can simply set an environment variable to point to the container: 
 
 .. code-block:: console
 
-   export img=path/to/ubuntu20.04-intel-ue-1.3.0-landda-dev.img
+   export img=path/to/ubuntu20.04-intel-landda-release-public-v1.2.0.img
 
 If users prefer, they may copy the container to their local working directory. For example, on Jet:
 
 .. code-block:: console
 
-   cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-ue-landda.img .
+   cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-landda-release-public-v1.2.0.img .
+
+.. COMMENT: Check that dev container will be on Jet...
 
 Other Systems
 ----------------
 
-On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-landda.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.2.0`` container rather than the updated ``develop`` branch container. 
+On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-landda-release-public-v1.2.0.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.2.0`` container rather than the updated ``develop`` branch container. 
 
 To download from the data bucket, users can run:
 
 .. code-block:: console
 
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/ubuntu20.04-intel-ue-1.3.0-landda-dev.img
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/ubuntu20.04-intel-landda-release-public-v1.2.0.img
 
 .. COMMENT: Update path!
 
@@ -145,7 +150,9 @@ To build the container from a Docker image, users can run:
 
 .. code-block:: console
 
-   singularity build --force ubuntu20.04-intel-ue-landda.img docker://noaaepic/ubuntu20.04-intel-ue-landda:unified-dev-testmp
+   singularity build --force ubuntu20.04-intel-landda-release-public-v1.2.0.img docker://noaaepic/ubuntu20.04-intel-landda:develop
+
+.. COMMENT: Check/fix pull command to reflect v1.2.0 instead of develop!
 
 This process may take several hours depending on the system. 
 
@@ -189,7 +196,7 @@ Save the location of the container in an environment variable.
 
 .. code-block:: console
 
-   export img=path/to/ubuntu20.04-intel-ue-landda.img
+   export img=path/to/ubuntu20.04-intel-landda-release-public-v1.2.0.img
 
 Set the ``USE_SINGULARITY`` environment variable to "yes". 
 
@@ -203,14 +210,14 @@ Users may convert a container ``.img`` file to a writable sandbox. This step is 
 
 .. code-block:: console
 
-   singularity build --sandbox ubuntu20.04-intel-ue-landda $img
+   singularity build --sandbox ubuntu20.04-intel-landda-release-public-v1.2.0 $img
 
 When making a writable sandbox on NOAA RDHPCS systems, the following warnings commonly appear and can be ignored:
 
 .. code-block:: console
 
    INFO:    Starting build...
-   INFO:    Verifying bootstrap image ubuntu20.04-intel-ue-landda.img
+   INFO:    Verifying bootstrap image ubuntu20.04-intel-landda-release-public-v1.2.0.img
    WARNING: integrity: signature not found for object group 1
    WARNING: Bootstrap image could not be verified, but build will continue.
 
