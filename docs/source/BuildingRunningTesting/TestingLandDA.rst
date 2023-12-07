@@ -28,7 +28,7 @@ This will allocate a compute node, load the appropriate modulefiles, and run the
 Tests
 *******
 
-The ERA5 CTests test the operability of seven major components of Land DA: ``vector2tile``, ``create_ens``, ``letkfoi_snowda``, ``apply_jediincr``, ``tile2vector``, ``land_driver``, and ``ufs_datm_land``. The tests and their dependencies are listed in the ``land-DA_workflow/test/CMakeLists.txt`` file. Currently, the CTests are only run on Hera and Orion; they cannot yet be run via container. 
+The ERA5 CTests test the operability of seven major elements of the Land DA System: ``vector2tile``, ``create_ens``, ``letkfoi_snowda``, ``apply_jediincr``, ``tile2vector``, ``land_driver``, and ``ufs_datm_land``. The tests and their dependencies are listed in the ``land-DA_workflow/test/CMakeLists.txt`` file. Currently, the CTests are only run on Hera and Orion; they cannot yet be run via container. 
 
 .. list-table:: *Land DA CTests*
    :widths: 20 50
