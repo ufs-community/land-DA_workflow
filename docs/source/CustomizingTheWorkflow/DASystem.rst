@@ -935,7 +935,7 @@ Next, the system designates work and output directories and copies restart files
 
    The |latestr| release of Land DA does not support ensemble runs. Thus, the first ensemble member (``mem000``) is the only ensemble member. 
 
-Here is an example of the configuration settings file, ``settings_DA_cycle_*``, for the ``submit_cycle.sh`` script:
+Here is an example of a configuration settings file, ``settings_DA_cycle_era5``, for the ``submit_cycle.sh`` script:
 
 .. code-block:: console
    
