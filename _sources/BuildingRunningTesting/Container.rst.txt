@@ -4,9 +4,12 @@
 Containerized Land DA Workflow
 **********************************
 
-These instructions will help users build and run a basic case for the Unified Forecast System (:term:`UFS`) Land Data Assimilation (DA) System using a `Singularity <https://docs.sylabs.io/guides/latest/user-guide/>`__ container. The Land DA :term:`container` packages together the Land DA System with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform environment in which to build and run the Land DA System. Normally, the details of building and running Earth systems models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, :term:`MPIs <MPI>`, and package versions available. Installation via Singularity container reduces this variability and allows for a smoother experience building and running Land DA. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (i.e., Hera, Orion). 
+These instructions will help users build and run a basic case for the Unified Forecast System (:term:`UFS`) Land Data Assimilation (DA) System using a `Singularity/Apptainer <https://apptainer.org/docs/user/main/>`__ container. The Land DA :term:`container` packages together the Land DA System with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform environment in which to build and run the Land DA System. Normally, the details of building and running Earth systems models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, :term:`MPIs <MPI>`, and package versions available. Installation via Singularity/Apptainer container reduces this variability and allows for a smoother experience building and running Land DA. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (i.e., Hera, Orion). 
 
-The out-of-the-box Land DA case described in this User's Guide builds a weather forecast for January 1, 2016 at 18z to January 3, 2016 at 18z. 
+This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (:term:`UFS`) Land DA System. Users can choose between two options: 
+
+   * A Dec. 21, 2019 00z sample case using :term:`ERA5` data with the UFS Land Driver (``settings_DA_cycle_era5``)
+   * A Jan. 3, 2000 00z sample case using :term:`GSWP3` data with the UFS Noah-MP land component (``settings_DA_cycle_gswp3``). 
 
 .. attention::
 
@@ -19,17 +22,21 @@ Prerequisites
 
 The containerized version of Land DA requires: 
 
-   * `Installation of Singularity <https://docs.sylabs.io/guides/latest/user-guide/quick_start.html>`__
+   * `Installation of Apptainer <https://apptainer.org/docs/admin/1.2/installation.html>`__
    * At least 6 CPU cores
    * An **Intel** compiler and :term:`MPI` (available for free `here <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`__) 
 
 
-Install Singularity
-======================
+Install Singularity/Apptainer
+===============================
 
-To build and run Land DA using a Singularity container, first install the Singularity package according to the `Singularity Installation Guide <https://docs.sylabs.io/guides/latest/user-guide/quick_start.html#quick-installation-steps>`__. This will include the installation of dependencies and the installation of the Go programming language. SingularityCE Version 3.7 or above is recommended. 
+.. note::
 
-.. note:: 
+   As of November 2021, the Linux-supported version of Singularity has been `renamed <https://apptainer.org/news/community-announcement-20211130/>`__ to *Apptainer*. Apptainer has maintained compatibility with Singularity, so ``singularity`` commands should work with either Singularity or Apptainer (see compatibility details `here <https://apptainer.org/docs/user/1.2/introduction.html>`__.)
+
+To build and run Land DA using a Singularity/Apptainer container, first install the software according to the `Apptainer Installation Guide <https://apptainer.org/docs/admin/1.2/installation.html>`__. This will include the installation of all dependencies. 
+
+.. attention:: 
    Docker containers can only be run with root privileges, and users generally do not have root privileges on :term:`HPCs <HPC>`. However, a Singularity image may be built directly from a Docker image for use on the system.
 
 .. _DownloadContainer:
@@ -74,19 +81,19 @@ Set a top-level directory location for Land DA work, and navigate to it. For exa
 
 .. code-block:: console 
 
-   export LANDDAROOT=/path/to/landda
-   [[ -d $LANDDAROOT ]] || mkdir -p $LANDDAROOT 
-   cd $LANDDAROOT
+   mkdir /path/to/landda
+   cd /path/to/landda
+   export LANDDAROOT=`pwd`
 
-where ``/path/to/landda`` is the path to this top-level directory (e.g., ``/Users/Joe.Schmoe/landda``). The second line will create the directory if it does not exist yet. 
+where ``/path/to/landda`` is the path to this top-level directory (e.g., ``/Users/Joe.Schmoe/landda``). 
 
 .. hint::
-   If a ``singularity: command not found`` error message appears in any of the following steps, try running: ``module load singularity``.
+   If a ``singularity: command not found`` error message appears in any of the following steps, try running: ``module load singularity`` or (on Derecho) ``module load apptainer``.
 
 NOAA RDHPCS Systems
 ----------------------
 
-On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-ue-landda.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
+On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-landda-release-public-v1.2.0.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
 
 .. _PreBuiltContainers:
 
@@ -95,46 +102,45 @@ On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-ue-la
    +--------------+--------------------------------------------------------+
    | Machine      | File location                                          |
    +==============+========================================================+
-   | Cheyenne     | /glade/scratch/epicufsrt/containers                    |
+   | Derecho      | /glade/work/epicufsrt/contrib/containers               |
+   +--------------+--------------------------------------------------------+
+   | Gaea         | /lustre/f2/dev/role.epic/contrib/containers            |
    +--------------+--------------------------------------------------------+
    | Hera         | /scratch1/NCEPDEV/nems/role.epic/containers            |
    +--------------+--------------------------------------------------------+
    | Jet          | /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers            |
    +--------------+--------------------------------------------------------+
-   | Orion        | /work/noaa/epic-ps/role-epic-ps/containers             |
+   | Orion        | /work/noaa/epic/role-epic/contrib/containers           |
    +--------------+--------------------------------------------------------+
-
-.. note::
-   Singularity is not available on Gaea, and therefore, container use is not supported on Gaea. 
 
 Users can simply set an environment variable to point to the container: 
 
 .. code-block:: console
 
-   export img=path/to/ubuntu20.04-intel-ue-landda.img
+   export img=path/to/ubuntu20.04-intel-landda-release-public-v1.2.0.img
 
 If users prefer, they may copy the container to their local working directory. For example, on Jet:
 
 .. code-block:: console
 
-   cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-ue-landda.img .
+   cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-landda-release-public-v1.2.0.img .
 
 Other Systems
 ----------------
 
-On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-landda.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.0.0`` container rather than the updated ``develop`` branch container. 
+On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-landda-release-public-v1.2.0.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.2.0`` container rather than the updated ``develop`` branch container. 
 
 To download from the data bucket, users can run:
 
 .. code-block:: console
 
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/ubuntu20.04-intel-landda.img
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/ubuntu20.04-intel-landda-release-public-v1.2.0.img
 
 To build the container from a Docker image, users can run:
 
 .. code-block:: console
 
-   singularity build --force ubuntu20.04-intel-ue-landda.img docker://noaaepic/ubuntu20.04-intel-ue-landda:unified-dev-testmp
+   singularity build --force ubuntu20.04-intel-landda-release-public-v1.2.0.img docker://noaaepic/ubuntu20.04-intel-landda:release-public-v1.2.0
 
 This process may take several hours depending on the system. 
 
@@ -147,16 +153,23 @@ This process may take several hours depending on the system.
 Get Data
 ***********
 
-In order to run the Land DA System, users will need input data in the form of fix files, model forcing files, restart files, and observations for data assimilation. These files are already present on NOAA RDHPCS systems (see :numref:`Section %s <Level1Data>` for details). 
+In order to run the Land DA System, users will need input data in the form of fix files, model forcing files, restart files, and observations for data assimilation. These files are already present on Level 1 systems (see :numref:`Section %s <Level1Data>` for details). 
 
 Users on any system may download and untar the data from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__ into their ``$LANDDAROOT`` directory. 
 
 .. code-block:: console
 
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/landda-input-data-{YEAR}.tar.gz
-   tar xvfz landda-input-data-{YEAR}.tar.gz
+   cd $LANDDAROOT
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/Landdav1.2.0_input_data.tar.gz
+   tar xvfz Landdav1.2.0_input_data.tar.gz
 
-replacing ``{YEAR}`` with either ``2016`` or ``2020``. The default name for the untarred file is ``inputs``. 
+If users choose to add data in a location other than ``$LANDDAROOT``, they can set the input data directory by running:
+
+.. code-block:: console
+
+   export LANDDA_INPUTS=/path/to/input/data
+
+where ``/path/to/input/data`` is replaced by the absolute path to the location of their Land DA input data. 
 
 .. _RunContainer:
 
@@ -178,7 +191,7 @@ Save the location of the container in an environment variable.
 
 .. code-block:: console
 
-   export img=path/to/ubuntu20.04-intel-ue-landda.img
+   export img=path/to/ubuntu20.04-intel-landda-release-public-v1.2.0.img
 
 Set the ``USE_SINGULARITY`` environment variable to "yes". 
 
@@ -188,18 +201,18 @@ Set the ``USE_SINGULARITY`` environment variable to "yes".
 
 This variable tells the workflow to use the containerized version of all the executables (including python) when running a cycle. 
 
-Users may convert a container ``.img`` file to a writable sandbox. This step is required when running on Cheyenne but is optional on most other systems:
+Users may convert a container ``.img`` file to a writable sandbox. This step is optional on most systems:
 
 .. code-block:: console
 
-   singularity build --sandbox ubuntu20.04-intel-ue-landda $img
+   singularity build --sandbox ubuntu20.04-intel-landda-release-public-v1.2.0 $img
 
 When making a writable sandbox on NOAA RDHPCS systems, the following warnings commonly appear and can be ignored:
 
 .. code-block:: console
 
    INFO:    Starting build...
-   INFO:    Verifying bootstrap image ubuntu20.04-intel-ue-landda.img
+   INFO:    Verifying bootstrap image ubuntu20.04-intel-landda-release-public-v1.2.0.img
    WARNING: integrity: signature not found for object group 1
    WARNING: Bootstrap image could not be verified, but build will continue.
 
@@ -252,20 +265,31 @@ When using a Singularity container, Intel compilers and Intel :term:`MPI` (prefe
 Configure the Experiment
 ===========================
 
+Modify Machine Settings
+------------------------
+
 Users on a system with a Slurm job scheduler will need to make some minor changes to the ``submit_cycle.sh`` file. Open the file and change the account and queue (qos) to match the desired account and qos on the system. Users may also need to add the following line to the script to specify the partition. For example, on Jet, users should set: 
 
 .. code-block:: console
 
    #SBATCH --partition=xjet
    
+When using the GSWP3 forcing option, users will need to update line 7 to say ``#SBATCH --cpus-per-task=4``. Users can perform this change manually in a code editor or run:
+
+.. code-block:: console
+
+   sed -i 's/--cpus-per-task=1/--cpus-per-task=4/g' submit_cycle.sh
+
 Save and close the file.
 
-.. _RunExptC:
+Modify Experiment Settings
+---------------------------
 
-Run the Experiment
-=====================
+The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided two sample ``settings_*`` files as examples: ``settings_DA_cycle_era5`` and ``settings_DA_cycle_gswp3``. 
 
-The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided four sample ``settings_*`` files as examples: ``settings_DA_cycle_gdas``, ``settings_DA_cycle_era5``, ``settings_DA_cycle_gdas_restart``, and ``settings_DA_cycle_era5_restart``. The ``*restart`` settings files will only work after an experiment with the corresponding non-restart settings file has been run. This is because they are designed to use the restart files created by the first experiment cycle to pick up where it left off. (e.g., ``settings_DA_cycle_gdas`` runs from 2016-01-01 at 18z to 2016-01-03 at 18z. The ``settings_DA_cycle_gdas_restart`` will run from 2016-01-03 at 18z to 2016-01-04 at 18z.)
+.. attention::
+   
+   Note that the GSWP3 option will only run as-is on Hera and Orion. Users on other systems may need to make significant changes to configuration files, which is not a supported option for the |latestr| release. It is recommended that users on these systems use the UFS land driver ERA5 sample experiment set in ``settings_DA_cycle_era5``.
 
 First, update the ``$BASELINE`` environment variable in the selected ``settings_DA_*`` file to say ``singularity.internal`` instead of ``hera.internal``:
 
@@ -273,11 +297,18 @@ First, update the ``$BASELINE`` environment variable in the selected ``settings_
 
    export BASELINE=singularity.internal
 
+When using the GSWP3 forcing option, users must also update the ``MACHINE_ID`` to ``orion`` in ``settings_DA_cycle_gswp3`` if running on Orion. 
+
+.. _RunExptC:
+
+Run the Experiment
+=====================
+
 To start the experiment, run: 
 
 .. code-block:: console
    
-   ./do_submit_cycle.sh settings_DA_cycle_gdas
+   ./do_submit_cycle.sh settings_DA_cycle_era5
 
 The ``do_submit_cycle.sh`` script will read the ``settings_DA_cycle_*`` file and the ``release.environment`` file, which contain sensible experiment default values to simplify the process of running the workflow for the first time. Advanced users will wish to modify the parameters in ``do_submit_cycle.sh`` to fit their particular needs. After reading the defaults and other variables from the settings files, ``do_submit_cycle.sh`` creates a working directory (named ``workdir`` by default) and an output directory called ``landda_expts`` in the parent directory of ``land-DA_workflow`` and then submits a job (``submit_cycle.sh``) to the queue that will run through the workflow. If all succeeds, users will see ``log`` and ``err`` files created in ``land-DA_workflow`` along with a ``cycle.log`` file, which will show where the cycle has ended. The ``landda_expts`` directory will also be populated with data in the following directories:
 
@@ -285,5 +316,8 @@ The ``do_submit_cycle.sh`` script will read the ``settings_DA_cycle_*`` file and
 
    landda_expts/DA_GHCN_test/DA/
    landda_expts/DA_GHCN_test/mem000/restarts/vector/
+   landda_expts/DA_GHCN_test/mem000/restarts/tile/
+
+Depending on the experiment, either the ``vector`` or the ``tile`` directory will have data, but not both. 
 
 Users can check experiment progress/success according to the instructions in :numref:`Section %s <VerifySuccess>`, which apply to both containerized and non-containerized versions of the Land DA System. 

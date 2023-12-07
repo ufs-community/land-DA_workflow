@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3.2. Land Data Assimilation System &mdash; UFS Offline Land DA User&#39;s Guide v1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=044582d4" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=3db8afb0" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=ed6dffd1"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4. Reference" href="../Reference/index.html" />
+    <link rel="prev" title="3.1. Noah-MP Land Surface Model" href="Model.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            UFS Offline Land DA User's Guide
+          </a>
+              <div class="version">
+                v1.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../BackgroundInfo/index.html">1. Background Information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../BuildingRunningTesting/index.html">2. Building, Running, and Testing the Land DA System</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">3. Customizing the Workflow</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Model.html">3.1. Noah-MP Land Surface Model</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3.2. Land Data Assimilation System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#joint-effort-for-data-assimilation-integration-jedi">3.2.1. Joint Effort for Data Assimilation Integration (JEDI)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#object-oriented-prediction-system-oops">3.2.1.1. Object-Oriented Prediction System (OOPS)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#jedi-configuration-files-parameters">3.2.1.1.1. JEDI Configuration Files &amp; Parameters</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#geometry">3.2.1.1.1.1. Geometry</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#window-begin-window-length">3.2.1.1.1.2. Window begin, Window length</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#background">3.2.1.1.1.3. Background</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#driver">3.2.1.1.1.4. Driver</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#local-ensemble-da">3.2.1.1.1.5. Local Ensemble DA</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#output-increment">3.2.1.1.1.6. Output Increment</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#observations">3.2.1.1.1.7. Observations</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#interface-for-observation-data-access-ioda">3.2.1.2. Interface for Observation Data Access (IODA)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#input-files">3.2.2. Input Files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#grid-description-files">3.2.2.1. Grid Description Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#observation-data">3.2.2.2. Observation Data</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#observation-types">3.2.2.2.1. Observation Types</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#ghcn-snow-depth-files">3.2.2.2.1.1. GHCN Snow Depth Files</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#observation-location-and-processing">3.2.2.2.2. Observation Location and Processing</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#ghcn">3.2.2.2.2.1. GHCN</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#viewing-netcdf-files">3.2.2.2.3. Viewing NetCDF Files</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#restart-files">3.2.2.3. Restart Files</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#da-workflow-overview">3.2.3. DA Workflow Overview</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#do-submit-cycle-sh">3.2.3.1. <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submit-cycle-sh">3.2.3.2. <code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#parameters-for-submit-cycle-sh">3.2.3.2.1. Parameters for <code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#do-landda-sh">3.2.3.3. <code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Reference/index.html">4. Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">UFS Offline Land DA User's Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html"><span class="section-number">3. </span>Customizing the Workflow</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">3.2. </span>Land Data Assimilation System</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/CustomizingTheWorkflow/DASystem.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="land-data-assimilation-system">
+<span id="dasystem"></span><h1><span class="section-number">3.2. </span>Land Data Assimilation System<a class="headerlink" href="#land-data-assimilation-system" title="Permalink to this heading"></a></h1>
+<p>This chapter describes the configuration of the offline Land <a class="reference internal" href="../Reference/Glossary.html#term-data-assimilation"><span class="xref std std-term">Data Assimilation</span></a> (DA) System, which utilizes the UFS Noah-MP component together with the <code class="docutils literal notranslate"><span class="pre">jedi-bundle</span></code> (Skylab v4.0) to enable cycled model forecasts. The data assimilation framework applies the Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm to combine the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (<span id="id1">Hunt <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id19" title="B.R. Hunt, E.J. Kostelich, and I. Szunyogh. Efficient data assimilation for spatiotemporal chaos: a local ensemble transform kalman filter. Physica D: Nonlinear Phenomena, 230(1–2):112–126, 2007. doi:10.1016/j.physd.2006.11.008.">HEJKS07</a>]</span>, 2007).</p>
+<section id="joint-effort-for-data-assimilation-integration-jedi">
+<h2><span class="section-number">3.2.1. </span>Joint Effort for Data Assimilation Integration (JEDI)<a class="headerlink" href="#joint-effort-for-data-assimilation-integration-jedi" title="Permalink to this heading"></a></h2>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Users are encouraged to visit the <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/index.html">JEDI Documentation</a>. Much of the information in this chapter is drawn directly from there with modifications to clarify JEDI’s use specifically in the context of the Land DA System.</p>
+</div>
+<p>The Joint Effort for Data assimilation Integration (<a class="reference internal" href="../Reference/Glossary.html#term-JEDI"><span class="xref std std-term">JEDI</span></a>) is a unified and versatile <a class="reference internal" href="../Reference/Glossary.html#term-data-assimilation"><span class="xref std std-term">data assimilation</span></a> (DA) system for Earth System Prediction that can be run on a variety of platforms. JEDI is developed by the Joint Center for Satellite Data Assimilation (<a class="reference external" href="https://www.jcsda.org/">JCSDA</a>) and partner agencies, including NOAA. The core feature of JEDI is separation of concerns. The data assimilation update, observation selection and processing, and observation operators are all coded with no knowledge of or dependency on each other or on the forecast model.</p>
+<p>The NOAH-MP offline Land DA System uses three JEDI components:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The Object-Oriented Prediction System (<a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/oops/index.html#top-oops" title="(in JEDI Documentation v1)"><span class="xref std std-ref">OOPS</span></a>) for the data assimilation algorithm</p></li>
+<li><p>The Interface for Observation Data Access (<a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ioda/index.html">IODA</a>) for the observation formatting and processing</p></li>
+<li><p>The Unified Forward Operator (<a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ufo/index.html">UFO</a>) for comparing model forecasts and observations</p></li>
+</ul>
+</div></blockquote>
+<p>JEDI’s Unified Forward Operator (UFO) links observation operators with the Object Oriented Prediction System (OOPS) to compute a simulated observation given a known model state. It does not restrict observation operators based on model-specific code structures or requirements. The UFO code structure provides generic classes for observation bias correction and quality control. Within this system, IODA converts the observation data into model-specific formats to be ingested by each model’s data assimilation system. This involves model-specific data conversion efforts.</p>
+<section id="object-oriented-prediction-system-oops">
+<h3><span class="section-number">3.2.1.1. </span>Object-Oriented Prediction System (OOPS)<a class="headerlink" href="#object-oriented-prediction-system-oops" title="Permalink to this heading"></a></h3>
+<p>A data assimilation experiment requires a <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> configuration file that specifies the details of the data assimilation and observation processing. OOPS provides the core set of data assimilation algorithms in JEDI by combining the generic building blocks required for the algorithms. The OOPS system does not require knowledge of any specific application model implementation structure or observation data information. In the Noah-MP offline Land DA System, OOPS reads the model forecast states from the restart files generated by the Noah-MP model. JEDI UFO contains generic quality control options and filters that can be applied to each observation system, without coding at certain model application levels. More information on the key concepts of the JEDI software design can be found in <span id="id2">Trémolet and Auligné [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id21" title="Y. Trémolet and T. Auligné. The joint effort for data assimilation integration (jedi). JCSDA Quarterly Newsletter, 66:1–5, 2020. doi:10.25923/RB19-0Q26.">TA20</a>]</span> (2020), <span id="id3">Holdaway <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id17" title="D. Holdaway, G. Vernieres, M. Wlasak, and S. King. Status of model interfacing in the joint effort for data assimilation integration (jedi). JCSDA Quarterly Newsletter, 66:15–24, 2020. doi:10.25923/RB19-0Q26.">HVMWK20</a>]</span> (2020), and <span id="id4">Honeyager <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id18" title="R. Honeyager, S. Herbener, X. Zhang, A. Shlyaeva, and Y. Trémolet. Observations in the joint effort for data assimilation integration (jedi) — unified forward operator (ufo) and interface for observation data access (ioda). JCSDA Quarterly Newsletter, 66:24–33, 2020. doi:10.25923/RB19-0Q26.">HHZ+20</a>]</span> (2020).</p>
+<section id="jedi-configuration-files-parameters">
+<h4><span class="section-number">3.2.1.1.1. </span>JEDI Configuration Files &amp; Parameters<a class="headerlink" href="#jedi-configuration-files-parameters" title="Permalink to this heading"></a></h4>
+<p>To create the DA experiment, the user should create or modify an experiment-specific configuration <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file. This <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file should contain certain fundamental components: geometry, window begin, window length, background, driver, local ensemble DA, output increment, and observations. These components can be implemented differently for different models and observation types, so they frequently contain distinct parameters and variable names depending on the use case. Therefore, this section of the User’s Guide focuses on assisting users with understanding and customizing these top-level configuration items in order to run Land DA experiments. Users may also reference the <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/using/building_and_running/config_content.html">JEDI Documentation</a> for additional information.</p>
+<p>Users may find the following example <code class="docutils literal notranslate"><span class="pre">GHCN.yaml</span></code> configuration file to be a helpful starting point. A similar file (with user-appropriate modifications) is required by JEDI for snow data assimilation. The following subsections will explain the variables within each top-level item of the <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file. The <code class="docutils literal notranslate"><span class="pre">GHCN.yaml</span></code> file for the v1.2.0 release can be found within the cloned repository at <code class="docutils literal notranslate"><span class="pre">DA_update/jedi/fv3-jedi/yaml_files/psl_develop/GHCN.yaml</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">geometry</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">fms initialization</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">namelist filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Data/fv3files/fmsmpp.nml</span>
+<span class="w">    </span><span class="nt">field table filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Data/fv3files/field_table</span>
+<span class="w">  </span><span class="nt">akbk</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Data/fv3files/akbk64.nc4</span>
+<span class="w">  </span><span class="nt">npx</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">49</span>
+<span class="w">  </span><span class="nt">npy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">49</span>
+<span class="w">  </span><span class="nt">npz</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">64</span>
+<span class="w">  </span><span class="nt">field metadata override</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Data/fieldmetadata/gfs-land.yaml</span>
+<span class="w">  </span><span class="nt">time invariant fields</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state fields</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">datetime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2019-12-21T00:00:00Z</span>
+<span class="w">      </span><span class="nt">filetype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fms restart</span>
+<span class="w">      </span><span class="nt">skip coupler file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">state variables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">orog_filt</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">datapath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/scratch2/NAGAPE/epic/UFS_Land-DA/inputs/forcing/era5/orog_files</span>
+<span class="w">      </span><span class="nt">filename_orog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">oro_C96.mx100.nc</span>
+
+<span class="nt">window begin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2019-12-21T00:00:00Z</span>
+<span class="nt">window length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PT24H</span>
+
+<span class="nt">background</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="nl">&amp;date</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2019-12-21T00:00:00Z</span>
+<span class="w">  </span><span class="nt">members</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">datetime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2019-12-21T00:00:00Z</span>
+<span class="w">      </span><span class="nt">filetype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fms restart</span>
+<span class="w">      </span><span class="nt">state variables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">snwdph</span><span class="p p-Indicator">,</span><span class="nv">vtype</span><span class="p p-Indicator">,</span><span class="nv">slmsk</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">datapath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mem_pos/</span>
+<span class="w">      </span><span class="nt">filename_sfcd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20191221.000000.sfc_data.nc</span>
+<span class="w">      </span><span class="nt">filename_cplr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20191221.000000.coupler.res</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">datetime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2019-12-21T00:00:00Z</span>
+<span class="w">      </span><span class="nt">filetype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fms restart</span>
+<span class="w">      </span><span class="nt">state variables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">snwdph</span><span class="p p-Indicator">,</span><span class="nv">vtype</span><span class="p p-Indicator">,</span><span class="nv">slmsk</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">datapath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mem_neg/</span>
+<span class="w">      </span><span class="nt">filename_sfcd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20191221.000000.sfc_data.nc</span>
+<span class="w">      </span><span class="nt">filename_cplr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20191221.000000.coupler.res</span>
+
+<span class="nt">driver</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">save posterior mean</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">save posterior mean increment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">save posterior ensemble</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">run as observer only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">local ensemble DA</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">solver</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LETKF</span>
+<span class="w">  </span><span class="nt">inflation</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">rtps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">rtpp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="nt">mult</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+
+<span class="nt">output increment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">filetype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fms restart</span>
+<span class="w">  </span><span class="nt">filename_sfcd</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xainc.sfc_data.nc</span>
+
+<span class="nt">observations</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">observers</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">obs space</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SnowDepthGHCN</span>
+<span class="w">      </span><span class="nt">distribution</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Halo</span>
+<span class="w">        </span><span class="nt">halo size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250e3</span>
+<span class="w">      </span><span class="nt">simulated variables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">totalSnowDepth</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">obsdatain</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">engine</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">H5File</span>
+<span class="w">          </span><span class="nt">obsfile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GHCN_2019122100.nc</span>
+<span class="w">      </span><span class="nt">obsdataout</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">engine</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">H5File</span>
+<span class="w">          </span><span class="nt">obsfile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">output/DA/hofx/letkf_hofx_ghcn_2019122100.nc</span>
+<span class="w">    </span><span class="nt">obs operator</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Identity</span>
+<span class="w">    </span><span class="nt">obs error</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">covariance model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">diagonal</span>
+<span class="w">    </span><span class="nt">obs localizations</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">localization method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Horizontal SOAR</span>
+<span class="w">      </span><span class="nt">lengthscale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250e3</span>
+<span class="w">      </span><span class="nt">soar horizontal decay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.000021</span>
+<span class="w">      </span><span class="nt">max nobs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">localization method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Vertical Brasnett</span>
+<span class="w">      </span><span class="nt">vertical lengthscale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">700</span>
+<span class="w">    </span><span class="nt">obs filters</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bounds Check</span><span class="w"> </span><span class="c1"># negative / missing snow</span>
+<span class="w">      </span><span class="nt">filter variables</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">totalSnowDepth</span>
+<span class="w">      </span><span class="nt">minvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Domain Check</span><span class="w"> </span><span class="c1"># missing station elevation (-999.9)</span>
+<span class="w">      </span><span class="nt">where</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">variable</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MetaData/height</span>
+<span class="w">        </span><span class="nt">minvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-999.0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Domain Check</span><span class="w"> </span><span class="c1"># land only</span>
+<span class="w">      </span><span class="nt">where</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">variable</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GeoVaLs/slmsk</span>
+<span class="w">        </span><span class="nt">minvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">        </span><span class="nt">maxvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span>
+<span class="w">    </span><span class="c1"># GFSv17 only.</span>
+<span class="w">    </span><span class="c1">#- filter: Domain Check # no sea ice</span>
+<span class="w">    </span><span class="c1">#  where:</span>
+<span class="w">    </span><span class="c1">#  - variable:</span>
+<span class="w">    </span><span class="c1">#      name: fraction_of_ice@GeoVaLs</span>
+<span class="w">    </span><span class="c1">#    maxvalue: 0.0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RejectList</span><span class="w">  </span><span class="c1"># no land-ice</span>
+<span class="w">      </span><span class="nt">where</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">variable</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GeoVaLs/vtype</span>
+<span class="w">        </span><span class="nt">minvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14.5</span>
+<span class="w">        </span><span class="nt">maxvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15.5</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Background Check</span><span class="w"> </span><span class="c1"># gross error check</span>
+<span class="w">      </span><span class="nt">filter variables</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">totalSnowDepth</span>
+<span class="w">      </span><span class="nt">threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6.25</span>
+<span class="w">      </span><span class="nt">action</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reject</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Any default values indicated in the sections below are the defaults set in <code class="docutils literal notranslate"><span class="pre">letkfoi_snow.yaml</span></code> or <code class="docutils literal notranslate"><span class="pre">GHCN.yaml</span></code> (found within the <code class="docutils literal notranslate"><span class="pre">DA_update/jedi/fv3-jedi/yaml_files/psl_develop</span></code> directory).</p>
+</div>
+<section id="geometry">
+<h5><span class="section-number">3.2.1.1.1.1. </span>Geometry<a class="headerlink" href="#geometry" title="Permalink to this heading"></a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">geometry:</span></code> section is used in JEDI configuration files to specify the model grid’s parallelization across compute nodes (horizontal and vertical).</p>
+<blockquote>
+<div><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">fms</span> <span class="pre">initialization</span></code></dt><dd><p>This section contains two parameters, <code class="docutils literal notranslate"><span class="pre">namelist</span> <span class="pre">filename</span></code> and <code class="docutils literal notranslate"><span class="pre">field</span> <span class="pre">table</span> <span class="pre">filename</span></code>.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">namelist</span> <span class="pre">filename</span></code></dt><dd><p>Specifies the path for the namelist filename.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">field</span> <span class="pre">table</span> <span class="pre">filename</span></code></dt><dd><p>Specifies the path for the field table filename.</p>
+</dd>
+</dl>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">akbk</span></code></dt><dd><p>Specifies the path to a file containing the coefficients that define the hybrid sigma-pressure vertical coordinate used in FV3. Files are provided with the repository containing <code class="docutils literal notranslate"><span class="pre">ak</span></code> and <code class="docutils literal notranslate"><span class="pre">bk</span></code> for some common choices of vertical resolution for GEOS and GFS.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">npx</span></code></dt><dd><p>Specifies the number of grid cells in the east-west direction.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">npy</span></code></dt><dd><p>Specifies the number of grid cells in the north-south direction.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">npz</span></code></dt><dd><p>Specifies the number of vertical layers.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">field</span> <span class="pre">metadata</span> <span class="pre">override</span></code></dt><dd><p>Specifies the path for file metadata.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">invariant</span> <span class="pre">state</span> <span class="pre">fields</span></code></dt><dd><p>This parameter contains several subparameters listed below.</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">datetime</span></code></dt><dd><p>Specifies the time in YYYY-MM-DDTHH:00:00Z format, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">filetype</span></code></dt><dd><p>Specifies the type of file. Valid values include: <code class="docutils literal notranslate"><span class="pre">fms</span> <span class="pre">restart</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">skip</span> <span class="pre">coupler</span> <span class="pre">file</span></code></dt><dd><p>Specifies whether to enable skipping coupler file. Valid values are: <code class="docutils literal notranslate"><span class="pre">true</span></code> | <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>true</p></td>
+<td><p>enable</p></td>
+</tr>
+<tr class="row-odd"><td><p>false</p></td>
+<td><p>do not enable</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">state</span> <span class="pre">variables</span></code></dt><dd><p>Specifies the list of state variables. Valid values include: <code class="docutils literal notranslate"><span class="pre">[orog_filt]</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">datapath</span></code></dt><dd><p>Specifies the path for state variables data.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">filename_orog</span></code></dt><dd><p>Specifies the name of orographic data file.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="window-begin-window-length">
+<h5><span class="section-number">3.2.1.1.1.2. </span>Window begin, Window length<a class="headerlink" href="#window-begin-window-length" title="Permalink to this heading"></a></h5>
+<p>These two items define the assimilation window for many applications, including Land DA.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">begin:</span></code></dt><dd><p>Specifies the beginning time window. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">window</span> <span class="pre">length:</span></code></dt><dd><p>Specifies the time window length. The form is PTXXH, where XX is a 1- or 2-digit hour. For example: <code class="docutils literal notranslate"><span class="pre">PT6H</span></code></p>
+</dd>
+</dl>
+</section>
+<section id="background">
+<h5><span class="section-number">3.2.1.1.1.3. </span>Background<a class="headerlink" href="#background" title="Permalink to this heading"></a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">background:</span></code> section includes information on the analysis file(s) (also known as “members”) generated by the previous cycle.</p>
+<blockquote>
+<div><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">date</span></code></dt><dd><p>Specifies the background date. The format is <code class="docutils literal notranslate"><span class="pre">&amp;date</span> <span class="pre">YYYY-MM-DDTHH:00:00Z</span></code>, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. For example: <code class="docutils literal notranslate"><span class="pre">&amp;date</span> <span class="pre">2019-12-21T00:00:00Z</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">members</span></code></dt><dd><p>Specifies information on analysis file(s) generated by a previous cycle.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">datetime</span></code></dt><dd><p>Specifies the date and time. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">filetype</span></code></dt><dd><p>Specifies the type of file. Valid values include: <code class="docutils literal notranslate"><span class="pre">fms</span> <span class="pre">restart</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">state</span> <span class="pre">variables</span></code></dt><dd><p>Specifies a list of state variables. Valid values: <code class="docutils literal notranslate"><span class="pre">[snwdph,vtype,slmsk]</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">datapath</span></code></dt><dd><p>Specifies the path for state variables data. Valid values: <code class="docutils literal notranslate"><span class="pre">mem_pos/</span></code> | <code class="docutils literal notranslate"><span class="pre">mem_neg/</span></code>. (With default experiment values, the full path will be <code class="docutils literal notranslate"><span class="pre">workdir/mem000/jedi/$datapath</span></code>.)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">filename_sfcd</span></code></dt><dd><p>Specifies the name of the surface data file. This usually takes the form <code class="docutils literal notranslate"><span class="pre">YYYYMMDD.HHmmss.sfc_data.nc</span></code>, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: <code class="docutils literal notranslate"><span class="pre">20191221.000000.sfc_data.nc</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">filename_cprl</span></code></dt><dd><p>Specifies the name of file that contains metadata for the restart. This usually takes the form <code class="docutils literal notranslate"><span class="pre">YYYYMMDD.HHmmss.coupler.res</span></code>, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: <code class="docutils literal notranslate"><span class="pre">20191221.000000.coupler.res</span></code></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="driver">
+<h5><span class="section-number">3.2.1.1.1.4. </span>Driver<a class="headerlink" href="#driver" title="Permalink to this heading"></a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">driver:</span></code> section describes optional modifications to the behavior of the LocalEnsembleDA driver. For details, refer to <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/oops/applications/localensembleda.html#top-oops-localensda" title="(in JEDI Documentation v1)"><span class="xref std std-ref">Local Ensemble Data Assimilation in OOPS</span></a> in the JEDI Documentation.</p>
+<blockquote>
+<div><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">save</span> <span class="pre">posterior</span> <span class="pre">mean</span></code></dt><dd><p>Specifies whether to save the posterior mean. Valid values: <code class="docutils literal notranslate"><span class="pre">true</span></code> | <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>true</p></td>
+<td><p>save</p></td>
+</tr>
+<tr class="row-odd"><td><p>false</p></td>
+<td><p>do not save</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">save</span> <span class="pre">posterior</span> <span class="pre">mean</span> <span class="pre">increment</span></code></dt><dd><p>Specifies whether to save the posterior mean increment. Valid values: <code class="docutils literal notranslate"><span class="pre">true</span></code> | <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>true</p></td>
+<td><p>enable</p></td>
+</tr>
+<tr class="row-odd"><td><p>false</p></td>
+<td><p>do not enable</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">save</span> <span class="pre">posterior</span> <span class="pre">ensemble</span></code></dt><dd><p>Specifies whether to save the posterior ensemble. Valid values: <code class="docutils literal notranslate"><span class="pre">true</span></code> | <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>true</p></td>
+<td><p>enable</p></td>
+</tr>
+<tr class="row-odd"><td><p>false</p></td>
+<td><p>do not enable</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">run</span> <span class="pre">as</span> <span class="pre">observer</span> <span class="pre">only</span></code></dt><dd><p>Specifies whether to run as observer only. Valid values: <code class="docutils literal notranslate"><span class="pre">true</span></code> | <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>true</p></td>
+<td><p>enable</p></td>
+</tr>
+<tr class="row-odd"><td><p>false</p></td>
+<td><p>do not enable</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="local-ensemble-da">
+<h5><span class="section-number">3.2.1.1.1.5. </span>Local Ensemble DA<a class="headerlink" href="#local-ensemble-da" title="Permalink to this heading"></a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">local</span> <span class="pre">ensemble</span> <span class="pre">DA:</span></code> section configures the local ensemble DA solver package.</p>
+<blockquote>
+<div><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">solver</span></code></dt><dd><p>Specifies the type of solver. Currently, <code class="docutils literal notranslate"><span class="pre">LETKF</span></code> is the only available option. See <span id="id5">Hunt <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id19" title="B.R. Hunt, E.J. Kostelich, and I. Szunyogh. Efficient data assimilation for spatiotemporal chaos: a local ensemble transform kalman filter. Physica D: Nonlinear Phenomena, 230(1–2):112–126, 2007. doi:10.1016/j.physd.2006.11.008.">HEJKS07</a>]</span> (2007).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">inflation</span></code></dt><dd><p>Describes ensemble inflation methods.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">rtps</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">0.0</span></code>)</dt><dd><p>Relaxation to prior spread (<span id="id6">Whitaker and Hamill [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id22" title="J.S. Whitaker and T.M. Hamill. Evaluating methods to account for system errors in ensemble data assimilation. Monthly Weather Review, 140(9):3078–3089, 2012. doi:10.1175/MWR-D-11-00276.1.">WH12</a>]</span>, 2012).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">rtpp</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">0.0</span></code>)</dt><dd><p>Relaxation to prior perturbation (<span id="id7">Zhang <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id23" title="F. Zhang, C. Snyder, and J. Sun. Impacts of initial estimate and observation availability on convective-scale data assimilation with an ensemble kalman filter. Monthly Weather Review, 132(5):1238–1253, 2004. doi:10.1175/1520-0493(2004)132%3C1238:IOIEAO%3E2.0.CO;2.">ZCSS04</a>]</span>, 2004).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">mult</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>)</dt><dd><p>Parameter of multiplicative inflation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="output-increment">
+<h5><span class="section-number">3.2.1.1.1.6. </span>Output Increment<a class="headerlink" href="#output-increment" title="Permalink to this heading"></a></h5>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">output</span> <span class="pre">increment:</span></code></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">filetype</span></code></dt><dd><p>Type of file provided for the output increment. Valid values include: <code class="docutils literal notranslate"><span class="pre">fms</span> <span class="pre">restart</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">filename_sfcd</span></code></dt><dd><p>Name of the file provided for the output increment. For example: <code class="docutils literal notranslate"><span class="pre">xainc.sfc_data.nc</span></code></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="observations">
+<h5><span class="section-number">3.2.1.1.1.7. </span>Observations<a class="headerlink" href="#observations" title="Permalink to this heading"></a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">observations:</span></code> item describes one or more types of observations, each of which is a multi-level YAML/JSON object in and of itself. Each of these observation types is read into JEDI as an <code class="docutils literal notranslate"><span class="pre">eckit::Configuration</span></code> object (see <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/using/building_and_running/config_content.html#observations" title="(in JEDI Documentation v1)"><span class="xref std std-ref">JEDI Documentation</span></a> for more details).</p>
+<section id="obs-space">
+<h6><span class="section-number">3.2.1.1.1.7.1. </span><code class="docutils literal notranslate"><span class="pre">obs</span> <span class="pre">space:</span></code><a class="headerlink" href="#obs-space" title="Permalink to this heading"></a></h6>
+<p>The <code class="docutils literal notranslate"><span class="pre">obs</span> <span class="pre">space:</span></code> section of the <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> comes under the <code class="docutils literal notranslate"><span class="pre">observations.observers:</span></code> section and describes the configuration of the observation space. An observation space handles observation data for a single observation type.</p>
+<blockquote>
+<div><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>Specifies the name of observation space. The Land DA System uses <code class="docutils literal notranslate"><span class="pre">Simulate</span></code> for the default case.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">distribution:</span></code></dt><dd><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>Specifies the name of distribution. Valid values include: <code class="docutils literal notranslate"><span class="pre">Halo</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">halo</span> <span class="pre">size</span></code></dt><dd><p>Specifies the size of the halo distribution. Format is e-notation. For example: <code class="docutils literal notranslate"><span class="pre">250e3</span></code></p>
+</dd>
+</dl>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">simulated</span> <span class="pre">variables</span></code></dt><dd><p>Specifies the list of variables that need to be simulated by observation operator. Valid values: <code class="docutils literal notranslate"><span class="pre">[totalSnowDepth]</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">obsdatain</span></code></dt><dd><p>This section specifies information about the observation input data.</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">engine</span></code></dt><dd><p>This section specifies parameters required for the file matching engine.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">type</span></code></dt><dd><p>Specifies the type of input observation data. Valid values: <code class="docutils literal notranslate"><span class="pre">H5File</span></code> | <code class="docutils literal notranslate"><span class="pre">OBS</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">obsfile</span></code></dt><dd><p>Specifies the input filename.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">obsdataout</span></code></dt><dd><p>This section contains information about the observation output data.</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">engine</span></code></dt><dd><p>This section specifies parameters required for the file matching engine.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">type</span></code></dt><dd><p>Specifies the type of output observation data. Valid values: <code class="docutils literal notranslate"><span class="pre">H5File</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">obsfile</span></code></dt><dd><p>Specifies the output file path.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="obs-operator">
+<h6><span class="section-number">3.2.1.1.1.7.2. </span><code class="docutils literal notranslate"><span class="pre">obs</span> <span class="pre">operator:</span></code><a class="headerlink" href="#obs-operator" title="Permalink to this heading"></a></h6>
+<p>The <code class="docutils literal notranslate"><span class="pre">obs</span> <span class="pre">operator:</span></code> section describes the observation operator and its options. An observation operator is used for computing H(x).</p>
+<blockquote>
+<div><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>Specifies the name in the <code class="docutils literal notranslate"><span class="pre">ObsOperator</span></code> and <code class="docutils literal notranslate"><span class="pre">LinearObsOperator</span></code> factory, defined in the C++ code. Valid values include: <code class="docutils literal notranslate"><span class="pre">Identity</span></code>. See <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ufo/obsops.html#top-ufo-obsops" title="(in JEDI Documentation v1)"><span class="xref std std-ref">JEDI Documentation</span></a> for more options.</p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="obs-error">
+<h6><span class="section-number">3.2.1.1.1.7.3. </span><code class="docutils literal notranslate"><span class="pre">obs</span> <span class="pre">error:</span></code><a class="headerlink" href="#obs-error" title="Permalink to this heading"></a></h6>
+<p>The <code class="docutils literal notranslate"><span class="pre">obs</span> <span class="pre">error:</span></code> section explains how to calculate the observation error covariance matrix and gives instructions (required for DA applications). The key covariance model, which describes how observation error covariances are created, is frequently the first item in this section. For diagonal observation error covariances, only the diagonal option is currently supported.</p>
+<blockquote>
+<div><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">covariance</span> <span class="pre">model</span></code></dt><dd><p>Specifies the covariance model. Valid values include: <code class="docutils literal notranslate"><span class="pre">diagonal</span></code></p>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+<section id="obs-localizations">
+<h6><span class="section-number">3.2.1.1.1.7.4. </span><code class="docutils literal notranslate"><span class="pre">obs</span> <span class="pre">localizations:</span></code><a class="headerlink" href="#obs-localizations" title="Permalink to this heading"></a></h6>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">obs</span> <span class="pre">localizations:</span></code></dt><dd><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">localization</span> <span class="pre">method</span></code></dt><dd><p>Specifies the observation localization method. Valid values include: <code class="docutils literal notranslate"><span class="pre">Horizontal</span> <span class="pre">SOAR</span></code></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Horizontal SOAR</p></td>
+<td><p>Second Order Auto-Regressive localization in
+the horizontal direction.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Vertical Brasnett</p></td>
+<td><p>Vertical component of the localization scheme
+defined in <span id="id8">Brasnett [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id25" title="B. Brasnett. A global analysis of snow depth for numerical weather prediction. J. Appl. Meteorol., 38(6):726–740, 1999. doi:10.1175/1520-0450(1999)038&lt;0726:AGAOSD&gt;2.0.CO;2.">Bra99</a>]</span> (1999)
+and used in the snow DA.</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">lengthscale</span></code></dt><dd><p>Radius of influence (i.e., maximum distance of observations from the location being updated) in meters. Format is e-notation. For example: <code class="docutils literal notranslate"><span class="pre">250e3</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">soar</span> <span class="pre">horizontal</span> <span class="pre">decay</span></code></dt><dd><p>Decay scale of SOAR localization function. Recommended value: <code class="docutils literal notranslate"><span class="pre">0.000021</span></code>. Users may adjust based on need/preference.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">max</span> <span class="pre">nobs</span></code></dt><dd><p>Maximum number of observations used to update each location.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="obs-filters">
+<h6><span class="section-number">3.2.1.1.1.7.5. </span><code class="docutils literal notranslate"><span class="pre">obs</span> <span class="pre">filters:</span></code><a class="headerlink" href="#obs-filters" title="Permalink to this heading"></a></h6>
+<p>Observation filters are used to define Quality Control (QC) filters. They have access to observation values and metadata, model values at observation locations, simulated observation value, and their own private data. See <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ufo/qcfilters/introduction.html#observation-filters" title="(in JEDI Documentation v1)"><span class="xref std std-ref">Observation Filters</span></a> in the JEDI Documentation for more detail. The <code class="docutils literal notranslate"><span class="pre">obs</span> <span class="pre">filters:</span></code> section contains the following fields:</p>
+<blockquote>
+<div><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">filter</span></code></dt><dd><p>Describes the parameters of a given QC filter. Valid values include: <code class="docutils literal notranslate"><span class="pre">Bounds</span> <span class="pre">Check</span></code> | <code class="docutils literal notranslate"><span class="pre">Background</span> <span class="pre">Check</span></code> | <code class="docutils literal notranslate"><span class="pre">Domain</span> <span class="pre">Check</span></code> | <code class="docutils literal notranslate"><span class="pre">RejectList</span></code>. See descriptions in the JEDI’s <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ufo/qcfilters/GenericQC.html">Generic QC Filters</a> Documentation for more.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Filter Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Bounds Check</p></td>
+<td><p>Rejects observations whose values lie outside
+specified limits:</p></td>
+</tr>
+<tr class="row-odd"><td><p>Background Check</p></td>
+<td><p>This filter checks for bias-corrected distance
+between the observation value and model-simulated
+value (<em>y</em> - <em>H(x)</em>) and rejects observations
+where the absolute difference is larger than
+the <code class="docutils literal notranslate"><span class="pre">absolute</span> <span class="pre">threshold</span></code> or the
+<span class="math notranslate nohighlight">\(threshold * observation error\)</span> or the
+<span class="math notranslate nohighlight">\(threshold * background error\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p>Domain Check</p></td>
+<td><p>This filter retains all observations selected by
+the <code class="docutils literal notranslate"><span class="pre">where</span></code> statement and rejects all others.</p></td>
+</tr>
+<tr class="row-odd"><td><p>RejectList</p></td>
+<td><p>This is an alternative name for the BlackList
+filter, which rejects all observations selected
+by the <code class="docutils literal notranslate"><span class="pre">where</span></code> statement. The status of all
+others remains the same. Opposite of Domain
+Check filter.</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">filter</span> <span class="pre">variables</span></code></dt><dd><p>Limit the action of a QC filter to a subset of variables or to specific channels.</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>Name of the filter variable. Users may indicate additional filter variables using the <code class="docutils literal notranslate"><span class="pre">name</span></code> field on consecutive lines (see code snippet below). Valid values include: <code class="docutils literal notranslate"><span class="pre">totalSnowDepth</span></code></p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">filter variables</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">variable_1</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">variable_2</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">minvalue</span></code></dt><dd><p>Minimum value for variables in the filter.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">maxvalue</span></code></dt><dd><p>Maximum value for variables in the filter.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">threshold</span></code></dt><dd><p>This variable may function differently depending on the filter it is used in. In the <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ufo/qcfilters/GenericQC.html#background-check-filter">Background Check Filter</a>, an observation is rejected when the difference between the observation value (<em>y</em>) and model simulated value (<em>H(x)</em>) is larger than the <code class="docutils literal notranslate"><span class="pre">threshold</span></code> * <em>observation error</em>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">action</span></code></dt><dd><p>Indicates which action to take once an observation has been flagged by a filter. See <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ufo/qcfilters/FilterOptions.html#filter-actions" title="(in JEDI Documentation v1)"><span class="xref std std-ref">Filter Actions</span></a> in the JEDI documentation for a full explanation and list of valid values.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>The name of the desired action. Valid values include: <code class="docutils literal notranslate"><span class="pre">accept</span></code> | <code class="docutils literal notranslate"><span class="pre">reject</span></code></p>
+</dd>
+</dl>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">where</span></code></dt><dd><p>By default, filters are applied to all filter variables listed. The <code class="docutils literal notranslate"><span class="pre">where</span></code> keyword applies a filter only to observations meeting certain conditions. See the <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ufo/qcfilters/FilterOptions.html#where-statement" title="(in JEDI Documentation v1)"><span class="xref std std-ref">Where Statement</span></a> section of the JEDI Documentation for a complete description of valid <code class="docutils literal notranslate"><span class="pre">where</span></code> conditions.</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">variable</span></code></dt><dd><p>A list of variables to check using the <code class="docutils literal notranslate"><span class="pre">where</span></code> statement.</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>Name of a variable to check using the <code class="docutils literal notranslate"><span class="pre">where</span></code> statement. Multiple variable names may be listed under <code class="docutils literal notranslate"><span class="pre">variable</span></code>. The conditions in the where statement will be applied to all of them. For example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Domain Check</span><span class="w"> </span><span class="c1"># land only</span>
+<span class="w">  </span><span class="nt">where</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">variable</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">variable_1</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">variable_2</span>
+<span class="w">    </span><span class="nt">minvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">    </span><span class="nt">maxvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">minvalue</span></code></dt><dd><p>Minimum value for variables in the <code class="docutils literal notranslate"><span class="pre">where</span></code> statement.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">maxvalue</span></code></dt><dd><p>Maximum value for variables in the <code class="docutils literal notranslate"><span class="pre">where</span></code> statement.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+</section>
+</section>
+</section>
+</section>
+<section id="interface-for-observation-data-access-ioda">
+<span id="ioda"></span><h3><span class="section-number">3.2.1.2. </span>Interface for Observation Data Access (IODA)<a class="headerlink" href="#interface-for-observation-data-access-ioda" title="Permalink to this heading"></a></h3>
+<p><em>This section references Honeyager, R., Herbener, S., Zhang, X., Shlyaeva, A., and Trémolet, Y., 2020: Observations in the Joint Effort for Data assimilation Integration (JEDI) - UFO and IODA. JCSDA Quarterly, 66, Winter 2020.</em></p>
+<p>The Interface for Observation Data Access (IODA) is a subsystem of JEDI that can handle data processing for various models, including the Land DA System. Currently, observation data sets come in a variety of formats (e.g., netCDF, BUFR, GRIB) and may differ significantly in structure, quality, and spatiotemporal resolution/density. Such data must be pre-processed and converted into model-specific formats. This process often involves iterative, model-specific data conversion efforts and numerous cumbersome ad-hoc approaches to prepare observations. Requirements for observation files and I/O handling often result in decreased I/O and computational efficiency. IODA addresses this need to modernize observation data management and use in conjunction with the various components of the Unified Forecast System (<a class="reference internal" href="../Reference/Glossary.html#term-UFS"><span class="xref std std-term">UFS</span></a>).</p>
+<p>IODA provides a unified, model-agnostic method of sharing observation data and exchanging modeling and data assimilation results. The IODA effort centers on three core facets: (i) in-memory data access, (ii) definition of the IODA file format, and (iii) data store creation for long-term storage of observation data and diagnostics. The combination of these foci enables optimal isolation of the scientific code from the underlying data structures and data processing software while simultaneously promoting efficient I/O during the forecasting/DA process by providing a common file format and structured data storage.</p>
+<p>The IODA file format represents observational field variables (e.g., temperature, salinity, humidity) and locations in two-dimensional tables, where the variables are represented by columns and the locations by rows. Metadata tables are associated with each axis of these data tables, and the location metadata hold the values describing each location (e.g., latitude, longitude). Actual data values are contained in a third dimension of the IODA data table; for instance: observation values, observation error, quality control flags, and simulated observation (H(x)) values.</p>
+<p>Since the raw observational data come in various formats, a diverse set of “IODA converters” exists to transform the raw observation data files into IODA format. While many of these Python-based IODA converters have been developed to handle marine-based observations, users can utilize the “IODA converter engine” components to develop and implement their own IODA converters to prepare arbitrary observation types for data assimilation within JEDI. (See <a class="reference external" href="https://github.com/NOAA-PSL/land-DA_update/blob/develop/jedi/ioda/imsfv3_scf2ioda_obs40.py">https://github.com/NOAA-PSL/land-DA_update/blob/develop/jedi/ioda/imsfv3_scf2ioda_obs40.py</a> for the Land DA IMS IODA converter.)</p>
+</section>
+</section>
+<section id="input-files">
+<h2><span class="section-number">3.2.2. </span>Input Files<a class="headerlink" href="#input-files" title="Permalink to this heading"></a></h2>
+<p>The Land DA System requires grid description files, observation files, and restart files to perform snow DA.</p>
+<section id="grid-description-files">
+<h3><span class="section-number">3.2.2.1. </span>Grid Description Files<a class="headerlink" href="#grid-description-files" title="Permalink to this heading"></a></h3>
+<p>The grid description files appear in <a class="reference internal" href="Model.html#v2tinputfiles"><span class="std std-numref">Section 3.1.2.1</span></a> and are also used as input files to the Vector-to-Tile Converter and the UFS land component. See <a class="reference internal" href="Model.html#gridinputfiles"><span class="std std-numref">Table 3.4</span></a> for a description of these files.</p>
+</section>
+<section id="observation-data">
+<span id="id9"></span><h3><span class="section-number">3.2.2.2. </span>Observation Data<a class="headerlink" href="#observation-data" title="Permalink to this heading"></a></h3>
+<p>Observation data from 2000 and 2019 are provided in NetCDF format for the v1.2.0 release. Instructions for downloading the data are provided in <a class="reference internal" href="../BuildingRunningTesting/Container.html#getdatac"><span class="std std-numref">Section 2.2.3</span></a>, and instructions for accessing the data on <a class="reference internal" href="../BackgroundInfo/TechnicalOverview.html#levelsofsupport"><span class="std std-ref">Level 1 Systems</span></a> are provided in <a class="reference internal" href="../BuildingRunningTesting/BuildRunLandDA.html#getdata"><span class="std std-numref">Section 2.1.2</span></a>. Currently, data is taken from the <a class="reference external" href="https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily">Global Historical Climatology Network</a> (GHCN), but eventually, data from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (<a class="reference external" href="https://usicecenter.gov/Products/ImsHome">IMS</a>) will also be available for use.</p>
+<section id="observation-types">
+<h4><span class="section-number">3.2.2.2.1. </span>Observation Types<a class="headerlink" href="#observation-types" title="Permalink to this heading"></a></h4>
+<section id="ghcn-snow-depth-files">
+<h5><span class="section-number">3.2.2.2.1.1. </span>GHCN Snow Depth Files<a class="headerlink" href="#ghcn-snow-depth-files" title="Permalink to this heading"></a></h5>
+<p>Snow depth observations are taken from the <a class="reference external" href="https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily">Global Historical Climatology Network</a>, which provides daily climate summaries sourced from a global network of 100,000 stations. NOAA’s <a class="reference external" href="https://www.ncei.noaa.gov/">NCEI</a> provides access to these snow depth and snowfall measurements through daily-generated individual station ASCII files or GZipped tar files of full-network observations on the NCEI server or Climate Data Online. Alternatively, users may acquire yearly tarballs via <code class="docutils literal notranslate"><span class="pre">wget</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">wget https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/{YYYY}.csv.gz</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">${YYYY}</span></code> should be replaced with the year of interest. Note that these yearly tarballs contain all measurement types from the daily GHCN output, and thus, snow depth must be manually extracted from this broader data set.</p>
+<p>These raw snow depth observations need to be converted into IODA-formatted netCDF files for ingestion into the JEDI LETKF system. However, this process was preemptively handled outside of the Land DA workflow, and the 2019 GHCN IODA files were provided by NOAA PSL (Clara Draper).</p>
+<p>The IODA-formatted GHCN files are available in the <code class="docutils literal notranslate"><span class="pre">inputs/DA/snow_depth/GHCN/data_proc/v3/</span></code> directory and are structured as follows (using 20191221 as an example):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">netcdf ghcn_snwd_ioda_20191221 {</span>
+<span class="go">dimensions:</span>
+<span class="go">   Location = 9379 ;</span>
+<span class="go">variables:</span>
+<span class="go">   int Location(Location) ;</span>
+<span class="go">                Location:suggested_chunk_dim = 9379LL ;</span>
+
+<span class="go">// global attributes:</span>
+<span class="go">      string :_ioda_layout = &quot;ObsGroup&quot; ;</span>
+<span class="go">      :_ioda_layout_version = 0 ;</span>
+<span class="go">      string :converter = &quot;ghcn_snod2ioda_newV2.py&quot; ;</span>
+<span class="go">      string :date_time_string = &quot;2019-12-21T18:00:00Z&quot; ;</span>
+<span class="go">      :nlocs = 9379 ;</span>
+<span class="go">      :history = &quot;Fri Aug 12 20:27:37 2022: ncrename -O -v altitude,height ./data_proc_test/nc4_ghcn_snwd_ioda_20191221.nc ./data_proc_Update/ghcn_snwd_ioda_20191221.nc&quot; ;</span>
+<span class="go">      :NCO = &quot;netCDF Operators version 4.9.1 (Homepage = http://nco.sf.net, Code = http://github.com/nco/nco)&quot; ;</span>
+
+<span class="go">group: MetaData {</span>
+<span class="go">   variables:</span>
+<span class="go">      int64 dateTime(Location) ;</span>
+<span class="go">         dateTime:_FillValue = -2208988800LL ;</span>
+<span class="go">         string dateTime:units = &quot;seconds since 1970-01-01T00:00:00Z&quot; ;</span>
+<span class="go">      float height(Location) ;</span>
+<span class="go">         height:_FillValue = 9.96921e+36f ;</span>
+<span class="go">      float latitude(Location) ;</span>
+<span class="go">         latitude:_FillValue = 9.96921e+36f ;</span>
+<span class="go">         string latitude:units = &quot;degrees_north&quot; ;</span>
+<span class="go">      float longitude(Location) ;</span>
+<span class="go">         longitude:_FillValue = 9.96921e+36f ;</span>
+<span class="go">         string longitude:units = &quot;degrees_east&quot; ;</span>
+<span class="go">      string stationIdentification(Location) ;</span>
+<span class="go">         string stationIdentification:_FillValue = &quot;&quot; ;</span>
+<span class="go">   } // group MetaData</span>
+
+<span class="go">group: ObsError {</span>
+<span class="go">   variables:</span>
+<span class="go">      float totalSnowDepth(Location) ;</span>
+<span class="go">         totalSnowDepth:_FillValue = 9.96921e+36f ;</span>
+<span class="go">         string totalSnowDepth:coordinates = &quot;longitude latitude&quot; ;</span>
+<span class="go">         string totalSnowDepth:units = &quot;mm&quot; ;</span>
+<span class="go">   } // group ObsError</span>
+
+<span class="go">group: ObsValue {</span>
+<span class="go">   variables:</span>
+<span class="go">      float totalSnowDepth(Location) ;</span>
+<span class="go">         totalSnowDepth:_FillValue = 9.96921e+36f ;</span>
+<span class="go">         string totalSnowDepth:coordinates = &quot;longitude latitude&quot; ;</span>
+<span class="go">         string totalSnowDepth:units = &quot;mm&quot; ;</span>
+<span class="go">   } // group ObsValue</span>
+
+<span class="go">group: PreQC {</span>
+<span class="go">   variables:</span>
+<span class="go">      int totalSnowDepth(Location) ;</span>
+<span class="go">         totalSnowDepth:_FillValue = -2147483647 ;</span>
+<span class="go">         string totalSnowDepth:coordinates = &quot;longitude latitude&quot; ;</span>
+<span class="go">   } // group PreQC</span>
+<span class="go">}</span>
+</pre></div>
+</div>
+<p>The primary observation variable is <code class="docutils literal notranslate"><span class="pre">totalSnowDepth</span></code>, which, along with the metadata fields of <code class="docutils literal notranslate"><span class="pre">datetime</span></code>, <code class="docutils literal notranslate"><span class="pre">latitude</span></code>, <code class="docutils literal notranslate"><span class="pre">longitude</span></code>, and <code class="docutils literal notranslate"><span class="pre">height</span></code> is defined along the <code class="docutils literal notranslate"><span class="pre">nlocs</span></code> dimension. Also present are <code class="docutils literal notranslate"><span class="pre">ObsError</span></code> and <code class="docutils literal notranslate"><span class="pre">PreQC</span></code> values corresponding to each <code class="docutils literal notranslate"><span class="pre">totalSnowDepth</span></code> measurement on <code class="docutils literal notranslate"><span class="pre">nlocs</span></code>. These values were attributed during the IODA conversion step (not supported for this release). The magnitude of <code class="docutils literal notranslate"><span class="pre">nlocs</span></code> varies between files; this is due to the fact that the number of stations reporting snow depth observations for a given day can vary in the GHCN.</p>
+</section>
+</section>
+<section id="observation-location-and-processing">
+<h4><span class="section-number">3.2.2.2.2. </span>Observation Location and Processing<a class="headerlink" href="#observation-location-and-processing" title="Permalink to this heading"></a></h4>
+<section id="ghcn">
+<h5><span class="section-number">3.2.2.2.2.1. </span>GHCN<a class="headerlink" href="#ghcn" title="Permalink to this heading"></a></h5>
+<p>GHCN files for 2000 and 2019 are already provided in IODA format for the v1.2.0 release. <a class="reference internal" href="../BuildingRunningTesting/BuildRunLandDA.html#getdata"><span class="std std-numref">Table 2.1.2</span></a> indicates where users can find data on NOAA <a class="reference internal" href="../Reference/Glossary.html#term-RDHPCS"><span class="xref std std-term">RDHPCS</span></a> platforms. Tar files containing the 2000 and 2019 data are located in the publicly-available <a class="reference external" href="https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html">Land DA Data Bucket</a>. Once untarred, the snow depth files are located in <code class="docutils literal notranslate"><span class="pre">/inputs/DA/snow_depth/GHCN/data_proc/{YEAR}</span></code>. The 2019 GHCN IODA files were provided by Clara Draper (NOAA PSL). Each file follows the naming convention of <code class="docutils literal notranslate"><span class="pre">ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc</span></code>, where <code class="docutils literal notranslate"><span class="pre">${YYYY}</span></code> is the four-digit cycle year, <code class="docutils literal notranslate"><span class="pre">${MM}</span></code> is the two-digit cycle month, and <code class="docutils literal notranslate"><span class="pre">${DD}</span></code> is the two-digit cycle day.</p>
+<p>In each experiment, the <code class="docutils literal notranslate"><span class="pre">DA_config</span></code> file sets the name of the experiment configuration file. This configuration file is typically named <code class="docutils literal notranslate"><span class="pre">settings_DA_test</span></code>. Before assimilation, if “GHCN” was specified as the observation type in the <code class="docutils literal notranslate"><span class="pre">DA_config</span></code> file, the <code class="docutils literal notranslate"><span class="pre">ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc</span></code> file corresponding to the specified cycle date is soft-linked to the JEDI working directory (<code class="docutils literal notranslate"><span class="pre">${JEDIWORKDIR}</span></code>) with a naming-convention change (i.e., <code class="docutils literal notranslate"><span class="pre">GHCN_${YYYY}${MM}${DD}${HH}.nc</span></code>). Here, the GHCN IODA file is appended with the cycle hour, <code class="docutils literal notranslate"><span class="pre">${HH}</span></code> which is extracted from the <code class="docutils literal notranslate"><span class="pre">${STARTDATE}</span></code> variable defined in the relevant <code class="docutils literal notranslate"><span class="pre">DA_config</span></code> file.</p>
+<p>Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, the observations are further quality controlled and checked using <code class="docutils literal notranslate"><span class="pre">letkf_land.yaml</span></code> (itself a concatenation of <code class="docutils literal notranslate"><span class="pre">GHCN.yaml</span></code> and <code class="docutils literal notranslate"><span class="pre">letkfoi_snow.yaml</span></code>; see the <a class="reference external" href="https://github.com/ufs-community/land-DA/tree/660d64da52bbe6fd5ccf29dad05fe6be3f10e749/jedi/fv3-jedi/yaml_files">GitHub yaml files</a> for more detail). The GHCN-specific observation filters, domain checks, and quality control parameters from <code class="docutils literal notranslate"><span class="pre">GHCN.yaml</span></code> ensure that only snow depth observations which meet specific criteria are assimilated (the rest are rejected). The contents of <code class="docutils literal notranslate"><span class="pre">GHCN.yaml</span></code> are listed below:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">obs space</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SnowDepthGHCN</span>
+<span class="w">    </span><span class="nt">distribution</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Halo</span>
+<span class="w">      </span><span class="nt">halo size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250e3</span>
+<span class="w">    </span><span class="nt">simulated variables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">totalSnowDepth</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">obsdatain</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">engine</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">H5File</span>
+<span class="w">        </span><span class="nt">obsfile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GHCN_XXYYYYXXMMXXDDXXHH.nc</span>
+<span class="w">    </span><span class="nt">obsdataout</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">engine</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">H5File</span>
+<span class="w">        </span><span class="nt">obsfile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">output/DA/hofx/letkf_hofx_ghcn_XXYYYYXXMMXXDDXXHH.nc</span>
+<span class="w">  </span><span class="nt">obs operator</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Identity</span>
+<span class="w">  </span><span class="nt">obs error</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">covariance model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">diagonal</span>
+<span class="w">  </span><span class="nt">obs localizations</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">localization method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Horizontal SOAR</span>
+<span class="w">    </span><span class="nt">lengthscale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250e3</span>
+<span class="w">    </span><span class="nt">soar horizontal decay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.000021</span>
+<span class="w">    </span><span class="nt">max nobs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">localization method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Vertical Brasnett</span>
+<span class="w">    </span><span class="nt">vertical lengthscale</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">700</span>
+<span class="w">  </span><span class="nt">obs filters</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Bounds Check</span><span class="w"> </span><span class="c1"># negative / missing snow</span>
+<span class="w">    </span><span class="nt">filter variables</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">totalSnowDepth</span>
+<span class="w">    </span><span class="nt">minvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Domain Check</span><span class="w"> </span><span class="c1"># missing station elevation (-999.9)</span>
+<span class="w">    </span><span class="nt">where</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">variable</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MetaData/height</span>
+<span class="w">      </span><span class="nt">minvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-999.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Domain Check</span><span class="w"> </span><span class="c1"># land only</span>
+<span class="w">    </span><span class="nt">where</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">variable</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GeoVaLs/slmsk</span>
+<span class="w">      </span><span class="nt">minvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="nt">maxvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span>
+<span class="w">  </span><span class="c1"># GFSv17 only.</span>
+<span class="w">  </span><span class="c1">#- filter: Domain Check # no sea ice</span>
+<span class="w">  </span><span class="c1">#  where:</span>
+<span class="w">  </span><span class="c1">#  - variable:</span>
+<span class="w">  </span><span class="c1">#      name: fraction_of_ice@GeoVaLs</span>
+<span class="w">  </span><span class="c1">#    maxvalue: 0.0</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RejectList</span><span class="w">  </span><span class="c1"># no land-ice</span>
+<span class="w">    </span><span class="nt">where</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">variable</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GeoVaLs/vtype</span>
+<span class="w">      </span><span class="nt">minvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14.5</span>
+<span class="w">      </span><span class="nt">maxvalue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15.5</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Background Check</span><span class="w"> </span><span class="c1"># gross error check</span>
+<span class="w">    </span><span class="nt">filter variables</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">totalSnowDepth</span>
+<span class="w">    </span><span class="nt">threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6.25</span>
+<span class="w">    </span><span class="nt">action</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reject</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="viewing-netcdf-files">
+<h4><span class="section-number">3.2.2.2.3. </span>Viewing NetCDF Files<a class="headerlink" href="#viewing-netcdf-files" title="Permalink to this heading"></a></h4>
+<p>Users can view file information and notes for NetCDF files using the instructions in <a class="reference internal" href="Model.html#view-netcdf-files"><span class="std std-numref">Section 3.1.1.1</span></a>. For example, on Orion:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Load<span class="w"> </span>modules:
+<span class="go">module load intel/2022.1.2 impi/2022.1.2 netcdf/4.7.4</span>
+<span class="go">ncdump -h /work/noaa/epic/UFS_Land-DA/inputs/DA/snow_depth/GHCN/data_proc/v3/2019/ghcn_snwd_ioda_20191221.nc</span>
+</pre></div>
+</div>
+<p>to see the contents of the 2019-12-21 GHCN file on Hera. Users may need to modify the module load command and the file path to reflect module versions/file paths that are available on their system.</p>
+</section>
+</section>
+<section id="restart-files">
+<h3><span class="section-number">3.2.2.3. </span>Restart Files<a class="headerlink" href="#restart-files" title="Permalink to this heading"></a></h3>
+<p>To restart the UFS land driver successfully after land model execution, all parameters, states, and fluxes used for a subsequent time iteration are stored in a restart file. This restart file is named <code class="docutils literal notranslate"><span class="pre">ufs_land_restart.{FILEDATE}.nc</span></code> where <code class="docutils literal notranslate"><span class="pre">FILEDATE</span></code> is in YYYY-MM-DD_HH-mm-SS format (e.g., <code class="docutils literal notranslate"><span class="pre">ufs_land_restart.2019-12-21_00-00-00.nc</span></code>). The restart file contains all the model fields and their values at a specific point in time; this information can be used to restart the model immediately to run the next cycle. The Land DA System reads the states from the restart file and replaces them after the DA step with the updated analysis. <a class="reference internal" href="#restartfiles"><span class="std std-numref">Table 3.5</span></a> lists the fields in the Land DA restart file. Within the UFS land driver (submodule <code class="docutils literal notranslate"><span class="pre">ufs-land-driver-emc-dev</span></code>), read/write of the restart file is performed in <code class="docutils literal notranslate"><span class="pre">ufsLandNoahMPRestartModule.f90</span></code>.</p>
+<span id="restartfiles"></span><table class="docutils align-default" id="id11">
+<caption><span class="caption-number">Table 3.5 </span><span class="caption-text">Files Included in ufs_land_restart.{FILEDATE}.nc</span><a class="headerlink" href="#id11" title="Permalink to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Long name</p></th>
+<th class="head"><p>Unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>time</p></td>
+<td><p>time</p></td>
+<td><p>“seconds since
+1970-01-01 00:00:00”</p></td>
+</tr>
+<tr class="row-odd"><td><p>timestep</p></td>
+<td><p>time step</p></td>
+<td><p>“seconds”</p></td>
+</tr>
+<tr class="row-even"><td><p>vegetation_fraction</p></td>
+<td><p>Vegetation fraction</p></td>
+<td><p>“-”</p></td>
+</tr>
+<tr class="row-odd"><td><p>emissivity_total</p></td>
+<td><p>surface emissivity</p></td>
+<td><p>“-”</p></td>
+</tr>
+<tr class="row-even"><td><p>albedo_direct_vis</p></td>
+<td><p>surface albedo - direct visible</p></td>
+<td><p>“-”</p></td>
+</tr>
+<tr class="row-odd"><td><p>albedo_direct_nir</p></td>
+<td><p>surface albedo - direct NIR</p></td>
+<td><p>“-”</p></td>
+</tr>
+<tr class="row-even"><td><p>albedo_diffuse_vis</p></td>
+<td><p>surface albedo - diffuse visible</p></td>
+<td><p>“-”</p></td>
+</tr>
+<tr class="row-odd"><td><p>albedo_diffuse_nir</p></td>
+<td><p>surface albedo - diffuse NIR</p></td>
+<td><p>“-”</p></td>
+</tr>
+<tr class="row-even"><td><p>temperature_soil_bot</p></td>
+<td><p>deep soil temperature</p></td>
+<td><p>“K”</p></td>
+</tr>
+<tr class="row-odd"><td><p>cm_noahmp</p></td>
+<td><p>surface exchange coefficient
+for momentum</p></td>
+<td><p>“m/s”</p></td>
+</tr>
+<tr class="row-even"><td><p>ch_noahmp</p></td>
+<td><p>surface exchange coefficient
+heat &amp; moisture</p></td>
+<td><p>“m/s”</p></td>
+</tr>
+<tr class="row-odd"><td><p>forcing_height</p></td>
+<td><p>height of forcing</p></td>
+<td><p>“m”</p></td>
+</tr>
+<tr class="row-even"><td><p>max_vegetation_frac</p></td>
+<td><p>maximum fractional coverage of
+vegetation</p></td>
+<td><p>“fraction”</p></td>
+</tr>
+<tr class="row-odd"><td><p>albedo_total</p></td>
+<td><p>grid composite albedo</p></td>
+<td><p>“fraction”</p></td>
+</tr>
+<tr class="row-even"><td><p>snow_water_equiv</p></td>
+<td><p>snow water equivalent</p></td>
+<td><p>“mm”</p></td>
+</tr>
+<tr class="row-odd"><td><p>snow_depth</p></td>
+<td><p>snow depth</p></td>
+<td><p>“m”</p></td>
+</tr>
+<tr class="row-even"><td><p>temperature_radiative</p></td>
+<td><p>surface radiative temperature</p></td>
+<td><p>“K”</p></td>
+</tr>
+<tr class="row-odd"><td><p>soil_moisture_vol</p></td>
+<td><p>volumetric moisture content in
+soil level</p></td>
+<td><p>“m3/m3”</p></td>
+</tr>
+<tr class="row-even"><td><p>temperature_soil</p></td>
+<td><p>temperature in soil
+level</p></td>
+<td><p>“K”</p></td>
+</tr>
+<tr class="row-odd"><td><p>soil_liquid_vol</p></td>
+<td><p>volumetric liquid
+content in soil level</p></td>
+<td><p>“m3/m3”</p></td>
+</tr>
+<tr class="row-even"><td><p>canopy_water</p></td>
+<td><p>canopy moisture
+content</p></td>
+<td><p>“m”</p></td>
+</tr>
+<tr class="row-odd"><td><p>transpiration_heat</p></td>
+<td><p>plant transpiration</p></td>
+<td><p>“W/m2”</p></td>
+</tr>
+<tr class="row-even"><td><p>friction_velocity</p></td>
+<td><p>friction velocity</p></td>
+<td><p>“m/s”</p></td>
+</tr>
+<tr class="row-odd"><td><p>z0_total</p></td>
+<td><p>surface roughness</p></td>
+<td><p>“m”</p></td>
+</tr>
+<tr class="row-even"><td><p>snow_cover_fraction</p></td>
+<td><p>snow cover fraction</p></td>
+<td><p>“fraction”</p></td>
+</tr>
+<tr class="row-odd"><td><p>spec_humidity_surface</p></td>
+<td><p>diagnostic specific humidity at
+surface</p></td>
+<td><p>“kg/kg”</p></td>
+</tr>
+<tr class="row-even"><td><p>ground_heat_total</p></td>
+<td><p>soil heat flux</p></td>
+<td><p>“W/m2”</p></td>
+</tr>
+<tr class="row-odd"><td><p>runoff_baseflow</p></td>
+<td><p>drainage runoff</p></td>
+<td><p>“mm/s”</p></td>
+</tr>
+<tr class="row-even"><td><p>latent_heat_total</p></td>
+<td><p>latent heat flux</p></td>
+<td><p>“W/m2”</p></td>
+</tr>
+<tr class="row-odd"><td><p>sensible_heat_flux</p></td>
+<td><p>sensible heat flux</p></td>
+<td><p>“W/m2”</p></td>
+</tr>
+<tr class="row-even"><td><p>evaporation_potential</p></td>
+<td><p>potential evaporation</p></td>
+<td><p>“mm/s”</p></td>
+</tr>
+<tr class="row-odd"><td><p>runoff_surface</p></td>
+<td><p>surface runoff</p></td>
+<td><p>“mm/s”</p></td>
+</tr>
+<tr class="row-even"><td><p>latent_heat_ground</p></td>
+<td><p>direct soil latent heat flux</p></td>
+<td><p>“W/m2”</p></td>
+</tr>
+<tr class="row-odd"><td><p>latent_heat_canopy</p></td>
+<td><p>canopy water latent heat flux</p></td>
+<td><p>“W/m2”</p></td>
+</tr>
+<tr class="row-even"><td><p>snow_sublimation</p></td>
+<td><p>sublimation/deposit from snowpack</p></td>
+<td><p>“mm/s”</p></td>
+</tr>
+<tr class="row-odd"><td><p>soil_moisture_total</p></td>
+<td><p>total soil column moisture
+content</p></td>
+<td><p>“mm”</p></td>
+</tr>
+<tr class="row-even"><td><p>precip_adv_heat_total</p></td>
+<td><p>precipitation advected heat -
+total</p></td>
+<td><p>“W/m2”</p></td>
+</tr>
+<tr class="row-odd"><td><p>cosine_zenith</p></td>
+<td><p>cosine of zenith angle</p></td>
+<td><p>“-”</p></td>
+</tr>
+<tr class="row-even"><td><p>snow_levels</p></td>
+<td><p>active snow levels</p></td>
+<td><p>“-”</p></td>
+</tr>
+<tr class="row-odd"><td><p>temperature_leaf</p></td>
+<td><p>leaf temperature</p></td>
+<td><p>“K”</p></td>
+</tr>
+<tr class="row-even"><td><p>temperature_ground</p></td>
+<td><p>ground temperature</p></td>
+<td><p>“K”</p></td>
+</tr>
+<tr class="row-odd"><td><p>canopy_ice</p></td>
+<td><p>canopy ice</p></td>
+<td><p>“mm”</p></td>
+</tr>
+<tr class="row-even"><td><p>canopy_liquid</p></td>
+<td><p>canopy liquid</p></td>
+<td><p>“mm”</p></td>
+</tr>
+<tr class="row-odd"><td><p>vapor_pres_canopy_air</p></td>
+<td><p>water vapor pressure in canopy
+air space</p></td>
+<td><p>“Pa”</p></td>
+</tr>
+<tr class="row-even"><td><p>temperature_canopy_air</p></td>
+<td><p>temperature in canopy air space</p></td>
+<td><p>“K”</p></td>
+</tr>
+<tr class="row-odd"><td><p>canopy_wet_fraction</p></td>
+<td><p>fraction of canopy covered by
+water</p></td>
+<td><p>“-”</p></td>
+</tr>
+<tr class="row-even"><td><p>snow_water_equiv_old</p></td>
+<td><p>snow water equivalent - before
+integration</p></td>
+<td><p>“mm”</p></td>
+</tr>
+<tr class="row-odd"><td><p>snow_albedo_old</p></td>
+<td><p>snow albedo - before integration</p></td>
+<td><p>“-”</p></td>
+</tr>
+<tr class="row-even"><td><p>snowfall</p></td>
+<td><p>snowfall</p></td>
+<td><p>“mm/s”</p></td>
+</tr>
+<tr class="row-odd"><td><p>lake_water</p></td>
+<td><p>depth of water in lake</p></td>
+<td><p>“mm”</p></td>
+</tr>
+<tr class="row-even"><td><p>depth_water_table</p></td>
+<td><p>depth to water table</p></td>
+<td><p>“m”</p></td>
+</tr>
+<tr class="row-odd"><td><p>aquifer_water</p></td>
+<td><p>aquifer water content</p></td>
+<td><p>“mm”</p></td>
+</tr>
+<tr class="row-even"><td><p>saturated_water</p></td>
+<td><p>aquifer + saturated soil water
+content</p></td>
+<td><p>“mm”</p></td>
+</tr>
+<tr class="row-odd"><td><p>leaf_carbon</p></td>
+<td><p>carbon in leaves</p></td>
+<td><p>“g/m2”</p></td>
+</tr>
+<tr class="row-even"><td><p>root_carbon</p></td>
+<td><p>carbon in roots</p></td>
+<td><p>“g/m2”</p></td>
+</tr>
+<tr class="row-odd"><td><p>stem_carbon</p></td>
+<td><p>carbon in stems</p></td>
+<td><p>“g/m2”</p></td>
+</tr>
+<tr class="row-even"><td><p>wood_carbon</p></td>
+<td><p>carbon in wood</p></td>
+<td><p>“g/m2”</p></td>
+</tr>
+<tr class="row-odd"><td><p>soil_carbon_stable</p></td>
+<td><p>stable carbon in soil</p></td>
+<td><p>“g/m2”</p></td>
+</tr>
+<tr class="row-even"><td><p>soil_carbon_fast</p></td>
+<td><p>fast carbon in soil</p></td>
+<td><p>“g/m2”</p></td>
+</tr>
+<tr class="row-odd"><td><p>leaf_area_index</p></td>
+<td><p>leaf area index</p></td>
+<td><p>“m2/m2”</p></td>
+</tr>
+<tr class="row-even"><td><p>stem_area_index</p></td>
+<td><p>stem area index</p></td>
+<td><p>“m2/m2”</p></td>
+</tr>
+<tr class="row-odd"><td><p>snow_age</p></td>
+<td><p>BATS non-dimensional snow age</p></td>
+<td><p>“-”</p></td>
+</tr>
+<tr class="row-even"><td><p>soil_moisture_wtd</p></td>
+<td><p>soil water content between bottom
+of the soil and water table</p></td>
+<td><p>“m3/m3”</p></td>
+</tr>
+<tr class="row-odd"><td><p>deep_recharge</p></td>
+<td><p>deep recharge for runoff_option 5</p></td>
+<td><p>“m”</p></td>
+</tr>
+<tr class="row-even"><td><p>recharge</p></td>
+<td><p>recharge for runoff_option 5</p></td>
+<td><p>“m”</p></td>
+</tr>
+<tr class="row-odd"><td><p>temperature_2m</p></td>
+<td><p>grid diagnostic temperature at 2
+meters</p></td>
+<td><p>“K”</p></td>
+</tr>
+<tr class="row-even"><td><p>spec_humidity_2m</p></td>
+<td><p>grid diagnostic specific humidity
+at 2 meters</p></td>
+<td><p>“kg/kg”</p></td>
+</tr>
+<tr class="row-odd"><td><p>eq_soil_water_vol</p></td>
+<td><p>equilibrium soil water content</p></td>
+<td><p>“m3/m3”</p></td>
+</tr>
+<tr class="row-even"><td><p>temperature_snow</p></td>
+<td><p>snow level temperature</p></td>
+<td><p>“K”</p></td>
+</tr>
+<tr class="row-odd"><td><p>interface_depth</p></td>
+<td><p>layer-bottom depth from snow
+surface</p></td>
+<td><p>“m”</p></td>
+</tr>
+<tr class="row-even"><td><p>snow_level_ice</p></td>
+<td><p>ice content of snow levels</p></td>
+<td><p>“mm”</p></td>
+</tr>
+<tr class="row-odd"><td><p>snow_level_liquid</p></td>
+<td><p>liquid content of snow levels</p></td>
+<td><p>“mm”</p></td>
+</tr>
+</tbody>
+</table>
+<p>The restart files also include one text file, <code class="docutils literal notranslate"><span class="pre">${FILEDATE}.coupler.res</span></code>, which contains metadata for the restart.</p>
+<p>Example of <code class="docutils literal notranslate"><span class="pre">${FILEDATE}.coupler.res</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">2        (Calendar: no_calendar=0, thirty_day_months=1, julian=2, gregorian=3, noleap=4)</span>
+<span class="go">2019     12     22     0     0     0    Model start time:   year, month, day, hour, minute, second</span>
+<span class="go">2019     12     22     0     0     0    Current model time: year, month, day, hour, minute, second</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="da-workflow-overview">
+<h2><span class="section-number">3.2.3. </span>DA Workflow Overview<a class="headerlink" href="#da-workflow-overview" title="Permalink to this heading"></a></h2>
+<p>The cycling Noah-MP offline DA run is initiated using <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code> to call the <code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code> script. <code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code> calls a third script (<code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code>) if DA has been activated in the experiment.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The offline Noah-MP model runs in vector space, whereas a cycling Noah-MP offline DA job uses JEDI’s tiled cubed-sphere (<a class="reference internal" href="../Reference/Glossary.html#term-FV3"><span class="xref std std-term">FV3</span></a>) format. <a class="reference internal" href="Model.html#vectortileconverter"><span class="std std-numref">Section 3.1.2</span></a> describes the Vector-to-Tile Converter that maps between these two formats.</p>
+</div>
+<section id="do-submit-cycle-sh">
+<h3><span class="section-number">3.2.3.1. </span><code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code><a class="headerlink" href="#do-submit-cycle-sh" title="Permalink to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code> script sets up the cycling job based on the user’s input settings. <a class="reference internal" href="#dosubmitcyclepng"><span class="std std-numref">Figure 3.1</span></a> illustrates the steps in this process.</p>
+<figure class="align-default" id="id12">
+<span id="dosubmitcyclepng"></span><img alt="The do submit cycle shell script starts by loading configuration files and modules. Then it proceeds to set executables, read in dates, compute forecast run variables, and setup work and output directories for the model. If a restart directory is available in the model output directory, it creates the dates file and submits the submit cycle shell script. If there is no output file, the script will try to copy restart files from an initial conditions directory before creating the dates file and submitting the submit cycle shell script." src="https://github.com/ufs-community/land-DA_workflow/wiki/do_submit_cycle.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 3.1 </span><span class="caption-text"><em>Flowchart of ‘do_submit_cycle.sh’</em></span><a class="headerlink" href="#id12" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>First, <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code> reads in a configuration file for the cycle settings. This file contains the information required to run the cycle: the experiment name, start date, end date, the paths of the working directory (i.e., <code class="docutils literal notranslate"><span class="pre">workdir</span></code>) and output directories, the length of each forecast, atmospheric forcing data, the Finite-Volume Cubed-Sphere Dynamical Core (<a class="reference internal" href="../Reference/Glossary.html#term-FV3"><span class="xref std std-term">FV3</span></a>) resolution and its paths, the number of cycles per job, the directory with initial conditions, a namelist file for running Land DA, and different DA options. Then, the required modules are loaded, and some executables are set for running the cycle. The restart frequency and running day/hours are computed from the inputs, and directories are created for running DA and saving the DA outputs. If restart files are not in the experiment output directory, the script will try to copy the restart files from the <code class="docutils literal notranslate"><span class="pre">ICSDIR</span></code> directory, which should contain initial conditions files if restart files are not available. Finally, the script creates the dates file (<code class="docutils literal notranslate"><span class="pre">analdates.sh</span></code>) and submits the <code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code> script, which is described in detail in the next section.</p>
+</section>
+<section id="submit-cycle-sh">
+<h3><span class="section-number">3.2.3.2. </span><code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code><a class="headerlink" href="#submit-cycle-sh" title="Permalink to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code> script first exports the required paths and loads the required modules. Then, it reads the dates file and runs through all the steps for submitting a cycle if the count of dates is less than the number of cycles per job (see <a class="reference internal" href="#submitcyclepng"><span class="std std-numref">Figure 3.2</span></a>).</p>
+<figure class="align-default" id="id13">
+<span id="submitcyclepng"></span><img alt="The submit cycle shell script starts by exporting paths and loading required modules. Then it starts a loop for the cycle. For each cycle in the experiment, it gets the data assimilation settings and date/time info; computes the restart frequency, run days, and run hours; and copies the restarts into the work directory. If the user is running a DA experiment, the script updates and submits the vector to tile namelists and submits the snow data assimilation. Then it submits the tile to vector namelists and saves the analysis restart. Regardless of whether DA is being used, the script runs the forecast model, updates the model namelist, and submits the land surface model. It checks existing model output, and then the loop ends. If there are more cycles to run, the script will run through this loop until they are complete." src="https://github.com/ufs-community/land-DA_workflow/wiki/submit_cycle.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 3.2 </span><span class="caption-text"><em>Flowchart of ‘submit_cycle.sh’</em></span><a class="headerlink" href="#id13" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>As the script loops through the steps in the process for each cycle, it reads in the DA settings and selects a run type — either DA or <code class="docutils literal notranslate"><span class="pre">openloop</span></code> (which skips DA). Required DA settings include: DA algorithm choice, directory paths for JEDI, Land_DA (where the <code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code> script is located), JEDI’s input observation options, DA window length, options for constructing <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> files, etc.</p>
+<p>Next, the system designates work and output directories and copies restart files into the working directory. If the DA option is selected, the script calls the <code class="docutils literal notranslate"><span class="pre">vector2tile</span></code> function and tries to convert the format of the Noah-MP model in vector space to the JEDI tile format used in <a class="reference internal" href="../Reference/Glossary.html#term-FV3"><span class="xref std std-term">FV3</span></a> cubed-sphere space. After the <code class="docutils literal notranslate"><span class="pre">vector2tile</span></code> is done, the script calls the data assimilation job script (<code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code>) and runs this script. Then, the <code class="docutils literal notranslate"><span class="pre">tile2vector</span></code> function is called and converts the JEDI output tiles back to vector format. The converted vector outputs are saved, and the forecast model is run. Then, the script checks the existing model outputs. Finally, if the current date is less than the end date, this same procedure will be processed for the next cycle.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The v1.2.0 release of Land DA does not support ensemble runs. Thus, the first ensemble member (<code class="docutils literal notranslate"><span class="pre">mem000</span></code>) is the only ensemble member.</p>
+</div>
+<p>Here is an example of a configuration settings file, <code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_era5</span></code>, for the <code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code> script:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>experiment<span class="w"> </span>name
+<span class="go">export exp_name=DA_ERA5_test</span>
+<span class="gp">#</span><span class="nb">export</span><span class="w"> </span><span class="nv">BASELINE</span><span class="o">=</span>hera.internal
+
+<span class="go">STARTDATE=2019122100</span>
+<span class="go">ENDDATE=2019122200</span>
+
+<span class="gp"># </span>Get<span class="w"> </span>commmon<span class="w"> </span>variables
+<span class="go">source ./release.environment</span>
+<span class="gp">#</span><span class="c1">###########################</span>
+
+<span class="gp">#</span>forcing<span class="w"> </span>options:<span class="w"> </span>gswp3,<span class="w"> </span>era5
+<span class="go">export atmos_forc=era5</span>
+
+<span class="gp"># </span><span class="k">for</span><span class="w"> </span>LETKF,<span class="w"> </span>this<span class="w"> </span>is<span class="w"> </span>size<span class="w"> </span>of<span class="w"> </span>ensemble.
+<span class="gp"># </span><span class="k">for</span><span class="w"> </span>LETKF-OI<span class="w"> </span>pseudo<span class="w"> </span>ensemble,<span class="w"> </span>or<span class="w"> </span>non-ensemble<span class="w"> </span>runs<span class="w"> </span>use<span class="w"> </span><span class="m">1</span>
+<span class="go">export ensemble_size=1</span>
+
+<span class="gp"># </span>length<span class="w"> </span>of<span class="w"> </span>each<span class="w"> </span>forecast
+<span class="go">export FCSTHR=24</span>
+
+<span class="gp">#</span>FV3<span class="w"> </span>resolution
+<span class="go">export RES=96</span>
+<span class="go">if [[ $BASELINE =~ &#39;hera.internal&#39; ]]; then</span>
+<span class="go">   export TPATH=/scratch2/NCEPDEV/land/data/fix/C96.mx100_frac/</span>
+<span class="go">else</span>
+<span class="go">   export TPATH=&quot;$LANDDA_INPUTS/forcing/${atmos_forc}/orog_files/&quot;</span>
+<span class="go">fi</span>
+<span class="go">export TSTUB=&quot;oro_C96.mx100&quot; # file stub for orography files in $TPATH</span>
+<span class="gp">                           # </span>oro_C<span class="si">${</span><span class="nv">RES</span><span class="si">}</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>atm<span class="w"> </span>only,<span class="w"> </span>oro_C<span class="si">${</span><span class="nv">RES</span><span class="si">}</span>.mx100<span class="w"> </span><span class="k">for</span><span class="w"> </span>atm/ocean.
+
+<span class="gp"># </span>number<span class="w"> </span>of<span class="w"> </span>cycles<span class="w"> </span>to<span class="w"> </span>submit<span class="w"> </span><span class="k">in</span><span class="w"> </span>a<span class="w"> </span>single<span class="w"> </span>job
+<span class="go">export cycles_per_job=1</span>
+
+<span class="gp"># </span>directory<span class="w"> </span>with<span class="w"> </span>initial<span class="w"> </span>conditions
+<span class="gp"># </span>can<span class="w"> </span>find<span class="w"> </span>some<span class="w"> </span>here:/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/single
+<span class="go">export ICSDIR=$LANDDAROOT/inputs/forcing/${atmos_forc}/orog_files/</span>
+
+<span class="gp"># </span>namelist<span class="w"> </span><span class="k">for</span><span class="w"> </span>do_landDA.sh
+<span class="gp"># </span><span class="nb">set</span><span class="w"> </span>to<span class="w"> </span><span class="s2">&quot;openloop&quot;</span><span class="w"> </span>to<span class="w"> </span>not<span class="w"> </span>call<span class="w"> </span>do_landDA.sh
+<span class="go">export DA_config=&quot;settings_DA_test&quot;</span>
+
+<span class="gp"># </span><span class="k">if</span><span class="w"> </span>want<span class="w"> </span>different<span class="w"> </span>DA<span class="w"> </span>at<span class="w"> </span>different<span class="w"> </span>times,<span class="w"> </span>list<span class="w"> </span>here.
+<span class="go">export DA_config00=${DA_config}</span>
+<span class="go">export DA_config06=${DA_config}</span>
+<span class="go">export DA_config12=${DA_config}</span>
+<span class="go">export DA_config18=${DA_config}</span>
+</pre></div>
+</div>
+<section id="parameters-for-submit-cycle-sh">
+<h4><span class="section-number">3.2.3.2.1. </span>Parameters for <code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code><a class="headerlink" href="#parameters-for-submit-cycle-sh" title="Permalink to this heading"></a></h4>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">exp_name</span></code></dt><dd><p>Specifies the name of experiment.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">STARTDATE</span></code></dt><dd><p>Specifies the experiment start date. The form is YYYYMMDDHH, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ENDDATE</span></code></dt><dd><p>Specifies the experiment end date. The form is YYYYMMDDHH, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">WORKDIR</span></code></dt><dd><p>Specifies the path to a temporary directory from which the experiment is run.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OUTDIR</span></code></dt><dd><p>Specifies the path to a directory where experiment output is saved.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ensemble_size</span></code></dt><dd><p>Specifies the size of the ensemble (i.e., number of ensemble members). Use <code class="docutils literal notranslate"><span class="pre">1</span></code> for non-ensemble runs.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">FCSTHR</span></code></dt><dd><p>Specifies the length of each forecast in hours.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">atmos_forc</span></code></dt><dd><p>Specifies the name of the atmospheric forcing data. Valid values include: <code class="docutils literal notranslate"><span class="pre">gdas</span></code> | <code class="docutils literal notranslate"><span class="pre">era5</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">RES</span></code></dt><dd><p>Specifies the resolution of FV3. Valid values: <code class="docutils literal notranslate"><span class="pre">C96</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Other resolutions are possible but not supported for this release.</p>
+</div>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">TPATH</span></code></dt><dd><p>Specifies the path to the directory containing the orography files.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">TSTUB</span></code></dt><dd><p>Specifies the file stub/name for orography files in <code class="docutils literal notranslate"><span class="pre">TPATH</span></code>. This file stub is named <code class="docutils literal notranslate"><span class="pre">oro_C${RES}</span></code> for atmosphere-only orography files and <code class="docutils literal notranslate"><span class="pre">oro_C{RES}.mx100</span></code> for atmosphere and ocean orography files.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cycles_per_job</span></code></dt><dd><p>Specifies the number of cycles to submit in a single job.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ICSDIR</span></code></dt><dd><p>Specifies the path to a directory containing initial conditions data.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DA_config</span></code></dt><dd><p>Configuration setting file for <code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code>. Set <code class="docutils literal notranslate"><span class="pre">DA_config</span></code> to <code class="docutils literal notranslate"><span class="pre">openloop</span></code> to skip data assimilation (and prevent a call <code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code>).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DA_configXX</span></code></dt><dd><p>Configuration setting file for <code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code> at <code class="docutils literal notranslate"><span class="pre">XX</span></code> hr. If users want to perform DA experiment at different times, list these in the configuration setting file. Set to <code class="docutils literal notranslate"><span class="pre">openloop</span></code> to skip data assimilation (and prevent a call <code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code>).</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="do-landda-sh">
+<h3><span class="section-number">3.2.3.3. </span><code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code><a class="headerlink" href="#do-landda-sh" title="Permalink to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code> runs the data assimilation job inside the <code class="docutils literal notranslate"><span class="pre">sumbit_cycle.sh</span></code> script. Currently, the only DA option is the snow Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI, <span id="id10">Frolov <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id20" title="S. Frolov, J.S. Whitaker, and C. Draper. Including parameterized error covariance in local ensemble solvers: experiments in a 1d model with balance constraints. Quarterly Journal of the Royal Meteorological Society, 2022. doi:10.1002/qj.4289.">FJSWD22</a>]</span>, 2022). <a class="reference internal" href="#dolanddapng"><span class="std std-numref">Figure 3.3</span></a> describes the workflow of this script.</p>
+<figure class="align-default" id="id14">
+<span id="dolanddapng"></span><img alt="The do land da shell script starts by reading in the configuration file and setting up directories. Then it formats date strings, stages restart files, and prepares the observation files. It constructs yaml files based on requested JEDI type and then proceeds to create the background ensembles using LETKF-OI. Next, the script runs JEDI and applies the increment to use restarts. Lastly, it performs clean-up operations." src="https://github.com/ufs-community/land-DA_workflow/wiki/do_landDA.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 3.3 </span><span class="caption-text"><em>Flowchart of ‘do_landDA.sh’</em></span><a class="headerlink" href="#id14" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>First, to run the DA job, <code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code> reads in the configuration file and sets up the directories. The date strings are formatted for the current date and previous date. For each tile, restarts are staged to apply the JEDI update. In this stage, all files will get directly updated. Then, the observation files are read and prepared for this job. Once the JEDI type is determined, <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> files are constructed. Note that if the user specifies a <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> file, the script uses that one. Otherwise, the script builds the <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> files. For LETKF-OI, a pseudo-ensemble is created by running the python script (<code class="docutils literal notranslate"><span class="pre">letkf_create_ens.py</span></code>). Once the ensemble is created, the script runs JEDI and applies increment to UFS restarts.</p>
+<p>Below, users can find an excerpt of a configuration settings file, <code class="docutils literal notranslate"><span class="pre">settings_DA_template</span></code>, for the <code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code> script:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">LANDDADIR=${CYCLEDIR}/DA_update/</span>
+
+<span class="gp">#</span><span class="c1">###########################</span>
+<span class="gp"># </span>DA<span class="w"> </span>options
+
+<span class="go">OBS_TYPES=(&quot;GHCN&quot;)</span>
+<span class="go">JEDI_TYPES=(&quot;DA&quot;)</span>
+
+<span class="go">WINLEN=24</span>
+
+<span class="gp"># </span>YAMLS
+<span class="go">YAML_DA=construct</span>
+<span class="go">YAML_HOFX=construct</span>
+
+<span class="gp"># </span>JEDI<span class="w"> </span>DIRECTORIES
+<span class="gp">#</span><span class="nv">JEDI_EXECDIR</span><span class="o">=</span><span class="w">   </span><span class="c1"># JEDI FV3 build directory</span>
+<span class="gp">#</span><span class="nv">IODA_BUILD_DIR</span><span class="o">=</span><span class="w"> </span><span class="c1"># JEDI IODA-converter source directory</span>
+<span class="gp">#</span><span class="nv">fv3bundle_vn</span><span class="o">=</span><span class="w"> </span><span class="c1"># date for JEDI fv3 bundle checkout (used to select correct yaml)</span>
+</pre></div>
+</div>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">LANDDADIR</span></code></dt><dd><p>Specifies the path to the <code class="docutils literal notranslate"><span class="pre">do_landDA.sh</span></code> script.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OBS_TYPES</span></code></dt><dd><p>Specifies the observation type. Format is “Obs1” “Obs2”. Currently, only GHCN observation data is available.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">JEDI_TYPES</span></code></dt><dd><p>Specifies the JEDI call type for each observation type above. Format is “type1” “type2”. Valid values: <code class="docutils literal notranslate"><span class="pre">DA</span></code> | <code class="docutils literal notranslate"><span class="pre">HOFX</span></code></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DA</p></td>
+<td><p>Data assimilation</p></td>
+</tr>
+<tr class="row-odd"><td><p>HOFX</p></td>
+<td><p>A generic application for running the model forecast
+(or reading forecasts from file) and computing H(x)</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">WINLEN</span></code></dt><dd><p>Specifies the DA window length. It is generally the same as the <code class="docutils literal notranslate"><span class="pre">FCSTLEN</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">YAML_DA</span></code></dt><dd><p>Specifies whether to construct the <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> name based on requested observation types and their availabilities. Valid values: <code class="docutils literal notranslate"><span class="pre">construct</span></code> | <em>desired YAML name</em></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>construct</p></td>
+<td><p>Enable constructing the YAML</p></td>
+</tr>
+<tr class="row-odd"><td><p>desired YAML name</p></td>
+<td><p>Will not test for availability of observations</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">JEDI_EXECDIR</span></code></dt><dd><p>Specifies the JEDI FV3 build directory. If using different JEDI version, users will need to edit the <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> files with the desired directory path.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">fv3bundle_vn</span></code></dt><dd><p>Specifies the date for JEDI <code class="docutils literal notranslate"><span class="pre">fv3-bundle</span></code> checkout (used to select correct <code class="docutils literal notranslate"><span class="pre">.yaml</span></code>).</p>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Model.html" class="btn btn-neutral float-left" title="3.1. Noah-MP Land Surface Model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../Reference/index.html" class="btn btn-neutral float-right" title="4. Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
