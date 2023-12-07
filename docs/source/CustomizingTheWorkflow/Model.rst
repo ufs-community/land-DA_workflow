@@ -7,12 +7,6 @@ Noah-MP Land Surface Model
 This chapter provides practical information on input files and parameters for the Noah-MP Land Surface Model (LSM) and its Vector-to-Tile Converter component.
 For background information on the Noah-MP LSM, see :numref:`Section %s <NoahMP>` of the Introduction. 
 
-.. attention::
-
-   The supported and tested configuration for this release is the :term:`DATM` + :term:`LND` configuration using the Noah-MP land component with :term:`GSWP3` data. However, information is also provided on the land driver-based configuration with :term:`ERA5` data for user convenience. 
-
-.. COMMENT: Post this comment elsewhere, too?
-
 .. _InputFiles:
 
 Input Files 
@@ -74,9 +68,7 @@ On Level 1 platforms, the requisite data is pre-staged at the locations listed i
 
 .. attention::
 
-   The DATM + LND option is only supported on Level 1 systems (i.e., Hera and Orion). It is not tested or supported using a container. 
-
-.. COMMENT: Check that this is true... 
+   The DATM + LND option is only supported on Level 1 systems (i.e., Hera and Orion). It is not tested or supported using a container except on Hera and Orion. 
 
 Forcing Files
 ---------------
@@ -181,8 +173,6 @@ The ``C96_grid.tile*.nc`` files contain grid information for tiles 1-6 at C96 gr
 .. note:: 
 
    ``grid_spec.nc`` and ``C96.mosaic.nc`` are the same file under different names and may be used interchangeably. 
-
-.. COMMENT: Get more info on these files!
 
 .. _land-driver-input-files:
 
@@ -687,13 +677,8 @@ Forcing Parameters
       +----------------+-----------------------------------------------------+
       | gdas           | hourly forcing stored in daily files                |
       +----------------+-----------------------------------------------------+
-
-      .. note:: 
-
-         There is no separate ``era5`` format. It is the same as the ``gdas`` format, 
-         so users should select ``gdas`` for this parameter when using ``era5`` forcing. 
-
-.. COMMENT: Check whether this (above) is still correct!
+      | era5           | hourly forcing stored in daily files                |
+      +----------------+-----------------------------------------------------+
 
 ``forcing_filename``
    Specifies the forcing file name prefix. A date will be appended to this prefix. For example: ``C96_ERA5_forcing_2020-10-01.nc``. The prefix merely indicates which grid (``C96``) and source (i.e., GDAS, GEFS) will be used. 
