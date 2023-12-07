@@ -1056,7 +1056,7 @@ The ``do_landDA.sh`` runs the data assimilation job inside the ``sumbit_cycle.sh
 
 First, to run the DA job, ``do_landDA.sh`` reads in the configuration file and sets up the directories. The date strings are formatted for the current date and previous date. For each tile, restarts are staged to apply the JEDI update. In this stage, all files will get directly updated. Then, the observation files are read and prepared for this job. Once the JEDI type is determined, ``.yaml`` files are constructed. Note that if the user specifies a ``.yaml`` file, the script uses that one. Otherwise, the script builds the ``.yaml`` files. For LETKF-OI, a pseudo-ensemble is created by running the python script (``letkf_create_ens.py``). Once the ensemble is created, the script runs JEDI and applies increment to UFS restarts.
 
-Below, users can find an example of a configuration settings file, ``settings_DA_template``, for the ``do_landDA.sh`` script:
+Below, users can find an excerpt of a configuration settings file, ``settings_DA_template``, for the ``do_landDA.sh`` script:
 
 .. code-block:: console
 
