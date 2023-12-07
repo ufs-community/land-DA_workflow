@@ -157,8 +157,6 @@ Users may find the following example ``GHCN.yaml`` configuration file to be a he
 
    Any default values indicated in the sections below are the defaults set in ``letkfoi_snow.yaml`` or ``GHCN.yaml`` (found within the ``land-DA_workflow/DA_update/jedi/fv3-jedi/yaml_files/20220921`` directory).
 
-.. COMMENT: Update example file?
-
 Geometry
 ^^^^^^^^^^^
 
@@ -557,9 +555,7 @@ Snow depth observations are taken from the `Global Historical Climatology Networ
 
 where ``${YYYY}`` should be replaced with the year of interest. Note that these yearly tarballs contain all measurement types from the daily GHCN output, and thus, snow depth must be manually extracted from this broader data set.
 
-These raw snow depth observations need to be converted into IODA-formatted netCDF files for ingestion into the JEDI LETKF system. However, this process was preemptively handled outside of the Land DA workflow, and initial GHCN IODA files for 2016 and 2020 were provided by NOAA PSL (Clara Draper).
-
-.. COMMENT: Update where files are from? 
+These raw snow depth observations need to be converted into IODA-formatted netCDF files for ingestion into the JEDI LETKF system. However, this process was preemptively handled outside of the Land DA workflow, and the 2019 GHCN IODA file was provided by NOAA PSL (Clara Draper).
 
 The IODA-formatted GHCN files are structured as follows (using 20160102 as an example):
 
@@ -628,9 +624,7 @@ Observation Location and Processing
 GHCN
 ^^^^^^
 
-GHCN files for 2000 and 2019 are already provided in IODA format for the |latestr| release. :numref:`Table %s <GetData>` indicates where users can find data on NOAA :term:`RDHPCS` platforms. Tar files containing the 2000 and 2019 data are located in the publicly-available `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html>`__. Once untarred, the snow depth files are located in ``/inputs/DA/snow_depth/GHCN/data_proc/{YEAR}``. These GHCN IODA files were provided by Clara Draper (NOAA PSL). Each file follows the naming convention of ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc``, where ``${YYYY}`` is the four-digit cycle year, ``${MM}`` is the two-digit cycle month, and ``${DD}`` is the two-digit cycle day. 
-
-.. COMMENT: Did Clara provide these most recent GHCN files?
+GHCN files for 2000 and 2019 are already provided in IODA format for the |latestr| release. :numref:`Table %s <GetData>` indicates where users can find data on NOAA :term:`RDHPCS` platforms. Tar files containing the 2000 and 2019 data are located in the publicly-available `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html>`__. Once untarred, the snow depth files are located in ``/inputs/DA/snow_depth/GHCN/data_proc/{YEAR}``. The 2019 GHCN IODA file was provided by Clara Draper (NOAA PSL). Each file follows the naming convention of ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc``, where ``${YYYY}`` is the four-digit cycle year, ``${MM}`` is the two-digit cycle month, and ``${DD}`` is the two-digit cycle day. 
 
 In each experiment, the ``DA_config`` file sets the name of the experiment configuration file. This configuration file is typically named ``settings_DA_test``. Before assimilation, if "GHCN" was specified as the observation type in the ``DA_config`` file, the ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` file corresponding to the specified cycle date is soft-linked to the JEDI working directory (``${JEDIWORKDIR}``) with a naming-convention change (i.e., ``GHCN_${YYYY}${MM}${DD}${HH}.nc``). Here, the GHCN IODA file is appended with the cycle hour, ``${HH}`` which is extracted from the ``${STARTDATE}`` variable defined in the relevant ``DA_config`` file. 
 
