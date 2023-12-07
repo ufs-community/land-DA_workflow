@@ -4,7 +4,6 @@
 export exp_name=DA_ERA5_test
 #export BASELINE=hera.internal
 
-#ERA5 forcing is available for 2020-2021
 STARTDATE=2019122100
 ENDDATE=2019122200
 

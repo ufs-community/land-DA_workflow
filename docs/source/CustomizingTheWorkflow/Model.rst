@@ -5,39 +5,189 @@ Noah-MP Land Surface Model
 ********************************
 
 This chapter provides practical information on input files and parameters for the Noah-MP Land Surface Model (LSM) and its Vector-to-Tile Converter component.
-For background information on the Noah-MP Land Surface Model (LSM), see :numref:`Section %s <NoahMP>` of the Introduction. 
+For background information on the Noah-MP LSM, see :numref:`Section %s <NoahMP>` of the Introduction. 
 
 .. _InputFiles:
 
 Input Files 
 **************
 
-The UFS land model requires multiple input files to run: static datasets
+The UFS land model requires multiple input files to run, including static datasets
 (fix files containing climatological information, terrain, and land use
-data), initial conditions and forcing files, and model configuration
-files (such as namelists). Users may reference the `Community Noah-MP User's
+data), initial conditions files, and forcing files. Users may reference the `Community Noah-MP User's
 Guide <https://www.jsg.utexas.edu/noah-mp/files/Users_Guide_v0.pdf>`__
 for a detailed technical description of certain elements of the Noah-MP model.
 
-There are several important files used to specify model parameters: 
-the static file (``ufs-land_C96_static_fields.nc``), 
-the initial conditions file (``ufs-land_C96_init_*.nc``), 
-and the model configuration file (``ufs-land.namelist.noahmp``). 
-These files and their parameters are described in the following subsections. 
-They are publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. 
-Users can download the data and untar the file via the command line, replacing 
-``{YEAR}`` with the year for the desired data. Release data is currently 
-available for 2016 and 2020:
+In both the land component and land driver implementations of Noah-MP, static file(s) and initial conditions file(s) specify model parameters. 
+These files are publicly available via the `Land DA data bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. 
+Users can download the data and untar the file via the command line:
 
 .. _TarFile:
 
 .. code-block:: console
    
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/landda-input-data-{YEAR}.tar.gz
-   tar xvfz landda-input-data-{YEAR}.tar.gz
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/Landdav1.2.0_input_data.tar.gz
+   tar xvfz Landdav1.2.0_input_data.tar.gz
+
+These files and their parameters are described in the following subsections.
+
+.. note::
+    
+   * Users who wish to use the UFS land component with GSWP3 data can proceed to the :numref:`Section %s <datm-lnd-input-files>`. 
+   * Users who wish to run the land driver implementation of Land DA with ERA5 data should proceed to :numref:`Section %s <land-driver-input-files>`. 
+
+.. _view-netcdf-files:
+
+Viewing netCDF Files
+======================
+
+Users can view file information and notes for NetCDF files using the ``ncdump`` module. First, load a compiler, MPI, and NetCDF modules: 
+
+.. code-block:: console
+
+   module load intel/2022.1.2 impi/2022.1.2 netcdf/4.7.4
+
+To view information on the variables contained in a :term:`netCDF` file, users can run ``ncdump -h filename.nc``. Users will need to replace ``filename.nc`` with the actual name of the file they want to view. For example: 
+
+.. code-block:: console
+
+   ncdump -h /path/to/ufs-land_C96_init_fields.tile1.nc
+
+where ``/path/to/`` is replaced by the actual path to the file. Users may also need to modify the module load command to reflect modules that are available on their system. 
+
+Alternatively, users on Level 1 platforms can load the Land DA environment, which contains the NetCDF module, from ``land-DA_workflow`` as described in :numref:`Section %s <build-land-da>`. 
+
+.. _datm-lnd-input-files:
+
+Input Files for the ``DATM`` + ``LND`` Configuration with GSWP3 data
+======================================================================
+
+With the integration of the UFS Noah-MP land component into the Land DA System in the v1.2.0 release, model forcing options have been enhanced so that users can run the UFS land component (:term:`LND`) with the data atmosphere component (:term:`DATM`). Updates provide a new analysis option on the cubed-sphere native grid using :term:`GSWP3` forcing data to run a single-day experiment for 2000-01-03. An artificial GHCN snow depth observation is provided for data assimilation (see :numref:`Section %s <observation-data>` for more on GHCN files). The GHCN observations will be extended in the near future. A new configuration setting file is also provided (``settings_DA_cycle_gswp3``). 
+
+On Level 1 platforms, the requisite data is pre-staged at the locations listed in :numref:`Section %s <Level1Data>`. The data are also publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. 
+
+.. attention::
+
+   The DATM + LND option is only supported on Level 1 systems (i.e., Hera and Orion). It is not tested or supported using a container except on Hera and Orion. 
+
+Forcing Files
+---------------
+
+:term:`Forcing files<forcing data>` for the land component configuration come from the Global Soil Wetness Project Phase 3 (`GSWP3 <https://hydro.iis.u-tokyo.ac.jp/GSWP3/>`__) dataset. They are located in the ``inputs/UFS_WM/DATM_GSWP3_input_data`` directory (downloaded :ref:`above <InputFiles>`).
+
+.. code-block:: console 
+
+   clmforc.GSWP3.c2011.0.5x0.5.Prec.1999-12.nc
+   clmforc.GSWP3.c2011.0.5x0.5.Prec.2000-01.nc
+   clmforc.GSWP3.c2011.0.5x0.5.Solr.1999-12.nc
+   clmforc.GSWP3.c2011.0.5x0.5.Solr.2000-01.nc
+   clmforc.GSWP3.c2011.0.5x0.5.TPQWL.1999-12.nc
+   clmforc.GSWP3.c2011.0.5x0.5.TPQWL.2000-01.nc
+   clmforc.GSWP3.c2011.0.5x0.5.TPQWL.SCRIP.210520_ESMFmesh.nc
+   fv1.9x2.5_141008_ESMFmesh.nc
+   topodata_0.9x1.25_USGS_070110_stream_c151201.nc
+   topodata_0.9x1.SCRIP.210520_ESMFmesh.nc
+
+These files provide atmospheric forcing data related to precipitation, solar radiation, longwave radiation, temperature, pressure, winds, humidity, topography, and mesh data. 
+
+Noah-MP Initial Conditions
+----------------------------
+
+The offline Land DA System currently only supports snow DA. 
+The initial conditions files include the initial state variables that are required for the UFS land snow DA to begin a cycling run. The data must be provided in :term:`netCDF` format. 
+
+By default, on Level 1 systems and in the Land DA data bucket, the initial conditions files are located at ``inputs/UFS_WM/NOAHMP_IC`` (downloaded :ref:`above <InputFiles>`). Each file corresponds to one of the six tiles of the `global FV3 grid <https://www.gfdl.noaa.gov/fv3/fv3-grids/>`__.  
+
+.. code-block:: console
+
+   ufs-land_C96_init_fields.tile*.nc
+
+The files contain the following data:             
+
+.. list-table:: *Variables specified in the initial conditions file ``ufs-land_C96_init_fields.tile*.nc``*
+   :header-rows: 1
+
+   * - Variables
+     - Long Name
+     - Units 
+   * - time(time)
+     - "time"
+     - "seconds since 1970-01-01 00:00:00"
+   * - geolat(lat, lon)
+     - "latitude"
+     - "degrees_north"
+   * - geolon(lat, lon)
+     - "longitude"
+     - "degrees_east"
+   * - snow_water_equivalent(time, lat, lon)
+     - "snow water equivalent"
+     - "mm"
+   * - snow_depth(time, lat, lon)
+     - "snow depth"
+     - "m"
+   * - canopy_water(time, lat, lon)
+     - "canopy surface water"
+     - "mm"
+   * - skin_temperature(time, lat, lon)
+     - "surface skin temperature"
+     - "K"
+   * - soil_temperature(time, soil_levels, lat, lon)
+     - "soil temperature"
+     - "K"
+   * - soil_moisture(time, soil_levels, lat, lon)
+     - "volumetric soil moisture"
+     - "m3/m3"
+   * - soil_liquid(time, soil_levels, lat, lon)
+     - "volumetric soil liquid"
+     - "m3/m3"
+
+
+FV3_fix_tiled Files
+---------------------
+
+The UFS land component also requires a series of tiled static (fix) files that will be used by the component model. These files contain information on maximum snow albedo, slope type, soil color and type, substrate temperature, vegetation greenness and type, and orography (grid and land mask information). These files are located in the ``inputs/UFS_WM/FV3_fix_tiled/C96/`` directory (downloaded :ref:`above <InputFiles>`). 
+
+.. code-block:: console
+
+   C96.maximum_snow_albedo.tile*.nc 
+   C96.slope_type.tile*.nc
+   C96.soil_type.tile*.nc
+   C96.soil_color.tile*.nc
+   C96.substrate_temperature.tile*.nc
+   C96.vegetation_greenness.tile*.nc
+   C96.vegetation_type.tile*.nc
+   oro_C96.mx100.tile*.nc
+
+FV3_input_data
+----------------
+
+The ``FV3_input_data`` directory contains grid information used by the model. This grid information is located in ``inputs/UFS_WM/FV3_input_data/INPUT`` (downloaded :ref:`above <InputFiles>`).
+
+.. code-block:: console
+
+   C96_grid.tile*.nc
+   grid_spec.nc     # aka C96.mosaic.nc
+
+The ``C96_grid.tile*.nc`` files contain grid information for tiles 1-6 at C96 grid resolution. The ``grid_spec.nc`` file contains information on the mosaic grid. 
+
+.. note:: 
+
+   ``grid_spec.nc`` and ``C96.mosaic.nc`` are the same file under different names and may be used interchangeably. 
+
+.. _land-driver-input-files:
+
+Input Files for the Land Driver Configuration with ERA5 Data
+==============================================================
+
+There are several important files used to specify model parameters in the land driver-based offline Land DA System: 
+the static file (``ufs-land_C96_static_fields.nc``), 
+the initial conditions file (``ufs-land_C96_init_*.nc``), 
+and the model configuration file (``ufs-land.namelist.noahmp``). 
+These files and their parameters are described in the following subsections. 
+They are publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. 
 
 Static File (``ufs-land_C96_static_fields.nc``)
-=================================================
+-------------------------------------------------
 
 The static file includes specific information on location, time, soil layers, and fixed (invariant) experiment parameters that are required for Noah-MP to run. The data must be provided in :term:`netCDF` format.
 
@@ -45,11 +195,9 @@ The static file is available in the ``inputs`` data directory (downloaded :ref:`
 
 .. code-block:: 
 
-   inputs/forcing/<source>/static/ufs-land_C96_static_fields.nc
+   inputs/forcing/era5/static/ufs-land_C96_static_fields.nc
 
-where ``<source>`` is either ``gdas`` or ``era5``. 
-
-.. table:: Configuration variables specified in the static file (ufs-land_C96_static_fields.nc)
+.. table:: *Configuration variables specified in the static file* (ufs-land_C96_static_fields.nc)
 
    +---------------------------+------------------------------------------+
    | Configuration Variables   | Description                              |
@@ -105,7 +253,7 @@ where ``<source>`` is either ``gdas`` or ``era5``.
    +---------------------------+------------------------------------------+
 
 Initial Conditions File (``ufs-land_C96_init_*.nc``)
-=================================================================
+------------------------------------------------------
 
 The offline Land DA System currently only supports snow DA. 
 The initial conditions file includes the initial state variables that are required for the UFS land snow DA to begin a cycling run. The data must be provided in :term:`netCDF` format.
@@ -114,8 +262,7 @@ The initial conditions file is available in the ``inputs`` data directory (downl
 
 .. code-block:: 
 
-   inputs/forcing/GDAS/init/ufs-land_C96_init_fields_1hr.nc
-   inputs/forcing/ERA5/init/ufs-land_C96_init_2010-12-31_23-00-00.nc
+   inputs/forcing/era5/init/ufs-land_C96_init_2010-12-31_23-00-00.nc
 
 .. table:: Configuration variables specified in the initial forcing file (ufs-land_C96_init_fields_1hr.nc)
 
@@ -150,7 +297,7 @@ The initial conditions file is available in the ``inputs`` data directory (downl
    +-----------------------------+----------------------------------------+
 
 Model Configuration File (``ufs-land.namelist.noahmp``)
-==========================================================
+----------------------------------------------------------
 
 The UFS land model uses a series of template files combined with 
 user-selected settings to create required namelists and parameter
@@ -163,7 +310,7 @@ from the ``template.ufs-noahMP.namelist.*`` file.
    Any default values indicated are the defaults set in the ``template.ufs-noahMP.namelist.*`` files. 
 
 Run Setup Parameters
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 ``static_file``
    Specifies the path to the UFS land static file. 
@@ -240,7 +387,7 @@ Run Setup Parameters
    Specifies the number of timesteps to run.
 
 Land Model Options
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 ``land_model``
    Specifies which land surface model to use. Valid values: ``1`` | ``2``
@@ -254,7 +401,7 @@ Land Model Options
       +--------+-------------+
 
 Structure-Related Parameters
--------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``num_soil_levels``
    Specifies the number of soil levels.
@@ -263,7 +410,7 @@ Structure-Related Parameters
    Specifies the forcing height in meters.
 
 Soil Setup Parameters
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 ``soil_level_thickness``
    Specifies the thickness (in meters) of each of the soil layers (top layer to bottom layer).
@@ -272,7 +419,7 @@ Soil Setup Parameters
    Specifies the soil level centroids from the surface (in meters).
 
 Noah-MP Options
-------------------------
+^^^^^^^^^^^^^^^^^^
 
 ``dynamic_vegetation_option``: (Default: ``4``)
    Specifies the dynamic vegetation model option. Valid values: ``1`` | ``2`` | ``3`` | ``4`` | ``5`` | ``6`` | ``7`` | ``8`` | ``9`` | ``10``
@@ -350,7 +497,7 @@ Noah-MP Options
       +--------+-----------------------------------------------------------------------+
       | 4      | BATS surface and subsurface runoff (free drainage)                    |
       +--------+-----------------------------------------------------------------------+
-      | 5      | Miguez-Macho&Fan groundwater scheme (:cite:t:`Miguez-MachoEtAl2007`;  |
+      | 5      | Miguez-Macho & Fan groundwater scheme (:cite:t:`Miguez-MachoEtAl2007`;|
       |        | :cite:t:`FanEtAl2007`)                                                |
       +--------+-----------------------------------------------------------------------+
 
@@ -513,7 +660,7 @@ Noah-MP Options
       +--------+------------------------------------------------+
 
 Forcing Parameters
----------------------
+^^^^^^^^^^^^^^^^^^^^^
 
 ``forcing_timestep_seconds``: (Default: ``3600``)
    Specifies the forcing timestep in seconds.
@@ -530,11 +677,8 @@ Forcing Parameters
       +----------------+-----------------------------------------------------+
       | gdas           | hourly forcing stored in daily files                |
       +----------------+-----------------------------------------------------+
-
-      .. note:: 
-
-         There is no separate ``era5`` format. It is the same as the ``gdas`` format, 
-         so users should select ``gdas`` for this parameter when using ``era5`` forcing. 
+      | era5           | hourly forcing stored in daily files                |
+      +----------------+-----------------------------------------------------+
 
 ``forcing_filename``
    Specifies the forcing file name prefix. A date will be appended to this prefix. For example: ``C96_ERA5_forcing_2020-10-01.nc``. The prefix merely indicates which grid (``C96``) and source (i.e., GDAS, GEFS) will be used. 
@@ -589,7 +733,7 @@ Forcing Parameters
    Specifies the variable name of forcing longwave radiation.
 
 Example Namelist Entry
---------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 The ``ufs-land.namelist.noahmp`` file should be similar to the following example, which comes from the ``template.ufs-noahMP.namelist.gdas`` file. 
 
@@ -597,12 +741,13 @@ The ``ufs-land.namelist.noahmp`` file should be similar to the following example
    
    &run_setup
 
-      static_file      = "/LANDDA_INPUTS/forcing/gdas/static/ufs-land_C96_static_fields.nc"
-      init_file        = "/LANDDA_INPUTS/forcing/gdas/init/ufs-land_C96_init_fields_1hr.nc"
-      forcing_dir      = "/LANDDA_INPUTS/forcing/gdas/gdas/forcing"
-      
+      static_file      = "/LANDDA_INPUTS/forcing/era5/static/ufs-land_C96_static_fields.nc"
+      init_file        = "/LANDDA_INPUTS/forcing/era5/init/ufs-land_C96_init_2010-12-31_23-00-00.nc"
+      forcing_dir      = "/LANDDA_INPUTS/forcing/era5/datm/C96/"
+   
       separate_output = .false.
-      output_dir       = "./"
+      output_dir       = "./noahmp_output/"
+      output_frequency_s = 0
 
       restart_frequency_s = XXFREQ
       restart_simulation  = .true.
@@ -611,12 +756,12 @@ The ``ufs-land.namelist.noahmp`` file should be similar to the following example
 
       timestep_seconds = 3600
 
-   ! simulation_start is required
-   ! either set simulation_end or run_* or run_timesteps, priority
-   !   1. simulation_end 2. run_[days/hours/minutes/seconds] 3. run_timesteps
+    ! simulation_start is required
+    ! either set simulation_end or run_* or run_timesteps, priority
+    !   1. simulation_end 2. run_[days/hours/minutes/seconds] 3. run_timesteps
 
-      simulation_start = "2000-01-01 00:00:00"   ! start date [yyyy-mm-dd hh:mm:ss]
-      ! simulation_end   = "1999-01-01 06:00:00"   !   end date [yyyy-mm-dd hh:mm:ss]
+      simulation_start = "2011-01-01 00:00:00"      ! start date [yyyy-mm-dd hh:mm:ss]
+      !  simulation_end   = "1999-01-01 06:00:00"   !   end date [yyyy-mm-dd hh:mm:ss]
 
       run_days         = XXRDD   ! number of days to run
       run_hours        = XXRHH   ! number of hours to run
@@ -626,8 +771,8 @@ The ``ufs-land.namelist.noahmp`` file should be similar to the following example
       run_timesteps    = 0       ! number of timesteps to run
       
       location_start   = 1
-      location_end     = 18360
-
+      location_end     = 18322
+      
    /
 
    &land_model_option
@@ -636,7 +781,7 @@ The ``ufs-land.namelist.noahmp`` file should be similar to the following example
 
    &structure
       num_soil_levels   = 4     ! number of soil levels
-      forcing_height    = 6     ! forcing height [m]
+      forcing_height    = 10    ! forcing height [m]
    /
 
    &soil_setup
@@ -664,17 +809,29 @@ The ``ufs-land.namelist.noahmp`` file should be similar to the following example
 
    &forcing
       forcing_timestep_seconds       = 3600
-      forcing_type                   = "gdas"
-      forcing_filename               = "C96_GDAS_forcing_"
+      forcing_regrid                 = "none"
+      forcing_regrid_weights_filename= ""
+      forcing_type                   = "dd_1h"
+      forcing_filename               = "C96_ERA5_forcing_"
       forcing_interp_solar           = "linear"  ! gswp3_zenith or linear
       forcing_time_solar             = "instantaneous"  ! gswp3_average or instantaneous
-      forcing_name_precipitation     = "precipitation_conserve"
+      forcing_name_precipitation     = "precipitation_bilinear"
       forcing_name_temperature       = "temperature"
       forcing_name_specific_humidity = "specific_humidity"
       forcing_name_wind_speed        = "wind_speed"
       forcing_name_pressure          = "surface_pressure"
       forcing_name_sw_radiation      = "solar_radiation"
       forcing_name_lw_radiation      = "longwave_radiation"
+   /
+
+   &io
+      output_names  =      "snow_water_equiv",
+                           "snow_depth",
+                           "temperature_snow"
+      daily_mean_names   = ""
+      monthly_mean_names = ""
+      solar_noon_names =   ""
+      restart_names = ""
    /
 
 
@@ -698,19 +855,21 @@ The input files containing grid information are listed in :numref:`Table %s <Gri
 
 .. _GridInputFiles:
 
-.. table:: Input Files Containing Grid Information
+.. list-table:: Input Files Containing Grid Information
+   :header-rows: 1
 
-   +-----------------------------+--------------------------------------------------------------------------+
-   | Filename                    | Description                                                              |
-   +=============================+==========================================================================+
-   | Cxx_grid.tile[1-6].nc       | Cxx grid information for tiles 1-6, where ``xx`` is the grid resolution. |
-   +-----------------------------+--------------------------------------------------------------------------+
-   | Cxx_oro_data.tile[1-6].nc / | Orography files that contain grid and land mask information. Cxx refers  |
-   |                             | to the atmospheric resolution, and mx100 refers to the ocean resolution  |
-   | oro_Cxx.mx100.tile[1-6].nc  | (100=1º). Both file names refer to the same file; there are symbolic     |
-   |                             | links between them.                                                      |
-   +-----------------------------+--------------------------------------------------------------------------+
-   
+   * - Filename
+     - Description
+   * - Cxx_grid.tile[1-6].nc
+     - Cxx grid information for tiles 1-6, where ``xx`` is the grid resolution.
+   * - Cxx_oro_data.tile[1-6].nc 
+       
+       oro_Cxx.mx100.tile[1-6].nc
+
+     - Orography files that contain grid and land mask information. 
+       Cxx refers to the atmospheric resolution, and mx100 refers to the ocean 
+       resolution (100=1º). Both file names refer to the same file; there are symbolic links between them. 
+
 Configuration File
 ======================
 
