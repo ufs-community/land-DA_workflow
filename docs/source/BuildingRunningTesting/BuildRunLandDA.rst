@@ -75,7 +75,7 @@ To clone the most recent release, run the same command with |tag| in place of ``
 
 .. code-block:: console
 
-   git clone -b ufs-land-da-v1.2.0 --recursive https://github.com/ufs-community/land-DA_workflow.git
+   git clone -b release/public-v1.2.0 --recursive https://github.com/ufs-community/land-DA_workflow.git
 
 .. _build-land-da:
 
