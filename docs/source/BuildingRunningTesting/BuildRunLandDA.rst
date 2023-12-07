@@ -152,7 +152,6 @@ To configure an experiment:
       
       sed -i 's/--cpus-per-task=1/--cpus-per-task=4/g' submit_cycle.sh 
 
-   .. COMMENT: 4, or 5? Both are in the doc provided to me...
 
 #. When using GSWP3 forcing option, users may also have to alter ``MACHINE_ID`` in line 8 of ``settings_DA_cycle_gswp3``. The default value is ``hera``, but ``orion`` is another option:
 
