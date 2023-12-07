@@ -935,49 +935,59 @@ Next, the system designates work and output directories and copies restart files
 
    The |latestr| release of Land DA does not support ensemble runs. Thus, the first ensemble member (``mem000``) is the only ensemble member. 
 
-Here is an example of the configuration settings file, ``settings_cycle``, for the ``submit_cycle`` script:
-
-.. COMMENT: Where is this file found? There doesn't seem to be one named settings_cycle. Do we mean ``settings_DA_cycle_*``?
+Here is an example of the configuration settings file, ``settings_DA_cycle_*``, for the ``submit_cycle.sh`` script:
 
 .. code-block:: console
    
-   export exp_name=DA_IMS_test
-   STARTDATE=2016010118
-   ENDDATE=2016010318
+   # experiment name
+   export exp_name=DA_ERA5_test
+   #export BASELINE=hera.internal
 
-   export WORKDIR=/*/*/
-   export OUTDIR=/*/*/
+   #ERA5 forcing is available for 2020-2021
+   STARTDATE=2019122100
+   ENDDATE=2019122200
 
+   # Get commmon variables
+   source ./release.environment
    ############################
 
-   # for LETKF, 
+   #forcing options: gswp3, era5
+   export atmos_forc=era5
+
+   # for LETKF, this is size of ensemble.
+   # for LETKF-OI pseudo ensemble, or non-ensemble runs use 1 
    export ensemble_size=1
 
+   # length of each forecast
    export FCSTHR=24
-
-   export atmos_forc=gdas
 
    #FV3 resolution
    export RES=96
-   export TPATH="/*/*/"
-   export TSTUB="oro_C96.mx100" 
+   if [[ $BASELINE =~ 'hera.internal' ]]; then
+      export TPATH=/scratch2/NCEPDEV/land/data/fix/C96.mx100_frac/
+   else
+      export TPATH="$LANDDA_INPUTS/forcing/${atmos_forc}/orog_files/"
+   fi
+   export TSTUB="oro_C96.mx100" # file stub for orography files in $TPATH
+                              # oro_C${RES} for atm only, oro_C${RES}.mx100 for atm/ocean.
 
-   # number of cycles 
+   # number of cycles to submit in a single job
    export cycles_per_job=1
 
    # directory with initial conditions
-   export ICSDIR=/*/*/
+   # can find some here:/scratch2/BMC/gsienkf/Clara.Draper/DA_test_cases/land-offline_workflow/offline_ICS/single
+   export ICSDIR=$LANDDAROOT/inputs/forcing/${atmos_forc}/orog_files/
 
    # namelist for do_landDA.sh
+   # set to "openloop" to not call do_landDA.sh
    export DA_config="settings_DA_test"
 
    # if want different DA at different times, list here. 
-   export DA_config00=${DA_config}
-   export DA_config06=${DA_config}
-   export DA_config12=${DA_config}
-   export DA_config18=${DA_config}
+   export DA_config00=${DA_config} 
+   export DA_config06=${DA_config} 
+   export DA_config12=${DA_config} 
+   export DA_config18=${DA_config} 
 
-.. COMMENT: Update script?
 
 Parameters for ``submit_cycle.sh``
 -------------------------------------
