@@ -33,7 +33,7 @@ JEDI Configuration Files & Parameters
 
 To create the DA experiment, the user should create or modify an experiment-specific configuration ``.yaml`` file. This ``.yaml`` file should contain certain fundamental components: geometry, window begin, window length, background, driver, local ensemble DA, output increment, and observations. These components can be implemented differently for different models and observation types, so they frequently contain distinct parameters and variable names depending on the use case. Therefore, this section of the User's Guide focuses on assisting users with understanding and customizing these top-level configuration items in order to run Land DA experiments. Users may also reference the `JEDI Documentation <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/using/building_and_running/config_content.html>`__ for additional information. 
 
-Users may find the following example ``GHCN.yaml`` configuration file to be a helpful starting point. A similar file (with user-appropriate modifications) is required by JEDI for snow data assimilation. The following subsections will explain the variables within each top-level item of the ``.yaml`` file. The ``GHCN.yaml`` file for the |latestr| release can be found within the cloned repository at ``land-DA_workflow/DA_update/jedi/fv3-jedi/yaml_files/20220921/GHCN.yaml``. 
+Users may find the following example ``GHCN.yaml`` configuration file to be a helpful starting point. A similar file (with user-appropriate modifications) is required by JEDI for snow data assimilation. The following subsections will explain the variables within each top-level item of the ``.yaml`` file. The ``GHCN.yaml`` file for the |latestr| release can be found within the cloned repository at ``DA_update/jedi/fv3-jedi/yaml_files/psl_develop/GHCN.yaml``. 
 
 .. code-block:: yaml
 
@@ -155,7 +155,7 @@ Users may find the following example ``GHCN.yaml`` configuration file to be a he
 
 .. note::
 
-   Any default values indicated in the sections below are the defaults set in ``letkfoi_snow.yaml`` or ``GHCN.yaml`` (found within the ``land-DA_workflow/DA_update/jedi/fv3-jedi/yaml_files/20220921`` directory).
+   Any default values indicated in the sections below are the defaults set in ``letkfoi_snow.yaml`` or ``GHCN.yaml`` (found within the ``DA_update/jedi/fv3-jedi/yaml_files/psl_develop`` directory).
 
 Geometry
 ^^^^^^^^^^^
