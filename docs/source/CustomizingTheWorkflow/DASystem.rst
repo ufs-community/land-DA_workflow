@@ -635,7 +635,7 @@ Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, th
 .. code-block:: yaml
 
    - obs space:
-       name: Simulate
+       name: SnowDepthGHCN
        distribution: 
          name: Halo
          halo size: 250e3
@@ -667,12 +667,12 @@ Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, th
      - filter: Domain Check # missing station elevation (-999.9)
        where:
        - variable:
-           name: height@MetaData
+           name: MetaData/height
          minvalue: -999.0
      - filter: Domain Check # land only
        where:
        - variable:
-           name: slmsk@GeoVaLs
+           name: GeoVaLs/slmsk
          minvalue: 0.5
          maxvalue: 1.5
      # GFSv17 only.
@@ -684,7 +684,7 @@ Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, th
      - filter: RejectList  # no land-ice
        where:
        - variable:
-           name: vtype@GeoVaLs
+           name: GeoVaLs/vtype
          minvalue: 14.5
          maxvalue: 15.5
      - filter: Background Check # gross error check
