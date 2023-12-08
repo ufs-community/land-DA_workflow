@@ -5,7 +5,7 @@
 [submodule "DA_update"]
 	path = DA_update
         url = https://github.com/ufs-community/land-DA.git
-        branch = develop
+        branch = release/land-da-public-v1.2.0
 [submodule "vector2tile"]
 	path = vector2tile
 	url = https://github.com/NOAA-PSL/land-vector2tile.git
