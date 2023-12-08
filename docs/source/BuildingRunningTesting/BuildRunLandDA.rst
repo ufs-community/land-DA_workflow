@@ -71,7 +71,7 @@ Clone the Land DA repository. To clone the ``develop`` branch, run:
 
    git clone -b develop --recursive https://github.com/ufs-community/land-DA_workflow.git
 
-To clone the most recent release, run the same command with |tag| in place of ``develop``: 
+To clone the most recent release, run the same command with |branch| in place of ``develop``: 
 
 .. code-block:: console
 
