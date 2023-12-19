@@ -345,7 +345,8 @@ while [ $date_count -lt $cycles_per_job ]; do
 
     	# FV3 executable:
     	cp ${CYCLEDIR}/build/ufs-weather-model/src/ufs-weather-model-build/ufs_model ./ufs_model 
-        cp ${LANDDA_INPUTS}/restarts/fv3_run ./fv3_run
+        cp ${CYCLEDIR}/fv3_run ./fv3_run
+        #cp ${LANDDA_INPUTS}/restarts/fv3_run ./fv3_run
  
     	if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then
       	if [[ $HAFS = 'false' ]] || [[ $FV3 = 'true' && $HAFS = 'true' ]]; then
@@ -376,8 +377,8 @@ while [ $date_count -lt $cycles_per_job ]; do
     	source ./fv3_run
 
     	if [[ $DATM_CDEPS = 'true' ]]; then
-      		atparse < ${PATHRT}/parm/${DATM_IN_CONFIGURE:-datm_in} > datm_in
-      		atparse < ${PATHRT}/parm/${DATM_STREAM_CONFIGURE:-datm.streams.IN} > datm.streams
+      	      atparse < ${PATHRT}/parm/${DATM_IN_CONFIGURE:-datm_in.IN} > datm_in
+       	      atparse < ${PATHRT}/parm/${DATM_STREAM_CONFIGURE:-datm.streams.IN} > datm.streams
     	fi
 
     	# NoahMP table file
