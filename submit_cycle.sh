@@ -346,7 +346,6 @@ while [ $date_count -lt $cycles_per_job ]; do
     	# FV3 executable:
     	cp ${CYCLEDIR}/build/ufs-weather-model/src/ufs-weather-model-build/ufs_model ./ufs_model 
         cp ${CYCLEDIR}/fv3_run ./fv3_run
-        #cp ${LANDDA_INPUTS}/restarts/fv3_run ./fv3_run
  
     	if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then
       	if [[ $HAFS = 'false' ]] || [[ $FV3 = 'true' && $HAFS = 'true' ]]; then
