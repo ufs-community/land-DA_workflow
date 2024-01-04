@@ -249,7 +249,7 @@ while [ $date_count -lt $cycles_per_job ]; do
             cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
         done  
     fi
- 
+
     ############################
     # run the forecast model
 
@@ -301,24 +301,14 @@ while [ $date_count -lt $cycles_per_job ]; do
 
         cp $CYCLEDIR/$TEST_NAME_RST ${PATHRT}/tests/$TEST_NAME_RST 
        	source ${PATHRT}/detect_machine.sh
-    	source ${PATHRT}/rt_utils.sh
-    	source ${PATHRT}/default_vars.sh
+        source ${PATHRT}/rt_utils.sh
+        source ${PATHRT}/default_vars.sh
     	source ${PATHRT}/tests/$TEST_NAME_RST
     	source ${PATHRT}/atparse.bash
 
-    	# Set inputdata location for each machines
-    	echo "MACHINE_ID: $MACHINE_ID"
-    	if [[ $MACHINE_ID = orion ]]; then
-      		DISKNM=/work/noaa/epic/UFS-WM_RT
-    	elif [[ $MACHINE_ID = hera ]]; then
-      		DISKNM=/scratch2/NAGAPE/epic/UFS-WM_RT
-    	else
-      		echo "Warning: MACHINE_ID is default, users will have to define INPUTDATA_ROOT and RTPWD by themselves"
-    	fi
-
-    	source ${PATHRT}/bl_date.conf
-    	RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-${BL_DATE}/${TEST_NAME}_${RT_COMPILER}}
-    	INPUTDATA_ROOT=${INPUTDATA_ROOT:-$DISKNM/NEMSfv3gfs/input-data-20221101}
+    	BL_DATE=20230816
+    	RTPWD=${RTPWD:-${LANDDA_INPUTS}/NEMSfv3gfs/develop-${BL_DATE}/INTEL/${TEST_NAME}}
+        INPUTDATA_ROOT=${INPUTDATA_ROOT:-${LANDDA_INPUTS}/NEMSfv3gfs/input-data-20221101}
 
     	echo "RTPWD= $RTPWD"
     	echo "INPUTDATA_ROOT= $INPUTDATA_ROOT"
