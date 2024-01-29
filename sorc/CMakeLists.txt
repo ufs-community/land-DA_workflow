@@ -44,26 +44,15 @@ include_directories( ${NETCDF_INCLUDE_DIRS} )
 ################################################################################
 set(LANDDA_LINKER_LANGUAGE CXX)
 
-if(NOT APP)
-  set(APP "LND")
-endif()
-
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
 list(APPEND UFS_WEATHER_MODEL_ARGS
   "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
-  "-DCMAKE_C_COMPILER=${MPI_C_COMPILER}"
-  "-DCMAKE_CXX_COMPILER=${MPI_CXX_COMPILER}"
-  "-DCMAKE_Fortran_COMPILER=${MPI_Fortran_COMPILER}"
   "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
-  "-DCMAKE_MODULE_PATH=${MAPL_ROOT}/share/MAPL/cmake"
-  "-DNETCDF_DIR=$ENV{NETCDF}"
-  "-D32BIT=ON"
-  "-DFASTER=ON"
   "-DMPI=ON"
-  "-DAPP=${APP}"
+  "-DAPP=LND"
 )
 
 ExternalProject_Add(ufs-weather-model
@@ -73,10 +62,10 @@ ExternalProject_Add(ufs-weather-model
   INSTALL_COMMAND cmake
   )
 
-add_subdirectory( vector2tile )
-add_subdirectory( tile2tile )
-add_subdirectory( ufs-land-driver-emc-dev )
-add_subdirectory( DA_update/add_jedi_incr )
+add_subdirectory(vector2tile)
+add_subdirectory(tile2tile)
+add_subdirectory(ufs-land-driver-emc-dev)
+add_subdirectory(DA_update/add_jedi_incr)
 
 # Include testing.
 add_subdirectory(test)
