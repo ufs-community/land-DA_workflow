@@ -29,28 +29,47 @@ include(ExternalProject)
 # -----------------
 ecbuild_bundle_initialize()
 
-list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-include( landda_compiler_flags )
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+include(landda_compiler_flags)
+
 
 ################################################################################
 # Dependencies
 ################################################################################
-find_package( NetCDF REQUIRED COMPONENTS Fortran)
+find_package(NetCDF REQUIRED COMPONENTS Fortran)
 include_directories( ${NETCDF_INCLUDE_DIRS} )
-
 
 ################################################################################
 # Sources
 ################################################################################
-set( LANDDA_LINKER_LANGUAGE CXX)
+set(LANDDA_LINKER_LANGUAGE CXX)
+
+if(NOT APP)
+  set(APP "LND")
+endif()
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+list(APPEND UFS_WEATHER_MODEL_ARGS
+  "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
+  "-DCMAKE_C_COMPILER=${MPI_C_COMPILER}"
+  "-DCMAKE_CXX_COMPILER=${MPI_CXX_COMPILER}"
+  "-DCMAKE_Fortran_COMPILER=${MPI_Fortran_COMPILER}"
+  "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+  "-DCMAKE_MODULE_PATH=${MAPL_ROOT}/share/MAPL/cmake"
+  "-DNETCDF_DIR=$ENV{NETCDF}"
+  "-D32BIT=ON"
+  "-DFASTER=ON"
+  "-DMPI=ON"
+  "-DAPP=${APP}"
+)
 
 ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
-  GIT_REPOSITORY https://github.com/ufs-community/ufs-weather-model
-  GIT_SUBMODULES_RECURSE TRUE
-  GIT_TAG develop
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
-  CMAKE_ARGS ${SOURCE_DIR} -DAPP=LND -DMPI=ON -DCMAKE_BUILD_TYPE=Release
+  CMAKE_ARGS ${UFS_WEATHER_MODEL_ARGS}
   INSTALL_COMMAND cmake
   )
 
