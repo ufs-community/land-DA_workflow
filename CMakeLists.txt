@@ -48,7 +48,7 @@ ExternalProject_Add(ufs-weather-model
   PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
   GIT_REPOSITORY https://github.com/ufs-community/ufs-weather-model
   GIT_SUBMODULES_RECURSE TRUE
-  GIT_TAG develop
+  GIT_TAG 24f5a415173e625606a65b90163464adcf2770c6
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
   CMAKE_ARGS ${SOURCE_DIR} -DAPP=LND -DMPI=ON -DCMAKE_BUILD_TYPE=Release
   INSTALL_COMMAND cmake
