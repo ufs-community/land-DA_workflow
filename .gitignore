@@ -3,6 +3,7 @@ sorc/*/
 !sorc/cmake/
 !sorc/manage_externals/
 !sorc/tile2tile/
+!sorc/test/
 
 __pycache__
 *.swp
