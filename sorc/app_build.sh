@@ -3,14 +3,14 @@
 # usage instructions
 usage () {
 cat << EOF_USAGE
-Usage: $0 --platform=PLATFORM [OPTIONS] ... [TARGETS]
+Usage: $0 [OPTIONS]
 
 OPTIONS
   -h, --help
       show this help guide
   -p, --platform=PLATFORM
       name of machine you are building on
-      (e.g. cheyenne | hera | jet | orion | hercules | wcoss2)
+      (e.g. hera | jet | orion | hercules )
   -c, --compiler=COMPILER
       compiler to use; default depends on platform
       (e.g. intel | gnu | cray | gccgfortran)
@@ -19,12 +19,6 @@ OPTIONS
       (e.g. ATM | ATMAQ | ATMW | S2S | S2SW)
   --ccpp="CCPP_SUITE1,CCPP_SUITE2..."
       CCPP suites (CCPP_SUITES) to include in build; delimited with ','
-  --enable-options="OPTION1,OPTION2,..."
-      enable ufs-weather-model options; delimited with ','
-      (e.g. 32BIT | INLINE_POST | UFS_GOCART | MOM6 | CICE6 | WW3 | CMEPS)
-  --disable-options="OPTION1,OPTION2,..."
-      disable ufs-weather-model options; delimited with ','
-      (e.g. 32BIT | INLINE_POST | UFS_GOCART | MOM6 | CICE6 | WW3 | CMEPS)
   --extrn
       check out external components
   --continue
@@ -48,15 +42,8 @@ OPTIONS
       (e.g. Debug | Release | RelWithDebInfo)
   --build-jobs=BUILD_JOBS
       number of build jobs; defaults to 4
-  --use-sub-modules
-      Use sub-component modules instead of top-level level SRW modules
   -v, --verbose
       build with verbose output
-
-TARGETS
-   default = builds the default list of apps (also not passing any target does the same)
-   all = builds all apps
-   Or any combinations of (ufs, ufs_utils, upp, gsi, rrfs_utils)
 
 NOTE: See User's Guide for detailed build instructions
 
@@ -85,13 +72,6 @@ Settings:
   BUILD_TYPE=${BUILD_TYPE}
   BUILD_JOBS=${BUILD_JOBS}
   VERBOSE=${VERBOSE}
-  BUILD_UFS=${BUILD_UFS}
-  BUILD_UFS_UTILS=${BUILD_UFS_UTILS}
-  BUILD_UPP=${BUILD_UPP}
-  BUILD_GSI=${BUILD_GSI}
-  BUILD_RRFS_UTILS=${BUILD_RRFS_UTILS}
-  BUILD_NEXUS=${BUILD_NEXUS}
-  BUILD_AQM_UTILS=${BUILD_AQM_UTILS}
 
 EOF_SETTINGS
 }
@@ -113,31 +93,17 @@ BIN_DIR="exec"
 COMPILER=""
 APPLICATION=""
 CCPP_SUITES=""
-ENABLE_OPTIONS=""
-DISABLE_OPTIONS=""
 BUILD_TYPE="Release"
 BUILD_JOBS=4
-RRFSFW=false
 EXTRN=false
 REMOVE=false
 CONTINUE=false
 VERBOSE=false
 
-# Turn off all apps to build and choose default later
-DEFAULT_BUILD=true
-BUILD_UFS="off"
-BUILD_UFS_UTILS="off"
-BUILD_UPP="off"
-BUILD_GSI="off"
-BUILD_RRFS_UTILS="off"
-BUILD_NEXUS="off"
-BUILD_AQM_UTILS="off"
-
 # Make options
 CLEAN=false
 BUILD=false
 MOVE=false
-USE_SUB_MODULES=false #change default to true later
 
 # process required arguments
 if [[ ("$1" == "--help") || ("$1" == "-h") ]]; then
@@ -157,10 +123,6 @@ while :; do
     --app|--app=|-a|-a=) usage_error "$1 requires argument." ;;
     --ccpp=?*) CCPP_SUITES=${1#*=} ;;
     --ccpp|--ccpp=) usage_error "$1 requires argument." ;;
-    --enable-options=?*) ENABLE_OPTIONS=${1#*=} ;;
-    --enable-options|--enable-options=) usage_error "$1 requires argument." ;;
-    --disable-options=?*) DISABLE_OPTIONS=${1#*=} ;;
-    --disable-options|--disable-options=) usage_error "$1 requires argument." ;;
     --extrn) EXTRN=true ;;
     --extrn=?*|--extrn=) usage_error "$1 argument ignored." ;;
     --remove) REMOVE=true ;;
@@ -182,19 +144,6 @@ while :; do
     --build-jobs|--build-jobs=) usage_error "$1 requires argument." ;;
     --verbose|-v) VERBOSE=true ;;
     --verbose=?*|--verbose=) usage_error "$1 argument ignored." ;;
-    --use-sub-modules) USE_SUB_MODULES=true ;;
-    # targets
-    default) ;;
-    all) DEFAULT_BUILD=false; BUILD_UFS="on";
-         BUILD_UFS_UTILS="on"; BUILD_UPP="on";
-         BUILD_GSI="on"; BUILD_RRFS_UTILS="on";;
-    ufs) DEFAULT_BUILD=false; BUILD_UFS="on" ;;
-    ufs_utils) DEFAULT_BUILD=false; BUILD_UFS_UTILS="on" ;;
-    upp) DEFAULT_BUILD=false; BUILD_UPP="on" ;;
-    gsi) DEFAULT_BUILD=false; BUILD_GSI="on" ;;
-    rrfs_utils) DEFAULT_BUILD=false; BUILD_RRFS_UTILS="on" ;;
-    nexus) DEFAULT_BUILD=false; BUILD_NEXUS="on" ;;
-    aqm_utils) DEFAULT_BUILD=false; BUILD_AQM_UTILS="on" ;;
     # unknown
     -?*|?*) usage_error "Unknown option $1" ;;
     *) break
