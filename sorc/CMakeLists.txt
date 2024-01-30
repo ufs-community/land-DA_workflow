@@ -44,6 +44,10 @@ include_directories( ${NETCDF_INCLUDE_DIRS} )
 ################################################################################
 set(LANDDA_LINKER_LANGUAGE CXX)
 
+if(NOT APP)
+  set(APP "LND")
+endif()
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
@@ -52,7 +56,7 @@ list(APPEND UFS_WEATHER_MODEL_ARGS
   "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
   "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
   "-DMPI=ON"
-  "-DAPP=LND"
+  "-DAPP=${APP}"
 )
 
 ExternalProject_Add(ufs-weather-model

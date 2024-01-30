@@ -172,7 +172,7 @@ fi
 
 # check if PLATFORM is set
 if [ -z $PLATFORM ] ; then
-  # Automatically detect HPC platforms for wcoss2, hera, jet, orion, hercules, etc
+  # Automatically detect HPC platforms for hera, jet, orion, hercules, wcoss2, etc
   source ${HOME_DIR}/parm/detect_platform.sh
   if [ "${PLATFORM}" = "unknown" ]; then
     printf "\nERROR: Please set PLATFORM.\n\n"
@@ -330,10 +330,10 @@ if [ "${CLEAN}" = true ]; then
   fi
 else
   printf "... Generate CMAKE configuration ...\n"
-  cmake ${SORC_DIR} ${CMAKE_SETTINGS} 2>&1 | tee log.cmake
+  ecbuild ${SORC_DIR} 2>&1 | tee log.ecbuild
 
-  printf "... Compile and install executables ...\n"
-  make ${MAKE_SETTINGS} install 2>&1 | tee log.make
+  printf "... Compile executables ...\n"
+  make ${MAKE_SETTINGS} 2>&1 | tee log.make
 
   # move executables to the designated location (HOMEdir/exec) only when 
   # both --build and --move are not set (no additional arguments) or
@@ -342,7 +342,7 @@ else
      [[ "${BUILD}" = true && "${MOVE}" = true ]]; then
     printf "... Moving pre-compiled executables to designated location ...\n"
     mkdir -p ${HOME_DIR}/${BIN_DIR}
-    cd "${INSTALL_DIR}/${BIN_DIR}"
+    cd "${INSTALL_DIR}/bin"
     for file in *; do
       [ -x "${file}" ] && mv "${file}" "${HOME_DIR}/${BIN_DIR}"
     done
