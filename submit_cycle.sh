@@ -334,7 +334,7 @@ while [ $date_count -lt $cycles_per_job ]; do
     	export layout_y=1
 
     	# FV3 executable:
-    	cp ${CYCLEDIR}/build/ufs-weather-model/src/ufs-weather-model-build/ufs_model ./ufs_model 
+    	cp ${CYCLEDIR}/exec/ufs_model .
         cp ${CYCLEDIR}/fv3_run ./fv3_run
  
     	if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then

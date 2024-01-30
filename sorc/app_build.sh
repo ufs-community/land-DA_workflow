@@ -343,9 +343,12 @@ else
     printf "... Moving pre-compiled executables to designated location ...\n"
     mkdir -p ${HOME_DIR}/${BIN_DIR}
     cd "${INSTALL_DIR}/bin"
+    # move executables in build/bin to BIN_DIR
     for file in *; do
       [ -x "${file}" ] && mv "${file}" "${HOME_DIR}/${BIN_DIR}"
     done
+    # copy ufs_model to BIN_DIR
+    cp ${BUILD_DIR}/ufs-weather-model/src/ufs-weather-model-build/ufs_model ${HOME_DIR}/${BIN_DIR}
   fi
 fi
 

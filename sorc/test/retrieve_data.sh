@@ -22,7 +22,7 @@ pip3 install awscli --upgrade --user
 export PATH=${HOME}/.local/bin:${PATH}
 
 # set envs
-DATA_ROOT=${project_source_dir}/../inputs
+DATA_ROOT=${project_source_dir}/../../inputs
 INPUTDATA_ROOT=${DATA_ROOT}/NEMSfv3gfs
 source ${PATHRT}/bl_date.conf
 INPUTDATA_DATE=20221101

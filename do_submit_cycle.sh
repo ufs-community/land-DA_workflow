@@ -74,23 +74,23 @@ fi
 ############################
 # set executables
 
-if [[ -e ${BUILDDIR}/bin/vector2tile_converter.exe ]]; then #prefer cmake-built executables
-  export vec2tileexec=${BUILDDIR}/bin/vector2tile_converter.exe
+if [[ -e ${CYCLEDIR}/exec/vector2tile_converter.exe ]]; then #prefer cmake-built executables
+  export vec2tileexec=${CYCLEDIR}/exec/vector2tile_converter.exe
 else
-  export vec2tileexec=${CYCLEDIR}/vector2tile/vector2tile_converter.exe
+  export vec2tileexec=${CYCLEDIR}/sorc/vector2tile/vector2tile_converter.exe
 fi
-if [[ -e ${BUILDDIR}/bin/tile2tile_converter.exe ]]; then #prefer cmake-built executables
-  export tile2tileexec=${BUILDDIR}/bin/tile2tile_converter.exe
+if [[ -e ${CYCLEDIR}/exec/tile2tile_converter.exe ]]; then #prefer cmake-built executables
+  export tile2tileexec=${CYCLEDIR}/exec/tile2tile_converter.exe
 else 
-  export tile2tileexec=${CYCLEDIR}/tile2tile/tile2tile_converter.exe
+  export tile2tileexec=${CYCLEDIR}/sorc/tile2tile/tile2tile_converter.exe
 fi
-if [[ -e ${BUILDDIR}/bin/ufsLand.exe ]]; then
-  export LSMexec=${BUILDDIR}/bin/ufsLand.exe
+if [[ -e ${CYCLEDIR}/exec/ufsLand.exe ]]; then
+  export LSMexec=${CYCLEDIR}/exec/ufsLand.exe
 else
-  export LSMexec=${CYCLEDIR}/ufs-land-driver-emc-dev/run/ufsLand.exe
+  export LSMexec=${CYCLEDIR}/sorc/ufs-land-driver-emc-dev/run/ufsLand.exe
 fi
 
-export DADIR=${CYCLEDIR}/DA_update/
+export DADIR=${CYCLEDIR}/sorc/DA_update/
 export DAscript=${DADIR}/do_landDA.sh
 export MPIEXEC=`which mpiexec`
 export LANDDADIR=${DADIR}
@@ -98,7 +98,7 @@ export LANDDADIR=${DADIR}
 export analdate=${CYCLEDIR}/analdates.sh
 export incdate=${CYCLEDIR}/incdate.sh
 
-export BUILDDIR=${CYCLEDIR}/build
+export BUILDDIR=${CYCLEDIR}/sorc/build
 export INCR_EXECDIR=${DADIR}/add_jedi_incr/exec/
 
 ############################
