@@ -152,10 +152,10 @@ while :; do
 done
 
 # Ensure uppercase / lowercase ============================================
-APPLICATION="${APPLICATION^^}"
-PLATFORM="${PLATFORM,,}"
-COMPILER="${COMPILER,,}"
-EXTERNALS="${EXTERNALS^^}"
+APPLICATION=$(echo ${APPLICATION} | tr '[a-z]' '[A-Z]')
+PLATFORM=$(echo ${PLATFORM} | tr '[A-Z]' '[a-z]')
+COMPILER=$(echo ${COMPILER} | tr '[A-Z]' '[a-z]')
+EXTERNALS=$(echo ${EXTERNALS} | tr '[a-z]' '[A-Z]')
 
 # move the pre-compiled executables to the designated location and exit
 if [ "${BUILD}" = false ] && [ "${MOVE}" = true ]; then
@@ -173,80 +173,43 @@ fi
 # check if PLATFORM is set
 if [ -z $PLATFORM ] ; then
   # Automatically detect HPC platforms for wcoss2, hera, jet, orion, hercules, etc
-  source ${HOME_DIR}/ush/fix_rrfs_locations.sh
-  if [[ "$PLATFORM" == "unknown" ]]; then
+  source ${HOME_DIR}/parm/detect_platform.sh
+  if [ "${PLATFORM}" = "unknown" ]; then
     printf "\nERROR: Please set PLATFORM.\n\n"
     usage
     exit 0
   fi
 fi
-# set PLATFORM (MACHINE)
-MACHINE="${PLATFORM}"
 printf "PLATFORM(MACHINE)=${PLATFORM}\n" >&2
 
 # check out external components specified in External.cfg
 if [ "${EXTRN}" = true ]; then
   cd ${SORC_DIR}
   # remove existing components
-  printf "... checking if external components exist ...\n"
-  if [ -d "${SORC_DIR}/UFS_UTILS" ]; then
-    printf "... removing UFS_UTILS ...\n"
-    rm -rf "${SORC_DIR}/UFS_UTILS"
-  fi
   if [ -d "${SORC_DIR}/ufs-weather-model" ]; then
     printf "... removing ufs-weather-model ...\n"
     rm -rf "${SORC_DIR}/ufs-weather-model"
   fi
-  if [ -d "${SORC_DIR}/UPP" ]; then
-    printf "... removing UPP ...\n"
-    rm -rf "${SORC_DIR}/UPP"
+  if [ -d "${SORC_DIR}/ufs-land-driver-emc-dev" ]; then
+    printf "... removing ufs-land-driver-emc-dev ...\n"
+    rm -rf "${SORC_DIR}/ufs-land-driver-emc-dev"
   fi
-  if [ -d "${SORC_DIR}/rrfs_utl" ]; then
-    printf "... removing rrfs_utl ...\n"
-    rm -rf "${SORC_DIR}/rrfs_utl"
+  if [ -d "${SORC_DIR}/DA_update" ]; then
+    printf "... removing DA_update ...\n"
+    rm -rf "${SORC_DIR}/DA_update"
   fi
-  if [ -d "${SORC_DIR}/gsi" ]; then
-    printf "... removing GSI ...\n"
-    rm -rf "${SORC_DIR}/gsi"
-  fi
-  if [ -d "${HOME_DIR}/python_graphics" ]; then
-    printf "... removing python_graphics ...\n"
-    rm -rf "${HOME_DIR}/python_graphics"
-  fi
-  if [ -d "${SORC_DIR}/AQM-utils" ]; then
-    printf "... removing AQM-utils ...\n"
-    rm -rf "${SORC_DIR}/AQM-utils"
+  if [ -d "${SORC_DIR}/vector2tile" ]; then
+    printf "... removing vector2tile ...\n"
+    rm -rf "${SORC_DIR}/vector2tile"
   fi
 
-  # run check-out
+  # run check-out (for Hercules)
   python --version 1>/dev/null 2>/dev/null
   if [[ $? -ne 0 ]]; then
-       module load python
+    module load python
   fi
   printf "... checking out external components ...\n"
   ./manage_externals/checkout_externals
-fi
-
-# choose default apps to build
-if [ "${DEFAULT_BUILD}" = true ]; then
-  BUILD_UFS="on"
-  BUILD_UFS_UTILS="on"
-  BUILD_UPP="on"
-  BUILD_GSI="on"
-  BUILD_RRFS_UTILS="on"
-  BUILD_AQM_UTILS="on"
-fi
-
-# Choose components to build for air quality modeling (RRFS-AQM)
-if [ "${APPLICATION}" = "ATMAQ" ]; then
-  if [ "${DEFAULT_BUILD}" = true ]; then
-    BUILD_NEXUS="on"
-  fi
-  if [ "${PLATFORM}" = "wcoss2" ]; then
-    BUILD_POST_STAT="on"
-  else
-    BUILD_POST_STAT="off"
-  fi
 fi
 
 set -eu
@@ -257,7 +220,6 @@ if [ -z "${COMPILER}" ] ; then
     jet|hera|gaea) COMPILER=intel ;;
     orion|hercules) COMPILER=intel ;;
     wcoss2) COMPILER=intel ;;
-    cheyenne) COMPILER=intel ;;
     macos|singularity) COMPILER=gnu ;;
     odin|noaacloud) COMPILER=intel ;;
     *)
@@ -334,29 +296,13 @@ fi
 CMAKE_SETTINGS="\
  -DCMAKE_BUILD_TYPE=${BUILD_TYPE}\
  -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}\
- -DCMAKE_INSTALL_BINDIR=${BIN_DIR}\
- -DBUILD_UFS=${BUILD_UFS}\
- -DBUILD_UFS_UTILS=${BUILD_UFS_UTILS}\
- -DBUILD_UPP=${BUILD_UPP}\
- -DBUILD_GSI=${BUILD_GSI}\
- -DBUILD_RRFS_UTILS=${BUILD_RRFS_UTILS}\
- -DBUILD_NEXUS=${BUILD_NEXUS}\
- -DBUILD_AQM_UTILS=${BUILD_AQM_UTILS}"
+ -DCMAKE_INSTALL_BINDIR=${BIN_DIR}"
 
 if [ ! -z "${APPLICATION}" ]; then
   CMAKE_SETTINGS="${CMAKE_SETTINGS} -DAPP=${APPLICATION}"
 fi
 if [ ! -z "${CCPP_SUITES}" ]; then
   CMAKE_SETTINGS="${CMAKE_SETTINGS} -DCCPP_SUITES=${CCPP_SUITES}"
-fi
-if [ ! -z "${ENABLE_OPTIONS}" ]; then
-  CMAKE_SETTINGS="${CMAKE_SETTINGS} -DENABLE_OPTIONS=${ENABLE_OPTIONS}"
-fi
-if [ ! -z "${DISABLE_OPTIONS}" ]; then
-  CMAKE_SETTINGS="${CMAKE_SETTINGS} -DDISABLE_OPTIONS=${DISABLE_OPTIONS}"
-fi
-if [ "${APPLICATION}" = "ATMAQ" ]; then
-  CMAKE_SETTINGS="${CMAKE_SETTINGS} -DCPL_AQM=ON -DBUILD_POST_STAT=${BUILD_POST_STAT}"
 fi
 
 # make settings
@@ -366,116 +312,41 @@ if [ "${VERBOSE}" = true ]; then
 fi
 
 # Before we go on load modules, we first need to activate Lmod for some systems
-source ${HOME_DIR}/ush/etc/lmod-setup.sh $MACHINE
+source ${HOME_DIR}/parm/lmod-setup.sh $MACHINE
 
 # source the module file for this platform/compiler combination, then build the code
 printf "... Load MODULE_FILE and create BUILD directory ...\n"
-
-if [ $USE_SUB_MODULES = true ]; then
-    #helper to try and load module
-    function load_module() {
-
-        set +e
-        #try most specialized modulefile first
-        MODF="$1${PLATFORM}.${COMPILER}"
-        if [ $BUILD_TYPE != "Release" ]; then
-            MODF="${MODF}.debug"
-        else
-            MODF="${MODF}.release"
-        fi
-        module is-avail ${MODF}
-        if [ $? -eq 0 ]; then
-            module load ${MODF}
-            return
-        fi
-        # without build type
-        MODF="$1${PLATFORM}.${COMPILER}"
-        module is-avail ${MODF}
-        if [ $? -eq 0 ]; then
-            module load ${MODF}
-            return
-        fi
-        # without compiler
-        MODF="$1${PLATFORM}"
-        module is-avail ${MODF}
-        if [ $? -eq 0 ]; then
-            module load ${MODF}
-            return
-        fi
-        set -e
-
-        # else fallback on app level modulefile
-        printf "... Fall back to app level modulefile ...\n"
-        module use ${HOME_DIR}/modulefiles
-        module load ${MODULE_FILE}
-    }
-    if [ $BUILD_UFS = "on" ]; then
-        printf "... Loading UFS modules ...\n"
-        module use ${SORC_DIR}/ufs-weather-model/modulefiles
-        load_module "ufs_"
-    fi
-    if [ $BUILD_UFS_UTILS = "on" ]; then
-        printf "... Loading UFS_UTILS modules ...\n"
-        module use ${SORC_DIR}/UFS_UTILS/modulefiles
-        load_module "build."
-    fi
-    if [ $BUILD_UPP = "on" ]; then
-        printf "... Loading UPP modules ...\n"
-        module use ${SORC_DIR}/UPP/modulefiles
-        load_module ""
-    fi
-    if [ $BUILD_GSI = "on" ]; then
-        printf "... Loading GSI modules ...\n"
-        module use ${SORC_DIR}/gsi/modulefiles
-        load_module "gsi_"
-    fi
-    if [ $BUILD_RRFS_UTILS = "on" ]; then
-        printf "... Loading RRFS_UTILS modules ...\n"
-        load_module ""
-    fi
-    if [ $BUILD_NEXUS = "on" ]; then
-        printf "... Loading NEXUS modules ...\n"
-        module use ${SORC_DIR}/arl_nexus/modulefiles
-        load_module ""
-    fi
-    if [ $BUILD_AQM_UTILS = "on" ]; then
-        printf "... Loading AQM-utils modules ...\n"
-        module use ${SORC_DIR}/AQM-utils/modulefiles
-        load_module ""
-    fi
-else
-    module use ${HOME_DIR}/modulefiles
-    module load ${MODULE_FILE}
-fi
+module use ${HOME_DIR}/modulefiles
+module load ${MODULE_FILE}
 module list
 
 mkdir -p ${BUILD_DIR}
 cd ${BUILD_DIR}
 
 if [ "${CLEAN}" = true ]; then
-    if [ -f $PWD/Makefile ]; then
-       printf "... Clean executables ...\n"
-       make ${MAKE_SETTINGS} clean 2>&1 | tee log.make
-    fi
+  if [ -f $PWD/Makefile ]; then
+    printf "... Clean executables ...\n"
+    make ${MAKE_SETTINGS} clean 2>&1 | tee log.make
+  fi
 else
-    printf "... Generate CMAKE configuration ...\n"
-    cmake ${SORC_DIR} ${CMAKE_SETTINGS} 2>&1 | tee log.cmake
+  printf "... Generate CMAKE configuration ...\n"
+  cmake ${SORC_DIR} ${CMAKE_SETTINGS} 2>&1 | tee log.cmake
 
-    printf "... Compile and install executables ...\n"
-    make ${MAKE_SETTINGS} install 2>&1 | tee log.make
+  printf "... Compile and install executables ...\n"
+  make ${MAKE_SETTINGS} install 2>&1 | tee log.make
 
-    # move executables to the designated location (HOMEdir/exec) only when 
-    # both --build and --move are not set (no additional arguments) or
-    # both --build and --move are set in the build command line
-    if [[ "${BUILD}" = false && "${MOVE}" = false ]] || 
-       [[ "${BUILD}" = true && "${MOVE}" = true ]]; then
-      printf "... Moving pre-compiled executables to designated location ...\n"
-      mkdir -p ${HOME_DIR}/${BIN_DIR}
-      cd "${INSTALL_DIR}/${BIN_DIR}"
-      for file in *; do
-        [ -x "${file}" ] && mv "${file}" "${HOME_DIR}/${BIN_DIR}"
-      done
-    fi
+  # move executables to the designated location (HOMEdir/exec) only when 
+  # both --build and --move are not set (no additional arguments) or
+  # both --build and --move are set in the build command line
+  if [[ "${BUILD}" = false && "${MOVE}" = false ]] || 
+     [[ "${BUILD}" = true && "${MOVE}" = true ]]; then
+    printf "... Moving pre-compiled executables to designated location ...\n"
+    mkdir -p ${HOME_DIR}/${BIN_DIR}
+    cd "${INSTALL_DIR}/${BIN_DIR}"
+    for file in *; do
+      [ -x "${file}" ] && mv "${file}" "${HOME_DIR}/${BIN_DIR}"
+    done
+  fi
 fi
 
 exit 0
