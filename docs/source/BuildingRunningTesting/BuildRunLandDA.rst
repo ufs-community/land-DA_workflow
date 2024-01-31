@@ -82,29 +82,17 @@ To clone the most recent release, run the same command with |branch| in place of
 Build the Land DA System
 ***************************
 
-#. Navigate to the workflow directory, and source the modulefiles.
+#. Navigate to the ``sorc`` directory.
 
    .. code-block:: console
 
-      cd $LANDDAROOT/land-DA_workflow
-      module use modulefiles
-      module load landda_<machine>.intel
-   
-   where ``<machine>`` is either ``hera`` or ``orion``. 
+      cd $LANDDAROOT/land-DA_workflow/sorc
 
-#. Create and navigate to a ``build`` directory.
+#. Run the build script ``app_build.sh``:
 
    .. code-block:: console
 
-      mkdir build
-      cd build
-
-#. Build the Land DA System.
-
-   .. code-block:: console
-
-      ecbuild ..
-      make -j4
+      ./app_build --extrn
 
    If the code successfully compiles, the console output should end with:
    
@@ -113,12 +101,13 @@ Build the Land DA System
       [100%] Completed 'ufs-weather-model'
       [100%] Built target ufs-weather-model
    
-   Additionally, the ``build`` directory will contain several files and directories along with a ``bin`` subdirectory with four executables: 
+   Additionally, the ``exec`` directory will contain the following executables: 
 
       * ``apply_incr.exe``
       * ``ufsLand.exe``
       * ``vector2tile_converter.exe``
       * ``tile2tile_converter.exe``
+      * ``ufs_model``
 
 
 Configure the Experiment
