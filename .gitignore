@@ -1,4 +1,6 @@
 exec/
+lib/
+lib64
 sorc/*/
 !sorc/cmake/
 !sorc/manage_externals/

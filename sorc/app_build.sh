@@ -347,6 +347,9 @@ else
     for file in *; do
       [ -x "${file}" ] && mv "${file}" "${HOME_DIR}/${BIN_DIR}"
     done
+    # copy libraries
+    cp -r ${BUILD_DIR}/lib ${HOME_DIR}
+    cp -r ${BUILD_DIR}/lib64 ${HOME_DIR}
     # copy ufs_model to BIN_DIR
     cp ${BUILD_DIR}/ufs-weather-model/src/ufs-weather-model-build/ufs_model ${HOME_DIR}/${BIN_DIR}
   fi
