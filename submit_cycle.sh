@@ -167,6 +167,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         cd $WORKDIR
 
         export THISDATE
+        export EXECdir="${CYCLEDIR}/exec"
         $DAscript ${CYCLEDIR}/$DA_config
         if [[ $? != 0 ]]; then
             echo "land DA script failed"
