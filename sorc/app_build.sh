@@ -203,6 +203,12 @@ if [ "${EXTRN}" = true ]; then
     rm -rf "${SORC_DIR}/vector2tile"
   fi
 
+  # remove build directory
+  if [ -d "${SORC_DIR}/build" ]; then
+    printf "... removing build directory ...\n"
+    rm -rf "${SORC_DIR}/build"
+  fi
+
   # run check-out (for Hercules)
   python --version 1>/dev/null 2>/dev/null
   if [[ $? -ne 0 ]]; then
@@ -258,11 +264,22 @@ fi
 
 printf "MODULE_FILE=${MODULE_FILE}\n" >&2
 
-# if build directory already exists then exit
 if [ "${REMOVE}" = true ]; then
   printf "Remove build directory\n"
   printf "  BUILD_DIR=${BUILD_DIR}\n\n"
   rm -rf ${BUILD_DIR}
+  printf "Remove BIN_DIR directory\n"
+  printf "  BIN_DIR=${HOME_DIR}/${BIN_DIR}\n\n"
+  if [ -d "${HOME_DIR}/${BIN_DIR}" ]; then
+    rm -rf "${HOME_DIR}/${BIN_DIR}"
+  fi
+  printf "Remove lib directory\n"
+  printf "  LIB_DIR=${HOME_DIR}/lib\n\n"
+  if [ -d "${HOME_DIR}/lib" ]; then
+    rm -rf "${HOME_DIR}/lib"
+    rm -rf "${HOME_DIR}/lib64"
+  fi
+  exit 0  
 elif [ "${CONTINUE}" = true ]; then
   printf "Continue build in directory\n"
   printf "  BUILD_DIR=${BUILD_DIR}\n\n"
