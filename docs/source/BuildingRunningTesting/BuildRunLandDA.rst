@@ -92,7 +92,7 @@ Build the Land DA System
 
    .. code-block:: console
 
-      ./app_build --extrn
+      ./app_build.sh --extrn
 
    If the code successfully compiles, the console output should end with:
    
