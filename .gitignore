@@ -1,11 +1,11 @@
 exec/
 lib/
 lib64
-sorc/*/
-!sorc/cmake/
-!sorc/manage_externals/
-!sorc/tile2tile/
-!sorc/test/
+sorc/build/
+sorc/ufs-weather-model/
+sorc/DA_update/
+sorc/vector2tile/
+sorc/ufs-land-driver-emc-dev/
 
 __pycache__
 *.swp
