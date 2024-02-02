@@ -19,8 +19,6 @@ OPTIONS
       (e.g. ATM | ATMAQ | ATMW | S2S | S2SW)
   --ccpp="CCPP_SUITE1,CCPP_SUITE2..."
       CCPP suites (CCPP_SUITES) to include in build; delimited with ','
-  --extrn
-      check out external components
   --continue
       continue with existing build
   --remove
@@ -66,7 +64,6 @@ Settings:
   ENABLE_OPTIONS=${ENABLE_OPTIONS}
   DISABLE_OPTIONS=${DISABLE_OPTIONS}
   RRFSFW=${RRFSFW}
-  EXTRN=${EXTRN}
   REMOVE=${REMOVE}
   CONTINUE=${CONTINUE}
   BUILD_TYPE=${BUILD_TYPE}
@@ -95,7 +92,6 @@ APPLICATION=""
 CCPP_SUITES=""
 BUILD_TYPE="Release"
 BUILD_JOBS=4
-EXTRN=false
 REMOVE=false
 CONTINUE=false
 VERBOSE=false
@@ -123,8 +119,6 @@ while :; do
     --app|--app=|-a|-a=) usage_error "$1 requires argument." ;;
     --ccpp=?*) CCPP_SUITES=${1#*=} ;;
     --ccpp|--ccpp=) usage_error "$1 requires argument." ;;
-    --extrn) EXTRN=true ;;
-    --extrn=?*|--extrn=) usage_error "$1 argument ignored." ;;
     --remove) REMOVE=true ;;
     --remove=?*|--remove=) usage_error "$1 argument ignored." ;;
     --continue) CONTINUE=true ;;
@@ -181,42 +175,6 @@ if [ -z $PLATFORM ] ; then
   fi
 fi
 printf "PLATFORM(MACHINE)=${PLATFORM}\n" >&2
-
-# check out external components specified in External.cfg
-if [ "${EXTRN}" = true ]; then
-  cd ${SORC_DIR}
-  # remove existing components
-  if [ -d "${SORC_DIR}/ufs-weather-model" ]; then
-    printf "... removing ufs-weather-model ...\n"
-    rm -rf "${SORC_DIR}/ufs-weather-model"
-  fi
-  if [ -d "${SORC_DIR}/ufs-land-driver-emc-dev" ]; then
-    printf "... removing ufs-land-driver-emc-dev ...\n"
-    rm -rf "${SORC_DIR}/ufs-land-driver-emc-dev"
-  fi
-  if [ -d "${SORC_DIR}/DA_update" ]; then
-    printf "... removing DA_update ...\n"
-    rm -rf "${SORC_DIR}/DA_update"
-  fi
-  if [ -d "${SORC_DIR}/vector2tile" ]; then
-    printf "... removing vector2tile ...\n"
-    rm -rf "${SORC_DIR}/vector2tile"
-  fi
-
-  # remove build directory
-  if [ -d "${SORC_DIR}/build" ]; then
-    printf "... removing build directory ...\n"
-    rm -rf "${SORC_DIR}/build"
-  fi
-
-  # run check-out (for Hercules)
-  python --version 1>/dev/null 2>/dev/null
-  if [[ $? -ne 0 ]]; then
-    module load python
-  fi
-  printf "... checking out external components ...\n"
-  ./manage_externals/checkout_externals
-fi
 
 set -eu
 
