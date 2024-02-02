@@ -69,7 +69,7 @@ pipeline {
         checkout scm
         sh '''
         ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch2/NAGAPE/epic/role.epic/jenkins/workspace/
-        sh sorc/app_build.sh --extrn
+        sh sorc/app_build.sh
         cp sorc/test/hera_ctest.sh sorc/build/
         cp sorc/test/check_ctest.sh sorc/build/
         cp sorc/test/run_hera_ctest.sh sorc/build/
@@ -93,7 +93,7 @@ pipeline {
         checkout scm
         sh '''
         ln -fs /work/noaa/epic/UFS_Land-DA/inputs /work/noaa/epic/role-epic/jenkins/workspace/
-        sh sorc/app_build.sh --extrn
+        sh sorc/app_build.sh
         cp sorc/test/orion_ctest.sh sorc/build/
         cp sorc/test/check_ctest.sh sorc/build/
         cp sorc/test/run_orion_ctest.sh sorc/build/
