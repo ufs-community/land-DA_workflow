@@ -3,7 +3,7 @@
 	url = https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev.git
 [submodule "sorc/DA_update"]
 	path = sorc/DA_update
-	url = https://github.com/ufs-community/land-DA.git
+	url = https://github.com/chan-hoo/land-DA.git
 [submodule "sorc/vector2tile"]
 	path = sorc/vector2tile
 	url = https://github.com/NOAA-PSL/land-vector2tile.git
