@@ -19,14 +19,12 @@ OPTIONS
       (e.g. ATM | ATMAQ | ATMW | S2S | S2SW)
   --ccpp="CCPP_SUITE1,CCPP_SUITE2..."
       CCPP suites (CCPP_SUITES) to include in build; delimited with ','
-  --continue
-      continue with existing build
   --remove
       removes existing build; overrides --continue
   --clean
       does a "make clean"
   --build
-      does a "make" (build only)
+      build only in BUILD_DIR
   --move
       move binaries to final location.
   --build-dir=BUILD_DIR
@@ -61,11 +59,7 @@ Settings:
   COMPILER=${COMPILER}
   APP=${APPLICATION}
   CCPP=${CCPP_SUITES}
-  ENABLE_OPTIONS=${ENABLE_OPTIONS}
-  DISABLE_OPTIONS=${DISABLE_OPTIONS}
-  RRFSFW=${RRFSFW}
   REMOVE=${REMOVE}
-  CONTINUE=${CONTINUE}
   BUILD_TYPE=${BUILD_TYPE}
   BUILD_JOBS=${BUILD_JOBS}
   VERBOSE=${VERBOSE}
@@ -93,7 +87,6 @@ CCPP_SUITES=""
 BUILD_TYPE="Release"
 BUILD_JOBS=4
 REMOVE=false
-CONTINUE=false
 VERBOSE=false
 
 # Make options
@@ -121,8 +114,6 @@ while :; do
     --ccpp|--ccpp=) usage_error "$1 requires argument." ;;
     --remove) REMOVE=true ;;
     --remove=?*|--remove=) usage_error "$1 argument ignored." ;;
-    --continue) CONTINUE=true ;;
-    --continue=?*|--continue=) usage_error "$1 argument ignored." ;;
     --clean) CLEAN=true ;;
     --build) BUILD=true ;;
     --move) MOVE=true ;;
@@ -258,22 +249,19 @@ if [ "${REMOVE}" = true ]; then
   git submodule update --init --recursive
   cd "${SORC_DIR}"
   exit 0  
-elif [ "${CONTINUE}" = true ]; then
-  printf "Continue build in directory\n"
-  printf "  BUILD_DIR=${BUILD_DIR}\n\n"
 else
   if [ -d "${BUILD_DIR}" ]; then
     while true; do
       if [[ $(ps -o stat= -p ${LCL_PID}) != *"+"* ]] ; then
-        printf "ERROR: Build directory already exists\n" >&2
+        printf "ERROR: Build directory already exists.\n" >&2
         printf "  BUILD_DIR=${BUILD_DIR}\n\n" >&2
         usage >&2
         exit 64
       fi
       # interactive selection
-      printf "Build directory (${BUILD_DIR}) already exists\n"
+      printf "Build directory (${BUILD_DIR}) already exists.\n"
       printf "Please choose what to do:\n\n"
-      printf "[R]emove the existing directory\n"
+      printf "[R]emove the existing directory and continue to build\n"
       printf "[C]ontinue building in the existing directory\n"
       printf "[Q]uit this build script\n"
       read -p "Choose an option (R/C/Q):" choice
