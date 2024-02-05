@@ -237,6 +237,26 @@ if [ "${REMOVE}" = true ]; then
     rm -rf "${HOME_DIR}/lib"
     rm -rf "${HOME_DIR}/lib64"
   fi
+  printf "Remove submodules\n"
+  if [ -d "${SORC_DIR}/DA_update" ]; then
+    printf "... Remove DA_update ...\n"
+    rm -rf "${SORC_DIR}/DA_update"
+  fi
+  if [ -d "${SORC_DIR}/ufsLand.fd" ]; then
+    printf "... Remove ufsLand.fd ...\n"
+    rm -rf "${SORC_DIR}/ufsLand.fd"
+  fi
+  if [ -d "${SORC_DIR}/ufs_model.fd" ]; then
+    printf "... Remove ufs_model.fd ...\n"
+    rm -rf "${SORC_DIR}/ufs_model.fd"
+  fi
+  if [ -d "${SORC_DIR}/vector2tile_converter.fd" ]; then
+    printf "... Remove vector2tile_converter.fd ...\n"
+    rm -rf "${SORC_DIR}/vector2tile_converter.fd"
+  fi
+  cd "${HOME_DIR}"
+  git submodule update --init --recursive
+  cd "${SORC_DIR}"
   exit 0  
 elif [ "${CONTINUE}" = true ]; then
   printf "Continue build in directory\n"
@@ -326,7 +346,7 @@ else
     cp -r ${BUILD_DIR}/lib ${HOME_DIR}
     cp -r ${BUILD_DIR}/lib64 ${HOME_DIR}
     # copy ufs_model to BIN_DIR
-    cp ${BUILD_DIR}/ufs-weather-model/src/ufs-weather-model-build/ufs_model ${HOME_DIR}/${BIN_DIR}
+    cp ${BUILD_DIR}/ufs_model.fd/src/ufs_model.fd-build/ufs_model ${HOME_DIR}/${BIN_DIR}
   fi
 fi
 
