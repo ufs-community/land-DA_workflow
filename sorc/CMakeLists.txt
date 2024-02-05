@@ -52,23 +52,23 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-list(APPEND UFS_WEATHER_MODEL_ARGS
+list(APPEND UFS_MODEL_ARGS
   "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
   "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
   "-DMPI=ON"
   "-DAPP=${APP}"
 )
 
-ExternalProject_Add(ufs-weather-model
-  PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
-  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
-  CMAKE_ARGS ${UFS_WEATHER_MODEL_ARGS}
+ExternalProject_Add(ufs_model.fd
+  PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs_model.fd
+  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs_model.fd
+  CMAKE_ARGS ${UFS_MODEL_ARGS}
   INSTALL_COMMAND cmake
   )
 
-add_subdirectory(vector2tile)
 add_subdirectory(tile2tile_converter.fd)
-add_subdirectory(ufs-land-driver-emc-dev)
+add_subdirectory(vector2tile_converter.fd)
+add_subdirectory(ufsLand.fd)
 add_subdirectory(DA_update/add_jedi_incr)
 
 # Include testing.
