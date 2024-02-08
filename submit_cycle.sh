@@ -1,10 +1,10 @@
 #!/bin/bash  
 #SBATCH --job-name=ufs_land_da
-#SBATCH --account=fv3-cam
+#SBATCH --account=da-cpu
 #SBATCH --qos=debug
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=1
 #SBATCH -t 00:06:00
 #SBATCH -o log_noahmp.%j.log
 #SBATCH -e err_noahmp.%j.err
