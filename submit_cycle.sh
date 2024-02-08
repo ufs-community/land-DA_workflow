@@ -1,10 +1,10 @@
 #!/bin/bash  
 #SBATCH --job-name=ufs_land_da
-#SBATCH --account=da-cpu
+#SBATCH --account=fv3-cam
 #SBATCH --qos=debug
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=4
 #SBATCH -t 00:06:00
 #SBATCH -o log_noahmp.%j.log
 #SBATCH -e err_noahmp.%j.err
@@ -296,7 +296,7 @@ while [ $date_count -lt $cycles_per_job ]; do
     
     	TEST_NAME=datm_cdeps_lnd_gswp3
     	TEST_NAME_RST=datm_cdeps_lnd_gswp3_rst
-    	PATHRT=${CYCLEDIR}/ufs-weather-model/tests
+    	PATHRT=${CYCLEDIR}/sorc/ufs_model.fd/tests
     	RT_COMPILER=${RT_COMPILER:-intel}
     	ATOL="1e-7"
 
