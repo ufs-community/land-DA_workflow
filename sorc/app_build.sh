@@ -140,7 +140,6 @@ done
 APPLICATION=$(echo ${APPLICATION} | tr '[a-z]' '[A-Z]')
 PLATFORM=$(echo ${PLATFORM} | tr '[A-Z]' '[a-z]')
 COMPILER=$(echo ${COMPILER} | tr '[A-Z]' '[a-z]')
-EXTERNALS=$(echo ${EXTERNALS} | tr '[a-z]' '[A-Z]')
 
 # move the pre-compiled executables to the designated location and exit
 if [ "${BUILD}" = false ] && [ "${MOVE}" = true ]; then
