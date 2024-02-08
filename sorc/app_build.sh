@@ -182,7 +182,6 @@ if [ -z "${COMPILER}" ] ; then
       ;;
   esac
 fi
-
 printf "COMPILER=${COMPILER}\n" >&2
 
 # print settings
@@ -190,39 +189,19 @@ if [ "${VERBOSE}" = true ] ; then
   settings
 fi
 
-# source version file only if it is specified in versions directory
-if [ "${PLATFORM}" = "wcoss2" ]; then
-  BUILD_VERSION_FILE="${HOME_DIR}/versions/build.ver"
-  if [ -f ${BUILD_VERSION_FILE} ]; then
-    . ${BUILD_VERSION_FILE}
-  fi
-fi
-
-# set MODULE_FILE for this platform/compiler combination
-MODULE_FILE="build_${PLATFORM}_${COMPILER}"
-if [ ! -f "${HOME_DIR}/modulefiles/${MODULE_FILE}.lua" ]; then
-  printf "ERROR: module file does not exist for platform/compiler\n" >&2
-  printf "  MODULE_FILE=${MODULE_FILE}\n" >&2
-  printf "  PLATFORM=${PLATFORM}\n" >&2
-  printf "  COMPILER=${COMPILER}\n\n" >&2
-  printf "Please make sure PLATFORM and COMPILER are set correctly\n" >&2
-  usage >&2
-  exit 64
-fi
-
-printf "MODULE_FILE=${MODULE_FILE}\n" >&2
-
 if [ "${REMOVE}" = true ]; then
   printf "Remove build directory\n"
-  printf "  BUILD_DIR=${BUILD_DIR}\n\n"
-  rm -rf ${BUILD_DIR}
+  printf "  BUILD_DIR=${BUILD_DIR}\n"
+  if [ -d "${BUILD_DIR}" ]; then
+    rm -rf ${BUILD_DIR}
+  fi
   printf "Remove BIN_DIR directory\n"
-  printf "  BIN_DIR=${HOME_DIR}/${BIN_DIR}\n\n"
+  printf "  BIN_DIR=${HOME_DIR}/${BIN_DIR}\n"
   if [ -d "${HOME_DIR}/${BIN_DIR}" ]; then
     rm -rf "${HOME_DIR}/${BIN_DIR}"
   fi
   printf "Remove lib directory\n"
-  printf "  LIB_DIR=${HOME_DIR}/lib\n\n"
+  printf "  LIB_DIR=${HOME_DIR}/lib\n"
   if [ -d "${HOME_DIR}/lib" ]; then
     rm -rf "${HOME_DIR}/lib"
     rm -rf "${HOME_DIR}/lib64"
@@ -294,9 +273,29 @@ if [ "${VERBOSE}" = true ]; then
 fi
 
 # Before we go on load modules, we first need to activate Lmod for some systems
-source ${HOME_DIR}/parm/lmod-setup.sh $MACHINE
+source ${HOME_DIR}/parm/lmod-setup.sh ${PLATFORM}
 
-# source the module file for this platform/compiler combination, then build the code
+# source version file for build
+BUILD_VERSION_FILE="${HOME_DIR}/versions/build.ver.${PLATFORM}"
+if [ -f ${BUILD_VERSION_FILE} ]; then
+  . ${BUILD_VERSION_FILE}
+fi
+
+# set MODULE_FILE for this platform/compiler combination
+MODULE_FILE="build_${PLATFORM}_${COMPILER}"
+if [ ! -f "${HOME_DIR}/modulefiles/${MODULE_FILE}.lua" ]; then
+  printf "ERROR: module file does not exist for platform/compiler\n" >&2
+  printf "  MODULE_FILE=${MODULE_FILE}\n" >&2
+  printf "  PLATFORM=${PLATFORM}\n" >&2
+  printf "  COMPILER=${COMPILER}\n\n" >&2
+  printf "Please make sure PLATFORM and COMPILER are set correctly\n" >&2
+  usage >&2
+  exit 64
+fi
+
+printf "MODULE_FILE=${MODULE_FILE}\n" >&2
+
+# load modules for platform/compiler combination, then build the code
 printf "... Load MODULE_FILE and create BUILD directory ...\n"
 module use ${HOME_DIR}/modulefiles
 module load ${MODULE_FILE}
