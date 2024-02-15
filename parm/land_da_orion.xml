@@ -4,11 +4,17 @@
   <!ENTITY LANDDA_INPUTS "/work/noaa/epic/jongkim/land-DA/inputs">
   <!ENTITY FORCING "gswp3">
   <!ENTITY RES "96">
+  <!ENTITY NPROCS "6">
+  <!ENTITY OBS_TYPES "GHCN">
+  <!ENTITY fv3bundle_vn "psl_develop">
+  <!ENTITY DAtype "letkfoi_snow">
+  <!ENTITY SNOWDEPTHVAR "snwdph">
   <!ENTITY MACHINE "orion">
   <!ENTITY TSTUB "oro_C96.mx100">
   <!ENTITY WORKDIR "/work/noaa/epic/jongkim/land-DA/workdir">
   <!ENTITY CYCLEDIR "/work/noaa/epic/jongkim/land-DA/land-DA_workflow">
   <!ENTITY BUILDDIR "/work/noaa/epic/jongkim/land-DA/land-DA_workflow/build/bin">
+  <!ENTITY JEDI_INSTALL "/work/noaa/epic/UFS_Land-DA/jedi">
   <!ENTITY OUTDIR "/work/noaa/epic/jongkim/land-DA/landda_expts/DA_GSWP3_test">
   <!ENTITY LOG "/work/noaa/epic/jongkim/land-DA/tests">
   <!ENTITY PATHRT "/work/noaa/epic/jongkim/land-DA">
@@ -33,7 +39,7 @@
     <cores>1</cores>
     <queue>batch</queue>
     <walltime>00:02:00</walltime>
-    <command>&CYCLEDIR;/jobs/JGLOBAL_LAND_PREP</command>
+    <command>&CYCLEDIR;/jobs/JLAND_PREP_EXP</command>
     <jobname>prepexp</jobname>
     <envar>
       <name>MACHINE</name>
@@ -108,86 +114,277 @@
       <value>&PHOUR;</value>
     </envar>
   </task>
-  <metatask name="prepobs">
-    <var name="obstypes">GHCN</var>
-    <task name="prepobs_#obstypes#">
-      <account>epic</account>
-      <cores>1</cores>
-      <queue>batch</queue>
-      <walltime>00:02:00</walltime>
-      <command>&CYCLEDIR;/jobs/JGLOBAL_PREP_LAND_OBS</command>
-      <jobname>prepobs_#obstypes#</jobname>
-      <envar>
-        <name>OBS_TYPES</name>
-        <value>#obstypes#</value>
-      </envar>
-      <envar>
-        <name>MACHINE</name>
-        <value>&MACHINE;</value>
-      </envar>
-      <envar>
-        <name>EXP_NAME</name>
-        <value>&EXP_NAME;</value>
-      </envar>
-      <envar>
-        <name>LANDDA_INPUTS</name>
-        <value>&LANDDA_INPUTS;</value>
-      </envar>
-      <envar>
-        <name>ATMOS_FORC</name>
-        <value>&FORCING;</value>
-      </envar>
-      <envar>
-        <name>WORKDIR</name>
-        <value>&WORKDIR;</value>
-      </envar>
-      <envar>
-        <name>CYCLEDIR</name>
-        <value>&CYCLEDIR;</value>
-      </envar>
-      <envar>
-        <name>BUILDDIR</name>
-        <value>&BUILDDIR;</value>
-      </envar>
-      <envar>
-        <name>OUTDIR</name>
-        <value>&OUTDIR;</value>
-      </envar>
-      <envar>
-        <name>CYYYY</name>
-        <value>&CYEAR;</value>
-      </envar>
-      <envar>
-        <name>CMM</name>
-        <value>&CMONTH;</value>
-      </envar>
-      <envar>
-        <name>CDD</name>
-        <value>&CDATE;</value>
-      </envar>
-      <envar>
-        <name>CHH</name>
-        <value>&CHOUR;</value>
-      </envar>
-      <envar>
-        <name>PYYYY</name>
-        <value>&PYEAR;</value>
-      </envar>
-      <envar>
-        <name>PMM</name>
-        <value>&PMONTH;</value>
-      </envar>
-      <envar>
-        <name>PDD</name>
-        <value>&PDATE;</value>
-      </envar>
-      <envar>
-        <name>PHH</name>
-        <value>&PHOUR;</value>
-      </envar>
-      <dependency>
-        <taskdep task="prepexp"/>
-      </dependency>
-    </task>
-  </metatask>
+  <task name="prepobs">
+    <account>epic</account>
+    <cores>1</cores>
+    <queue>batch</queue>
+    <walltime>00:02:00</walltime>
+    <command>&CYCLEDIR;/jobs/JLAND_PREP_OBS</command>
+    <jobname>prepobs</jobname>
+    <envar>
+      <name>OBS_TYPES</name>
+      <value>&OBS_TYPES;</value>
+    </envar>
+    <envar>
+      <name>MACHINE</name>
+      <value>&MACHINE;</value>
+    </envar>
+    <envar>
+      <name>EXP_NAME</name>
+      <value>&EXP_NAME;</value>
+    </envar>
+    <envar>
+      <name>LANDDA_INPUTS</name>
+      <value>&LANDDA_INPUTS;</value>
+    </envar>
+    <envar>
+      <name>ATMOS_FORC</name>
+      <value>&FORCING;</value>
+    </envar>
+    <envar>
+      <name>WORKDIR</name>
+      <value>&WORKDIR;</value>
+    </envar>
+    <envar>
+      <name>CYCLEDIR</name>
+      <value>&CYCLEDIR;</value>
+    </envar>
+    <envar>
+      <name>BUILDDIR</name>
+      <value>&BUILDDIR;</value>
+    </envar>
+    <envar>
+      <name>OUTDIR</name>
+      <value>&OUTDIR;</value>
+    </envar>
+    <envar>
+      <name>CYYYY</name>
+      <value>&CYEAR;</value>
+    </envar>
+    <envar>
+      <name>CMM</name>
+      <value>&CMONTH;</value>
+    </envar>
+    <envar>
+      <name>CDD</name>
+      <value>&CDATE;</value>
+    </envar>
+    <envar>
+      <name>CHH</name>
+      <value>&CHOUR;</value>
+    </envar>
+    <envar>
+      <name>PYYYY</name>
+      <value>&PYEAR;</value>
+    </envar>
+    <envar>
+      <name>PMM</name>
+      <value>&PMONTH;</value>
+    </envar>
+    <envar>
+      <name>PDD</name>
+      <value>&PDATE;</value>
+    </envar>
+    <envar>
+      <name>PHH</name>
+      <value>&PHOUR;</value>
+    </envar>
+    <dependency>
+      <taskdep task="prepexp"/>
+    </dependency>
+  </task>
+  <task name="prepbmat">
+    <account>epic</account>
+    <cores>1</cores>
+    <queue>batch</queue>
+    <walltime>00:02:00</walltime>
+    <command>&CYCLEDIR;/jobs/JLAND_PREP_BMAT</command>
+    <jobname>prepbmat</jobname>
+    <envar>
+      <name>MACHINE</name>
+      <value>&MACHINE;</value>
+    </envar>
+    <envar>
+      <name>EXP_NAME</name>
+      <value>&EXP_NAME;</value>
+    </envar>
+    <envar>
+      <name>LANDDA_INPUTS</name>
+      <value>&LANDDA_INPUTS;</value>
+    </envar>
+    <envar>
+      <name>ATMOS_FORC</name>
+      <value>&FORCING;</value>
+    </envar>
+    <envar>
+      <name>WORKDIR</name>
+      <value>&WORKDIR;</value>
+    </envar>
+    <envar>
+      <name>CYCLEDIR</name>
+      <value>&CYCLEDIR;</value>
+    </envar>
+    <envar>
+      <name>BUILDDIR</name>
+      <value>&BUILDDIR;</value>
+    </envar>
+    <envar>
+      <name>OUTDIR</name>
+      <value>&OUTDIR;</value>
+    </envar>
+    <envar>
+      <name>CYYYY</name>
+      <value>&CYEAR;</value>
+    </envar>
+    <envar>
+      <name>CMM</name>
+      <value>&CMONTH;</value>
+    </envar>
+    <envar>
+      <name>CDD</name>
+      <value>&CDATE;</value>
+    </envar>
+    <envar>
+      <name>CHH</name>
+      <value>&CHOUR;</value>
+    </envar>
+    <envar>
+      <name>PYYYY</name>
+      <value>&PYEAR;</value>
+    </envar>
+    <envar>
+      <name>PMM</name>
+      <value>&PMONTH;</value>
+    </envar>
+    <envar>
+      <name>PDD</name>
+      <value>&PDATE;</value>
+    </envar>
+    <envar>
+      <name>PHH</name>
+      <value>&PHOUR;</value>
+    </envar>
+    <envar>
+      <name>fv3bundle_vn</name>
+      <value>&fv3bundle_vn;</value>
+    </envar>
+    <envar>
+      <name>DAtype</name>
+      <value>&DAtype;</value>
+    </envar>
+    <envar>
+      <name>SNOWDEPTHVAR</name>
+      <value>&SNOWDEPTHVAR;</value>
+    </envar>
+    <dependency>
+      <taskdep task="prepobs"/>
+    </dependency>
+  </task>
+  <task name="runana">
+    <account>epic</account>
+    <nodes>1:ppn=&NPROCS;</nodes>
+    <queue>batch</queue>
+    <walltime>00:15:00</walltime>
+    <command>/work/noaa/epic/jongkim/land-DA/ana.sh</command>
+    <jobname>runana</jobname>
+    <envar>
+      <name>OBS_TYPES</name>
+      <value>&OBS_TYPES;</value>
+    </envar>
+    <envar>
+      <name>MACHINE</name>
+      <value>&MACHINE;</value>
+    </envar>
+    <envar>
+      <name>EXP_NAME</name>
+      <value>&EXP_NAME;</value>
+    </envar>
+    <envar>
+      <name>LANDDA_INPUTS</name>
+      <value>&LANDDA_INPUTS;</value>
+    </envar>
+    <envar>
+      <name>ATMOS_FORC</name>
+      <value>&FORCING;</value>
+    </envar>
+    <envar>
+      <name>RES</name>
+      <value>&RES;</value>
+    </envar>
+    <envar>
+      <name>TSTUB</name>
+      <value>&TSTUB;</value>
+    </envar>
+    <envar>
+      <name>WORKDIR</name>
+      <value>&WORKDIR;</value>
+    </envar>
+    <envar>
+      <name>CYCLEDIR</name>
+      <value>&CYCLEDIR;</value>
+    </envar>
+    <envar>
+      <name>BUILDDIR</name>
+      <value>&BUILDDIR;</value>
+    </envar>
+    <envar>
+      <name>OUTDIR</name>
+      <value>&OUTDIR;</value>
+    </envar>
+    <envar>
+      <name>CYYYY</name>
+      <value>&CYEAR;</value>
+    </envar>
+    <envar>
+      <name>CMM</name>
+      <value>&CMONTH;</value>
+    </envar>
+    <envar>
+      <name>CDD</name>
+      <value>&CDATE;</value>
+    </envar>
+    <envar>
+      <name>CHH</name>
+      <value>&CHOUR;</value>
+    </envar>
+    <envar>
+      <name>PYYYY</name>
+      <value>&PYEAR;</value>
+    </envar>
+    <envar>
+      <name>PMM</name>
+      <value>&PMONTH;</value>
+    </envar>
+    <envar>
+      <name>PDD</name>
+      <value>&PDATE;</value>
+    </envar>
+    <envar>
+      <name>PHH</name>
+      <value>&PHOUR;</value>
+    </envar>
+    <envar>
+      <name>fv3bundle_vn</name>
+      <value>&fv3bundle_vn;</value>
+    </envar>
+    <envar>
+      <name>DAtype</name>
+      <value>&DAtype;</value>
+    </envar>
+    <envar>
+      <name>SNOWDEPTHVAR</name>
+      <value>&SNOWDEPTHVAR;</value>
+    </envar>
+    <envar>
+      <name>NPROC_JEDI</name>
+      <value>&NPROCS;</value>
+    </envar>
+    <envar>
+      <name>JEDI_INSTALL</name>
+      <value>&JEDI_INSTALL;</value>
+    </envar>
+    <dependency>
+      <taskdep task="prepbmat"/>
+    </dependency>
+  </task>
 </workflow>
