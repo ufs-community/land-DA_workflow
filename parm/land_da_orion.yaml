@@ -152,7 +152,7 @@ workflow:
         NPROC_JEDI: "&NPROCS;"
         JEDI_INSTALL: "&JEDI_INSTALL;"
       account: epic
-      command: "/work/noaa/epic/jongkim/land-DA/ana.sh"
+      command: "&CYCLEDIR;/jobs/JLAND_RUN_ANA"
       jobname: runana
       nodes: "1:ppn=&NPROCS;"
       walltime: 00:15:00
