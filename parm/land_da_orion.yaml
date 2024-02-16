@@ -11,7 +11,8 @@ workflow:
     LANDDA_INPUTS: "/work/noaa/epic/jongkim/land-DA/inputs"
     FORCING: "gswp3"
     RES: "96"
-    NPROCS: "6"
+    FCSTHR: "24"
+    NPROCS: "7"
     OBS_TYPES: "GHCN"
     fv3bundle_vn: "psl_develop"
     DAtype: "letkfoi_snow"
@@ -146,6 +147,10 @@ workflow:
         PMM:   "&PMONTH;"
         PDD:   "&PDATE;"
         PHH:   "&PHOUR;"
+        NYYYY: "&NYEAR;"
+        NMM:   "&NMONTH;"
+        NDD:   "&NDATE;"
+        NHH:   "&NHOUR;"
         fv3bundle_vn: "&fv3bundle_vn;"
         DAtype: "&DAtype;"
         SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
@@ -161,3 +166,44 @@ workflow:
         taskdep:
           attrs:
             task: prepbmat
+    task_runfcst:
+      envars:
+        OBS_TYPES: "&OBS_TYPES;"
+        MACHINE: "&MACHINE;"
+        EXP_NAME: "&EXP_NAME;"
+        LANDDA_INPUTS: "&LANDDA_INPUTS;"
+        ATMOS_FORC: "&FORCING;"
+        RES: "&RES;"
+        TSTUB: "&TSTUB;"
+        WORKDIR: "&WORKDIR;"
+        CYCLEDIR: "&CYCLEDIR;"
+        BUILDDIR: "&BUILDDIR;"
+        OUTDIR: "&OUTDIR;"
+        CYYYY: "&CYEAR;"
+        CMM:   "&CMONTH;"
+        CDD:   "&CDATE;"
+        CHH:   "&CHOUR;"
+        PYYYY: "&PYEAR;"
+        PMM:   "&PMONTH;"
+        PDD:   "&PDATE;"
+        PHH:   "&PHOUR;"
+        NYYYY: "&NYEAR;"
+        NMM:   "&NMONTH;"
+        NDD:   "&NDATE;"
+        NHH:   "&NHOUR;"
+        fv3bundle_vn: "&fv3bundle_vn;"
+        DAtype: "&DAtype;"
+        SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
+        NPROC_JEDI: "&NPROCS;"
+        JEDI_INSTALL: "&JEDI_INSTALL;"
+        FCSTHR: "&FCSTHR;"
+      account: epic
+      command: "/work/noaa/epic/jongkim/land-DA/fcst.sh"
+      jobname: runfcst
+      nodes: "1:ppn=&NPROCS;"
+      walltime: 00:30:00
+      queue: batch
+      dependency:
+        taskdep:
+          attrs:
+            task: runana

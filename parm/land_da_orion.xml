@@ -4,7 +4,8 @@
   <!ENTITY LANDDA_INPUTS "/work/noaa/epic/jongkim/land-DA/inputs">
   <!ENTITY FORCING "gswp3">
   <!ENTITY RES "96">
-  <!ENTITY NPROCS "6">
+  <!ENTITY FCSTHR "24">
+  <!ENTITY NPROCS "7">
   <!ENTITY OBS_TYPES "GHCN">
   <!ENTITY fv3bundle_vn "psl_develop">
   <!ENTITY DAtype "letkfoi_snow">
@@ -364,6 +365,22 @@
       <value>&PHOUR;</value>
     </envar>
     <envar>
+      <name>NYYYY</name>
+      <value>&NYEAR;</value>
+    </envar>
+    <envar>
+      <name>NMM</name>
+      <value>&NMONTH;</value>
+    </envar>
+    <envar>
+      <name>NDD</name>
+      <value>&NDATE;</value>
+    </envar>
+    <envar>
+      <name>NHH</name>
+      <value>&NHOUR;</value>
+    </envar>
+    <envar>
       <name>fv3bundle_vn</name>
       <value>&fv3bundle_vn;</value>
     </envar>
@@ -385,6 +402,133 @@
     </envar>
     <dependency>
       <taskdep task="prepbmat"/>
+    </dependency>
+  </task>
+  <task name="runfcst">
+    <account>epic</account>
+    <nodes>1:ppn=&NPROCS;</nodes>
+    <queue>batch</queue>
+    <walltime>00:30:00</walltime>
+    <command>/work/noaa/epic/jongkim/land-DA/fcst.sh</command>
+    <jobname>runfcst</jobname>
+    <envar>
+      <name>OBS_TYPES</name>
+      <value>&OBS_TYPES;</value>
+    </envar>
+    <envar>
+      <name>MACHINE</name>
+      <value>&MACHINE;</value>
+    </envar>
+    <envar>
+      <name>EXP_NAME</name>
+      <value>&EXP_NAME;</value>
+    </envar>
+    <envar>
+      <name>LANDDA_INPUTS</name>
+      <value>&LANDDA_INPUTS;</value>
+    </envar>
+    <envar>
+      <name>ATMOS_FORC</name>
+      <value>&FORCING;</value>
+    </envar>
+    <envar>
+      <name>RES</name>
+      <value>&RES;</value>
+    </envar>
+    <envar>
+      <name>TSTUB</name>
+      <value>&TSTUB;</value>
+    </envar>
+    <envar>
+      <name>WORKDIR</name>
+      <value>&WORKDIR;</value>
+    </envar>
+    <envar>
+      <name>CYCLEDIR</name>
+      <value>&CYCLEDIR;</value>
+    </envar>
+    <envar>
+      <name>BUILDDIR</name>
+      <value>&BUILDDIR;</value>
+    </envar>
+    <envar>
+      <name>OUTDIR</name>
+      <value>&OUTDIR;</value>
+    </envar>
+    <envar>
+      <name>CYYYY</name>
+      <value>&CYEAR;</value>
+    </envar>
+    <envar>
+      <name>CMM</name>
+      <value>&CMONTH;</value>
+    </envar>
+    <envar>
+      <name>CDD</name>
+      <value>&CDATE;</value>
+    </envar>
+    <envar>
+      <name>CHH</name>
+      <value>&CHOUR;</value>
+    </envar>
+    <envar>
+      <name>PYYYY</name>
+      <value>&PYEAR;</value>
+    </envar>
+    <envar>
+      <name>PMM</name>
+      <value>&PMONTH;</value>
+    </envar>
+    <envar>
+      <name>PDD</name>
+      <value>&PDATE;</value>
+    </envar>
+    <envar>
+      <name>PHH</name>
+      <value>&PHOUR;</value>
+    </envar>
+    <envar>
+      <name>NYYYY</name>
+      <value>&NYEAR;</value>
+    </envar>
+    <envar>
+      <name>NMM</name>
+      <value>&NMONTH;</value>
+    </envar>
+    <envar>
+      <name>NDD</name>
+      <value>&NDATE;</value>
+    </envar>
+    <envar>
+      <name>NHH</name>
+      <value>&NHOUR;</value>
+    </envar>
+    <envar>
+      <name>fv3bundle_vn</name>
+      <value>&fv3bundle_vn;</value>
+    </envar>
+    <envar>
+      <name>DAtype</name>
+      <value>&DAtype;</value>
+    </envar>
+    <envar>
+      <name>SNOWDEPTHVAR</name>
+      <value>&SNOWDEPTHVAR;</value>
+    </envar>
+    <envar>
+      <name>NPROC_JEDI</name>
+      <value>&NPROCS;</value>
+    </envar>
+    <envar>
+      <name>JEDI_INSTALL</name>
+      <value>&JEDI_INSTALL;</value>
+    </envar>
+    <envar>
+      <name>FCSTHR</name>
+      <value>&FCSTHR;</value>
+    </envar>
+    <dependency>
+      <taskdep task="runana"/>
     </dependency>
   </task>
 </workflow>
