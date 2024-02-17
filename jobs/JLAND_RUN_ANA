@@ -14,14 +14,15 @@ else
 fi
 
 TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
-YYYY=${CYYYY}
-MM=${CMM}
-DD=${CDD}
-HH=${CHH}
-YYYP=${PYYYY}
-MP=${PMM}
-DP=${PDD}
-HP=${PHH}
+YYYY=${CTIME:0:4}
+MM=${CTIME:4:2}
+DD=${CTIME:6:2}
+HH=${CTIME:8:2}
+YYYP=${PTIME:0:4}
+MP=${PTIME:4:2}
+DP=${PTIME:6:2}
+HP=${PTIME:8:2}
+
 mem_ens="mem000"
 
 MEM_WORKDIR=${WORKDIR}/${mem_ens}

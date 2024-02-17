@@ -5,14 +5,15 @@ workflow:
   cycledef:
     - attrs:
         group: epic
-      spec: 200001030000 200001030000 24:00:00
+      spec: 201912210000 201912210000 24:00:00
   entities:
     EXP_NAME: "LETKF"
     LANDDA_INPUTS: "/work/noaa/epic/jongkim/land-DA/inputs"
-    FORCING: "gswp3"
+    FORCING: "era5"
     RES: "96"
     FCSTHR: "24"
-    NPROCS: "7"
+    NPROCS_ANA: "6"
+    NPROCS_FCST: "6"
     OBS_TYPES: "GHCN"
     fv3bundle_vn: "psl_develop"
     DAtype: "letkfoi_snow"
@@ -26,18 +27,9 @@ workflow:
     OUTDIR: /work/noaa/epic/jongkim/land-DA/landda_expts/DA_GSWP3_test
     LOG: /work/noaa/epic/jongkim/land-DA/tests
     PATHRT: /work/noaa/epic/jongkim/land-DA
-    CYEAR:  "<cyclestr>@Y</cyclestr>"
-    CMONTH: "<cyclestr>@m</cyclestr>"
-    CDATE:  "<cyclestr>@d</cyclestr>"
-    CHOUR:  "<cyclestr>@H</cyclestr>"
-    PYEAR:  "<cyclestr offset='-1:00:00'>@Y</cyclestr>"
-    PMONTH: "<cyclestr offset='-1:00:00'>@m</cyclestr>"
-    PDATE:  "<cyclestr offset='-1:00:00'>@d</cyclestr>"
-    PHOUR:  "<cyclestr offset='-1:00:00'>@H</cyclestr>"
-    NYEAR:  "<cyclestr offset='01:00:00'>@Y</cyclestr>"
-    NMONTH: "<cyclestr offset='01:00:00'>@m</cyclestr>"
-    NDATE:  "<cyclestr offset='01:00:00'>@d</cyclestr>"
-    NHOUR:  "<cyclestr offset='01:00:00'>@H</cyclestr>"
+    CTIME:  "<cyclestr>@Y@m@d@H</cyclestr>"
+    PTIME:  "<cyclestr offset='-1:00:00'>@Y@m@d@H</cyclestr>"
+    NTIME:  "<cyclestr offset='01:00:00'>@Y@m@d@H</cyclestr>"
   log: /work/noaa/epic/jongkim/land-DA/tests/workflow.log;
   tasks:
     task_prepexp:
@@ -52,14 +44,8 @@ workflow:
         CYCLEDIR: "&CYCLEDIR;"
         BUILDDIR: "&BUILDDIR;"
         OUTDIR: "&OUTDIR;"
-        CYYYY: "&CYEAR;"
-        CMM:   "&CMONTH;"
-        CDD:   "&CDATE;"
-        CHH:   "&CHOUR;"
-        PYYYY: "&PYEAR;"
-        PMM:   "&PMONTH;"
-        PDD:   "&PDATE;"
-        PHH:   "&PHOUR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
       account: epic
       command: "&CYCLEDIR;/jobs/JLAND_PREP_EXP"
       jobname: prepexp
@@ -77,14 +63,8 @@ workflow:
         CYCLEDIR: "&CYCLEDIR;"
         BUILDDIR: "&BUILDDIR;"
         OUTDIR: "&OUTDIR;"
-        CYYYY: "&CYEAR;"
-        CMM:   "&CMONTH;"
-        CDD:   "&CDATE;"
-        CHH:   "&CHOUR;"
-        PYYYY: "&PYEAR;"
-        PMM:   "&PMONTH;"
-        PDD:   "&PDATE;"
-        PHH:   "&PHOUR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
       account: epic
       command: "&CYCLEDIR;/jobs/JLAND_PREP_OBS"
       jobname: prepobs
@@ -105,14 +85,8 @@ workflow:
         CYCLEDIR: "&CYCLEDIR;"
         BUILDDIR: "&BUILDDIR;"
         OUTDIR: "&OUTDIR;"
-        CYYYY: "&CYEAR;"
-        CMM:   "&CMONTH;"
-        CDD:   "&CDATE;"
-        CHH:   "&CHOUR;"
-        PYYYY: "&PYEAR;"
-        PMM:   "&PMONTH;"
-        PDD:   "&PDATE;"
-        PHH:   "&PHOUR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
         fv3bundle_vn: "&fv3bundle_vn;"
         DAtype: "&DAtype;"
         SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
@@ -139,27 +113,18 @@ workflow:
         CYCLEDIR: "&CYCLEDIR;"
         BUILDDIR: "&BUILDDIR;"
         OUTDIR: "&OUTDIR;"
-        CYYYY: "&CYEAR;"
-        CMM:   "&CMONTH;"
-        CDD:   "&CDATE;"
-        CHH:   "&CHOUR;"
-        PYYYY: "&PYEAR;"
-        PMM:   "&PMONTH;"
-        PDD:   "&PDATE;"
-        PHH:   "&PHOUR;"
-        NYYYY: "&NYEAR;"
-        NMM:   "&NMONTH;"
-        NDD:   "&NDATE;"
-        NHH:   "&NHOUR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
+        NTIME: "&NTIME;"
         fv3bundle_vn: "&fv3bundle_vn;"
         DAtype: "&DAtype;"
         SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
-        NPROC_JEDI: "&NPROCS;"
+        NPROC_JEDI: "&NPROCS_ANA;"
         JEDI_INSTALL: "&JEDI_INSTALL;"
       account: epic
-      command: "&CYCLEDIR;/jobs/JLAND_RUN_ANA"
+      command: "&CYCLEDIR;/jobs/JLAND_PREP_OBS"
       jobname: runana
-      nodes: "1:ppn=&NPROCS;"
+      nodes: "1:ppn=&NPROCS_ANA;"
       walltime: 00:15:00
       queue: batch
       dependency:
@@ -179,28 +144,18 @@ workflow:
         CYCLEDIR: "&CYCLEDIR;"
         BUILDDIR: "&BUILDDIR;"
         OUTDIR: "&OUTDIR;"
-        CYYYY: "&CYEAR;"
-        CMM:   "&CMONTH;"
-        CDD:   "&CDATE;"
-        CHH:   "&CHOUR;"
-        PYYYY: "&PYEAR;"
-        PMM:   "&PMONTH;"
-        PDD:   "&PDATE;"
-        PHH:   "&PHOUR;"
-        NYYYY: "&NYEAR;"
-        NMM:   "&NMONTH;"
-        NDD:   "&NDATE;"
-        NHH:   "&NHOUR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
+        NTIME: "&NTIME;"
         fv3bundle_vn: "&fv3bundle_vn;"
         DAtype: "&DAtype;"
         SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
-        NPROC_JEDI: "&NPROCS;"
         JEDI_INSTALL: "&JEDI_INSTALL;"
         FCSTHR: "&FCSTHR;"
       account: epic
-      command: "/work/noaa/epic/jongkim/land-DA/fcst.sh"
+      command: "&CYCLEDIR;/jobs/JLAND_RUN_FCST"
       jobname: runfcst
-      nodes: "1:ppn=&NPROCS;"
+      nodes: "1:ppn=&NPROCS_FCST;"
       walltime: 00:30:00
       queue: batch
       dependency:

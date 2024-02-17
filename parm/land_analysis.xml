@@ -2,10 +2,11 @@
 <!DOCTYPE workflow [
   <!ENTITY EXP_NAME "LETKF">
   <!ENTITY LANDDA_INPUTS "/work/noaa/epic/jongkim/land-DA/inputs">
-  <!ENTITY FORCING "gswp3">
+  <!ENTITY FORCING "era5">
   <!ENTITY RES "96">
   <!ENTITY FCSTHR "24">
-  <!ENTITY NPROCS "7">
+  <!ENTITY NPROCS_ANA "6">
+  <!ENTITY NPROCS_FCST "6">
   <!ENTITY OBS_TYPES "GHCN">
   <!ENTITY fv3bundle_vn "psl_develop">
   <!ENTITY DAtype "letkfoi_snow">
@@ -19,21 +20,12 @@
   <!ENTITY OUTDIR "/work/noaa/epic/jongkim/land-DA/landda_expts/DA_GSWP3_test">
   <!ENTITY LOG "/work/noaa/epic/jongkim/land-DA/tests">
   <!ENTITY PATHRT "/work/noaa/epic/jongkim/land-DA">
-  <!ENTITY CYEAR "<cyclestr>@Y</cyclestr>">
-  <!ENTITY CMONTH "<cyclestr>@m</cyclestr>">
-  <!ENTITY CDATE "<cyclestr>@d</cyclestr>">
-  <!ENTITY CHOUR "<cyclestr>@H</cyclestr>">
-  <!ENTITY PYEAR "<cyclestr offset='-1:00:00'>@Y</cyclestr>">
-  <!ENTITY PMONTH "<cyclestr offset='-1:00:00'>@m</cyclestr>">
-  <!ENTITY PDATE "<cyclestr offset='-1:00:00'>@d</cyclestr>">
-  <!ENTITY PHOUR "<cyclestr offset='-1:00:00'>@H</cyclestr>">
-  <!ENTITY NYEAR "<cyclestr offset='01:00:00'>@Y</cyclestr>">
-  <!ENTITY NMONTH "<cyclestr offset='01:00:00'>@m</cyclestr>">
-  <!ENTITY NDATE "<cyclestr offset='01:00:00'>@d</cyclestr>">
-  <!ENTITY NHOUR "<cyclestr offset='01:00:00'>@H</cyclestr>">
+  <!ENTITY CTIME "<cyclestr>@Y@m@d@H</cyclestr>">
+  <!ENTITY PTIME "<cyclestr offset='-1:00:00'>@Y@m@d@H</cyclestr>">
+  <!ENTITY NTIME "<cyclestr offset='01:00:00'>@Y@m@d@H</cyclestr>">
 ]>
 <workflow realtime="False" scheduler="slurm">
-  <cycledef group="epic">200001030000 200001030000 24:00:00</cycledef>
+  <cycledef group="epic">201912210000 201912210000 24:00:00</cycledef>
   <log>/work/noaa/epic/jongkim/land-DA/tests/workflow.log;</log>
   <task name="prepexp">
     <account>epic</account>
@@ -83,36 +75,12 @@
       <value>&OUTDIR;</value>
     </envar>
     <envar>
-      <name>CYYYY</name>
-      <value>&CYEAR;</value>
+      <name>CTIME</name>
+      <value>&CTIME;</value>
     </envar>
     <envar>
-      <name>CMM</name>
-      <value>&CMONTH;</value>
-    </envar>
-    <envar>
-      <name>CDD</name>
-      <value>&CDATE;</value>
-    </envar>
-    <envar>
-      <name>CHH</name>
-      <value>&CHOUR;</value>
-    </envar>
-    <envar>
-      <name>PYYYY</name>
-      <value>&PYEAR;</value>
-    </envar>
-    <envar>
-      <name>PMM</name>
-      <value>&PMONTH;</value>
-    </envar>
-    <envar>
-      <name>PDD</name>
-      <value>&PDATE;</value>
-    </envar>
-    <envar>
-      <name>PHH</name>
-      <value>&PHOUR;</value>
+      <name>PTIME</name>
+      <value>&PTIME;</value>
     </envar>
   </task>
   <task name="prepobs">
@@ -159,36 +127,12 @@
       <value>&OUTDIR;</value>
     </envar>
     <envar>
-      <name>CYYYY</name>
-      <value>&CYEAR;</value>
+      <name>CTIME</name>
+      <value>&CTIME;</value>
     </envar>
     <envar>
-      <name>CMM</name>
-      <value>&CMONTH;</value>
-    </envar>
-    <envar>
-      <name>CDD</name>
-      <value>&CDATE;</value>
-    </envar>
-    <envar>
-      <name>CHH</name>
-      <value>&CHOUR;</value>
-    </envar>
-    <envar>
-      <name>PYYYY</name>
-      <value>&PYEAR;</value>
-    </envar>
-    <envar>
-      <name>PMM</name>
-      <value>&PMONTH;</value>
-    </envar>
-    <envar>
-      <name>PDD</name>
-      <value>&PDATE;</value>
-    </envar>
-    <envar>
-      <name>PHH</name>
-      <value>&PHOUR;</value>
+      <name>PTIME</name>
+      <value>&PTIME;</value>
     </envar>
     <dependency>
       <taskdep task="prepexp"/>
@@ -234,36 +178,12 @@
       <value>&OUTDIR;</value>
     </envar>
     <envar>
-      <name>CYYYY</name>
-      <value>&CYEAR;</value>
+      <name>CTIME</name>
+      <value>&CTIME;</value>
     </envar>
     <envar>
-      <name>CMM</name>
-      <value>&CMONTH;</value>
-    </envar>
-    <envar>
-      <name>CDD</name>
-      <value>&CDATE;</value>
-    </envar>
-    <envar>
-      <name>CHH</name>
-      <value>&CHOUR;</value>
-    </envar>
-    <envar>
-      <name>PYYYY</name>
-      <value>&PYEAR;</value>
-    </envar>
-    <envar>
-      <name>PMM</name>
-      <value>&PMONTH;</value>
-    </envar>
-    <envar>
-      <name>PDD</name>
-      <value>&PDATE;</value>
-    </envar>
-    <envar>
-      <name>PHH</name>
-      <value>&PHOUR;</value>
+      <name>PTIME</name>
+      <value>&PTIME;</value>
     </envar>
     <envar>
       <name>fv3bundle_vn</name>
@@ -283,10 +203,10 @@
   </task>
   <task name="runana">
     <account>epic</account>
-    <nodes>1:ppn=&NPROCS;</nodes>
+    <nodes>1:ppn=&NPROCS_ANA;</nodes>
     <queue>batch</queue>
     <walltime>00:15:00</walltime>
-    <command>/work/noaa/epic/jongkim/land-DA/ana.sh</command>
+    <command>&CYCLEDIR;/jobs/JLAND_PREP_OBS</command>
     <jobname>runana</jobname>
     <envar>
       <name>OBS_TYPES</name>
@@ -333,52 +253,16 @@
       <value>&OUTDIR;</value>
     </envar>
     <envar>
-      <name>CYYYY</name>
-      <value>&CYEAR;</value>
+      <name>CTIME</name>
+      <value>&CTIME;</value>
     </envar>
     <envar>
-      <name>CMM</name>
-      <value>&CMONTH;</value>
+      <name>PTIME</name>
+      <value>&PTIME;</value>
     </envar>
     <envar>
-      <name>CDD</name>
-      <value>&CDATE;</value>
-    </envar>
-    <envar>
-      <name>CHH</name>
-      <value>&CHOUR;</value>
-    </envar>
-    <envar>
-      <name>PYYYY</name>
-      <value>&PYEAR;</value>
-    </envar>
-    <envar>
-      <name>PMM</name>
-      <value>&PMONTH;</value>
-    </envar>
-    <envar>
-      <name>PDD</name>
-      <value>&PDATE;</value>
-    </envar>
-    <envar>
-      <name>PHH</name>
-      <value>&PHOUR;</value>
-    </envar>
-    <envar>
-      <name>NYYYY</name>
-      <value>&NYEAR;</value>
-    </envar>
-    <envar>
-      <name>NMM</name>
-      <value>&NMONTH;</value>
-    </envar>
-    <envar>
-      <name>NDD</name>
-      <value>&NDATE;</value>
-    </envar>
-    <envar>
-      <name>NHH</name>
-      <value>&NHOUR;</value>
+      <name>NTIME</name>
+      <value>&NTIME;</value>
     </envar>
     <envar>
       <name>fv3bundle_vn</name>
@@ -394,7 +278,7 @@
     </envar>
     <envar>
       <name>NPROC_JEDI</name>
-      <value>&NPROCS;</value>
+      <value>&NPROCS_ANA;</value>
     </envar>
     <envar>
       <name>JEDI_INSTALL</name>
@@ -406,10 +290,10 @@
   </task>
   <task name="runfcst">
     <account>epic</account>
-    <nodes>1:ppn=&NPROCS;</nodes>
+    <nodes>1:ppn=&NPROCS_FCST;</nodes>
     <queue>batch</queue>
     <walltime>00:30:00</walltime>
-    <command>/work/noaa/epic/jongkim/land-DA/fcst.sh</command>
+    <command>&CYCLEDIR;/jobs/JLAND_RUN_FCST</command>
     <jobname>runfcst</jobname>
     <envar>
       <name>OBS_TYPES</name>
@@ -456,52 +340,16 @@
       <value>&OUTDIR;</value>
     </envar>
     <envar>
-      <name>CYYYY</name>
-      <value>&CYEAR;</value>
+      <name>CTIME</name>
+      <value>&CTIME;</value>
     </envar>
     <envar>
-      <name>CMM</name>
-      <value>&CMONTH;</value>
+      <name>PTIME</name>
+      <value>&PTIME;</value>
     </envar>
     <envar>
-      <name>CDD</name>
-      <value>&CDATE;</value>
-    </envar>
-    <envar>
-      <name>CHH</name>
-      <value>&CHOUR;</value>
-    </envar>
-    <envar>
-      <name>PYYYY</name>
-      <value>&PYEAR;</value>
-    </envar>
-    <envar>
-      <name>PMM</name>
-      <value>&PMONTH;</value>
-    </envar>
-    <envar>
-      <name>PDD</name>
-      <value>&PDATE;</value>
-    </envar>
-    <envar>
-      <name>PHH</name>
-      <value>&PHOUR;</value>
-    </envar>
-    <envar>
-      <name>NYYYY</name>
-      <value>&NYEAR;</value>
-    </envar>
-    <envar>
-      <name>NMM</name>
-      <value>&NMONTH;</value>
-    </envar>
-    <envar>
-      <name>NDD</name>
-      <value>&NDATE;</value>
-    </envar>
-    <envar>
-      <name>NHH</name>
-      <value>&NHOUR;</value>
+      <name>NTIME</name>
+      <value>&NTIME;</value>
     </envar>
     <envar>
       <name>fv3bundle_vn</name>
@@ -514,10 +362,6 @@
     <envar>
       <name>SNOWDEPTHVAR</name>
       <value>&SNOWDEPTHVAR;</value>
-    </envar>
-    <envar>
-      <name>NPROC_JEDI</name>
-      <value>&NPROCS;</value>
     </envar>
     <envar>
       <name>JEDI_INSTALL</name>

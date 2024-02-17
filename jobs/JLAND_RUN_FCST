@@ -15,18 +15,18 @@ fi
 
 MACHINE_ID=${MACHINE}
 TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
-YYYY=${CYYYY}
-MM=${CMM}
-DD=${CDD}
-HH=${CHH}
-YYYP=${PYYYY}
-MP=${PMM}
-DP=${PDD}
-HP=${PHH}
-nYYYY=${NYYYY}
-nMM=${NMM}
-nDD=${NDD}
-nHH=${NHH}
+YYYY=${CTIME:0:4}
+MM=${CTIME:4:2}
+DD=${CTIME:6:2}
+HH=${CTIME:8:2}
+YYYP=${PTIME:0:4}
+MP=${PTIME:4:2}
+DP=${PTIME:6:2}
+HP=${PTIME:8:2}
+nYYYY=${NTIME:0:4}
+nMM=${NTIME:4:2}
+nDD=${NTIME:6:2}
+nHH=${NTIME:8:2}
 mem_ens="mem000"
 
 MEM_WORKDIR=${WORKDIR}/${mem_ens}
@@ -129,7 +129,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
     set -x 
 	
     # update model namelist 
-    cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
+    cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${ATMOS_FORC}  ufs-land.namelist
     
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs-land.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
@@ -244,19 +244,20 @@ fi
 ############################
 # check model ouput (all members)
 
-mem_ens="mem000"
+#mem_ens="mem000"
 
-MEM_WORKDIR=${WORKDIR}/${mem_ens}
-MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
+#MEM_WORKDIR=${WORKDIR}/${mem_ens}
+#MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
 
 if [[ ${ATMOS_FORC} == "era5" ]]; then
- if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then
-   cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
-else
-   for tile in 1 2 3 4 5 6
-    do
-       cp ${MEM_WORKDIR}/noahmp_output/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
-    done
+    if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then
+	cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
+    fi
 fi
-    
 
+if [[ ${ATMOS_FORC} == "gswp3" ]]; then
+	for tile in 1 2 3 4 5 6
+	do
+	    cp ${MEM_WORKDIR}/noahmp_output/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
+	done
+fi
