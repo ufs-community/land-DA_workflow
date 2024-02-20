@@ -60,7 +60,7 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "era5" ]]; then
     export MEM_WORKDIR
 
     # update vec2tile and tile2vec namelists
-    cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
+    cp  ${CYCLEDIR}/parm/templates/template.vector2tile vector2tile.namelist
 
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" vector2tile.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
@@ -103,7 +103,7 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "gswp3" ]]; then
 	    done
 
     # update tile2tile namelist
-    cp  ${CYCLEDIR}/template.ufs2jedi ufs2jedi.namelist
+    cp  ${CYCLEDIR}/parm/templates/template.ufs2jedi ufs2jedi.namelist
 
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs2jedi.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs2jedi.namelist

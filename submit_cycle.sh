@@ -83,7 +83,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         export MEM_WORKDIR
 
         # update vec2tile and tile2vec namelists
-        cp  ${CYCLEDIR}/template.vector2tile vector2tile.namelist
+        cp  ${CYCLEDIR}/parm/templates/template.vector2tile vector2tile.namelist
 
         sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" vector2tile.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
@@ -130,7 +130,7 @@ while [ $date_count -lt $cycles_per_job ]; do
     	done
 
        # update tile2tile namelist
-        cp  ${CYCLEDIR}/template.ufs2jedi ufs2jedi.namelist
+        cp  ${CYCLEDIR}/parm/templates/template.ufs2jedi ufs2jedi.namelist
 
         sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs2jedi.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" ufs2jedi.namelist
@@ -194,7 +194,7 @@ while [ $date_count -lt $cycles_per_job ]; do
            source ${CYCLEDIR}/land_mods
         fi
 
-        cp  ${CYCLEDIR}/template.tile2vector tile2vector.namelist
+        cp  ${CYCLEDIR}/parm/templates/template.tile2vector tile2vector.namelist
 
         sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" tile2vector.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
@@ -225,7 +225,7 @@ while [ $date_count -lt $cycles_per_job ]; do
            source ${CYCLEDIR}/land_mods
         fi 
         
-        cp  ${CYCLEDIR}/template.jedi2ufs jedi2ufs.namelist
+        cp  ${CYCLEDIR}/parm/templates/template.jedi2ufs jedi2ufs.namelist
          
         sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" jedi2ufs.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" jedi2ufs.namelist
@@ -261,7 +261,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         set -x 
     	
         # update model namelist 
-        cp  ${CYCLEDIR}/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
+        cp  ${CYCLEDIR}/parm/templates/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
 
     	sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs-land.namelist
     	sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
