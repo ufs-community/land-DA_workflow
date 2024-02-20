@@ -1,0 +1,164 @@
+workflow:
+  attrs:
+    realtime: false
+    scheduler: slurm
+  cycledef:
+    - attrs:
+        group: epic
+      spec: 201912210000 201912210000 24:00:00
+  entities:
+    EXP_NAME: "LETKF"
+    LANDDA_INPUTS: "/work/noaa/epic/jongkim/land-DA/inputs"
+    FORCING: "era5"
+    RES: "96"
+    FCSTHR: "24"
+    NPROCS_ANA: "6"
+    NPROCS_FCST: "6"
+    OBS_TYPES: "GHCN"
+    fv3bundle_vn: "psl_develop"
+    DAtype: "letkfoi_snow"
+    SNOWDEPTHVAR: "snwdph"
+    MACHINE: orion
+    TSTUB: "oro_C96.mx100"
+    WORKDIR: /work/noaa/epic/jongkim/land-DA/workdir
+    CYCLEDIR: /work/noaa/epic/jongkim/land-DA/land-DA_workflow
+    BUILDDIR: /work/noaa/epic/jongkim/land-DA/land-DA_workflow/build/bin
+    JEDI_INSTALL: /work/noaa/epic/UFS_Land-DA/jedi
+    OUTDIR: /work/noaa/epic/jongkim/land-DA/landda_expts/DA_GSWP3_test
+    LOG: /work/noaa/epic/jongkim/land-DA/tests
+    PATHRT: /work/noaa/epic/jongkim/land-DA
+    CTIME:  "<cyclestr>@Y@m@d@H</cyclestr>"
+    PTIME:  "<cyclestr offset='-1:00:00'>@Y@m@d@H</cyclestr>"
+    NTIME:  "<cyclestr offset='01:00:00'>@Y@m@d@H</cyclestr>"
+  log: /work/noaa/epic/jongkim/land-DA/tests/workflow.log;
+  tasks:
+    task_prepexp:
+      envars:
+        MACHINE: "&MACHINE;"
+        EXP_NAME: "&EXP_NAME;"
+        LANDDA_INPUTS: "&LANDDA_INPUTS;"
+        ATMOS_FORC: "&FORCING;"
+        RES: "&RES;"
+        TSTUB: "&TSTUB;"
+        WORKDIR: "&WORKDIR;"
+        CYCLEDIR: "&CYCLEDIR;"
+        BUILDDIR: "&BUILDDIR;"
+        OUTDIR: "&OUTDIR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
+      account: epic
+      command: "&CYCLEDIR;/jobs/JLAND_PREP_EXP"
+      jobname: prepexp
+      cores: 1
+      walltime: 00:02:00
+      queue: batch
+    task_prepobs:
+      envars:
+        OBS_TYPES: "&OBS_TYPES;"
+        MACHINE: "&MACHINE;"
+        EXP_NAME: "&EXP_NAME;"
+        LANDDA_INPUTS: "&LANDDA_INPUTS;"
+        ATMOS_FORC: "&FORCING;"
+        WORKDIR: "&WORKDIR;"
+        CYCLEDIR: "&CYCLEDIR;"
+        BUILDDIR: "&BUILDDIR;"
+        OUTDIR: "&OUTDIR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
+      account: epic
+      command: "&CYCLEDIR;/jobs/JLAND_PREP_OBS"
+      jobname: prepobs
+      cores: 1
+      walltime: 00:02:00
+      queue: batch
+      dependency:
+        taskdep:
+          attrs:
+            task: prepexp
+    task_prepbmat:
+      envars:
+        MACHINE: "&MACHINE;"
+        EXP_NAME: "&EXP_NAME;"
+        LANDDA_INPUTS: "&LANDDA_INPUTS;"
+        ATMOS_FORC: "&FORCING;"
+        WORKDIR: "&WORKDIR;"
+        CYCLEDIR: "&CYCLEDIR;"
+        BUILDDIR: "&BUILDDIR;"
+        OUTDIR: "&OUTDIR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
+        fv3bundle_vn: "&fv3bundle_vn;"
+        DAtype: "&DAtype;"
+        SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
+      account: epic
+      command: "&CYCLEDIR;/jobs/JLAND_PREP_BMAT"
+      jobname: prepbmat
+      cores: 1
+      walltime: 00:02:00
+      queue: batch
+      dependency:
+        taskdep:
+          attrs:
+            task: prepobs
+    task_runana:
+      envars:
+        OBS_TYPES: "&OBS_TYPES;"
+        MACHINE: "&MACHINE;"
+        EXP_NAME: "&EXP_NAME;"
+        LANDDA_INPUTS: "&LANDDA_INPUTS;"
+        ATMOS_FORC: "&FORCING;"
+        RES: "&RES;"
+        TSTUB: "&TSTUB;"
+        WORKDIR: "&WORKDIR;"
+        CYCLEDIR: "&CYCLEDIR;"
+        BUILDDIR: "&BUILDDIR;"
+        OUTDIR: "&OUTDIR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
+        NTIME: "&NTIME;"
+        fv3bundle_vn: "&fv3bundle_vn;"
+        DAtype: "&DAtype;"
+        SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
+        NPROC_JEDI: "&NPROCS_ANA;"
+        JEDI_INSTALL: "&JEDI_INSTALL;"
+      account: epic
+      command: "&CYCLEDIR;/jobs/JLAND_PREP_OBS"
+      jobname: runana
+      nodes: "1:ppn=&NPROCS_ANA;"
+      walltime: 00:15:00
+      queue: batch
+      dependency:
+        taskdep:
+          attrs:
+            task: prepbmat
+    task_runfcst:
+      envars:
+        OBS_TYPES: "&OBS_TYPES;"
+        MACHINE: "&MACHINE;"
+        EXP_NAME: "&EXP_NAME;"
+        LANDDA_INPUTS: "&LANDDA_INPUTS;"
+        ATMOS_FORC: "&FORCING;"
+        RES: "&RES;"
+        TSTUB: "&TSTUB;"
+        WORKDIR: "&WORKDIR;"
+        CYCLEDIR: "&CYCLEDIR;"
+        BUILDDIR: "&BUILDDIR;"
+        OUTDIR: "&OUTDIR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
+        NTIME: "&NTIME;"
+        fv3bundle_vn: "&fv3bundle_vn;"
+        DAtype: "&DAtype;"
+        SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
+        JEDI_INSTALL: "&JEDI_INSTALL;"
+        FCSTHR: "&FCSTHR;"
+      account: epic
+      command: "&CYCLEDIR;/jobs/JLAND_RUN_FCST"
+      jobname: runfcst
+      nodes: "1:ppn=&NPROCS_FCST;"
+      walltime: 00:30:00
+      queue: batch
+      dependency:
+        taskdep:
+          attrs:
+            task: runana
