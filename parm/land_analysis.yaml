@@ -47,7 +47,7 @@ workflow:
         CTIME: "&CTIME;"
         PTIME: "&PTIME;"
       account: epic
-      command: "&CYCLEDIR;/jobs/JLAND_PREP_EXP"
+      command: "&CYCLEDIR;/jobs/JLANDDA_PREP_EXP"
       jobname: prepexp
       cores: 1
       walltime: 00:02:00
@@ -66,7 +66,7 @@ workflow:
         CTIME: "&CTIME;"
         PTIME: "&PTIME;"
       account: epic
-      command: "&CYCLEDIR;/jobs/JLAND_PREP_OBS"
+      command: "&CYCLEDIR;/jobs/JLANDDA_PREP_OBS"
       jobname: prepobs
       cores: 1
       walltime: 00:02:00
@@ -91,7 +91,7 @@ workflow:
         DAtype: "&DAtype;"
         SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
       account: epic
-      command: "&CYCLEDIR;/jobs/JLAND_PREP_BMAT"
+      command: "&CYCLEDIR;/jobs/JLANDDA_PREP_BMAT"
       jobname: prepbmat
       cores: 1
       walltime: 00:02:00
@@ -122,7 +122,7 @@ workflow:
         NPROC_JEDI: "&NPROCS_ANA;"
         JEDI_INSTALL: "&JEDI_INSTALL;"
       account: epic
-      command: "&CYCLEDIR;/jobs/JLAND_PREP_OBS"
+      command: "&CYCLEDIR;/jobs/JLANDDA_PREP_OBS"
       jobname: runana
       nodes: "1:ppn=&NPROCS_ANA;"
       walltime: 00:15:00
@@ -153,7 +153,7 @@ workflow:
         JEDI_INSTALL: "&JEDI_INSTALL;"
         FCSTHR: "&FCSTHR;"
       account: epic
-      command: "&CYCLEDIR;/jobs/JLAND_RUN_FCST"
+      command: "&CYCLEDIR;/jobs/JLANDDA_RUN_FCST"
       jobname: runfcst
       nodes: "1:ppn=&NPROCS_FCST;"
       walltime: 00:30:00

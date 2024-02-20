@@ -88,7 +88,7 @@
     <cores>1</cores>
     <queue>batch</queue>
     <walltime>00:02:00</walltime>
-    <command>&CYCLEDIR;/jobs/JLAND_PREP_OBS</command>
+    <command>&CYCLEDIR;/jobs/JLANDDA_PREP_OBS</command>
     <jobname>prepobs</jobname>
     <envar>
       <name>OBS_TYPES</name>
@@ -143,7 +143,7 @@
     <cores>1</cores>
     <queue>batch</queue>
     <walltime>00:02:00</walltime>
-    <command>&CYCLEDIR;/jobs/JLAND_PREP_BMAT</command>
+    <command>&CYCLEDIR;/jobs/JLANDDA_PREP_BMAT</command>
     <jobname>prepbmat</jobname>
     <envar>
       <name>MACHINE</name>
@@ -206,7 +206,7 @@
     <nodes>1:ppn=&NPROCS_ANA;</nodes>
     <queue>batch</queue>
     <walltime>00:15:00</walltime>
-    <command>&CYCLEDIR;/jobs/JLAND_PREP_OBS</command>
+    <command>&CYCLEDIR;/jobs/JLANDDA_PREP_OBS</command>
     <jobname>runana</jobname>
     <envar>
       <name>OBS_TYPES</name>
@@ -293,7 +293,7 @@
     <nodes>1:ppn=&NPROCS_FCST;</nodes>
     <queue>batch</queue>
     <walltime>00:30:00</walltime>
-    <command>&CYCLEDIR;/jobs/JLAND_RUN_FCST</command>
+    <command>&CYCLEDIR;/jobs/JLANDDA_RUN_FCST</command>
     <jobname>runfcst</jobname>
     <envar>
       <name>OBS_TYPES</name>
