@@ -4,6 +4,9 @@ lib64
 sorc/build/
 sorc/lib/
 sorc/lib64
+parm/*.db
+parm/*.out
+parm/*.err
 
 __pycache__
 *.swp

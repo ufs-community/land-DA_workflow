@@ -47,12 +47,12 @@ module use modulefiles; module load modules.landda
 if [[ $do_jedi == "YES" && $ATMOS_FORC == "era5" ]]; then
     
     # copy restarts into work directory
-	rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-	if [[ ! -e ${rst_in} ]]; then
-	    rst_in=${LANDDA_INPUTS}/restarts/${ATMOS_FORC}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-	    fi
-	rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-	cp ${rst_in} ${rst_out}
+    rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    if [[ ! -e ${rst_in} ]]; then
+      rst_in=${LANDDA_INPUTS}/restarts/${ATMOS_FORC}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    fi
+    rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    cp ${rst_in} ${rst_out}
 
     echo '************************************************'
     echo 'calling vector2tile' 

@@ -34,7 +34,7 @@
     <cores>1</cores>
     <queue>batch</queue>
     <walltime>00:02:00</walltime>
-    <command>&CYCLEDIR;/jobs/JLAND_PREP_EXP</command>
+    <command>&CYCLEDIR;/jobs/JLANDDA_PREP_EXP</command>
     <jobname>prepexp</jobname>
     <envar>
       <name>MACHINE</name>
