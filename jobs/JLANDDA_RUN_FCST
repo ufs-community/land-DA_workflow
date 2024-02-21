@@ -38,7 +38,7 @@ JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
 JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
 JEDI_EXEC=$JEDI_EXECDIR/fv3jedi_letkf.x
 LOGDIR=${OUTDIR}/DA/logs
-apply_incr_EXEC=${BUILDDIR}/apply_incr.exe
+apply_incr_EXEC=${EXECdir}/apply_incr.exe
 SAVE_INCR="YES"
 KEEPJEDIDIR="YES"
 FREQ=$((${FCSTHR}*3600))
@@ -76,7 +76,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
     sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
     sed -i -e "s#XXTPATH#${TPATH}#g" tile2vector.namelist
 
-    ${BUILDDIR}/vector2tile_converter.exe tile2vector.namelist
+    ${EXECdir}/vector2tile_converter.exe tile2vector.namelist
     if [[ $? != 0 ]]; then
         echo "tile2vector failed"
         exit
@@ -103,7 +103,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     sed -i -e "s/XXTSTUB/${TSTUB}/g" jedi2ufs.namelist
     sed -i -e "s#XXTPATH#${TPATH}#g" jedi2ufs.namelist
 
-    ${BUILDDIR}/tile2tile_converter.exe jedi2ufs.namelist
+    ${EXECdir}/tile2tile_converter.exe jedi2ufs.namelist
     if [[ $? != 0 ]]; then
         echo "tile2tile failed"
         exit 

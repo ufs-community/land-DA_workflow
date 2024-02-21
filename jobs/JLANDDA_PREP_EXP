@@ -77,7 +77,7 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "era5" ]]; then
     echo '************************************************'
     echo 'calling vector2tile' 
 
-    ${BUILDDIR}/vector2tile_converter.exe vector2tile.namelist
+    ${EXECdir}/vector2tile_converter.exe vector2tile.namelist
     if [[ $? != 0 ]]; then
         echo "vec2tile failed"
         exit
@@ -117,7 +117,7 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "gswp3" ]]; then
     sed -i -e "s#XXTPATH#${TPATH}#g" ufs2jedi.namelist
 
     # submit tile2tile    
-    ${BUILDDIR}/tile2tile_converter.exe ufs2jedi.namelist
+    ${EXECdir}/tile2tile_converter.exe ufs2jedi.namelist
     if [[ $? != 0 ]]; then
         echo "tile2tile failed"
         exit 

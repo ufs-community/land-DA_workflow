@@ -1,7 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE workflow [
+  <!ENTITY MACHINE "hera">
+  <!ENTITY ACCOUNT "fv3-cam">
   <!ENTITY EXP_NAME "LETKF">
-  <!ENTITY LANDDA_INPUTS "/work/noaa/epic/jongkim/land-DA/inputs">
+  <!ENTITY EXP_BASEDIR "/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/LAND-DA-WORKFLOW">
+  <!ENTITY LANDDA_INPUTS "&EXP_BASEDIR;/inputs">
   <!ENTITY FORCING "era5">
   <!ENTITY RES "96">
   <!ENTITY FCSTHR "24">
@@ -11,24 +14,23 @@
   <!ENTITY fv3bundle_vn "psl_develop">
   <!ENTITY DAtype "letkfoi_snow">
   <!ENTITY SNOWDEPTHVAR "snwdph">
-  <!ENTITY MACHINE "orion">
   <!ENTITY TSTUB "oro_C96.mx100">
-  <!ENTITY WORKDIR "/work/noaa/epic/jongkim/land-DA/workdir">
-  <!ENTITY CYCLEDIR "/work/noaa/epic/jongkim/land-DA/land-DA_workflow">
-  <!ENTITY BUILDDIR "/work/noaa/epic/jongkim/land-DA/land-DA_workflow/build/bin">
+  <!ENTITY WORKDIR "&EXP_BASEDIR;/workdir">
+  <!ENTITY CYCLEDIR "&EXP_BASEDIR;/land-DA_workflow">
+  <!ENTITY EXECdir "&CYCLEDIR;/exec">
   <!ENTITY JEDI_INSTALL "/work/noaa/epic/UFS_Land-DA/jedi">
-  <!ENTITY OUTDIR "/work/noaa/epic/jongkim/land-DA/landda_expts/DA_GSWP3_test">
-  <!ENTITY LOG "/work/noaa/epic/jongkim/land-DA/tests">
-  <!ENTITY PATHRT "/work/noaa/epic/jongkim/land-DA">
+  <!ENTITY OUTDIR "&EXP_BASEDIR;/landda_expts/DA_GSWP3_test">
+  <!ENTITY LOG "&EXP_BASEDIR;/tests">
+  <!ENTITY PATHRT "&EXP_BASEDIR;">
   <!ENTITY CTIME "<cyclestr>@Y@m@d@H</cyclestr>">
   <!ENTITY PTIME "<cyclestr offset='-1:00:00'>@Y@m@d@H</cyclestr>">
   <!ENTITY NTIME "<cyclestr offset='01:00:00'>@Y@m@d@H</cyclestr>">
 ]>
 <workflow realtime="False" scheduler="slurm">
   <cycledef group="epic">201912210000 201912210000 24:00:00</cycledef>
-  <log>/work/noaa/epic/jongkim/land-DA/tests/workflow.log;</log>
+  <log>&LOG;/workflow.log</log>
   <task name="prepexp">
-    <account>epic</account>
+    <account>&ACCOUNT;</account>
     <cores>1</cores>
     <queue>batch</queue>
     <walltime>00:02:00</walltime>
@@ -67,8 +69,8 @@
       <value>&CYCLEDIR;</value>
     </envar>
     <envar>
-      <name>BUILDDIR</name>
-      <value>&BUILDDIR;</value>
+      <name>EXECdir</name>
+      <value>&EXECdir;</value>
     </envar>
     <envar>
       <name>OUTDIR</name>
@@ -84,7 +86,7 @@
     </envar>
   </task>
   <task name="prepobs">
-    <account>epic</account>
+    <account>&ACCOUNT;</account>
     <cores>1</cores>
     <queue>batch</queue>
     <walltime>00:02:00</walltime>
@@ -119,8 +121,8 @@
       <value>&CYCLEDIR;</value>
     </envar>
     <envar>
-      <name>BUILDDIR</name>
-      <value>&BUILDDIR;</value>
+      <name>EXECdir</name>
+      <value>&EXECdir;</value>
     </envar>
     <envar>
       <name>OUTDIR</name>
@@ -139,7 +141,7 @@
     </dependency>
   </task>
   <task name="prepbmat">
-    <account>epic</account>
+    <account>&ACCOUNT;</account>
     <cores>1</cores>
     <queue>batch</queue>
     <walltime>00:02:00</walltime>
@@ -170,8 +172,8 @@
       <value>&CYCLEDIR;</value>
     </envar>
     <envar>
-      <name>BUILDDIR</name>
-      <value>&BUILDDIR;</value>
+      <name>EXECdir</name>
+      <value>&EXECdir;</value>
     </envar>
     <envar>
       <name>OUTDIR</name>
@@ -202,7 +204,7 @@
     </dependency>
   </task>
   <task name="runana">
-    <account>epic</account>
+    <account>&ACCOUNT;</account>
     <nodes>1:ppn=&NPROCS_ANA;</nodes>
     <queue>batch</queue>
     <walltime>00:15:00</walltime>
@@ -245,8 +247,8 @@
       <value>&CYCLEDIR;</value>
     </envar>
     <envar>
-      <name>BUILDDIR</name>
-      <value>&BUILDDIR;</value>
+      <name>EXECdir</name>
+      <value>&EXECdir;</value>
     </envar>
     <envar>
       <name>OUTDIR</name>
@@ -289,7 +291,7 @@
     </dependency>
   </task>
   <task name="runfcst">
-    <account>epic</account>
+    <account>&ACCOUNT;</account>
     <nodes>1:ppn=&NPROCS_FCST;</nodes>
     <queue>batch</queue>
     <walltime>00:30:00</walltime>
@@ -332,8 +334,8 @@
       <value>&CYCLEDIR;</value>
     </envar>
     <envar>
-      <name>BUILDDIR</name>
-      <value>&BUILDDIR;</value>
+      <name>EXECdir</name>
+      <value>&EXECdir;</value>
     </envar>
     <envar>
       <name>OUTDIR</name>
