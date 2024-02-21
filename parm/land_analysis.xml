@@ -5,7 +5,7 @@
   <!ENTITY EXP_NAME "LETKF">
   <!ENTITY EXP_BASEDIR "/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/LAND-DA-WORKFLOW">
   <!ENTITY JEDI_INSTALL "/scratch2/NAGAPE/epic/UFS_Land-DA/jedi">
-  <!ENTITY LANDDA_INPUTS "&EXP_BASEDIR;/inputs">
+  <!ENTITY LANDDA_INPUTS "/scratch2/NAGAPE/epic/UFS_Land-DA/inputs">
   <!ENTITY FORCING "era5">
   <!ENTITY RES "96">
   <!ENTITY FCSTHR "24">
