@@ -4,6 +4,7 @@
   <!ENTITY ACCOUNT "fv3-cam">
   <!ENTITY EXP_NAME "LETKF">
   <!ENTITY EXP_BASEDIR "/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/LAND-DA-WORKFLOW">
+  <!ENTITY JEDI_INSTALL "/scratch2/NAGAPE/epic/UFS_Land-DA/jedi">
   <!ENTITY LANDDA_INPUTS "&EXP_BASEDIR;/inputs">
   <!ENTITY FORCING "era5">
   <!ENTITY RES "96">
@@ -18,7 +19,6 @@
   <!ENTITY WORKDIR "&EXP_BASEDIR;/workdir">
   <!ENTITY CYCLEDIR "&EXP_BASEDIR;/land-DA_workflow">
   <!ENTITY EXECdir "&CYCLEDIR;/exec">
-  <!ENTITY JEDI_INSTALL "/work/noaa/epic/UFS_Land-DA/jedi">
   <!ENTITY OUTDIR "&EXP_BASEDIR;/landda_expts/DA_GSWP3_test">
   <!ENTITY LOG "&EXP_BASEDIR;/tests">
   <!ENTITY PATHRT "&EXP_BASEDIR;">

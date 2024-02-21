@@ -10,7 +10,7 @@ if [[ ${EXP_NAME} == "openloop" ]]; then
 else
     do_jedi="YES"
     SAVE_TILE="YES"
-    LANDDADIR=${CYCLEDIR}/DA_update/
+    LANDDADIR=${CYCLEDIR}/sorc/DA_update
 fi
 
 MACHINE_ID=${MACHINE}
@@ -124,9 +124,7 @@ fi
 
 if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then 
     echo '************************************************'
-    echo 'running the forecast model'
-
-    set -x 
+    echo 'running the forecast model' 
 	
     # update model namelist 
     cp  ${CYCLEDIR}/parm/templates/template.ufs-noahMP.namelist.${ATMOS_FORC}  ufs-land.namelist
@@ -145,19 +143,18 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
 
     nt=$SLURM_NTASKS
 
-    ${MPIEXEC} -n 1 ${CYCLEDIR}/build/bin/ufsLand.exe
+    ${MPIEXEC} -n 1 ${EXECdir}/ufsLand.exe
 fi 
 # no error codes on exit from model, check for restart below instead
 
 if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
-    set -e     
     
     echo '************************************************'
     echo 'running the forecast model' 
 
     TEST_NAME=datm_cdeps_lnd_gswp3
     TEST_NAME_RST=datm_cdeps_lnd_gswp3_rst
-    PATHRT=${CYCLEDIR}/ufs-weather-model/tests
+    PATHRT=${CYCLEDIR}/sorc/ufs_model.fd/tests
     RT_COMPILER=${RT_COMPILER:-intel}
     ATOL="1e-7"
 
@@ -195,7 +192,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     export layout_y=1
 
     # FV3 executable:
-    cp ${CYCLEDIR}/build/ufs-weather-model/src/ufs-weather-model-build/ufs_model ./ufs_model 
+    cp ${EXECdir}/ufs_model ./ufs_model 
     cp ${CYCLEDIR}/fv3_run ./fv3_run
 
     if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then
