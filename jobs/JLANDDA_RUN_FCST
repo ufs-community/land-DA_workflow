@@ -83,6 +83,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
     fi
 
     # save analysis restart
+    mkdir -p ${MEM_MODL_OUTDIR}/restarts/vector
     cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
 fi
 
