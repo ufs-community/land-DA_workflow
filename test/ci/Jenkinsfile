@@ -148,14 +148,15 @@ pipeline {
         '''
         }
       }	      
-	 post {
-                            always {
-                                // Archive the test log files
-                                sh 'cd "${}" && tar --create --gzip --verbose --dereference --file "${WORKSPACE}/${}/test_logs-${PLATFORM}-${COMPILER}.tgz" */log.generate_FV3LAM_wflow */log/* ${WORKSPACE}/${PLATFORM}/tests/ctest/_tests_*yaml summary*txt ${WORKSPACE}/${PLATFORM}/tests/ctest/log.*'
-                                // Remove the data sets from the experiments directory to conserve disk space
-                                sh 'find "${EXPERIMENT_BASE_DIR}" -regextype posix-extended -regex "^.*(orog|[0-9]{10})$" -type d | xargs rm -rf'
-                                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.SRW_PLATFORM}/*_test_results-*-*.txt", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false], [bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.PLATFORM}/test_logs-${env.PLATFORM}-${env.COMPILER}.tgz", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
-                            }
-                        }     
-                     }
-                  } 
+
+	}
+	post {
+	    always {
+		// Archive the test log files
+		sh 'cd "${}" && tar --create --gzip --verbose --dereference --file "${WORKSPACE}/${}/test_logs-${PLATFORM}-${COMPILER}.tgz" */log.generate_FV3LAM_wflow */log/* ${WORKSPACE}/${PLATFORM}/tests/ctest/_tests_*yaml summary*txt ${WORKSPACE}/${PLATFORM}/tests/ctest/log.*'
+		// Remove the data sets from the experiments directory to conserve disk space
+		sh 'find "${EXPERIMENT_BASE_DIR}" -regextype posix-extended -regex "^.*(orog|[0-9]{10})$" -type d | xargs rm -rf'
+		s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.SRW_PLATFORM}/*_test_results-*-*.txt", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false], [bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.PLATFORM}/test_logs-${env.PLATFORM}-${env.COMPILER}.tgz", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
+	    }
+	}     
+} 
