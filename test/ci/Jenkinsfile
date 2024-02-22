@@ -4,7 +4,7 @@ pipeline {
     stage('Launch SonarQube') {
             steps {
                 script {
-                    build job: '/land-da/land-da-sonarqube', parameters: [
+                    build job: '/land-DA_workflow/land-da-sonarqube', parameters: [
                         string(name: 'BRANCH_NAME', value: env.CHANGE_BRANCH ?: 'develop'),
                         string(name: 'FORK_NAME', value: env.CHANGE_FORK ?: '')
                     ], wait: false
