@@ -2,8 +2,10 @@ exec/
 lib/
 lib64
 sorc/build/
+sorc/conda/
 sorc/lib/
 sorc/lib64
+parm/conda_loc
 parm/*.db
 parm/*.out
 parm/*.err

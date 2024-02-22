@@ -33,6 +33,8 @@ OPTIONS
       installation prefix
   --bin-dir=BIN_DIR
       installation binary directory name ("exec" by default; any name is available)
+  --conda-dir=CONDA_DIR
+      installation location for miniconda (SRW clone conda subdirectory by default)
   --build-type=BUILD_TYPE
       build type; defaults to Release
       (e.g. Debug | Release | RelWithDebInfo)
@@ -81,6 +83,7 @@ HOME_DIR="${SORC_DIR}/.."
 BUILD_DIR="${SORC_DIR}/build"
 INSTALL_DIR="${SORC_DIR}/build"
 BIN_DIR="exec"
+CONDA_BUILD_DIR="${SORC_DIR}/conda"
 COMPILER=""
 APPLICATION=""
 CCPP_SUITES=""
@@ -88,6 +91,7 @@ BUILD_TYPE="Release"
 BUILD_JOBS=4
 REMOVE=false
 VERBOSE=false
+BUILD_CONDA="on"
 
 # Make options
 CLEAN=false
@@ -123,6 +127,8 @@ while :; do
     --install-dir|--install-dir=) usage_error "$1 requires argument." ;;
     --bin-dir=?*) BIN_DIR=${1#*=} ;;
     --bin-dir|--bin-dir=) usage_error "$1 requires argument." ;;
+    --conda-dir=?*) CONDA_BUILD_DIR=${1#*=} ;;
+    --conda-dir|--conda-dir=) usage_error "$1 requires argument." ;;
     --build-type=?*) BUILD_TYPE=${1#*=} ;;
     --build-type|--build-type=) usage_error "$1 requires argument." ;;
     --build-jobs=?*) BUILD_JOBS=$((${1#*=})) ;;
@@ -166,29 +172,7 @@ if [ -z $PLATFORM ] ; then
 fi
 printf "PLATFORM(MACHINE)=${PLATFORM}\n" >&2
 
-set -eu
-
-# automatically determine compiler
-if [ -z "${COMPILER}" ] ; then
-  case ${PLATFORM} in
-    jet|hera|gaea) COMPILER=intel ;;
-    orion|hercules) COMPILER=intel ;;
-    wcoss2) COMPILER=intel ;;
-    macos|singularity) COMPILER=gnu ;;
-    odin|noaacloud) COMPILER=intel ;;
-    *)
-      COMPILER=intel
-      printf "WARNING: Setting default COMPILER=intel for new platform ${PLATFORM}\n" >&2;
-      ;;
-  esac
-fi
-printf "COMPILER=${COMPILER}\n" >&2
-
-# print settings
-if [ "${VERBOSE}" = true ] ; then
-  settings
-fi
-
+# Remove option
 if [ "${REMOVE}" = true ]; then
   printf "Remove build directory\n"
   printf "  BUILD_DIR=${BUILD_DIR}\n"
@@ -223,6 +207,7 @@ if [ "${REMOVE}" = true ]; then
     printf "... Remove vector2tile_converter.fd ...\n"
     rm -rf "${SORC_DIR}/vector2tile_converter.fd"
   fi
+
   cd "${HOME_DIR}"
   git submodule update --init --recursive
   cd "${SORC_DIR}"
@@ -251,6 +236,65 @@ else
       esac
     done
   fi
+fi
+
+# Conda is not used on Gaea-c5 F2 filesystem as well as wcoss2
+if [ "${PLATFORM}" = "gaea-c5" ] || [ "${PLATFORM}" = "wcoss2" ]; then
+  BUILD_CONDA="off"
+fi
+
+# build conda and conda environments, if requested.
+if [ "${BUILD_CONDA}" = "on" ] ; then
+  if [ ! -d "${CONDA_BUILD_DIR}" ] ; then
+    os=$(uname)
+    test $os == Darwin && os=MacOSX
+    hardware=$(uname -m)
+    installer=Miniforge3-${os}-${hardware}.sh
+    curl -L -O "https://github.com/conda-forge/miniforge/releases/download/23.3.1-1/${installer}"
+    bash ./${installer} -bfp "${CONDA_BUILD_DIR}"
+    rm ${installer}
+  fi
+
+  source ${CONDA_BUILD_DIR}/etc/profile.d/conda.sh
+  # Put some additional packages in the base environment on MacOS systems
+  if [ "${os}" == "MacOSX" ] ; then
+    mamba install -y bash coreutils sed
+  fi
+  conda activate
+  if ! conda env list | grep -q "^land_da\s" ; then
+    mamba env create -n land_da --file ${HOME_DIR}/parm/conda_environment.yml
+  fi
+else
+  if [ -d "${CONDA_BUILD_DIR}" ] ; then
+    source ${CONDA_BUILD_DIR}/etc/profile.d/conda.sh
+    conda activate
+  fi
+fi
+
+CONDA_BUILD_DIR="$(readlink -f "${CONDA_BUILD_DIR}")"
+echo ${CONDA_BUILD_DIR} > ${HOME_DIR}/parm/conda_loc
+
+set -eu
+
+# automatically determine compiler
+if [ -z "${COMPILER}" ] ; then
+  case ${PLATFORM} in
+    jet|hera|gaea) COMPILER=intel ;;
+    orion|hercules) COMPILER=intel ;;
+    wcoss2) COMPILER=intel ;;
+    macos|singularity) COMPILER=gnu ;;
+    odin|noaacloud) COMPILER=intel ;;
+    *)
+      COMPILER=intel
+      printf "WARNING: Setting default COMPILER=intel for new platform ${PLATFORM}\n" >&2;
+      ;;
+  esac
+fi
+printf "COMPILER=${COMPILER}\n" >&2
+
+# print settings
+if [ "${VERBOSE}" = true ] ; then
+  settings
 fi
 
 # cmake settings
