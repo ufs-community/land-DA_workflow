@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE workflow [
   <!ENTITY MACHINE "hera">
-  <!ENTITY ACCOUNT "fv3-cam">
+  <!ENTITY ACCOUNT "epic">
   <!ENTITY EXP_NAME "LETKF">
   <!ENTITY EXP_BASEDIR "/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/LAND-DA-WORKFLOW">
   <!ENTITY JEDI_INSTALL "/scratch2/NAGAPE/epic/UFS_Land-DA/jedi">

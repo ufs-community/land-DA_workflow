@@ -7,8 +7,10 @@ workflow:
         group: epic
       spec: 201912210000 201912210000 24:00:00
   entities:
+    MACHINE: "hera"
+    ACCOUNT: "naqfc"
     EXP_NAME: "LETKF"
-    EXP_BASEDIR: "/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/LAND-DA-WORKFLOW"
+    EXP_BASEDIR: "/scratch2/NCEPDEV/epic/Chan-hoo.Jeon/LAND-DA-WORKFLOW"
     JEDI_INSTALL: "/scratch2/NAGAPE/epic/UFS_Land-DA/jedi"
     LANDDA_INPUTS: "/scratch2/NAGAPE/epic/UFS_Land-DA/input"
     FORCING: "era5"
@@ -20,8 +22,6 @@ workflow:
     fv3bundle_vn: "psl_develop"
     DAtype: "letkfoi_snow"
     SNOWDEPTHVAR: "snwdph"
-    MACHINE: "hera"
-    ACCOUNT: "epic"
     TSTUB: "oro_C96.mx100"
     WORKDIR: "&EXP_BASEDIR;/workdir"
     CYCLEDIR: "&EXP_BASEDIR;/land-DA_workflow"

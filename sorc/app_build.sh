@@ -33,6 +33,7 @@ OPTIONS
       installation prefix
   --bin-dir=BIN_DIR
       installation binary directory name ("exec" by default; any name is available)
+  --conda=BUILD_CONDA (on|off|only)
   --conda-dir=CONDA_DIR
       installation location for miniconda (SRW clone conda subdirectory by default)
   --build-type=BUILD_TYPE
@@ -127,6 +128,8 @@ while :; do
     --install-dir|--install-dir=) usage_error "$1 requires argument." ;;
     --bin-dir=?*) BIN_DIR=${1#*=} ;;
     --bin-dir|--bin-dir=) usage_error "$1 requires argument." ;;
+    --conda=?*) BUILD_CONDA=${1#*=} ;;
+    --conda|--conda=) usage_error "$1 requires argument." ;;
     --conda-dir=?*) CONDA_BUILD_DIR=${1#*=} ;;
     --conda-dir|--conda-dir=) usage_error "$1 requires argument." ;;
     --build-type=?*) BUILD_TYPE=${1#*=} ;;
@@ -171,6 +174,50 @@ if [ -z $PLATFORM ] ; then
   fi
 fi
 printf "PLATFORM(MACHINE)=${PLATFORM}\n" >&2
+
+# Conda is not used on Gaea-c5 F2 filesystem as well as wcoss2
+if [ "${PLATFORM}" = "gaea-c5" ] || [ "${PLATFORM}" = "wcoss2" ]; then
+  BUILD_CONDA="off"
+fi
+# build conda and conda environments, if requested.
+if [ "${BUILD_CONDA}" = "on" ] || [ "${BUILD_CONDA}" = "only" ]; then
+  if [ "${BUILD_CONDA}" = "only" ]; then
+    if [ -d "${CONDA_BUILD_DIR}" ]; then
+      printf "Removing conda build directory ...\n"
+      rm -rf "${CONDA_BUILD_DIR}"
+      printf "Removed ...\n"
+    fi
+  fi
+
+  if [ ! -d "${CONDA_BUILD_DIR}" ] ; then
+    os=$(uname)
+    test $os == Darwin && os=MacOSX
+    hardware=$(uname -m)
+    installer=Miniforge3-${os}-${hardware}.sh
+    curl -L -O "https://github.com/conda-forge/miniforge/releases/download/23.3.1-1/${installer}"
+    bash ./${installer} -bfp "${CONDA_BUILD_DIR}"
+    rm ${installer}
+  fi
+
+  source ${CONDA_BUILD_DIR}/etc/profile.d/conda.sh
+  # Put some additional packages in the base environment on MacOS systems
+  if [ "${os}" == "MacOSX" ] ; then
+    mamba install -y bash coreutils sed
+  fi
+  conda activate
+  if ! conda env list | grep -q "^land_da\s" ; then
+    mamba env create -n land_da --file ${HOME_DIR}/parm/conda_environment.yml
+  fi
+else
+  if [ -d "${CONDA_BUILD_DIR}" ] ; then
+    source ${CONDA_BUILD_DIR}/etc/profile.d/conda.sh
+    conda activate
+  fi
+fi
+
+CONDA_BUILD_DIR="$(readlink -f "${CONDA_BUILD_DIR}")"
+echo ${CONDA_BUILD_DIR} > ${HOME_DIR}/parm/conda_loc
+[[ "${BUILD_CONDA}" == "only" ]] && exit 0
 
 # Remove option
 if [ "${REMOVE}" = true ]; then
@@ -237,42 +284,6 @@ else
     done
   fi
 fi
-
-# Conda is not used on Gaea-c5 F2 filesystem as well as wcoss2
-if [ "${PLATFORM}" = "gaea-c5" ] || [ "${PLATFORM}" = "wcoss2" ]; then
-  BUILD_CONDA="off"
-fi
-
-# build conda and conda environments, if requested.
-if [ "${BUILD_CONDA}" = "on" ] ; then
-  if [ ! -d "${CONDA_BUILD_DIR}" ] ; then
-    os=$(uname)
-    test $os == Darwin && os=MacOSX
-    hardware=$(uname -m)
-    installer=Miniforge3-${os}-${hardware}.sh
-    curl -L -O "https://github.com/conda-forge/miniforge/releases/download/23.3.1-1/${installer}"
-    bash ./${installer} -bfp "${CONDA_BUILD_DIR}"
-    rm ${installer}
-  fi
-
-  source ${CONDA_BUILD_DIR}/etc/profile.d/conda.sh
-  # Put some additional packages in the base environment on MacOS systems
-  if [ "${os}" == "MacOSX" ] ; then
-    mamba install -y bash coreutils sed
-  fi
-  conda activate
-  if ! conda env list | grep -q "^land_da\s" ; then
-    mamba env create -n land_da --file ${HOME_DIR}/parm/conda_environment.yml
-  fi
-else
-  if [ -d "${CONDA_BUILD_DIR}" ] ; then
-    source ${CONDA_BUILD_DIR}/etc/profile.d/conda.sh
-    conda activate
-  fi
-fi
-
-CONDA_BUILD_DIR="$(readlink -f "${CONDA_BUILD_DIR}")"
-echo ${CONDA_BUILD_DIR} > ${HOME_DIR}/parm/conda_loc
 
 set -eu
 
