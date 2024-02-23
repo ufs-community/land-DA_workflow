@@ -215,7 +215,7 @@ else
   fi
 fi
 
-##### TEOMPORARY FIX : should be resolved soon ######################
+##### TEMPORARY FIX : should be resolved soon ######################
 # Copy missing files of uwtools manually
 tmpfile_target="${CONDA_BUILD_DIR}/envs/land_da/lib/python3.11/site-packages/uwtools/resources"
 tmpfile_path="${HOME_DIR}/parm/tmp"
