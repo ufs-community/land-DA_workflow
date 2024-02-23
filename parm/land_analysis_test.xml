@@ -19,7 +19,7 @@
   <!ENTITY WORKDIR "&EXP_BASEDIR;/workdir">
   <!ENTITY CYCLEDIR "&EXP_BASEDIR;/land-DA_workflow">
   <!ENTITY EXECdir "&CYCLEDIR;/exec">
-  <!ENTITY OUTDIR "&EXP_BASEDIR;/landda_expts/DA_GSWP3_test">
+  <!ENTITY OUTDIR "&EXP_BASEDIR;/landda_expts/DA_era5_test">
   <!ENTITY LOG "&EXP_BASEDIR;/tests">
   <!ENTITY PATHRT "&EXP_BASEDIR;">
   <!ENTITY CTIME "<cyclestr>@Y@m@d@H</cyclestr>">
