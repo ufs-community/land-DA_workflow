@@ -33,7 +33,7 @@ export nHH=`echo $NYMDH | cut -c9-10`
 # set paths
 export WORKDIR=$project_binary_dir/test
 export EXECDIR=${EXECDIR:-$project_binary_dir/bin}
-export LANDDA_INPUTS=${LANDDA_INPUTS:-"`dirname $project_source_dir`/inputs"}
+export LANDDA_INPUTS=${LANDDA_INPUTS:-"`dirname $project_source_dir`/../inputs"}
 
 # set IODA path
 export IODA_BUILD_DIR=${IODA_BUILD_DIR:-"${JEDI_INSTALL}/build"}

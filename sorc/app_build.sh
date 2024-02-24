@@ -394,9 +394,9 @@ else
     printf "... Moving pre-compiled executables to designated location ...\n"
     mkdir -p ${HOME_DIR}/${BIN_DIR}
     cd "${INSTALL_DIR}/bin"
-    # move executables in build/bin to BIN_DIR
+    # copy executables in build/bin to BIN_DIR
     for file in *; do
-      [ -x "${file}" ] && mv "${file}" "${HOME_DIR}/${BIN_DIR}"
+      [ -x "${file}" ] && cp "${file}" "${HOME_DIR}/${BIN_DIR}"
     done
     # copy libraries
     cp -r ${BUILD_DIR}/lib ${HOME_DIR}
