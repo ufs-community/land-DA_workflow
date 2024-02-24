@@ -12,7 +12,7 @@ echo ${project_source_dir}
 #
 MACHINE_ID=${MACHINE_ID:-hera}
 TEST_NAME=datm_cdeps_lnd_gswp3
-PATHRT=${project_source_dir}/ufs-weather-model/tests
+PATHRT=${project_source_dir}/ufs_model.fd/tests
 RT_COMPILER=${RT_COMPILER:-intel}
 ATOL="1e-7"
 source ${PATHRT}/detect_machine.sh
@@ -55,7 +55,7 @@ export layout_x=1
 export layout_y=1
 
 # FV3 executable:
-cp ${project_binary_dir}/ufs-weather-model/src/ufs-weather-model-build/ufs_model ./ufs_model
+cp ${project_binary_dir}/ufs_model.fd/src/ufs_model.fd-build/ufs_model ./ufs_model
 
 #set multiple input files
 for i in ${FV3_RUN:-fv3_run.IN}

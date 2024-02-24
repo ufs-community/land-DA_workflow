@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 ################################################
 # pass arguments
 project_binary_dir=$1
@@ -35,7 +35,7 @@ do
 done
 
 # update model namelist
-cp $project_source_dir/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
+cp $project_source_dir/../parm/templates/template.ufs-noahMP.namelist.${atmos_forc} ufs-land.namelist
 sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs-land.namelist
 sed -i -e "s/XXYYYY/${YY}/g" ufs-land.namelist
 sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist

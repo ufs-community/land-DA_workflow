@@ -175,65 +175,6 @@ if [ -z $PLATFORM ] ; then
 fi
 printf "PLATFORM(MACHINE)=${PLATFORM}\n" >&2
 
-# Conda is not used on Gaea-c5 F2 filesystem as well as wcoss2
-if [ "${PLATFORM}" = "gaea-c5" ] || [ "${PLATFORM}" = "wcoss2" ]; then
-  BUILD_CONDA="off"
-fi
-# build conda and conda environments, if requested.
-if [ "${BUILD_CONDA}" = "on" ] || [ "${BUILD_CONDA}" = "only" ]; then
-  if [ "${BUILD_CONDA}" = "only" ]; then
-    if [ -d "${CONDA_BUILD_DIR}" ]; then
-      printf "Removing conda build directory ...\n"
-      rm -rf "${CONDA_BUILD_DIR}"
-      printf "Removed ...\n"
-    fi
-  fi
-
-  if [ ! -d "${CONDA_BUILD_DIR}" ] ; then
-    os=$(uname)
-    test $os == Darwin && os=MacOSX
-    hardware=$(uname -m)
-    installer=Miniforge3-${os}-${hardware}.sh
-    curl -L -O "https://github.com/conda-forge/miniforge/releases/download/23.3.1-1/${installer}"
-    bash ./${installer} -bfp "${CONDA_BUILD_DIR}"
-    rm ${installer}
-  fi
-
-  source ${CONDA_BUILD_DIR}/etc/profile.d/conda.sh
-  # Put some additional packages in the base environment on MacOS systems
-  if [ "${os}" == "MacOSX" ] ; then
-    mamba install -y bash coreutils sed
-  fi
-  conda activate
-  if ! conda env list | grep -q "^land_da\s" ; then
-    mamba env create -n land_da --file ${HOME_DIR}/parm/conda_environment.yml
-  fi
-else
-  if [ -d "${CONDA_BUILD_DIR}" ] ; then
-    source ${CONDA_BUILD_DIR}/etc/profile.d/conda.sh
-    conda activate
-  fi
-fi
-
-##### TEMPORARY FIX : should be resolved soon ######################
-# Copy missing files of uwtools manually
-tmpfile_target="${CONDA_BUILD_DIR}/envs/land_da/lib/python3.11/site-packages/uwtools/resources"
-tmpfile_path="${HOME_DIR}/parm/tmp"
-tmpfile1="rocoto.jsonschema"
-tmpfile2="schema_with_metatasks.rng"
-if [ ! -f "${tmpfile_target}/${tmpfile1}" ]; then
-  cp "${tmpfile_path}/${tmpfile1}" "${tmpfile_target}/${tmpfile1}"
-fi
-if [ ! -f "${tmpfile_target}/${tmpfile2}" ]; then
-  cp "${tmpfile_path}/${tmpfile2}" "${tmpfile_target}/${tmpfile2}"
-fi
-####################################################################
-
-CONDA_BUILD_DIR="$(readlink -f "${CONDA_BUILD_DIR}")"
-echo ${CONDA_BUILD_DIR} > ${HOME_DIR}/parm/conda_loc
-
-[[ "${BUILD_CONDA}" == "only" ]] && exit 0
-
 # Remove option
 if [ "${REMOVE}" = true ]; then
   printf "Remove build directory\n"
@@ -274,30 +215,90 @@ if [ "${REMOVE}" = true ]; then
   git submodule update --init --recursive
   cd "${SORC_DIR}"
   exit 0  
-else
-  if [ -d "${BUILD_DIR}" ]; then
-    while true; do
-      if [[ $(ps -o stat= -p ${LCL_PID}) != *"+"* ]] ; then
-        printf "ERROR: Build directory already exists.\n" >&2
-        printf "  BUILD_DIR=${BUILD_DIR}\n\n" >&2
-        usage >&2
-        exit 64
-      fi
-      # interactive selection
-      printf "Build directory (${BUILD_DIR}) already exists.\n"
-      printf "Please choose what to do:\n\n"
-      printf "[R]emove the existing directory and continue to build\n"
-      printf "[C]ontinue building in the existing directory\n"
-      printf "[Q]uit this build script\n"
-      read -p "Choose an option (R/C/Q):" choice
-      case ${choice} in
-        [Rr]* ) rm -rf ${BUILD_DIR}; break ;;
-        [Cc]* ) break ;;
-        [Qq]* ) exit ;;
-        * ) printf "Invalid option selected.\n" ;;
-      esac
-    done
+fi
+
+# Conda is not used on Gaea-c5 F2 filesystem as well as wcoss2
+if [ "${PLATFORM}" = "gaea-c5" ] || [ "${PLATFORM}" = "wcoss2" ]; then
+  BUILD_CONDA="off"
+fi
+# build conda and conda environments, if requested.
+if [ "${BUILD_CONDA}" = "on" ] || [ "${BUILD_CONDA}" = "only" ]; then
+  if [ "${BUILD_CONDA}" = "only" ]; then
+    if [ -d "${CONDA_BUILD_DIR}" ]; then
+      printf "Removing conda build directory ...\n"
+      rm -rf "${CONDA_BUILD_DIR}"
+      printf "Removed ...\n"
+    fi
   fi
+
+  if [ ! -d "${CONDA_BUILD_DIR}" ] ; then
+    os=$(uname)
+    test $os == Darwin && os=MacOSX
+    hardware=$(uname -m)
+    installer=Miniforge3-${os}-${hardware}.sh
+    curl -L -O "https://github.com/conda-forge/miniforge/releases/download/23.3.1-1/${installer}"
+    bash ./${installer} -bfp "${CONDA_BUILD_DIR}"
+    rm ${installer}
+  fi
+
+  source ${CONDA_BUILD_DIR}/etc/profile.d/conda.sh
+  # Put some additional packages in the base environment on MacOS systems
+  if [ "${os}" == "MacOSX" ] ; then
+    mamba install -y bash coreutils sed
+  fi
+  conda activate
+  if ! conda env list | grep -q "^land_da\s" ; then
+    mamba env create -n land_da --file ${HOME_DIR}/parm/conda_environment.yml
+  fi
+
+  ##### TEMPORARY FIX : should be resolved soon ######################
+  # Copy missing files of uwtools manually
+  tmpfile_target="${CONDA_BUILD_DIR}/envs/land_da/lib/python3.11/site-packages/uwtools/resources"
+  tmpfile_path="${HOME_DIR}/parm/tmp"
+  tmpfile1="rocoto.jsonschema"
+  tmpfile2="schema_with_metatasks.rng"
+  if [ ! -f "${tmpfile_target}/${tmpfile1}" ]; then
+    cp "${tmpfile_path}/${tmpfile1}" "${tmpfile_target}/${tmpfile1}"
+  fi
+  if [ ! -f "${tmpfile_target}/${tmpfile2}" ]; then
+    cp "${tmpfile_path}/${tmpfile2}" "${tmpfile_target}/${tmpfile2}"
+  fi
+  ####################################################################
+
+else
+  if [ -d "${CONDA_BUILD_DIR}" ] ; then
+    source ${CONDA_BUILD_DIR}/etc/profile.d/conda.sh
+    conda activate
+  fi
+fi
+
+CONDA_BUILD_DIR="$(readlink -f "${CONDA_BUILD_DIR}")"
+echo ${CONDA_BUILD_DIR} > ${HOME_DIR}/parm/conda_loc
+
+[[ "${BUILD_CONDA}" == "only" ]] && exit 0
+
+if [ -d "${BUILD_DIR}" ]; then
+  while true; do
+    if [[ $(ps -o stat= -p ${LCL_PID}) != *"+"* ]] ; then
+      printf "ERROR: Build directory already exists.\n" >&2
+      printf "  BUILD_DIR=${BUILD_DIR}\n\n" >&2
+      usage >&2
+      exit 64
+    fi
+    # interactive selection
+    printf "Build directory (${BUILD_DIR}) already exists.\n"
+    printf "Please choose what to do:\n\n"
+    printf "[R]emove the existing directory and continue to build\n"
+    printf "[C]ontinue building in the existing directory\n"
+    printf "[Q]uit this build script\n"
+    read -p "Choose an option (R/C/Q):" choice
+    case ${choice} in
+      [Rr]* ) rm -rf ${BUILD_DIR}; break ;;
+      [Cc]* ) break ;;
+      [Qq]* ) exit ;;
+      * ) printf "Invalid option selected.\n" ;;
+    esac
+  done
 fi
 
 set -eu
