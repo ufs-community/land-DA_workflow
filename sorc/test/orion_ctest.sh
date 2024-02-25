@@ -3,7 +3,7 @@
 #SBATCH --account=nems
 set -eux
 
-module use modulefiles && module load build_orion_intel
+module use ../../modulefiles && module load build_orion_intel
 
 ctest
 
