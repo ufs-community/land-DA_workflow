@@ -1,6 +1,6 @@
 [submodule "sorc/DA_update"]
 	path = sorc/DA_update
-	url = https://github.com/chan-hoo/land-DA.git
+	url = https://github.com/ufs-community/land-DA.git
 	ignore = dirty
 [submodule "sorc/ufsLand.fd"]
 	path = sorc/ufsLand.fd
