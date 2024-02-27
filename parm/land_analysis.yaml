@@ -8,9 +8,9 @@ workflow:
       spec: 201912210000 201912210000 24:00:00
   entities:
     MACHINE: "hera"
-    ACCOUNT: "naqfc"
+    ACCOUNT: "epic"
     EXP_NAME: "LETKF"
-    EXP_BASEDIR: "/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/LAND-DA-WORKFLOW"
+    EXP_BASEDIR: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/landda_version"
     JEDI_INSTALL: "/scratch2/NAGAPE/epic/UFS_Land-DA/jedi"
     LANDDA_INPUTS: "/scratch2/NAGAPE/epic/UFS_Land-DA/inputs"
     FORCING: "era5"
