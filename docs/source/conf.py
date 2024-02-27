@@ -23,6 +23,7 @@ numfig = True
 extensions = [
     'sphinx_rtd_theme',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.extlinks',
     'sphinxcontrib.bibtex',
 ]
 
@@ -51,19 +52,35 @@ rst_prolog = """
 .. |branch| replace:: ``release/public-v1.2.0``
 """
 
+# Linkcheck options
+
+# Avoid a 403 Forbidden error when accessing certain links (e.g., noaa.gov)
+user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+
+# Ignore working links that cause a linkcheck 403 error.
+linkcheck_ignore = [#r'https://www\.intel\.com/content/www/us/en/docs/cpp\-compiler/developer\-guide\-reference/2021\-10/thread\-affinity\-interface\.html',
+                   ]
+
+# Ignore anchor tags for SRW App data bucket. Shows Not Found even when they exist.
+linkcheck_anchors_ignore = [r"current_srw_release_data/", 
+                            ]
+
+linkcheck_allowed_redirects = {r"https://github\.com/ufs-community/land-DA\_workflow/wiki/.*": 
+                                 r"https://raw\.githubusercontent\.com/wiki/ufs-community/land-DA\_workflow/.*",
+
+                              }
+
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
+# The theme to use for HTML and HTML Help pages. 
 html_theme = 'sphinx_rtd_theme'
 html_theme_path = ["_themes", ]
+html_logo= "https://github.com/ufs-community/ufs/wiki/images/ufs-epic-logo.png"
 
 # Theme options are theme-specific and customize the look and feel of a theme
-# further.  For a list of options available for each theme, see the
-# documentation.
-#
+# further. 
 html_theme_options = {
     "body_max_width": "none", 
     'navigation_depth': 6,
@@ -79,10 +96,23 @@ def setup(app):
     app.add_css_file('custom.css')  # may also be an URL
     app.add_css_file('theme_overrides.css')  # may also be a URL
 
-# Example configuration for intersphinx: refer to the Python standard library.
+# -- Options for intersphinx extension ---------------------------------------
+
 intersphinx_mapping = {
    'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0', None),
    'spack-stack': ('https://spack-stack.readthedocs.io/en/1.3.0/', None),
-   'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/latest/', None),
+   'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/develop/', None),
    'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/', None),
 }
+
+# -- Options for extlinks extension ---------------------------------------
+
+extlinks_detect_hardcoded_links = True
+extlinks = {'github-docs': ('https://docs.github.com/en/%s', '%s'),
+            'nco': ('https://www.nco.ncep.noaa.gov/idsb/implementation_standards/%s', '%s'),
+            'rst': ('https://www.sphinx-doc.org/en/master/usage/restructuredtext/%s', '%s'),
+            'rtd': ('https://readthedocs.org/projects/land-da-workflow/%s', '%s'),
+            'land-wflow-repo': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
+            'land-wflow-wiki': ('https://github.com/ufs-community/land-DA_workflow/wiki/%s','%s'),
+            'uw': ('https://uwtools.readthedocs.io/en/main/%s', '%s'),
+            }
