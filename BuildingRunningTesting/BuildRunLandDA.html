@@ -168,23 +168,13 @@
 <section id="build-the-land-da-system">
 <span id="build-land-da"></span><h2><span class="section-number">2.1.4. </span>Build the Land DA System<a class="headerlink" href="#build-the-land-da-system" title="Permalink to this heading"></a></h2>
 <ol class="arabic">
-<li><p>Navigate to the workflow directory, and source the modulefiles.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $LANDDAROOT/land-DA_workflow</span>
-<span class="go">module use modulefiles</span>
-<span class="go">module load landda_&lt;machine&gt;.intel</span>
-</pre></div>
-</div>
-<p>where <code class="docutils literal notranslate"><span class="pre">&lt;machine&gt;</span></code> is either <code class="docutils literal notranslate"><span class="pre">hera</span></code> or <code class="docutils literal notranslate"><span class="pre">orion</span></code>.</p>
-</li>
-<li><p>Create and navigate to a <code class="docutils literal notranslate"><span class="pre">build</span></code> directory.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mkdir build</span>
-<span class="go">cd build</span>
+<li><p>Navigate to the <code class="docutils literal notranslate"><span class="pre">sorc</span></code> directory.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $LANDDAROOT/land-DA_workflow/sorc</span>
 </pre></div>
 </div>
 </li>
-<li><p>Build the Land DA System.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ecbuild ..</span>
-<span class="go">make -j4</span>
+<li><p>Run the build script <code class="docutils literal notranslate"><span class="pre">app_build.sh</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./app_build.sh</span>
 </pre></div>
 </div>
 <p>If the code successfully compiles, the console output should end with:</p>
@@ -192,13 +182,14 @@
 <span class="go">[100%] Built target ufs-weather-model</span>
 </pre></div>
 </div>
-<p>Additionally, the <code class="docutils literal notranslate"><span class="pre">build</span></code> directory will contain several files and directories along with a <code class="docutils literal notranslate"><span class="pre">bin</span></code> subdirectory with four executables:</p>
+<p>Additionally, the <code class="docutils literal notranslate"><span class="pre">exec</span></code> directory will contain the following executables:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">apply_incr.exe</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ufsLand.exe</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">vector2tile_converter.exe</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">tile2tile_converter.exe</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ufs_model</span></code></p></li>
 </ul>
 </div></blockquote>
 </li>
