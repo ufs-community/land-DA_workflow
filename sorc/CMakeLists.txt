@@ -29,35 +29,47 @@ include(ExternalProject)
 # -----------------
 ecbuild_bundle_initialize()
 
-list( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
-include( landda_compiler_flags )
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+include(landda_compiler_flags)
+
 
 ################################################################################
 # Dependencies
 ################################################################################
-find_package( NetCDF REQUIRED COMPONENTS Fortran)
+find_package(NetCDF REQUIRED COMPONENTS Fortran)
 include_directories( ${NETCDF_INCLUDE_DIRS} )
-
 
 ################################################################################
 # Sources
 ################################################################################
-set( LANDDA_LINKER_LANGUAGE CXX)
+set(LANDDA_LINKER_LANGUAGE CXX)
 
-ExternalProject_Add(ufs-weather-model
-  PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs-weather-model
-  GIT_REPOSITORY https://github.com/ufs-community/ufs-weather-model
-  GIT_SUBMODULES_RECURSE TRUE
-  GIT_TAG 24f5a415173e625606a65b90163464adcf2770c6
-  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs-weather-model
-  CMAKE_ARGS ${SOURCE_DIR} -DAPP=LND -DMPI=ON -DCMAKE_BUILD_TYPE=Release
+if(NOT APP)
+  set(APP "LND")
+endif()
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+list(APPEND UFS_MODEL_ARGS
+  "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
+  "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+  "-DMPI=ON"
+  "-DAPP=${APP}"
+)
+
+ExternalProject_Add(ufs_model.fd
+  PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ufs_model.fd
+  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ufs_model.fd
+  CMAKE_ARGS ${UFS_MODEL_ARGS}
   INSTALL_COMMAND cmake
   )
 
-add_subdirectory( vector2tile )
-add_subdirectory( tile2tile )
-add_subdirectory( ufs-land-driver-emc-dev )
-add_subdirectory( DA_update/add_jedi_incr )
+add_subdirectory(tile2tile_converter.fd)
+add_subdirectory(vector2tile_converter.fd)
+add_subdirectory(ufsLand.fd)
+add_subdirectory(DA_update/add_jedi_incr)
 
 # Include testing.
 add_subdirectory(test)

@@ -1,0 +1,576 @@
+{
+  "$defs": {
+    "compoundTimeString": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "cyclestr": {
+              "additionalProperties": false,
+              "properties": {
+                "attrs": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "offset": {
+                      "$ref": "#/$defs/time"
+                    }
+                  },
+                  "type": "object"
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "cyclestr"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "dependency": {
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^(and|or|not|nand|nor|xor)(_.*)?$": {
+          "$ref": "#/$defs/dependency"
+        },
+        "^(streq|strneq)(_.*)?$": {
+          "additionalProperties": false,
+          "properties": {
+            "left": {
+              "$ref": "#/$defs/compoundTimeString"
+            },
+            "right": {
+              "$ref": "#/$defs/compoundTimeString"
+            }
+          },
+          "required": [
+            "left",
+            "right"
+          ],
+          "type": "object"
+        },
+        "^cycleexistdep(_.*)?$": {
+          "additionalProperties": false,
+          "properties": {
+            "cycle_offset": {
+              "$ref": "#/$defs/time"
+            }
+          },
+          "type": "object"
+        },
+        "^datadep(_.*)?$": {
+          "additionalProperties": false,
+          "properties": {
+            "attrs": {
+              "additionalProperties": false,
+              "properties": {
+                "age": {
+                  "$ref": "#/$defs/nonNegativeTime"
+                },
+                "minsize": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "value": {
+              "$ref": "#/$defs/compoundTimeString"
+            }
+          },
+          "type": "object"
+        },
+        "^metataskdep(_.*)?$": {
+          "additionalProperties": false,
+          "properties": {
+            "attrs": {
+              "additionalProperties": false,
+              "properties": {
+                "cycle_offset": {
+                  "$ref": "#/$defs/time"
+                },
+                "metatask": {
+                  "type": "string"
+                },
+                "state": {
+                  "enum": [
+                    "SUCCEEDED",
+                    "DEAD",
+                    "Succeeded",
+                    "Dead",
+                    "succeeded",
+                    "dead"
+                  ],
+                  "type": "string"
+                },
+                "threshold": {
+                  "maximum": 1,
+                  "minimum": 0,
+                  "type": "number"
+                }
+              },
+              "required": [
+                "metatask"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "^sh(_.*)?$": {
+          "additionalProperties": false,
+          "properties": {
+            "attrs": {
+              "additionalProperties": false,
+              "properties": {
+                "runopt": {
+                  "type": "string"
+                },
+                "shell": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "command": {
+              "$ref": "#/$defs/compoundTimeString"
+            }
+          },
+          "required": [
+            "command"
+          ],
+          "type": "object"
+        },
+        "^some(_.*)?$": {
+          "patternProperties": {
+            "^threshold(_.*)?$": {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            }
+          },
+          "properties": {
+            "$ref": "#/$defs/dependency"
+          },
+          "type": "array"
+        },
+        "^taskdep(_.*)?$": {
+          "additionalProperties": false,
+          "properties": {
+            "attrs": {
+              "additionalProperties": false,
+              "properties": {
+                "cycle_offset": {
+                  "$ref": "#/$defs/time"
+                },
+                "state": {
+                  "enum": [
+                    "RUNNING",
+                    "Running",
+                    "running",
+                    "SUCCEEDED",
+                    "DEAD",
+                    "Succeeded",
+                    "Dead",
+                    "succeeded",
+                    "dead"
+                  ],
+                  "type": "string"
+                },
+                "task": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "task"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "^taskvalid(_.*)?$": {
+          "additionalProperties": false,
+          "properties": {
+            "attrs": {
+              "additionalProperties": false,
+              "properties": {
+                "task": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "task"
+              ],
+              "type": "object"
+            },
+            "required": [
+              "attrs"
+            ],
+            "type": "object"
+          },
+          "type": "object"
+        },
+        "^timedep(_.*)?$": {
+          "$ref": "#/$defs/compoundTimeString"
+        }
+      },
+      "type": "object"
+    },
+    "metatask": {
+      "additionalProperties": false,
+      "maxProperties": 4,
+      "minProperties": 2,
+      "patternProperties": {
+        "^metatask_.+$": {
+          "$ref": "#/$defs/metatask"
+        },
+        "^task_.+$": {
+          "$ref": "#/$defs/task"
+        }
+      },
+      "properties": {
+        "attrs": {
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "enum": [
+                "parallel",
+                "serial"
+              ],
+              "type": "string"
+            },
+            "throttle": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        },
+        "var": {
+          "$ref": "#/$defs/var"
+        }
+      },
+      "required": [
+        "var"
+      ],
+      "type": "object"
+    },
+    "nonNegativeTime": {
+      "oneOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "pattern": "^([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+$",
+          "type": "string"
+        },
+        {
+          "pattern": "^([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+$",
+          "type": "string"
+        },
+        {
+          "pattern": "^([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+$",
+          "type": "string"
+        }
+      ]
+    },
+    "task": {
+      "additionalProperties": false,
+      "dependentSchemas": {
+        "exclusive": {
+          "not": {
+            "required": [
+              "shared"
+            ]
+          }
+        },
+        "join": {
+          "not": {
+            "required": [
+              "stdout"
+            ]
+          }
+        },
+        "shared": {
+          "not": {
+            "required": [
+              "exclusive"
+            ]
+          }
+        },
+        "stderr": {
+          "required": [
+            "stdout"
+          ]
+        },
+        "stdout": {
+          "not": {
+            "required": [
+              "join"
+            ]
+          },
+          "required": [
+            "stderr"
+          ]
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "cores"
+          ]
+        },
+        {
+          "required": [
+            "native"
+          ]
+        },
+        {
+          "required": [
+            "nodes"
+          ]
+        }
+      ],
+      "properties": {
+        "account": {
+          "type": "string"
+        },
+        "attrs": {
+          "cycledefs": {
+            "type": "string"
+          },
+          "final": {
+            "type": "boolean"
+          },
+          "maxtries": {
+            "format": "number",
+            "minimum": 0,
+            "type": "string"
+          },
+          "throttle": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "command": {
+          "$ref": "#/$defs/compoundTimeString"
+        },
+        "cores": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "deadline": {
+          "$ref": "#/$defs/compoundTimeString"
+        },
+        "dependency": {
+          "$ref": "#/$defs/dependency"
+        },
+        "envars": {
+          "type": "object"
+        },
+        "exclusive": {
+          "type": "string"
+        },
+        "jobname": {
+          "$ref": "#/$defs/compoundTimeString"
+        },
+        "join": {
+          "$ref": "#/$defs/compoundTimeString"
+        },
+        "memory": {
+          "type": "string"
+        },
+        "native": {
+          "$ref": "#/$defs/compoundTimeString"
+        },
+        "nodes": {
+          "type": "string"
+        },
+        "partition": {
+          "type": "string"
+        },
+        "queue": {
+          "type": "string"
+        },
+        "rewind": {
+          "type": "string"
+        },
+        "shared": {
+          "type": "string"
+        },
+        "stderr": {
+          "$ref": "#/$defs/compoundTimeString"
+        },
+        "stdout": {
+          "$ref": "#/$defs/compoundTimeString"
+        },
+        "walltime": {
+          "$ref": "#/$defs/nonNegativeTime"
+        }
+      },
+      "required": [
+        "command",
+        "walltime"
+      ],
+      "type": "object"
+    },
+    "time": {
+      "oneOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "pattern": "^-?([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+$",
+          "type": "string"
+        },
+        {
+          "pattern": "^-?([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+$",
+          "type": "string"
+        },
+        {
+          "pattern": "^-?([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+$",
+          "type": "string"
+        }
+      ]
+    },
+    "var": {
+      "additionalProperties": false,
+      "minProperties": 1,
+      "patternProperties": {
+        "^.+$": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "properties": {
+    "workflow": {
+      "additionalProperties": false,
+      "properties": {
+        "attrs": {
+          "properties": {
+            "cyclethrottle": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "realtime": {
+              "type": "boolean"
+            },
+            "scheduler": {
+              "enum": [
+                "sge",
+                "lsf",
+                "lsfcray",
+                "ll",
+                "torque",
+                "moabtorque",
+                "moab",
+                "pbspro",
+                "slurm",
+                "cobalt"
+              ],
+              "type": "string"
+            },
+            "taskthrottle": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "realtime",
+            "scheduler"
+          ],
+          "type": "object"
+        },
+        "cycledef": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "attrs": {
+                "additionalProperties": false,
+                "properties": {
+                  "activation_offset": {
+                    "$ref": "#/$defs/time"
+                  },
+                  "group": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "spec": {
+                "oneOf": [
+                  {
+                    "pattern": "^[0-9]{12} [0-9]{12} ([0-9]+|(#[^# ]+#))+$",
+                    "type": "string"
+                  },
+                  {
+                    "pattern": "^[0-9]{12} [0-9]{12} ([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+$",
+                    "type": "string"
+                  },
+                  {
+                    "pattern": "^[0-9]{12} [0-9]{12} ([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+$",
+                    "type": "string"
+                  },
+                  {
+                    "pattern": "^[0-9]{12} [0-9]{12} ([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+:([0-9]+|(#[^# ]+#))+$",
+                    "type": "string"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "spec"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "entities": {
+          "type": "object"
+        },
+        "log": {
+          "$ref": "#/$defs/compoundTimeString"
+        },
+        "tasks": {
+          "additionalProperties": false,
+          "minProperties": 1,
+          "patternProperties": {
+            "^metatask_.+$": {
+              "$ref": "#/$defs/metatask"
+            },
+            "^task_.+$": {
+              "$ref": "#/$defs/task"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "cycledef",
+        "log",
+        "tasks"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "workflow"
+  ],
+  "type": "object"
+}

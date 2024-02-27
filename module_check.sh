@@ -11,7 +11,7 @@ fi
 
 # check which modules are required and notify the user if they are not currently loaded in the environment.
 if [[ ( ${MACHINE} == "orion" || ${MACHINE} == "hera" ) && ${USE_SINGULARITY} != "yes" ]]; then 
-  env_mods=($(grep -o 'load("[^"]*")' ${CYCLEDIR}/modulefiles/landda_${MACHINE}.intel.lua | sed 's/load("//;s/")//'))
+  env_mods=($(grep -o 'load("[^"]*")' ${CYCLEDIR}/modulefiles/build_${MACHINE}_intel.lua | sed 's/load("//;s/")//'))
 
   missing_mods=()
 

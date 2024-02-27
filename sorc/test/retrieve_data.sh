@@ -5,7 +5,7 @@ set -e
 project_source_dir=$1
 
 # first retrieve test data for landda system
-cd ${project_source_dir}/../
+cd ${project_source_dir}/../../
 [[ ! -f landda-test-inps.tar.gz ]] && wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/landda_inputs.tar.gz
 [[ ! -d inputs ]] && tar xvfz landda_inputs.tar.gz
 cd ${project_source_dir}
@@ -13,7 +13,7 @@ cd ${project_source_dir}
 # Then retrieve data for ufs-datm-lnd model test (RT: datm_cdeps_lnd_gswp3)
 
 # First load modules
-PATHRT=${project_source_dir}/ufs-weather-model/tests
+PATHRT=${project_source_dir}/ufs_model.fd/tests
 RT_COMPILER=${RT_COMPILER:-intel}
 
 # install aws
@@ -22,7 +22,7 @@ pip3 install awscli --upgrade --user
 export PATH=${HOME}/.local/bin:${PATH}
 
 # set envs
-DATA_ROOT=${project_source_dir}/../inputs
+DATA_ROOT=${project_source_dir}/../../inputs
 INPUTDATA_ROOT=${DATA_ROOT}/NEMSfv3gfs
 source ${PATHRT}/bl_date.conf
 INPUTDATA_DATE=20221101

@@ -1,12 +1,16 @@
-[submodule "ufs-land-driver-emc-dev"]
-	path = ufs-land-driver-emc-dev
+[submodule "sorc/DA_update"]
+	path = sorc/DA_update
+	url = https://github.com/ufs-community/land-DA.git
+	ignore = dirty
+[submodule "sorc/ufsLand.fd"]
+	path = sorc/ufsLand.fd
 	url = https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev.git
-	branch = new_baseline
-[submodule "DA_update"]
-	path = DA_update
-        url = https://github.com/ufs-community/land-DA.git
-        branch = release/land-da-public-v1.2.0
-[submodule "vector2tile"]
-	path = vector2tile
+	ignore = dirty
+[submodule "sorc/vector2tile_converter.fd"]
+	path = sorc/vector2tile_converter.fd
 	url = https://github.com/NOAA-PSL/land-vector2tile.git
-	branch = develop
+	ignore = dirty
+[submodule "sorc/ufs_model.fd"]
+	path = sorc/ufs_model.fd
+	url = https://github.com/ufs-community/ufs-weather-model.git
+	ignore = dirty

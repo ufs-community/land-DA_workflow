@@ -7,9 +7,10 @@ Provide a detailed description of what this PR does. What bug does it fix, or wh
 - [ ] Is baseline change expected ? <!-- Add "Baseline Change" Label -->
 
 ## Subcomponents involved:
-- [ ] DA_update
-- [ ] vector2tile
-- [ ] ufs-land-driver
+- [ ] DA_update (ufs-community/land-DA)
+- [ ] ufsLand.fd (NOAA-EPIC/ufs-land-driver-emc-dev)
+- [ ] ufs_model.fd (ufs-community/ufs-weather-model)
+- [ ] vector2tile_converter.fd (NOAA-PSL/land-vector2tile)
 - [ ] none
 
 ## Linked PR's and Issues:
