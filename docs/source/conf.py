@@ -55,19 +55,31 @@ rst_prolog = """
 # Linkcheck options
 
 # Avoid a 403 Forbidden error when accessing certain links (e.g., noaa.gov)
+# Can be found using navigator.userAgent inside a browser console.
 user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
 
 # Ignore working links that cause a linkcheck 403 error.
-linkcheck_ignore = [#r'https://www\.intel\.com/content/www/us/en/docs/cpp\-compiler/developer\-guide\-reference/2021\-10/thread\-affinity\-interface\.html',
-                   ]
+linkcheck_ignore = [r'https://www\.intel\.com/content/www/us/en/developer/tools/oneapi/hpc\-toolkit\-download\.html',
+                    r'https://doi.org/10.1029/.*',
+                    r'https://doi.org/10.1002/.*',
+                    ]
 
 # Ignore anchor tags for SRW App data bucket. Shows Not Found even when they exist.
 linkcheck_anchors_ignore = [r"current_srw_release_data/", 
                             ]
 
-linkcheck_allowed_redirects = {r"https://github\.com/ufs-community/land-DA\_workflow/wiki/.*": 
-                                 r"https://raw\.githubusercontent\.com/wiki/ufs-community/land-DA\_workflow/.*",
-
+linkcheck_allowed_redirects = {r"https://github.com/ufs-community/land-DA_workflow/wiki/.*": 
+                                 r"https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/.*",
+                               r"https://github.com/ufs-community/land-DA_workflow/issues/new": 
+                                 r"https://github.com/login.*",
+                               r"https://doi.org/10.5281/zenodo.*": 
+                                 r"https://zenodo.org/records/*",
+                               r"https://doi.org/10.25923/RB19-0Q26": 
+                                 r"https://repository.library.noaa.gov/view/noaa/22752",
+                               r"https://doi.org/10.1016/j.physd.2006.11.008": 
+                                 r"https://linkinghub.elsevier.com/retrieve/pii/S0167278906004647",
+                               r"https://doi.org/.*/.*": 
+                                 r"https://journals.ametsoc.org:443/view/journals/.*/.*/.*/.*",
                               }
 
 
