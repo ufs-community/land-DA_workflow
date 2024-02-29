@@ -111,6 +111,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     fi
 
     # save analysis restart
+    mkdir -p ${MEM_MODL_OUTDIR}/restarts/tile
     for tile in 1 2 3 4 5 6
     do
         cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc    
