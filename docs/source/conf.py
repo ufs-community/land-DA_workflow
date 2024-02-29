@@ -52,7 +52,7 @@ rst_prolog = """
 .. |branch| replace:: ``release/public-v1.2.0``
 """
 
-# Linkcheck options
+# -- Linkcheck options -------------------------------------------------
 
 # Avoid a 403 Forbidden error when accessing certain links (e.g., noaa.gov)
 # Can be found using navigator.userAgent inside a browser console.
@@ -64,9 +64,8 @@ linkcheck_ignore = [r'https://www\.intel\.com/content/www/us/en/developer/tools/
                     r'https://doi.org/10.1002/.*',
                     ]
 
-# Ignore anchor tags for SRW App data bucket. Shows Not Found even when they exist.
-linkcheck_anchors_ignore = [r"current_srw_release_data/", 
-                            ]
+# Ignore anchor tags for Land DA data bucket. Shows Not Found even when they exist.
+linkcheck_anchors_ignore = []
 
 linkcheck_allowed_redirects = {r"https://github.com/ufs-community/land-DA_workflow/wiki/.*": 
                                  r"https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/.*",

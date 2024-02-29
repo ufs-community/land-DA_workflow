@@ -4,6 +4,8 @@
 Technical Overview
 *********************
 
+.. _prerequisites:
+
 Prerequisites
 ***************
 
@@ -51,6 +53,8 @@ Level 1 Systems
 ==================
 Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and the ``jedi-bundle`` (Skylab v4.0). Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them. 
 
+.. COMMENT: Update spack-stack to 1.5.1
+
 +-----------+-----------------------------------+-----------------------------------------------------------------+
 | Platform  | Compiler/MPI                      | spack-stack & jedi-bundle Installations                         |
 +===========+===================================+=================================================================+
@@ -72,77 +76,126 @@ Level 2-4 Systems
 
 On non-Level 1 platforms, the Land DA System can be run within a container that includes the prerequisite software; otherwise, the required libraries will need to be installed as part of the Land DA build process. Once these prerequisite libraries are installed, applications and models should build and run successfully. However, users may need to perform additional troubleshooting on Level 3 or 4 systems since little or no pre-release testing has been conducted on these systems.
 
+.. _repos-dir-structure:
+
 Code Repositories and Directory Structure
 ********************************************
+
+.. _file-dir-structure:
 
 File & Directory Structure
 ============================
 
 The main repository for the Land DA System is named ``land-DA_workflow``; 
 it is available on GitHub at https://github.com/ufs-community/land-DA_workflow. 
-The ``land-DA_workflow`` repository contains a few nested submodules. 
-When the ``develop`` branch of the ``land-DA_workflow`` repository 
-is cloned with the ``--recursive`` argument, the basic directory structure will be 
-similar to the example below. Some files and directories have been removed for brevity. 
-Directories in parentheses () are only visible after the build step. 
+The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operations (NCO) `WCOSS Implementation Standards <https://www.nco.ncep.noaa.gov/idsb/implementation_standards/ImplementationStandards.v11.0.0.pdf>`__. This structure is implemented using Git submodules. When the ``develop`` branch of the ``land-DA_workflow`` repository is cloned with the ``--recursive`` argument, the specific GitHub repositories described in ``/sorc/app_build.sh`` are cloned into ``sorc``. The diagram below illustrates the file and directory structure of the Land DA System. Directories in parentheses () are only visible after the build step. Some files and directories have been removed for brevity. 
+
+.. COMMENT: Add parentheses around post-build dirs and update language above
 
 .. code-block:: console
 
    land-offline_workflow
-    ├── DA_update
-    │     ├── add_jedi_incr
-    │     ├── jedi/fv3-jedi
-    │     └── do_LandDA.sh
-    ├── cmake
     ├── configures
-    ├── docs
+    ├── doc
+    ├── jobs
     ├── modulefiles
-    ├── test
-    ├── tile2tile
-    ├── ufs-land-driver-emc-dev
-    │     └── ccpp-physics
-    ├── (ufs-weather-model)
-    ├── vector2tile
-    ├── CMakeLists.txt
-    ├── README.md
+    ├── parm
+    ├── sorc
+    │     ├── DA_update
+    │     │     ├── add_jedi_incr
+    │     │     ├── jedi/fv3-jedi
+    │     │     └── do_LandDA.sh
+    │     ├── cmake
+    │     ├── test
+    │     ├── tile2tile_converter.fd --- Tile-to-tile converter
+    │     │     ├── cmake
+    │     │     └── config
+    │     ├── ufsLand.fd           ----- UFS Land Driver (ufs-land-driver-emc-dev)
+    │     │     └── ccpp-physics
+    │     ├── ufs_model.fd         ----- UFS Weather Model (ufs-weather-model)
+    │     └── vector2tile_converter.fd - Vector-to-tile converter
+    │     │     ├── cmake
+    │     │     └── config
+    │     ├── CMakeLists.txt
+    │     └── app_build.sh
     ├── LICENSE
+    ├── README.md
     ├── check_*
+    ├── datm_cdeps_lnd_gswp3_rst
     ├── do_submit_cycle.sh
+    ├── do_submit_test.sh
+    ├── fv3_run
+    ├── incdate.sh
+    ├── land_mods
+    ├── module_check.sh
     ├── release.environment
+    ├── run_container_executable.sh
     ├── settings_DA_*
-    ├── submit_cycle.sh
-    └── template.*
+    └── submit_cycle.sh
+
+:numref:`Table %s <Subdirectories>` describes the contents of the most important Land DA subdirectories. :numref:`Section %s <components>` describes the Land DA System components. Users can reference the `NCO Implementation Standards <https://www.nco.ncep.noaa.gov/idsb/implementation_standards/ImplementationStandards.v11.0.0.pdf>`__ (p. 19) for additional details on repository structure in NCO-compliant repositories. 
+
+.. _Subdirectories:
+
+.. list-table:: *Subdirectories of the land-DA_workflow repository*
+   :widths: 20 50
+   :header-rows: 1
+
+   * - Directory Name
+     - Description
+   * - configures
+     - Machine-specific configurations
+   * - docs
+     - Repository documentation
+   * - jobs
+     - :term:`J-job <J-jobs>` scripts launched by Rocoto
+   * - modulefiles
+     - Files that load the modules required for building and running the workflow
+   * - parm
+     - Parameter files used to configure the model, physics, workflow, and various components
+   * - sorc
+     - External source code used to build the Land DA System
+
+.. COMMENT: Update "configures" description?
+
+.. COMMENT: Add later?   
+   * - scripts
+     - Scripts launched by the J-jobs
+   * - tests
+     - Tests for baseline experiment configurations
+
+.. _components:
 
 Land DA Components
 =====================
 
-:numref:`Table %s <LandDAComponents>` describes the various subrepositories that form
-the UFS Land DA System. 
+:numref:`Table %s <LandDAComponents>` describes the various subrepositories that form the UFS Land DA System. 
 
 .. _LandDAComponents:
 
-.. table:: UFS Land DA System Components
+.. list-table:: UFS Land DA System Components
+   :header-rows: 1
 
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | Repository Name          | Repository Description                  | Authoritative repository URL                         |
-   +==========================+=========================================+======================================================+
-   | DA_update                | Contains scripts and components for     | https://github.com/ufs-community/land-DA/            |
-   |                          | performing data assimilation (DA)       |                                                      |
-   |                          | procedures.                             |                                                      |
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | *-- land-apply_jedi_incr*| Contains code that applies the          | https://github.com/NOAA-PSL/land-apply_jedi_incr     |
-   |                          | JEDI-generated DA increment to UFS      |                                                      |
-   |                          | ``sfc_data`` restart                    |                                                      |
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | ufs-land-driver-emc-dev  | Repository for the UFS Land             | https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev | 
-   |                          | Driver                                  |                                                      |
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | *-- ccpp-physics*        | Repository for the Common               | https://github.com/ufs-community/ccpp-physics/       |
-   |                          | Community Physics Package (CCPP)        |                                                      |
-   |                          |                                         |                                                      |
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
-   | land-vector2tile         | Contains code to map between the vector | https://github.com/NOAA-PSL/land-vector2tile         |
-   +--------------------------+-----------------------------------------+------------------------------------------------------+
+   * - Repository Name
+     - Repository Description
+     - Authoritative Repository URL
+   * - DA_update
+     - Contains scripts and components for performing data assimilation (DA) procedures.
+     - https://github.com/ufs-community/land-DA/
+   * - *-- land-apply_jedi_incr*
+     - Contains code that applies the JEDI-generated DA increment to UFS ``sfc_data`` restart 
+     - https://github.com/NOAA-PSL/land-apply_jedi_incr
+   * - ufs-land-driver-emc-dev
+     - Repository for the UFS Land Driver
+     - https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev
+   * - *-- ccpp-physics*
+     - Repository for the Common Community Physics Package (CCPP)
+     - https://github.com/ufs-community/ccpp-physics/
+   * - land-vector2tile
+     - Contains code to map between the vector format used by the Noah-MP offline driver, and the tile format used by the UFS atmospheric model. 
+     - https://github.com/NOAA-PSL/land-vector2tile
+
+.. _land-component:
 
 The UFS Land Component
 =========================
@@ -152,7 +205,3 @@ Updates allowing the Land DA System to run with the land component are underway.
 
 The land component makes use of a National Unified Operational Prediction Capability (:term:`NUOPC`) cap to interface with a coupled modeling system. 
 Unlike the standalone Noah-MP land driver, the Noah-MP :term:`NUOPC cap` is able to create an :term:`ESMF` multi-tile grid by reading in a mosaic grid file. For the domain, the :term:`FMS` initializes reading and writing of the cubed-sphere tiled output. Then, the Noah-MP land component reads static information and initial conditions (e.g., surface albedo) and interpolates the data to the date of the simulation. The solar zenith angle is calculated based on the time information. 
-
-
-
-
