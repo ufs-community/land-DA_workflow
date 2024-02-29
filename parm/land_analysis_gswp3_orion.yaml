@@ -30,8 +30,8 @@ workflow:
     LOG: "&EXP_BASEDIR;/tests"
     PATHRT: "&EXP_BASEDIR;"
     CTIME:  "<cyclestr>@Y@m@d@H</cyclestr>"
-    PTIME:  "<cyclestr offset='-1:00:00'>@Y@m@d@H</cyclestr>"
-    NTIME:  "<cyclestr offset='01:00:00'>@Y@m@d@H</cyclestr>"
+    PTIME:  "<cyclestr offset='-1:00:00:00'>@Y@m@d@H</cyclestr>"
+    NTIME:  "<cyclestr offset='01:00:00:00'>@Y@m@d@H</cyclestr>"
   log: "&LOG;/workflow.log"
   tasks:
     task_prepexp:
