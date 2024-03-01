@@ -10,7 +10,7 @@ workflow:
     MACHINE: "orion"
     ACCOUNT: "epic"
     EXP_NAME: "LETKF"
-    EXP_BASEDIR: "/work/noaa/epic/chjeon/landda_gswp3"
+    EXP_BASEDIR: "/work/noaa/epic/chjeon/landda_fixjjob"
     JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA/jedi"
     LANDDA_INPUTS: "/work/noaa/epic/UFS_Land-DA/inputs"
     FORCING: "gswp3"
