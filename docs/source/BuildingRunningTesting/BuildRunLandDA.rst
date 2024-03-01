@@ -151,6 +151,18 @@ where:
    * ``<platform>`` is ``hera`` or ``orion``.
    * ``<forcing>`` is either ``gswp3`` or ``era5`` forcing data.
 
+Users will need to configure certain elements of their experiment in ``land_analysis.yaml``: 
+
+   * ``ACCOUNT:`` A valid account name. Hera, Orion, and most NOAA RDHPCS systems require a valid account name; other systems may not
+   * ``EXP_NAME:`` An experiment name of the user's choice
+   * ``EXP_BASEDIR:`` The full path to the directory where land-DA_workflow was cloned (i.e., ``$LANDDAROOT``)
+   * ``JEDI_INSTALL:`` The full path to the system's ``jedi-bundle`` installation
+   * ``LANDDA_INPUTS:`` The full path to the experiment data
+
+.. note::
+
+   To determine an appropriate ``ACCOUNT`` field for Level 1 systems running the Slurm job scheduler, run ``saccount_params``. On other systems, running ``groups`` will return a list of projects that the user has permissions for. Not all listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
+
 Users may configure other elements of an experiment in ``land_analysis.yaml`` if desired. The ``land_analysis_*`` files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Sections :numref:`%s <Model>` & :numref:`%s <DASystem>`. 
 
 .. _generate-wflow:
@@ -158,68 +170,78 @@ Users may configure other elements of an experiment in ``land_analysis.yaml`` if
 Generate the Rocoto XML File
 ==============================
 
-Generate the workflow by running: 
+Generate the workflow with ``uwtools`` by running: 
 
 .. code-block:: console
 
    uw rocoto realize --input-file land_analysis.yaml --output-file land_analysis.xml
 
+If the command runs without problems, ``uwtools`` will output a message similar to the following: 
+
+.. code-block:: console
+
+   [2024-03-01T20:36:03]     INFO 0 UW schema-validation errors found
+   [2024-03-01T20:36:03]     INFO 0 Rocoto validation errors found
+
 Run the Experiment
 ********************
 
-To run the experiment, issue a ``rocotorun`` command from the _____ directory: 
+To run the experiment, issue a ``rocotorun`` command from the ``parm`` directory: 
 
 .. code-block:: console
 
    rocotorun -w land_analysis.xml -d land_analysis.db
-
-
-
-Run an Experiment
-********************
-
-The Land DA System uses a script-based workflow that is launched using the ``do_submit_cycle.sh`` script. This script requires a ``settings_DA_cycle_*`` input file that details all the specifics of a given experiment. For example, to run the ERA5 case, users would run:
-
-.. code-block:: console
-
-   ./do_submit_cycle.sh settings_DA_cycle_era5
-      
-Users can replace ``settings_DA_cycle_era5`` with a different settings file to run a different default experiment. Regardless of the file selected, the system will output a message such as ``Submitted batch job ########``, indicating that the job was successfully submitted. If all goes well, one full cycle will run with data assimilation (DA) and a forecast. 
 
 .. _VerifySuccess:
 
 Check Progress
 *****************
 
-To check on the experiment status, users on a system with a Slurm job scheduler may run: 
+Check Experiment Status
+========================
+
+To view the experiment status, run: 
 
 .. code-block:: console
 
-   squeue -u $USER
+   rocotostat -w land_analysis.xml -d land_analysis.db
 
-To view progress, users can open the ``log*`` and ``err*`` files once they have been generated:
-
-.. code-block:: console
-
-   tail -f log* err*
-
-Users will need to type ``Ctrl+C`` to exit the files. For examples of what the log and error files should look like in a successful experiment, reference :ref:`ERA5 Experiment Logs <era5-log-output>` or :ref:`GSWP3 Experiment Logs <gswp3-log-output>` below. 
-
-.. attention::
-
-   If the log file contains a NetCDF error (e.g., ``ModuleNotFoundError: No module named 'netCDF4'``), run:
-      
-   .. code-block:: console
-         
-      python -m pip install netCDF4
-      
-   Then, resubmit the job (``sbatch submit_cycle.sh``).
-
-Next, check for the background and analysis files in the test directory.
+If ``rocotorun`` was successful, the ``rocotostat`` command will print a status report to the console. For example:
 
 .. code-block:: console
 
-   ls -l ../landda_expts/DA_<data_source>_test/mem000/restarts/<vector/tile>``
+   CYCLE              TASK                 JOBID        STATE   EXIT STATUS   TRIES   DURATION
+   ======================================================================================================
+   200001030000    prepexp   druby://hfe08:41879   SUBMITTING             -       2        0.0
+   200001030000    prepobs                     -            -             -       -          -
+   200001030000   prepbmat                     -            -             -       -          -
+   200001030000     runana                     -            -             -       -          -
+   200001030000    runfcst                     -            -             -       -          -
+
+Users will need to issue the ``rocotorun`` command multiple times. The tasks must run in order, and ``rocotorun`` initiates the next task once its dependencies have completed successfully. Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command. For each task, a ``slurm-########.out`` log file is generated. A task that runs successfully will include a message with ``exit code 0:0`` at the bottom of the file: 
+
+.. code-block:: console
+
+   _______________________________________________________________
+   Start Epilog on node h24c45 for job 56463665 :: Fri Mar  1 22:38:34 UTC 2024
+   Job 56463665 finished for user Gillian.Petro in partition hera with exit code 0:0
+   _______________________________________________________________
+   End Epilogue Fri Mar  1 22:38:34 UTC 2024
+
+The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, DEAD. Users may view the ``slurm-########.out`` files to determine why an task may have failed. 
+
+Check Experiment Output
+=========================
+
+As the experiment progresses, it will create an experiment directory in ``$LANDDAROOT/landda_expts/EXP_NAME`` to hold experiment output. (Note that ``$EXP_NAME`` was set in ``land_analysis.yaml``.)
+
+.. COMMENT: Edit from here down!
+
+Check for the background and analysis files in the experiment directory:
+
+.. code-block:: console
+
+   ls -l $LANDDAROOT/landda_expts/EXP_NAME/DA_<data_source>_test/mem000/restarts/<vector/tile>``
 
 where: 
 
