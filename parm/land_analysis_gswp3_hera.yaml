@@ -128,7 +128,7 @@ workflow:
         NPROC_JEDI: "&NPROCS_ANA;"
         JEDI_INSTALL: "&JEDI_INSTALL;"
       account: "&ACCOUNT;"
-      command: "&CYCLEDIR;/jobs/JLANDDA_PREP_OBS"
+      command: "&CYCLEDIR;/jobs/JLANDDA_RUN_ANA"
       jobname: runana
       nodes: "1:ppn=&NPROCS_ANA;"
       walltime: 00:15:00
