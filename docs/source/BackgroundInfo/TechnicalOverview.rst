@@ -81,39 +81,90 @@ On non-Level 1 platforms, the Land DA System can be run within a container that 
 Code Repositories and Directory Structure
 ********************************************
 
+.. _components:
+
+Hierarchical Repository Structure
+===================================
+
+The main repository for the Land DA System is named ``land-DA_workflow``; 
+it is available on GitHub at https://github.com/ufs-community/land-DA_workflow. 
+This :term:`umbrella repository` uses Git submodules and an ``app_build.sh`` file to pull in the appropriate versions of external repositories associated with the Land DA System. :numref:`Table %s <LandDAComponents>` describes the various subrepositories that form the UFS Land DA System. 
+
+.. _LandDAComponents:
+
+.. list-table:: UFS Land DA System Components
+   :header-rows: 1
+
+   * - Land DA Submodule Name
+     - Repository Name
+     - Repository Description
+     - Authoritative Repository URL
+   * - DA_update
+     - land-DA
+     - Contains scripts and components for performing data assimilation (DA) procedures.
+     - https://github.com/ufs-community/land-DA/
+   * - *-- add_jedi_incr*
+     - *-- land-apply_jedi_incr*
+     - Contains code that applies the JEDI-generated DA increment to UFS ``sfc_data`` restart 
+     - https://github.com/NOAA-PSL/land-apply_jedi_incr
+   * - ufsLand.fd
+     - ufs-land-driver-emc-dev
+     - Repository for the UFS Land Driver
+     - https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev
+   * - *-- ccpp-physics*
+     - Repository for the Common Community Physics Package (CCPP)
+     - https://github.com/ufs-community/ccpp-physics/
+   * - ufs_model.fd
+     - ufs-weather-model
+     - Repository for the UFS Weather Model (WM). This repository contains a number of subrepositories, which are documented :doc:`in the WM User's <ufs-wm:CodeOverview>`.
+     - https://github.com/ufs-community/ufs-weather-model/
+   * - vector2tile_converter.fd
+     - land-vector2tile
+     - Contains code to map between the vector format used by the Noah-MP offline driver, and the tile format used by the UFS atmospheric model. 
+     - https://github.com/NOAA-PSL/land-vector2tile
+   * - N/A 
+     - uwtools 
+     - Repository for the Unified Workflow (UW) Toolkit. This repository is not a Git submodule, but the build script installs UW tools, if desired, as part of the build.
+     - https://github.com/ufs-community/workflow-tools
+
+.. note::
+   The prerequisite libraries (including NCEP Libraries and external libraries) are not included in the UFS Land DA System repository. The `spack-stack <https://github.com/JCSDA/spack-stack>`__ repository assembles these prerequisite libraries. Spack-stack has already been built on `preconfigured (Level 1) platforms <https://github.com/ufs-community/ufs-srweather-app/wiki/Supported-Platforms-and-Compilers>`__. However, it must be built on other systems. See the :doc:`spack-stack Documentation <spack-stack:index>` for details on installing spack-stack. 
+
 .. _file-dir-structure:
 
 File & Directory Structure
 ============================
 
-The main repository for the Land DA System is named ``land-DA_workflow``; 
-it is available on GitHub at https://github.com/ufs-community/land-DA_workflow. 
-The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operations (NCO) `WCOSS Implementation Standards <https://www.nco.ncep.noaa.gov/idsb/implementation_standards/ImplementationStandards.v11.0.0.pdf>`__. This structure is implemented using Git submodules. When the ``develop`` branch of the ``land-DA_workflow`` repository is cloned with the ``--recursive`` argument, the specific GitHub repositories described in ``/sorc/app_build.sh`` are cloned into ``sorc``. The diagram below illustrates the file and directory structure of the Land DA System. Directories in parentheses () are only visible after the build step. Some files and directories have been removed for brevity. 
-
-.. COMMENT: Add parentheses around post-build dirs and update language above
+The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operations (NCO) :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>`. When the ``develop`` branch of the ``land-DA_workflow`` repository is cloned with the ``--recursive`` argument, the specific GitHub repositories described in ``/sorc/app_build.sh`` are cloned into ``sorc``. The diagram below illustrates the file and directory structure of the Land DA System. Directories in parentheses () are only visible after the build step. Some files and directories have been removed for brevity. 
 
 .. code-block:: console
 
    land-offline_workflow
     ├── configures
     ├── doc
+    ├── (exec)
     ├── jobs
+    ├── (lib*)
     ├── modulefiles
     ├── parm
     ├── sorc
+    │     ├── (build)
+    │     ├── cmake
+    │     │     ├── compiler_flags_*
+    │     │     └── landda_compiler_flags.cmake
+    │     ├── (conda)
     │     ├── DA_update
     │     │     ├── add_jedi_incr
     │     │     ├── jedi/fv3-jedi
     │     │     └── do_LandDA.sh
-    │     ├── cmake
     │     ├── test
-    │     ├── tile2tile_converter.fd --- Tile-to-tile converter
+    │     ├── tile2tile_converter.fd
     │     │     ├── cmake
     │     │     └── config
-    │     ├── ufsLand.fd           ----- UFS Land Driver (ufs-land-driver-emc-dev)
+    │     ├── ufsLand.fd
     │     │     └── ccpp-physics
-    │     ├── ufs_model.fd         ----- UFS Weather Model (ufs-weather-model)
-    │     └── vector2tile_converter.fd - Vector-to-tile converter
+    │     ├── ufs_model.fd
+    │     ├── vector2tile_converter.fd
     │     │     ├── cmake
     │     │     └── config
     │     ├── CMakeLists.txt
@@ -164,36 +215,6 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
    * - tests
      - Tests for baseline experiment configurations
 
-.. _components:
-
-Land DA Components
-=====================
-
-:numref:`Table %s <LandDAComponents>` describes the various subrepositories that form the UFS Land DA System. 
-
-.. _LandDAComponents:
-
-.. list-table:: UFS Land DA System Components
-   :header-rows: 1
-
-   * - Repository Name
-     - Repository Description
-     - Authoritative Repository URL
-   * - DA_update
-     - Contains scripts and components for performing data assimilation (DA) procedures.
-     - https://github.com/ufs-community/land-DA/
-   * - *-- land-apply_jedi_incr*
-     - Contains code that applies the JEDI-generated DA increment to UFS ``sfc_data`` restart 
-     - https://github.com/NOAA-PSL/land-apply_jedi_incr
-   * - ufs-land-driver-emc-dev
-     - Repository for the UFS Land Driver
-     - https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev
-   * - *-- ccpp-physics*
-     - Repository for the Common Community Physics Package (CCPP)
-     - https://github.com/ufs-community/ccpp-physics/
-   * - land-vector2tile
-     - Contains code to map between the vector format used by the Noah-MP offline driver, and the tile format used by the UFS atmospheric model. 
-     - https://github.com/NOAA-PSL/land-vector2tile
 
 .. _land-component:
 
