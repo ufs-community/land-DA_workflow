@@ -207,15 +207,6 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
    * - sorc
      - External source code used to build the Land DA System
 
-.. COMMENT: Update "configures" description?
-
-.. COMMENT: Add later?   
-   * - scripts
-     - Scripts launched by the J-jobs
-   * - tests
-     - Tests for baseline experiment configurations
-
-
 .. _land-component:
 
 The UFS Land Component
