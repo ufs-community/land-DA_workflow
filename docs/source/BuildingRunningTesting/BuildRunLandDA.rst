@@ -98,8 +98,9 @@ Build the Land DA System
    
    .. code-block:: console
 
-      [100%] Completed 'ufs-weather-model'
-      [100%] Built target ufs-weather-model
+      [100%] Completed 'ufs_model.fd'
+      [100%] Built target ufs_model.fd
+      ... Moving pre-compiled executables to designated location ...
    
    Additionally, the ``exec`` directory will contain the following executables: 
 
@@ -109,48 +110,70 @@ Build the Land DA System
       * ``tile2tile_converter.exe``
       * ``ufs_model``
 
+.. _config-wflow:
 
-Configure the Experiment
-***************************
+Configure an Experiment
+*************************
 
-The ``develop`` branch includes two scripts with default experiment settings: 
+.. _load-env:
 
-   * ``settings_DA_cycle_era5`` for running a Dec. 21, 2019 00z sample case with the UFS Land Driver.
-   * ``settings_DA_cycle_gswp3`` for running a Jan. 3, 2000 00z sample case with the UFS Noah-MP land component. 
+Load the Workflow Environment
+===============================
 
-To configure an experiment: 
+To load the workflow environment, run: 
 
-#. Navigate back to the ``land-DA_workflow`` directory and check that the account, queue, and partition are correct in ``submit_cycle.sh``. 
+.. code-block:: console
 
-   .. code-block:: console
+   cd $LANDDAROOT/land-DA_workflow
+   module use modulefiles
+   module load wflow_<platform>
+   conda activate land_da
 
-      cd ..
-      vi submit_cycle.sh
+where ``<platform>`` is ``hera`` or ``orion``. 
 
-   If necessary, modify lines 3 and 4 to include the correct account and queue (qos) for the system. It may also be necessary to add the following line to the script to specify the partition: 
+Modify the Workflow Configuration YAML
+========================================
 
-   .. code-block:: console
+The ``develop`` branch includes two default experiments: 
 
-      #SBATCH --partition=my_partition
-   
-   where ``my_partition`` is the name of the partition on the user's system. 
+   * A Dec. 21, 2019 00z sample case using the UFS Land Driver.
+   * A Jan. 3, 2000 00z sample case using the UFS Noah-MP land component. 
 
-   When using the GSWP3 forcing option, users will need to update line 7 to say ``#SBATCH --cpus-per-task=4``. Users can perform this change manually in a code editor or run: 
+Copy the experiment settings into ``land_analysis.yaml``:
 
-   .. code-block:: console
-      
-      sed -i 's/--cpus-per-task=1/--cpus-per-task=4/g' submit_cycle.sh 
+.. code-block:: console
+
+   cd $LANDDAROOT/land-DA_workflow/parm
+   cp land_analysis_<forcing>_<platform>.yaml land_analysis.yaml
+
+where: 
+
+   * ``<platform>`` is ``hera`` or ``orion``.
+   * ``<forcing>`` is either ``gswp3`` or ``era5`` forcing data.
+
+Users may configure other elements of an experiment in ``land_analysis.yaml`` if desired. The ``land_analysis_*`` files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Sections :numref:`%s <Model>` & :numref:`%s <DASystem>`. 
+
+.. _generate-wflow:
+
+Generate the Rocoto XML File
+==============================
+
+Generate the workflow by running: 
+
+.. code-block:: console
+
+   uw rocoto realize --input-file land_analysis.yaml --output-file land_analysis.xml
+
+Run the Experiment
+********************
+
+To run the experiment, issue a ``rocotorun`` command from the _____ directory: 
+
+.. code-block:: console
+
+   rocotorun -w land_analysis.xml -d land_analysis.db
 
 
-#. When using GSWP3 forcing option, users may also have to alter ``MACHINE_ID`` in line 8 of ``settings_DA_cycle_gswp3``. The default value is ``hera``, but ``orion`` is another option:
-
-   .. code-block:: console
-
-      export MACHINE_ID=orion
-   
-   Users running the ERA5 case do not need to make this change. 
-
-#. Configure other elements of the experiment if desired. The ``settings_*`` files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Sections :numref:`%s <Model>` & :numref:`%s <DASystem>`. 
 
 Run an Experiment
 ********************
