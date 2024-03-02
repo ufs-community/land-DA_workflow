@@ -5,15 +5,15 @@ workflow:
   cycledef:
     - attrs:
         group: epic
-      spec: 200001030000 200001030000 24:00:00
+      spec: 201912210000 201912210000 24:00:00
   entities:
-    MACHINE: "hera"
+    MACHINE: "orion"
     ACCOUNT: "epic"
     EXP_NAME: "LETKF"
-    EXP_BASEDIR: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/landda_gswp3"
-    JEDI_INSTALL: "/scratch2/NAGAPE/epic/UFS_Land-DA/jedi"
-    LANDDA_INPUTS: "/scratch2/NAGAPE/epic/UFS_Land-DA/inputs"
-    FORCING: "gswp3"
+    EXP_BASEDIR: "/work/noaa/epic/chjeon/landda_fixjjob"
+    JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA/jedi"
+    LANDDA_INPUTS: "/work/noaa/epic/UFS_Land-DA/inputs"
+    FORCING: "era5"
     RES: "96"
     FCSTHR: "24"
     NPROCS_ANA: "6"
@@ -26,12 +26,12 @@ workflow:
     WORKDIR: "&EXP_BASEDIR;/workdir"
     CYCLEDIR: "&EXP_BASEDIR;/land-DA_workflow"
     EXECdir: "&CYCLEDIR;/exec"
-    OUTDIR: "&EXP_BASEDIR;/landda_expts/DA_gswp3_test"
+    OUTDIR: "&EXP_BASEDIR;/landda_expts/DA_era5_test"
     LOG: "&EXP_BASEDIR;/tests"
     PATHRT: "&EXP_BASEDIR;"
     CTIME:  "<cyclestr>@Y@m@d@H</cyclestr>"
-    PTIME:  "<cyclestr offset='-24:00:00'>@Y@m@d@H</cyclestr>"
-    NTIME:  "<cyclestr offset='24:00:00'>@Y@m@d@H</cyclestr>"
+    PTIME:  "<cyclestr offset='-1:00:00'>@Y@m@d@H</cyclestr>"
+    NTIME:  "<cyclestr offset='01:00:00'>@Y@m@d@H</cyclestr>"
   log: "&LOG;/workflow.log"
   tasks:
     task_prepexp:
