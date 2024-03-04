@@ -344,7 +344,6 @@ if [ "${VERBOSE}" = true ]; then
 fi
 
 # Before we go on load modules, we first need to activate Lmod for some systems
-source ${HOME_DIR}/parm/lmod-setup.sh ${PLATFORM}
 
 # source version file for build
 BUILD_VERSION_FILE="${HOME_DIR}/versions/build.ver.${PLATFORM}"
