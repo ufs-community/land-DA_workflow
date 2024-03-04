@@ -68,16 +68,12 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        git submodule update --init --recursive
         ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch2/NAGAPE/epic/role.epic/jenkins/workspace/
-        module use modulefiles && module load landda_hera.intel
-        mkdir build
-        cp test/hera_ctest.sh build/
-        cp test/check_ctest.sh build/
-        cp test/run_hera_ctest.sh build/
-        cd build/
-        module use ../modulefiles && module load landda_hera.intel
-        ecbuild ../ && make -j4
+        sh sorc/app_build.sh
+        cp sorc/test/hera_ctest.sh sorc/build/
+        cp sorc/test/check_ctest.sh sorc/build/
+        cp sorc/test/run_hera_ctest.sh sorc/build/
+        cd sorc/build/
         echo $(pwd)
         ./run_hera_ctest.sh
         '''
@@ -96,19 +92,15 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
-        git submodule update --init --recursive
         ln -fs /work/noaa/epic/UFS_Land-DA/inputs /work/noaa/epic/role-epic/jenkins/workspace/
-        module use modulefiles && module load landda_orion.intel.lua
-        mkdir build
-        cp test/orion_ctest.sh build/
-        cp test/check_ctest.sh build/
-        cp test/run_orion_ctest.sh build/
-	      cd test/
+        sh sorc/app_build.sh
+        cp sorc/test/orion_ctest.sh sorc/build/
+        cp sorc/test/check_ctest.sh sorc/build/
+        cp sorc/test/run_orion_ctest.sh sorc/build/
+	      cd sorc/test/
 	      sed -i 's|MACHINE_ID=${MACHINE_ID:-hera}|MACHINE_ID=${MACHINE_ID:-orion}|g' run_ufs_datm_lnd.sh
-	      cd ..
-        cd build/
-        module use ../modulefiles && module load landda_orion.intel.lua
-        ecbuild ../ && make -j4
+	      cd ../../
+        cd sorc/build/
         echo $(pwd)
         ctest
 	'''
