@@ -26,41 +26,7 @@ Create a directory for the Land DA experiment (``$LANDDAROOT``):
 
 where ``/path/to/landda`` is the path to the directory where the user plans to run Land DA experiments. 
 
-.. _GetData:
-
-Get Data
-***********
-
-:numref:`Table %s <Level1Data>` shows the locations of pre-staged data on NOAA :term:`RDHPCS` (i.e., Hera and Orion). 
-   
-.. _Level1Data:
-
-.. table:: Level 1 RDHPCS Data
-
-   +-----------+--------------------------------------------------+
-   | Platform  | Data Location                                    |
-   +===========+==================================================+
-   | Hera      | /scratch2/NAGAPE/epic/UFS_Land-DA/inputs         |
-   +-----------+--------------------------------------------------+
-   | Orion     | /work/noaa/epic/UFS_Land-DA/inputs               |
-   +-----------+--------------------------------------------------+
-
-Users can either set the ``LANDDA_INPUTS`` environment variable to the location of their system's pre-staged data or use a soft link to the data. For example, on Hera, users may set: 
-
-.. code-block:: console
-
-   export LANDDA_INPUTS=/scratch2/NAGAPE/epic/UFS_Land-DA/inputs
-
-Alternatively, users can add a soft link to the data. For example, on Orion:
-
-.. code-block:: console
-
-   cd $LANDDAROOT
-   ln -fs /work/noaa/epic/UFS_Land-DA/inputs
-
-Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetDataC>`. Users with access to data for additional experiments may use the same process described above to point or link to that data by modifying the path to the data appropriately. 
-
-Users who are not using Land DA on Hera or Orion should view :numref:`Chapter %s <Container>` for instructions on running the containerized version of Land DA. :numref:`Section %s <GetDataC>` explains options for downloading the sample data onto their system. 
+.. _GetCode:
 
 Get Code
 ***********
@@ -157,13 +123,34 @@ Users will need to configure certain elements of their experiment in ``land_anal
    * ``EXP_NAME:`` An experiment name of the user's choice
    * ``EXP_BASEDIR:`` The full path to the directory where land-DA_workflow was cloned (i.e., ``$LANDDAROOT``)
    * ``JEDI_INSTALL:`` The full path to the system's ``jedi-bundle`` installation
-   * ``LANDDA_INPUTS:`` The full path to the experiment data
+   * ``LANDDA_INPUTS:`` The full path to the experiment data. See :ref:`Data <GetData>` below for information on prestaged data on Level 1 platforms. 
 
 .. note::
 
    To determine an appropriate ``ACCOUNT`` field for Level 1 systems running the Slurm job scheduler, run ``saccount_params``. On other systems, running ``groups`` will return a list of projects that the user has permissions for. Not all listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
 
 Users may configure other elements of an experiment in ``land_analysis.yaml`` if desired. The ``land_analysis_*`` files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Sections :numref:`%s <Model>` & :numref:`%s <DASystem>`. 
+
+.. _GetData:
+
+Data
+------
+
+:numref:`Table %s <Level1Data>` shows the locations of pre-staged data on NOAA :term:`RDHPCS` (i.e., Hera and Orion). 
+   
+.. _Level1Data:
+
+.. table:: Level 1 RDHPCS Data
+
+   +-----------+--------------------------------------------------+
+   | Platform  | Data Location                                    |
+   +===========+==================================================+
+   | Hera      | /scratch2/NAGAPE/epic/UFS_Land-DA/inputs         |
+   +-----------+--------------------------------------------------+
+   | Orion     | /work/noaa/epic/UFS_Land-DA/inputs               |
+   +-----------+--------------------------------------------------+
+
+Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetDataC>` and set ``LANDDA_INPUTS`` to point to the location of the downloaded data. Similarly, users with access to data for additional experiments may set the path to that data in ``LANDDA_INPUTS``. 
 
 .. _generate-wflow:
 
