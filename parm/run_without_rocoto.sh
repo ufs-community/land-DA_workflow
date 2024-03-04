@@ -12,14 +12,14 @@
 
 export MACHINE="hera"
 export ACCOUNT="nems"
-export FORCING="era5"
+export FORCING="gswp3"
 
 if [ "${MACHINE}" = "hera" ]; then
-  export EXP_BASEDIR="/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/landda_test"
+  export EXP_BASEDIR="/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/landda_nonrocoto"
   export JEDI_INSTALL="/scratch2/NAGAPE/epic/UFS_Land-DA/jedi"
   export LANDDA_INPUTS="/scratch2/NAGAPE/epic/UFS_Land-DA/inputs"
 elif [ "${MACHINE}" = "orion" ]; then
-  export EXP_BASEDIR="/work/noaa/epic/chjeon/landda_test"
+  export EXP_BASEDIR="/work/noaa/epic/chjeon/landda_nonrocoto"
   export JEDI_INSTALL="/work/noaa/epic/UFS_Land-DA/jedi"
   export LANDDA_INPUTS="/work/noaa/epic/UFS_Land-DA/inputs"
 fi
@@ -41,6 +41,7 @@ export LOG="${EXP_BASEDIR}/tests"
 export PATHRT="${EXP_BASEDIR}"
 
 export ATMOS_FORC="${FORCING}"
+export NPROC_JEDI="${NPROCS_ANA}"
 
 if [ "${FORCING}" = "era5" ]; then
   export CTIME="2019122100"
@@ -57,7 +58,7 @@ fi
 echo " ... PREP_EXP running ... "
 ${CYCLEDIR}/jobs/JLANDDA_PREP_EXP
 export err=$?
-if [ $err != 0 ]; then
+if [ $err = 0 ]; then
   echo " === PREP_EXP completed successfully === "
 else
   echo " ERROR: PREP_EXP failed !!! "
@@ -67,7 +68,7 @@ fi
 echo " ... PREP_OBS running ... "
 ${CYCLEDIR}/jobs/JLANDDA_PREP_OBS
 export err=$?
-if [ $err != 0 ]; then
+if [ $err = 0 ]; then
   echo " === PREP_OBS completed successfully === "
 else
   echo " ERROR: PREP_OBS failed !!! "
@@ -77,7 +78,7 @@ fi
 echo " ... PREP_BMAT running ... "
 ${CYCLEDIR}/jobs/JLANDDA_PREP_BMAT
 export err=$?
-if [ $err != 0 ]; then
+if [ $err = 0 ]; then
   echo " === PREP_BMAT completed successfully === "
 else
   echo " ERROR: PREP_BMAT failed !!! "
@@ -87,7 +88,7 @@ fi
 echo " ... RUN_ANA running ... "
 ${CYCLEDIR}/jobs/JLANDDA_RUN_ANA
 export err=$?
-if [ $err != 0 ]; then
+if [ $err = 0 ]; then
   echo " === RUN_ANA completed successfully === "
 else
   echo " ERROR: RUN_ANA failed !!! "
@@ -95,9 +96,9 @@ else
 fi
 
 echo " ... RUN_FCST running ... "
-${CYCLEDIR}/jobs/JLANDDDA_RUN_FCST
+${CYCLEDIR}/jobs/JLANDDA_RUN_FCST
 export err=$?
-if [ $err != 0 ]; then
+if [ $err = 0 ]; then
   echo " === RUN_FCST completed successfully === "
 else
   echo " ERROR: RUN_FCST failed !!! "
