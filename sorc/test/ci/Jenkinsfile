@@ -68,6 +68,7 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
+	git submodule update --init --recursive
         ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch2/NAGAPE/epic/role.epic/jenkins/workspace/
         sh sorc/app_build.sh
         cp sorc/test/hera_ctest.sh sorc/build/
