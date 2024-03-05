@@ -6,8 +6,8 @@ Land DA Workflow (Hera & Orion)
 
 This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (:term:`UFS`) Land DA System. Users can choose between two options: 
 
-   * A Dec. 21, 2019 00z sample case using ERA5 data with the UFS Land Driver (``settings_DA_cycle_era5``)
-   * A Jan. 3, 2000 00z sample case using GSWP3 data with the UFS Noah-MP land component (``settings_DA_cycle_gswp3``). 
+   * A Dec. 21, 2019 00z sample case using ERA5 data with the UFS Land Driver (``land_analysis_era5_<machine>``)
+   * A Jan. 3, 2000 00z sample case using GSWP3 data with the UFS Noah-MP land component (``land_analysis_gswp3_<machine>``). 
 
 .. attention::
    
@@ -114,11 +114,13 @@ Copy the experiment settings into ``land_analysis.yaml``:
 
 where: 
 
-   * ``<platform>`` is ``hera`` or ``orion``.
    * ``<forcing>`` is either ``gswp3`` or ``era5`` forcing data.
+   * ``<platform>`` is ``hera`` or ``orion``.
+   
 
 Users will need to configure certain elements of their experiment in ``land_analysis.yaml``: 
 
+   * ``MACHINE:`` A valid machine name (i.e., ``hera`` or ``orion``)
    * ``ACCOUNT:`` A valid account name. Hera, Orion, and most NOAA RDHPCS systems require a valid account name; other systems may not
    * ``EXP_NAME:`` An experiment name of the user's choice
    * ``EXP_BASEDIR:`` The full path to the directory where land-DA_workflow was cloned (i.e., ``$LANDDAROOT``)
@@ -127,7 +129,7 @@ Users will need to configure certain elements of their experiment in ``land_anal
 
 .. note::
 
-   To determine an appropriate ``ACCOUNT`` field for Level 1 systems running the Slurm job scheduler, run ``saccount_params``. On other systems, running ``groups`` will return a list of projects that the user has permissions for. Not all listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
+   To determine an appropriate ``ACCOUNT`` field for Level 1 systems that use the Slurm job scheduler, run ``saccount_params``. On other systems, running ``groups`` will return a list of projects that the user has permissions for. Not all listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
 
 Users may configure other elements of an experiment in ``land_analysis.yaml`` if desired. The ``land_analysis_*`` files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Sections :numref:`%s <Model>` & :numref:`%s <DASystem>`. 
 
@@ -163,7 +165,7 @@ Generate the workflow with ``uwtools`` by running:
 
    uw rocoto realize --input-file land_analysis.yaml --output-file land_analysis.xml
 
-If the command runs without problems, ``uwtools`` will output a message similar to the following: 
+If the command runs without problems, ``uwtools`` will output a "0 errors found" message similar to the following: 
 
 .. code-block:: console
 
@@ -181,10 +183,7 @@ To run the experiment, issue a ``rocotorun`` command from the ``parm`` directory
 
 .. _VerifySuccess:
 
-Check Progress
-*****************
-
-Check Experiment Status
+Track Experiment Status
 ========================
 
 To view the experiment status, run: 
@@ -215,7 +214,7 @@ Users will need to issue the ``rocotorun`` command multiple times. The tasks mus
    _______________________________________________________________
    End Epilogue Fri Mar  1 22:38:34 UTC 2024
 
-The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, DEAD. Users may view the ``slurm-########.out`` files to determine why an task may have failed. 
+The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, and DEAD. Users may view the ``slurm-########.out`` files to determine why a task may have failed. 
 
 Check Experiment Output
 =========================
