@@ -27,7 +27,7 @@ On platforms that utilize Rocoto workflow software (including Hera and Orion), i
    200001030000    runfcst           -        DEAD         256      1     2186.0
 
 
-This means that the dead task has not completed successfully, so the workflow has stopped. Once the issue has been identified and fixed (by referencing the log files in ``$EXPTDIR/log``), users can re-run the failed task using the ``rocotorewind`` command:
+This means that the dead task has not completed successfully, so the workflow has stopped. Once the issue has been identified and fixed (by referencing the log files), users can re-run the failed task using the ``rocotorewind`` command:
 
 .. COMMENT: Where are the log files actually?
 
