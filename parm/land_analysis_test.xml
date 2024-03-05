@@ -208,7 +208,7 @@
     <nodes>1:ppn=&NPROCS_ANA;</nodes>
     <queue>batch</queue>
     <walltime>00:15:00</walltime>
-    <command>&CYCLEDIR;/jobs/JLANDDA_PREP_OBS</command>
+    <command>&CYCLEDIR;/jobs/JLANDDA_RUN_ANA</command>
     <jobname>runana</jobname>
     <envar>
       <name>OBS_TYPES</name>

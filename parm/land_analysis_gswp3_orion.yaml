@@ -1,0 +1,171 @@
+workflow:
+  attrs:
+    realtime: false
+    scheduler: slurm
+  cycledef:
+    - attrs:
+        group: epic
+      spec: 200001030000 200001030000 24:00:00
+  entities:
+    MACHINE: "orion"
+    ACCOUNT: "epic"
+    EXP_NAME: "LETKF"
+    EXP_BASEDIR: "/work/noaa/epic/uname/LAND-DA-ROOT"
+    JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA/jedi"
+    LANDDA_INPUTS: "/work/noaa/epic/UFS_Land-DA/inputs"
+    FORCING: "gswp3"
+    RES: "96"
+    FCSTHR: "24"
+    NPROCS_ANA: "6"
+    NPROCS_FCST: "6"
+    OBS_TYPES: "GHCN"
+    fv3bundle_vn: "psl_develop"
+    DAtype: "letkfoi_snow"
+    SNOWDEPTHVAR: "snwdph"
+    TSTUB: "oro_C96.mx100"
+    WORKDIR: "&EXP_BASEDIR;/workdir"
+    CYCLEDIR: "&EXP_BASEDIR;/land-DA_workflow"
+    EXECdir: "&CYCLEDIR;/exec"
+    OUTDIR: "&EXP_BASEDIR;/landda_expts/DA_gswp3_test"
+    LOG: "&EXP_BASEDIR;/tests"
+    PATHRT: "&EXP_BASEDIR;"
+    CTIME:  "<cyclestr>@Y@m@d@H</cyclestr>"
+    PTIME:  "<cyclestr offset='-24:00:00'>@Y@m@d@H</cyclestr>"
+    NTIME:  "<cyclestr offset='24:00:00'>@Y@m@d@H</cyclestr>"
+  log: "&LOG;/workflow.log"
+  tasks:
+    task_prepexp:
+      envars:
+        MACHINE: "&MACHINE;"
+        ACCOUNT: "&ACCOUNT;"
+        EXP_NAME: "&EXP_NAME;"
+        LANDDA_INPUTS: "&LANDDA_INPUTS;"
+        ATMOS_FORC: "&FORCING;"
+        RES: "&RES;"
+        TSTUB: "&TSTUB;"
+        WORKDIR: "&WORKDIR;"
+        CYCLEDIR: "&CYCLEDIR;"
+        EXECdir: "&EXECdir;"
+        OUTDIR: "&OUTDIR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
+      account: "&ACCOUNT;"
+      command: "&CYCLEDIR;/jobs/JLANDDA_PREP_EXP"
+      jobname: prepexp
+      cores: 1
+      walltime: 00:02:00
+      queue: batch
+    task_prepobs:
+      envars:
+        OBS_TYPES: "&OBS_TYPES;"
+        MACHINE: "&MACHINE;"
+        ACCOUNT: "&ACCOUNT;"
+        EXP_NAME: "&EXP_NAME;"
+        LANDDA_INPUTS: "&LANDDA_INPUTS;"
+        ATMOS_FORC: "&FORCING;"
+        WORKDIR: "&WORKDIR;"
+        CYCLEDIR: "&CYCLEDIR;"
+        EXECdir: "&EXECdir;"
+        OUTDIR: "&OUTDIR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
+      account: "&ACCOUNT;"
+      command: "&CYCLEDIR;/jobs/JLANDDA_PREP_OBS"
+      jobname: prepobs
+      cores: 1
+      walltime: 00:02:00
+      queue: batch
+      dependency:
+        taskdep:
+          attrs:
+            task: prepexp
+    task_prepbmat:
+      envars:
+        MACHINE: "&MACHINE;"
+        ACCOUNT: "&ACCOUNT;"
+        EXP_NAME: "&EXP_NAME;"
+        LANDDA_INPUTS: "&LANDDA_INPUTS;"
+        ATMOS_FORC: "&FORCING;"
+        WORKDIR: "&WORKDIR;"
+        CYCLEDIR: "&CYCLEDIR;"
+        EXECdir: "&EXECdir;"
+        OUTDIR: "&OUTDIR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
+        fv3bundle_vn: "&fv3bundle_vn;"
+        DAtype: "&DAtype;"
+        SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
+      account: "&ACCOUNT;"
+      command: "&CYCLEDIR;/jobs/JLANDDA_PREP_BMAT"
+      jobname: prepbmat
+      cores: 1
+      walltime: 00:02:00
+      queue: batch
+      dependency:
+        taskdep:
+          attrs:
+            task: prepobs
+    task_runana:
+      envars:
+        OBS_TYPES: "&OBS_TYPES;"
+        MACHINE: "&MACHINE;"
+        ACCOUNT: "&ACCOUNT;"
+        EXP_NAME: "&EXP_NAME;"
+        LANDDA_INPUTS: "&LANDDA_INPUTS;"
+        ATMOS_FORC: "&FORCING;"
+        RES: "&RES;"
+        TSTUB: "&TSTUB;"
+        WORKDIR: "&WORKDIR;"
+        CYCLEDIR: "&CYCLEDIR;"
+        EXECdir: "&EXECdir;"
+        OUTDIR: "&OUTDIR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
+        NTIME: "&NTIME;"
+        fv3bundle_vn: "&fv3bundle_vn;"
+        DAtype: "&DAtype;"
+        SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
+        NPROC_JEDI: "&NPROCS_ANA;"
+        JEDI_INSTALL: "&JEDI_INSTALL;"
+      account: "&ACCOUNT;"
+      command: "&CYCLEDIR;/jobs/JLANDDA_RUN_ANA"
+      jobname: runana
+      nodes: "1:ppn=&NPROCS_ANA;"
+      walltime: 00:15:00
+      queue: batch
+      dependency:
+        taskdep:
+          attrs:
+            task: prepbmat
+    task_runfcst:
+      envars:
+        OBS_TYPES: "&OBS_TYPES;"
+        MACHINE: "&MACHINE;"
+        ACCOUNT: "&ACCOUNT;"
+        EXP_NAME: "&EXP_NAME;"
+        LANDDA_INPUTS: "&LANDDA_INPUTS;"
+        ATMOS_FORC: "&FORCING;"
+        RES: "&RES;"
+        TSTUB: "&TSTUB;"
+        WORKDIR: "&WORKDIR;"
+        CYCLEDIR: "&CYCLEDIR;"
+        EXECdir: "&EXECdir;"
+        OUTDIR: "&OUTDIR;"
+        CTIME: "&CTIME;"
+        PTIME: "&PTIME;"
+        NTIME: "&NTIME;"
+        fv3bundle_vn: "&fv3bundle_vn;"
+        DAtype: "&DAtype;"
+        SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
+        JEDI_INSTALL: "&JEDI_INSTALL;"
+        FCSTHR: "&FCSTHR;"
+      account: "&ACCOUNT;"
+      command: "&CYCLEDIR;/jobs/JLANDDA_RUN_FCST"
+      jobname: runfcst
+      nodes: "1:ppn=&NPROCS_FCST;"
+      walltime: 00:45:00
+      queue: batch
+      dependency:
+        taskdep:
+          attrs:
+            task: runana
