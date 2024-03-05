@@ -112,6 +112,7 @@ This :term:`umbrella repository` uses Git submodules and an ``app_build.sh`` fil
      - Repository for the UFS Land Driver
      - https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev
    * - *-- ccpp-physics*
+     - *-- ccpp-physics*
      - Repository for the Common Community Physics Package (CCPP)
      - https://github.com/ufs-community/ccpp-physics/
    * - ufs_model.fd
@@ -125,7 +126,7 @@ This :term:`umbrella repository` uses Git submodules and an ``app_build.sh`` fil
    * - N/A 
      - uwtools 
      - Repository for the Unified Workflow (UW) Toolkit. This repository is not a Git submodule, but the build script installs UW tools, if desired, as part of the build.
-     - https://github.com/ufs-community/workflow-tools
+     - https://github.com/ufs-community/uwtools
 
 .. note::
    The prerequisite libraries (including NCEP Libraries and external libraries) are not included in the UFS Land DA System repository. The `spack-stack <https://github.com/JCSDA/spack-stack>`__ repository assembles these prerequisite libraries. Spack-stack has already been built on `preconfigured (Level 1) platforms <https://github.com/ufs-community/ufs-srweather-app/wiki/Supported-Platforms-and-Compilers>`__. However, it must be built on other systems. See the :doc:`spack-stack Documentation <spack-stack:index>` for details on installing spack-stack. 
@@ -184,7 +185,7 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     ├── settings_DA_*
     └── submit_cycle.sh
 
-:numref:`Table %s <Subdirectories>` describes the contents of the most important Land DA subdirectories. :numref:`Section %s <components>` describes the Land DA System components. Users can reference the `NCO Implementation Standards <https://www.nco.ncep.noaa.gov/idsb/implementation_standards/ImplementationStandards.v11.0.0.pdf>`__ (p. 19) for additional details on repository structure in NCO-compliant repositories. 
+:numref:`Table %s <Subdirectories>` describes the contents of the most important Land DA subdirectories. :numref:`Section %s <components>` describes the Land DA System components. Users can reference the :nco:`NCO Implementation Standards <ImplementationStandards.v11.0.0.pdf>` (p. 19) for additional details on repository structure in NCO-compliant repositories. 
 
 .. _Subdirectories:
 
@@ -194,24 +195,25 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
 
    * - Directory Name
      - Description
-   * - configures
-     - Machine-specific configurations
    * - docs
      - Repository documentation
+   * - exec
+     - Binary executables
    * - jobs
      - :term:`J-job <J-jobs>` scripts launched by Rocoto
+   * - lib
+     - Model-specific libraries
    * - modulefiles
      - Files that load the modules required for building and running the workflow
    * - parm
      - Parameter files used to configure the model, physics, workflow, and various components
+   * - scripts
+     - Scripts launched by the :term:`J-jobs`
    * - sorc
      - External source code used to build the Land DA System
 
-.. COMMENT: Update "configures" description?
 
 .. COMMENT: Add later?   
-   * - scripts
-     - Scripts launched by the J-jobs
    * - tests
      - Tests for baseline experiment configurations
 
@@ -226,3 +228,7 @@ Updates allowing the Land DA System to run with the land component are underway.
 
 The land component makes use of a National Unified Operational Prediction Capability (:term:`NUOPC`) cap to interface with a coupled modeling system. 
 Unlike the standalone Noah-MP land driver, the Noah-MP :term:`NUOPC cap` is able to create an :term:`ESMF` multi-tile grid by reading in a mosaic grid file. For the domain, the :term:`FMS` initializes reading and writing of the cubed-sphere tiled output. Then, the Noah-MP land component reads static information and initial conditions (e.g., surface albedo) and interpolates the data to the date of the simulation. The solar zenith angle is calculated based on the time information. 
+
+Unified Workflow (UW) Tools
+============================
+The Unified Workflow (UW) is a set of tools intended to unify the workflow for various UFS applications under one framework. The UW toolkit currently includes rocoto, template, and configuration (config) tools, which are being incorporated into the Land DA workflow. Additional tools are under development. More details about UW tools can be found in the `uwtools <https://github.com/ufs-community/workflow-tools>` GitHub repository and in the :uw:`UW Documentation <>`.

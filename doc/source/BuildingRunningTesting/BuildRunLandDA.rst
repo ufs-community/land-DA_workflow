@@ -117,7 +117,6 @@ where:
    * ``<forcing>`` is either ``gswp3`` or ``era5`` forcing data.
    * ``<platform>`` is ``hera`` or ``orion``.
    
-
 Users will need to configure certain elements of their experiment in ``land_analysis.yaml``: 
 
    * ``MACHINE:`` A valid machine name (i.e., ``hera`` or ``orion``)
@@ -126,9 +125,7 @@ Users will need to configure certain elements of their experiment in ``land_anal
    * ``EXP_BASEDIR:`` The full path to the directory where land-DA_workflow was cloned (i.e., ``$LANDDAROOT``)
    * ``JEDI_INSTALL:`` The full path to the system's ``jedi-bundle`` installation
    * ``LANDDA_INPUTS:`` The full path to the experiment data. See :ref:`Data <GetData>` below for information on prestaged data on Level 1 platforms. 
-   * ``OUTDIR:`` The full path to the directory where experiment will write its output. By default, this is set to ``"&EXP_BASEDIR;/landda_expts/DA_gswp3_test"``, but users can change the ``DA_gswp3_test`` portion to a name of their choice. 
-
-   .. COMMENT:
+   * ``OUTDIR:`` The full path to the directory where experiment will write its output. By default, this is set to ``"&EXP_BASEDIR;/landda_expts/DA_<forcing>_test"``, but users can change the ``DA_<forcing>_test`` portion to a name of their choice. If users do not change the name, the new experiment will overwrite data from the previous experiment. 
 
 .. note::
 
@@ -231,7 +228,7 @@ Check for the background and analysis files in the experiment directory:
 
 .. code-block:: console
 
-   ls -l $LANDDAROOT/landda_expts/EXP_NAME/DA_<data_source>_test/mem000/restarts/<vector/tile>``
+   ls -l $LANDDAROOT/landda_expts/DA_<data_source>_test/mem000/restarts/<vector/tile>``
 
 where: 
 

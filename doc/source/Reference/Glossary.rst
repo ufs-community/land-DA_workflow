@@ -24,6 +24,9 @@ Glossary
    ESMF
       `Earth System Modeling Framework <https://earthsystemmodeling.org/docs/release/latest/ESMF_usrdoc/>`__. The ESMF defines itself as "a suite of software tools for developing high-performance, multi-component Earth science modeling applications." It is a community-developed software infrastructure for building and coupling models. 
 
+   ex-scripts
+      Scripting layer (contained in ``land-DA_workflow/jobs/``) that should be called by a :term:`J-job <J-jobs>` for each workflow component to run a specific task or sub-task in the workflow. The different scripting layers are described in detail in the :nco:`NCO Implementation Standards document <ImplementationStandards.v11.0.0.pdf>`.
+
    FMS
       The Flexible Modeling System (`FMS <https://www.gfdl.noaa.gov/fms/>`__) is a software framework for supporting the efficient
       development, construction, execution, and scientific interpretation of atmospheric, 
@@ -37,6 +40,9 @@ Glossary
 
    GSWP3
       The Global Soil Wetness Project Phase 3 (`GSWP3 <https://hydro.iis.u-tokyo.ac.jp/GSWP3/>`__) dataset is a century-long comprehensive set of data documenting several variables for hydro-energy-eco systems. 
+
+   J-jobs
+      Scripting layer (contained in ``land-DA_workflow/jobs/``) that should be directly called for each workflow component (either on the command line or by the workflow manager) to run a specific task in the workflow. The different scripting layers are described in detail in the :nco:`NCO Implementation Standards document <ImplementationStandards.v11.0.0.pdf>`.
 
    JEDI
       The Joint Effort for Data assimilation Integration (`JEDI <https://www.jcsda.org/jcsda-project-jedi>`__) is a unified and versatile data assimilation (DA) system for Earth System Prediction. It aims to enable efficient research and accelerated transition from research to operations by providing a framework that takes into account all components of the Earth system in a consistent manner. The JEDI software package can run on a variety of platforms and for a variety of purposes, and it is designed to readily accommodate new atmospheric and oceanic models and new observation systems. The `JEDI User's Guide <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/>`__ contains extensive information on the software. 
@@ -81,6 +87,9 @@ Glossary
 
    UFS
       The Unified Forecast System (UFS) is a community-based, coupled, comprehensive Earth modeling system consisting of several applications (apps). These apps span regional to global domains and sub-hourly to seasonal time scales. The UFS is designed to support the :term:`Weather Enterprise` and to be the source system for NOAA's operational numerical weather prediction applications. For more information, visit https://ufscommunity.org/.
+
+   Umbrella repository
+      A repository that houses external code, or “externals,” from additional repositories.
 
    Weather Enterprise
       Individuals and organizations from public, private, and academic sectors that contribute to the research, development, and production of weather forecast products; primary consumers of these weather forecast products.
