@@ -77,7 +77,13 @@ pipeline {
         cd sorc/build/
         echo $(pwd)
         ./run_hera_ctest.sh
-        '''
+	
+ 	export machine_name_logs=$(echo $machine | awk '{ print tolower($1) }')
+	tar --create --gzip --verbose --dereference --file "${machine_name_logs}.tgz" ${WORKSPACE}/tests/logs/*.log
+
+	'''
+        s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: true, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "**/*tgz*", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
+      
       }
     }        
     stage('Run Land DA Workflow on Orion') {
@@ -106,14 +112,7 @@ pipeline {
         echo $(pwd)
         ctest
 	'''
-	// export machine_name_logs=$(echo $machine | awk '{ print tolower($1) }')
-
-
-        // tar --create --gzip --verbose --dereference --file "${machine_name_logs}.tgz" ${WORKSPACE}/tests/logs/*.log
-
-        // '''
-        // s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: true, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "**/*tgz*", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
-      }
+	}
     }    
     stage('Run Land DA Workflow on Hercules') {
         agent {
