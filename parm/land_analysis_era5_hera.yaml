@@ -10,7 +10,7 @@ workflow:
     MACHINE: "hera"
     ACCOUNT: "nems"
     EXP_NAME: "LETKF"
-    EXP_BASEDIR: "/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/landda_fixjjob"
+    EXP_BASEDIR: "/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/landda_version"
     JEDI_INSTALL: "/scratch2/NAGAPE/epic/UFS_Land-DA/jedi"
     LANDDA_INPUTS: "/scratch2/NAGAPE/epic/UFS_Land-DA/inputs"
     FORCING: "era5"

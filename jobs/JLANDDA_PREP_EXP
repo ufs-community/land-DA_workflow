@@ -42,6 +42,11 @@ mkdir -p $MEM_WORKDIR/modulefiles; cp ${CYCLEDIR}/modulefiles/build_${MACHINE}_i
 cd $MEM_WORKDIR
 
 # load modulefiles
+BUILD_VERSION_FILE="${CYCLEDIR}/versions/build.ver_${MACHINE}"
+if [ -e ${BUILD_VERSION_FILE} ]; then
+  . ${BUILD_VERSION_FILE}
+fi
+
 module use modulefiles; module load modules.landda
 
 if [[ $do_jedi == "YES" && $ATMOS_FORC == "era5" ]]; then
