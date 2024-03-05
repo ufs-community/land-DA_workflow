@@ -126,6 +126,9 @@ Users will need to configure certain elements of their experiment in ``land_anal
    * ``EXP_BASEDIR:`` The full path to the directory where land-DA_workflow was cloned (i.e., ``$LANDDAROOT``)
    * ``JEDI_INSTALL:`` The full path to the system's ``jedi-bundle`` installation
    * ``LANDDA_INPUTS:`` The full path to the experiment data. See :ref:`Data <GetData>` below for information on prestaged data on Level 1 platforms. 
+   * ``OUTDIR:`` The full path to the directory where experiment will write its output. By default, this is set to ``"&EXP_BASEDIR;/landda_expts/DA_gswp3_test"``, but users can change the ``DA_gswp3_test`` portion to a name of their choice. 
+
+   .. COMMENT:
 
 .. note::
 
@@ -221,7 +224,8 @@ Check Experiment Output
 
 As the experiment progresses, it will create an experiment directory in ``$LANDDAROOT/landda_expts/EXP_NAME`` to hold experiment output. (Note that ``$EXP_NAME`` was set in ``land_analysis.yaml``.)
 
-.. COMMENT: Edit from here down!
+.. COMMENT: What is EXP_NAME used for? Why are the slurm log files ending up in parm?
+.. COMMENT: Explain OUTDIR, rundir, and workdir content.
 
 Check for the background and analysis files in the experiment directory:
 
@@ -235,51 +239,3 @@ where:
    * ``<vector/tile>`` is either ``vector`` or ``tile`` depending on whether ERA5 or GSWP3 forcing data was used, respectively. 
 
 The experiment should generate several files. 
-
-.. _era5-log-output:
-
-ERA5 Experiment Logs
-=====================
-
-For the ERA5 experiment, the ``log*`` file for a successful experiment will a message like:
-
-.. code-block:: console
-
-   Creating: .//ufs_land_restart.2019-12-22_00-00-00.nc
-   Searching for forcing at time: 2019-12-22 01:00:00
-   
-The ``err*`` file for a successful experiment will end with something similar to:
-
-.. code-block:: console
-
-   + THISDATE=2019122200
-   + date_count=1
-   + '[' 1 -lt 1 ']'
-   + '[' 2019122200 -lt 2019122200 ']'
-
-.. _gswp3-log-output:
-
-GSWP3 Experiment Logs
-=======================
-
-For the GSWP3 experiment, the ``log*`` file for a successful experiment will end with a list of resource statistics. For example:
-
-.. code-block:: console
-
-   Number of times filesystem performed OUTPUT          = 250544
-   Number of Voluntary Context Switches                 = 3252
-   Number of InVoluntary Context Switches               = 183
-   *****************END OF RESOURCE STATISTICS*************************
-   
-The ``err*`` file for a successful experiment will end with something similar to:
-
-.. code-block:: console
-
-   + echo 'do_landDA: calling apply snow increment'
-   + [[ '' =~ hera\.internal ]]
-   + /apps/intel-2022.1.2/intel-2022.1.2/mpi/2021.5.1/bin/mpiexec -n 6 /path/to/land-DA_workflow/build/bin/apply_incr.exe /path/to/landda_expts/DA_GSWP3_test/DA/logs//apply_incr.log
-   + [[ 0 != 0 ]]
-   + '[' YES == YES ']'
-   + '[' YES == YES ']'
-   + cp /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile1.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile2.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile3.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile4.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile5.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile6.nc /path/to/landda_expts/DA_GSWP3_test/DA/jedi_incr/
-   + [[ YES == \N\O ]]
