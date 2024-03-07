@@ -141,7 +141,6 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
 .. code-block:: console
 
    land-offline_workflow
-    ├── configures
     ├── doc
     ├── (exec)
     ├── jobs
@@ -195,7 +194,7 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
 
    * - Directory Name
      - Description
-   * - docs
+   * - doc
      - Repository documentation
    * - exec
      - Binary executables

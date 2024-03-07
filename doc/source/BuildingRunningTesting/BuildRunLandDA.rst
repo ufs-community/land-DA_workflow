@@ -91,6 +91,7 @@ To load the workflow environment, run:
 .. code-block:: console
 
    cd $LANDDAROOT/land-DA_workflow
+   source versions/build.ver_<platform>
    module use modulefiles
    module load wflow_<platform>
    conda activate land_da
