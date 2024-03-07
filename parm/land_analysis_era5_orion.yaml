@@ -10,7 +10,7 @@ workflow:
     MACHINE: "orion"
     ACCOUNT: "epic"
     EXP_NAME: "LETKF"
-    EXP_BASEDIR: "/work/noaa/epic/uname/LAND-DA-ROOT"
+    EXP_BASEDIR: "/work/noaa/epic/username/LAND-DA-ROOT"
     JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA/jedi"
     LANDDA_INPUTS: "/work/noaa/epic/UFS_Land-DA/inputs"
     FORCING: "era5"

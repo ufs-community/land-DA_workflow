@@ -11,6 +11,7 @@ parm/*.xml
 parm/*.db
 parm/*.out
 parm/*.err
+parm/*.log
 
 __pycache__
 *.swp

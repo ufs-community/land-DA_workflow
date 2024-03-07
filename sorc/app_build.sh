@@ -347,8 +347,8 @@ fi
 source ${HOME_DIR}/parm/lmod-setup.sh ${PLATFORM}
 
 # source version file for build
-BUILD_VERSION_FILE="${HOME_DIR}/versions/build.ver.${PLATFORM}"
-if [ -f ${BUILD_VERSION_FILE} ]; then
+BUILD_VERSION_FILE="${HOME_DIR}/versions/build.ver_${PLATFORM}"
+if [ -e ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi
 
