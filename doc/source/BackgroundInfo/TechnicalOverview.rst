@@ -210,12 +210,8 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
      - Scripts launched by the :term:`J-jobs`
    * - sorc
      - External source code used to build the Land DA System
-
-
-.. COMMENT: Add later?   
-   * - tests
-     - Tests for baseline experiment configurations
-
+   * - versions
+     - Contain run.ver and build.ver, which are files that get automatically sourced in order to track package versions at run and compile time respectively.
 
 .. _land-component:
 

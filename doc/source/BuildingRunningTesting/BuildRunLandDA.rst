@@ -176,6 +176,40 @@ If the command runs without problems, ``uwtools`` will output a "0 errors found"
 Run the Experiment
 ********************
 
+.. _wflow-overview:
+
+Workflow Overview
+==================
+
+Each Land DA experiment includes multiple tasks that must be run in order to satisfy the dependencies of later tasks. These tasks are housed in the :term:`J-job <j-jobs>` scripts contained in the ``jobs`` directory. 
+
+.. list-table:: *J-job Tasks in the Land DA Workflow*
+   :header-rows: 1
+
+   * - J-job Task
+     - Description
+   * - JLANDDA_PREP_EXP
+     - Sets up the experiment
+   * - JLANDDA_PREP_OBS
+     - Sets up the observation files
+   * - JLANDDA_PREP_BMAT
+     - Sets up the :term:`JEDI` run
+   * - JLANDDA_RUN_ANA
+     - Runs JEDI
+   * - JLANDDA_RUN_FCST
+     - Runs forecast
+
+Users may run these tasks :ref:`using the Rocoto workflow manager <run-w-rocoto>` or :ref:`using a batch script <run-batch-script>`. 
+
+.. _run-w-rocoto:
+
+Run With Rocoto
+=================
+
+.. note:: 
+
+   Users who do not have Rocoto installed on their system can view 
+
 To run the experiment, issue a ``rocotorun`` command from the ``parm`` directory: 
 
 .. code-block:: console
@@ -185,7 +219,7 @@ To run the experiment, issue a ``rocotorun`` command from the ``parm`` directory
 .. _VerifySuccess:
 
 Track Experiment Status
-========================
+-------------------------
 
 To view the experiment status, run: 
 
@@ -217,10 +251,38 @@ Users will need to issue the ``rocotorun`` command multiple times. The tasks mus
 
 The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, and DEAD. Users may view the ``slurm-########.out`` files to determine why a task may have failed. 
 
+.. _run-batch-script:
+
+Run Without Rocoto
+--------------------
+
+Users may choose not to run the workflow with uwtools and Rocoto. To run the :term:`J-jobs` scripts in the ``jobs`` directory, navigate to the ``parm`` directory and edit ``run_without_rocoto.sh`` (e.g., using vim or preferred command line editor). Users will likely need to change the ``MACHINE``, ``ACCOUNT``, and ``EXP_BASEDIR`` variables to match their system. Then, run ``run_without_rocoto.sh``:
+
+.. code-block:: console
+
+   cd $LANDDAROOT/land-DA_workflow/parm
+   sbatch run_without_rocoto.sh
+
 Check Experiment Output
 =========================
 
-As the experiment progresses, it will create an experiment directory in ``$LANDDAROOT/landda_expts/EXP_NAME`` to hold experiment output. (Note that ``$EXP_NAME`` was set in ``land_analysis.yaml``.)
+As the experiment progresses, it will generate a number of directories to hold intermediate and output files. The directory structure for those files and directories appears below:
+
+.. COMMENT: In the future: It will create an experiment directory in ``$LANDDAROOT/landda_expts/EXP_NAME`` to hold experiment output. (Note that ``$EXP_NAME`` was set in ``land_analysis.yaml``.)
+
+.. code-block:: console
+
+   $LANDDAROOT: Base directory
+    ├── land-offline_workflow(<CYCLEDIR>): Home directory of the land DA workflow
+    ├── landda_expts
+    │     └── DA_<forcing>_test(<OUTDIR>)
+    │     │     ├── DA: Directory containing the output files of JEDI run
+    │     │     └── mem000: Directory containing the output files
+    ├── tests(<LOG>): Directory containing the log files of the Rocoto workflow
+    └── workdir(<WORKDIR>)
+          └── mem000: Working directory
+
+Each variable in angle brackets is the name for the directory defined in the file ``land_analysis.yaml``. In the future, this directory structure will be modified to meet the :nco:`NCO Implementation Standards<>`. 
 
 .. COMMENT: What is EXP_NAME used for? Why are the slurm log files ending up in parm?
 .. COMMENT: Explain OUTDIR, rundir, and workdir content.
