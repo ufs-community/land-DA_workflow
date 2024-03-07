@@ -57,6 +57,7 @@ workflow:
       cores: 1
       walltime: 00:02:00
       queue: batch
+      join: "&LOGDIR;/prep_exp.log"
     task_prepobs:
       envars:
         OBS_TYPES: "&OBS_TYPES;"
@@ -77,6 +78,7 @@ workflow:
       cores: 1
       walltime: 00:02:00
       queue: batch
+      join: "&LOGDIR;/prep_obs.log"
       dependency:
         taskdep:
           attrs:
@@ -103,6 +105,7 @@ workflow:
       cores: 1
       walltime: 00:02:00
       queue: batch
+      join: "&LOGDIR;/prep_bmat.log"
       dependency:
         taskdep:
           attrs:
@@ -135,6 +138,7 @@ workflow:
       nodes: "1:ppn=&NPROCS_ANA;"
       walltime: 00:15:00
       queue: batch
+      join: "&LOGDIR;/run_ana.log"
       dependency:
         taskdep:
           attrs:
@@ -167,6 +171,7 @@ workflow:
       nodes: "1:ppn=&NPROCS_FCST;"
       walltime: 00:30:00
       queue: batch
+      join: "&LOGDIR;/run_fcst.log"
       dependency:
         taskdep:
           attrs:
