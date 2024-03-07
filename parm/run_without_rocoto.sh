@@ -13,13 +13,15 @@
 export MACHINE="hera"
 export ACCOUNT="nems"
 export FORCING="gswp3"
+export NET="landda"
+export model_ver="v1.2.1"
 
 if [ "${MACHINE}" = "hera" ]; then
-  export EXP_BASEDIR="/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/landda_nonrocoto"
+  export EXP_BASEDIR="/scratch2/NAGAPE/epic/{USER}/landda_nonrocoto"
   export JEDI_INSTALL="/scratch2/NAGAPE/epic/UFS_Land-DA/jedi"
   export LANDDA_INPUTS="/scratch2/NAGAPE/epic/UFS_Land-DA/inputs"
 elif [ "${MACHINE}" = "orion" ]; then
-  export EXP_BASEDIR="/work/noaa/epic/chjeon/landda_nonrocoto"
+  export EXP_BASEDIR="/work/noaa/epic/{USER}/landda_nonrocoto"
   export JEDI_INSTALL="/work/noaa/epic/UFS_Land-DA/jedi"
   export LANDDA_INPUTS="/work/noaa/epic/UFS_Land-DA/inputs"
 fi
@@ -33,11 +35,11 @@ export fv3bundle_vn="psl_develop"
 export DAtype="letkfoi_snow"
 export SNOWDEPTHVAR="snwdph"
 export TSTUB="oro_C96.mx100"
-export WORKDIR="${EXP_BASEDIR}/workdir"
+export WORKDIR="${EXP_BASEDIR}/workdir/run_&FORCING;"
 export CYCLEDIR="${EXP_BASEDIR}/land-DA_workflow"
 export EXECdir="${CYCLEDIR}/exec"
-export OUTDIR="${EXP_BASEDIR}/landda_expts/DA_${FORCING}_test"
-export LOG="${EXP_BASEDIR}/tests"
+export OUTDIR="${EXP_BASEDIR}/com/${NET}/${model_ver}/run_${FORCING}"
+export LOGDIR="${EXP_BASEDIR}/com/output/logs"
 export PATHRT="${EXP_BASEDIR}"
 
 export ATMOS_FORC="${FORCING}"
