@@ -4,7 +4,7 @@ pipeline {
     stage('Launch SonarQube') {
             steps {
                 script {
-                    build job: '/land-da/land-da-sonarqube', parameters: [
+                    build job: '/land-DA_workflow/land-da-sonarqube', parameters: [
                         string(name: 'BRANCH_NAME', value: env.CHANGE_BRANCH ?: 'develop'),
                         string(name: 'FORK_NAME', value: env.CHANGE_FORK ?: '')
                     ], wait: false
@@ -68,6 +68,7 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
+	git submodule update --init --recursive
         ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch2/NAGAPE/epic/role.epic/jenkins/workspace/
         sh sorc/app_build.sh
         cp sorc/test/hera_ctest.sh sorc/build/
@@ -76,7 +77,10 @@ pipeline {
         cd sorc/build/
         echo $(pwd)
         ./run_hera_ctest.sh
-        '''
+	tar --create --gzip --verbose --dereference --file "hera.tgz" ${WORKSPACE}/sorc/build/Testing/Temporary/*.log
+	'''
+        s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: true, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "**/*tgz*", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
+      
       }
     }        
     stage('Run Land DA Workflow on Orion') {
@@ -92,6 +96,7 @@ pipeline {
         cleanWs()
         checkout scm
         sh '''
+	git submodule update --init --recursive
         ln -fs /work/noaa/epic/UFS_Land-DA/inputs /work/noaa/epic/role-epic/jenkins/workspace/
         sh sorc/app_build.sh
         cp sorc/test/orion_ctest.sh sorc/build/
@@ -103,8 +108,8 @@ pipeline {
         cd sorc/build/
         echo $(pwd)
         ctest
-        '''
-      }
+	'''
+	}
     }    
     stage('Run Land DA Workflow on Hercules') {
         agent {
@@ -138,7 +143,7 @@ pipeline {
         sh '''
         
         '''
-      }
-    }
-  }  
+        }
+      }	      
+  }
 }
