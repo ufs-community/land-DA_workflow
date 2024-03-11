@@ -226,4 +226,4 @@ Unlike the standalone Noah-MP land driver, the Noah-MP :term:`NUOPC cap` is able
 
 Unified Workflow (UW) Tools
 ============================
-The Unified Workflow (UW) is a set of tools intended to unify the workflow for various UFS applications under one framework. The UW toolkit currently includes rocoto, template, and configuration (config) tools, which are being incorporated into the Land DA workflow. Additional tools are under development. More details about UW tools can be found in the `uwtools <https://github.com/ufs-community/workflow-tools>` GitHub repository and in the :uw:`UW Documentation <>`.
+The Unified Workflow (UW) is a set of tools intended to unify the workflow for various UFS applications under one framework. The UW toolkit currently includes rocoto, template, and configuration (config) tools, which are being incorporated into the Land DA workflow. Additional tools are under development. More details about UW tools can be found in the `uwtools <https://github.com/ufs-community/uwtools>` GitHub repository and in the :uw:`UW Documentation <>`.
