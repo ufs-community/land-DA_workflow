@@ -61,6 +61,12 @@ Glossary
    netCDF
       NetCDF (`Network Common Data Form <https://www.unidata.ucar.edu/software/netcdf/>`__) is a file format and community standard for storing multidimensional scientific data. It includes a set of software libraries and machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.
 
+   NCEP
+      National Centers for Environmental Prediction (NCEP) is an arm of the National Weather Service consisting of nine centers. More information can be found at https://www.ncep.noaa.gov.
+   
+   NCO
+      :term:`NCEP` Central Operations. Visit the `NCO website <https://www.nco.ncep.noaa.gov/>`__ for more information.
+
    NUOPC
    National Unified Operational Prediction Capability
       The `National Unified Operational Prediction Capability <https://earthsystemmodeling.org/nuopc/>`__ is a consortium of Navy, NOAA, and Air Force modelers and their research partners. It aims to advance the weather modeling systems used by meteorologists, mission planners, and decision makers. NUOPC partners are working toward a common model architecture --- a standard way of building models --- in order to make it easier to collaboratively build modeling systems.
