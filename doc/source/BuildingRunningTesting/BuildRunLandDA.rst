@@ -273,16 +273,21 @@ As the experiment progresses, it will generate a number of directories to hold i
 .. code-block:: console
 
    $LANDDAROOT: Base directory
-    ├── land-offline_workflow(<CYCLEDIR>): Home directory of the land DA workflow
-    ├── landda_expts
-    │     └── DA_<forcing>_test(<OUTDIR>)
-    │     │     ├── DA: Directory containing the output files of JEDI run
-    │     │     └── mem000: Directory containing the output files
-    ├── tests(<LOG>): Directory containing the log files of the Rocoto workflow
+    ├── land-DA_workflow(<CYCLEDIR>): Home directory of the land DA workflow
+    ├── com
+    │     ├── landda (<NET>)
+    │     │     └── vX.Y.Z (<model_ver>)
+    │     │     │     └── DA_<forcing> (<OUTDIR>)
+    │     │     │           ├── DA: Directory containing the output files of JEDI run
+    │     │     │           └── mem000: Directory containing the output files
+    │     └──  output
+    │           └──  logs
+    │                 └── run_<forcing> (<LOGDIR>): Directory containing the log file of the Rocoto workflow
     └── workdir(<WORKDIR>)
-          └── mem000: Working directory
+          └── run_<forcing>
+                └── mem000: Working directory
 
-Each variable in angle brackets is the name for the directory defined in the file ``land_analysis.yaml``. In the future, this directory structure will be modified to meet the :nco:`NCO Implementation Standards<>`. 
+Each variable in angle brackets is the name for the directory defined in the file ``land_analysis.yaml``. In the future, this directory structure will be further modified to meet the :nco:`NCO Implementation Standards<>`. 
 
 .. COMMENT: What is EXP_NAME used for? Why are the slurm log files ending up in parm?
 .. COMMENT: Explain OUTDIR, rundir, and workdir content.
