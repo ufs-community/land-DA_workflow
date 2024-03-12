@@ -208,7 +208,7 @@ Run With Rocoto
 
 .. note:: 
 
-   Users who do not have Rocoto installed on their system can view 
+   Users who do not have Rocoto installed on their system can view :numref:`Section %s: Run Without Rocoto <run-batch-script>`.
 
 To run the experiment, issue a ``rocotorun`` command from the ``parm`` directory: 
 
