@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=land_da_wflow
-#SBATCH --account=nems
+#SBATCH --account=epic
 #SBATCH --qos=debug
 #SBATCH --nodes=1
 #SBATCH --tasks-per-node=6
@@ -10,18 +10,18 @@
 #SBATCH -e err_landda_wflow.%j.err
 
 
-export MACHINE="hera"
-export ACCOUNT="nems"
-export FORCING="gswp3"
+export MACHINE="orion"
+export ACCOUNT="epic"
+export FORCING="era5"
 export NET="landda"
 export model_ver="v1.2.1"
 
 if [ "${MACHINE}" = "hera" ]; then
-  export EXP_BASEDIR="/scratch2/NAGAPE/epic/{USER}/landda_nonrocoto"
+  export EXP_BASEDIR="/scratch2/NAGAPE/epic/{USER}/landda_test"
   export JEDI_INSTALL="/scratch2/NAGAPE/epic/UFS_Land-DA/jedi"
   export LANDDA_INPUTS="/scratch2/NAGAPE/epic/UFS_Land-DA/inputs"
 elif [ "${MACHINE}" = "orion" ]; then
-  export EXP_BASEDIR="/work/noaa/epic/{USER}/landda_nonrocoto"
+  export EXP_BASEDIR="/work/noaa/epic/{USER}/landda_test"
   export JEDI_INSTALL="/work/noaa/epic/UFS_Land-DA/jedi"
   export LANDDA_INPUTS="/work/noaa/epic/UFS_Land-DA/inputs"
 fi
