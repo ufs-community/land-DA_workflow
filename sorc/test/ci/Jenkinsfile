@@ -60,7 +60,7 @@ pipeline {
           label "hera"
         }
         environment {
-        ACCNR = 'nems'
+        ACCNR = 'epic'
         NODE_PATH = '/scratch2/NAGAPE/epic/role.epic/'
       }
       steps {
@@ -88,7 +88,7 @@ pipeline {
           label "orion"
         }
         environment {
-        ACCNR = 'nems'
+        ACCNR = 'epic'
         NODE_PATH = '/work/noaa/epic/role-epic/'
       }
       steps {
@@ -102,9 +102,9 @@ pipeline {
         cp sorc/test/orion_ctest.sh sorc/build/
         cp sorc/test/check_ctest.sh sorc/build/
         cp sorc/test/run_orion_ctest.sh sorc/build/
-	      cd sorc/test/
-	      sed -i 's|MACHINE_ID=${MACHINE_ID:-hera}|MACHINE_ID=${MACHINE_ID:-orion}|g' run_ufs_datm_lnd.sh
-	      cd ../../
+	cd sorc/test/
+	sed -i 's|MACHINE_ID=${MACHINE_ID:-hera}|MACHINE_ID=${MACHINE_ID:-orion}|g' run_ufs_datm_lnd.sh
+	cd ../../
         cd sorc/build/
         echo $(pwd)
         ctest
