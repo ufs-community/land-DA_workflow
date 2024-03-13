@@ -12,6 +12,7 @@ parm/*.db
 parm/*.out
 parm/*.err
 parm/*.log
+parm/land_analysis.yaml
 
 __pycache__
 *.swp

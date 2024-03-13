@@ -10,7 +10,9 @@ workflow:
     MACHINE: "hera"
     ACCOUNT: "epic"
     EXP_NAME: "LETKF"
-    EXP_BASEDIR: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/landda_gswp3"
+    NET: "landda"
+    model_ver: "v1.2.1"
+    EXP_BASEDIR: "/scratch2/NAGAPE/epic/{USER}/landda_test"
     JEDI_INSTALL: "/scratch2/NAGAPE/epic/UFS_Land-DA/jedi"
     LANDDA_INPUTS: "/scratch2/NAGAPE/epic/UFS_Land-DA/inputs"
     FORCING: "gswp3"
@@ -23,16 +25,16 @@ workflow:
     DAtype: "letkfoi_snow"
     SNOWDEPTHVAR: "snwdph"
     TSTUB: "oro_C96.mx100"
-    WORKDIR: "&EXP_BASEDIR;/workdir"
+    WORKDIR: "&EXP_BASEDIR;/workdir/run_&FORCING;"
     CYCLEDIR: "&EXP_BASEDIR;/land-DA_workflow"
     EXECdir: "&CYCLEDIR;/exec"
-    OUTDIR: "&EXP_BASEDIR;/landda_expts/DA_gswp3_test"
-    LOG: "&EXP_BASEDIR;/tests"
+    OUTDIR: "&EXP_BASEDIR;/com/&NET;/&model_ver;/run_&FORCING;"
+    LOGDIR: "&EXP_BASEDIR;/com/output/logs/run_&FORCING;"
     PATHRT: "&EXP_BASEDIR;"
     CTIME:  "<cyclestr>@Y@m@d@H</cyclestr>"
     PTIME:  "<cyclestr offset='-24:00:00'>@Y@m@d@H</cyclestr>"
     NTIME:  "<cyclestr offset='24:00:00'>@Y@m@d@H</cyclestr>"
-  log: "&LOG;/workflow.log"
+  log: "&LOGDIR;/workflow.log"
   tasks:
     task_prepexp:
       envars:
@@ -55,6 +57,7 @@ workflow:
       cores: 1
       walltime: 00:02:00
       queue: batch
+      join: "&LOGDIR;/prep_exp.log"
     task_prepobs:
       envars:
         OBS_TYPES: "&OBS_TYPES;"
@@ -75,6 +78,7 @@ workflow:
       cores: 1
       walltime: 00:02:00
       queue: batch
+      join: "&LOGDIR;/prep_obs.log"
       dependency:
         taskdep:
           attrs:
@@ -101,6 +105,7 @@ workflow:
       cores: 1
       walltime: 00:02:00
       queue: batch
+      join: "&LOGDIR;/prep_bmat.log"
       dependency:
         taskdep:
           attrs:
@@ -133,6 +138,7 @@ workflow:
       nodes: "1:ppn=&NPROCS_ANA;"
       walltime: 00:15:00
       queue: batch
+      join: "&LOGDIR;/run_ana.log"
       dependency:
         taskdep:
           attrs:
@@ -165,6 +171,7 @@ workflow:
       nodes: "1:ppn=&NPROCS_FCST;"
       walltime: 00:30:00
       queue: batch
+      join: "&LOGDIR;/run_fcst.log"
       dependency:
         taskdep:
           attrs:

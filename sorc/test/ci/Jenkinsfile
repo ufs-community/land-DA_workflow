@@ -60,7 +60,7 @@ pipeline {
           label "hera"
         }
         environment {
-        ACCNR = 'nems'
+        ACCNR = 'epic'
         NODE_PATH = '/scratch2/NAGAPE/epic/role.epic/'
       }
       steps {
@@ -70,7 +70,7 @@ pipeline {
         sh '''
 	git submodule update --init --recursive
         ln -fs /scratch2/NAGAPE/epic/UFS_Land-DA/inputs /scratch2/NAGAPE/epic/role.epic/jenkins/workspace/
-        sh sorc/app_build.sh
+        sh sorc/app_build.sh -c=intel --conda=off --build
         cp sorc/test/hera_ctest.sh sorc/build/
         cp sorc/test/check_ctest.sh sorc/build/
         cp sorc/test/run_hera_ctest.sh sorc/build/
@@ -88,7 +88,7 @@ pipeline {
           label "orion"
         }
         environment {
-        ACCNR = 'nems'
+        ACCNR = 'epic'
         NODE_PATH = '/work/noaa/epic/role-epic/'
       }
       steps {
@@ -98,13 +98,13 @@ pipeline {
         sh '''
 	git submodule update --init --recursive
         ln -fs /work/noaa/epic/UFS_Land-DA/inputs /work/noaa/epic/role-epic/jenkins/workspace/
-        sh sorc/app_build.sh
+        sh sorc/app_build.sh -c=intel --conda=off --build
         cp sorc/test/orion_ctest.sh sorc/build/
         cp sorc/test/check_ctest.sh sorc/build/
         cp sorc/test/run_orion_ctest.sh sorc/build/
-	      cd sorc/test/
-	      sed -i 's|MACHINE_ID=${MACHINE_ID:-hera}|MACHINE_ID=${MACHINE_ID:-orion}|g' run_ufs_datm_lnd.sh
-	      cd ../../
+	cd sorc/test/
+	sed -i 's|MACHINE_ID=${MACHINE_ID:-hera}|MACHINE_ID=${MACHINE_ID:-orion}|g' run_ufs_datm_lnd.sh
+	cd ../../
         cd sorc/build/
         echo $(pwd)
         ctest
