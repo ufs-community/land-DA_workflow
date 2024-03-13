@@ -147,6 +147,9 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     ├── (lib*)
     ├── modulefiles
     ├── parm
+    │     ├── check_release_outputs.sh
+    │     ├── land_analysis_<forcing>_<platform>.yaml
+    │     └── run_without_rocoto.sh
     ├── sorc
     │     ├── (build)
     │     ├── cmake
@@ -171,10 +174,8 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     │     └── app_build.sh
     ├── LICENSE
     ├── README.md
-    ├── check_*
     ├── datm_cdeps_lnd_gswp3_rst
     ├── do_submit_cycle.sh
-    ├── do_submit_test.sh
     ├── fv3_run
     ├── incdate.sh
     ├── land_mods
