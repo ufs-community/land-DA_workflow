@@ -239,7 +239,7 @@ If ``rocotorun`` was successful, the ``rocotostat`` command will print a status 
    200001030000     runana                     -            -             -       -          -
    200001030000    runfcst                     -            -             -       -          -
 
-Users will need to issue the ``rocotorun`` command multiple times. The tasks must run in order, and ``rocotorun`` initiates the next task once its dependencies have completed successfully. Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command. For each task, a ``slurm-########.out`` log file is generated. A task that runs successfully will include a message with ``exit code 0:0`` at the bottom of the file: 
+Users will need to issue the ``rocotorun`` command multiple times. The tasks must run in order, and ``rocotorun`` initiates the next task once its dependencies have completed successfully. Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command. For each task, a log file is generated. These files are stored in ``$LANDDAROOT/com/output/logs/run_<forcing>``, where ``<forcing>`` is either ``gswp3`` or ``era5``. A task that runs successfully will include a message with ``exit code 0:0`` at the bottom of the file: 
 
 .. code-block:: console
 
@@ -249,7 +249,7 @@ Users will need to issue the ``rocotorun`` command multiple times. The tasks mus
    _______________________________________________________________
    End Epilogue Fri Mar  1 22:38:34 UTC 2024
 
-The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, and DEAD. Users may view the ``slurm-########.out`` files to determine why a task may have failed. 
+The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, and DEAD. Users may view the log files to determine why a task may have failed.
 
 .. _run-batch-script:
 
@@ -277,9 +277,12 @@ As the experiment progresses, it will generate a number of directories to hold i
     ├── com
     │     ├── landda (<NET>)
     │     │     └── vX.Y.Z (<model_ver>)
-    │     │     │     └── DA_<forcing> (<OUTDIR>)
-    │     │     │           ├── DA: Directory containing the output files of JEDI run
-    │     │     │           └── mem000: Directory containing the output files
+    │     │           └── DA_<forcing> (<OUTDIR>)
+    │     │                 ├── DA: Directory containing the output files of JEDI run
+    │     │                 │     ├── hofx
+    │     │                 │     ├── jedi_incr  
+    │     │                 │     └── logs
+    │     │                 └── mem000: Directory containing the output files
     │     └──  output
     │           └──  logs
     │                 └── run_<forcing> (<LOGDIR>): Directory containing the log file of the Rocoto workflow
@@ -287,7 +290,7 @@ As the experiment progresses, it will generate a number of directories to hold i
           └── run_<forcing>
                 └── mem000: Working directory
 
-Each variable in angle brackets is the name for the directory defined in the file ``land_analysis.yaml``. In the future, this directory structure will be further modified to meet the :nco:`NCO Implementation Standards<>`. 
+``<forcing>`` refers to the type of forcing data used (``gswp3`` or ``era5``). Each variable in parentheses and angle brackets (e.g., ``(<VAR>)``) is the name for the directory defined in the file ``land_analysis.yaml``. In the future, this directory structure will be further modified to meet the :nco:`NCO Implementation Standards<>`.
 
 .. COMMENT: What is EXP_NAME used for? Why are the slurm log files ending up in parm?
 .. COMMENT: Explain OUTDIR, rundir, and workdir content.
