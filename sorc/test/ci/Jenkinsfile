@@ -98,7 +98,7 @@ pipeline {
         sh '''
 	git submodule update --init --recursive
         ln -fs /work/noaa/epic/UFS_Land-DA/inputs /work/noaa/epic/role-epic/jenkins/workspace/
-        sh sorc/app_build.sh
+        sh sorc/app_build.sh -c=intel --conda=off --build
         cp sorc/test/orion_ctest.sh sorc/build/
         cp sorc/test/check_ctest.sh sorc/build/
         cp sorc/test/run_orion_ctest.sh sorc/build/
