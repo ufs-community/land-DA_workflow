@@ -122,7 +122,6 @@ Users will need to configure certain elements of their experiment in ``land_anal
 
    * ``MACHINE:`` A valid machine name (i.e., ``hera`` or ``orion``)
    * ``ACCOUNT:`` A valid account name. Hera, Orion, and most NOAA RDHPCS systems require a valid account name; other systems may not
-   * ``EXP_NAME:`` An experiment name of the user's choice
    * ``EXP_BASEDIR:`` The full path to the directory where land-DA_workflow was cloned (i.e., ``$LANDDAROOT``)
    * ``JEDI_INSTALL:`` The full path to the system's ``jedi-bundle`` installation
    * ``LANDDA_INPUTS:`` The full path to the experiment data. See :ref:`Data <GetData>` below for information on prestaged data on Level 1 platforms. 
@@ -239,15 +238,7 @@ If ``rocotorun`` was successful, the ``rocotostat`` command will print a status 
    200001030000     runana                     -            -             -       -          -
    200001030000    runfcst                     -            -             -       -          -
 
-Users will need to issue the ``rocotorun`` command multiple times. The tasks must run in order, and ``rocotorun`` initiates the next task once its dependencies have completed successfully. Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command. For each task, a log file is generated. These files are stored in ``$LANDDAROOT/com/output/logs/run_<forcing>``, where ``<forcing>`` is either ``gswp3`` or ``era5``. A task that runs successfully will include a message with ``exit code 0:0`` at the bottom of the file: 
-
-.. code-block:: console
-
-   _______________________________________________________________
-   Start Epilog on node h24c45 for job 56463665 :: Fri Mar  1 22:38:34 UTC 2024
-   Job 56463665 finished for user Gillian.Petro in partition hera with exit code 0:0
-   _______________________________________________________________
-   End Epilogue Fri Mar  1 22:38:34 UTC 2024
+Users will need to issue the ``rocotorun`` command multiple times. The tasks must run in order, and ``rocotorun`` initiates the next task once its dependencies have completed successfully. Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command. For each task, a log file is generated. These files are stored in ``$LANDDAROOT/com/output/logs/run_<forcing>``, where ``<forcing>`` is either ``gswp3`` or ``era5``. 
 
 The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, and DEAD. Users may view the log files to determine why a task may have failed.
 
@@ -267,8 +258,6 @@ Check Experiment Output
 =========================
 
 As the experiment progresses, it will generate a number of directories to hold intermediate and output files. The directory structure for those files and directories appears below:
-
-.. COMMENT: In the future: It will create an experiment directory in ``$LANDDAROOT/landda_expts/EXP_NAME`` to hold experiment output. (Note that ``$EXP_NAME`` was set in ``land_analysis.yaml``.)
 
 .. code-block:: console
 
@@ -292,18 +281,15 @@ As the experiment progresses, it will generate a number of directories to hold i
 
 ``<forcing>`` refers to the type of forcing data used (``gswp3`` or ``era5``). Each variable in parentheses and angle brackets (e.g., ``(<VAR>)``) is the name for the directory defined in the file ``land_analysis.yaml``. In the future, this directory structure will be further modified to meet the :nco:`NCO Implementation Standards<>`.
 
-.. COMMENT: What is EXP_NAME used for? Why are the slurm log files ending up in parm?
-.. COMMENT: Explain OUTDIR, rundir, and workdir content.
-
 Check for the background and analysis files in the experiment directory:
 
 .. code-block:: console
 
-   ls -l $LANDDAROOT/landda_expts/DA_<data_source>_test/mem000/restarts/<vector/tile>``
+   ls -l $LANDDAROOT/com/landda/v1.2.1/run_<forcing>/mem000/restarts/<vector_or_tile>
 
 where: 
 
-   * ``<data_source>`` is either ``era5`` or ``gswp3``, and
-   * ``<vector/tile>`` is either ``vector`` or ``tile`` depending on whether ERA5 or GSWP3 forcing data was used, respectively. 
+   * ``<forcing>`` is either ``era5`` or ``gswp3``, and
+   * ``<vector_or_tile>`` is either ``vector`` or ``tile`` depending on whether ERA5 or GSWP3 forcing data was used, respectively. 
 
-The experiment should generate several files. 
+The experiment should generate several restart files. 
