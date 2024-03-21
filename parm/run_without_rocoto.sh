@@ -28,8 +28,8 @@ fi
 
 export RES="96"
 export FCSTHR="24"
-export NPROCS_ANA="6"
-export NPROCS_FCST="6"
+export NPROCS_ANALYSIS="6"
+export NPROCS_FORECAST="6"
 export OBS_TYPES="GHCN"
 export fv3bundle_vn="psl_develop"
 export DAtype="letkfoi_snow"
@@ -43,14 +43,16 @@ export LOGDIR="${EXP_BASEDIR}/com/output/logs"
 export PATHRT="${EXP_BASEDIR}"
 
 export ATMOS_FORC="${FORCING}"
-export NPROC_JEDI="${NPROCS_ANA}"
+export NPROC_JEDI="${NPROCS_ANALYSIS}"
 
 if [ "${FORCING}" = "era5" ]; then
-  export CTIME="2019122100"
+  export PDY="20191221"
+  export cyc="00"
   export PTIME="2019122000"
   export NTIME="2019122200"
 elif [ "${FORCING}" = "gswp3" ]; then
-  export CTIME="2000010300"
+  export PDY="20000103"
+  export cyc="00"
   export PTIME="2000010200"
   export NTIME="2000010400"
 fi
@@ -87,23 +89,23 @@ else
   exit 3
 fi
 
-echo " ... RUN_ANA running ... "
-${CYCLEDIR}/jobs/JLANDDA_RUN_ANA
+echo " ... ANALYSIS running ... "
+${CYCLEDIR}/jobs/JLANDDA_ANALYSIS
 export err=$?
 if [ $err = 0 ]; then
-  echo " === RUN_ANA completed successfully === "
+  echo " === Task ANALYSIS completed successfully === "
 else
-  echo " ERROR: RUN_ANA failed !!! "
+  echo " ERROR: ANALYSIS failed !!! "
   exit 4
 fi
 
-echo " ... RUN_FCST running ... "
-${CYCLEDIR}/jobs/JLANDDA_RUN_FCST
+echo " ... FORECAST running ... "
+${CYCLEDIR}/jobs/JLANDDA_FORECAST
 export err=$?
 if [ $err = 0 ]; then
-  echo " === RUN_FCST completed successfully === "
+  echo " === Task FORECAST completed successfully === "
 else
-  echo " ERROR: RUN_FCST failed !!! "
+  echo " ERROR: FORECAST failed !!! "
   exit 5
 fi
 

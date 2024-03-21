@@ -8,6 +8,7 @@ workflow:
       spec: 201912210000 201912210000 24:00:00
   entities:
     MACHINE: "orion"
+    SCHED: "slurm"
     ACCOUNT: "epic"
     EXP_NAME: "LETKF"
     NET: "landda"
@@ -18,8 +19,8 @@ workflow:
     FORCING: "era5"
     RES: "96"
     FCSTHR: "24"
-    NPROCS_ANA: "6"
-    NPROCS_FCST: "6"
+    NPROCS_ANALYSIS: "6"
+    NPROCS_FORECAST: "6"
     OBS_TYPES: "GHCN"
     fv3bundle_vn: "psl_develop"
     DAtype: "letkfoi_snow"
@@ -31,7 +32,8 @@ workflow:
     OUTDIR: "&EXP_BASEDIR;/com/&NET;/&model_ver;/run_&FORCING;"
     LOGDIR: "&EXP_BASEDIR;/com/output/logs/run_&FORCING;"
     PATHRT: "&EXP_BASEDIR;"
-    CTIME:  "<cyclestr>@Y@m@d@H</cyclestr>"
+    PDY:  "<cyclestr>@Y@m@d</cyclestr>"
+    cyc: "<cyclestr>@H</cyclestr>"
     PTIME:  "<cyclestr offset='-1:00:00'>@Y@m@d@H</cyclestr>"
     NTIME:  "<cyclestr offset='01:00:00'>@Y@m@d@H</cyclestr>"
   log: "&LOGDIR;/workflow.log"
@@ -39,6 +41,7 @@ workflow:
     task_prepexp:
       envars:
         MACHINE: "&MACHINE;"
+        SCHED: "&SCHED;"
         ACCOUNT: "&ACCOUNT;"
         EXP_NAME: "&EXP_NAME;"
         LANDDA_INPUTS: "&LANDDA_INPUTS;"
@@ -49,7 +52,8 @@ workflow:
         CYCLEDIR: "&CYCLEDIR;"
         EXECdir: "&EXECdir;"
         OUTDIR: "&OUTDIR;"
-        CTIME: "&CTIME;"
+        PDY: "&PDY;"
+        cyc: "&cyc;"
         PTIME: "&PTIME;"
       account: "&ACCOUNT;"
       command: "&CYCLEDIR;/jobs/JLANDDA_PREP_EXP"
@@ -62,6 +66,7 @@ workflow:
       envars:
         OBS_TYPES: "&OBS_TYPES;"
         MACHINE: "&MACHINE;"
+        SCHED: "&SCHED;"
         ACCOUNT: "&ACCOUNT;"
         EXP_NAME: "&EXP_NAME;"
         LANDDA_INPUTS: "&LANDDA_INPUTS;"
@@ -70,7 +75,8 @@ workflow:
         CYCLEDIR: "&CYCLEDIR;"
         EXECdir: "&EXECdir;"
         OUTDIR: "&OUTDIR;"
-        CTIME: "&CTIME;"
+        PDY: "&PDY;"
+        cyc: "&cyc;"
         PTIME: "&PTIME;"
       account: "&ACCOUNT;"
       command: "&CYCLEDIR;/jobs/JLANDDA_PREP_OBS"
@@ -86,6 +92,7 @@ workflow:
     task_prepbmat:
       envars:
         MACHINE: "&MACHINE;"
+        SCHED: "&SCHED;"
         ACCOUNT: "&ACCOUNT;"
         EXP_NAME: "&EXP_NAME;"
         LANDDA_INPUTS: "&LANDDA_INPUTS;"
@@ -94,7 +101,8 @@ workflow:
         CYCLEDIR: "&CYCLEDIR;"
         EXECdir: "&EXECdir;"
         OUTDIR: "&OUTDIR;"
-        CTIME: "&CTIME;"
+        PDY: "&PDY;"
+        cyc: "&cyc;"
         PTIME: "&PTIME;"
         fv3bundle_vn: "&fv3bundle_vn;"
         DAtype: "&DAtype;"
@@ -110,10 +118,11 @@ workflow:
         taskdep:
           attrs:
             task: prepobs
-    task_runana:
+    task_analysis:
       envars:
         OBS_TYPES: "&OBS_TYPES;"
         MACHINE: "&MACHINE;"
+        SCHED: "&SCHED;"
         ACCOUNT: "&ACCOUNT;"
         EXP_NAME: "&EXP_NAME;"
         LANDDA_INPUTS: "&LANDDA_INPUTS;"
@@ -124,29 +133,31 @@ workflow:
         CYCLEDIR: "&CYCLEDIR;"
         EXECdir: "&EXECdir;"
         OUTDIR: "&OUTDIR;"
-        CTIME: "&CTIME;"
+        PDY: "&PDY;"
+        cyc: "&cyc;"
         PTIME: "&PTIME;"
         NTIME: "&NTIME;"
         fv3bundle_vn: "&fv3bundle_vn;"
         DAtype: "&DAtype;"
         SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
-        NPROC_JEDI: "&NPROCS_ANA;"
+        NPROC_JEDI: "&NPROCS_ANALYSIS;"
         JEDI_INSTALL: "&JEDI_INSTALL;"
       account: "&ACCOUNT;"
-      command: "&CYCLEDIR;/jobs/JLANDDA_RUN_ANA"
-      jobname: runana
-      nodes: "1:ppn=&NPROCS_ANA;"
+      command: "&CYCLEDIR;/jobs/JLANDDA_ANALYSIS"
+      jobname: analysis
+      nodes: "1:ppn=&NPROCS_ANALYSIS;"
       walltime: 00:15:00
       queue: batch
-      join: "&LOGDIR;/run_ana.log"
+      join: "&LOGDIR;/analysis.log"
       dependency:
         taskdep:
           attrs:
             task: prepbmat
-    task_runfcst:
+    task_forecast:
       envars:
         OBS_TYPES: "&OBS_TYPES;"
         MACHINE: "&MACHINE;"
+        SCHED: "&SCHED;"
         ACCOUNT: "&ACCOUNT;"
         EXP_NAME: "&EXP_NAME;"
         LANDDA_INPUTS: "&LANDDA_INPUTS;"
@@ -157,7 +168,8 @@ workflow:
         CYCLEDIR: "&CYCLEDIR;"
         EXECdir: "&EXECdir;"
         OUTDIR: "&OUTDIR;"
-        CTIME: "&CTIME;"
+        PDY: "&PDY;"
+        cyc: "&cyc;"
         PTIME: "&PTIME;"
         NTIME: "&NTIME;"
         fv3bundle_vn: "&fv3bundle_vn;"
@@ -166,13 +178,13 @@ workflow:
         JEDI_INSTALL: "&JEDI_INSTALL;"
         FCSTHR: "&FCSTHR;"
       account: "&ACCOUNT;"
-      command: "&CYCLEDIR;/jobs/JLANDDA_RUN_FCST"
-      jobname: runfcst
-      nodes: "1:ppn=&NPROCS_FCST;"
+      command: "&CYCLEDIR;/jobs/JLANDDA_FORECAST"
+      jobname: forecast
+      nodes: "1:ppn=&NPROCS_FORECAST;"
       walltime: 00:30:00
       queue: batch
-      join: "&LOGDIR;/run_fcst.log"
+      join: "&LOGDIR;/forecast.log"
       dependency:
         taskdep:
           attrs:
-            task: runana
+            task: analysis
