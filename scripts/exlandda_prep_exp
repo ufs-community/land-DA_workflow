@@ -10,7 +10,7 @@ if [[ ${EXP_NAME} == "openloop" ]]; then
 else
     do_jedi="YES"
     SAVE_TILE="YES"
-    LANDDADIR=${CYCLEDIR}/sorc/DA_update
+    LANDDADIR=${HOMElandda}/sorc/DA_update
 fi
 
 echo ${LANDDA_INPUTS}, ${ATMOS_FORC}
@@ -38,11 +38,11 @@ if [[ ! -e ${MEM_MODL_OUTDIR} ]]; then
     mkdir -p ${MEM_MODL_OUTDIR}
 fi
 
-mkdir -p $MEM_WORKDIR/modulefiles; cp ${CYCLEDIR}/modulefiles/build_${MACHINE}_intel.lua $MEM_WORKDIR/modulefiles/modules.landda.lua
+mkdir -p $MEM_WORKDIR/modulefiles; cp ${HOMElandda}/modulefiles/build_${MACHINE}_intel.lua $MEM_WORKDIR/modulefiles/modules.landda.lua
 cd $MEM_WORKDIR
 
 # load modulefiles
-BUILD_VERSION_FILE="${CYCLEDIR}/versions/build.ver_${MACHINE}"
+BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
 if [ -e ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi
@@ -65,7 +65,7 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "era5" ]]; then
     export MEM_WORKDIR
 
     # update vec2tile and tile2vec namelists
-    cp  ${CYCLEDIR}/parm/templates/template.vector2tile vector2tile.namelist
+    cp  ${HOMElandda}/parm/templates/template.vector2tile vector2tile.namelist
 
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" vector2tile.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
@@ -82,7 +82,7 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "era5" ]]; then
     echo '************************************************'
     echo 'calling vector2tile' 
 
-    ${EXECdir}/vector2tile_converter.exe vector2tile.namelist
+    ${EXEClandda}/vector2tile_converter.exe vector2tile.namelist
     if [[ $? != 0 ]]; then
         echo "vec2tile failed"
         exit
@@ -108,7 +108,7 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "gswp3" ]]; then
 	    done
 
     # update tile2tile namelist
-    cp  ${CYCLEDIR}/parm/templates/template.ufs2jedi ufs2jedi.namelist
+    cp  ${HOMElandda}/parm/templates/template.ufs2jedi ufs2jedi.namelist
 
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs2jedi.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs2jedi.namelist
@@ -122,7 +122,7 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "gswp3" ]]; then
     sed -i -e "s#XXTPATH#${TPATH}#g" ufs2jedi.namelist
 
     # submit tile2tile    
-    ${EXECdir}/tile2tile_converter.exe ufs2jedi.namelist
+    ${EXEClandda}/tile2tile_converter.exe ufs2jedi.namelist
     if [[ $? != 0 ]]; then
         echo "tile2tile failed"
         exit 

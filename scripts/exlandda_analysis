@@ -10,7 +10,7 @@ if [[ ${EXP_NAME} == "openloop" ]]; then
 else
     do_jedi="YES"
     SAVE_TILE="YES"
-    LANDDADIR=${CYCLEDIR}/sorc/DA_update
+    LANDDADIR=${HOMElandda}/sorc/DA_update
 fi
 
 TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
@@ -34,14 +34,14 @@ JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
 JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
 JEDI_EXEC=$JEDI_EXECDIR/fv3jedi_letkf.x
 LOGDIR=${OUTDIR}/DA/logs
-apply_incr_EXEC=${EXECdir}/apply_incr.exe
+apply_incr_EXEC=${EXEClandda}/apply_incr.exe
 SAVE_INCR="YES"
 KEEPJEDIDIR="YES"
 
 cd $MEM_WORKDIR
 
 # load modulefiles
-BUILD_VERSION_FILE="${CYCLEDIR}/versions/build.ver_${MACHINE}"
+BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
 if [ -e ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi

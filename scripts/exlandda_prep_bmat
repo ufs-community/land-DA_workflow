@@ -10,7 +10,7 @@ if [[ ${EXP_NAME} == "openloop" ]]; then
 else
     do_jedi="YES"
     SAVE_TILE="YES"
-    LANDDADIR=${CYCLEDIR}/sorc/DA_update
+    LANDDADIR=${HOMElandda}/sorc/DA_update
 fi
 
 TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
@@ -30,7 +30,7 @@ FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 cd $MEM_WORKDIR
 
 # load modulefiles
-BUILD_VERSION_FILE="${CYCLEDIR}/versions/build.ver_${MACHINE}"
+BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
 if [ -e ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi

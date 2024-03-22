@@ -36,8 +36,8 @@ export DAtype="letkfoi_snow"
 export SNOWDEPTHVAR="snwdph"
 export TSTUB="oro_C96.mx100"
 export WORKDIR="${EXP_BASEDIR}/workdir/run_&FORCING;"
-export CYCLEDIR="${EXP_BASEDIR}/land-DA_workflow"
-export EXECdir="${CYCLEDIR}/exec"
+export HOMElandda="${EXP_BASEDIR}/land-DA_workflow"
+export EXECdir="${HOMElandda}/exec"
 export OUTDIR="${EXP_BASEDIR}/com/${NET}/${model_ver}/run_${FORCING}"
 export LOGDIR="${EXP_BASEDIR}/com/output/logs"
 export PATHRT="${EXP_BASEDIR}"
@@ -60,7 +60,7 @@ fi
 # Call J-job scripts
 #
 echo " ... PREP_EXP running ... "
-${CYCLEDIR}/jobs/JLANDDA_PREP_EXP
+${HOMElandda}/jobs/JLANDDA_PREP_EXP
 export err=$?
 if [ $err = 0 ]; then
   echo " === PREP_EXP completed successfully === "
@@ -70,7 +70,7 @@ else
 fi
 
 echo " ... PREP_OBS running ... "
-${CYCLEDIR}/jobs/JLANDDA_PREP_OBS
+${HOMElandda}/jobs/JLANDDA_PREP_OBS
 export err=$?
 if [ $err = 0 ]; then
   echo " === PREP_OBS completed successfully === "
@@ -80,7 +80,7 @@ else
 fi
 
 echo " ... PREP_BMAT running ... "
-${CYCLEDIR}/jobs/JLANDDA_PREP_BMAT
+${HOMElandda}/jobs/JLANDDA_PREP_BMAT
 export err=$?
 if [ $err = 0 ]; then
   echo " === PREP_BMAT completed successfully === "
@@ -90,7 +90,7 @@ else
 fi
 
 echo " ... ANALYSIS running ... "
-${CYCLEDIR}/jobs/JLANDDA_ANALYSIS
+${HOMElandda}/jobs/JLANDDA_ANALYSIS
 export err=$?
 if [ $err = 0 ]; then
   echo " === Task ANALYSIS completed successfully === "
@@ -100,7 +100,7 @@ else
 fi
 
 echo " ... FORECAST running ... "
-${CYCLEDIR}/jobs/JLANDDA_FORECAST
+${HOMElandda}/jobs/JLANDDA_FORECAST
 export err=$?
 if [ $err = 0 ]; then
   echo " === Task FORECAST completed successfully === "

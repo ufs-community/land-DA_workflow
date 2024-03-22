@@ -27,8 +27,8 @@ workflow:
     SNOWDEPTHVAR: "snwdph"
     TSTUB: "oro_C96.mx100"
     WORKDIR: "&EXP_BASEDIR;/workdir/run_&FORCING;"
-    CYCLEDIR: "&EXP_BASEDIR;/land-DA_workflow"
-    EXECdir: "&CYCLEDIR;/exec"
+    HOMElandda: "&EXP_BASEDIR;/land-DA_workflow"
+    EXECdir: "&HOMElandda;/exec"
     OUTDIR: "&EXP_BASEDIR;/com/&NET;/&model_ver;/run_&FORCING;"
     LOGDIR: "&EXP_BASEDIR;/com/output/logs/run_&FORCING;"
     PATHRT: "&EXP_BASEDIR;"
@@ -49,14 +49,14 @@ workflow:
         RES: "&RES;"
         TSTUB: "&TSTUB;"
         WORKDIR: "&WORKDIR;"
-        CYCLEDIR: "&CYCLEDIR;"
+        HOMElandda: "&HOMElandda;"
         EXECdir: "&EXECdir;"
         OUTDIR: "&OUTDIR;"
         PDY: "&PDY;"
         cyc: "&cyc;"
         PTIME: "&PTIME;"
       account: "&ACCOUNT;"
-      command: "&CYCLEDIR;/jobs/JLANDDA_PREP_EXP"
+      command: "&HOMElandda;/jobs/JLANDDA_PREP_EXP"
       jobname: prepexp
       cores: 1
       walltime: 00:02:00
@@ -72,14 +72,14 @@ workflow:
         LANDDA_INPUTS: "&LANDDA_INPUTS;"
         ATMOS_FORC: "&FORCING;"
         WORKDIR: "&WORKDIR;"
-        CYCLEDIR: "&CYCLEDIR;"
+        HOMElandda: "&HOMElandda;"
         EXECdir: "&EXECdir;"
         OUTDIR: "&OUTDIR;"
         PDY: "&PDY;"
         cyc: "&cyc;"
         PTIME: "&PTIME;"
       account: "&ACCOUNT;"
-      command: "&CYCLEDIR;/jobs/JLANDDA_PREP_OBS"
+      command: "&HOMElandda;/jobs/JLANDDA_PREP_OBS"
       jobname: prepobs
       cores: 1
       walltime: 00:02:00
@@ -98,7 +98,7 @@ workflow:
         LANDDA_INPUTS: "&LANDDA_INPUTS;"
         ATMOS_FORC: "&FORCING;"
         WORKDIR: "&WORKDIR;"
-        CYCLEDIR: "&CYCLEDIR;"
+        HOMElandda: "&HOMElandda;"
         EXECdir: "&EXECdir;"
         OUTDIR: "&OUTDIR;"
         PDY: "&PDY;"
@@ -108,7 +108,7 @@ workflow:
         DAtype: "&DAtype;"
         SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
       account: "&ACCOUNT;"
-      command: "&CYCLEDIR;/jobs/JLANDDA_PREP_BMAT"
+      command: "&HOMElandda;/jobs/JLANDDA_PREP_BMAT"
       jobname: prepbmat
       cores: 1
       walltime: 00:02:00
@@ -130,7 +130,7 @@ workflow:
         RES: "&RES;"
         TSTUB: "&TSTUB;"
         WORKDIR: "&WORKDIR;"
-        CYCLEDIR: "&CYCLEDIR;"
+        HOMElandda: "&HOMElandda;"
         EXECdir: "&EXECdir;"
         OUTDIR: "&OUTDIR;"
         PDY: "&PDY;"
@@ -143,7 +143,7 @@ workflow:
         NPROC_JEDI: "&NPROCS_ANALYSIS;"
         JEDI_INSTALL: "&JEDI_INSTALL;"
       account: "&ACCOUNT;"
-      command: "&CYCLEDIR;/jobs/JLANDDA_ANALYSIS"
+      command: "&HOMElandda;/jobs/JLANDDA_ANALYSIS"
       jobname: analysis
       nodes: "1:ppn=&NPROCS_ANALYSIS;"
       walltime: 00:15:00
@@ -165,7 +165,7 @@ workflow:
         RES: "&RES;"
         TSTUB: "&TSTUB;"
         WORKDIR: "&WORKDIR;"
-        CYCLEDIR: "&CYCLEDIR;"
+        HOMElandda: "&HOMElandda;"
         EXECdir: "&EXECdir;"
         OUTDIR: "&OUTDIR;"
         PDY: "&PDY;"
@@ -178,7 +178,7 @@ workflow:
         JEDI_INSTALL: "&JEDI_INSTALL;"
         FCSTHR: "&FCSTHR;"
       account: "&ACCOUNT;"
-      command: "&CYCLEDIR;/jobs/JLANDDA_FORECAST"
+      command: "&HOMElandda;/jobs/JLANDDA_FORECAST"
       jobname: forecast
       nodes: "1:ppn=&NPROCS_FORECAST;"
       walltime: 00:45:00
