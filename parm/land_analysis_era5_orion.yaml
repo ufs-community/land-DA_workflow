@@ -42,7 +42,7 @@ workflow:
     NTIME:  "<cyclestr offset='01:00:00'>@Y@m@d@H</cyclestr>"
   log: "&LOGDIR;/workflow.log"
   tasks:
-    task_prepexp:
+    task_prep_exp:
       envars:
         MACHINE: "&MACHINE;"
         SCHED: "&SCHED;"
@@ -63,13 +63,13 @@ workflow:
         SLASH_ENSMEM_SUBDIR: "&SLASH_ENSMEM_SUBDIR;"
         PTIME: "&PTIME;"
       account: "&ACCOUNT;"
-      command: "&HOMElandda;/jobs/JLANDDA_PREP_EXP"
-      jobname: prepexp
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_exp" "&HOMElandda;" "&MACHINE;" "JLANDDA_PREP_EXP"'
+      jobname: prep_exp
       cores: 1
       walltime: 00:02:00
       queue: batch
       join: "&LOGDIR;/prep_exp.log"
-    task_prepobs:
+    task_prep_obs:
       envars:
         OBS_TYPES: "&OBS_TYPES;"
         MACHINE: "&MACHINE;"
@@ -90,7 +90,7 @@ workflow:
         PTIME: "&PTIME;"
       account: "&ACCOUNT;"
       command: "&HOMElandda;/jobs/JLANDDA_PREP_OBS"
-      jobname: prepobs
+      jobname: prep_obs
       cores: 1
       walltime: 00:02:00
       queue: batch
@@ -98,8 +98,8 @@ workflow:
       dependency:
         taskdep:
           attrs:
-            task: prepexp
-    task_prepbmat:
+            task: prep_exp
+    task_prep_bmat:
       envars:
         MACHINE: "&MACHINE;"
         SCHED: "&SCHED;"
@@ -130,7 +130,7 @@ workflow:
       dependency:
         taskdep:
           attrs:
-            task: prepobs
+            task: prep_obs
     task_analysis:
       envars:
         OBS_TYPES: "&OBS_TYPES;"
@@ -168,7 +168,7 @@ workflow:
       dependency:
         taskdep:
           attrs:
-            task: prepbmat
+            task: prep_bmat
     task_forecast:
       envars:
         OBS_TYPES: "&OBS_TYPES;"
