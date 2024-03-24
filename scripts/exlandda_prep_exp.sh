@@ -26,7 +26,7 @@ HP=${PTIME:8:2}
 mem_ens="mem000" 
 
 MEM_WORKDIR=${WORKDIR}/${mem_ens}
-MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
+MEM_MODL_OUTDIR=${COMOUT}/${mem_ens}
 RSTRDIR=${MEM_WORKDIR}
 JEDIWORKDIR=${WORKDIR}/mem000/jedi
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
@@ -130,10 +130,10 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "gswp3" ]]; then
 fi # tile2tile for DA
 
 if [[ $do_jedi == "YES" ]]; then
-    if [[ ! -e ${OUTDIR}/DA ]]; then
-	mkdir -p ${OUTDIR}/DA/jedi_incr
-	mkdir -p ${OUTDIR}/DA/logs
-	mkdir -p ${OUTDIR}/DA/hofx        
+    if [[ ! -e ${COMOUT}/DA ]]; then
+	mkdir -p ${COMOUT}/DA/jedi_incr
+	mkdir -p ${COMOUT}/DA/logs
+	mkdir -p ${COMOUT}/DA/hofx        
     fi    
     if [[ ! -e $JEDIWORKDIR ]]; then
 	mkdir -p $JEDIWORKDIR
@@ -141,7 +141,7 @@ if [[ $do_jedi == "YES" ]]; then
     cd $JEDIWORKDIR
 
     if [[ ! -e ${JEDIWORKDIR}/output ]]; then
-	ln -s ${OUTDIR} ${JEDIWORKDIR}/output
+	ln -s ${COMOUT} ${JEDIWORKDIR}/output
     fi
     
     if  [[ $SAVE_TILE == "YES" ]]; then

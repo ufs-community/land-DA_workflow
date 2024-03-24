@@ -2,7 +2,7 @@
 
 set -xue
 
-if [ "$#" -ne 4 ]; then
+if [ "$#" -ne 3 ]; then
   echo "Incorrect number of arguments specified:
   Number of arguments specified:  $#
 
@@ -16,18 +16,15 @@ where the arguments are defined as follows:
   Full path to the pachage home directory.
 
   machine_name:
-  Machine name in lowercase: e.g. hera/orion
-
-  jjob_fn:
-  File name of the J-job script for the task."
+  Machine name in lowercase: e.g. hera/orion"
 fi
 
 task_name="$1"
 home_dir="$2"
 machine_name="$3"
-jjob_fn="$4"
 
 machine="${machine_name,,}"
+task_name_upper="${task_name^^}"
 
 module purge
 
@@ -51,4 +48,4 @@ else
 fi
 
 # Run J-job script
-${home_dir}/jobs/${jjob_fn}
+${home_dir}/jobs/JLANDDA_${task_name_upper}

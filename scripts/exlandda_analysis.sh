@@ -26,14 +26,14 @@ HP=${PTIME:8:2}
 mem_ens="mem000"
 
 MEM_WORKDIR=${WORKDIR}/${mem_ens}
-MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
+MEM_MODL_OUTDIR=${COMOUT}/${mem_ens}
 RSTRDIR=${MEM_WORKDIR}
 JEDIWORKDIR=${WORKDIR}/mem000/jedi
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
 JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
 JEDI_EXEC=$JEDI_EXECDIR/fv3jedi_letkf.x
-LOGDIR=${OUTDIR}/DA/logs
+LOGDIR=${COMOUT}/DA/logs
 apply_incr_EXEC=${EXEClandda}/apply_incr.exe
 SAVE_INCR="YES"
 KEEPJEDIDIR="YES"
@@ -206,7 +206,7 @@ fi
 
 # keep increments
 if [ $SAVE_INCR == "YES" ] && [ $do_DA == "YES" ]; then
-   cp ${JEDIWORKDIR}/${FILEDATE}.xainc.sfc_data.tile*.nc  ${OUTDIR}/DA/jedi_incr/
+   cp ${JEDIWORKDIR}/${FILEDATE}.xainc.sfc_data.tile*.nc  ${COMOUT}/DA/jedi_incr/
 fi 
 
 # clean up 

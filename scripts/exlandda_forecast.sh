@@ -30,14 +30,14 @@ nHH=${NTIME:8:2}
 mem_ens="mem000"
 
 MEM_WORKDIR=${WORKDIR}/${mem_ens}
-MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
+MEM_MODL_OUTDIR=${COMOUT}/${mem_ens}
 RSTRDIR=${MEM_WORKDIR}
 JEDIWORKDIR=${WORKDIR}/mem000/jedi
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
 JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
 JEDI_EXEC=$JEDI_EXECDIR/fv3jedi_letkf.x
-LOGDIR=${OUTDIR}/DA/logs
+LOGDIR=${COMOUT}/DA/logs
 apply_incr_EXEC=${EXEClandda}/apply_incr.exe
 SAVE_INCR="YES"
 KEEPJEDIDIR="YES"
@@ -247,11 +247,6 @@ fi
 ############################
 # check model ouput (all members)
 
-#mem_ens="mem000"
-
-#MEM_WORKDIR=${WORKDIR}/${mem_ens}
-#MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
-
 if [[ ${ATMOS_FORC} == "era5" ]]; then
     if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then
 	cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
@@ -261,6 +256,6 @@ fi
 if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   for tile in 1 2 3 4 5 6
   do
-    cp ${OUTDIR}/${mem_ens}/noahmp/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
+    cp ${COMOUT}/${mem_ens}/noahmp/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
   done
 fi
