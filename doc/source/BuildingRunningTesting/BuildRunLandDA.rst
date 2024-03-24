@@ -262,18 +262,20 @@ As the experiment progresses, it will generate a number of directories to hold i
 
    $LANDDAROOT: Base directory
     ├── land-DA_workflow(<CYCLEDIR>): Home directory of the land DA workflow
-    ├── ptmp
-    │     └── com
-    │           ├── landda (<NET>)
-    │           │     └── vX.Y.Z (<model_ver>)
-    │           │           └── DA_<forcing> (<OUTDIR>)
-    │           │                 ├── DA: Directory containing the output files of JEDI run
-    │           │                 │     ├── hofx
-    │           │                 │     └── jedi_incr
-    │           │                 └── mem000: Directory containing the output files
-    │           └──  output
-    │                 └──  logs
-    │                       └── run_<forcing> (<LOGDIR>): Directory containing the log file of the Rocoto workflow
+    ├── ptmp (<PTMP>)
+    │     └── test (<envir>)
+    │           └── com
+    │                 ├── landda (<NET>)
+    │                 │     └── vX.Y.Z (<model_ver>)
+    │                 │           └── landda.YYYYMMDD (<RUN>.<PDY>)
+    │                 │                 └── HH (<cyc>)
+    │                 │                       ├── DA: Directory containing the output files of JEDI run
+    │                 │                       │     ├── hofx
+    │                 │                       │     └── jedi_incr
+    │                 │                       └── mem000: Directory containing the output files
+    │                 └──  output
+    │                       └──  logs
+    │                             └── run_<forcing> (<LOGDIR>): Directory containing the log file of the Rocoto workflow
     └── workdir(<WORKDIR>)
           └── run_<forcing>
                 └── mem000: Working directory
