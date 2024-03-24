@@ -273,8 +273,8 @@ As the experiment progresses, it will generate a number of directories to hold i
     │                 │                       │     ├── hofx
     │                 │                       │     └── jedi_incr
     │                 │                       └── mem000: Directory containing the output files
-    │                 └──  output
-    │                       └──  logs
+    │                 └── output
+    │                       └── logs
     │                             └── run_<forcing> (<LOGDIR>): Directory containing the log file of the Rocoto workflow
     └── workdir(<WORKDIR>)
           └── run_<forcing>
