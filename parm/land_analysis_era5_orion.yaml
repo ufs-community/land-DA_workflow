@@ -38,8 +38,8 @@ workflow:
     PDY:  "<cyclestr>@Y@m@d</cyclestr>"
     cyc: "<cyclestr>@H</cyclestr>"
     SLASH_ENSMEM_SUBDIR: ""
-    PTIME:  "<cyclestr offset='-1:00:00'>@Y@m@d@H</cyclestr>"
-    NTIME:  "<cyclestr offset='01:00:00'>@Y@m@d@H</cyclestr>"
+    PTIME:  "<cyclestr offset='-24:00:00'>@Y@m@d@H</cyclestr>"
+    NTIME:  "<cyclestr offset='24:00:00'>@Y@m@d@H</cyclestr>"
   log: "&LOGDIR;/workflow.log"
   tasks:
     task_prep_exp:

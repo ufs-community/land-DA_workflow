@@ -11,8 +11,6 @@ workflow:
     SCHED: "slurm"
     ACCOUNT: "nems"
     EXP_NAME: "LETKF"
-    NET: "landda"
-    model_ver: "v1.2.1"
     EXP_BASEDIR: "/scratch2/NAGAPE/epic/{USER}/landda_test"
     JEDI_INSTALL: "/scratch2/NAGAPE/epic/UFS_Land-DA/jedi"
     LANDDA_INPUTS: "/scratch2/NAGAPE/epic/UFS_Land-DA/inputs"
@@ -26,19 +24,25 @@ workflow:
     DAtype: "letkfoi_snow"
     SNOWDEPTHVAR: "snwdph"
     TSTUB: "oro_C96.mx100"
-    WORKDIR: "&EXP_BASEDIR;/workdir/run_&FORCING;"
+    NET: "landda"
+    envir: "test"
+    model_ver: "v1.2.1"
     HOMElandda: "&EXP_BASEDIR;/land-DA_workflow"
-    EXECdir: "&HOMElandda;/exec"
-    OUTDIR: "&EXP_BASEDIR;/com/&NET;/&model_ver;/run_&FORCING;"
-    LOGDIR: "&EXP_BASEDIR;/com/output/logs/run_&FORCING;"
+    PTMP: "&EXP_BASEDIR;/ptmp"
+    COMROOT: "&PTMP;/&envir;/com"
+    DATAROOT: "&PTMP;/&envir;/tmp"
+    KEEPDATA: "YES"
+    WORKDIR: "&EXP_BASEDIR;/workdir/run_&FORCING;"
+    LOGDIR: "&COMROOT;/output/logs/run_&FORCING;"
     PATHRT: "&EXP_BASEDIR;"
     PDY:  "<cyclestr>@Y@m@d</cyclestr>"
     cyc: "<cyclestr>@H</cyclestr>"
-    PTIME:  "<cyclestr offset='-1:00:00'>@Y@m@d@H</cyclestr>"
-    NTIME:  "<cyclestr offset='01:00:00'>@Y@m@d@H</cyclestr>"
+    SLASH_ENSMEM_SUBDIR: ""
+    PTIME:  "<cyclestr offset='-24:00:00'>@Y@m@d@H</cyclestr>"
+    NTIME:  "<cyclestr offset='24:00:00'>@Y@m@d@H</cyclestr>"
   log: "&LOGDIR;/workflow.log"
   tasks:
-    task_prepexp:
+    task_prep_exp:
       envars:
         MACHINE: "&MACHINE;"
         SCHED: "&SCHED;"
@@ -49,20 +53,23 @@ workflow:
         RES: "&RES;"
         TSTUB: "&TSTUB;"
         WORKDIR: "&WORKDIR;"
+        model_ver: "&model_ver;"
         HOMElandda: "&HOMElandda;"
-        EXECdir: "&EXECdir;"
-        OUTDIR: "&OUTDIR;"
+        COMROOT: "&COMROOT;"
+        DATAROOT: "&DATAROOT;"
+        KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
+        SLASH_ENSMEM_SUBDIR: "&SLASH_ENSMEM_SUBDIR;"
         PTIME: "&PTIME;"
       account: "&ACCOUNT;"
-      command: "&HOMElandda;/jobs/JLANDDA_PREP_EXP"
-      jobname: prepexp
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_exp" "&HOMElandda;" "&MACHINE;"'
+      jobname: prep_exp
       cores: 1
       walltime: 00:02:00
       queue: batch
       join: "&LOGDIR;/prep_exp.log"
-    task_prepobs:
+    task_prep_obs:
       envars:
         OBS_TYPES: "&OBS_TYPES;"
         MACHINE: "&MACHINE;"
@@ -72,15 +79,18 @@ workflow:
         LANDDA_INPUTS: "&LANDDA_INPUTS;"
         ATMOS_FORC: "&FORCING;"
         WORKDIR: "&WORKDIR;"
+        model_ver: "&model_ver;"
         HOMElandda: "&HOMElandda;"
-        EXECdir: "&EXECdir;"
-        OUTDIR: "&OUTDIR;"
+        COMROOT: "&COMROOT;"
+        DATAROOT: "&DATAROOT;"
+        KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
+        SLASH_ENSMEM_SUBDIR: "&SLASH_ENSMEM_SUBDIR;"
         PTIME: "&PTIME;"
       account: "&ACCOUNT;"
-      command: "&HOMElandda;/jobs/JLANDDA_PREP_OBS"
-      jobname: prepobs
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_obs" "&HOMElandda;" "&MACHINE;"'
+      jobname: prep_obs
       cores: 1
       walltime: 00:02:00
       queue: batch
@@ -88,8 +98,8 @@ workflow:
       dependency:
         taskdep:
           attrs:
-            task: prepexp
-    task_prepbmat:
+            task: prep_exp
+    task_prep_bmat:
       envars:
         MACHINE: "&MACHINE;"
         SCHED: "&SCHED;"
@@ -98,18 +108,21 @@ workflow:
         LANDDA_INPUTS: "&LANDDA_INPUTS;"
         ATMOS_FORC: "&FORCING;"
         WORKDIR: "&WORKDIR;"
+        model_ver: "&model_ver;"
         HOMElandda: "&HOMElandda;"
-        EXECdir: "&EXECdir;"
-        OUTDIR: "&OUTDIR;"
+        COMROOT: "&COMROOT;"
+        DATAROOT: "&DATAROOT;"
+        KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
+        SLASH_ENSMEM_SUBDIR: "&SLASH_ENSMEM_SUBDIR;"
         PTIME: "&PTIME;"
         fv3bundle_vn: "&fv3bundle_vn;"
         DAtype: "&DAtype;"
         SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
       account: "&ACCOUNT;"
-      command: "&HOMElandda;/jobs/JLANDDA_PREP_BMAT"
-      jobname: prepbmat
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_bmat" "&HOMElandda;" "&MACHINE;"'
+      jobname: prep_bmat
       cores: 1
       walltime: 00:02:00
       queue: batch
@@ -117,7 +130,7 @@ workflow:
       dependency:
         taskdep:
           attrs:
-            task: prepobs
+            task: prep_obs
     task_analysis:
       envars:
         OBS_TYPES: "&OBS_TYPES;"
@@ -130,11 +143,14 @@ workflow:
         RES: "&RES;"
         TSTUB: "&TSTUB;"
         WORKDIR: "&WORKDIR;"
+        model_ver: "&model_ver;"
         HOMElandda: "&HOMElandda;"
-        EXECdir: "&EXECdir;"
-        OUTDIR: "&OUTDIR;"
+        COMROOT: "&COMROOT;"
+        DATAROOT: "&DATAROOT;"
+        KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
+        SLASH_ENSMEM_SUBDIR: "&SLASH_ENSMEM_SUBDIR;"
         PTIME: "&PTIME;"
         NTIME: "&NTIME;"
         fv3bundle_vn: "&fv3bundle_vn;"
@@ -143,7 +159,7 @@ workflow:
         NPROC_JEDI: "&NPROCS_ANALYSIS;"
         JEDI_INSTALL: "&JEDI_INSTALL;"
       account: "&ACCOUNT;"
-      command: "&HOMElandda;/jobs/JLANDDA_ANALYSIS"
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "analysis" "&HOMElandda;" "&MACHINE;"'
       jobname: analysis
       nodes: "1:ppn=&NPROCS_ANALYSIS;"
       walltime: 00:15:00
@@ -152,7 +168,7 @@ workflow:
       dependency:
         taskdep:
           attrs:
-            task: prepbmat
+            task: prep_bmat
     task_forecast:
       envars:
         OBS_TYPES: "&OBS_TYPES;"
@@ -165,11 +181,15 @@ workflow:
         RES: "&RES;"
         TSTUB: "&TSTUB;"
         WORKDIR: "&WORKDIR;"
+        model_ver: "&model_ver;"
         HOMElandda: "&HOMElandda;"
-        EXECdir: "&EXECdir;"
-        OUTDIR: "&OUTDIR;"
+        COMROOT: "&COMROOT;"
+        DATAROOT: "&DATAROOT;"
+        KEEPDATA: "&KEEPDATA;"
+        LOGDIR: "&LOGDIR;"
         PDY: "&PDY;"
         cyc: "&cyc;"
+        SLASH_ENSMEM_SUBDIR: "&SLASH_ENSMEM_SUBDIR;"
         PTIME: "&PTIME;"
         NTIME: "&NTIME;"
         fv3bundle_vn: "&fv3bundle_vn;"
@@ -178,7 +198,7 @@ workflow:
         JEDI_INSTALL: "&JEDI_INSTALL;"
         FCSTHR: "&FCSTHR;"
       account: "&ACCOUNT;"
-      command: "&HOMElandda;/jobs/JLANDDA_FORECAST"
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "forecast" "&HOMElandda;" "&MACHINE;"'
       jobname: forecast
       nodes: "1:ppn=&NPROCS_FORECAST;"
       walltime: 00:30:00
