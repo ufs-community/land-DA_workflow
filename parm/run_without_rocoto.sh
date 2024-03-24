@@ -11,17 +11,16 @@
 
 
 export MACHINE="orion"
+export SCHED="slurm"
 export ACCOUNT="epic"
 export FORCING="era5"
-export NET="landda"
-export model_ver="v1.2.1"
 
 if [ "${MACHINE}" = "hera" ]; then
   export EXP_BASEDIR="/scratch2/NAGAPE/epic/{USER}/landda_test"
   export JEDI_INSTALL="/scratch2/NAGAPE/epic/UFS_Land-DA/jedi"
   export LANDDA_INPUTS="/scratch2/NAGAPE/epic/UFS_Land-DA/inputs"
 elif [ "${MACHINE}" = "orion" ]; then
-  export EXP_BASEDIR="/work/noaa/epic/{USER}/landda_test"
+  export EXP_BASEDIR="/work/noaa/epic/chjeon/landda_test"
   export JEDI_INSTALL="/work/noaa/epic/UFS_Land-DA/jedi"
   export LANDDA_INPUTS="/work/noaa/epic/UFS_Land-DA/inputs"
 fi
@@ -35,13 +34,18 @@ export fv3bundle_vn="psl_develop"
 export DAtype="letkfoi_snow"
 export SNOWDEPTHVAR="snwdph"
 export TSTUB="oro_C96.mx100"
-export WORKDIR="${EXP_BASEDIR}/workdir/run_&FORCING;"
+export NET="landda"
+export envir="test"
+export model_ver="v1.2.1"
 export HOMElandda="${EXP_BASEDIR}/land-DA_workflow"
-export EXECdir="${HOMElandda}/exec"
-export OUTDIR="${EXP_BASEDIR}/com/${NET}/${model_ver}/run_${FORCING}"
+export PTMP="${EXP_BASEDIR}/ptmp"
+export COMROOT="${PTMP}/${envir}/com"
+export DATAROOT="${PTMP}/${envir}/tmp"
+export KEEPDATA="YES"
+export WORKDIR="${EXP_BASEDIR}/workdir/run_&FORCING;"
 export LOGDIR="${EXP_BASEDIR}/com/output/logs"
 export PATHRT="${EXP_BASEDIR}"
-
+export SLASH_ENSMEM_SUBDIR=""
 export ATMOS_FORC="${FORCING}"
 export NPROC_JEDI="${NPROCS_ANALYSIS}"
 
@@ -60,7 +64,7 @@ fi
 # Call J-job scripts
 #
 echo " ... PREP_EXP running ... "
-${HOMElandda}/jobs/JLANDDA_PREP_EXP
+${HOMElandda}/parm/task_load_modules_run_jjob.sh "prep_exp" "${HOMElandda}" "${MACHINE}"
 export err=$?
 if [ $err = 0 ]; then
   echo " === PREP_EXP completed successfully === "
@@ -70,7 +74,7 @@ else
 fi
 
 echo " ... PREP_OBS running ... "
-${HOMElandda}/jobs/JLANDDA_PREP_OBS
+${HOMElandda}/parm/task_load_modules_run_jjob.sh "prep_obs" "${HOMElandda}" "${MACHINE}"
 export err=$?
 if [ $err = 0 ]; then
   echo " === PREP_OBS completed successfully === "
@@ -80,7 +84,7 @@ else
 fi
 
 echo " ... PREP_BMAT running ... "
-${HOMElandda}/jobs/JLANDDA_PREP_BMAT
+${HOMElandda}/parm/task_load_modules_run_jjob.sh "prep_bmat" "${HOMElandda}" "${MACHINE}"
 export err=$?
 if [ $err = 0 ]; then
   echo " === PREP_BMAT completed successfully === "
@@ -90,7 +94,7 @@ else
 fi
 
 echo " ... ANALYSIS running ... "
-${HOMElandda}/jobs/JLANDDA_ANALYSIS
+${HOMElandda}/parm/task_load_modules_run_jjob.sh "analysis" "${HOMElandda}" "${MACHINE}"
 export err=$?
 if [ $err = 0 ]; then
   echo " === Task ANALYSIS completed successfully === "
@@ -100,7 +104,7 @@ else
 fi
 
 echo " ... FORECAST running ... "
-${HOMElandda}/jobs/JLANDDA_FORECAST
+${HOMElandda}/parm/task_load_modules_run_jjob.sh "forecast" "${HOMElandda}" "${MACHINE}"
 export err=$?
 if [ $err = 0 ]; then
   echo " === Task FORECAST completed successfully === "
