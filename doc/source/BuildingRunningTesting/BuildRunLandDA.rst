@@ -286,7 +286,7 @@ Check for the background and analysis files in the experiment directory:
 
 .. code-block:: console
 
-   ls -l $LANDDAROOT/com/landda/v1.2.1/run_<forcing>/mem000/restarts/<vector_or_tile>
+   ls -l $LANDDAROOT/ptmp/test/com/landda/v1.2.1/landda.<PDY>/<cyc>/run_<forcing>/mem000/restarts/<vector_or_tile>
 
 where: 
 
