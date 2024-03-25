@@ -11,7 +11,7 @@ fi
 
 # check which modules are required and notify the user if they are not currently loaded in the environment.
 if [[ ( ${MACHINE} == "orion" || ${MACHINE} == "hera" ) && ${USE_SINGULARITY} != "yes" ]]; then 
-  env_mods=($(grep -o 'load("[^"]*")' ${CYCLEDIR}/modulefiles/build_${MACHINE}_intel.lua | sed 's/load("//;s/")//'))
+  env_mods=($(grep -o 'load("[^"]*")' ${HOMElandda}/modulefiles/build_${MACHINE}_intel.lua | sed 's/load("//;s/")//'))
 
   missing_mods=()
 
@@ -23,7 +23,7 @@ if [[ ( ${MACHINE} == "orion" || ${MACHINE} == "hera" ) && ${USE_SINGULARITY} !=
   done
 
   if [[ ${#missing_mods[@]} -gt 0 ]]; then
-    echo "Error: the following modules are not loaded in the current environment: ${missing_mods[@]}. Please load them via 'module use ${CYCLEDIR}/modulefiles; module load landda_${MACHINE}.intel' and then re-launch do_submit_cycle.sh."
+    echo "Error: the following modules are not loaded in the current environment: ${missing_mods[@]}. Please load them via 'module use ${HOMElandda}/modulefiles; module load landda_${MACHINE}.intel' and then re-launch do_submit_cycle.sh."
     exit 1
   else
     echo "All modules properly loaded in environment. Continuing!"

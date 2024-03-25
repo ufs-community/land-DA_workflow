@@ -21,7 +21,7 @@ while [ $date_count -lt $cycles_per_job ]; do
 
     if [ $THISDATE -ge $ENDDATE ]; then 
         echo "All done, at date ${THISDATE}"  >> $logfile
-        cd $CYCLEDIR 
+        cd $HOMElandda 
         if [ $KEEPWORKDIR == "NO" ];   then 
             rm -rf $WORKDIR
         fi
@@ -83,7 +83,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         export MEM_WORKDIR
 
         # update vec2tile and tile2vec namelists
-        cp  ${CYCLEDIR}/parm/templates/template.vector2tile vector2tile.namelist
+        cp  ${HOMElandda}/parm/templates/template.vector2tile vector2tile.namelist
 
         sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" vector2tile.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
@@ -101,7 +101,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         echo 'calling vector2tile' 
 
         if [[ $BASELINE =~ 'hera.internal' ]]; then
-           source ${CYCLEDIR}/land_mods
+           source ${HOMElandda}/land_mods
         fi
         $vec2tileexec vector2tile.namelist
         if [[ $? != 0 ]]; then
@@ -130,7 +130,7 @@ while [ $date_count -lt $cycles_per_job ]; do
     	done
 
        # update tile2tile namelist
-        cp  ${CYCLEDIR}/parm/templates/template.ufs2jedi ufs2jedi.namelist
+        cp  ${HOMElandda}/parm/templates/template.ufs2jedi ufs2jedi.namelist
 
         sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs2jedi.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" ufs2jedi.namelist
@@ -146,7 +146,7 @@ while [ $date_count -lt $cycles_per_job ]; do
        # submit tile2tile 
        
         if [[ $BASELINE =~ 'hera.internal' ]]; then
-           source ${CYCLEDIR}/land_mods
+           source ${HOMElandda}/land_mods
         fi 
         $tile2tileexec ufs2jedi.namelist
         if [[ $? != 0 ]]; then
@@ -167,8 +167,8 @@ while [ $date_count -lt $cycles_per_job ]; do
         cd $WORKDIR
 
         export THISDATE
-        export EXECdir="${CYCLEDIR}/exec"
-        $DAscript ${CYCLEDIR}/$DA_config
+        export EXECdir="${HOMElandda}/exec"
+        $DAscript ${HOMElandda}/$DA_config
         if [[ $? != 0 ]]; then
             echo "land DA script failed"
             exit
@@ -191,10 +191,10 @@ while [ $date_count -lt $cycles_per_job ]; do
         echo 'calling tile2vector' 
 
         if [[ $BASELINE =~ 'hera.internal' ]]; then
-           source ${CYCLEDIR}/land_mods
+           source ${HOMElandda}/land_mods
         fi
 
-        cp  ${CYCLEDIR}/parm/templates/template.tile2vector tile2vector.namelist
+        cp  ${HOMElandda}/parm/templates/template.tile2vector tile2vector.namelist
 
         sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" tile2vector.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
@@ -222,10 +222,10 @@ while [ $date_count -lt $cycles_per_job ]; do
         echo 'calling tile2tile' 
    
         if [[ $BASELINE =~ 'hera.internal' ]]; then
-           source ${CYCLEDIR}/land_mods
+           source ${HOMElandda}/land_mods
         fi 
         
-        cp  ${CYCLEDIR}/parm/templates/template.jedi2ufs jedi2ufs.namelist
+        cp  ${HOMElandda}/parm/templates/template.jedi2ufs jedi2ufs.namelist
          
         sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" jedi2ufs.namelist
         sed -i -e "s/XXYYYY/${YYYY}/g" jedi2ufs.namelist
@@ -261,7 +261,7 @@ while [ $date_count -lt $cycles_per_job ]; do
         set -x 
     	
         # update model namelist 
-        cp  ${CYCLEDIR}/parm/templates/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
+        cp  ${HOMElandda}/parm/templates/template.ufs-noahMP.namelist.${atmos_forc}  ufs-land.namelist
 
     	sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs-land.namelist
     	sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
@@ -277,7 +277,7 @@ while [ $date_count -lt $cycles_per_job ]; do
 
     	nt=$SLURM_NTASKS
     	if [[ $BASELINE =~ 'hera.internal' ]]; then
-            source ${CYCLEDIR}/land_mods
+            source ${HOMElandda}/land_mods
     	fi
 
     	if [[ $BASELINE =~ 'hera.internal' ]]; then
@@ -296,11 +296,11 @@ while [ $date_count -lt $cycles_per_job ]; do
     
     	TEST_NAME=datm_cdeps_lnd_gswp3
     	TEST_NAME_RST=datm_cdeps_lnd_gswp3_rst
-    	PATHRT=${CYCLEDIR}/sorc/ufs_model.fd/tests
+    	PATHRT=${HOMElandda}/sorc/ufs_model.fd/tests
     	RT_COMPILER=${RT_COMPILER:-intel}
     	ATOL="1e-7"
 
-        cp $CYCLEDIR/$TEST_NAME_RST ${PATHRT}/tests/$TEST_NAME_RST 
+        cp $HOMElandda/$TEST_NAME_RST ${PATHRT}/tests/$TEST_NAME_RST 
        	source ${PATHRT}/detect_machine.sh
         source ${PATHRT}/rt_utils.sh
         source ${PATHRT}/default_vars.sh
@@ -335,8 +335,8 @@ while [ $date_count -lt $cycles_per_job ]; do
     	export layout_y=1
 
     	# FV3 executable:
-    	cp ${CYCLEDIR}/exec/ufs_model .
-        cp ${CYCLEDIR}/fv3_run ./fv3_run
+    	cp ${HOMElandda}/exec/ufs_model .
+        cp ${HOMElandda}/fv3_run ./fv3_run
  
     	if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then
       	if [[ $HAFS = 'false' ]] || [[ $FV3 = 'true' && $HAFS = 'true' ]]; then
@@ -412,7 +412,7 @@ done #  date_count -lt cycles_per_job
 if [ $THISDATE -lt $ENDDATE ]; then
     echo "STARTDATE=${THISDATE}" > ${analdate}
     echo "ENDDATE=${ENDDATE}" >> ${analdate}
-    cd ${CYCLEDIR}
-    sbatch ${CYCLEDIR}/submit_cycle.sh
+    cd ${HOMElandda}
+    sbatch ${HOMElandda}/submit_cycle.sh
 fi
 

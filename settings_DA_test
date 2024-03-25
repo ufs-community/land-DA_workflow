@@ -13,7 +13,7 @@
 
 # if calling from submit_cycle.sh, do not change these three:
 JEDIWORKDIR=${WORKDIR}/jedi/
-LANDDADIR=${CYCLEDIR}/sorc/DA_update/  # directory where do_landDA.sh script is 
+LANDDADIR=${HOMElandda}/sorc/DA_update/  # directory where do_landDA.sh script is 
 RSTRDIR=${MEM_WORKDIR} 
 
 ############################
