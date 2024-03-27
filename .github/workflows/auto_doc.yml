@@ -14,14 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install python
-      uses: gabrielfalcao/pyenv-action@v18
-      with:
-        default: "3.9"
-        command: pip install -U pip
-
     - name: Build HTML
-      uses: ammaraskar/sphinx-action@master
+      uses: ammaraskar/sphinx-action@dev
       with:
         docs-folder: "doc/"
         pre-build-command: "python --version;python -m pip install --upgrade pip"
