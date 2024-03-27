@@ -13,14 +13,14 @@ jobs:
       contents: write
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
     - name: Build HTML
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'        
       uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "doc/"
-      
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
