@@ -12,6 +12,11 @@ jobs:
     permissions:
       contents: write
     steps:
+    - script: |
+        set -o xtrace
+        python --version
+        pip --version
+
     - uses: actions/checkout@v3
     - name: Build HTML
       uses: ammaraskar/sphinx-action@master
