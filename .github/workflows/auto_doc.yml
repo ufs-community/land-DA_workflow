@@ -17,7 +17,7 @@ jobs:
     - name: Install python
       uses: gabrielfalcao/pyenv-action@v18
       with:
-        default: "3.11.*"
+        default: "3.9"
         command: pip install -U pip
 
     - name: Build HTML
