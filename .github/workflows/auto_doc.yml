@@ -14,11 +14,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Build HTML
+    - name: Install python
       uses: gabrielfalcao/pyen-action@v18
       with:
         default: "3.11.*"
         command: pip install -U pip
+
+    - name: Build HTML
       uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "doc/"
