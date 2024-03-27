@@ -18,7 +18,7 @@ jobs:
       uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "doc/"
-        pre-build-command: "python --version;/usr/local/bin/python -m pip install --upgrade pip"
+        pre-build-command: "python --version;pip index versions python;/usr/local/bin/python -m pip install --upgrade pip"
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
