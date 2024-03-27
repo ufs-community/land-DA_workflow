@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Install python
-      uses: gabrielfalcao/pyen-action@v18
+      uses: gabrielfalcao/pyenv-action@v18
       with:
         default: "3.11.*"
         command: pip install -U pip
