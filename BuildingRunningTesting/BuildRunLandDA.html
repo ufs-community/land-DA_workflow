@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2.1. Land DA Workflow (Hera &amp; Orion) &mdash; UFS Offline Land DA User&#39;s Guide v1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=044582d4" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=3db8afb0" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=95484ca5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="2.2. Containerized Land DA Workflow" href="Container.html" />
+    <link rel="prev" title="2. Building, Running, and Testing the Land DA System" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            UFS Offline Land DA User's Guide
+              <img src="https://github.com/ufs-community/ufs/wiki/images/ufs-epic-logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v1.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../BackgroundInfo/index.html">1. Background Information</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">2. Building, Running, and Testing the Land DA System</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.1. Land DA Workflow (Hera &amp; Orion)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#create-a-working-directory">2.1.1. Create a Working Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-code">2.1.2. Get Code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-the-land-da-system">2.1.3. Build the Land DA System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configure-an-experiment">2.1.4. Configure an Experiment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#load-the-workflow-environment">2.1.4.1. Load the Workflow Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#modify-the-workflow-configuration-yaml">2.1.4.2. Modify the Workflow Configuration YAML</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#data">2.1.4.2.1. Data</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#generate-the-rocoto-xml-file">2.1.4.3. Generate the Rocoto XML File</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#run-the-experiment">2.1.5. Run the Experiment</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#workflow-overview">2.1.5.1. Workflow Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#run-with-rocoto">2.1.5.2. Run With Rocoto</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#track-experiment-status">2.1.5.2.1. Track Experiment Status</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#run-without-rocoto">2.1.5.2.2. Run Without Rocoto</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#check-experiment-output">2.1.5.3. Check Experiment Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Container.html">2.2. Containerized Land DA Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TestingLandDA.html">2.3. Testing the Land DA Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../CustomizingTheWorkflow/index.html">3. Customizing the Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Reference/index.html">4. Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">UFS Offline Land DA User's Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html"><span class="section-number">2. </span>Building, Running, and Testing the Land DA System</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">2.1. </span>Land DA Workflow (Hera &amp; Orion)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/BuildingRunningTesting/BuildRunLandDA.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="land-da-workflow-hera-orion">
+<span id="buildrunlandda"></span><h1><span class="section-number">2.1. </span>Land DA Workflow (Hera &amp; Orion)<a class="headerlink" href="#land-da-workflow-hera-orion" title="Link to this heading"></a></h1>
+<p>This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (<a class="reference internal" href="../Reference/Glossary.html#term-UFS"><span class="xref std std-term">UFS</span></a>) Land DA System. Users can choose between two options:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>A Dec. 21, 2019 00z sample case using ERA5 data with the UFS Land Driver (<code class="docutils literal notranslate"><span class="pre">land_analysis_era5_&lt;machine&gt;</span></code>)</p></li>
+<li><p>A Jan. 3, 2000 00z sample case using GSWP3 data with the UFS Noah-MP land component (<code class="docutils literal notranslate"><span class="pre">land_analysis_gswp3_&lt;machine&gt;</span></code>).</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>These steps are designed for use on <a class="reference internal" href="../BackgroundInfo/TechnicalOverview.html#levelsofsupport"><span class="std std-ref">Level 1</span></a> systems (i.e., Hera and Orion) and may require significant changes on other systems. It is recommended that users on other systems run the containerized version of Land DA. Users may reference <a class="reference internal" href="Container.html#container"><span class="std std-numref">Chapter 2.2: Containerized Land DA Workflow</span></a> for instructions.</p>
+</div>
+<section id="create-a-working-directory">
+<h2><span class="section-number">2.1.1. </span>Create a Working Directory<a class="headerlink" href="#create-a-working-directory" title="Link to this heading"></a></h2>
+<p>Create a directory for the Land DA experiment (<code class="docutils literal notranslate"><span class="pre">$LANDDAROOT</span></code>):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mkdir /path/to/landda</span>
+<span class="go">cd /path/to/landda</span>
+<span class="go">export LANDDAROOT=`pwd`</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">/path/to/landda</span></code> is the path to the directory where the user plans to run Land DA experiments.</p>
+</section>
+<section id="get-code">
+<span id="getcode"></span><h2><span class="section-number">2.1.2. </span>Get Code<a class="headerlink" href="#get-code" title="Link to this heading"></a></h2>
+<p>Clone the Land DA repository. To clone the <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch, run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone -b develop --recursive https://github.com/ufs-community/land-DA_workflow.git</span>
+</pre></div>
+</div>
+<p>To clone the most recent release, run the same command with <code class="docutils literal notranslate"><span class="pre">release/public-v1.2.0</span></code> in place of <code class="docutils literal notranslate"><span class="pre">develop</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone -b release/public-v1.2.0 --recursive https://github.com/ufs-community/land-DA_workflow.git</span>
+</pre></div>
+</div>
+</section>
+<section id="build-the-land-da-system">
+<span id="build-land-da"></span><h2><span class="section-number">2.1.3. </span>Build the Land DA System<a class="headerlink" href="#build-the-land-da-system" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Navigate to the <code class="docutils literal notranslate"><span class="pre">sorc</span></code> directory.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $LANDDAROOT/land-DA_workflow/sorc</span>
+</pre></div>
+</div>
+</li>
+<li><p>Run the build script <code class="docutils literal notranslate"><span class="pre">app_build.sh</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./app_build.sh</span>
+</pre></div>
+</div>
+<p>If the code successfully compiles, the console output should end with:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[100%] Completed &#39;ufs_model.fd&#39;</span>
+<span class="go">[100%] Built target ufs_model.fd</span>
+<span class="go">... Moving pre-compiled executables to designated location ...</span>
+</pre></div>
+</div>
+<p>Additionally, the <code class="docutils literal notranslate"><span class="pre">exec</span></code> directory will contain the following executables:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">apply_incr.exe</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ufsLand.exe</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vector2tile_converter.exe</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tile2tile_converter.exe</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ufs_model</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</section>
+<section id="configure-an-experiment">
+<span id="config-wflow"></span><h2><span class="section-number">2.1.4. </span>Configure an Experiment<a class="headerlink" href="#configure-an-experiment" title="Link to this heading"></a></h2>
+<section id="load-the-workflow-environment">
+<span id="load-env"></span><h3><span class="section-number">2.1.4.1. </span>Load the Workflow Environment<a class="headerlink" href="#load-the-workflow-environment" title="Link to this heading"></a></h3>
+<p>To load the workflow environment, run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $LANDDAROOT/land-DA_workflow</span>
+<span class="go">source versions/build.ver_&lt;platform&gt;</span>
+<span class="go">module use modulefiles</span>
+<span class="go">module load wflow_&lt;platform&gt;</span>
+<span class="go">conda activate land_da</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;platform&gt;</span></code> is <code class="docutils literal notranslate"><span class="pre">hera</span></code> or <code class="docutils literal notranslate"><span class="pre">orion</span></code>.</p>
+</section>
+<section id="modify-the-workflow-configuration-yaml">
+<h3><span class="section-number">2.1.4.2. </span>Modify the Workflow Configuration YAML<a class="headerlink" href="#modify-the-workflow-configuration-yaml" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch includes two default experiments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>A Dec. 21, 2019 00z sample case using the UFS Land Driver.</p></li>
+<li><p>A Jan. 3, 2000 00z sample case using the UFS Noah-MP land component.</p></li>
+</ul>
+</div></blockquote>
+<p>Copy the experiment settings into <code class="docutils literal notranslate"><span class="pre">land_analysis.yaml</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $LANDDAROOT/land-DA_workflow/parm</span>
+<span class="go">cp land_analysis_&lt;forcing&gt;_&lt;platform&gt;.yaml land_analysis.yaml</span>
+</pre></div>
+</div>
+<p>where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;forcing&gt;</span></code> is either <code class="docutils literal notranslate"><span class="pre">gswp3</span></code> or <code class="docutils literal notranslate"><span class="pre">era5</span></code> forcing data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;platform&gt;</span></code> is <code class="docutils literal notranslate"><span class="pre">hera</span></code> or <code class="docutils literal notranslate"><span class="pre">orion</span></code>.</p></li>
+</ul>
+</div></blockquote>
+<p>Users will need to configure certain elements of their experiment in <code class="docutils literal notranslate"><span class="pre">land_analysis.yaml</span></code>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MACHINE:</span></code> A valid machine name (i.e., <code class="docutils literal notranslate"><span class="pre">hera</span></code> or <code class="docutils literal notranslate"><span class="pre">orion</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ACCOUNT:</span></code> A valid account name. Hera, Orion, and most NOAA RDHPCS systems require a valid account name; other systems may not</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EXP_BASEDIR:</span></code> The full path to the directory where land-DA_workflow was cloned (i.e., <code class="docutils literal notranslate"><span class="pre">$LANDDAROOT</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">JEDI_INSTALL:</span></code> The full path to the system’s <code class="docutils literal notranslate"><span class="pre">jedi-bundle</span></code> installation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LANDDA_INPUTS:</span></code> The full path to the experiment data. See <a class="reference internal" href="#getdata"><span class="std std-ref">Data</span></a> below for information on prestaged data on Level 1 platforms.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OUTDIR:</span></code> The full path to the directory where experiment will write its output. By default, this is set to <code class="docutils literal notranslate"><span class="pre">&quot;&amp;EXP_BASEDIR;/landda_expts/DA_&lt;forcing&gt;_test&quot;</span></code>, but users can change the <code class="docutils literal notranslate"><span class="pre">DA_&lt;forcing&gt;_test</span></code> portion to a name of their choice. If users do not change the name, the new experiment will overwrite data from the previous experiment.</p></li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To determine an appropriate <code class="docutils literal notranslate"><span class="pre">ACCOUNT</span></code> field for Level 1 systems that use the Slurm job scheduler, run <code class="docutils literal notranslate"><span class="pre">saccount_params</span></code>. On other systems, running <code class="docutils literal notranslate"><span class="pre">groups</span></code> will return a list of projects that the user has permissions for. Not all listed projects/groups have an HPC allocation, but those that do are potentially valid account names.</p>
+</div>
+<p>Users may configure other elements of an experiment in <code class="docutils literal notranslate"><span class="pre">land_analysis.yaml</span></code> if desired. The <code class="docutils literal notranslate"><span class="pre">land_analysis_*</span></code> files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Sections <a class="reference internal" href="../CustomizingTheWorkflow/Model.html#model"><span class="std std-numref">3.1</span></a> &amp; <a class="reference internal" href="../CustomizingTheWorkflow/DASystem.html#dasystem"><span class="std std-numref">3.2</span></a>.</p>
+<section id="data">
+<span id="getdata"></span><h4><span class="section-number">2.1.4.2.1. </span>Data<a class="headerlink" href="#data" title="Link to this heading"></a></h4>
+<p><a class="reference internal" href="#level1data"><span class="std std-numref">Table 2.1</span></a> shows the locations of pre-staged data on NOAA <a class="reference internal" href="../Reference/Glossary.html#term-RDHPCS"><span class="xref std std-term">RDHPCS</span></a> (i.e., Hera and Orion).</p>
+<span id="level1data"></span><table class="docutils align-default" id="id1">
+<caption><span class="caption-number">Table 2.1 </span><span class="caption-text">Level 1 RDHPCS Data</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Platform</p></th>
+<th class="head"><p>Data Location</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Hera</p></td>
+<td><p>/scratch2/NAGAPE/epic/UFS_Land-DA/inputs</p></td>
+</tr>
+<tr class="row-odd"><td><p>Orion</p></td>
+<td><p>/work/noaa/epic/UFS_Land-DA/inputs</p></td>
+</tr>
+</tbody>
+</table>
+<p>Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in <a class="reference internal" href="Container.html#getdatac"><span class="std std-numref">Section 2.2.3</span></a> and set <code class="docutils literal notranslate"><span class="pre">LANDDA_INPUTS</span></code> to point to the location of the downloaded data. Similarly, users with access to data for additional experiments may set the path to that data in <code class="docutils literal notranslate"><span class="pre">LANDDA_INPUTS</span></code>.</p>
+</section>
+</section>
+<section id="generate-the-rocoto-xml-file">
+<span id="generate-wflow"></span><h3><span class="section-number">2.1.4.3. </span>Generate the Rocoto XML File<a class="headerlink" href="#generate-the-rocoto-xml-file" title="Link to this heading"></a></h3>
+<p>Generate the workflow with <code class="docutils literal notranslate"><span class="pre">uwtools</span></code> by running:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">uw rocoto realize --input-file land_analysis.yaml --output-file land_analysis.xml</span>
+</pre></div>
+</div>
+<p>If the command runs without problems, <code class="docutils literal notranslate"><span class="pre">uwtools</span></code> will output a “0 errors found” message similar to the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[2024-03-01T20:36:03]     INFO 0 UW schema-validation errors found</span>
+<span class="go">[2024-03-01T20:36:03]     INFO 0 Rocoto validation errors found</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="run-the-experiment">
+<h2><span class="section-number">2.1.5. </span>Run the Experiment<a class="headerlink" href="#run-the-experiment" title="Link to this heading"></a></h2>
+<section id="workflow-overview">
+<span id="wflow-overview"></span><h3><span class="section-number">2.1.5.1. </span>Workflow Overview<a class="headerlink" href="#workflow-overview" title="Link to this heading"></a></h3>
+<p>Each Land DA experiment includes multiple tasks that must be run in order to satisfy the dependencies of later tasks. These tasks are housed in the <a class="reference internal" href="../Reference/Glossary.html#term-J-jobs"><span class="xref std std-term">J-job</span></a> scripts contained in the <code class="docutils literal notranslate"><span class="pre">jobs</span></code> directory.</p>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-number">Table 2.2 </span><span class="caption-text"><em>J-job Tasks in the Land DA Workflow</em></span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>J-job Task</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>JLANDDA_PREP_EXP</p></td>
+<td><p>Sets up the experiment</p></td>
+</tr>
+<tr class="row-odd"><td><p>JLANDDA_PREP_OBS</p></td>
+<td><p>Sets up the observation files</p></td>
+</tr>
+<tr class="row-even"><td><p>JLANDDA_PREP_BMAT</p></td>
+<td><p>Sets up the <a class="reference internal" href="../Reference/Glossary.html#term-JEDI"><span class="xref std std-term">JEDI</span></a> run</p></td>
+</tr>
+<tr class="row-odd"><td><p>JLANDDA_RUN_ANA</p></td>
+<td><p>Runs JEDI</p></td>
+</tr>
+<tr class="row-even"><td><p>JLANDDA_RUN_FCST</p></td>
+<td><p>Runs forecast</p></td>
+</tr>
+</tbody>
+</table>
+<p>Users may run these tasks <a class="reference internal" href="#run-w-rocoto"><span class="std std-ref">using the Rocoto workflow manager</span></a> or <a class="reference internal" href="#run-batch-script"><span class="std std-ref">using a batch script</span></a>.</p>
+</section>
+<section id="run-with-rocoto">
+<span id="run-w-rocoto"></span><h3><span class="section-number">2.1.5.2. </span>Run With Rocoto<a class="headerlink" href="#run-with-rocoto" title="Link to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Users who do not have Rocoto installed on their system can view <a class="reference internal" href="#run-batch-script"><span class="std std-numref">Section 2.1.5.2.2: Run Without Rocoto</span></a>.</p>
+</div>
+<p>To run the experiment, issue a <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command from the <code class="docutils literal notranslate"><span class="pre">parm</span></code> directory:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">rocotorun -w land_analysis.xml -d land_analysis.db</span>
+</pre></div>
+</div>
+<section id="track-experiment-status">
+<span id="verifysuccess"></span><h4><span class="section-number">2.1.5.2.1. </span>Track Experiment Status<a class="headerlink" href="#track-experiment-status" title="Link to this heading"></a></h4>
+<p>To view the experiment status, run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">rocotostat -w land_analysis.xml -d land_analysis.db</span>
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> was successful, the <code class="docutils literal notranslate"><span class="pre">rocotostat</span></code> command will print a status report to the console. For example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">CYCLE              TASK                 JOBID        STATE   EXIT STATUS   TRIES   DURATION</span>
+<span class="go">======================================================================================================</span>
+<span class="go">200001030000    prepexp   druby://hfe08:41879   SUBMITTING             -       2        0.0</span>
+<span class="go">200001030000    prepobs                     -            -             -       -          -</span>
+<span class="go">200001030000   prepbmat                     -            -             -       -          -</span>
+<span class="go">200001030000     runana                     -            -             -       -          -</span>
+<span class="go">200001030000    runfcst                     -            -             -       -          -</span>
+</pre></div>
+</div>
+<p>Users will need to issue the <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command multiple times. The tasks must run in order, and <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> initiates the next task once its dependencies have completed successfully. Note that the status table printed by <code class="docutils literal notranslate"><span class="pre">rocotostat</span></code> only updates after each <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command. For each task, a log file is generated. These files are stored in <code class="docutils literal notranslate"><span class="pre">$LANDDAROOT/com/output/logs/run_&lt;forcing&gt;</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;forcing&gt;</span></code> is either <code class="docutils literal notranslate"><span class="pre">gswp3</span></code> or <code class="docutils literal notranslate"><span class="pre">era5</span></code>.</p>
+<p>The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, and DEAD. Users may view the log files to determine why a task may have failed.</p>
+</section>
+<section id="run-without-rocoto">
+<span id="run-batch-script"></span><h4><span class="section-number">2.1.5.2.2. </span>Run Without Rocoto<a class="headerlink" href="#run-without-rocoto" title="Link to this heading"></a></h4>
+<p>Users may choose not to run the workflow with uwtools and Rocoto. To run the <a class="reference internal" href="../Reference/Glossary.html#term-J-jobs"><span class="xref std std-term">J-jobs</span></a> scripts in the <code class="docutils literal notranslate"><span class="pre">jobs</span></code> directory, navigate to the <code class="docutils literal notranslate"><span class="pre">parm</span></code> directory and edit <code class="docutils literal notranslate"><span class="pre">run_without_rocoto.sh</span></code> (e.g., using vim or preferred command line editor). Users will likely need to change the <code class="docutils literal notranslate"><span class="pre">MACHINE</span></code>, <code class="docutils literal notranslate"><span class="pre">ACCOUNT</span></code>, and <code class="docutils literal notranslate"><span class="pre">EXP_BASEDIR</span></code> variables to match their system. Then, run <code class="docutils literal notranslate"><span class="pre">run_without_rocoto.sh</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $LANDDAROOT/land-DA_workflow/parm</span>
+<span class="go">sbatch run_without_rocoto.sh</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="check-experiment-output">
+<h3><span class="section-number">2.1.5.3. </span>Check Experiment Output<a class="headerlink" href="#check-experiment-output" title="Link to this heading"></a></h3>
+<p>As the experiment progresses, it will generate a number of directories to hold intermediate and output files. The directory structure for those files and directories appears below:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span>LANDDAROOT:<span class="w"> </span>Base<span class="w"> </span>directory
+<span class="go"> ├── land-DA_workflow(&lt;CYCLEDIR&gt;): Home directory of the land DA workflow</span>
+<span class="go"> ├── com</span>
+<span class="go"> │     ├── landda (&lt;NET&gt;)</span>
+<span class="go"> │     │     └── vX.Y.Z (&lt;model_ver&gt;)</span>
+<span class="go"> │     │           └── DA_&lt;forcing&gt; (&lt;OUTDIR&gt;)</span>
+<span class="go"> │     │                 ├── DA: Directory containing the output files of JEDI run</span>
+<span class="go"> │     │                 │     ├── hofx</span>
+<span class="go"> │     │                 │     ├── jedi_incr</span>
+<span class="go"> │     │                 │     └── logs</span>
+<span class="go"> │     │                 └── mem000: Directory containing the output files</span>
+<span class="go"> │     └──  output</span>
+<span class="go"> │           └──  logs</span>
+<span class="go"> │                 └── run_&lt;forcing&gt; (&lt;LOGDIR&gt;): Directory containing the log file of the Rocoto workflow</span>
+<span class="go"> └── workdir(&lt;WORKDIR&gt;)</span>
+<span class="go">       └── run_&lt;forcing&gt;</span>
+<span class="go">             └── mem000: Working directory</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;forcing&gt;</span></code> refers to the type of forcing data used (<code class="docutils literal notranslate"><span class="pre">gswp3</span></code> or <code class="docutils literal notranslate"><span class="pre">era5</span></code>). Each variable in parentheses and angle brackets (e.g., <code class="docutils literal notranslate"><span class="pre">(&lt;VAR&gt;)</span></code>) is the name for the directory defined in the file <code class="docutils literal notranslate"><span class="pre">land_analysis.yaml</span></code>. In the future, this directory structure will be further modified to meet the <a class="reference external" href="https://www.nco.ncep.noaa.gov/idsb/implementation_standards/">NCO Implementation Standards</a>.</p>
+<p>Check for the background and analysis files in the experiment directory:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ls -l $LANDDAROOT/com/landda/v1.2.1/run_&lt;forcing&gt;/mem000/restarts/&lt;vector_or_tile&gt;</span>
+</pre></div>
+</div>
+<p>where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;forcing&gt;</span></code> is either <code class="docutils literal notranslate"><span class="pre">era5</span></code> or <code class="docutils literal notranslate"><span class="pre">gswp3</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;vector_or_tile&gt;</span></code> is either <code class="docutils literal notranslate"><span class="pre">vector</span></code> or <code class="docutils literal notranslate"><span class="pre">tile</span></code> depending on whether ERA5 or GSWP3 forcing data was used, respectively.</p></li>
+</ul>
+</div></blockquote>
+<p>The experiment should generate several restart files.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="2. Building, Running, and Testing the Land DA System" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Container.html" class="btn btn-neutral float-right" title="2.2. Containerized Land DA Workflow" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

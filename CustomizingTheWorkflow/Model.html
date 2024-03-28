@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3.1. Noah-MP Land Surface Model &mdash; UFS Offline Land DA User&#39;s Guide v1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=044582d4" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=3db8afb0" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=95484ca5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3.2. Land Data Assimilation System" href="DASystem.html" />
+    <link rel="prev" title="3. Customizing the Workflow" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            UFS Offline Land DA User's Guide
+              <img src="https://github.com/ufs-community/ufs/wiki/images/ufs-epic-logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                v1.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../BackgroundInfo/index.html">1. Background Information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../BuildingRunningTesting/index.html">2. Building, Running, and Testing the Land DA System</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">3. Customizing the Workflow</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3.1. Noah-MP Land Surface Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#input-files">3.1.1. Input Files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#viewing-netcdf-files">3.1.1.1. Viewing netCDF Files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#input-files-for-the-datm-lnd-configuration-with-gswp3-data">3.1.1.2. Input Files for the <code class="docutils literal notranslate"><span class="pre">DATM</span></code> + <code class="docutils literal notranslate"><span class="pre">LND</span></code> Configuration with GSWP3 data</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#forcing-files">3.1.1.2.1. Forcing Files</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#noah-mp-initial-conditions">3.1.1.2.2. Noah-MP Initial Conditions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#fv3-fix-tiled-files">3.1.1.2.3. FV3_fix_tiled Files</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#fv3-input-data">3.1.1.2.4. FV3_input_data</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#input-files-for-the-land-driver-configuration-with-era5-data">3.1.1.3. Input Files for the Land Driver Configuration with ERA5 Data</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#static-file-ufs-land-c96-static-fields-nc">3.1.1.3.1. Static File (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_static_fields.nc</span></code>)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#initial-conditions-file-ufs-land-c96-init-nc">3.1.1.3.2. Initial Conditions File (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_init_*.nc</span></code>)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#model-configuration-file-ufs-land-namelist-noahmp">3.1.1.3.3. Model Configuration File (<code class="docutils literal notranslate"><span class="pre">ufs-land.namelist.noahmp</span></code>)</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#run-setup-parameters">3.1.1.3.3.1. Run Setup Parameters</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#land-model-options">3.1.1.3.3.2. Land Model Options</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#structure-related-parameters">3.1.1.3.3.3. Structure-Related Parameters</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#soil-setup-parameters">3.1.1.3.3.4. Soil Setup Parameters</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#noah-mp-options">3.1.1.3.3.5. Noah-MP Options</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#forcing-parameters">3.1.1.3.3.6. Forcing Parameters</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#example-namelist-entry">3.1.1.3.3.7. Example Namelist Entry</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#vector-to-tile-converter">3.1.2. Vector-to-Tile Converter</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#input-file">3.1.2.1. Input File</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-file">3.1.2.2. Configuration File</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id14">3.1.2.2.1. Run Setup Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#fv3-tile-related-parameters-for-restart-perturbation-conversion">3.1.2.2.2. FV3 Tile-Related Parameters for Restart/Perturbation Conversion</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#parameters-for-restart-conversion">3.1.2.2.3. Parameters for Restart Conversion</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#perturbation-mapping-parameters">3.1.2.2.4. Perturbation Mapping Parameters</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#example-of-a-namelist-vector2tile-entry">3.1.2.2.5. Example of a <code class="docutils literal notranslate"><span class="pre">namelist.vector2tile</span></code> Entry</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="DASystem.html">3.2. Land Data Assimilation System</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Reference/index.html">4. Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">UFS Offline Land DA User's Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html"><span class="section-number">3. </span>Customizing the Workflow</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">3.1. </span>Noah-MP Land Surface Model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/CustomizingTheWorkflow/Model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="noah-mp-land-surface-model">
+<span id="model"></span><h1><span class="section-number">3.1. </span>Noah-MP Land Surface Model<a class="headerlink" href="#noah-mp-land-surface-model" title="Link to this heading"></a></h1>
+<p>This chapter provides practical information on input files and parameters for the Noah-MP Land Surface Model (LSM) and its Vector-to-Tile Converter component.
+For background information on the Noah-MP LSM, see <a class="reference internal" href="../BackgroundInfo/Introduction.html#noahmp"><span class="std std-numref">Section 1.1.3.2</span></a> of the Introduction.</p>
+<section id="input-files">
+<span id="inputfiles"></span><h2><span class="section-number">3.1.1. </span>Input Files<a class="headerlink" href="#input-files" title="Link to this heading"></a></h2>
+<p>The UFS land model requires multiple input files to run, including static datasets
+(fix files containing climatological information, terrain, and land use
+data), initial conditions files, and forcing files. Users may reference the <a class="reference external" href="https://www.jsg.utexas.edu/noah-mp/files/Users_Guide_v0.pdf">Community Noah-MP User’s
+Guide</a>
+for a detailed technical description of certain elements of the Noah-MP model.</p>
+<p>In both the land component and land driver implementations of Noah-MP, static file(s) and initial conditions file(s) specify model parameters.
+These files are publicly available via the <a class="reference external" href="https://registry.opendata.aws/noaa-ufs-land-da/">Land DA data bucket</a>.
+Users can download the data and untar the file via the command line:</p>
+<div class="highlight-console notranslate" id="tarfile"><div class="highlight"><pre><span></span><span class="go">wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/Landdav1.2.0_input_data.tar.gz</span>
+<span class="go">tar xvfz Landdav1.2.0_input_data.tar.gz</span>
+</pre></div>
+</div>
+<p>These files and their parameters are described in the following subsections.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Users who wish to use the UFS land component with GSWP3 data can proceed to the <a class="reference internal" href="#datm-lnd-input-files"><span class="std std-numref">Section 3.1.1.2</span></a>.</p></li>
+<li><p>Users who wish to run the land driver implementation of Land DA with ERA5 data should proceed to <a class="reference internal" href="#land-driver-input-files"><span class="std std-numref">Section 3.1.1.3</span></a>.</p></li>
+</ul>
+</div>
+<section id="viewing-netcdf-files">
+<span id="view-netcdf-files"></span><h3><span class="section-number">3.1.1.1. </span>Viewing netCDF Files<a class="headerlink" href="#viewing-netcdf-files" title="Link to this heading"></a></h3>
+<p>Users can view file information and notes for NetCDF files using the <code class="docutils literal notranslate"><span class="pre">ncdump</span></code> module. First, load a compiler, MPI, and NetCDF modules:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">module load intel/2022.1.2 impi/2022.1.2 netcdf/4.7.4</span>
+</pre></div>
+</div>
+<p>To view information on the variables contained in a <a class="reference internal" href="../Reference/Glossary.html#term-netCDF"><span class="xref std std-term">netCDF</span></a> file, users can run <code class="docutils literal notranslate"><span class="pre">ncdump</span> <span class="pre">-h</span> <span class="pre">filename.nc</span></code>. Users will need to replace <code class="docutils literal notranslate"><span class="pre">filename.nc</span></code> with the actual name of the file they want to view. For example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ncdump -h /path/to/ufs-land_C96_init_fields.tile1.nc</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">/path/to/</span></code> is replaced by the actual path to the file. Users may also need to modify the module load command to reflect modules that are available on their system.</p>
+<p>Alternatively, users on Level 1 platforms can load the Land DA environment, which contains the NetCDF module, from <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code> as described in <a class="reference internal" href="../BuildingRunningTesting/BuildRunLandDA.html#build-land-da"><span class="std std-numref">Section 2.1.3</span></a>.</p>
+</section>
+<section id="input-files-for-the-datm-lnd-configuration-with-gswp3-data">
+<span id="datm-lnd-input-files"></span><h3><span class="section-number">3.1.1.2. </span>Input Files for the <code class="docutils literal notranslate"><span class="pre">DATM</span></code> + <code class="docutils literal notranslate"><span class="pre">LND</span></code> Configuration with GSWP3 data<a class="headerlink" href="#input-files-for-the-datm-lnd-configuration-with-gswp3-data" title="Link to this heading"></a></h3>
+<p>With the integration of the UFS Noah-MP land component into the Land DA System in the v1.2.0 release, model forcing options have been enhanced so that users can run the UFS land component (<a class="reference external" href="https://ufs-weather-model.readthedocs.io/en/develop/Glossary.html#term-LND" title="(in UFS Weather Model Users Guide)"><span class="xref std std-term">LND</span></a>) with the data atmosphere component (<a class="reference external" href="https://ufs-weather-model.readthedocs.io/en/develop/Glossary.html#term-DATM" title="(in UFS Weather Model Users Guide)"><span class="xref std std-term">DATM</span></a>). Updates provide a new analysis option on the cubed-sphere native grid using <a class="reference internal" href="../Reference/Glossary.html#term-GSWP3"><span class="xref std std-term">GSWP3</span></a> forcing data to run a single-day experiment for 2000-01-03. An artificial GHCN snow depth observation is provided for data assimilation (see <a class="reference internal" href="DASystem.html#observation-data"><span class="std std-numref">Section 3.2.2.2</span></a> for more on GHCN files). The GHCN observations will be extended in the near future. A new configuration setting file is also provided (<code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_gswp3</span></code>).</p>
+<p>On Level 1 platforms, the requisite data is pre-staged at the locations listed in <a class="reference internal" href="../BuildingRunningTesting/BuildRunLandDA.html#level1data"><span class="std std-numref">Section 2.1</span></a>. The data are also publicly available via the <a class="reference external" href="https://registry.opendata.aws/noaa-ufs-land-da/">Land DA Data Bucket</a>.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The DATM + LND option is only supported on Level 1 systems (i.e., Hera and Orion). It is not tested or supported using a container except on Hera and Orion.</p>
+</div>
+<section id="forcing-files">
+<h4><span class="section-number">3.1.1.2.1. </span>Forcing Files<a class="headerlink" href="#forcing-files" title="Link to this heading"></a></h4>
+<p><a class="reference internal" href="../Reference/Glossary.html#term-forcing-data"><span class="xref std std-term">Forcing files</span></a> for the land component configuration come from the Global Soil Wetness Project Phase 3 (<a class="reference external" href="https://hydro.iis.u-tokyo.ac.jp/GSWP3/">GSWP3</a>) dataset. They are located in the <code class="docutils literal notranslate"><span class="pre">inputs/UFS_WM/DATM_GSWP3_input_data</span></code> directory (downloaded <a class="reference internal" href="#inputfiles"><span class="std std-ref">above</span></a>).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">clmforc.GSWP3.c2011.0.5x0.5.Prec.1999-12.nc</span>
+<span class="go">clmforc.GSWP3.c2011.0.5x0.5.Prec.2000-01.nc</span>
+<span class="go">clmforc.GSWP3.c2011.0.5x0.5.Solr.1999-12.nc</span>
+<span class="go">clmforc.GSWP3.c2011.0.5x0.5.Solr.2000-01.nc</span>
+<span class="go">clmforc.GSWP3.c2011.0.5x0.5.TPQWL.1999-12.nc</span>
+<span class="go">clmforc.GSWP3.c2011.0.5x0.5.TPQWL.2000-01.nc</span>
+<span class="go">clmforc.GSWP3.c2011.0.5x0.5.TPQWL.SCRIP.210520_ESMFmesh.nc</span>
+<span class="go">fv1.9x2.5_141008_ESMFmesh.nc</span>
+<span class="go">topodata_0.9x1.25_USGS_070110_stream_c151201.nc</span>
+<span class="go">topodata_0.9x1.SCRIP.210520_ESMFmesh.nc</span>
+</pre></div>
+</div>
+<p>These files provide atmospheric forcing data related to precipitation, solar radiation, longwave radiation, temperature, pressure, winds, humidity, topography, and mesh data.</p>
+</section>
+<section id="noah-mp-initial-conditions">
+<h4><span class="section-number">3.1.1.2.2. </span>Noah-MP Initial Conditions<a class="headerlink" href="#noah-mp-initial-conditions" title="Link to this heading"></a></h4>
+<p>The offline Land DA System currently only supports snow DA.
+The initial conditions files include the initial state variables that are required for the UFS land snow DA to begin a cycling run. The data must be provided in <a class="reference internal" href="../Reference/Glossary.html#term-netCDF"><span class="xref std std-term">netCDF</span></a> format.</p>
+<p>By default, on Level 1 systems and in the Land DA data bucket, the initial conditions files are located at <code class="docutils literal notranslate"><span class="pre">inputs/UFS_WM/NOAHMP_IC</span></code> (downloaded <a class="reference internal" href="#inputfiles"><span class="std std-ref">above</span></a>). Each file corresponds to one of the six tiles of the <a class="reference external" href="https://www.gfdl.noaa.gov/fv3/fv3-grids/">global FV3 grid</a>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ufs-land_C96_init_fields.tile*.nc</span>
+</pre></div>
+</div>
+<p>The files contain the following data:</p>
+<table class="docutils align-default" id="id15">
+<caption><span class="caption-number">Table 3.1 </span><span class="caption-text"><em>Variables specified in the initial conditions file ``ufs-land_C96_init_fields.tile</em>.nc``*</span><a class="headerlink" href="#id15" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variables</p></th>
+<th class="head"><p>Long Name</p></th>
+<th class="head"><p>Units</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>time(time)</p></td>
+<td><p>“time”</p></td>
+<td><p>“seconds since 1970-01-01 00:00:00”</p></td>
+</tr>
+<tr class="row-odd"><td><p>geolat(lat, lon)</p></td>
+<td><p>“latitude”</p></td>
+<td><p>“degrees_north”</p></td>
+</tr>
+<tr class="row-even"><td><p>geolon(lat, lon)</p></td>
+<td><p>“longitude”</p></td>
+<td><p>“degrees_east”</p></td>
+</tr>
+<tr class="row-odd"><td><p>snow_water_equivalent(time, lat, lon)</p></td>
+<td><p>“snow water equivalent”</p></td>
+<td><p>“mm”</p></td>
+</tr>
+<tr class="row-even"><td><p>snow_depth(time, lat, lon)</p></td>
+<td><p>“snow depth”</p></td>
+<td><p>“m”</p></td>
+</tr>
+<tr class="row-odd"><td><p>canopy_water(time, lat, lon)</p></td>
+<td><p>“canopy surface water”</p></td>
+<td><p>“mm”</p></td>
+</tr>
+<tr class="row-even"><td><p>skin_temperature(time, lat, lon)</p></td>
+<td><p>“surface skin temperature”</p></td>
+<td><p>“K”</p></td>
+</tr>
+<tr class="row-odd"><td><p>soil_temperature(time, soil_levels, lat, lon)</p></td>
+<td><p>“soil temperature”</p></td>
+<td><p>“K”</p></td>
+</tr>
+<tr class="row-even"><td><p>soil_moisture(time, soil_levels, lat, lon)</p></td>
+<td><p>“volumetric soil moisture”</p></td>
+<td><p>“m3/m3”</p></td>
+</tr>
+<tr class="row-odd"><td><p>soil_liquid(time, soil_levels, lat, lon)</p></td>
+<td><p>“volumetric soil liquid”</p></td>
+<td><p>“m3/m3”</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="fv3-fix-tiled-files">
+<h4><span class="section-number">3.1.1.2.3. </span>FV3_fix_tiled Files<a class="headerlink" href="#fv3-fix-tiled-files" title="Link to this heading"></a></h4>
+<p>The UFS land component also requires a series of tiled static (fix) files that will be used by the component model. These files contain information on maximum snow albedo, slope type, soil color and type, substrate temperature, vegetation greenness and type, and orography (grid and land mask information). These files are located in the <code class="docutils literal notranslate"><span class="pre">inputs/UFS_WM/FV3_fix_tiled/C96/</span></code> directory (downloaded <a class="reference internal" href="#inputfiles"><span class="std std-ref">above</span></a>).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">C96.maximum_snow_albedo.tile*.nc</span>
+<span class="go">C96.slope_type.tile*.nc</span>
+<span class="go">C96.soil_type.tile*.nc</span>
+<span class="go">C96.soil_color.tile*.nc</span>
+<span class="go">C96.substrate_temperature.tile*.nc</span>
+<span class="go">C96.vegetation_greenness.tile*.nc</span>
+<span class="go">C96.vegetation_type.tile*.nc</span>
+<span class="go">oro_C96.mx100.tile*.nc</span>
+</pre></div>
+</div>
+</section>
+<section id="fv3-input-data">
+<h4><span class="section-number">3.1.1.2.4. </span>FV3_input_data<a class="headerlink" href="#fv3-input-data" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">FV3_input_data</span></code> directory contains grid information used by the model. This grid information is located in <code class="docutils literal notranslate"><span class="pre">inputs/UFS_WM/FV3_input_data/INPUT</span></code> (downloaded <a class="reference internal" href="#inputfiles"><span class="std std-ref">above</span></a>).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">C96_grid.tile*.nc</span>
+<span class="go">grid_spec.nc     # aka C96.mosaic.nc</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">C96_grid.tile*.nc</span></code> files contain grid information for tiles 1-6 at C96 grid resolution. The <code class="docutils literal notranslate"><span class="pre">grid_spec.nc</span></code> file contains information on the mosaic grid.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">grid_spec.nc</span></code> and <code class="docutils literal notranslate"><span class="pre">C96.mosaic.nc</span></code> are the same file under different names and may be used interchangeably.</p>
+</div>
+</section>
+</section>
+<section id="input-files-for-the-land-driver-configuration-with-era5-data">
+<span id="land-driver-input-files"></span><h3><span class="section-number">3.1.1.3. </span>Input Files for the Land Driver Configuration with ERA5 Data<a class="headerlink" href="#input-files-for-the-land-driver-configuration-with-era5-data" title="Link to this heading"></a></h3>
+<p>There are several important files used to specify model parameters in the land driver-based offline Land DA System:
+the static file (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_static_fields.nc</span></code>),
+the initial conditions file (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_init_*.nc</span></code>),
+and the model configuration file (<code class="docutils literal notranslate"><span class="pre">ufs-land.namelist.noahmp</span></code>).
+These files and their parameters are described in the following subsections.
+They are publicly available via the <a class="reference external" href="https://registry.opendata.aws/noaa-ufs-land-da/">Land DA Data Bucket</a>.</p>
+<section id="static-file-ufs-land-c96-static-fields-nc">
+<h4><span class="section-number">3.1.1.3.1. </span>Static File (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_static_fields.nc</span></code>)<a class="headerlink" href="#static-file-ufs-land-c96-static-fields-nc" title="Link to this heading"></a></h4>
+<p>The static file includes specific information on location, time, soil layers, and fixed (invariant) experiment parameters that are required for Noah-MP to run. The data must be provided in <a class="reference internal" href="../Reference/Glossary.html#term-netCDF"><span class="xref std std-term">netCDF</span></a> format.</p>
+<p>The static file is available in the <code class="docutils literal notranslate"><span class="pre">inputs</span></code> data directory (downloaded <a class="reference internal" href="#inputfiles"><span class="std std-ref">above</span></a>) at the following path:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inputs</span><span class="o">/</span><span class="n">forcing</span><span class="o">/</span><span class="n">era5</span><span class="o">/</span><span class="n">static</span><span class="o">/</span><span class="n">ufs</span><span class="o">-</span><span class="n">land_C96_static_fields</span><span class="o">.</span><span class="n">nc</span>
+</pre></div>
+</div>
+<table class="docutils align-default" id="id16">
+<caption><span class="caption-number">Table 3.2 </span><span class="caption-text"><em>Configuration variables specified in the static file</em> (ufs-land_C96_static_fields.nc)</span><a class="headerlink" href="#id16" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Configuration Variables</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>land_mask</p></td>
+<td><p>land-sea mask (0-ocean, 1-land)</p></td>
+</tr>
+<tr class="row-odd"><td><p>vegetation_category</p></td>
+<td><p>vegetation type</p></td>
+</tr>
+<tr class="row-even"><td><p>soil_category</p></td>
+<td><p>soil type</p></td>
+</tr>
+<tr class="row-odd"><td><p>slope_category</p></td>
+<td><p>slope type</p></td>
+</tr>
+<tr class="row-even"><td><p>albedo_monthly</p></td>
+<td><p>monthly albedo</p></td>
+</tr>
+<tr class="row-odd"><td><p>lai_monthly (leaf area
+index_monthly)</p></td>
+<td><p>monthly leaf area index</p></td>
+</tr>
+<tr class="row-even"><td><p>emissivity</p></td>
+<td><p>emissivity</p></td>
+</tr>
+<tr class="row-odd"><td><p>z0_monthly</p></td>
+<td><p>monthly ground roughness length</p></td>
+</tr>
+<tr class="row-even"><td><p>cube_tile</p></td>
+<td><p>FV3 tile where the grid is located</p></td>
+</tr>
+<tr class="row-odd"><td><p>cube_i</p></td>
+<td><p>i-location in the FV3 tile where the
+grid is located</p></td>
+</tr>
+<tr class="row-even"><td><p>cube_j</p></td>
+<td><p>j-location in the FV3 tile where the
+grid is located</p></td>
+</tr>
+<tr class="row-odd"><td><p>latitude</p></td>
+<td><p>latitude</p></td>
+</tr>
+<tr class="row-even"><td><p>longitude</p></td>
+<td><p>longitude</p></td>
+</tr>
+<tr class="row-odd"><td><p>elevation</p></td>
+<td><p>elevation</p></td>
+</tr>
+<tr class="row-even"><td><p>deep_soil_temperature</p></td>
+<td><p>lower boundary soil temperature</p></td>
+</tr>
+<tr class="row-odd"><td><p>max_snow_albedo</p></td>
+<td><p>maximum snow albedo</p></td>
+</tr>
+<tr class="row-even"><td><p>gvf_monthly</p></td>
+<td><p>monthly green vegetation fraction (gvf)</p></td>
+</tr>
+<tr class="row-odd"><td><p>visible_black_sky_albedo</p></td>
+<td><p>visible black sky albedo</p></td>
+</tr>
+<tr class="row-even"><td><p>visible_white_sky_albedo</p></td>
+<td><p>visible white sky albedo</p></td>
+</tr>
+<tr class="row-odd"><td><p>near_IR_black_sky_albedo</p></td>
+<td><p>near infrared black sky albedo</p></td>
+</tr>
+<tr class="row-even"><td><p>near_IR_white_sky_albedo</p></td>
+<td><p>near infrared white sky albedo</p></td>
+</tr>
+<tr class="row-odd"><td><p>soil_level_nodes</p></td>
+<td><p>soil level nodes</p></td>
+</tr>
+<tr class="row-even"><td><p>soil_level_thickness</p></td>
+<td><p>soil level thickness</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="initial-conditions-file-ufs-land-c96-init-nc">
+<h4><span class="section-number">3.1.1.3.2. </span>Initial Conditions File (<code class="docutils literal notranslate"><span class="pre">ufs-land_C96_init_*.nc</span></code>)<a class="headerlink" href="#initial-conditions-file-ufs-land-c96-init-nc" title="Link to this heading"></a></h4>
+<p>The offline Land DA System currently only supports snow DA.
+The initial conditions file includes the initial state variables that are required for the UFS land snow DA to begin a cycling run. The data must be provided in <a class="reference internal" href="../Reference/Glossary.html#term-netCDF"><span class="xref std std-term">netCDF</span></a> format.</p>
+<p>The initial conditions file is available in the <code class="docutils literal notranslate"><span class="pre">inputs</span></code> data directory (downloaded <a class="reference internal" href="#tarfile"><span class="std std-ref">above</span></a>) at the following path:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inputs</span><span class="o">/</span><span class="n">forcing</span><span class="o">/</span><span class="n">era5</span><span class="o">/</span><span class="n">init</span><span class="o">/</span><span class="n">ufs</span><span class="o">-</span><span class="n">land_C96_init_2010</span><span class="o">-</span><span class="mi">12</span><span class="o">-</span><span class="mi">31_23</span><span class="o">-</span><span class="mi">00</span><span class="o">-</span><span class="mf">00.</span><span class="n">nc</span>
+</pre></div>
+</div>
+<table class="docutils align-default" id="id17">
+<caption><span class="caption-number">Table 3.3 </span><span class="caption-text">Configuration variables specified in the initial forcing file (ufs-land_C96_init_fields_1hr.nc)</span><a class="headerlink" href="#id17" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Configuration Variables</p></th>
+<th class="head"><p>Units</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>time</p></td>
+<td><p>seconds since 1970-01-01 00:00:00</p></td>
+</tr>
+<tr class="row-odd"><td><p>date (date length)</p></td>
+<td><p>UTC date</p></td>
+</tr>
+<tr class="row-even"><td><p>latitude</p></td>
+<td><p>degrees north-south</p></td>
+</tr>
+<tr class="row-odd"><td><p>longitude</p></td>
+<td><p>degrees east-west</p></td>
+</tr>
+<tr class="row-even"><td><p>snow_water_equivalent</p></td>
+<td><p>mm</p></td>
+</tr>
+<tr class="row-odd"><td><p>snow_depth</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-even"><td><p>canopy_water</p></td>
+<td><p>mm</p></td>
+</tr>
+<tr class="row-odd"><td><p>skin_temperature</p></td>
+<td><p>K</p></td>
+</tr>
+<tr class="row-even"><td><p>soil_temperature</p></td>
+<td><p>mm</p></td>
+</tr>
+<tr class="row-odd"><td><p>soil_moisture</p></td>
+<td><p>m<sup>3</sup>/m<sup>3</sup></p></td>
+</tr>
+<tr class="row-even"><td><p>soil_liquid</p></td>
+<td><p>m<sup>3</sup>/m<sup>3</sup></p></td>
+</tr>
+<tr class="row-odd"><td><p>soil_level_thickness</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-even"><td><p>soil_level_nodes</p></td>
+<td><p>m</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="model-configuration-file-ufs-land-namelist-noahmp">
+<h4><span class="section-number">3.1.1.3.3. </span>Model Configuration File (<code class="docutils literal notranslate"><span class="pre">ufs-land.namelist.noahmp</span></code>)<a class="headerlink" href="#model-configuration-file-ufs-land-namelist-noahmp" title="Link to this heading"></a></h4>
+<p>The UFS land model uses a series of template files combined with
+user-selected settings to create required namelists and parameter
+files needed by the UFS Land DA workflow. This section describes the
+options in the <code class="docutils literal notranslate"><span class="pre">ufs-land.namelist.noahmp</span></code> file, which is generated
+from the <code class="docutils literal notranslate"><span class="pre">template.ufs-noahMP.namelist.*</span></code> file.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Any default values indicated are the defaults set in the <code class="docutils literal notranslate"><span class="pre">template.ufs-noahMP.namelist.*</span></code> files.</p>
+</div>
+<section id="run-setup-parameters">
+<h5><span class="section-number">3.1.1.3.3.1. </span>Run Setup Parameters<a class="headerlink" href="#run-setup-parameters" title="Link to this heading"></a></h5>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">static_file</span></code></dt><dd><p>Specifies the path to the UFS land static file.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">init_file</span></code></dt><dd><p>Specifies the path to the UFS land initial condition file.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_dir</span></code></dt><dd><p>Specifies the path to the UFS land forcing directory where atmospheric forcing files are located.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">separate_output</span></code></dt><dd><p>Specifies whether to enable separate output files for each output time. Valid values: <code class="docutils literal notranslate"><span class="pre">.false.</span></code> | <code class="docutils literal notranslate"><span class="pre">.true.</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>.false.</p></td>
+<td><p>do not enable (should only be used
+for single point or short simulations)</p></td>
+</tr>
+<tr class="row-odd"><td><p>.true.</p></td>
+<td><p>enable</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">output_dir</span></code></dt><dd><p>Specifies the output directory where output files will be saved. If <code class="docutils literal notranslate"><span class="pre">separate_output=.true.</span></code>, but no <code class="docutils literal notranslate"><span class="pre">output_dir</span></code> is specified, it will default to the directory where the executable is run.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">restart_frequency_s</span></code></dt><dd><p>Specifies the restart frequency (in seconds) for the UFS land model.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">restart_simulation</span></code></dt><dd><p>Specifies whether to enable the restart simulation. Valid values: <code class="docutils literal notranslate"><span class="pre">.false.</span></code> | <code class="docutils literal notranslate"><span class="pre">.true.</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>.false.</p></td>
+<td><p>do not enable</p></td>
+</tr>
+<tr class="row-odd"><td><p>.true.</p></td>
+<td><p>enable</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">restart_date</span></code></dt><dd><p>Specifies the restart date. The form is <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span> <span class="pre">HH:MM:SS</span></code>, where
+YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day,
+HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-digit second.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">restart_dir</span></code></dt><dd><p>Specifies the restart directory.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">timestep_seconds</span></code></dt><dd><p>Specifies the land model timestep in seconds.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">simulation_start</span></code></dt><dd><p>Specifies the simulation start time. The form is <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span> <span class="pre">HH:MM:SS</span></code>, where
+YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day,
+HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-digit second.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">simulation_end</span></code></dt><dd><p>Specifies the simulation end time. The form is <code class="docutils literal notranslate"><span class="pre">YYYY-MM-DD</span> <span class="pre">HH:MM:SS</span></code>, where
+YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day,
+HH is a valid 2-digit hour, MM is a valid 2-digit minute, and SS is a valid 2-digit second.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">run_days</span></code></dt><dd><p>Specifies the number of days to run.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">run_hours</span></code></dt><dd><p>Specifies the number of hours to run.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">run_minutes</span></code></dt><dd><p>Specifies the number of minutes to run.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">run_seconds</span></code></dt><dd><p>Specifies the number of seconds to run.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">run_timesteps</span></code></dt><dd><p>Specifies the number of timesteps to run.</p>
+</dd>
+</dl>
+</section>
+<section id="land-model-options">
+<h5><span class="section-number">3.1.1.3.3.2. </span>Land Model Options<a class="headerlink" href="#land-model-options" title="Link to this heading"></a></h5>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">land_model</span></code></dt><dd><p>Specifies which land surface model to use. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>Noah</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>Noah-MP</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+</dl>
+</section>
+<section id="structure-related-parameters">
+<h5><span class="section-number">3.1.1.3.3.3. </span>Structure-Related Parameters<a class="headerlink" href="#structure-related-parameters" title="Link to this heading"></a></h5>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">num_soil_levels</span></code></dt><dd><p>Specifies the number of soil levels.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_height</span></code></dt><dd><p>Specifies the forcing height in meters.</p>
+</dd>
+</dl>
+</section>
+<section id="soil-setup-parameters">
+<h5><span class="section-number">3.1.1.3.3.4. </span>Soil Setup Parameters<a class="headerlink" href="#soil-setup-parameters" title="Link to this heading"></a></h5>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">soil_level_thickness</span></code></dt><dd><p>Specifies the thickness (in meters) of each of the soil layers (top layer to bottom layer).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">soil_level_nodes</span></code></dt><dd><p>Specifies the soil level centroids from the surface (in meters).</p>
+</dd>
+</dl>
+</section>
+<section id="noah-mp-options">
+<h5><span class="section-number">3.1.1.3.3.5. </span>Noah-MP Options<a class="headerlink" href="#noah-mp-options" title="Link to this heading"></a></h5>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">dynamic_vegetation_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">4</span></code>)</dt><dd><p>Specifies the dynamic vegetation model option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code> | <code class="docutils literal notranslate"><span class="pre">4</span></code> | <code class="docutils literal notranslate"><span class="pre">5</span></code> | <code class="docutils literal notranslate"><span class="pre">6</span></code> | <code class="docutils literal notranslate"><span class="pre">7</span></code> | <code class="docutils literal notranslate"><span class="pre">8</span></code> | <code class="docutils literal notranslate"><span class="pre">9</span></code> | <code class="docutils literal notranslate"><span class="pre">10</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>off (use table LAI; use FVEG=SHDFAC from input)</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>on (dynamic vegetation; must use Ball-Berry canopy option)</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>off (use table LAI; calculate FVEG)</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>off (use table LAI; use maximum vegetation fraction)</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>on (use maximum vegetation fraction)</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>on (use FVEG = SHDFAC from input)</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>off (use input LAI; use FVEG = SHDFAC from input)</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>off (use input LAI; calculate FVEG)</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>off (use input LAI; use maximum vegetation fraction)</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>crop model on (use maximum vegetation fraction)</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">LAI</span></code></dt><dd><p>Routines for handling Leaf/Stem area index data products</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">FVEG</span></code></dt><dd><p>Green vegetation fraction [0.0-1.0]</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">SHDFAC</span></code></dt><dd><p>Greenness vegetation (shaded) fraction</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">canopy_stomatal_resistance_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">2</span></code>)</dt><dd><p>Specifies the canopy stomatal resistance option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>Ball-Berry</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>Jarvis</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">soil_wetness_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the soil moisture factor for the stomatal resistance option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>Noah (soil moisture)</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>CLM (matric potential)</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>SSiB (matric potential)</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">runoff_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the runoff option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code> | <code class="docutils literal notranslate"><span class="pre">4</span></code> | <code class="docutils literal notranslate"><span class="pre">5</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>SIMGM: TOPMODEL with groundwater (<span id="id1">Niu <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id9" title="G.-Y. Niu, Z.-L. Yang, R.E. Dickinson, L.E. Gulden, and H. Su. Development of a simple groundwater model for use in climate models and evaluation with gravity recovery and climate experiment data. Journal of Geophysical Research, 2007. doi:10.1029/2006JD007522.">NYD+07</a>]</span>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>SIMTOP: TOPMODEL with an equilibrium water table
+(<span id="id2">Niu <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id8" title="G.-Y. Niu, Z.-L. Yang, R.E. Dickinson, and L.E. Gulden. A simple topmodel-based runoff parameterization (simtop) for use in gcms. Journal of Geophysical Research, 2005. doi:10.1029/2005JD006111.">NYREDG05</a>]</span>)</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>Noah original surface and subsurface runoff (free drainage)
+(<span id="id3">Schaake <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id12" title="J.C. Schaake, V.I. Koren, Q.-Y. Duan, K.E. Mitchell, and F. Chen. Simple water balance model for estimating runoff at different spatial and temporal scales. Journal of Geophysical Research, 101(D3):7461–7475, 1996. doi:10.1029/95JD02892.">SKD+96</a>]</span>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>BATS surface and subsurface runoff (free drainage)</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>Miguez-Macho &amp; Fan groundwater scheme (<span id="id4">Miguez-Macho <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id10" title="G. Miguez-Macho, Y. Fan, C.P. Weaver, R. Walko, and A. Robock. Incorporating water table dynamics in climate modeling: 2. formulation, validation, and soil moisture simulation. Journal of Geophysical Research, 2007. doi:10.1029/2006JD008112.">MMFW+07</a>]</span>;
+<span id="id5">Fan <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id11" title="Y. Fan, G. Miguez-Macho, C.P. Weaver, R. Walko, and A. Robock. Incorporating water table dynamics in climate modeling: 1. water table observations and equilibrium water table simulations. Journal of Geophysical Research, 112(D10):19569–19585, 2007. doi:10.1029/2006JD008111.">FMMW+07</a>]</span>)</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">surface_exchange_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">3</span></code>)</dt><dd><p>Specifies the surface layer drag coefficient option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>Monin-Obukhov</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>original Noah (Chen 1997)</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">supercooled_soilwater_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the supercooled liquid water option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>no iteration (<span id="id6">Niu and Yang [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id14" title="G.-Y. Niu and Z.-L. Yang. Effects of frozen soil on snowmelt runoff and soil water storage at a continental scale. Journal of Hydrometeorology, 7(5):937–952, 2006. doi:10.1175/JHM538.1.">NY06</a>]</span>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>Koren’s iteration (<span id="id7">Koren <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id6" title="V. Koren, J. Schaake, K. Mitchell, Q.Y. Duan, F. Chen, and J.M. Baker. A parameterization of snowpack and frozen ground intended for ncep weather and climate models. Journal of Geophysical Research, 104(D16):19569–19585, 1999. doi:10.1029/1999JD900232.">KSM+99</a>]</span>)</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">frozen_soil_adjust_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the frozen soil permeability option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>linear effects, more permeable (<span id="id8">Niu and Yang [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id14" title="G.-Y. Niu and Z.-L. Yang. Effects of frozen soil on snowmelt runoff and soil water storage at a continental scale. Journal of Hydrometeorology, 7(5):937–952, 2006. doi:10.1175/JHM538.1.">NY06</a>]</span>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>nonlinear effects, less permeable (<span id="id9">Koren <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id6" title="V. Koren, J. Schaake, K. Mitchell, Q.Y. Duan, F. Chen, and J.M. Baker. A parameterization of snowpack and frozen ground intended for ncep weather and climate models. Journal of Geophysical Research, 104(D16):19569–19585, 1999. doi:10.1029/1999JD900232.">KSM+99</a>]</span>)</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">radiative_transfer_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">3</span></code>)</dt><dd><p>Specifies the radiation transfer option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>modified two-stream (gap = F(solar angle, 3D structure…)&lt;1-FVEG)</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>two-stream applied to grid-cell (gap = 0)</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>two-stream applied to a vegetated fraction (gap=1-FVEG)</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">snow_albedo_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">2</span></code>)</dt><dd><p>Specifies the snow surface albedo option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>BATS</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>CLASS</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">precip_partition_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the option for partitioning precipitation into rainfall and snowfall. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code> | <code class="docutils literal notranslate"><span class="pre">4</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p><span id="id10">Jordan [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id26" title="R. Jordan. A one-dimensional temperature model for a snow cover: technical documentation for sntherm.89. Technical Report Special Rep. 91-16, U.S. Army Cold Regions Research and Engineering Laboratory, Hanover, NH, October 1991.">Jor91</a>]</span> (1991)</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>BATS: when SFCTMP&lt;TFRZ+2.2</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>Noah: when SFCTMP&lt;TFRZ</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>Use WRF microphysics output</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">SFCTMP</span></code></dt><dd><p>Surface air temperature</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">TFRZ</span></code></dt><dd><p>Freezing/melting point (K)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">soil_temp_lower_bdy_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">2</span></code>)</dt><dd><p>Specifies the lower boundary condition of soil temperature option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>zero heat flux from the bottom (ZBOT and TBOT not used)</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>TBOT at ZBOT (8m) read from a file (original Noah)</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">TBOT</span></code></dt><dd><p>Lower boundary soil temperature [K]</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ZBOT</span></code></dt><dd><p>Depth[m] of lower boundary soil temperature (TBOT)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">soil_temp_time_scheme_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">3</span></code>)</dt><dd><p>Specifies the snow and soil temperature time scheme. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>semi-implicit; flux top boundary condition</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>fully implicit (original Noah); temperature top boundary condition</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>same as 1, but FSNO for TS calculation (generally improves snow; v3.7)</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">FSNO</span></code></dt><dd><p>Fraction of surface covered with snow</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">TS</span></code></dt><dd><p>Surface temperature</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">thermal_roughness_scheme_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">2</span></code>)</dt><dd><p>Specifies the method/scheme used to calculate the thermal roughness length. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code> | <code class="docutils literal notranslate"><span class="pre">4</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>z0h=z, thermal roughness length = momentum roughness length</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>czil, use canopy height method based on (<span id="id11">Chen and Zhang [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id24" title="F. Chen and Y. Zhang. On the coupling strength between the land surface and the atmosphere: from viewpoint of surface exchange coefficients. Geophys. Res. Lett., 2009. doi:10.1029/2009GL037980.">CZ09</a>]</span>)</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>European Center method</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>kb inverse method</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">surface_evap_resistance_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the surface evaporation resistance option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code> | <code class="docutils literal notranslate"><span class="pre">3</span></code> | <code class="docutils literal notranslate"><span class="pre">4</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p><span id="id12">Sakaguchi and Zeng [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id15" title="K. Sakaguchi and X. Zeng. Effects of soil wetness, plant litter, and under-canopy atmospheric stability on ground evaporation in the community land model (clm3.5). Journal of Geophysical Research, 2009. doi:10.1029/2008JD010834.">SZ09</a>]</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p><span id="id13">Sellers <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id16" title="P.J. Sellers, M.D. Heiser, and F.G. Hall. Relations between surface conductance and spectral vegetation indices at intermediate (100 m2 to 15 km2) length scales. Journal of Geophysical Research, 97(D17):19033–19059, 1992. doi:10.1029/92JD01096.">SMDHH92</a>]</span></p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>adjusted Sellers to decrease RSURF for wet soil</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>option 1 for non-snow; rsurf = rsurf_snow for snow</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">rsurf</span></code></dt><dd><p>Ground surface resistance (s/m)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">glacier_option</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>)</dt><dd><p>Specifies the glacier model option. Valid values: <code class="docutils literal notranslate"><span class="pre">1</span></code> | <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>include phase change of ice</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>simple (ice treatment more like original Noah)</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+</dl>
+</section>
+<section id="forcing-parameters">
+<h5><span class="section-number">3.1.1.3.3.6. </span>Forcing Parameters<a class="headerlink" href="#forcing-parameters" title="Link to this heading"></a></h5>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_timestep_seconds</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">3600</span></code>)</dt><dd><p>Specifies the forcing timestep in seconds.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_type</span></code></dt><dd><p>Specifies the forcing type option, which describes the frequency and length of forcing in each forcing file. Valid values: <code class="docutils literal notranslate"><span class="pre">single-point</span></code> | <code class="docutils literal notranslate"><span class="pre">gswp3</span></code> | <code class="docutils literal notranslate"><span class="pre">gdas</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>single-point</p></td>
+<td><p>All forcing times are in one file</p></td>
+</tr>
+<tr class="row-odd"><td><p>gswp3</p></td>
+<td><p>three-hourly forcing stored in monthly files</p></td>
+</tr>
+<tr class="row-even"><td><p>gdas</p></td>
+<td><p>hourly forcing stored in daily files</p></td>
+</tr>
+<tr class="row-odd"><td><p>era5</p></td>
+<td><p>hourly forcing stored in daily files</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_filename</span></code></dt><dd><p>Specifies the forcing file name prefix. A date will be appended to this prefix. For example: <code class="docutils literal notranslate"><span class="pre">C96_ERA5_forcing_2020-10-01.nc</span></code>. The prefix merely indicates which grid (<code class="docutils literal notranslate"><span class="pre">C96</span></code>) and source (i.e., GDAS, GEFS) will be used.
+Common values include: <code class="docutils literal notranslate"><span class="pre">C96_GDAS_forcing_</span></code> | <code class="docutils literal notranslate"><span class="pre">C96_ERA5_forcing_</span></code> | <code class="docutils literal notranslate"><span class="pre">C96_GEFS_forcing_</span></code> | <code class="docutils literal notranslate"><span class="pre">C96_GSWP3_forcing_</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">C96_GDAS_forcing_</span></code></p></td>
+<td><p>GDAS forcing data for a C96 grid</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">C96_ERA5_forcing_</span></code></p></td>
+<td><p>ERA5 forcing data for a C96 grid</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">C96_GEFS_forcing_</span></code></p></td>
+<td><p>GEFS forcing data for a C96 grid</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">C96_GSWP3_forcing_</span></code></p></td>
+<td><p>GSWP3 forcing data for a C96 grid</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_interp_solar</span></code></dt><dd><p>Specifies the interpolation option for solar radiation. Valid values: <code class="docutils literal notranslate"><span class="pre">linear</span></code> | <code class="docutils literal notranslate"><span class="pre">gswp3_zenith</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>linear</p></td>
+<td><p>Performs a linear interpolation between forcing times</p></td>
+</tr>
+<tr class="row-odd"><td><p>gswp3_zenith</p></td>
+<td><p>Performs a cosine zenith angle interpolation between
+forcing times</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_time_solar</span></code></dt><dd><p>Valid values include: <code class="docutils literal notranslate"><span class="pre">&quot;instantaneous&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;gswp3_average&quot;</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_name_precipitation</span></code></dt><dd><p>Specifies the variable name of forcing precipitation. Valid values include: <code class="docutils literal notranslate"><span class="pre">&quot;precipitation_conserve&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;precipitation_bilinear&quot;</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_name_temperature``(Default:</span> <span class="pre">``&quot;temperature&quot;</span></code>)</dt><dd><p>Specifies the variable name of forcing temperature.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_name_specific_humidity</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">&quot;specific_humidity&quot;</span></code>)</dt><dd><p>Specifies the variable name of forcing specific-humidity.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_name_wind_speed</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">&quot;wind_speed&quot;</span></code>)</dt><dd><p>Specifies the variable name of forcing wind speed.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_name_pressure</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">&quot;surface_pressure&quot;</span></code>)</dt><dd><p>Specifies the variable name of forcing surface pressure.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_name_sw_radiation</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">&quot;solar_radiation&quot;</span></code>)</dt><dd><p>Specifies the variable name of forcing shortwave radiation.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">forcing_name_lw_radiation</span></code>: (Default: <code class="docutils literal notranslate"><span class="pre">&quot;longwave_radiation&quot;</span></code>)</dt><dd><p>Specifies the variable name of forcing longwave radiation.</p>
+</dd>
+</dl>
+</section>
+<section id="example-namelist-entry">
+<h5><span class="section-number">3.1.1.3.3.7. </span>Example Namelist Entry<a class="headerlink" href="#example-namelist-entry" title="Link to this heading"></a></h5>
+<p>The <code class="docutils literal notranslate"><span class="pre">ufs-land.namelist.noahmp</span></code> file should be similar to the following example, which comes from the <code class="docutils literal notranslate"><span class="pre">template.ufs-noahMP.namelist.gdas</span></code> file.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&amp;run_setup</span>
+
+<span class="go">   static_file      = &quot;/LANDDA_INPUTS/forcing/era5/static/ufs-land_C96_static_fields.nc&quot;</span>
+<span class="go">   init_file        = &quot;/LANDDA_INPUTS/forcing/era5/init/ufs-land_C96_init_2010-12-31_23-00-00.nc&quot;</span>
+<span class="go">   forcing_dir      = &quot;/LANDDA_INPUTS/forcing/era5/datm/C96/&quot;</span>
+
+<span class="go">   separate_output = .false.</span>
+<span class="go">   output_dir       = &quot;./noahmp_output/&quot;</span>
+<span class="go">   output_frequency_s = 0</span>
+
+<span class="go">   restart_frequency_s = XXFREQ</span>
+<span class="go">   restart_simulation  = .true.</span>
+<span class="go">   restart_date        = &quot;XXYYYY-XXMM-XXDD XXHH:00:00&quot;</span>
+<span class="go">   restart_dir         = &quot;./&quot;</span>
+
+<span class="go">   timestep_seconds = 3600</span>
+
+<span class="go"> ! simulation_start is required</span>
+<span class="go"> ! either set simulation_end or run_* or run_timesteps, priority</span>
+<span class="go"> !   1. simulation_end 2. run_[days/hours/minutes/seconds] 3. run_timesteps</span>
+
+<span class="go">   simulation_start = &quot;2011-01-01 00:00:00&quot;      ! start date [yyyy-mm-dd hh:mm:ss]</span>
+<span class="go">   !  simulation_end   = &quot;1999-01-01 06:00:00&quot;   !   end date [yyyy-mm-dd hh:mm:ss]</span>
+
+<span class="go">   run_days         = XXRDD   ! number of days to run</span>
+<span class="go">   run_hours        = XXRHH   ! number of hours to run</span>
+<span class="go">   run_minutes      = 0       ! number of minutes to run</span>
+<span class="go">   run_seconds      = 0       ! number of seconds to run</span>
+
+<span class="go">   run_timesteps    = 0       ! number of timesteps to run</span>
+
+<span class="go">   location_start   = 1</span>
+<span class="go">   location_end     = 18322</span>
+
+<span class="go">/</span>
+
+<span class="go">&amp;land_model_option</span>
+<span class="go">   land_model        = 2   ! choose land model: 1=noah, 2=noahmp</span>
+<span class="go">/</span>
+
+<span class="go">&amp;structure</span>
+<span class="go">   num_soil_levels   = 4     ! number of soil levels</span>
+<span class="go">   forcing_height    = 10    ! forcing height [m]</span>
+<span class="go">/</span>
+
+<span class="go">&amp;soil_setup</span>
+<span class="go">   soil_level_thickness   =  0.10,    0.30,    0.60,    1.00      ! soil level thicknesses [m]</span>
+<span class="go">   soil_level_nodes       =  0.05,    0.25,    0.70,    1.50      ! soil level centroids from surface [m]</span>
+<span class="go">/</span>
+
+<span class="go">&amp;noahmp_options</span>
+<span class="go">   dynamic_vegetation_option         = 4</span>
+<span class="go">   canopy_stomatal_resistance_option = 2</span>
+<span class="go">   soil_wetness_option               = 1</span>
+<span class="go">   runoff_option                     = 1</span>
+<span class="go">   surface_exchange_option           = 3</span>
+<span class="go">   supercooled_soilwater_option      = 1</span>
+<span class="go">   frozen_soil_adjust_option         = 1</span>
+<span class="go">   radiative_transfer_option         = 3</span>
+<span class="go">   snow_albedo_option                = 2</span>
+<span class="go">   precip_partition_option           = 1</span>
+<span class="go">   soil_temp_lower_bdy_option        = 2</span>
+<span class="go">   soil_temp_time_scheme_option      = 3</span>
+<span class="go">   thermal_roughness_scheme_option   = 2</span>
+<span class="go">   surface_evap_resistance_option    = 1</span>
+<span class="go">   glacier_option                    = 1</span>
+<span class="go">/</span>
+
+<span class="go">&amp;forcing</span>
+<span class="go">   forcing_timestep_seconds       = 3600</span>
+<span class="go">   forcing_regrid                 = &quot;none&quot;</span>
+<span class="go">   forcing_regrid_weights_filename= &quot;&quot;</span>
+<span class="go">   forcing_type                   = &quot;dd_1h&quot;</span>
+<span class="go">   forcing_filename               = &quot;C96_ERA5_forcing_&quot;</span>
+<span class="go">   forcing_interp_solar           = &quot;linear&quot;  ! gswp3_zenith or linear</span>
+<span class="go">   forcing_time_solar             = &quot;instantaneous&quot;  ! gswp3_average or instantaneous</span>
+<span class="go">   forcing_name_precipitation     = &quot;precipitation_bilinear&quot;</span>
+<span class="go">   forcing_name_temperature       = &quot;temperature&quot;</span>
+<span class="go">   forcing_name_specific_humidity = &quot;specific_humidity&quot;</span>
+<span class="go">   forcing_name_wind_speed        = &quot;wind_speed&quot;</span>
+<span class="go">   forcing_name_pressure          = &quot;surface_pressure&quot;</span>
+<span class="go">   forcing_name_sw_radiation      = &quot;solar_radiation&quot;</span>
+<span class="go">   forcing_name_lw_radiation      = &quot;longwave_radiation&quot;</span>
+<span class="go">/</span>
+
+<span class="go">&amp;io</span>
+<span class="go">   output_names  =      &quot;snow_water_equiv&quot;,</span>
+<span class="go">                        &quot;snow_depth&quot;,</span>
+<span class="go">                        &quot;temperature_snow&quot;</span>
+<span class="go">   daily_mean_names   = &quot;&quot;</span>
+<span class="go">   monthly_mean_names = &quot;&quot;</span>
+<span class="go">   solar_noon_names =   &quot;&quot;</span>
+<span class="go">   restart_names = &quot;&quot;</span>
+<span class="go">/</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+<section id="vector-to-tile-converter">
+<span id="vectortileconverter"></span><h2><span class="section-number">3.1.2. </span>Vector-to-Tile Converter<a class="headerlink" href="#vector-to-tile-converter" title="Link to this heading"></a></h2>
+<p>The Vector-to-Tile Converter is used for mapping between the vector format
+used by the Noah-MP offline driver and the tile format used by the UFS
+atmospheric model. This converter is currently used to prepare input tile files
+for JEDI. Note that these files include only those fields required by
+JEDI, rather than the full restart.</p>
+<section id="input-file">
+<span id="v2tinputfiles"></span><h3><span class="section-number">3.1.2.1. </span>Input File<a class="headerlink" href="#input-file" title="Link to this heading"></a></h3>
+<p>The input files containing grid information are listed in <a class="reference internal" href="#gridinputfiles"><span class="std std-numref">Table 3.4</span></a>:</p>
+<span id="gridinputfiles"></span><table class="docutils align-default" id="id18">
+<caption><span class="caption-number">Table 3.4 </span><span class="caption-text">Input Files Containing Grid Information</span><a class="headerlink" href="#id18" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Filename</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Cxx_grid.tile[1-6].nc</p></td>
+<td><p>Cxx grid information for tiles 1-6, where <code class="docutils literal notranslate"><span class="pre">xx</span></code> is the grid resolution.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cxx_oro_data.tile[1-6].nc</p>
+<p>oro_Cxx.mx100.tile[1-6].nc</p>
+</td>
+<td><p>Orography files that contain grid and land mask information.
+Cxx refers to the atmospheric resolution, and mx100 refers to the ocean
+resolution (100=1º). Both file names refer to the same file; there are symbolic links between them.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="configuration-file">
+<h3><span class="section-number">3.1.2.2. </span>Configuration File<a class="headerlink" href="#configuration-file" title="Link to this heading"></a></h3>
+<p>This section describes the options in the <code class="docutils literal notranslate"><span class="pre">namelist.vector2tile</span></code> file.</p>
+<section id="id14">
+<h4><span class="section-number">3.1.2.2.1. </span>Run Setup Parameters<a class="headerlink" href="#id14" title="Link to this heading"></a></h4>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">direction</span></code></dt><dd><p>Specifies the conversion option. Valid values: <code class="docutils literal notranslate"><span class="pre">vector2tile</span></code> | <code class="docutils literal notranslate"><span class="pre">tile2vector</span></code> | <code class="docutils literal notranslate"><span class="pre">lndp2tile</span></code> | <code class="docutils literal notranslate"><span class="pre">lndp2vector</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>vector2tile</p></td>
+<td><p>vector-to-tile conversion for restart file</p></td>
+</tr>
+<tr class="row-odd"><td><p>tile2vector</p></td>
+<td><p>tile-to-vector conversion for restart file</p></td>
+</tr>
+<tr class="row-even"><td><p>lndp2tile</p></td>
+<td><p>land perturbation to tile</p></td>
+</tr>
+<tr class="row-odd"><td><p>lndp2vector</p></td>
+<td><p>land perturbation to vector</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+</dl>
+</section>
+<section id="fv3-tile-related-parameters-for-restart-perturbation-conversion">
+<h4><span class="section-number">3.1.2.2.2. </span>FV3 Tile-Related Parameters for Restart/Perturbation Conversion<a class="headerlink" href="#fv3-tile-related-parameters-for-restart-perturbation-conversion" title="Link to this heading"></a></h4>
+<p>Parameters in this section include the FV3 resolution and path to orographic files
+for restart/perturbation conversion.</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">tile_size</span></code></dt><dd><p>Specifies the size (horizontal resolution) of the FV3 tile. Valid values: <code class="docutils literal notranslate"><span class="pre">96</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">C96</span></code> grid files correspond to approximately 1º latitude/longitude.</p></li>
+<li><p>Additional resolutions (e.g., <code class="docutils literal notranslate"><span class="pre">192</span></code>, <code class="docutils literal notranslate"><span class="pre">384</span></code>, <code class="docutils literal notranslate"><span class="pre">768</span></code>) are under development.</p></li>
+</ul>
+</div>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tile_path</span></code></dt><dd><p>Specifies the path to the orographic tile files.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tile_fstub</span></code></dt><dd><p>Specifies the name (file stub) of orographic tile files. The file stub will be named <code class="docutils literal notranslate"><span class="pre">oro_C${RES}</span></code> for atmosphere-only and <code class="docutils literal notranslate"><span class="pre">oro_C{RES}.mx100</span></code> for atmosphere and ocean.</p>
+</dd>
+</dl>
+</section>
+<section id="parameters-for-restart-conversion">
+<h4><span class="section-number">3.1.2.2.3. </span>Parameters for Restart Conversion<a class="headerlink" href="#parameters-for-restart-conversion" title="Link to this heading"></a></h4>
+<p>These parameters apply <em>only</em> to restart conversion.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">static_filename</span></code></dt><dd><p>Specifies the path for static file.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">vector_restart_path</span></code></dt><dd><p>Specifies the location of vector restart file, vector-to-tile direction.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">tile_restart_path</span></code></dt><dd><p>Specifies the location of tile restart file, tile-to-vector direction.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">output_path</span></code></dt><dd><p>Specifies the path for converted files. If this is same
+as tile/vector path, the files may be overwritten.</p>
+</dd>
+</dl>
+</section>
+<section id="perturbation-mapping-parameters">
+<h4><span class="section-number">3.1.2.2.4. </span>Perturbation Mapping Parameters<a class="headerlink" href="#perturbation-mapping-parameters" title="Link to this heading"></a></h4>
+<p>These parameters are <em>only</em> relevant for perturbation mapping in ensembles.
+Support for ensembles is <em>not</em> provided for the Land DA v1.0.0 release.</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">lndp_layout</span></code></dt><dd><p>Specifies the layout options. Valid values: <code class="docutils literal notranslate"><span class="pre">1x4</span></code> | <code class="docutils literal notranslate"><span class="pre">4x1</span></code> | <code class="docutils literal notranslate"><span class="pre">2x2</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">lndp_input_file</span></code></dt><dd><p>Specifies the path for the input file.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">output</span> <span class="pre">files</span></code></dt><dd><p>Specifies the path for the output file.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">lndp_var_list</span></code></dt><dd><p>Specifies the land perturbation variable options. Valid values: <code class="docutils literal notranslate"><span class="pre">vgf</span></code> | <code class="docutils literal notranslate"><span class="pre">smc</span></code></p>
+<blockquote>
+<div><table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>vgf</p></td>
+<td><p>Perturbs the vegetation green fraction</p></td>
+</tr>
+<tr class="row-odd"><td><p>smc</p></td>
+<td><p>Perturbs the soil moisture</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd>
+</dl>
+</section>
+<section id="example-of-a-namelist-vector2tile-entry">
+<h4><span class="section-number">3.1.2.2.5. </span>Example of a <code class="docutils literal notranslate"><span class="pre">namelist.vector2tile</span></code> Entry<a class="headerlink" href="#example-of-a-namelist-vector2tile-entry" title="Link to this heading"></a></h4>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&amp;run_setup</span>
+
+<span class="go">direction = &quot;vector2tile&quot;</span>
+
+<span class="go">&amp;FV3 resolution and path to oro files for restart/perturbation</span>
+<span class="go">conversion</span>
+
+<span class="go">tile_size = 96</span>
+<span class="go">tile_path =&quot;/ /&quot;</span>
+<span class="go">tile_fstub = &quot;oro_C96.mx100&quot;</span>
+
+<span class="go">!------------------- only restart conversion -------------------</span>
+
+<span class="go">! Time stamp for conversion for restart conversion</span>
+<span class="go">restart_date = &quot;2019-09-30 23:00:00&quot;</span>
+
+<span class="go">! Path for static file</span>
+<span class="go">static_filename=&quot;/*/filename.nc &quot;</span>
+
+<span class="go">! Location of vector restart file (vector2tile direction)</span>
+<span class="go">vector_restart_path =&quot;/ /&quot;</span>
+
+<span class="go">! Location of tile restart files (tile2vector direction)</span>
+<span class="go">tile_restart_path =&quot;/ /&quot;</span>
+
+<span class="go">output_path =&quot;/ /&quot;</span>
+
+<span class="go">!------------------- only perturbation mapping -------------------</span>
+<span class="go">lndp_layout = &quot;1x4&quot;</span>
+
+<span class="go">! input files</span>
+<span class="go">lndp_input_file =&quot;/*/filename.nc &quot;</span>
+
+<span class="go">! output files</span>
+<span class="go">lndp_output_file = &quot;./output.nc&quot;</span>
+
+<span class="go">! land perturbation variable list</span>
+<span class="go">lndp_var_list=&#39;vgf&#39;,&#39;smc&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="3. Customizing the Workflow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="DASystem.html" class="btn btn-neutral float-right" title="3.2. Land Data Assimilation System" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
