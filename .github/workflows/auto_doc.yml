@@ -18,7 +18,6 @@ jobs:
       uses: ammaraskar/sphinx-action@dev
       with:
         docs-folder: "doc/"
-        build-command: "sphinx-build source build"
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
