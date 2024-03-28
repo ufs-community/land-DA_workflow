@@ -87,7 +87,7 @@ fi
 if [[ -e ${CYCLEDIR}/exec/ufsLand.exe ]]; then
   export LSMexec=${CYCLEDIR}/exec/ufsLand.exe
 else
-  export LSMexec=${CYCLEDIR}/sorc/ufs-land-driver-emc-dev/run/ufsLand.exe
+  export LSMexec=${CYCLEDIR}/sorc/ufsLand.fd/run/ufsLand.exe
 fi
 
 export DADIR=${CYCLEDIR}/sorc/DA_update/
