@@ -99,19 +99,21 @@ On many NOAA :term:`RDHPCS` systems, a container named ``ubuntu20.04-intel-landd
 
 .. table:: Locations of Pre-Built Containers
 
-   +--------------+--------------------------------------------------------+
-   | Machine      | File location                                          |
-   +==============+========================================================+
-   | Derecho      | /glade/work/epicufsrt/contrib/containers               |
-   +--------------+--------------------------------------------------------+
-   | Gaea         | /lustre/f2/dev/role.epic/contrib/containers            |
-   +--------------+--------------------------------------------------------+
-   | Hera         | /scratch1/NCEPDEV/nems/role.epic/containers            |
-   +--------------+--------------------------------------------------------+
-   | Jet          | /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers            |
-   +--------------+--------------------------------------------------------+
-   | Orion        | /work/noaa/epic/role-epic/contrib/containers           |
-   +--------------+--------------------------------------------------------+
+   +-----------------+--------------------------------------------------------+
+   | Machine         | File location                                          |
+   +=================+========================================================+
+   | Derecho         | /glade/work/epicufsrt/contrib/containers               |
+   +-----------------+--------------------------------------------------------+
+   | Gaea            | /gpfs/f5/epic/world-shared/containers                  |
+   +-----------------+--------------------------------------------------------+
+   | Hera            | /scratch1/NCEPDEV/nems/role.epic/containers            |
+   +-----------------+--------------------------------------------------------+
+   | Jet             | /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers            |
+   +-----------------+--------------------------------------------------------+
+   | NOAA Cloud      | /contrib/EPIC/containers                               |
+   +-----------------+--------------------------------------------------------+
+   | Orion/Hercules  | /work/noaa/epic/role-epic/contrib/containers           |
+   +-----------------+--------------------------------------------------------+
 
 Users can simply set an environment variable to point to the container: 
 
@@ -244,7 +246,7 @@ Navigate to the ``land-DA_workflow`` directory after it has been successfully co
 
    cd land-DA_workflow
 
-When using a Singularity container, Intel compilers and Intel :term:`MPI` (preferably 2020 versions or newer) need to be available on the host system to properly launch MPI jobs. Generally, this is accomplished by loading a module with a recent Intel compiler and then loading the corresponding Intel MPI. For example, users can modify the following commands to load their system's compiler/MPI combination:
+When using a Singularity container, Intel compilers and Intel :term:`MPI` (preferably 2020 versions or newer) need to be available on the host system to properly launch MPI jobs. The Level 1 systems that have Intel compilers and Intel MPI available are: Hera, Jet, NOAA Cloud, and Orion. Generally, this is accomplished by loading a module with a recent Intel compiler and then loading the corresponding Intel MPI. For example, users can modify the following commands to load their system's compiler/MPI combination:
 
 .. code-block:: console
 
@@ -259,6 +261,27 @@ When using a Singularity container, Intel compilers and Intel :term:`MPI` (prefe
       source /path/to/init/bash
    
    Then they should be able to load the appropriate modules.
+
+The remaining Level 1 systems that do not have Intel MPI available will need to load a different Intel compiler and MPI combination. Refer to :numref:`Table %s <NonIMPICompilers>` for which Intel compiler and MPI to load for these systems.
+
+.. _NonIMPICompilers:
+
+.. table:: Intel compilers and MPIs for non-Intel MPI Level 1 systems
+
+   +-----------------+-------------------------------------------------------------------------+
+   | Machine         | Intel compiler and MPI combinations                                     |
+   +=================+=========================================================================+
+   | Derecho         |  module load intel-oneapi/2023.2.1 cray-mpich/8.1.25                    |
+   +-----------------+-------------------------------------------------------------------------+
+   | Gaea            |  module load intel-classic/2023.1.0 cray-mpich/8.1.25                   |
+   +-----------------+-------------------------------------------------------------------------+
+   | Hercules        |  module load intel-oneapi-compilers/2022.2.1 intel-oneapi-mpi/2021.7.1  |
+   +-----------------+-------------------------------------------------------------------------+
+
+For Derecho and Gaea, an additional script is needed to help set up the land-DA workflow scripts so that the container can run there. 
+
+.. code-block:: console
+      ./setup_container.sh -p=<derecho|gaea>
 
 .. _ConfigureExptC:
 
