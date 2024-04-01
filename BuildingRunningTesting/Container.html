@@ -203,7 +203,7 @@
 <td><p>/glade/work/epicufsrt/contrib/containers</p></td>
 </tr>
 <tr class="row-odd"><td><p>Gaea</p></td>
-<td><p>/lustre/f2/dev/role.epic/contrib/containers</p></td>
+<td><p>/gpfs/f5/epic/world-shared/containers</p></td>
 </tr>
 <tr class="row-even"><td><p>Hera</p></td>
 <td><p>/scratch1/NCEPDEV/nems/role.epic/containers</p></td>
@@ -211,7 +211,10 @@
 <tr class="row-odd"><td><p>Jet</p></td>
 <td><p>/mnt/lfs4/HFIP/hfv3gfs/role.epic/containers</p></td>
 </tr>
-<tr class="row-even"><td><p>Orion</p></td>
+<tr class="row-even"><td><p>NOAA Cloud</p></td>
+<td><p>/contrib/EPIC/containers</p></td>
+</tr>
+<tr class="row-odd"><td><p>Orion/Hercules</p></td>
 <td><p>/work/noaa/epic/role-epic/contrib/containers</p></td>
 </tr>
 </tbody>
@@ -312,7 +315,7 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd land-DA_workflow</span>
 </pre></div>
 </div>
-<p>When using a Singularity container, Intel compilers and Intel <a class="reference internal" href="../Reference/Glossary.html#term-MPI"><span class="xref std std-term">MPI</span></a> (preferably 2020 versions or newer) need to be available on the host system to properly launch MPI jobs. Generally, this is accomplished by loading a module with a recent Intel compiler and then loading the corresponding Intel MPI. For example, users can modify the following commands to load their system’s compiler/MPI combination:</p>
+<p>When using a Singularity container, Intel compilers and Intel <a class="reference internal" href="../Reference/Glossary.html#term-MPI"><span class="xref std std-term">MPI</span></a> (preferably 2020 versions or newer) need to be available on the host system to properly launch MPI jobs. The Level 1 systems that have Intel compilers and Intel MPI available are: Hera, Jet, NOAA Cloud, and Orion. Generally, this is accomplished by loading a module with a recent Intel compiler and then loading the corresponding Intel MPI. For example, users can modify the following commands to load their system’s compiler/MPI combination:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">module load intel/2022.1.2 impi/2022.1.2</span>
 </pre></div>
 </div>
@@ -324,6 +327,27 @@
 </div>
 <p>Then they should be able to load the appropriate modules.</p>
 </div>
+<p>The remaining Level 1 systems that do not have Intel MPI available will need to load a different Intel compiler and MPI combination. Refer to <a class="reference internal" href="#nonimpicompilers"><span class="std std-numref">Table 2.4</span></a> for which Intel compiler and MPI to load for these systems.</p>
+<span id="nonimpicompilers"></span><table class="docutils align-default" id="id3">
+<caption><span class="caption-number">Table 2.4 </span><span class="caption-text">Intel compilers and MPIs for non-Intel MPI Level 1 systems</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Machine</p></th>
+<th class="head"><p>Intel compiler and MPI combinations</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Derecho</p></td>
+<td><p>module load intel-oneapi/2023.2.1 cray-mpich/8.1.25</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gaea</p></td>
+<td><p>module load intel-classic/2023.1.0 cray-mpich/8.1.25</p></td>
+</tr>
+<tr class="row-even"><td><p>Hercules</p></td>
+<td><p>module load intel-oneapi-compilers/2022.2.1 intel-oneapi-mpi/2021.7.1</p></td>
+</tr>
+</tbody>
+</table>
+<p>For Derecho and Gaea, an additional script is needed to help set up the land-DA workflow scripts so that the container can run there.</p>
 </section>
 <section id="configure-the-experiment">
 <span id="configureexptc"></span><h3><span class="section-number">2.2.4.2. </span>Configure the Experiment<a class="headerlink" href="#configure-the-experiment" title="Link to this heading"></a></h3>
