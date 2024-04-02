@@ -281,6 +281,7 @@ The remaining Level 1 systems that do not have Intel MPI available will need to 
 For Derecho and Gaea, an additional script is needed to help set up the land-DA workflow scripts so that the container can run there. 
 
 .. code-block:: console
+
       ./setup_container.sh -p=<derecho|gaea>
 
 .. _ConfigureExptC:
