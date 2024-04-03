@@ -13,9 +13,12 @@ jobs:
       contents: write
     steps:
     - uses: actions/checkout@v3
+
     - name: Build HTML
-      uses: ammaraskar/sphinx-action@master
-      
+      uses: ammaraskar/sphinx-action@dev
+      with:
+        docs-folder: "doc/"
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
