@@ -32,6 +32,7 @@ load(pathJoin("sp", sp_ver))
 load(pathJoin("w3emc", w3emc_ver))
 load(pathJoin("gftl-shared", gftl_shared_ver))
 load(pathJoin("mapl", mapl_ver))
+load(pathJoin("prod-util", prod_util_ver))
 
 load("ufs-pyenv")
 load("atlas")

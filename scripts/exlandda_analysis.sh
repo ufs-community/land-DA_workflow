@@ -10,14 +10,14 @@ if [[ ${EXP_NAME} == "openloop" ]]; then
 else
     do_jedi="YES"
     SAVE_TILE="YES"
-    LANDDADIR=${CYCLEDIR}/sorc/DA_update
+    LANDDADIR=${HOMElandda}/sorc/DA_update
 fi
 
 TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
-YYYY=${CTIME:0:4}
-MM=${CTIME:4:2}
-DD=${CTIME:6:2}
-HH=${CTIME:8:2}
+YYYY=${PDY:0:4}
+MM=${PDY:4:2}
+DD=${PDY:6:2}
+HH=${cyc}
 YYYP=${PTIME:0:4}
 MP=${PTIME:4:2}
 DP=${PTIME:6:2}
@@ -26,22 +26,22 @@ HP=${PTIME:8:2}
 mem_ens="mem000"
 
 MEM_WORKDIR=${WORKDIR}/${mem_ens}
-MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
+MEM_MODL_OUTDIR=${COMOUT}/${mem_ens}
 RSTRDIR=${MEM_WORKDIR}
 JEDIWORKDIR=${WORKDIR}/mem000/jedi
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
 JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
 JEDI_EXEC=$JEDI_EXECDIR/fv3jedi_letkf.x
-LOGDIR=${OUTDIR}/DA/logs
-apply_incr_EXEC=${EXECdir}/apply_incr.exe
+LOGDIR=${COMOUT}/DA/logs
+apply_incr_EXEC=${EXEClandda}/apply_incr.exe
 SAVE_INCR="YES"
 KEEPJEDIDIR="YES"
 
 cd $MEM_WORKDIR
 
 # load modulefiles
-BUILD_VERSION_FILE="${CYCLEDIR}/versions/build.ver_${MACHINE}"
+BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
 if [ -e ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi
@@ -206,7 +206,7 @@ fi
 
 # keep increments
 if [ $SAVE_INCR == "YES" ] && [ $do_DA == "YES" ]; then
-   cp ${JEDIWORKDIR}/${FILEDATE}.xainc.sfc_data.tile*.nc  ${OUTDIR}/DA/jedi_incr/
+   cp ${JEDIWORKDIR}/${FILEDATE}.xainc.sfc_data.tile*.nc  ${COMOUT}/DA/jedi_incr/
 fi 
 
 # clean up 

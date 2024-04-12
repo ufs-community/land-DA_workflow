@@ -10,15 +10,15 @@ if [[ ${EXP_NAME} == "openloop" ]]; then
 else
     do_jedi="YES"
     SAVE_TILE="YES"
-    LANDDADIR=${CYCLEDIR}/sorc/DA_update
+    LANDDADIR=${HOMElandda}/sorc/DA_update
 fi
 
 MACHINE_ID=${MACHINE}
 TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
-YYYY=${CTIME:0:4}
-MM=${CTIME:4:2}
-DD=${CTIME:6:2}
-HH=${CTIME:8:2}
+YYYY=${PDY:0:4}
+MM=${PDY:4:2}
+DD=${PDY:6:2}
+HH=${cyc}
 YYYP=${PTIME:0:4}
 MP=${PTIME:4:2}
 DP=${PTIME:6:2}
@@ -30,15 +30,15 @@ nHH=${NTIME:8:2}
 mem_ens="mem000"
 
 MEM_WORKDIR=${WORKDIR}/${mem_ens}
-MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
+MEM_MODL_OUTDIR=${COMOUT}/${mem_ens}
 RSTRDIR=${MEM_WORKDIR}
 JEDIWORKDIR=${WORKDIR}/mem000/jedi
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
 JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
 JEDI_EXEC=$JEDI_EXECDIR/fv3jedi_letkf.x
-LOGDIR=${OUTDIR}/DA/logs
-apply_incr_EXEC=${EXECdir}/apply_incr.exe
+LOGDIR=${COMOUT}/DA/logs
+apply_incr_EXEC=${EXEClandda}/apply_incr.exe
 SAVE_INCR="YES"
 KEEPJEDIDIR="YES"
 FREQ=$((${FCSTHR}*3600))
@@ -48,7 +48,7 @@ RHH=$((${FCSTHR}%24))
 cd $MEM_WORKDIR
 
 # load modulefiles
-BUILD_VERSION_FILE="${CYCLEDIR}/versions/build.ver_${MACHINE}"
+BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
 if [ -e ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi
@@ -68,7 +68,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
     echo '************************************************'
     echo 'calling tile2vector' 
 
-    cp  ${CYCLEDIR}/parm/templates/template.tile2vector tile2vector.namelist
+    cp  ${HOMElandda}/parm/templates/template.tile2vector tile2vector.namelist
 
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" tile2vector.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
@@ -80,7 +80,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
     sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
     sed -i -e "s#XXTPATH#${TPATH}#g" tile2vector.namelist
 
-    ${EXECdir}/vector2tile_converter.exe tile2vector.namelist
+    ${EXEClandda}/vector2tile_converter.exe tile2vector.namelist
     if [[ $? != 0 ]]; then
         echo "tile2vector failed"
         exit
@@ -96,7 +96,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     echo '************************************************'
     echo 'calling tile2tile' 
 
-    cp  ${CYCLEDIR}/parm/templates/template.jedi2ufs jedi2ufs.namelist
+    cp  ${HOMElandda}/parm/templates/template.jedi2ufs jedi2ufs.namelist
      
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" jedi2ufs.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" jedi2ufs.namelist
@@ -108,7 +108,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     sed -i -e "s/XXTSTUB/${TSTUB}/g" jedi2ufs.namelist
     sed -i -e "s#XXTPATH#${TPATH}#g" jedi2ufs.namelist
 
-    ${EXECdir}/tile2tile_converter.exe jedi2ufs.namelist
+    ${EXEClandda}/tile2tile_converter.exe jedi2ufs.namelist
     if [[ $? != 0 ]]; then
         echo "tile2tile failed"
         exit 
@@ -133,7 +133,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
     echo 'running the forecast model' 
 	
     # update model namelist 
-    cp  ${CYCLEDIR}/parm/templates/template.ufs-noahMP.namelist.${ATMOS_FORC}  ufs-land.namelist
+    cp  ${HOMElandda}/parm/templates/template.ufs-noahMP.namelist.${ATMOS_FORC}  ufs-land.namelist
     
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs-land.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
@@ -149,7 +149,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
 
     nt=$SLURM_NTASKS
 
-    ${MPIEXEC} -n 1 ${EXECdir}/ufsLand.exe
+    ${MPIEXEC} -n 1 ${EXEClandda}/ufsLand.exe
 fi 
 # no error codes on exit from model, check for restart below instead
 
@@ -160,11 +160,11 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
 
     TEST_NAME=datm_cdeps_lnd_gswp3
     TEST_NAME_RST=datm_cdeps_lnd_gswp3_rst
-    PATHRT=${CYCLEDIR}/sorc/ufs_model.fd/tests
+    PATHRT=${HOMElandda}/sorc/ufs_model.fd/tests
     RT_COMPILER=${RT_COMPILER:-intel}
     ATOL="1e-7"
 
-    cp $CYCLEDIR/$TEST_NAME_RST ${PATHRT}/tests/$TEST_NAME_RST 
+    cp $HOMElandda/$TEST_NAME_RST ${PATHRT}/tests/$TEST_NAME_RST 
     source ${PATHRT}/rt_utils.sh
     source ${PATHRT}/default_vars.sh
     source ${PATHRT}/tests/$TEST_NAME_RST
@@ -198,8 +198,8 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     export layout_y=1
 
     # FV3 executable:
-    cp ${EXECdir}/ufs_model ./ufs_model 
-    cp ${CYCLEDIR}/fv3_run ./fv3_run
+    cp ${EXEClandda}/ufs_model ./ufs_model 
+    cp ${HOMElandda}/fv3_run ./fv3_run
 
     if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then
 	if [[ $HAFS = 'false' ]] || [[ $FV3 = 'true' && $HAFS = 'true' ]]; then
@@ -247,11 +247,6 @@ fi
 ############################
 # check model ouput (all members)
 
-#mem_ens="mem000"
-
-#MEM_WORKDIR=${WORKDIR}/${mem_ens}
-#MEM_MODL_OUTDIR=${OUTDIR}/${mem_ens}
-
 if [[ ${ATMOS_FORC} == "era5" ]]; then
     if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then
 	cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
@@ -261,6 +256,6 @@ fi
 if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   for tile in 1 2 3 4 5 6
   do
-    cp ${OUTDIR}/${mem_ens}/noahmp/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
+    cp ${COMOUT}/${mem_ens}/noahmp/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
   done
 fi
