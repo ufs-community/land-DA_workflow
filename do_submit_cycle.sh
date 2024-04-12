@@ -87,7 +87,7 @@ fi
 if [[ -e ${HOMElandda}/exec/ufsLand.exe ]]; then
   export LSMexec=${HOMElandda}/exec/ufsLand.exe
 else
-  export LSMexec=${HOMElandda}/sorc/ufs-land-driver-emc-dev/run/ufsLand.exe
+  export LSMexec=${HOMElandda}/sorc/ufsLand.fd/run/ufsLand.exe
 fi
 
 export DADIR=${HOMElandda}/sorc/DA_update/
