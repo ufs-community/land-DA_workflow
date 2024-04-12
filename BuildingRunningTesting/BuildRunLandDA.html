@@ -220,7 +220,6 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">EXP_BASEDIR:</span></code> The full path to the directory where land-DA_workflow was cloned (i.e., <code class="docutils literal notranslate"><span class="pre">$LANDDAROOT</span></code>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">JEDI_INSTALL:</span></code> The full path to the system’s <code class="docutils literal notranslate"><span class="pre">jedi-bundle</span></code> installation</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">LANDDA_INPUTS:</span></code> The full path to the experiment data. See <a class="reference internal" href="#getdata"><span class="std std-ref">Data</span></a> below for information on prestaged data on Level 1 platforms.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">OUTDIR:</span></code> The full path to the directory where experiment will write its output. By default, this is set to <code class="docutils literal notranslate"><span class="pre">&quot;&amp;EXP_BASEDIR;/landda_expts/DA_&lt;forcing&gt;_test&quot;</span></code>, but users can change the <code class="docutils literal notranslate"><span class="pre">DA_&lt;forcing&gt;_test</span></code> portion to a name of their choice. If users do not change the name, the new experiment will overwrite data from the previous experiment.</p></li>
 </ul>
 </div></blockquote>
 <div class="admonition note">
@@ -285,10 +284,10 @@
 <tr class="row-even"><td><p>JLANDDA_PREP_BMAT</p></td>
 <td><p>Sets up the <a class="reference internal" href="../Reference/Glossary.html#term-JEDI"><span class="xref std std-term">JEDI</span></a> run</p></td>
 </tr>
-<tr class="row-odd"><td><p>JLANDDA_RUN_ANA</p></td>
+<tr class="row-odd"><td><p>JLANDDA_ANALYSIS</p></td>
 <td><p>Runs JEDI</p></td>
 </tr>
-<tr class="row-even"><td><p>JLANDDA_RUN_FCST</p></td>
+<tr class="row-even"><td><p>JLANDDA_FORECAST</p></td>
 <td><p>Runs forecast</p></td>
 </tr>
 </tbody>
@@ -338,18 +337,20 @@
 <p>As the experiment progresses, it will generate a number of directories to hold intermediate and output files. The directory structure for those files and directories appears below:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span>LANDDAROOT:<span class="w"> </span>Base<span class="w"> </span>directory
 <span class="go"> ├── land-DA_workflow(&lt;CYCLEDIR&gt;): Home directory of the land DA workflow</span>
-<span class="go"> ├── com</span>
-<span class="go"> │     ├── landda (&lt;NET&gt;)</span>
-<span class="go"> │     │     └── vX.Y.Z (&lt;model_ver&gt;)</span>
-<span class="go"> │     │           └── DA_&lt;forcing&gt; (&lt;OUTDIR&gt;)</span>
-<span class="go"> │     │                 ├── DA: Directory containing the output files of JEDI run</span>
-<span class="go"> │     │                 │     ├── hofx</span>
-<span class="go"> │     │                 │     ├── jedi_incr</span>
-<span class="go"> │     │                 │     └── logs</span>
-<span class="go"> │     │                 └── mem000: Directory containing the output files</span>
-<span class="go"> │     └──  output</span>
-<span class="go"> │           └──  logs</span>
-<span class="go"> │                 └── run_&lt;forcing&gt; (&lt;LOGDIR&gt;): Directory containing the log file of the Rocoto workflow</span>
+<span class="go"> ├── ptmp (&lt;PTMP&gt;)</span>
+<span class="go"> │     └── test (&lt;envir&gt;)</span>
+<span class="go"> │           └── com</span>
+<span class="go"> │                 ├── landda (&lt;NET&gt;)</span>
+<span class="go"> │                 │     └── vX.Y.Z (&lt;model_ver&gt;)</span>
+<span class="go"> │                 │           └── landda.YYYYMMDD (&lt;RUN&gt;.&lt;PDY&gt;)</span>
+<span class="go"> │                 │                 └── HH (&lt;cyc&gt;)</span>
+<span class="go"> │                 │                       ├── DA: Directory containing the output files of JEDI run</span>
+<span class="go"> │                 │                       │     ├── hofx</span>
+<span class="go"> │                 │                       │     └── jedi_incr</span>
+<span class="go"> │                 │                       └── mem000: Directory containing the output files</span>
+<span class="go"> │                 └── output</span>
+<span class="go"> │                       └── logs</span>
+<span class="go"> │                             └── run_&lt;forcing&gt; (&lt;LOGDIR&gt;): Directory containing the log file of the Rocoto workflow</span>
 <span class="go"> └── workdir(&lt;WORKDIR&gt;)</span>
 <span class="go">       └── run_&lt;forcing&gt;</span>
 <span class="go">             └── mem000: Working directory</span>
@@ -357,7 +358,7 @@
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">&lt;forcing&gt;</span></code> refers to the type of forcing data used (<code class="docutils literal notranslate"><span class="pre">gswp3</span></code> or <code class="docutils literal notranslate"><span class="pre">era5</span></code>). Each variable in parentheses and angle brackets (e.g., <code class="docutils literal notranslate"><span class="pre">(&lt;VAR&gt;)</span></code>) is the name for the directory defined in the file <code class="docutils literal notranslate"><span class="pre">land_analysis.yaml</span></code>. In the future, this directory structure will be further modified to meet the <a class="reference external" href="https://www.nco.ncep.noaa.gov/idsb/implementation_standards/">NCO Implementation Standards</a>.</p>
 <p>Check for the background and analysis files in the experiment directory:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ls -l $LANDDAROOT/com/landda/v1.2.1/run_&lt;forcing&gt;/mem000/restarts/&lt;vector_or_tile&gt;</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ls -l $LANDDAROOT/ptmp/test/com/landda/v1.2.1/landda.&lt;PDY&gt;/&lt;cyc&gt;/run_&lt;forcing&gt;/mem000/restarts/&lt;vector_or_tile&gt;</span>
 </pre></div>
 </div>
 <p>where:</p>
