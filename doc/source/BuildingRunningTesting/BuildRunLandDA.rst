@@ -125,7 +125,6 @@ Users will need to configure certain elements of their experiment in ``land_anal
    * ``EXP_BASEDIR:`` The full path to the directory where land-DA_workflow was cloned (i.e., ``$LANDDAROOT``)
    * ``JEDI_INSTALL:`` The full path to the system's ``jedi-bundle`` installation
    * ``LANDDA_INPUTS:`` The full path to the experiment data. See :ref:`Data <GetData>` below for information on prestaged data on Level 1 platforms. 
-   * ``OUTDIR:`` The full path to the directory where experiment will write its output. By default, this is set to ``"&EXP_BASEDIR;/landda_expts/DA_<forcing>_test"``, but users can change the ``DA_<forcing>_test`` portion to a name of their choice. If users do not change the name, the new experiment will overwrite data from the previous experiment. 
 
 .. note::
 
@@ -193,9 +192,9 @@ Each Land DA experiment includes multiple tasks that must be run in order to sat
      - Sets up the observation files
    * - JLANDDA_PREP_BMAT
      - Sets up the :term:`JEDI` run
-   * - JLANDDA_RUN_ANA
+   * - JLANDDA_ANALYSIS
      - Runs JEDI
-   * - JLANDDA_RUN_FCST
+   * - JLANDDA_FORECAST
      - Runs forecast
 
 Users may run these tasks :ref:`using the Rocoto workflow manager <run-w-rocoto>` or :ref:`using a batch script <run-batch-script>`. 
@@ -263,18 +262,20 @@ As the experiment progresses, it will generate a number of directories to hold i
 
    $LANDDAROOT: Base directory
     ├── land-DA_workflow(<CYCLEDIR>): Home directory of the land DA workflow
-    ├── com
-    │     ├── landda (<NET>)
-    │     │     └── vX.Y.Z (<model_ver>)
-    │     │           └── DA_<forcing> (<OUTDIR>)
-    │     │                 ├── DA: Directory containing the output files of JEDI run
-    │     │                 │     ├── hofx
-    │     │                 │     ├── jedi_incr  
-    │     │                 │     └── logs
-    │     │                 └── mem000: Directory containing the output files
-    │     └──  output
-    │           └──  logs
-    │                 └── run_<forcing> (<LOGDIR>): Directory containing the log file of the Rocoto workflow
+    ├── ptmp (<PTMP>)
+    │     └── test (<envir>)
+    │           └── com
+    │                 ├── landda (<NET>)
+    │                 │     └── vX.Y.Z (<model_ver>)
+    │                 │           └── landda.YYYYMMDD (<RUN>.<PDY>)
+    │                 │                 └── HH (<cyc>)
+    │                 │                       ├── DA: Directory containing the output files of JEDI run
+    │                 │                       │     ├── hofx
+    │                 │                       │     └── jedi_incr
+    │                 │                       └── mem000: Directory containing the output files
+    │                 └── output
+    │                       └── logs
+    │                             └── run_<forcing> (<LOGDIR>): Directory containing the log file of the Rocoto workflow
     └── workdir(<WORKDIR>)
           └── run_<forcing>
                 └── mem000: Working directory
@@ -285,7 +286,7 @@ Check for the background and analysis files in the experiment directory:
 
 .. code-block:: console
 
-   ls -l $LANDDAROOT/com/landda/v1.2.1/run_<forcing>/mem000/restarts/<vector_or_tile>
+   ls -l $LANDDAROOT/ptmp/test/com/landda/v1.2.1/landda.<PDY>/<cyc>/run_<forcing>/mem000/restarts/<vector_or_tile>
 
 where: 
 

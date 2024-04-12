@@ -22,7 +22,7 @@ export KEEPWORKDIR="YES"
 
 ############################
 # ensure necessary envars are set
-envars=("exp_name" "STARTDATE" "ENDDATE" "LANDDAROOT" "LANDDA_INPUTS" "CYCLEDIR" \
+envars=("exp_name" "STARTDATE" "ENDDATE" "LANDDAROOT" "LANDDA_INPUTS" "HOMElandda" \
         "LANDDA_EXPTS" "BUILDDIR" "atmos_forc" "OBSDIR" "WORKDIR" \
         "OUTDIR" "TEST_BASEDIR" "JEDI_EXECDIR" "JEDI_STATICDIR" "ensemble_size" \
         "FCSTHR" "RES" "TPATH" "TSTUB" "cycles_per_job" "ICSDIR" "DA_config" \
@@ -46,7 +46,7 @@ fi
 # check that modules are loaded in the environment
 
 if [[ ! $BASELINE =~ 'hera.internal' ]]; then
-  ${CYCLEDIR}/module_check.sh
+  ${HOMElandda}/module_check.sh
 fi
 
 if [[ $? -ne 0 ]]; then
@@ -74,37 +74,37 @@ fi
 ############################
 # set executables
 
-if [[ -e ${CYCLEDIR}/exec/vector2tile_converter.exe ]]; then #prefer cmake-built executables
-  export vec2tileexec=${CYCLEDIR}/exec/vector2tile_converter.exe
+if [[ -e ${HOMElandda}/exec/vector2tile_converter.exe ]]; then #prefer cmake-built executables
+  export vec2tileexec=${HOMElandda}/exec/vector2tile_converter.exe
 else
-  export vec2tileexec=${CYCLEDIR}/sorc/vector2tile/vector2tile_converter.exe
+  export vec2tileexec=${HOMElandda}/sorc/vector2tile/vector2tile_converter.exe
 fi
-if [[ -e ${CYCLEDIR}/exec/tile2tile_converter.exe ]]; then #prefer cmake-built executables
-  export tile2tileexec=${CYCLEDIR}/exec/tile2tile_converter.exe
+if [[ -e ${HOMElandda}/exec/tile2tile_converter.exe ]]; then #prefer cmake-built executables
+  export tile2tileexec=${HOMElandda}/exec/tile2tile_converter.exe
 else 
-  export tile2tileexec=${CYCLEDIR}/sorc/tile2tile/tile2tile_converter.exe
+  export tile2tileexec=${HOMElandda}/sorc/tile2tile/tile2tile_converter.exe
 fi
-if [[ -e ${CYCLEDIR}/exec/ufsLand.exe ]]; then
-  export LSMexec=${CYCLEDIR}/exec/ufsLand.exe
+if [[ -e ${HOMElandda}/exec/ufsLand.exe ]]; then
+  export LSMexec=${HOMElandda}/exec/ufsLand.exe
 else
-  export LSMexec=${CYCLEDIR}/sorc/ufs-land-driver-emc-dev/run/ufsLand.exe
+  export LSMexec=${HOMElandda}/sorc/ufsLand.fd/run/ufsLand.exe
 fi
 
-export DADIR=${CYCLEDIR}/sorc/DA_update/
+export DADIR=${HOMElandda}/sorc/DA_update/
 export DAscript=${DADIR}/do_landDA.sh
 export MPIEXEC=`which mpiexec`
 export LANDDADIR=${DADIR}
 
-export analdate=${CYCLEDIR}/analdates.sh
-export incdate=${CYCLEDIR}/incdate.sh
+export analdate=${HOMElandda}/analdates.sh
+export incdate=${HOMElandda}/incdate.sh
 
-export BUILDDIR=${CYCLEDIR}/sorc/build
+export BUILDDIR=${HOMElandda}/sorc/build
 export INCR_EXECDIR=${DADIR}/add_jedi_incr/exec/
 
 ############################
 # read in dates  
 
-export logfile=${CYCLEDIR}/cycle.log
+export logfile=${HOMElandda}/cycle.log
 touch $logfile
 echo "***************************************" >> $logfile
 echo "cycling from $STARTDATE to $ENDDATE" >> $logfile
