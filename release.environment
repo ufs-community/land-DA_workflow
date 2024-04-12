@@ -3,12 +3,12 @@
 #Set defaults
 export LANDDAROOT=${LANDDAROOT:-`dirname $PWD`}
 export LANDDA_INPUTS=${LANDDA_INPUTS:-${LANDDAROOT}/inputs}
-export CYCLEDIR=$(pwd) 
+export HOMElandda=$(pwd) 
 export LANDDA_EXPTS=${LANDDA_EXPTS:-${LANDDAROOT}/landda_expts}
 if [[ ! $BASELINE =~ 'hera.internal' ]]; then
   export PYTHON=`/usr/bin/which python`
 fi
-export BUILDDIR=${BUILDDIR:-${CYCLEDIR}/sorc/build}
+export BUILDDIR=${BUILDDIR:-${HOMElandda}/sorc/build}
 
 #Change some variables if working with a container
 if [[ ${USE_SINGULARITY} =~ yes ]]; then
@@ -20,7 +20,7 @@ if [[ ${USE_SINGULARITY} =~ yes ]]; then
   #Scripts that launch containerized versions of the executables are in $PWD/singularity/bin They should be called
   #from the host system to be run (e.g. mpiexec -n 6 $BUILDDIR/bin/fv3jedi_letkf.x )
   export BUILDDIR=$PWD/sorc/build
-  export JEDI_EXECDIR=${CYCLEDIR}/sorc/build/bin
+  export JEDI_EXECDIR=${HOMElandda}/sorc/build/bin
   module try-load singularity
   export SINGULARITYBIN=`/usr/bin/which singularity`
   sed -i 's/singularity exec/${SINGULARITYBIN} exec/g' run_container_executable.sh
