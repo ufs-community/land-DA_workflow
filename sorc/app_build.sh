@@ -251,20 +251,6 @@ if [ "${BUILD_CONDA}" = "on" ] || [ "${BUILD_CONDA}" = "only" ]; then
     mamba env create -n land_da --file ${HOME_DIR}/parm/conda_environment.yml
   fi
 
-  ##### TEMPORARY FIX : should be resolved soon ######################
-  # Copy missing files of uwtools manually
-  tmpfile_target="${CONDA_BUILD_DIR}/envs/land_da/lib/python3.11/site-packages/uwtools/resources"
-  tmpfile_path="${HOME_DIR}/parm/tmp"
-  tmpfile1="rocoto.jsonschema"
-  tmpfile2="schema_with_metatasks.rng"
-  if [ ! -f "${tmpfile_target}/${tmpfile1}" ]; then
-    cp "${tmpfile_path}/${tmpfile1}" "${tmpfile_target}/${tmpfile1}"
-  fi
-  if [ ! -f "${tmpfile_target}/${tmpfile2}" ]; then
-    cp "${tmpfile_path}/${tmpfile2}" "${tmpfile_target}/${tmpfile2}"
-  fi
-  ####################################################################
-
 else
   if [ -d "${CONDA_BUILD_DIR}" ] ; then
     source ${CONDA_BUILD_DIR}/etc/profile.d/conda.sh
