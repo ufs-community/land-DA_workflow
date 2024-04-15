@@ -37,8 +37,6 @@ fi
 module use modulefiles; module load modules.landda
 PYTHON=$(/usr/bin/which python)
 
-#fv3bundle_vn=psl_develop
-#DAtype=letkfoi_snow
 #SNOWDEPTHVAR=snwdph
 YAML_DA=construct
 GFSv17="NO"
@@ -49,7 +47,7 @@ cd $JEDIWORKDIR
 # 4. CREATE BACKGROUND ENSEMBLE (LETKFOI)
 ################################################
 
-if [[ ${DAtype} == 'letkfoi_snow' ]]; then
+if [[ ${DAtype} == "letkfoi_snow" ]]; then
 
     JEDI_EXEC="fv3jedi_letkf.x"
 

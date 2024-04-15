@@ -57,8 +57,6 @@ PYTHON=$(/usr/bin/which python)
 MPIEXEC=`which mpiexec`
 MPIRUN=${MPIRUN:-`which mpiexec`}
 
-#fv3bundle_vn=psl_develop
-#DAtype=letkfoi_snow
 #SNOWDEPTHVAR=snwdph
 
 cd $MEM_WORKDIR

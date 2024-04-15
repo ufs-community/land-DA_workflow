@@ -49,8 +49,6 @@ module use modulefiles; module load modules.landda
 PYTHON=$(/usr/bin/which python)
 MPIEXEC=`which mpiexec`
 
-#fv3bundle_vn=psl_develop
-#DAtype=letkfoi_snow
 #SNOWDEPTHVAR=snwdph
 YAML_DA=construct
 GFSv17="NO"
@@ -73,17 +71,14 @@ fi
 if [[ $do_DA == "YES" ]]; then 
 
    if [[ $YAML_DA == "construct" ]];then  # construct the yaml
-
-      cp ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${DAtype}.yaml ${JEDIWORKDIR}/letkf_land.yaml
-
-      for obs in "${OBS_TYPES[@]}";
-      do 
-        cat ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${obs}.yaml >> letkf_land.yaml
-      done
-
+     cp ${PARMlandda}/jedi/${DAtype}.yaml ${JEDIWORKDIR}/letkf_land.yaml
+     for obs in "${OBS_TYPES[@]}";
+     do 
+       cat ${PARMlandda}/jedi/${fv3bundle_vn}/${obs}.yaml >> letkf_land.yaml
+     done
    else # use specified yaml 
-      echo "Using user specified YAML: ${YAML_DA}"
-      cp ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${YAML_DA} ${JEDIWORKDIR}/letkf_land.yaml
+     echo "Using user specified YAML: ${YAML_DA}"
+     cp ${PARMlandda}/jedi/${YAML_DA} ${JEDIWORKDIR}/letkf_land.yaml
    fi
 
    sed -i -e "s/XXYYYY/${YYYY}/g" letkf_land.yaml
@@ -108,16 +103,14 @@ fi
 if [[ $do_HOFX == "YES" ]]; then 
 
    if [[ $YAML_HOFX == "construct" ]];then  # construct the yaml
-
-      cp ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${DAtype}.yaml ${JEDIWORKDIR}/hofx_land.yaml
-
-      for obs in "${OBS_TYPES[@]}";
-      do 
-        cat ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${obs}.yaml >> hofx_land.yaml
-      done
+     cp ${PARMlandda}/jedi/${DAtype}.yaml ${JEDIWORKDIR}/hofx_land.yaml
+     for obs in "${OBS_TYPES[@]}";
+     do 
+       cat ${PARMlandda}/jedi/${obs}.yaml >> hofx_land.yaml
+     done
    else # use specified yaml 
-      echo "Using user specified YAML: ${YAML_HOFX}"
-      cp ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${YAML_HOFX} ${JEDIWORKDIR}/hofx_land.yaml
+     echo "Using user specified YAML: ${YAML_HOFX}"
+     cp ${PARMlandda}/jedi/${YAML_HOFX} ${JEDIWORKDIR}/hofx_land.yaml
    fi
 
    sed -i -e "s/XXYYYY/${YYYY}/g" hofx_land.yaml

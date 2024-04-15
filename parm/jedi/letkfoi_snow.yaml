@@ -1,0 +1,58 @@
+geometry:
+  fms initialization:
+    namelist filename: Data/fv3files/fmsmpp.nml
+    field table filename: Data/fv3files/field_table
+  akbk: Data/fv3files/akbk64.nc4
+  npx: XXREP
+  npy: XXREP
+  npz: 64
+  field metadata override: Data/fieldmetadata/gfs-land.yaml
+  time invariant fields:
+    state fields:
+      datetime: XXYYYP-XXMP-XXDPTXXHP:00:00Z
+      filetype: fms restart
+      skip coupler file: true
+      state variables: [orog_filt]
+      datapath: XXTPATH
+      filename_orog: XXTSTUB.nc
+    derived fields: [nominal_surface_pressure]
+
+time window:
+  begin: XXYYYP-XXMP-XXDPTXXHP:00:00Z
+  length: PT24H
+
+background:
+ date: &date XXYYYY-XXMM-XXDDTXXHH:00:00Z
+ members:
+   - datetime: XXYYYY-XXMM-XXDDTXXHH:00:00Z
+     filetype: fms restart
+     state variables: [snwdph,vtype,slmsk]
+     datapath: mem_pos/
+     filename_sfcd: XXYYYYXXMMXXDD.XXHH0000.sfc_data.nc
+     filename_cplr: XXYYYYXXMMXXDD.XXHH0000.coupler.res
+   - datetime: XXYYYY-XXMM-XXDDTXXHH:00:00Z
+     filetype: fms restart
+     state variables: [snwdph,vtype,slmsk]
+     datapath: mem_neg/
+     filename_sfcd: XXYYYYXXMMXXDD.XXHH0000.sfc_data.nc
+     filename_cplr: XXYYYYXXMMXXDD.XXHH0000.coupler.res
+
+driver:
+  save posterior mean: false
+  save posterior mean increment: true
+  save posterior ensemble: false
+  run as observer only: XXHOFX
+
+local ensemble DA:
+  solver: LETKF
+  inflation:
+    rtps: 0.0
+    rtpp: 0.0
+    mult: 1.0
+
+output increment:
+  filetype: fms restart
+  filename_sfcd: xainc.sfc_data.nc
+
+observations:
+  observers:
