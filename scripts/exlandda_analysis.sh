@@ -74,7 +74,7 @@ if [[ $do_DA == "YES" ]]; then
      cp ${PARMlandda}/jedi/${DAtype}.yaml ${JEDIWORKDIR}/letkf_land.yaml
      for obs in "${OBS_TYPES[@]}";
      do 
-       cat ${PARMlandda}/jedi/${fv3bundle_vn}/${obs}.yaml >> letkf_land.yaml
+       cat ${PARMlandda}/jedi/${obs}.yaml >> letkf_land.yaml
      done
    else # use specified yaml 
      echo "Using user specified YAML: ${YAML_DA}"
