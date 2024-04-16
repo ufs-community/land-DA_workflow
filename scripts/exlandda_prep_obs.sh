@@ -10,7 +10,6 @@ if [[ ${EXP_NAME} == "openloop" ]]; then
 else
     do_jedi="YES"
     SAVE_TILE="YES"
-    LANDDADIR=${HOMElandda}/sorc/DA_update
 fi
 
 TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/

@@ -54,7 +54,7 @@ if [[ ${DAtype} == "letkfoi_snow" ]]; then
     if [ $GFSv17 == "YES" ]; then
         SNOWDEPTHVAR="snodl"
         # field overwrite file with GFSv17 variables.
-        cp ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/gfs-land-v17.yaml ${JEDIWORKDIR}/gfs-land-v17.yaml
+        cp ${PARMlandda}/jedi/gfs-land-v17.yaml ${JEDIWORKDIR}/gfs-land-v17.yaml
     else
         SNOWDEPTHVAR="snwdph"
     fi
