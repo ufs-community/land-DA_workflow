@@ -28,11 +28,11 @@ do
 done
 
 # prepare yaml files
-cp $project_source_dir/DA_update/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${DAtype}.yaml letkf_land.yaml
+cp $project_source_dir/../parm/jedi/${DAtype}.yaml letkf_land.yaml
 for ii in "${!OBS_TYPES[@]}";
 do
     echo "============================= ${OBS_TYPES[$ii]}" 
-    cat $project_source_dir/DA_update/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${OBS_TYPES[$ii]}.yaml >> letkf_land.yaml
+    cat $project_source_dir/../parm/jedi/${OBS_TYPES[$ii]}.yaml >> letkf_land.yaml
 
     # link ioda obs file
     # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, so that

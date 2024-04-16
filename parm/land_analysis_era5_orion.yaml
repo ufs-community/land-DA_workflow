@@ -12,7 +12,7 @@ workflow:
     ACCOUNT: "epic"
     EXP_NAME: "LETKF"
     EXP_BASEDIR: "/work/noaa/epic/{USER}/landda_test"
-    JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA/jedi"
+    JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA/jedi_skylabv7.0"
     LANDDA_INPUTS: "/work/noaa/epic/UFS_Land-DA/inputs"
     FORCING: "era5"
     RES: "96"

@@ -56,7 +56,6 @@ export TSTUB="oro_C${RES}.mx100"
 export GFSv17=NO
 export OBS_TYPES=("GHCN")
 export DAtype=letkfoi_snow
-export fv3bundle_vn=psl_develop
 export B=30  # background error std for LETKFOI
 if [ $GFSv17 == "YES" ]; then
     export SNOWDEPTHVAR="snodl"

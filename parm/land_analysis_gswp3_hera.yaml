@@ -12,7 +12,7 @@ workflow:
     ACCOUNT: "nems"
     EXP_NAME: "LETKF"
     EXP_BASEDIR: "/scratch2/NAGAPE/epic/{USER}/landda_test"
-    JEDI_INSTALL: "/scratch2/NAGAPE/epic/UFS_Land-DA/jedi"
+    JEDI_INSTALL: "/scratch2/NAGAPE/epic/UFS_Land-DA/jedi_skylabv7.0"
     LANDDA_INPUTS: "/scratch2/NAGAPE/epic/UFS_Land-DA/inputs"
     FORCING: "gswp3"
     RES: "96"
