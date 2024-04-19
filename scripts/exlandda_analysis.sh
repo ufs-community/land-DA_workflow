@@ -147,7 +147,7 @@ if [[ $do_DA == "YES" ]]; then
   ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXECDIR}/$pgm letkf_land.yaml >>$pgmout 2>errfile
   export err=$?; err_chk
   cp errfile errfile_jedi_letkf
-  if [[ $? != 0 ]]; then
+  if [[ $err != 0 ]]; then
     echo "JEDI DA failed"
     exit 10
   fi
@@ -158,7 +158,7 @@ if [[ $do_HOFX == "YES" ]]; then
   ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXEC} hofx_land.yaml >>$pgmout 2>errfile
   export err=$?; err_chk
   cp errfile errfile_jedi_hofx
-  if [[ $? != 0 ]]; then
+  if [[ $err != 0 ]]; then
     echo "JEDI hofx failed"
     exit 10
   fi
