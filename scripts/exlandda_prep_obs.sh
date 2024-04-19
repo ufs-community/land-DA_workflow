@@ -32,9 +32,6 @@ FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 
 cd $JEDIWORKDIR
 
-# load modulefiles
-#module use modulefiles; module load modules.landda
-
 OBSDIR=${LANDDA_INPUTS}/DA
 ################################################
 # 2. PREPARE OBS FILES

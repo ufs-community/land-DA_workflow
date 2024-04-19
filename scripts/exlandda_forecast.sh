@@ -31,15 +31,8 @@ mem_ens="mem000"
 MEM_WORKDIR=${WORKDIR}/${mem_ens}
 MEM_MODL_OUTDIR=${COMOUT}/${mem_ens}
 RSTRDIR=${MEM_WORKDIR}
-JEDIWORKDIR=${WORKDIR}/mem000/jedi
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
-JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
-JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
-JEDI_EXEC=$JEDI_EXECDIR/fv3jedi_letkf.x
-LOGDIR=${COMOUT}/DA/logs
-apply_incr_EXEC=${EXEClandda}/apply_incr.exe
 SAVE_INCR="YES"
-KEEPJEDIDIR="YES"
 FREQ=$((${FCSTHR}*3600))
 RDD=$((${FCSTHR}/24))
 RHH=$((${FCSTHR}%24))
@@ -77,10 +70,14 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
     sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
     sed -i -e "s#XXTPATH#${TPATH}#g" tile2vector.namelist
 
-    ${EXEClandda}/vector2tile_converter.exe tile2vector.namelist
-    if [[ $? != 0 ]]; then
-        echo "tile2vector failed"
-        exit
+    export pgm="vector2tile_converter.exe"
+    . prep_step
+    ${EXEClandda}/$pgm tile2vector.namelist >>$pgmout 2>errfile
+    export err=$?; err_chk
+    cp errfile errfile_tile2vector
+    if [[ $err != 0 ]]; then
+      echo "tile2vector failed"
+      exit 10
     fi
 
     # save analysis restart
@@ -93,7 +90,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     echo '************************************************'
     echo 'calling tile2tile' 
 
-    cp  ${HOMElandda}/parm/templates/template.jedi2ufs jedi2ufs.namelist
+    cp ${HOMElandda}/parm/templates/template.jedi2ufs jedi2ufs.namelist
      
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" jedi2ufs.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" jedi2ufs.namelist
@@ -105,10 +102,14 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     sed -i -e "s/XXTSTUB/${TSTUB}/g" jedi2ufs.namelist
     sed -i -e "s#XXTPATH#${TPATH}#g" jedi2ufs.namelist
 
-    ${EXEClandda}/tile2tile_converter.exe jedi2ufs.namelist
-    if [[ $? != 0 ]]; then
-        echo "tile2tile failed"
-        exit 
+    export pgm="tile2tile_converter.exe"
+    . prep_step
+    ${EXEClandda}/$pgm jedi2ufs.namelist >>$pgmout 2>errfile
+    export err=$?; err_chk
+    cp errfile errfile_tile2tile
+    if [[ $err != 0 ]]; then
+      echo "tile2tile failed"
+      exit 10
     fi
 
     # save analysis restart
@@ -146,7 +147,15 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
 
     nt=$SLURM_NTASKS
 
-    ${MPIEXEC} -n 1 ${EXEClandda}/ufsLand.exe
+    export pgm="ufsLand.exe"
+    . prep_step
+    ${MPIEXEC} -n 1 ${EXEClandda}/$pgm >>$pgmout 2>errfile
+    export err=$?; err_chk
+    cp errfile errfile_ufsLand
+    if [[ $err != 0 ]]; then
+      echo "ufsLand failed"
+      exit 10
+    fi
 fi 
 # no error codes on exit from model, check for restart below instead
 
@@ -195,7 +204,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     export layout_y=1
 
     # FV3 executable:
-    cp ${EXEClandda}/ufs_model ./ufs_model 
+#    cp ${EXEClandda}/ufs_model ./ufs_model 
     cp ${HOMElandda}/fv3_run ./fv3_run
 
     if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then
@@ -236,7 +245,15 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
 
     # start runs
     echo "Start ufs-cdeps-land model run with TASKS: ${TASKS}"
-    ${MPIRUN} -n ${TASKS} ./ufs_model
+    export pgm="ufs_model"
+    . prep_step
+    ${MPIRUN} -n ${TASKS} ${EXEClandda}/$pgm >>$pgmout 2>errfile
+    export err=$?; err_chk
+    cp errfile errfile_ufs_model
+    if [[ $err != 0 ]]; then
+      echo "ufs_model failed"
+      exit 10
+    fi
 fi
 
 # no error codes on exit from model, check for restart below instead

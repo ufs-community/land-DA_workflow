@@ -49,8 +49,6 @@ cd $JEDIWORKDIR
 
 if [[ ${DAtype} == "letkfoi_snow" ]]; then
 
-    JEDI_EXEC="fv3jedi_letkf.x"
-
     if [ $GFSv17 == "YES" ]; then
         SNOWDEPTHVAR="snodl"
         # field overwrite file with GFSv17 variables.

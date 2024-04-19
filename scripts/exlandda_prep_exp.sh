@@ -121,11 +121,14 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "gswp3" ]]; then
     sed -i -e "s/XXTSTUB/${TSTUB}/g" ufs2jedi.namelist
     sed -i -e "s#XXTPATH#${TPATH}#g" ufs2jedi.namelist
 
-    # submit tile2tile    
-    ${EXEClandda}/tile2tile_converter.exe ufs2jedi.namelist
-    if [[ $? != 0 ]]; then
-        echo "tile2tile failed"
-        exit 
+    # submit tile2tile
+    export pgm="tile2tile_converter.exe"
+    . prep_step
+    ${EXEClandda}/$pgm ufs2jedi.namelist >>$pgmout 2>errfile
+    export err=$?; err_chk
+    if [[ $err != 0 ]]; then
+      echo "tile2tile failed"
+      exit 
     fi
 fi # tile2tile for DA
 

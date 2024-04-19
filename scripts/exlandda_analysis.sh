@@ -31,9 +31,6 @@ JEDIWORKDIR=${WORKDIR}/mem000/jedi
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
 JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
-JEDI_EXEC=$JEDI_EXECDIR/fv3jedi_letkf.x
-LOGDIR=${COMOUT}/DA/logs
-apply_incr_EXEC=${EXEClandda}/apply_incr.exe
 SAVE_INCR="YES"
 KEEPJEDIDIR="YES"
 
@@ -146,18 +143,26 @@ fi
 echo 'do_landDA: calling fv3-jedi'
 
 if [[ $do_DA == "YES" ]]; then
-    ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXEC} letkf_land.yaml ${LOGDIR}/jedi_letkf.log
-    if [[ $? != 0 ]]; then
-        echo "JEDI DA failed"
-        exit 10
-    fi
+  export pgm="fv3jedi_letkf.x"
+  . prep_step
+  ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXECDIR}/$pgm letkf_land.yaml >>$pgmout 2>errfile
+  export err=$?; err_chk
+  cp errfile errfile_jedi_letkf
+  if [[ $? != 0 ]]; then
+    echo "JEDI DA failed"
+    exit 10
+  fi
 fi 
 if [[ $do_HOFX == "YES" ]]; then
-    ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXEC} hofx_land.yaml ${LOGDIR}/jedi_hofx.log
-    if [[ $? != 0 ]]; then
-        echo "JEDI hofx failed"
-        exit 10
-    fi
+  export pgm="fv3jedi_letkf.x"
+  . prep_step
+  ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXEC} hofx_land.yaml >>$pgmout 2>errfile
+  export err=$?; err_chk
+  cp errfile errfile_jedi_hofx
+  if [[ $? != 0 ]]; then
+    echo "JEDI hofx failed"
+    exit 10
+  fi
 fi 
 
 ################################################
@@ -181,11 +186,15 @@ EOF
 
     echo 'do_landDA: calling apply snow increment'
 
+    export pgm="apply_incr.exe"
+    . prep_step
     # (n=6) -> this is fixed, at one task per tile (with minor code change, could run on a single proc). 
-    ${MPIEXEC} -n 6 ${apply_incr_EXEC} ${LOGDIR}/apply_incr.log
-    if [[ $? != 0 ]]; then
-        echo "apply snow increment failed"
-        exit 10
+    ${MPIEXEC} -n 6 ${EXEClandda}/$pgm >>$pgmout 2>errfile
+    export err=$?; err_chk
+    cp errfile errfile_apply_incr
+    if [[ $err != 0 ]]; then
+      echo "apply snow increment failed"
+      exit 10
     fi
 
   fi
