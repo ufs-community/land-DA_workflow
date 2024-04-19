@@ -6,11 +6,10 @@ set -ex
 # copy restarts to workdir, convert to UFS tile for DA (all members) 
 
 if [[ ${EXP_NAME} == "openloop" ]]; then
-    do_jedi="NO"
+  do_jedi="NO"
 else
-    do_jedi="YES"
-    SAVE_TILE="YES"
-    LANDDADIR=${HOMElandda}/sorc/DA_update
+  do_jedi="YES"
+  SAVE_TILE="YES"
 fi
 
 TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
@@ -35,7 +34,6 @@ if [ -e ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi
 module use modulefiles; module load modules.landda
-PYTHON=$(/usr/bin/which python)
 
 #SNOWDEPTHVAR=snwdph
 YAML_DA=construct
@@ -73,7 +71,7 @@ if [[ ${DAtype} == "letkfoi_snow" ]]; then
     echo 'do_landDA: calling create ensemble'
 
     # using ioda mods to get a python version with netCDF4
-    ${PYTHON} ${LANDDADIR}/letkf_create_ens.py $FILEDATE $SNOWDEPTHVAR $B
+    ${USHlandda}/letkf_create_ens.py $FILEDATE $SNOWDEPTHVAR $B
     if [[ $? != 0 ]]; then
         echo "letkf create failed"
         exit 10

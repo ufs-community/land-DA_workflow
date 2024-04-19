@@ -45,7 +45,6 @@ if [ -e ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi
 module use modulefiles; module load modules.landda
-PYTHON=$(/usr/bin/which python)
 MPIEXEC=`which mpiexec`
 MPIRUN=${MPIRUN:-`which mpiexec`}
 

@@ -10,7 +10,6 @@ if [[ ${EXP_NAME} == "openloop" ]]; then
 else
     do_jedi="YES"
     SAVE_TILE="YES"
-    LANDDADIR=${HOMElandda}/sorc/DA_update
 fi
 
 echo ${LANDDA_INPUTS}, ${ATMOS_FORC}
@@ -165,7 +164,7 @@ if [[ $do_jedi == "YES" ]]; then
     if [[ -e  ${RSTRDIR}/${FILEDATE}.coupler.res ]]; then
 	ln -sf ${RSTRDIR}/${FILEDATE}.coupler.res $cres_file
     else #  if not present, need to create coupler.res for JEDI
-	cp ${LANDDADIR}/template.coupler.res $cres_file
+	cp ${PARMlandda}/templates/template.coupler.res $cres_file
 
 	sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
 	sed -i -e "s/XXMM/${MM}/g" $cres_file
