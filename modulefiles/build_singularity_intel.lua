@@ -10,8 +10,8 @@ stack_intel_ver=os.getenv("stack_intel_ver") or "2021.8.0"
 load(pathJoin("stack-intel", stack_intel_ver))
 
 load("intel-oneapi-mpi/2021.8.0")
-stack_impi_ver=os.getenv("stack_impi_ver") or "2021.8.0"
-load(pathJoin("stack-intel-oneapi-mpi", stack_impi_ver))
+stack_intel_oneapi_mpi_ver=os.getenv("stack_intel_oneapi_mpi_ver") or "2021.8.0"
+load(pathJoin("stack-intel-oneapi-mpi", stack_intel_oneapi_mpi_ver))
 
 stack_python_ver=os.getenv("stack_python_ver") or "3.8.10"
 load(pathJoin("stack-python", stack_python_ver))
