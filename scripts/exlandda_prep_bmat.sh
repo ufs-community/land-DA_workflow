@@ -48,17 +48,17 @@ cd $JEDIWORKDIR
 if [[ ${DAtype} == "letkfoi_snow" ]]; then
 
     if [ $GFSv17 == "YES" ]; then
-        SNOWDEPTHVAR="snodl"
-        # field overwrite file with GFSv17 variables.
-        cp ${PARMlandda}/jedi/gfs-land-v17.yaml ${JEDIWORKDIR}/gfs-land-v17.yaml
+      SNOWDEPTHVAR="snodl"
     else
-        SNOWDEPTHVAR="snwdph"
+      SNOWDEPTHVAR="snwdph"
+      # replace field overwrite file
+      cp ${PARMlandda}/jedi/gfs-land.yaml ${JEDIWORKDIR}/gfs-land.yaml
     fi
     # FOR LETKFOI, CREATE THE PSEUDO-ENSEMBLE
     for ens in pos neg
     do
         if [ -e $JEDIWORKDIR/mem_${ens} ]; then
-                rm -r $JEDIWORKDIR/mem_${ens}
+          rm -r $JEDIWORKDIR/mem_${ens}
         fi
         mkdir -p $JEDIWORKDIR/mem_${ens}
         for tile in 1 2 3 4 5 6

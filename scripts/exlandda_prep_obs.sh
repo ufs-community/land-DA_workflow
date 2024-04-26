@@ -45,7 +45,9 @@ for obs in "${OBS_TYPES[@]}"; do
     elif [ $ATMOS_FORC == "era5" ] && [ ${obs} == "GHCN" ]; then
 	obsfile=$OBSDIR/snow_depth/GHCN/data_proc/v3/${YYYY}/ghcn_snwd_ioda_${YYYP}${MP}${DP}.nc
     elif [ $ATMOS_FORC == "gswp3" ] && [ ${obs} == "GHCN" ]; then
-	obsfile=$OBSDIR/snow_depth/GHCN/data_proc/v3/${YYYY}/fake_ghcn_snwd_ioda_${YYYP}${MP}${DP}.nc
+#	obsfile=$OBSDIR/snow_depth/GHCN/data_proc/v3/${YYYY}/fake_ghcn_snwd_ioda_${YYYP}${MP}${DP}.nc
+        obsfile=/work/noaa/epic/chjeon/nc_var_change/data/fake_ghcn_snwd_ioda_${YYYP}${MP}${DP}_new.nc
+#        obsfile=/work/noaa/epic/chjeon/nc_var_change/data/ghcn_snwd_ioda_20230501.nc
     elif [ ${obs} == "SYNTH" ]; then
 	obsfile=$OBSDIR/synthetic_noahmp/IODA.synthetic_gswp_obs.${YYYY}${MM}${DD}${HH}.nc
     else

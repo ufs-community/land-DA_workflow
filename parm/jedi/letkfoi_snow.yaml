@@ -6,7 +6,7 @@ geometry:
   npx: XXREP
   npy: XXREP
   npz: 64
-  field metadata override: Data/fieldmetadata/gfs-land.yaml
+  field metadata override: gfs-land.yaml
   time invariant fields:
     state fields:
       datetime: XXYYYP-XXMP-XXDPTXXHP:00:00Z

@@ -128,6 +128,12 @@ if [[ $do_HOFX == "YES" ]]; then
 
 fi
 
+if [[ "$GFSv17" == "NO" ]]; then
+  cp ${PARMlandda}/jedi/gfs-land.yaml ${JEDIWORKDIR}/gfs-land.yaml
+else
+  cp ${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data/fieldmetadata/gfs_v17-land.yaml ${JEDIWORKDIR}/gfs-land.yaml
+fi
+
 ################################################
 # 4. CREATE BACKGROUND ENSEMBLE (LETKFOI)
 ################################################
