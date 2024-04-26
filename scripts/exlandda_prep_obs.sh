@@ -37,7 +37,7 @@ OBSDIR=${LANDDA_INPUTS}/DA
 # 2. PREPARE OBS FILES
 ################################################
 for obs in "${OBS_TYPES[@]}"; do
-  # get the. obs file name
+  # get the obs file name
   if [ ${obs} == "GTS" ]; then
     obsfile=$OBSDIR/snow_depth/GTS/data_proc/${YYYY}${MM}/adpsfc_snow_${YYYY}${MM}${DD}${HH}.nc4
     # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, so that
