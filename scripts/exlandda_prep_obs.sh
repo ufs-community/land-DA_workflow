@@ -43,7 +43,7 @@ for obs in "${OBS_TYPES[@]}"; do
     # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, so that
     # obs are within DA window.
   elif [ $ATMOS_FORC == "era5" ] && [ ${obs} == "GHCN" ]; then
-    obsfile=$OBSDIR/snow_depth/GHCN/data_proc/v3/${YYYY}/ghcn_snwd_ioda_${YYYP}${MP}${DP}.nc
+    obsfile=$OBSDIR/snow_depth/GHCN/data_proc/v3/${YYYY}/ghcn_snwd_ioda_${YYYP}${MP}${DP}_jediv7.nc
   elif [ $ATMOS_FORC == "gswp3" ] && [ ${obs} == "GHCN" ]; then
     obsfile=$OBSDIR/snow_depth/GHCN/data_proc/v3/${YYYY}/fake_ghcn_snwd_ioda_${YYYP}${MP}${DP}_jediv7.nc
   elif [ ${obs} == "SYNTH" ]; then
