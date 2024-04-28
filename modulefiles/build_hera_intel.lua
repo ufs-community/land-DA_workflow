@@ -43,5 +43,4 @@ setenv("FC", "mpiifort")
 setenv("CMAKE_Platform", "hera.intel")
 
 setenv("EPICHOME", "/scratch2/NAGAPE/epic/UFS_Land-DA")
-setenv("JEDI_INSTALL", pathJoin(os.getenv("EPICHOME"),"jedi"))
-
+setenv("JEDI_INSTALL", pathJoin(os.getenv("EPICHOME"),"jedi_skylabv7.0"))

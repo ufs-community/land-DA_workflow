@@ -12,7 +12,7 @@ source ${project_source_dir}/test/runtime_vars.sh ${project_binary_dir} ${projec
 RSTDIR=$project_binary_dir/test/bkg/restarts/tile
 
 # set executables
-TEST_EXEC="${project_source_dir}/DA_update/letkf_create_ens.py"
+TEST_EXEC="${project_source_dir}/../ush/letkf_create_ens.py"
 NPROC=1
 
 # move to work directory
@@ -36,7 +36,7 @@ if [[ ${DAtype} == 'letkfoi_snow' ]]; then
         done
 
         cres_file=$WORKDIR/mem_${ens}/${FILEDATE}.coupler.res
-        cp ${project_source_dir}/DA_update/template.coupler.res $cres_file
+        cp ${project_source_dir}/../parm/templates/template.coupler.res $cres_file
         sed -i -e "s/XXYYYY/${YY}/g" $cres_file
         sed -i -e "s/XXMM/${MM}/g" $cres_file
         sed -i -e "s/XXDD/${DD}/g" $cres_file

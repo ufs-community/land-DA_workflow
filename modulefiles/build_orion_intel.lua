@@ -42,5 +42,4 @@ setenv("FC", "mpiifort")
 setenv("CMAKE_Platform", "orion.intel")
 
 setenv("EPICHOME", "/work/noaa/epic/UFS_Land-DA")
-setenv("JEDI_INSTALL", pathJoin(os.getenv("EPICHOME"),"jedi"))
-
+setenv("JEDI_INSTALL", pathJoin(os.getenv("EPICHOME"),"jedi_skylabv7.0"))

@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 ################################################
 # pass arguments
 project_binary_dir=$1
