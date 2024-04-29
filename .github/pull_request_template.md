@@ -7,7 +7,7 @@ Provide a detailed description of what this PR does. What bug does it fix, or wh
 - [ ] Is baseline change expected ? <!-- Add "Baseline Change" Label -->
 
 ## Subcomponents involved:
-- [ ] DA_update (ufs-community/land-DA)
+- [ ] apply_incr.fd (NOAA-PSL/land-apply_jedi_incr)
 - [ ] ufsLand.fd (NOAA-EPIC/ufs-land-driver-emc-dev)
 - [ ] ufs_model.fd (ufs-community/ufs-weather-model)
 - [ ] vector2tile_converter.fd (NOAA-PSL/land-vector2tile)
