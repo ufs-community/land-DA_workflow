@@ -81,30 +81,34 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "era5" ]]; then
     echo '************************************************'
     echo 'calling vector2tile' 
 
-    ${EXEClandda}/vector2tile_converter.exe vector2tile.namelist
-    if [[ $? != 0 ]]; then
-        echo "vec2tile failed"
-        exit
+    export pgm="vector2tile_converter.exe"
+    . prep_step
+    ${EXEClandda}/$pgm vector2tile.namelist >>$pgmout 2>errfile
+    cp errfile errfile_vector2tile
+    export err=$?; err_chk
+    if [[ $err != 0 ]]; then
+      echo "vec2tile failed"
+      exit
     fi
 fi # vector2tile for DA
 
 if [[ $do_jedi == "YES" && $ATMOS_FORC == "gswp3" ]]; then
 
-	echo '************************************************'
-	echo 'calling tile2tile'    
+  echo '************************************************'
+  echo 'calling tile2tile'    
 
-	export MEM_WORKDIR
+  export MEM_WORKDIR
    
-        # copy restarts into work directory
-	for tile in 1 2 3 4 5 6
-	do
-	    rst_in=${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-	    if [[ ! -e ${rst_in} ]]; then  
-		rst_in=${LANDDA_INPUTS}/restarts/${ATMOS_FORC}/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
-		fi
-	    rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc
-	    cp ${rst_in} ${rst_out}
-	    done
+  # copy restarts into work directory
+  for tile in 1 2 3 4 5 6
+  do
+    rst_in=${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    if [[ ! -e ${rst_in} ]]; then  
+      rst_in=${LANDDA_INPUTS}/restarts/${ATMOS_FORC}/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
+    fi
+    rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc
+    cp ${rst_in} ${rst_out}
+  done
 
     # update tile2tile namelist
     cp  ${HOMElandda}/parm/templates/template.ufs2jedi ufs2jedi.namelist
@@ -124,6 +128,7 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "gswp3" ]]; then
     export pgm="tile2tile_converter.exe"
     . prep_step
     ${EXEClandda}/$pgm ufs2jedi.namelist >>$pgmout 2>errfile
+    cp errfile errfile_tile2tile
     export err=$?; err_chk
     if [[ $err != 0 ]]; then
       echo "tile2tile failed"
