@@ -57,7 +57,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
     echo '************************************************'
     echo 'calling tile2vector' 
 
-    cp  ${HOMElandda}/parm/templates/template.tile2vector tile2vector.namelist
+    cp  ${PARMlandda}/templates/template.tile2vector tile2vector.namelist
 
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" tile2vector.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
@@ -89,7 +89,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     echo '************************************************'
     echo 'calling tile2tile' 
 
-    cp ${HOMElandda}/parm/templates/template.jedi2ufs jedi2ufs.namelist
+    cp ${PARMlandda}/templates/template.jedi2ufs jedi2ufs.namelist
      
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" jedi2ufs.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" jedi2ufs.namelist
@@ -130,7 +130,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
     echo 'running the forecast model' 
 	
     # update model namelist 
-    cp  ${HOMElandda}/parm/templates/template.ufs-noahMP.namelist.${ATMOS_FORC}  ufs-land.namelist
+    cp  ${PARMlandda}/templates/template.ufs-noahMP.namelist.${ATMOS_FORC}  ufs-land.namelist
     
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs-land.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
