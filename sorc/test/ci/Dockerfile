@@ -12,7 +12,7 @@ COPY . $HOME/land-offline_workflow
 # set env vars
 ENV LANDDA_INPUTS=$HOME/inputs
 ENV EPICHOME=/opt
-ENV JEDI_INSTALL=${EPICHOME}/jedi
+ENV JEDI_INSTALL=${EPICHOME}/jedi_skylabv7.0
 ENV TEST_BASEDIR=${EPICHOME}/test_base/mem000/restarts/vector"}
 
 #build & unit testing

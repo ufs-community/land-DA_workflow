@@ -194,9 +194,9 @@ if [ "${REMOVE}" = true ]; then
     rm -rf "${HOME_DIR}/lib64"
   fi
   printf "Remove submodules\n"
-  if [ -d "${SORC_DIR}/DA_update" ]; then
-    printf "... Remove DA_update ...\n"
-    rm -rf "${SORC_DIR}/DA_update"
+  if [ -d "${SORC_DIR}/apply_incr.fd" ]; then
+    printf "... Remove apply_incr.fd ...\n"
+    rm -rf "${SORC_DIR}/apply_incr.fd"
   fi
   if [ -d "${SORC_DIR}/ufsLand.fd" ]; then
     printf "... Remove ufsLand.fd ...\n"

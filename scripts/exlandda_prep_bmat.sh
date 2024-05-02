@@ -6,11 +6,10 @@ set -ex
 # copy restarts to workdir, convert to UFS tile for DA (all members) 
 
 if [[ ${EXP_NAME} == "openloop" ]]; then
-    do_jedi="NO"
+  do_jedi="NO"
 else
-    do_jedi="YES"
-    SAVE_TILE="YES"
-    LANDDADIR=${HOMElandda}/sorc/DA_update
+  do_jedi="YES"
+  SAVE_TILE="YES"
 fi
 
 TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
@@ -35,10 +34,7 @@ if [ -e ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi
 module use modulefiles; module load modules.landda
-PYTHON=$(/usr/bin/which python)
 
-#fv3bundle_vn=psl_develop
-#DAtype=letkfoi_snow
 #SNOWDEPTHVAR=snwdph
 YAML_DA=construct
 GFSv17="NO"
@@ -49,22 +45,20 @@ cd $JEDIWORKDIR
 # 4. CREATE BACKGROUND ENSEMBLE (LETKFOI)
 ################################################
 
-if [[ ${DAtype} == 'letkfoi_snow' ]]; then
-
-    JEDI_EXEC="fv3jedi_letkf.x"
+if [[ ${DAtype} == "letkfoi_snow" ]]; then
 
     if [ $GFSv17 == "YES" ]; then
-        SNOWDEPTHVAR="snodl"
-        # field overwrite file with GFSv17 variables.
-        cp ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/gfs-land-v17.yaml ${JEDIWORKDIR}/gfs-land-v17.yaml
+      SNOWDEPTHVAR="snodl"
     else
-        SNOWDEPTHVAR="snwdph"
+      SNOWDEPTHVAR="snwdph"
+      # replace field overwrite file
+      cp ${PARMlandda}/jedi/gfs-land.yaml ${JEDIWORKDIR}/gfs-land.yaml
     fi
     # FOR LETKFOI, CREATE THE PSEUDO-ENSEMBLE
     for ens in pos neg
     do
         if [ -e $JEDIWORKDIR/mem_${ens} ]; then
-                rm -r $JEDIWORKDIR/mem_${ens}
+          rm -r $JEDIWORKDIR/mem_${ens}
         fi
         mkdir -p $JEDIWORKDIR/mem_${ens}
         for tile in 1 2 3 4 5 6
@@ -77,7 +71,7 @@ if [[ ${DAtype} == 'letkfoi_snow' ]]; then
     echo 'do_landDA: calling create ensemble'
 
     # using ioda mods to get a python version with netCDF4
-    ${PYTHON} ${LANDDADIR}/letkf_create_ens.py $FILEDATE $SNOWDEPTHVAR $B
+    ${USHlandda}/letkf_create_ens.py $FILEDATE $SNOWDEPTHVAR $B
     if [[ $? != 0 ]]; then
         echo "letkf create failed"
         exit 10

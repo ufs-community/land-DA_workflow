@@ -10,7 +10,6 @@ if [[ ${EXP_NAME} == "openloop" ]]; then
 else
     do_jedi="YES"
     SAVE_TILE="YES"
-    LANDDADIR=${HOMElandda}/sorc/DA_update
 fi
 
 TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
@@ -32,9 +31,6 @@ JEDIWORKDIR=${WORKDIR}/mem000/jedi
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
 JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
-JEDI_EXEC=$JEDI_EXECDIR/fv3jedi_letkf.x
-LOGDIR=${COMOUT}/DA/logs
-apply_incr_EXEC=${EXEClandda}/apply_incr.exe
 SAVE_INCR="YES"
 KEEPJEDIDIR="YES"
 
@@ -46,11 +42,8 @@ if [ -e ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi
 module use modulefiles; module load modules.landda
-PYTHON=$(/usr/bin/which python)
 MPIEXEC=`which mpiexec`
 
-#fv3bundle_vn=psl_develop
-#DAtype=letkfoi_snow
 #SNOWDEPTHVAR=snwdph
 YAML_DA=construct
 GFSv17="NO"
@@ -73,17 +66,14 @@ fi
 if [[ $do_DA == "YES" ]]; then 
 
    if [[ $YAML_DA == "construct" ]];then  # construct the yaml
-
-      cp ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${DAtype}.yaml ${JEDIWORKDIR}/letkf_land.yaml
-
-      for obs in "${OBS_TYPES[@]}";
-      do 
-        cat ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${obs}.yaml >> letkf_land.yaml
-      done
-
+     cp ${PARMlandda}/jedi/${DAtype}.yaml ${JEDIWORKDIR}/letkf_land.yaml
+     for obs in "${OBS_TYPES[@]}";
+     do 
+       cat ${PARMlandda}/jedi/${obs}.yaml >> letkf_land.yaml
+     done
    else # use specified yaml 
-      echo "Using user specified YAML: ${YAML_DA}"
-      cp ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${YAML_DA} ${JEDIWORKDIR}/letkf_land.yaml
+     echo "Using user specified YAML: ${YAML_DA}"
+     cp ${PARMlandda}/jedi/${YAML_DA} ${JEDIWORKDIR}/letkf_land.yaml
    fi
 
    sed -i -e "s/XXYYYY/${YYYY}/g" letkf_land.yaml
@@ -108,16 +98,14 @@ fi
 if [[ $do_HOFX == "YES" ]]; then 
 
    if [[ $YAML_HOFX == "construct" ]];then  # construct the yaml
-
-      cp ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${DAtype}.yaml ${JEDIWORKDIR}/hofx_land.yaml
-
-      for obs in "${OBS_TYPES[@]}";
-      do 
-        cat ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${obs}.yaml >> hofx_land.yaml
-      done
+     cp ${PARMlandda}/jedi/${DAtype}.yaml ${JEDIWORKDIR}/hofx_land.yaml
+     for obs in "${OBS_TYPES[@]}";
+     do 
+       cat ${PARMlandda}/jedi/${obs}.yaml >> hofx_land.yaml
+     done
    else # use specified yaml 
-      echo "Using user specified YAML: ${YAML_HOFX}"
-      cp ${LANDDADIR}/jedi/fv3-jedi/yaml_files/${fv3bundle_vn}/${YAML_HOFX} ${JEDIWORKDIR}/hofx_land.yaml
+     echo "Using user specified YAML: ${YAML_HOFX}"
+     cp ${PARMlandda}/jedi/${YAML_HOFX} ${JEDIWORKDIR}/hofx_land.yaml
    fi
 
    sed -i -e "s/XXYYYY/${YYYY}/g" hofx_land.yaml
@@ -140,6 +128,12 @@ if [[ $do_HOFX == "YES" ]]; then
 
 fi
 
+if [[ "$GFSv17" == "NO" ]]; then
+  cp ${PARMlandda}/jedi/gfs-land.yaml ${JEDIWORKDIR}/gfs-land.yaml
+else
+  cp ${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data/fieldmetadata/gfs_v17-land.yaml ${JEDIWORKDIR}/gfs-land.yaml
+fi
+
 ################################################
 # 4. CREATE BACKGROUND ENSEMBLE (LETKFOI)
 ################################################
@@ -154,18 +148,26 @@ fi
 echo 'do_landDA: calling fv3-jedi'
 
 if [[ $do_DA == "YES" ]]; then
-    ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXEC} letkf_land.yaml ${LOGDIR}/jedi_letkf.log
-    if [[ $? != 0 ]]; then
-        echo "JEDI DA failed"
-        exit 10
-    fi
+  export pgm="fv3jedi_letkf.x"
+  . prep_step
+  ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXECDIR}/$pgm letkf_land.yaml >>$pgmout 2>errfile
+  export err=$?; err_chk
+  cp errfile errfile_jedi_letkf
+  if [[ $err != 0 ]]; then
+    echo "JEDI DA failed"
+    exit 10
+  fi
 fi 
 if [[ $do_HOFX == "YES" ]]; then
-    ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXEC} hofx_land.yaml ${LOGDIR}/jedi_hofx.log
-    if [[ $? != 0 ]]; then
-        echo "JEDI hofx failed"
-        exit 10
-    fi
+  export pgm="fv3jedi_letkf.x"
+  . prep_step
+  ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXEC} hofx_land.yaml >>$pgmout 2>errfile
+  export err=$?; err_chk
+  cp errfile errfile_jedi_hofx
+  if [[ $err != 0 ]]; then
+    echo "JEDI hofx failed"
+    exit 10
+  fi
 fi 
 
 ################################################
@@ -189,11 +191,15 @@ EOF
 
     echo 'do_landDA: calling apply snow increment'
 
+    export pgm="apply_incr.exe"
+    . prep_step
     # (n=6) -> this is fixed, at one task per tile (with minor code change, could run on a single proc). 
-    ${MPIEXEC} -n 6 ${apply_incr_EXEC} ${LOGDIR}/apply_incr.log
-    if [[ $? != 0 ]]; then
-        echo "apply snow increment failed"
-        exit 10
+    ${MPIEXEC} -n 6 ${EXEClandda}/$pgm >>$pgmout 2>errfile
+    export err=$?; err_chk
+    cp errfile errfile_apply_incr
+    if [[ $err != 0 ]]; then
+      echo "apply snow increment failed"
+      exit 10
     fi
 
   fi

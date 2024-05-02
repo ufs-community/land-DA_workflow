@@ -10,7 +10,6 @@ if [[ ${EXP_NAME} == "openloop" ]]; then
 else
     do_jedi="YES"
     SAVE_TILE="YES"
-    LANDDADIR=${HOMElandda}/sorc/DA_update
 fi
 
 echo ${LANDDA_INPUTS}, ${ATMOS_FORC}
@@ -65,7 +64,7 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "era5" ]]; then
     export MEM_WORKDIR
 
     # update vec2tile and tile2vec namelists
-    cp  ${HOMElandda}/parm/templates/template.vector2tile vector2tile.namelist
+    cp  ${PARMlandda}/templates/template.vector2tile vector2tile.namelist
 
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" vector2tile.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
@@ -82,33 +81,37 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "era5" ]]; then
     echo '************************************************'
     echo 'calling vector2tile' 
 
-    ${EXEClandda}/vector2tile_converter.exe vector2tile.namelist
-    if [[ $? != 0 ]]; then
-        echo "vec2tile failed"
-        exit
+    export pgm="vector2tile_converter.exe"
+    . prep_step
+    ${EXEClandda}/$pgm vector2tile.namelist >>$pgmout 2>errfile
+    cp errfile errfile_vector2tile
+    export err=$?; err_chk
+    if [[ $err != 0 ]]; then
+      echo "vec2tile failed"
+      exit
     fi
 fi # vector2tile for DA
 
 if [[ $do_jedi == "YES" && $ATMOS_FORC == "gswp3" ]]; then
 
-	echo '************************************************'
-	echo 'calling tile2tile'    
+  echo '************************************************'
+  echo 'calling tile2tile'    
 
-	export MEM_WORKDIR
+  export MEM_WORKDIR
    
-        # copy restarts into work directory
-	for tile in 1 2 3 4 5 6
-	do
-	    rst_in=${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-	    if [[ ! -e ${rst_in} ]]; then  
-		rst_in=${LANDDA_INPUTS}/restarts/${ATMOS_FORC}/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
-		fi
-	    rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc
-	    cp ${rst_in} ${rst_out}
-	    done
+  # copy restarts into work directory
+  for tile in 1 2 3 4 5 6
+  do
+    rst_in=${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    if [[ ! -e ${rst_in} ]]; then  
+      rst_in=${LANDDA_INPUTS}/restarts/${ATMOS_FORC}/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
+    fi
+    rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc
+    cp ${rst_in} ${rst_out}
+  done
 
     # update tile2tile namelist
-    cp  ${HOMElandda}/parm/templates/template.ufs2jedi ufs2jedi.namelist
+    cp  ${PARMlandda}/templates/template.ufs2jedi ufs2jedi.namelist
 
     sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs2jedi.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs2jedi.namelist
@@ -121,11 +124,15 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "gswp3" ]]; then
     sed -i -e "s/XXTSTUB/${TSTUB}/g" ufs2jedi.namelist
     sed -i -e "s#XXTPATH#${TPATH}#g" ufs2jedi.namelist
 
-    # submit tile2tile    
-    ${EXEClandda}/tile2tile_converter.exe ufs2jedi.namelist
-    if [[ $? != 0 ]]; then
-        echo "tile2tile failed"
-        exit 
+    # submit tile2tile
+    export pgm="tile2tile_converter.exe"
+    . prep_step
+    ${EXEClandda}/$pgm ufs2jedi.namelist >>$pgmout 2>errfile
+    cp errfile errfile_tile2tile
+    export err=$?; err_chk
+    if [[ $err != 0 ]]; then
+      echo "tile2tile failed"
+      exit 
     fi
 fi # tile2tile for DA
 
@@ -162,7 +169,7 @@ if [[ $do_jedi == "YES" ]]; then
     if [[ -e  ${RSTRDIR}/${FILEDATE}.coupler.res ]]; then
 	ln -sf ${RSTRDIR}/${FILEDATE}.coupler.res $cres_file
     else #  if not present, need to create coupler.res for JEDI
-	cp ${LANDDADIR}/template.coupler.res $cres_file
+	cp ${PARMlandda}/templates/template.coupler.res $cres_file
 
 	sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
 	sed -i -e "s/XXMM/${MM}/g" $cres_file
