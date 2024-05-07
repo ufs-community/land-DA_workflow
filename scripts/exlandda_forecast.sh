@@ -169,7 +169,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     RT_COMPILER=${RT_COMPILER:-intel}
     ATOL="1e-7"
 
-    cp $HOMElandda/$TEST_NAME_RST ${PATHRT}/tests/$TEST_NAME_RST 
+    cp $PARMlandda/$TEST_NAME_RST ${PATHRT}/tests/$TEST_NAME_RST 
     source ${PATHRT}/rt_utils.sh
     source ${PATHRT}/default_vars.sh
     source ${PATHRT}/tests/$TEST_NAME_RST
@@ -204,7 +204,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
 
     # FV3 executable:
 #    cp ${EXEClandda}/ufs_model ./ufs_model 
-    cp ${HOMElandda}/fv3_run ./fv3_run
+    cp ${PARMlandda}/fv3_run ./fv3_run
 
     if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then
 	if [[ $HAFS = 'false' ]] || [[ $FV3 = 'true' && $HAFS = 'true' ]]; then
