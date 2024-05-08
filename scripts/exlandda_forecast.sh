@@ -6,10 +6,10 @@ set -ex
 # copy restarts to workdir, convert to UFS tile for DA (all members)
 
 if [[ ${EXP_NAME} == "openloop" ]]; then
-    do_jedi="NO"
+  do_jedi="NO"
 else
-    do_jedi="YES"
-    SAVE_TILE="YES"
+  do_jedi="YES"
+  SAVE_TILE="YES"
 fi
 
 MACHINE_ID=${MACHINE}
@@ -53,7 +53,9 @@ MPIRUN=${MPIRUN:-`which mpiexec`}
 cd $MEM_WORKDIR
 
 #  convert back to vector, run model (all members) convert back to vector, run model (all members)
-if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
+if [[ ${do_jedi} == "YES" ]]; then
+
+  if [[ ${ATMOS_FORC} == "era5" ]]; then
     echo '************************************************'
     echo 'calling tile2vector' 
 
@@ -82,50 +84,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
     # save analysis restart
     mkdir -p ${MEM_MODL_OUTDIR}/restarts/vector
     cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-fi
 
-#  convert back to UFS tile, run model (all members)
-if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then  
-    echo '************************************************'
-    echo 'calling tile2tile' 
-
-    cp ${PARMlandda}/templates/template.jedi2ufs jedi2ufs.namelist
-     
-    sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" jedi2ufs.namelist
-    sed -i -e "s/XXYYYY/${YYYY}/g" jedi2ufs.namelist
-    sed -i -e "s/XXMM/${MM}/g" jedi2ufs.namelist
-    sed -i -e "s/XXDD/${DD}/g" jedi2ufs.namelist
-    sed -i -e "s/XXHH/${HH}/g" jedi2ufs.namelist
-    sed -i -e "s/MODEL_FORCING/${ATMOS_FORC}/g" jedi2ufs.namelist
-    sed -i -e "s/XXRES/${RES}/g" jedi2ufs.namelist
-    sed -i -e "s/XXTSTUB/${TSTUB}/g" jedi2ufs.namelist
-    sed -i -e "s#XXTPATH#${TPATH}#g" jedi2ufs.namelist
-
-    export pgm="tile2tile_converter.exe"
-    . prep_step
-    ${EXEClandda}/$pgm jedi2ufs.namelist >>$pgmout 2>errfile
-    export err=$?; err_chk
-    cp errfile errfile_tile2tile
-    if [[ $err != 0 ]]; then
-      echo "tile2tile failed"
-      exit 10
-    fi
-
-    # save analysis restart
-    mkdir -p ${MEM_MODL_OUTDIR}/restarts/tile
-    for tile in 1 2 3 4 5 6
-    do
-        cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc    
-        cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
-    done  
-fi
-
-
-#jkimmmm
-############################
-# run the forecast model
-
-if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then 
     echo '************************************************'
     echo 'running the forecast model' 
 	
@@ -155,11 +114,42 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "era5" ]]; then
       echo "ufsLand failed"
       exit 10
     fi
-fi 
-# no error codes on exit from model, check for restart below instead
 
-if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
-    
+  #  convert back to UFS tile, run model (all members)
+  elif [[ ${ATMOS_FORC} == "gswp3" ]]; then  
+    echo '************************************************'
+    echo 'calling tile2tile' 
+
+    cp ${PARMlandda}/templates/template.jedi2ufs jedi2ufs.namelist
+     
+    sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" jedi2ufs.namelist
+    sed -i -e "s/XXYYYY/${YYYY}/g" jedi2ufs.namelist
+    sed -i -e "s/XXMM/${MM}/g" jedi2ufs.namelist
+    sed -i -e "s/XXDD/${DD}/g" jedi2ufs.namelist
+    sed -i -e "s/XXHH/${HH}/g" jedi2ufs.namelist
+    sed -i -e "s/MODEL_FORCING/${ATMOS_FORC}/g" jedi2ufs.namelist
+    sed -i -e "s/XXRES/${RES}/g" jedi2ufs.namelist
+    sed -i -e "s/XXTSTUB/${TSTUB}/g" jedi2ufs.namelist
+    sed -i -e "s#XXTPATH#${TPATH}#g" jedi2ufs.namelist
+
+    export pgm="tile2tile_converter.exe"
+    . prep_step
+    ${EXEClandda}/$pgm jedi2ufs.namelist >>$pgmout 2>errfile
+    export err=$?; err_chk
+    cp errfile errfile_tile2tile
+    if [[ $err != 0 ]]; then
+      echo "tile2tile failed"
+      exit 10
+    fi
+
+    # save analysis restart
+    mkdir -p ${MEM_MODL_OUTDIR}/restarts/tile
+    for tile in 1 2 3 4 5 6
+    do
+      cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc    
+      cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
+    done  
+
     echo '************************************************'
     echo 'running the forecast model' 
 
@@ -183,8 +173,8 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     echo "INPUTDATA_ROOT= $INPUTDATA_ROOT"
 
     if [[ ! -d ${INPUTDATA_ROOT} ]] || [[ ! -d ${RTPWD} ]]; then
-	echo "Error: cannot find either folder for INPUTDATA_ROOT or RTPWD, please check!"
-	exit 1
+      echo "Error: cannot find either folder for INPUTDATA_ROOT or RTPWD, please check!"
+      exit 1
     fi
 
     # create run folder
@@ -202,14 +192,13 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     export layout_x=1
     export layout_y=1
 
-    # FV3 executable:
-#    cp ${EXEClandda}/ufs_model ./ufs_model 
+    # FV3 executable: 
     cp ${PARMlandda}/fv3_run ./fv3_run
 
     if [[ $DATM_CDEPS = 'true' ]] || [[ $FV3 = 'true' ]] || [[ $S2S = 'true' ]]; then
-	if [[ $HAFS = 'false' ]] || [[ $FV3 = 'true' && $HAFS = 'true' ]]; then
-	    atparse < ${PATHRT}/parm/${INPUT_NML:-input.nml.IN} > input.nml
-	fi
+      if [[ $HAFS = 'false' ]] || [[ $FV3 = 'true' && $HAFS = 'true' ]]; then
+        atparse < ${PATHRT}/parm/${INPUT_NML:-input.nml.IN} > input.nml
+      fi
     fi
 
     atparse < ${PATHRT}/parm/${MODEL_CONFIGURE:-model_configure.IN} > model_configure
@@ -220,7 +209,7 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
 
     # diag table
     if [[ "Q${DIAG_TABLE:-}" != Q ]] ; then
-	atparse < ${PATHRT}/parm/diag_table/${DIAG_TABLE} > diag_table
+      atparse < ${PATHRT}/parm/diag_table/${DIAG_TABLE} > diag_table
     fi
 
     # Field table
@@ -235,8 +224,8 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
     source ./fv3_run
 
     if [[ $DATM_CDEPS = 'true' ]]; then
-	atparse < ${PATHRT}/parm/${DATM_IN_CONFIGURE:-datm_in.IN} > datm_in
-	atparse < ${PATHRT}/parm/${DATM_STREAM_CONFIGURE:-datm.streams.IN} > datm.streams
+      atparse < ${PATHRT}/parm/${DATM_IN_CONFIGURE:-datm_in.IN} > datm_in
+      atparse < ${PATHRT}/parm/${DATM_STREAM_CONFIGURE:-datm.streams.IN} > datm.streams
     fi
 
     # NoahMP table file
@@ -253,20 +242,16 @@ if [[ $do_jedi == "YES" && ${ATMOS_FORC} == "gswp3" ]]; then
       echo "ufs_model failed"
       exit 10
     fi
+  fi
 fi
-
-# no error codes on exit from model, check for restart below instead
 
 ############################
 # check model ouput (all members)
-
 if [[ ${ATMOS_FORC} == "era5" ]]; then
-    if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then
-	cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
-    fi
-fi
-
-if [[ ${ATMOS_FORC} == "gswp3" ]]; then
+  if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then
+    cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
+  fi
+elif [[ ${ATMOS_FORC} == "gswp3" ]]; then
   for tile in 1 2 3 4 5 6
   do
     cp ${COMOUT}/${mem_ens}/noahmp/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
