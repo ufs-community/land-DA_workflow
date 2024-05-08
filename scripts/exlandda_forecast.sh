@@ -12,7 +12,6 @@ else
   SAVE_TILE="YES"
 fi
 
-MACHINE_ID=${MACHINE}
 TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
@@ -30,9 +29,6 @@ mem_ens="mem000"
 
 MEM_WORKDIR=${WORKDIR}/${mem_ens}
 MEM_MODL_OUTDIR=${COMOUT}/${mem_ens}
-RSTRDIR=${MEM_WORKDIR}
-FILEDATE=${YYYY}${MM}${DD}.${HH}0000
-SAVE_INCR="YES"
 FREQ=$((${FCSTHR}*3600))
 RDD=$((${FCSTHR}/24))
 RHH=$((${FCSTHR}%24))
@@ -178,7 +174,7 @@ if [[ ${do_jedi} == "YES" ]]; then
     fi
 
     # create run folder
-    RUNDIR=${MEM_MODL_OUTDIR}/noahmp/${TEST_NAME_RST}
+    RUNDIR=${DATA}/noahmp/${TEST_NAME_RST}
     [[ -d ${RUNDIR} ]] && echo "Warning: remove old run folder!" && rm -rf ${RUNDIR}
     mkdir -p ${RUNDIR}
     cd ${RUNDIR}
@@ -214,7 +210,7 @@ if [[ ${do_jedi} == "YES" ]]; then
 
     # Field table
     if [[ "Q${FIELD_TABLE:-}" != Q ]] ; then
-	cp ${PATHRT}/parm/field_table/${FIELD_TABLE} field_table
+      cp ${PATHRT}/parm/field_table/${FIELD_TABLE} field_table
     fi
 
     # Field Dictionary
@@ -254,6 +250,6 @@ if [[ ${ATMOS_FORC} == "era5" ]]; then
 elif [[ ${ATMOS_FORC} == "gswp3" ]]; then
   for tile in 1 2 3 4 5 6
   do
-    cp ${COMOUT}/${mem_ens}/noahmp/${TEST_NAME_RST}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
+    cp ${RUNDIR}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
   done
 fi
