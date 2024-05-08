@@ -6,10 +6,10 @@ set -ex
 # copy restarts to workdir, convert to UFS tile for DA (all members) 
 
 if [[ ${EXP_NAME} == "openloop" ]]; then
-    do_jedi="NO"
+  do_jedi="NO"
 else
-    do_jedi="YES"
-    SAVE_TILE="YES"
+  do_jedi="YES"
+  SAVE_TILE="YES"
 fi
 
 TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
