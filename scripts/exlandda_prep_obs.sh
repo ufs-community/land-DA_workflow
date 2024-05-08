@@ -12,7 +12,6 @@ else
   SAVE_TILE="YES"
 fi
 
-TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}
@@ -24,11 +23,7 @@ HP=${PTIME:8:2}
 
 mem_ens="mem000" 
 
-MEM_WORKDIR=${WORKDIR}/${mem_ens}
-MEM_MODL_OUTDIR=${COMOUT}/${mem_ens}
-RSTRDIR=${MEM_WORKDIR}
 JEDIWORKDIR=${WORKDIR}/mem000/jedi
-FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 
 cd $JEDIWORKDIR
 
