@@ -48,8 +48,10 @@ fi
 
 module use modulefiles; module load modules.landda
 
-if [[ $do_jedi == "YES" && $ATMOS_FORC == "era5" ]]; then
-    
+if [[ $do_jedi == "YES" ]]; then
+
+  if [[ $ATMOS_FORC == "era5" ]]; then
+    # vector2tile for DA
     # copy restarts into work directory
     rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
     if [[ ! -e ${rst_in} ]]; then
@@ -89,26 +91,24 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "era5" ]]; then
     if [[ $err != 0 ]]; then
       echo "vec2tile failed"
       exit
-    fi
-fi # vector2tile for DA
+    fi 
+  elif [[ $ATMOS_FORC == "gswp3" ]]; then
+    # tile2tile for DA
+    echo '************************************************'
+    echo 'calling tile2tile'    
 
-if [[ $do_jedi == "YES" && $ATMOS_FORC == "gswp3" ]]; then
-
-  echo '************************************************'
-  echo 'calling tile2tile'    
-
-  export MEM_WORKDIR
+    export MEM_WORKDIR
    
-  # copy restarts into work directory
-  for tile in 1 2 3 4 5 6
-  do
-    rst_in=${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-    if [[ ! -e ${rst_in} ]]; then  
-      rst_in=${LANDDA_INPUTS}/restarts/${ATMOS_FORC}/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
-    fi
-    rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc
-    cp ${rst_in} ${rst_out}
-  done
+    # copy restarts into work directory
+    for tile in 1 2 3 4 5 6
+    do
+      rst_in=${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+      if [[ ! -e ${rst_in} ]]; then  
+        rst_in=${LANDDA_INPUTS}/restarts/${ATMOS_FORC}/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
+      fi
+      rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc
+      cp ${rst_in} ${rst_out}
+    done
 
     # update tile2tile namelist
     cp  ${PARMlandda}/templates/template.ufs2jedi ufs2jedi.namelist
@@ -134,53 +134,50 @@ if [[ $do_jedi == "YES" && $ATMOS_FORC == "gswp3" ]]; then
       echo "tile2tile failed"
       exit 
     fi
-fi # tile2tile for DA
+  fi
 
-if [[ $do_jedi == "YES" ]]; then
-    if [[ ! -e ${COMOUT}/DA ]]; then
-	mkdir -p ${COMOUT}/DA/jedi_incr
-	mkdir -p ${COMOUT}/DA/logs
-	mkdir -p ${COMOUT}/DA/hofx        
-    fi    
-    if [[ ! -e $JEDIWORKDIR ]]; then
-	mkdir -p $JEDIWORKDIR
-    fi    
-    cd $JEDIWORKDIR
+  if [[ ! -e ${COMOUT}/DA ]]; then
+    mkdir -p ${COMOUT}/DA/jedi_incr
+    mkdir -p ${COMOUT}/DA/logs
+    mkdir -p ${COMOUT}/DA/hofx        
+  fi    
+  if [[ ! -e $JEDIWORKDIR ]]; then
+    mkdir -p $JEDIWORKDIR
+  fi    
+  cd $JEDIWORKDIR
 
-    if [[ ! -e ${JEDIWORKDIR}/output ]]; then
-	ln -s ${COMOUT} ${JEDIWORKDIR}/output
-    fi
+  if [[ ! -e ${JEDIWORKDIR}/output ]]; then
+    ln -s ${COMOUT} ${JEDIWORKDIR}/output
+  fi
     
-    if  [[ $SAVE_TILE == "YES" ]]; then
-	for tile in 1 2 3 4 5 6
-	do
-	    cp ${RSTRDIR}/${FILEDATE}.sfc_data.tile${tile}.nc  ${RSTRDIR}/${FILEDATE}.sfc_data_back.tile${tile}.nc
-	done
-    fi
-
-    #stage restarts for applying JEDI update (files will get directly updated)
+  if  [[ $SAVE_TILE == "YES" ]]; then
     for tile in 1 2 3 4 5 6
     do
-	ln -fs ${RSTRDIR}/${FILEDATE}.sfc_data.tile${tile}.nc ${JEDIWORKDIR}/${FILEDATE}.sfc_data.tile${tile}.nc
+      cp ${RSTRDIR}/${FILEDATE}.sfc_data.tile${tile}.nc  ${RSTRDIR}/${FILEDATE}.sfc_data_back.tile${tile}.nc
     done
+  fi
 
-    cres_file=${JEDIWORKDIR}/${FILEDATE}.coupler.res    
+  #stage restarts for applying JEDI update (files will get directly updated)
+  for tile in 1 2 3 4 5 6
+  do
+    ln -fs ${RSTRDIR}/${FILEDATE}.sfc_data.tile${tile}.nc ${JEDIWORKDIR}/${FILEDATE}.sfc_data.tile${tile}.nc
+  done
 
-    if [[ -e  ${RSTRDIR}/${FILEDATE}.coupler.res ]]; then
-	ln -sf ${RSTRDIR}/${FILEDATE}.coupler.res $cres_file
-    else #  if not present, need to create coupler.res for JEDI
-	cp ${PARMlandda}/templates/template.coupler.res $cres_file
+  cres_file=${JEDIWORKDIR}/${FILEDATE}.coupler.res    
 
-	sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
-	sed -i -e "s/XXMM/${MM}/g" $cres_file
-	sed -i -e "s/XXDD/${DD}/g" $cres_file
-	sed -i -e "s/XXHH/${HH}/g" $cres_file
+  if [[ -e  ${RSTRDIR}/${FILEDATE}.coupler.res ]]; then
+    ln -sf ${RSTRDIR}/${FILEDATE}.coupler.res $cres_file
+  else #  if not present, need to create coupler.res for JEDI
+    cp ${PARMlandda}/templates/template.coupler.res $cres_file
 
-	sed -i -e "s/XXYYYP/${YYYP}/g" $cres_file
-	sed -i -e "s/XXMP/${MP}/g" $cres_file
-	sed -i -e "s/XXDP/${DP}/g" $cres_file
-	sed -i -e "s/XXHP/${HP}/g" $cres_file
-	
-    fi    
+    sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
+    sed -i -e "s/XXMM/${MM}/g" $cres_file
+    sed -i -e "s/XXDD/${DD}/g" $cres_file
+    sed -i -e "s/XXHH/${HH}/g" $cres_file
+    sed -i -e "s/XXYYYP/${YYYP}/g" $cres_file
+    sed -i -e "s/XXMP/${MP}/g" $cres_file
+    sed -i -e "s/XXDP/${DP}/g" $cres_file
+    sed -i -e "s/XXHP/${HP}/g" $cres_file	
+  fi    
 fi # do_jedi setup
 
