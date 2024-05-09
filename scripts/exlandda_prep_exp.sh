@@ -134,10 +134,6 @@ if [[ $do_jedi == "YES" ]]; then
   fi    
   cd $JEDIWORKDIR
 
-  if [[ ! -e ${JEDIWORKDIR}/output ]]; then
-    ln -s ${COMOUT} ${JEDIWORKDIR}/output
-  fi
-    
   if  [[ $SAVE_TILE == "YES" ]]; then
     for tile in 1 2 3 4 5 6
     do

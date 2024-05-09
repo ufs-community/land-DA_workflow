@@ -46,7 +46,10 @@ MPIEXEC=`which mpiexec`
 YAML_DA=construct
 GFSv17="NO"
 B=30 # back ground error std for LETKFOI
+   
 cd $JEDIWORKDIR
+
+mkdir -p output/DA/hofx
 
 ################################################
 # 3. DETERMINE REQUESTED JEDI TYPE, CONSTRUCT YAMLS
@@ -200,6 +203,10 @@ fi
 ################################################
 # 7. CLEAN UP
 ################################################
+
+if [[ -d output/DA/hofx ]]; then
+  cp -r output/DA/hofx ${COMOUT}/${mem_ens}
+fi
 
 # keep increments
 if [ $SAVE_INCR == "YES" ] && [ $do_DA == "YES" ]; then
