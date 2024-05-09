@@ -191,7 +191,7 @@ workflow:
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "forecast" "&HOMElandda;" "&MACHINE;"'
       jobname: forecast
       nodes: "1:ppn=&NPROCS_FORECAST;"
-      walltime: 00:40:00
+      walltime: 01:00:00
       queue: batch
       join: "&LOGDIR;/forecast.log"
       dependency:
