@@ -13,6 +13,7 @@ set -xue
 export USHlandda="${HOMElandda}/ush"
 export EXEClandda="${HOMElandda}/exec"
 export PARMlandda="${HOMElandda}/parm"
+export FIXlandda="${HOMElandda}/fix"
 export SCRIPTSlandda="${HOMElandda}/scripts"
 #
 #-----------------------------------------------------------------------
