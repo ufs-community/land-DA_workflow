@@ -203,7 +203,8 @@ fi
 
 # keep increments
 if [ $SAVE_INCR == "YES" ] && [ $do_DA == "YES" ]; then
-  cp ${JEDIWORKDIR}/${FILEDATE}.xainc.sfc_data.tile*.nc  ${COMOUT}/DA/jedi_incr/
+  mkdir -p ${COMOUT}/${mem_ens}/jedi_incr
+  cp ${JEDIWORKDIR}/${FILEDATE}.xainc.sfc_data.tile*.nc  ${COMOUT}/${mem_ens}/jedi_incr
 fi 
 
 # clean up 

@@ -25,18 +25,12 @@ HP=${PTIME:8:2}
 mem_ens="mem000" 
 
 MEM_WORKDIR=${WORKDIR}/${mem_ens}
-MEM_MODL_OUTDIR=${COMOUT}/${mem_ens}
 JEDIWORKDIR=${WORKDIR}/mem000/jedi
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 
-if [[ ! -e ${MEM_WORKDIR} ]]; then
-    mkdir -p ${MEM_WORKDIR}
-fi
-if [[ ! -e ${MEM_MODL_OUTDIR} ]]; then
-    mkdir -p ${MEM_MODL_OUTDIR}
-fi
-
-mkdir -p $MEM_WORKDIR/modulefiles; cp ${HOMElandda}/modulefiles/build_${MACHINE}_intel.lua $MEM_WORKDIR/modulefiles/modules.landda.lua
+mkdir -p ${MEM_WORKDIR}
+mkdir -p $MEM_WORKDIR/modulefiles
+cp ${HOMElandda}/modulefiles/build_${MACHINE}_intel.lua $MEM_WORKDIR/modulefiles/modules.landda.lua
 cd $MEM_WORKDIR
 
 # load modulefiles
@@ -52,7 +46,7 @@ if [[ $do_jedi == "YES" ]]; then
   if [[ $ATMOS_FORC == "era5" ]]; then
     # vector2tile for DA
     # copy restarts into work directory
-    rst_in=${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    rst_in=${COMOUT}/${mem_ens}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
     if [[ ! -e ${rst_in} ]]; then
       rst_in=${LANDDA_INPUTS}/restarts/${ATMOS_FORC}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
     fi
@@ -101,7 +95,7 @@ if [[ $do_jedi == "YES" ]]; then
     # copy restarts into work directory
     for tile in 1 2 3 4 5 6
     do
-      rst_in=${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+      rst_in=${COMOUT}/${mem_ens}/restarts/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
       if [[ ! -e ${rst_in} ]]; then  
         rst_in=${LANDDA_INPUTS}/restarts/${ATMOS_FORC}/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
       fi
@@ -135,11 +129,6 @@ if [[ $do_jedi == "YES" ]]; then
     fi
   fi
 
-  if [[ ! -e ${COMOUT}/DA ]]; then
-    mkdir -p ${COMOUT}/DA/jedi_incr
-    mkdir -p ${COMOUT}/DA/logs
-    mkdir -p ${COMOUT}/DA/hofx        
-  fi    
   if [[ ! -e $JEDIWORKDIR ]]; then
     mkdir -p $JEDIWORKDIR
   fi    

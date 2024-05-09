@@ -28,7 +28,6 @@ nHH=${NTIME:8:2}
 mem_ens="mem000"
 
 MEM_WORKDIR=${WORKDIR}/${mem_ens}
-MEM_MODL_OUTDIR=${COMOUT}/${mem_ens}
 FREQ=$((${FCSTHR}*3600))
 RDD=$((${FCSTHR}/24))
 RHH=$((${FCSTHR}%24))
@@ -78,8 +77,8 @@ if [[ ${do_jedi} == "YES" ]]; then
     fi
 
     # save analysis restart
-    mkdir -p ${MEM_MODL_OUTDIR}/restarts/vector
-    cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    mkdir -p ${COMOUT}/${mem_ens}/restarts/vector
+    cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${COMOUT}/${mem_ens}/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
 
     echo '************************************************'
     echo 'running the forecast model' 
@@ -139,11 +138,11 @@ if [[ ${do_jedi} == "YES" ]]; then
     fi
 
     # save analysis restart
-    mkdir -p ${MEM_MODL_OUTDIR}/restarts/tile
+    mkdir -p ${COMOUT}/${mem_ens}/restarts/tile
     for tile in 1 2 3 4 5 6
     do
-      cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc    
-      cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
+      cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${COMOUT}/${mem_ens}/restarts/tile/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc    
+      cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${COMOUT}/${mem_ens}/restarts/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
     done  
 
     echo '************************************************'
@@ -245,11 +244,11 @@ fi
 # check model ouput (all members)
 if [[ ${ATMOS_FORC} == "era5" ]]; then
   if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then
-    cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${MEM_MODL_OUTDIR}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
+    cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${COMOUT}/${mem_ens}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
   fi
 elif [[ ${ATMOS_FORC} == "gswp3" ]]; then
   for tile in 1 2 3 4 5 6
   do
-    cp ${RUNDIR}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${MEM_MODL_OUTDIR}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
+    cp ${RUNDIR}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${COMOUT}/${mem_ens}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
   done
 fi
