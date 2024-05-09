@@ -26,7 +26,6 @@ mem_ens="mem000"
 
 MEM_WORKDIR=${WORKDIR}/${mem_ens}
 MEM_MODL_OUTDIR=${COMOUT}/${mem_ens}
-RSTRDIR=${MEM_WORKDIR}
 JEDIWORKDIR=${WORKDIR}/mem000/jedi
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 
@@ -153,20 +152,20 @@ if [[ $do_jedi == "YES" ]]; then
   if  [[ $SAVE_TILE == "YES" ]]; then
     for tile in 1 2 3 4 5 6
     do
-      cp ${RSTRDIR}/${FILEDATE}.sfc_data.tile${tile}.nc  ${RSTRDIR}/${FILEDATE}.sfc_data_back.tile${tile}.nc
+      cp ${MEM_WORKDIR}/${FILEDATE}.sfc_data.tile${tile}.nc  ${MEM_WORKDIR}/${FILEDATE}.sfc_data_back.tile${tile}.nc
     done
   fi
 
   #stage restarts for applying JEDI update (files will get directly updated)
   for tile in 1 2 3 4 5 6
   do
-    ln -fs ${RSTRDIR}/${FILEDATE}.sfc_data.tile${tile}.nc ${JEDIWORKDIR}/${FILEDATE}.sfc_data.tile${tile}.nc
+    ln -fs ${MEM_WORKDIR}/${FILEDATE}.sfc_data.tile${tile}.nc ${JEDIWORKDIR}/${FILEDATE}.sfc_data.tile${tile}.nc
   done
 
   cres_file=${JEDIWORKDIR}/${FILEDATE}.coupler.res    
 
-  if [[ -e  ${RSTRDIR}/${FILEDATE}.coupler.res ]]; then
-    ln -sf ${RSTRDIR}/${FILEDATE}.coupler.res $cres_file
+  if [[ -e  ${MEM_WORKDIR}/${FILEDATE}.coupler.res ]]; then
+    ln -sf ${MEM_WORKDIR}/${FILEDATE}.coupler.res $cres_file
   else #  if not present, need to create coupler.res for JEDI
     cp ${PARMlandda}/templates/template.coupler.res $cres_file
 
