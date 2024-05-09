@@ -12,8 +12,8 @@ else
     SAVE_TILE="YES"
 fi
 
-echo ${LANDDA_INPUTS}, ${ATMOS_FORC}
-TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
+echo ${FIXlandda}, ${ATMOS_FORC}
+TPATH=${FIXlandda}/forcing/${ATMOS_FORC}/orog_files/
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}
@@ -48,7 +48,7 @@ if [[ $do_jedi == "YES" ]]; then
     # copy restarts into work directory
     rst_in=${COMOUT}/${mem_ens}/restarts/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
     if [[ ! -e ${rst_in} ]]; then
-      rst_in=${LANDDA_INPUTS}/restarts/${ATMOS_FORC}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+      rst_in=${FIXlandda}/restarts/${ATMOS_FORC}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
     fi
     rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
     cp ${rst_in} ${rst_out}
@@ -61,7 +61,7 @@ if [[ $do_jedi == "YES" ]]; then
     # update vec2tile and tile2vec namelists
     cp  ${PARMlandda}/templates/template.vector2tile vector2tile.namelist
 
-    sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" vector2tile.namelist
+    sed -i "s|FIXlandda|${FIXlandda}|g" vector2tile.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
     sed -i -e "s/XXMM/${MM}/g" vector2tile.namelist
     sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
@@ -97,7 +97,7 @@ if [[ $do_jedi == "YES" ]]; then
     do
       rst_in=${COMOUT}/${mem_ens}/restarts/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
       if [[ ! -e ${rst_in} ]]; then  
-        rst_in=${LANDDA_INPUTS}/restarts/${ATMOS_FORC}/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
+        rst_in=${FIXlandda}/restarts/${ATMOS_FORC}/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
       fi
       rst_out=${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc
       cp ${rst_in} ${rst_out}
@@ -106,7 +106,7 @@ if [[ $do_jedi == "YES" ]]; then
     # update tile2tile namelist
     cp  ${PARMlandda}/templates/template.ufs2jedi ufs2jedi.namelist
 
-    sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs2jedi.namelist
+    sed -i "s|FIXlandda|${FIXlandda}|g" ufs2jedi.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs2jedi.namelist
     sed -i -e "s/XXMM/${MM}/g" ufs2jedi.namelist
     sed -i -e "s/XXDD/${DD}/g" ufs2jedi.namelist

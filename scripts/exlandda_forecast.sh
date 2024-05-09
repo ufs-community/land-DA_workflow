@@ -13,7 +13,7 @@ else
 fi
 
 MACHINE_ID=${MACHINE}
-TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
+TPATH=${FIXlandda}/forcing/${ATMOS_FORC}/orog_files/
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}
@@ -57,7 +57,7 @@ if [[ ${do_jedi} == "YES" ]]; then
 
     cp  ${PARMlandda}/templates/template.tile2vector tile2vector.namelist
 
-    sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" tile2vector.namelist
+    sed -i "s|FIXlandda|${FIXlandda}|g" tile2vector.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
     sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
     sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
@@ -87,7 +87,7 @@ if [[ ${do_jedi} == "YES" ]]; then
     # update model namelist 
     cp  ${PARMlandda}/templates/template.ufs-noahMP.namelist.${ATMOS_FORC}  ufs-land.namelist
     
-    sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" ufs-land.namelist
+    sed -i "s|FIXlandda|${FIXlandda}|g" ufs-land.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
     sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
     sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
@@ -118,7 +118,7 @@ if [[ ${do_jedi} == "YES" ]]; then
 
     cp ${PARMlandda}/templates/template.jedi2ufs jedi2ufs.namelist
      
-    sed -i "s|LANDDA_INPUTS|${LANDDA_INPUTS}|g" jedi2ufs.namelist
+    sed -i "s|FIXlandda|${FIXlandda}|g" jedi2ufs.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" jedi2ufs.namelist
     sed -i -e "s/XXMM/${MM}/g" jedi2ufs.namelist
     sed -i -e "s/XXDD/${DD}/g" jedi2ufs.namelist
@@ -162,8 +162,8 @@ if [[ ${do_jedi} == "YES" ]]; then
     source ${PATHRT}/atparse.bash
 
     BL_DATE=20230816
-    RTPWD=${RTPWD:-${LANDDA_INPUTS}/NEMSfv3gfs/develop-${BL_DATE}/INTEL/${TEST_NAME}}
-    INPUTDATA_ROOT=${INPUTDATA_ROOT:-${LANDDA_INPUTS}/NEMSfv3gfs/input-data-20221101}
+    RTPWD=${RTPWD:-${FIXlandda}/NEMSfv3gfs/develop-${BL_DATE}/INTEL/${TEST_NAME}}
+    INPUTDATA_ROOT=${INPUTDATA_ROOT:-${FIXlandda}/NEMSfv3gfs/input-data-20221101}
 
     echo "RTPWD= $RTPWD"
     echo "INPUTDATA_ROOT= $INPUTDATA_ROOT"
@@ -217,7 +217,7 @@ if [[ ${do_jedi} == "YES" ]]; then
     # Set up the run directory
     mkdir -p RESTART INPUT
     cd INPUT
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/DATM_GSWP3_input_data/. .
+    rsync -arv ${FIXlandda}/UFS_WM/DATM_GSWP3_input_data/. .
     cd -
 
     SUFFIX=${RT_SUFFIX}
@@ -228,38 +228,38 @@ if [[ ${do_jedi} == "YES" ]]; then
 
       # CMEPS restart and pointer files
       RFILE1=ufs.cpld.cpl.r.${RESTART_FILE_SUFFIX_SECS}.nc
-      cp ${LANDDA_INPUTS}/restarts/gswp3/${RFILE1} RESTART/.
+      cp ${FIXlandda}/restarts/gswp3/${RFILE1} RESTART/.
       ls -1 "RESTART/${RFILE1}">rpointer.cpl
 
       # CDEPS restart and pointer files
       RFILE2=ufs.cpld.datm.r.${RESTART_FILE_SUFFIX_SECS}.nc
-      cp ${LANDDA_INPUTS}/restarts/gswp3/${RFILE2} RESTART/.
+      cp ${FIXlandda}/restarts/gswp3/${RFILE2} RESTART/.
       ls -1 "RESTART/${RFILE2}">rpointer.atm
     fi
 
     cd INPUT
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile1.nc C96.initial.tile1.nc
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile2.nc C96.initial.tile2.nc
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile3.nc C96.initial.tile3.nc
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile4.nc C96.initial.tile4.nc
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile5.nc C96.initial.tile5.nc
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile6.nc C96.initial.tile6.nc
+    rsync -arv ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile1.nc C96.initial.tile1.nc
+    rsync -arv ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile2.nc C96.initial.tile2.nc
+    rsync -arv ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile3.nc C96.initial.tile3.nc
+    rsync -arv ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile4.nc C96.initial.tile4.nc
+    rsync -arv ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile5.nc C96.initial.tile5.nc
+    rsync -arv ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile6.nc C96.initial.tile6.nc
 
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/C96.maximum_snow_albedo.tile*.nc .
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/C96.slope_type.tile*.nc .
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/C96.soil_type.tile*.nc .
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/C96.soil_color.tile*.nc .
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/C96.substrate_temperature.tile*.nc .
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/C96.vegetation_greenness.tile*.nc .
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/C96.vegetation_type.tile*.nc .
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile1.nc oro_data.tile1.nc
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile2.nc oro_data.tile2.nc
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile3.nc oro_data.tile3.nc
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile4.nc oro_data.tile4.nc
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile5.nc oro_data.tile5.nc
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile6.nc oro_data.tile6.nc
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_input_data/INPUT/C96_grid.tile*.nc .
-    rsync -arv ${LANDDA_INPUTS}/UFS_WM/FV3_input_data/INPUT/grid_spec.nc C96_mosaic.nc
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.maximum_snow_albedo.tile*.nc .
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.slope_type.tile*.nc .
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.soil_type.tile*.nc .
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.soil_color.tile*.nc .
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.substrate_temperature.tile*.nc .
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.vegetation_greenness.tile*.nc .
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.vegetation_type.tile*.nc .
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile1.nc oro_data.tile1.nc
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile2.nc oro_data.tile2.nc
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile3.nc oro_data.tile3.nc
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile4.nc oro_data.tile4.nc
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile5.nc oro_data.tile5.nc
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile6.nc oro_data.tile6.nc
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_input_data/INPUT/C96_grid.tile*.nc .
+    rsync -arv ${FIXlandda}/UFS_WM/FV3_input_data/INPUT/grid_spec.nc C96_mosaic.nc
     cd -
 
     if [[ $DATM_CDEPS = 'true' ]]; then

@@ -4,7 +4,7 @@ add_test(NAME test_vector2tile
          WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 set_tests_properties(test_vector2tile
     PROPERTIES
-    ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS}")
+    ENVIRONMENT "FIXlandda=$ENV{FIXlandda}")
 
 # test for creating pseudo ensemble for use in letkfoi
 add_test(NAME test_create_ens
@@ -13,7 +13,7 @@ add_test(NAME test_create_ens
 set_tests_properties(test_create_ens
     PROPERTIES
     DEPENDS     "test_vector2title"
-    ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS}") 
+    ENVIRONMENT "FIXlandda=$ENV{FIXlandda}") 
 
 # test for running letkfoi to assimilate snow DA
 add_test(NAME test_letkfoi_snowda
@@ -22,7 +22,7 @@ add_test(NAME test_letkfoi_snowda
 set_tests_properties(test_letkfoi_snowda
     PROPERTIES
     DEPENDS "test_create_ens"
-    ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS}")
+    ENVIRONMENT "FIXlandda=$ENV{FIXlandda}")
 
 # test for adding jedi increment
 add_test(NAME test_apply_jediincr
@@ -31,7 +31,7 @@ add_test(NAME test_apply_jediincr
 set_tests_properties(test_apply_jediincr
     PROPERTIES
     DEPENDS "test_letkfoi_snowda"
-    ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS}")
+    ENVIRONMENT "FIXlandda=$ENV{FIXlandda}")
 
 # test for tile2vector for use in ufs-land-driver
 add_test(NAME test_tile2vector
@@ -40,7 +40,7 @@ add_test(NAME test_tile2vector
 set_tests_properties(test_tile2vector
     PROPERTIES
     DEPENDS "test_apply_jediincr" 
-    ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS};
+    ENVIRONMENT "FIXlandda=$ENV{FIXlandda};
                  TOL=$ENV{TOL}")
 
 # test for ufs-land-driver
@@ -50,7 +50,7 @@ add_test(NAME test_land_driver
 set_tests_properties(test_land_driver
     PROPERTIES
     DEPENDS "test_tile2vector"
-    ENVIRONMENT "LANDDA_INPUTS=$ENV{LANDDA_INPUTS};
+    ENVIRONMENT "FIXlandda=$ENV{FIXlandda};
                  TOL=$ENV{TOL}")
 
 # test for ufs-datm-lnd model

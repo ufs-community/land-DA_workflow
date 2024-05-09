@@ -18,11 +18,9 @@ export FORCING="era5"
 if [ "${MACHINE}" = "hera" ]; then
   export EXP_BASEDIR="/scratch2/NAGAPE/epic/{USER}/landda_test"
   export JEDI_INSTALL="/scratch2/NAGAPE/epic/UFS_Land-DA/jedi_skylabv7.0"
-  export LANDDA_INPUTS="/scratch2/NAGAPE/epic/UFS_Land-DA/inputs"
 elif [ "${MACHINE}" = "orion" ]; then
   export EXP_BASEDIR="/work/noaa/epic/chjeon/landda_test"
   export JEDI_INSTALL="/work/noaa/epic/UFS_Land-DA/jedi_skylabv7.0"
-  export LANDDA_INPUTS="/work/noaa/epic/UFS_Land-DA/inputs"
 fi
 
 export RES="96"

@@ -27,7 +27,7 @@ JEDIWORKDIR=${WORKDIR}/mem000/jedi
 
 cd $JEDIWORKDIR
 
-OBSDIR=${LANDDA_INPUTS}/DA
+OBSDIR=${FIXlandda}/DA
 ################################################
 # 2. PREPARE OBS FILES
 ################################################

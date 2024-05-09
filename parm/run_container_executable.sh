@@ -8,8 +8,8 @@ img=${img:-${CONTAINERLOC}/ubuntu20.04-intel-ue-landda.img}
 CONTAINERBASE="/"`echo $img | xargs realpath | awk -F"/" '{print $2}'`
 cmd=$(basename "$0")
 arg="$@"
-if [ ! -z "$LANDDA_INPUTS" ]; then
-  INPUTBASE="/"`echo $LANDDA_INPUTS | xargs realpath | awk -F"/" '{print $2}'`
+if [ ! -z "$FIXlandda" ]; then
+  INPUTBASE="/"`echo $FIXlandda | xargs realpath | awk -F"/" '{print $2}'`
   INPUTBIND="-B $INPUTBASE:$INPUTBASE"
 else
   INPUTBIND=""
