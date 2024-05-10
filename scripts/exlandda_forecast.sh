@@ -217,7 +217,7 @@ if [[ ${do_jedi} == "YES" ]]; then
     # Set up the run directory
     mkdir -p RESTART INPUT
     cd INPUT
-    rsync -arv ${FIXlandda}/UFS_WM/DATM_GSWP3_input_data/. .
+    ln -nsf ${FIXlandda}/UFS_WM/DATM_GSWP3_input_data/* .
     cd -
 
     SUFFIX=${RT_SUFFIX}
@@ -238,28 +238,27 @@ if [[ ${do_jedi} == "YES" ]]; then
     fi
 
     cd INPUT
-    rsync -arv ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile1.nc C96.initial.tile1.nc
-    rsync -arv ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile2.nc C96.initial.tile2.nc
-    rsync -arv ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile3.nc C96.initial.tile3.nc
-    rsync -arv ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile4.nc C96.initial.tile4.nc
-    rsync -arv ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile5.nc C96.initial.tile5.nc
-    rsync -arv ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile6.nc C96.initial.tile6.nc
-
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.maximum_snow_albedo.tile*.nc .
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.slope_type.tile*.nc .
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.soil_type.tile*.nc .
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.soil_color.tile*.nc .
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.substrate_temperature.tile*.nc .
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.vegetation_greenness.tile*.nc .
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.vegetation_type.tile*.nc .
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile1.nc oro_data.tile1.nc
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile2.nc oro_data.tile2.nc
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile3.nc oro_data.tile3.nc
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile4.nc oro_data.tile4.nc
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile5.nc oro_data.tile5.nc
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile6.nc oro_data.tile6.nc
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_input_data/INPUT/C96_grid.tile*.nc .
-    rsync -arv ${FIXlandda}/UFS_WM/FV3_input_data/INPUT/grid_spec.nc C96_mosaic.nc
+    ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile1.nc C96.initial.tile1.nc
+    ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile2.nc C96.initial.tile2.nc
+    ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile3.nc C96.initial.tile3.nc
+    ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile4.nc C96.initial.tile4.nc
+    ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile5.nc C96.initial.tile5.nc
+    ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile6.nc C96.initial.tile6.nc
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.maximum_snow_albedo.tile*.nc .
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.slope_type.tile*.nc .
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.soil_type.tile*.nc .
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.soil_color.tile*.nc .
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.substrate_temperature.tile*.nc .
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.vegetation_greenness.tile*.nc .
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/C96.vegetation_type.tile*.nc .
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile1.nc oro_data.tile1.nc
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile2.nc oro_data.tile2.nc
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile3.nc oro_data.tile3.nc
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile4.nc oro_data.tile4.nc
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile5.nc oro_data.tile5.nc
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C96/oro_C96.mx100.tile6.nc oro_data.tile6.nc
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_input_data/INPUT/C96_grid.tile*.nc .
+    ln -nsf ${FIXlandda}/UFS_WM/FV3_input_data/INPUT/grid_spec.nc C96_mosaic.nc
     cd -
 
     if [[ $DATM_CDEPS = 'true' ]]; then
