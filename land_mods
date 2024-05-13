@@ -1,5 +1,0 @@
-module purge
-module load intel/2022.2.0
-module load impi/2022.2.0
-module load netcdf/4.7.0
-module load netcdf-hdf5parallel/4.7.4

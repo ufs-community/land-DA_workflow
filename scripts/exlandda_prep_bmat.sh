@@ -12,7 +12,7 @@ else
   SAVE_TILE="YES"
 fi
 
-TPATH=${LANDDA_INPUTS}/forcing/${ATMOS_FORC}/orog_files/
+TPATH=${FIXlandda}/forcing/${ATMOS_FORC}/orog_files/
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}
@@ -21,8 +21,6 @@ HH=${cyc}
 mem_ens="mem000" 
 
 MEM_WORKDIR=${WORKDIR}/${mem_ens}
-MEM_MODL_OUTDIR=${COMOUT}/${mem_ens}
-RSTRDIR=${MEM_WORKDIR}
 JEDIWORKDIR=${WORKDIR}/mem000/jedi
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 
@@ -47,34 +45,34 @@ cd $JEDIWORKDIR
 
 if [[ ${DAtype} == "letkfoi_snow" ]]; then
 
-    if [ $GFSv17 == "YES" ]; then
-      SNOWDEPTHVAR="snodl"
-    else
-      SNOWDEPTHVAR="snwdph"
-      # replace field overwrite file
-      cp ${PARMlandda}/jedi/gfs-land.yaml ${JEDIWORKDIR}/gfs-land.yaml
+  if [ $GFSv17 == "YES" ]; then
+    SNOWDEPTHVAR="snodl"
+  else
+    SNOWDEPTHVAR="snwdph"
+    # replace field overwrite file
+    cp ${PARMlandda}/jedi/gfs-land.yaml ${JEDIWORKDIR}/gfs-land.yaml
+  fi
+  # FOR LETKFOI, CREATE THE PSEUDO-ENSEMBLE
+  for ens in pos neg
+  do
+    if [ -e $JEDIWORKDIR/mem_${ens} ]; then
+      rm -r $JEDIWORKDIR/mem_${ens}
     fi
-    # FOR LETKFOI, CREATE THE PSEUDO-ENSEMBLE
-    for ens in pos neg
+    mkdir -p $JEDIWORKDIR/mem_${ens}
+    for tile in 1 2 3 4 5 6
     do
-        if [ -e $JEDIWORKDIR/mem_${ens} ]; then
-          rm -r $JEDIWORKDIR/mem_${ens}
-        fi
-        mkdir -p $JEDIWORKDIR/mem_${ens}
-        for tile in 1 2 3 4 5 6
-        do
-        cp ${JEDIWORKDIR}/${FILEDATE}.sfc_data.tile${tile}.nc  ${JEDIWORKDIR}/mem_${ens}/${FILEDATE}.sfc_data.tile${tile}.nc
-        done
-        cp ${JEDIWORKDIR}/${FILEDATE}.coupler.res ${JEDIWORKDIR}/mem_${ens}/${FILEDATE}.coupler.res
+      cp ${JEDIWORKDIR}/${FILEDATE}.sfc_data.tile${tile}.nc  ${JEDIWORKDIR}/mem_${ens}/${FILEDATE}.sfc_data.tile${tile}.nc
     done
+    cp ${JEDIWORKDIR}/${FILEDATE}.coupler.res ${JEDIWORKDIR}/mem_${ens}/${FILEDATE}.coupler.res
+  done
 
-    echo 'do_landDA: calling create ensemble'
+  echo 'do_landDA: calling create ensemble'
 
-    # using ioda mods to get a python version with netCDF4
-    ${USHlandda}/letkf_create_ens.py $FILEDATE $SNOWDEPTHVAR $B
-    if [[ $? != 0 ]]; then
-        echo "letkf create failed"
-        exit 10
-    fi
+  # using ioda mods to get a python version with netCDF4
+  ${USHlandda}/letkf_create_ens.py $FILEDATE $SNOWDEPTHVAR $B
+  if [[ $? != 0 ]]; then
+    echo "letkf create failed"
+    exit 10
+  fi
 
 fi
