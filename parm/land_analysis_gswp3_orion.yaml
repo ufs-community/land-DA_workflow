@@ -2,10 +2,12 @@ workflow:
   attrs:
     realtime: false
     scheduler: slurm
+    cyclethrottle: 24
+    taskthrottle: 24
   cycledef:
     - attrs:
-        group: epic
-      spec: 200001030000 200001030000 24:00:00
+        group: cycled
+      spec: 200001030000 200001040000 24:00:00
   entities:
     MACHINE: "orion"
     SCHED: "slurm"
@@ -18,6 +20,8 @@ workflow:
     FCSTHR: "24"
     NPROCS_ANALYSIS: "6"
     NPROCS_FORECAST: "6"
+    OBSDIR: ""
+    OBSDIR_SUBDIR: ""
     OBS_TYPES: "GHCN"
     DAtype: "letkfoi_snow"
     SNOWDEPTHVAR: "snwdph"
@@ -25,6 +29,7 @@ workflow:
     NET: "landda"
     envir: "test"
     model_ver: "v1.2.1"
+    RUN: "landda"
     HOMElandda: "&EXP_BASEDIR;/land-DA_workflow"
     PTMP: "&EXP_BASEDIR;/ptmp"
     COMROOT: "&PTMP;/&envir;/com"
@@ -32,15 +37,20 @@ workflow:
     KEEPDATA: "YES"
     WORKDIR: "&EXP_BASEDIR;/workdir/run_&FORCING;"
     LOGDIR: "&COMROOT;/output/logs/run_&FORCING;"
+    LOGFN_SUFFIX: "<cyclestr>_@Y@m@d.log</cyclestr>"
     PATHRT: "&EXP_BASEDIR;"
     PDY:  "<cyclestr>@Y@m@d</cyclestr>"
     cyc: "<cyclestr>@H</cyclestr>"
-    SLASH_ENSMEM_SUBDIR: ""
     PTIME:  "<cyclestr offset='-24:00:00'>@Y@m@d@H</cyclestr>"
     NTIME:  "<cyclestr offset='24:00:00'>@Y@m@d@H</cyclestr>"
+    WARMSTART_DIR: ""
+    DATADEP_FILE1: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
+    DATADEP_FILE2: "<cyclestr offset='-24:00:00'>&COMROOT;/&NET;/&model_ver;/&RUN;.@Y@m@d/@H/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
   log: "&LOGDIR;/workflow.log"
   tasks:
     task_prep_exp:
+      attrs:
+        cycledefs: cycled
       envars:
         MACHINE: "&MACHINE;"
         SCHED: "&SCHED;"
@@ -57,7 +67,6 @@ workflow:
         KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
-        SLASH_ENSMEM_SUBDIR: "&SLASH_ENSMEM_SUBDIR;"
         PTIME: "&PTIME;"
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_exp" "&HOMElandda;" "&MACHINE;"'
@@ -65,9 +74,23 @@ workflow:
       cores: 1
       walltime: 00:02:00
       queue: batch
-      join: "&LOGDIR;/prep_exp.log"
+      join: "&LOGDIR;/prep_exp&LOGFN_SUFFIX;"
+      dependency:
+        or:
+          datadep_file1:
+            attrs:
+              age: 5
+            value: "&DATADEP_FILE1;"
+          datadep_file2:
+            attrs:
+              age: 5
+            value: "&DATADEP_FILE2;"
     task_prep_obs:
+      attrs:
+        cycledefs: cycled
       envars:
+        OBSDIR: "&OBSDIR;"
+        OBSDIR_SUBDIR: "&OBSDIR_SUBDIR;"
         OBS_TYPES: "&OBS_TYPES;"
         MACHINE: "&MACHINE;"
         SCHED: "&SCHED;"
@@ -82,7 +105,6 @@ workflow:
         KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
-        SLASH_ENSMEM_SUBDIR: "&SLASH_ENSMEM_SUBDIR;"
         PTIME: "&PTIME;"
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_obs" "&HOMElandda;" "&MACHINE;"'
@@ -90,12 +112,14 @@ workflow:
       cores: 1
       walltime: 00:02:00
       queue: batch
-      join: "&LOGDIR;/prep_obs.log"
+      join: "&LOGDIR;/prep_obs&LOGFN_SUFFIX;"
       dependency:
         taskdep:
           attrs:
             task: prep_exp
     task_prep_bmat:
+      attrs:
+        cycledefs: cycled
       envars:
         MACHINE: "&MACHINE;"
         SCHED: "&SCHED;"
@@ -110,7 +134,6 @@ workflow:
         KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
-        SLASH_ENSMEM_SUBDIR: "&SLASH_ENSMEM_SUBDIR;"
         PTIME: "&PTIME;"
         DAtype: "&DAtype;"
         SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
@@ -120,12 +143,14 @@ workflow:
       cores: 1
       walltime: 00:02:00
       queue: batch
-      join: "&LOGDIR;/prep_bmat.log"
+      join: "&LOGDIR;/prep_bmat&LOGFN_SUFFIX;"
       dependency:
         taskdep:
           attrs:
             task: prep_obs
     task_analysis:
+      attrs:
+        cycledefs: cycled
       envars:
         OBS_TYPES: "&OBS_TYPES;"
         MACHINE: "&MACHINE;"
@@ -143,7 +168,6 @@ workflow:
         KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
-        SLASH_ENSMEM_SUBDIR: "&SLASH_ENSMEM_SUBDIR;"
         PTIME: "&PTIME;"
         NTIME: "&NTIME;"
         DAtype: "&DAtype;"
@@ -156,12 +180,14 @@ workflow:
       nodes: "1:ppn=&NPROCS_ANALYSIS;"
       walltime: 00:15:00
       queue: batch
-      join: "&LOGDIR;/analysis.log"
+      join: "&LOGDIR;/analysis&LOGFN_SUFFIX;"
       dependency:
         taskdep:
           attrs:
             task: prep_bmat
     task_forecast:
+      attrs:
+        cycledefs: cycled
       envars:
         OBS_TYPES: "&OBS_TYPES;"
         MACHINE: "&MACHINE;"
@@ -180,7 +206,6 @@ workflow:
         LOGDIR: "&LOGDIR;"
         PDY: "&PDY;"
         cyc: "&cyc;"
-        SLASH_ENSMEM_SUBDIR: "&SLASH_ENSMEM_SUBDIR;"
         PTIME: "&PTIME;"
         NTIME: "&NTIME;"
         DAtype: "&DAtype;"
@@ -193,7 +218,7 @@ workflow:
       nodes: "1:ppn=&NPROCS_FORECAST;"
       walltime: 01:00:00
       queue: batch
-      join: "&LOGDIR;/forecast.log"
+      join: "&LOGDIR;/forecast&LOGFN_SUFFIX;"
       dependency:
         taskdep:
           attrs:

@@ -2,9 +2,11 @@ workflow:
   attrs:
     realtime: false
     scheduler: slurm
+    cyclethrottle: 24
+    taskthrottle: 24
   cycledef:
     - attrs:
-        group: epic
+        group: cycled
       spec: 201912210000 201912210000 24:00:00
   entities:
     MACHINE: "hera"
@@ -18,6 +20,8 @@ workflow:
     FCSTHR: "24"
     NPROCS_ANALYSIS: "6"
     NPROCS_FORECAST: "6"
+    OBSDIR: ""
+    OBSDIR_SUBDIR: ""
     OBS_TYPES: "GHCN"
     DAtype: "letkfoi_snow"
     SNOWDEPTHVAR: "snwdph"
@@ -68,6 +72,8 @@ workflow:
       join: "&LOGDIR;/prep_exp.log"
     task_prep_obs:
       envars:
+        OBSDIR: "&OBSDIR;"
+        OBSDIR_SUBDIR: "&OBSDIR_SUBDIR;"
         OBS_TYPES: "&OBS_TYPES;"
         MACHINE: "&MACHINE;"
         SCHED: "&SCHED;"
