@@ -22,17 +22,12 @@ MP=${PTIME:4:2}
 DP=${PTIME:6:2}
 HP=${PTIME:8:2}
 
-mem_ens="mem000"
-
-MEM_WORKDIR=${WORKDIR}/${mem_ens}
-JEDIWORKDIR=${WORKDIR}/mem000/jedi
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
+
 JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
 JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
-SAVE_INCR="YES"
-KEEPJEDIDIR="YES"
 
-cd $MEM_WORKDIR
+SAVE_INCR="YES"
 
 # load modulefiles
 BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
@@ -46,14 +41,63 @@ MPIEXEC=`which mpiexec`
 YAML_DA=construct
 GFSv17="NO"
 B=30 # back ground error std for LETKFOI
-   
-cd $JEDIWORKDIR
+
+if [[ $do_jedi == "YES" ]]; then
+  cres_file=${DATA}/${FILEDATE}.coupler.res
+  cp ${PARMlandda}/templates/template.coupler.res $cres_file
+
+  sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
+  sed -i -e "s/XXMM/${MM}/g" $cres_file
+  sed -i -e "s/XXDD/${DD}/g" $cres_file
+  sed -i -e "s/XXHH/${HH}/g" $cres_file
+  sed -i -e "s/XXYYYP/${YYYP}/g" $cres_file
+  sed -i -e "s/XXMP/${MP}/g" $cres_file
+  sed -i -e "s/XXDP/${DP}/g" $cres_file
+  sed -i -e "s/XXHP/${HP}/g" $cres_file
+fi
+
+################################################
+# CREATE BACKGROUND ENSEMBLE (LETKFOI)
+################################################
+
+if [[ ${DAtype} == "letkfoi_snow" ]]; then
+
+  if [ $GFSv17 == "YES" ]; then
+    SNOWDEPTHVAR="snodl"
+  else
+    SNOWDEPTHVAR="snwdph"
+    # replace field overwrite file
+    cp ${PARMlandda}/jedi/gfs-land.yaml ${DATA}/gfs-land.yaml
+  fi
+  # FOR LETKFOI, CREATE THE PSEUDO-ENSEMBLE
+  for ens in pos neg
+  do
+    if [ -e $DATA/mem_${ens} ]; then
+      rm -r $DATA/mem_${ens}
+    fi
+    mkdir -p $DATA/mem_${ens}
+    for tile in 1 2 3 4 5 6
+    do
+      cp ${COMIN}/${FILEDATE}.sfc_data.tile${tile}.nc ${DATA}/mem_${ens}/${FILEDATE}.sfc_data.tile${tile}.nc
+    done
+    cp ${DATA}/${FILEDATE}.coupler.res ${DATA}/mem_${ens}/${FILEDATE}.coupler.res
+  done
+
+  echo 'do_landDA: calling create ensemble'
+
+  # using ioda mods to get a python version with netCDF4
+  ${USHlandda}/letkf_create_ens.py $FILEDATE $SNOWDEPTHVAR $B
+  if [[ $? != 0 ]]; then
+    echo "letkf create failed"
+    exit 10
+  fi
+fi
+
+################################################
+# DETERMINE REQUESTED JEDI TYPE, CONSTRUCT YAMLS
+################################################
 
 mkdir -p output/DA/hofx
-
-################################################
-# 3. DETERMINE REQUESTED JEDI TYPE, CONSTRUCT YAMLS
-################################################
 
 do_DA="YES"
 do_HOFX="NO"
@@ -67,14 +111,14 @@ fi
 if [[ $do_DA == "YES" ]]; then 
 
   if [[ $YAML_DA == "construct" ]];then  # construct the yaml
-    cp ${PARMlandda}/jedi/${DAtype}.yaml ${JEDIWORKDIR}/letkf_land.yaml
+    cp ${PARMlandda}/jedi/${DAtype}.yaml ${DATA}/letkf_land.yaml
     for obs in "${OBS_TYPES[@]}";
     do 
       cat ${PARMlandda}/jedi/${obs}.yaml >> letkf_land.yaml
     done
   else # use specified yaml 
     echo "Using user specified YAML: ${YAML_DA}"
-    cp ${PARMlandda}/jedi/${YAML_DA} ${JEDIWORKDIR}/letkf_land.yaml
+    cp ${PARMlandda}/jedi/${YAML_DA} ${DATA}/letkf_land.yaml
   fi
 
   sed -i -e "s/XXYYYY/${YYYY}/g" letkf_land.yaml
@@ -96,14 +140,14 @@ fi
 if [[ $do_HOFX == "YES" ]]; then 
 
   if [[ $YAML_HOFX == "construct" ]];then  # construct the yaml
-    cp ${PARMlandda}/jedi/${DAtype}.yaml ${JEDIWORKDIR}/hofx_land.yaml
+    cp ${PARMlandda}/jedi/${DAtype}.yaml ${DATA}/hofx_land.yaml
     for obs in "${OBS_TYPES[@]}";
     do 
       cat ${PARMlandda}/jedi/${obs}.yaml >> hofx_land.yaml
     done
   else # use specified yaml 
     echo "Using user specified YAML: ${YAML_HOFX}"
-    cp ${PARMlandda}/jedi/${YAML_HOFX} ${JEDIWORKDIR}/hofx_land.yaml
+    cp ${PARMlandda}/jedi/${YAML_HOFX} ${DATA}/hofx_land.yaml
   fi
 
   sed -i -e "s/XXYYYY/${YYYY}/g" hofx_land.yaml
@@ -124,16 +168,13 @@ if [[ $do_HOFX == "YES" ]]; then
 fi
 
 if [[ "$GFSv17" == "NO" ]]; then
-  cp ${PARMlandda}/jedi/gfs-land.yaml ${JEDIWORKDIR}/gfs-land.yaml
+  cp ${PARMlandda}/jedi/gfs-land.yaml ${DATA}/gfs-land.yaml
 else
-  cp ${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data/fieldmetadata/gfs_v17-land.yaml ${JEDIWORKDIR}/gfs-land.yaml
+  cp ${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data/fieldmetadata/gfs_v17-land.yaml ${DATA}/gfs-land.yaml
 fi
 
 ################################################
-# 4. CREATE BACKGROUND ENSEMBLE (LETKFOI)
-################################################
-################################################
-# 5. RUN JEDI
+# RUN JEDI
 ################################################
 
 if [[ ! -e Data ]]; then
@@ -156,7 +197,7 @@ fi
 if [[ $do_HOFX == "YES" ]]; then
   export pgm="fv3jedi_letkf.x"
   . prep_step
-  ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXEC} hofx_land.yaml >>$pgmout 2>errfile
+  ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXECDIR}/$pgm hofx_land.yaml >>$pgmout 2>errfile
   export err=$?; err_chk
   cp errfile errfile_jedi_hofx
   if [[ $err != 0 ]]; then
@@ -166,7 +207,7 @@ if [[ $do_HOFX == "YES" ]]; then
 fi 
 
 ################################################
-# 6. APPLY INCREMENT TO UFS RESTARTS 
+# APPLY INCREMENT TO UFS RESTARTS 
 ################################################
 
 if [[ $do_DA == "YES" ]]; then 
@@ -201,20 +242,17 @@ EOF
 fi 
 
 ################################################
-# 7. CLEAN UP
+# CLEAN UP
 ################################################
 
 if [[ -d output/DA/hofx ]]; then
-  cp -r output/DA/hofx ${COMOUT}/${mem_ens}
+  mkdir -p ${COMOUT}/hofx
+  cp -r output/DA/hofx ${COMOUT}/hofx
 fi
 
 # keep increments
 if [ $SAVE_INCR == "YES" ] && [ $do_DA == "YES" ]; then
-  mkdir -p ${COMOUT}/${mem_ens}/jedi_incr
-  cp ${JEDIWORKDIR}/${FILEDATE}.xainc.sfc_data.tile*.nc  ${COMOUT}/${mem_ens}/jedi_incr
+  mkdir -p ${COMOUT}/jedi_incr
+  cp -p ${DATA}/${FILEDATE}.xainc.sfc_data.tile*.nc  ${COMOUT}/jedi_incr
 fi 
 
-# clean up 
-if [[ $KEEPJEDIDIR == "NO" ]]; then
-  rm -rf ${JEDIWORKDIR} 
-fi 

@@ -26,14 +26,10 @@ nYYYY=${NTIME:0:4}
 nMM=${NTIME:4:2}
 nDD=${NTIME:6:2}
 nHH=${NTIME:8:2}
-mem_ens="mem000"
 
-MEM_WORKDIR=${WORKDIR}/${mem_ens}
 FREQ=$((${FCSTHR}*3600))
 RDD=$((${FCSTHR}/24))
 RHH=$((${FCSTHR}%24))
-
-cd $MEM_WORKDIR
 
 # load modulefiles
 BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
@@ -44,10 +40,6 @@ module use modulefiles; module load modules.landda
 MPIEXEC=`which mpiexec`
 MPIRUN=${MPIRUN:-`which mpiexec`}
 
-#SNOWDEPTHVAR=snwdph
-
-cd $MEM_WORKDIR
-
 #  convert back to vector, run model (all members) convert back to vector, run model (all members)
 if [[ ${do_jedi} == "YES" ]]; then
 
@@ -55,7 +47,7 @@ if [[ ${do_jedi} == "YES" ]]; then
     echo '************************************************'
     echo 'calling tile2vector' 
 
-    cp  ${PARMlandda}/templates/template.tile2vector tile2vector.namelist
+    cp ${PARMlandda}/templates/template.tile2vector tile2vector.namelist
 
     sed -i "s|FIXlandda|${FIXlandda}|g" tile2vector.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
@@ -78,14 +70,14 @@ if [[ ${do_jedi} == "YES" ]]; then
     fi
 
     # save analysis restart
-    mkdir -p ${COMOUT}/${mem_ens}/restarts/vector
-    cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${COMOUT}/${mem_ens}/restarts/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+    mkdir -p ${COMOUT}/RESTART/vector
+    cp -p ${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${COMOUT}/RESTART/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
 
     echo '************************************************'
     echo 'running the forecast model' 
 	
     # update model namelist 
-    cp  ${PARMlandda}/templates/template.ufs-noahMP.namelist.${ATMOS_FORC}  ufs-land.namelist
+    cp ${PARMlandda}/templates/template.ufs-noahMP.namelist.${ATMOS_FORC} ufs-land.namelist
     
     sed -i "s|FIXlandda|${FIXlandda}|g" ufs-land.namelist
     sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
@@ -95,9 +87,6 @@ if [[ ${do_jedi} == "YES" ]]; then
     sed -i -e "s/XXFREQ/${FREQ}/g" ufs-land.namelist
     sed -i -e "s/XXRDD/${RDD}/g" ufs-land.namelist
     sed -i -e "s/XXRHH/${RHH}/g" ufs-land.namelist
-
-    # submit model
-    echo $MEM_WORKDIR
 
     nt=$SLURM_NTASKS
 
@@ -139,11 +128,11 @@ if [[ ${do_jedi} == "YES" ]]; then
     fi
 
     # save analysis restart
-    mkdir -p ${COMOUT}/${mem_ens}/restarts/tile
+    mkdir -p ${COMOUT}/RESTART/tile
     for tile in 1 2 3 4 5 6
     do
-      cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${COMOUT}/${mem_ens}/restarts/tile/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc    
-      cp ${MEM_WORKDIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${COMOUT}/${mem_ens}/restarts/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
+      cp -p ${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${COMOUT}/RESTART/tile/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc    
+      cp -p ${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${tile}.nc ${COMOUT}/RESTART/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${tile}.nc
     done  
 
     echo '************************************************'
@@ -172,14 +161,6 @@ if [[ ${do_jedi} == "YES" ]]; then
       echo "Error: cannot find either folder for INPUTDATA_ROOT or RTPWD, please check!"
       exit 1
     fi
-
-    # create run folder
-    RUNDIR=${DATA}/noahmp/${TEST_NAME_RST}
-    [[ -d ${RUNDIR} ]] && echo "Warning: remove old run folder!" && rm -rf ${RUNDIR}
-    mkdir -p ${RUNDIR}
-    cd ${RUNDIR}
-
-    echo "NoahMP run dir= $RUNDIR"
 
     # modify some env variables - reduce core usage
     export ATM_compute_tasks=0
@@ -224,7 +205,7 @@ if [[ ${do_jedi} == "YES" ]]; then
     # restart
     if [ $WARM_START = .true. ]; then
       # NoahMP restart files
-      cp ${COMOUT}/${mem_ens}/restarts/tile/ufs.cpld.lnd.out.${RESTART_FILE_SUFFIX_SECS}.tile*.nc RESTART/.
+      cp ${COMOUT}/RESTART/tile/ufs.cpld.lnd.out.${RESTART_FILE_SUFFIX_SECS}.tile*.nc RESTART/.
 
       # CMEPS restart and pointer files
       RFILE1=ufs.cpld.cpl.r.${RESTART_FILE_SUFFIX_SECS}.nc
@@ -286,12 +267,12 @@ fi
 ############################
 # check model ouput (all members)
 if [[ ${ATMOS_FORC} == "era5" ]]; then
-  if [[ -e ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then
-    cp ${MEM_WORKDIR}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${COMOUT}/${mem_ens}/restarts/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
+  if [[ -e ${DATA}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then
+    cp -p ${DATA}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${COMOUT}/RESTART/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
   fi
 elif [[ ${ATMOS_FORC} == "gswp3" ]]; then
   for tile in 1 2 3 4 5 6
   do
-    cp ${RUNDIR}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${COMOUT}/${mem_ens}/restarts/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
+    cp -p ${DATA}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${COMOUT}/RESTART/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
   done
 fi

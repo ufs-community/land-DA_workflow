@@ -82,16 +82,6 @@ else
   exit 2
 fi
 
-echo " ... PREP_BMAT running ... "
-${HOMElandda}/parm/task_load_modules_run_jjob.sh "prep_bmat" "${HOMElandda}" "${MACHINE}"
-export err=$?
-if [ $err = 0 ]; then
-  echo " === PREP_BMAT completed successfully === "
-else
-  echo " ERROR: PREP_BMAT failed !!! "
-  exit 3
-fi
-
 echo " ... ANALYSIS running ... "
 ${HOMElandda}/parm/task_load_modules_run_jjob.sh "analysis" "${HOMElandda}" "${MACHINE}"
 export err=$?
