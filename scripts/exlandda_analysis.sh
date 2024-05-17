@@ -2,9 +2,6 @@
 
 set -xue
 
-############################
-# copy restarts to workdir, convert to UFS tile for DA (all members)
-
 TPATH=${FIXlandda}/forcing/${ATMOS_FORC}/orog_files/
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
@@ -200,7 +197,7 @@ if [[ $do_HOFX == "YES" ]]; then
 fi 
 
 ################################################
-# Create increment files
+# Apply Increment to UFS sfc_data files
 ################################################
 
 if [[ $do_DA == "YES" ]]; then 

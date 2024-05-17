@@ -62,8 +62,7 @@ if [[ ${ATMOS_FORC} == "era5" ]]; then
   fi
 
   # save analysis restart
-  mkdir -p ${COMOUT}/RESTART/vector
-  cp -p ${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${COMOUT}/RESTART/vector/ufs_land_restart_anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+  cp -p ${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${COMOUT}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
 
   echo '************************************************'
   echo 'running the forecast model' 
@@ -91,6 +90,12 @@ if [[ ${ATMOS_FORC} == "era5" ]]; then
     echo "ufsLand failed"
     exit 10
   fi
+
+  mkdir -p ${COMOUT}/RESTART
+  cp -p ${DATA}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${COMOUT}/RESTART/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
+
+  # link restart for next cycle
+  ln -nsf ${COMOUT}/RESTART/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${DATA_RESTART}
 
 #  convert back to UFS tile, run model (all members)
 elif [[ ${ATMOS_FORC} == "gswp3" ]]; then  
@@ -120,9 +125,9 @@ elif [[ ${ATMOS_FORC} == "gswp3" ]]; then
   fi
 
   # save analysis restart
-  mkdir -p ${COMOUT}/RESTART/tile
+  mkdir -p ${COMOUT}/RESTART
   for itile in {1..6}
   do
-    cp -p ${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc ${COMOUT}/RESTART/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${itile}.nc
+    cp -p ${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc ${COMOUT}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc
   done  
 fi

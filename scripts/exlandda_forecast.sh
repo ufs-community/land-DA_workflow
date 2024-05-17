@@ -2,9 +2,6 @@
 
 set -xue
 
-############################
-# copy restarts to workdir, convert to UFS tile for DA (all members)
-
 MACHINE_ID=${MACHINE}
 TPATH=${FIXlandda}/forcing/${ATMOS_FORC}/orog_files/
 YYYY=${PDY:0:4}
@@ -27,16 +24,17 @@ module use modulefiles; module load modules.landda
 
 MPIEXEC=`which mpiexec`
 
-for itile in {1..6}
-do
-  cp ${COMIN}/RESTART/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${itile}.nc .
-done
 
 #  convert back to UFS tile, run model (all members)
 if [[ ${ATMOS_FORC} == "gswp3" ]]; then  
 
   echo '************************************************'
   echo 'running the forecast model' 
+
+  for itile in {1..6}
+  do
+    cp ${COMIN}/RESTART/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${itile}.nc
+  done
 
   TEST_NAME=datm_cdeps_lnd_gswp3
   TEST_NAME_RST=datm_cdeps_lnd_gswp3_rst
@@ -105,7 +103,7 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   # restart
   if [ $WARM_START = .true. ]; then
     # NoahMP restart files
-    cp ${COMOUT}/RESTART/tile/ufs.cpld.lnd.out.${RESTART_FILE_SUFFIX_SECS}.tile*.nc RESTART/.
+    cp ${COMOUT}/RESTART/ufs.cpld.lnd.out.${RESTART_FILE_SUFFIX_SECS}.tile*.nc RESTART/.
 
     # CMEPS restart and pointer files
     RFILE1=ufs.cpld.cpl.r.${RESTART_FILE_SUFFIX_SECS}.nc
@@ -161,17 +159,16 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
     echo "ufs_model failed"
     exit 10
   fi
-fi
 
-############################
-# check model ouput (all members)
-if [[ ${ATMOS_FORC} == "era5" ]]; then
-  if [[ -e ${DATA}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ]]; then
-    cp -p ${DATA}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${COMOUT}/RESTART/vector/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
-  fi
-elif [[ ${ATMOS_FORC} == "gswp3" ]]; then
-  for tile in 1 2 3 4 5 6
+  # copy model ouput to COM
+  for itile in {1..6}
   do
-    cp -p ${DATA}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${tile}.nc ${COMOUT}/RESTART/tile/ufs_land_restart_back.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${tile}.nc
+    cp -p ${DATA}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${itile}.nc ${COMOUT}/RESTART/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc
+  done
+
+  # link restart for next cycle
+  for itile in {1..6}
+  do
+    ln -nsf ${COMOUT}/RESTART/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc ${DATA_RESTART}
   done
 fi

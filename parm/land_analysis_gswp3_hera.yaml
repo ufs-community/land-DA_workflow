@@ -8,6 +8,7 @@ workflow:
     - attrs:
         group: cycled
       spec: 200001030000 200001040000 24:00:00
+# for era5: spec:  201912210000 201912210000 24:00:00
   entities:
     MACHINE: "hera"
     SCHED: "slurm"

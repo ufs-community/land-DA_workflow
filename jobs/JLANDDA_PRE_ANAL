@@ -70,6 +70,8 @@ mkdir -p ${COMOUT}
 # Create a teomporary share directory
 export DATA_SHARE="${DATA_SHARE:-${DATAROOT}/DATA_SHARE/${PDY}${cyc}}"
 mkdir -p ${DATA_SHARE}
+export DATA_RESTART="${DATA_RESTART:-${DATAROOT}/DATA_SHARE/RESTART}"
+mkdir -p ${DATA_RESTART}
 
 # Run setpdy to initialize PDYm and PDYp variables
 export cycle="${cycle:-t${cyc}z}"

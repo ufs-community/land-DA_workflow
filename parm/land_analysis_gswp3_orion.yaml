@@ -8,6 +8,7 @@ workflow:
     - attrs:
         group: cycled
       spec: 200001030000 200001040000 24:00:00
+# for era5: spec:  201912210000 201912210000 24:00:00
   entities:
     MACHINE: "orion"
     SCHED: "slurm"
@@ -44,7 +45,9 @@ workflow:
     PTIME:  "<cyclestr offset='-24:00:00'>@Y@m@d@H</cyclestr>"
     NTIME:  "<cyclestr offset='24:00:00'>@Y@m@d@H</cyclestr>"
     DATADEP_FILE1: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
-    DATADEP_FILE2: "<cyclestr offset='-24:00:00'>&COMROOT;/&NET;/&model_ver;/&RUN;.@Y@m@d/@H/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
+    DATADEP_FILE2: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.nc</cyclestr>"
+    DATADEP_FILE3: "<cyclestr>&DATAROOT/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
+    DATADEP_FILE3: "<cyclestr>&DATAROOT/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.nc</cyclestr>"
   log: "&LOGDIR;/workflow.log"
   tasks:
     task_prep_obs:
@@ -111,6 +114,14 @@ workflow:
             attrs:
               age: 5
             value: "&DATADEP_FILE2;"
+          datadep_file3:
+            attrs:
+              age: 5
+            value: "&DATADEP_FILE3;"
+          datadep_file4:
+            attrs:
+              age: 5
+            value: "&DATADEP_FILE4;"
     task_analysis:
       attrs:
         cycledefs: cycled

@@ -2,9 +2,6 @@
 
 set -xue
 
-############################
-# copy restarts to workdir, convert to UFS tile for DA (all members) 
-
 TPATH=${FIXlandda}/forcing/${ATMOS_FORC}/orog_files/
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
@@ -30,13 +27,16 @@ module use modulefiles; module load modules.landda
 if [[ $ATMOS_FORC == "era5" ]]; then
   # vector2tile for DA
   # copy restarts into work directory
-  rst_in=${COMIN}/RESTART/vector/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-  if [[ ! -e ${rst_in} ]]; then
-    rst_in=${FIXlandda}/restarts/${ATMOS_FORC}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
+  rst_fn="ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc"
+  if [[ -e ${DATA_RESTART}/${rst_fn} ]]; then
+    cp ${DATA_RESTART}/${rst_fn} .      
+  elif [[ -e ${WARMSTART_DIR}/${rst_fn} ]]; then
+    cp ${WARMSTART_DIR}/${rst_fn} .
+  else
+    echo "Initial restart file does not exist"
+    exit 11
   fi
-  rst_out=${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-  cp ${rst_in} ${rst_out}
-  cp -p ${rst_out} ${DATA_SHARE}
+  cp -p ${rst_fn} ${DATA_SHARE}
 
   echo '************************************************'
   echo 'calling vector2tile' 
@@ -66,8 +66,10 @@ if [[ $ATMOS_FORC == "era5" ]]; then
   export err=$?; err_chk
   if [[ $err != 0 ]]; then
     echo "vec2tile failed"
-    exit
+    exit 12
   fi 
+
+
 elif [[ $ATMOS_FORC == "gswp3" ]]; then
   # tile2tile for DA
   echo '************************************************'
@@ -76,14 +78,17 @@ elif [[ $ATMOS_FORC == "gswp3" ]]; then
   # copy restarts into work directory
   for itile in {1..6}
   do
-    rst_in=${COMIN}/RESTART/tile/ufs_land_restart_back.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-    if [[ ! -e ${rst_in} ]]; then  
-      rst_in=${FIXlandda}/restarts/${ATMOS_FORC}/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${itile}.nc
+    rst_fn="ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc"
+    if [[ -e ${DATA_RESTART}/${rst_fn} ]]; then
+      cp ${DATA_RESTART}/${rst_fn} .
+    elif [[ -e ${WARMSTART_DIR}/${rst_fn} ]]; then
+      cp ${WARMSTART_DIR}/${rst_fn} .
+    else
+      echo "Initial restart files do not exist"
+      exit 21
     fi
-    rst_out=${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc
-    cp ${rst_in} ${rst_out}
     # copy restart to data share dir for post_anal
-    cp -p ${rst_out} ${DATA_SHARE}
+    cp -p ${rst_fn} ${DATA_SHARE}
   done
 
   # update tile2tile namelist
@@ -108,13 +113,13 @@ elif [[ $ATMOS_FORC == "gswp3" ]]; then
   export err=$?; err_chk
   if [[ $err != 0 ]]; then
     echo "tile2tile failed"
-    exit 
+    exit 22 
   fi
-fi
 
-#stage restarts for applying JEDI update to intermediate directory
-for itile in {1..6}
-do
-  cp -p ${DATA}/${FILEDATE}.sfc_data.tile${itile}.nc ${DATA_SHARE}/${FILEDATE}.sfc_data.tile${itile}.nc
-done
+  #stage restarts for applying JEDI update to intermediate directory
+  for itile in {1..6}
+  do
+    cp -p ${DATA}/${FILEDATE}.sfc_data.tile${itile}.nc ${DATA_SHARE}/${FILEDATE}.sfc_data.tile${itile}.nc
+  done
+fi
 
