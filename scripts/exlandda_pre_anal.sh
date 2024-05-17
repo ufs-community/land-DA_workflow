@@ -36,6 +36,7 @@ if [[ $ATMOS_FORC == "era5" ]]; then
   fi
   rst_out=${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
   cp ${rst_in} ${rst_out}
+  cp -p ${rst_out} ${DATA_SHARE}
 
   echo '************************************************'
   echo 'calling vector2tile' 
@@ -81,6 +82,8 @@ elif [[ $ATMOS_FORC == "gswp3" ]]; then
     fi
     rst_out=${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc
     cp ${rst_in} ${rst_out}
+    # copy restart to data share dir for post_anal
+    cp -p ${rst_out} ${DATA_SHARE}
   done
 
   # update tile2tile namelist
@@ -112,6 +115,6 @@ fi
 #stage restarts for applying JEDI update to intermediate directory
 for itile in {1..6}
 do
-  cp -p ${DATA}/${FILEDATE}.sfc_data.tile${itile}.nc ${COMOUT}/${FILEDATE}.sfc_data.tile${itile}.nc
+  cp -p ${DATA}/${FILEDATE}.sfc_data.tile${itile}.nc ${DATA_SHARE}/${FILEDATE}.sfc_data.tile${itile}.nc
 done
 

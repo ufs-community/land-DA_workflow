@@ -37,9 +37,9 @@ B=30 # back ground error std for LETKFOI
 
 for itile in {1..6}
 do
-  cp ${COMIN}/${FILEDATE}.sfc_data.ini.tile${itile}.nc ${FILEDATE}.sfc_data.tile${itile}.nc
+  cp ${DATA_SHARE}/${FILEDATE}.sfc_data.tile${itile}.nc .
 done
-ln -nsf ${COMIN}/OBS/*_${YYYY}${MM}${DD}${HH}.nc .
+ln -nsf ${COMIN}/obs/*_${YYYY}${MM}${DD}${HH}.nc .
 
 cres_file=${DATA}/${FILEDATE}.coupler.res
 cp ${PARMlandda}/templates/template.coupler.res $cres_file
@@ -200,7 +200,7 @@ if [[ $do_HOFX == "YES" ]]; then
 fi 
 
 ################################################
-# APPLY INCREMENT TO UFS RESTARTS 
+# Create increment files
 ################################################
 
 if [[ $do_DA == "YES" ]]; then 
@@ -232,14 +232,19 @@ EOF
     fi
   fi
 
+  for itile in {1..6}
+  do
+    cp -p ${DATA}/${FILEDATE}.xainc.sfc_data.tile${itile}.nc ${COMOUT}
+  done
+
 fi 
+
+for itile in {1..6}
+do
+  cp -p ${DATA}/${FILEDATE}.sfc_data.tile${itile}.nc ${COMOUT}
+done
 
 if [[ -d output/DA/hofx ]]; then
   cp -rp output/DA/hofx ${COMOUT}
 fi
-
-if [[ $do_DA == "YES" ]]; then
-  mkdir -p ${COMOUT}/jedi_incr
-  cp -p ${DATA}/${FILEDATE}.xainc.sfc_data.tile*.nc  ${COMOUT}/jedi_incr
-fi 
 

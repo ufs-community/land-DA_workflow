@@ -11,18 +11,10 @@ YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}
 HH=${cyc}
-YYYP=${PTIME:0:4}
-MP=${PTIME:4:2}
-DP=${PTIME:6:2}
-HP=${PTIME:8:2}
 nYYYY=${NTIME:0:4}
 nMM=${NTIME:4:2}
 nDD=${NTIME:6:2}
 nHH=${NTIME:8:2}
-
-FREQ=$((${FCSTHR}*3600))
-RDD=$((${FCSTHR}/24))
-RHH=$((${FCSTHR}%24))
 
 # load modulefiles
 BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
@@ -34,6 +26,11 @@ cp ${HOMElandda}/modulefiles/build_${MACHINE}_intel.lua $DATA/modulefiles/module
 module use modulefiles; module load modules.landda
 
 MPIEXEC=`which mpiexec`
+
+for itile in {1..6}
+do
+  cp ${COMIN}/RESTART/tile/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${itile}.nc .
+done
 
 #  convert back to UFS tile, run model (all members)
 if [[ ${ATMOS_FORC} == "gswp3" ]]; then  
