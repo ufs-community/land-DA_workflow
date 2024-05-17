@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -ex
+set -xue
 
 ############################
 # copy restarts to workdir, convert to UFS tile for DA (all members)
@@ -34,6 +34,8 @@ BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
 if [ -e ${BUILD_VERSION_FILE} ]; then
   . ${BUILD_VERSION_FILE}
 fi
+mkdir -p modulefiles
+cp ${HOMElandda}/modulefiles/build_${MACHINE}_intel.lua $DATA/modulefiles/modules.landda.lua
 module use modulefiles; module load modules.landda
 MPIEXEC=`which mpiexec`
 
@@ -43,6 +45,10 @@ GFSv17="NO"
 B=30 # back ground error std for LETKFOI
 
 if [[ $do_jedi == "YES" ]]; then
+
+  ln -nsf ${COMIN}/${FILEDATE}.sfc_data.tile*.nc .
+  ln -nsf ${COMIN}/OBS/*_${YYYY}${MM}${DD}${HH}.nc .
+
   cres_file=${DATA}/${FILEDATE}.coupler.res
   cp ${PARMlandda}/templates/template.coupler.res $cres_file
 
@@ -97,8 +103,6 @@ fi
 # DETERMINE REQUESTED JEDI TYPE, CONSTRUCT YAMLS
 ################################################
 
-mkdir -p output/DA/hofx
-
 do_DA="YES"
 do_HOFX="NO"
 
@@ -107,6 +111,7 @@ if [[ $do_DA == "NO" && $do_HOFX == "NO" ]]; then
   exit 0 
 fi
 
+mkdir -p output/DA/hofx
 # if yaml is specified by user, use that. Otherwise, build the yaml
 if [[ $do_DA == "YES" ]]; then 
 
@@ -247,7 +252,7 @@ fi
 
 if [[ -d output/DA/hofx ]]; then
   mkdir -p ${COMOUT}/hofx
-  cp -r output/DA/hofx ${COMOUT}/hofx
+  cp -rp output/DA/hofx ${COMOUT}
 fi
 
 # keep increments

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -ex
+set -xue
 
 ############################
 # copy restarts to workdir, convert to UFS tile for DA (all members)

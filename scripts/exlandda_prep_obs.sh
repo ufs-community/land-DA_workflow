@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -ex
+set -xue
 
 ############################
 # copy restarts to workdir, convert to UFS tile for DA (all members) 
@@ -50,7 +50,7 @@ for obs in "${OBS_TYPES[@]}"; do
 
   # check obs are available
   if [[ -e $obsfile ]]; then
-    echo "do_landDA: $i observations found: $obsfile"
+    echo "do_landDA: $obs observations found: $obsfile"
     cp -p $obsfile ${COMOUT}/OBS/${obs}_${YYYY}${MM}${DD}${HH}.nc
   else
     echo "${obs} observations not found: $obsfile"
