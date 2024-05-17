@@ -20,7 +20,7 @@ if [ "${MACHINE}" = "hera" ]; then
   export JEDI_INSTALL="/scratch2/NAGAPE/epic/UFS_Land-DA/jedi_skylabv7.0"
 elif [ "${MACHINE}" = "orion" ]; then
   export EXP_BASEDIR="/work/noaa/epic/chjeon/landda_test"
-  export JEDI_INSTALL="/work/noaa/epic/UFS_Land-DA/jedi_skylabv7.0"
+  export JEDI_INSTALL="/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7"
 fi
 
 export RES="96"
