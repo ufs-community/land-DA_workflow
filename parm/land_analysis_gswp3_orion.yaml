@@ -16,7 +16,7 @@ workflow:
     EXP_NAME: "LETKF"
     EXP_BASEDIR: "/work/noaa/epic/{USER}/landda_test"
     JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7"
-    WARMSTART_DIR: ""
+    WARMSTART_DIR: "/work/noaa/epic/UFS_Land-DA_Dev/DATA_RESTART"
     FORCING: "gswp3"
     RES: "96"
     FCSTHR: "24"
@@ -46,8 +46,8 @@ workflow:
     NTIME:  "<cyclestr offset='24:00:00'>@Y@m@d@H</cyclestr>"
     DATADEP_FILE1: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
     DATADEP_FILE2: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.nc</cyclestr>"
-    DATADEP_FILE3: "<cyclestr>&DATAROOT/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
-    DATADEP_FILE3: "<cyclestr>&DATAROOT/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.nc</cyclestr>"
+    DATADEP_FILE3: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
+    DATADEP_FILE4: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.nc</cyclestr>"
   log: "&LOGDIR;/workflow.log"
   tasks:
     task_prep_obs:
@@ -88,6 +88,7 @@ workflow:
         ATMOS_FORC: "&FORCING;"
         RES: "&RES;"
         TSTUB: "&TSTUB;"
+        WARMSTART_DIR: "&WARMSTART_DIR;"
         model_ver: "&model_ver;"
         RUN: "&RUN;"
         HOMElandda: "&HOMElandda;"
