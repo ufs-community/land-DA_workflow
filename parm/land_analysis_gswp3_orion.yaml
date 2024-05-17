@@ -47,43 +47,6 @@ workflow:
     DATADEP_FILE2: "<cyclestr offset='-24:00:00'>&COMROOT;/&NET;/&model_ver;/&RUN;.@Y@m@d/@H/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
   log: "&LOGDIR;/workflow.log"
   tasks:
-    task_prep_exp:
-      attrs:
-        cycledefs: cycled
-      envars:
-        MACHINE: "&MACHINE;"
-        SCHED: "&SCHED;"
-        ACCOUNT: "&ACCOUNT;"
-        EXP_NAME: "&EXP_NAME;"
-        ATMOS_FORC: "&FORCING;"
-        RES: "&RES;"
-        TSTUB: "&TSTUB;"
-        model_ver: "&model_ver;"
-        RUN: "&RUN;"
-        HOMElandda: "&HOMElandda;"
-        COMROOT: "&COMROOT;"
-        DATAROOT: "&DATAROOT;"
-        KEEPDATA: "&KEEPDATA;"
-        PDY: "&PDY;"
-        cyc: "&cyc;"
-        PTIME: "&PTIME;"
-      account: "&ACCOUNT;"
-      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_exp" "&HOMElandda;" "&MACHINE;"'
-      jobname: prep_exp
-      cores: 1
-      walltime: 00:02:00
-      queue: batch
-      join: "&LOGDIR;/prep_exp&LOGFN_SUFFIX;"
-      dependency:
-        or:
-          datadep_file1:
-            attrs:
-              age: 5
-            value: "&DATADEP_FILE1;"
-          datadep_file2:
-            attrs:
-              age: 5
-            value: "&DATADEP_FILE2;"
     task_prep_obs:
       attrs:
         cycledefs: cycled
@@ -111,10 +74,43 @@ workflow:
       walltime: 00:02:00
       queue: batch
       join: "&LOGDIR;/prep_obs&LOGFN_SUFFIX;"
+    task_pre_anal:
+      attrs:
+        cycledefs: cycled
+      envars:
+        MACHINE: "&MACHINE;"
+        SCHED: "&SCHED;"
+        ACCOUNT: "&ACCOUNT;"
+        EXP_NAME: "&EXP_NAME;"
+        ATMOS_FORC: "&FORCING;"
+        RES: "&RES;"
+        TSTUB: "&TSTUB;"
+        model_ver: "&model_ver;"
+        RUN: "&RUN;"
+        HOMElandda: "&HOMElandda;"
+        COMROOT: "&COMROOT;"
+        DATAROOT: "&DATAROOT;"
+        KEEPDATA: "&KEEPDATA;"
+        PDY: "&PDY;"
+        cyc: "&cyc;"
+        PTIME: "&PTIME;"
+      account: "&ACCOUNT;"
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "pre_anal" "&HOMElandda;" "&MACHINE;"'
+      jobname: pre_anal
+      cores: 1
+      walltime: 00:05:00
+      queue: batch
+      join: "&LOGDIR;/pre_anal&LOGFN_SUFFIX;"
       dependency:
-        taskdep:
-          attrs:
-            task: prep_exp
+        or:
+          datadep_file1:
+            attrs:
+              age: 5
+            value: "&DATADEP_FILE1;"
+          datadep_file2:
+            attrs:
+              age: 5
+            value: "&DATADEP_FILE2;"
     task_analysis:
       attrs:
         cycledefs: cycled
@@ -150,7 +146,38 @@ workflow:
       dependency:
         taskdep:
           attrs:
-            task: prep_obs
+            task: pre_anal
+    task_post_anal:
+      attrs:
+        cycledefs: cycled
+      envars:
+        MACHINE: "&MACHINE;"
+        SCHED: "&SCHED;"
+        ACCOUNT: "&ACCOUNT;"
+        EXP_NAME: "&EXP_NAME;"
+        ATMOS_FORC: "&FORCING;"
+        RES: "&RES;"
+        TSTUB: "&TSTUB;"
+        model_ver: "&model_ver;"
+        RUN: "&RUN;"
+        HOMElandda: "&HOMElandda;"
+        COMROOT: "&COMROOT;"
+        DATAROOT: "&DATAROOT;"
+        KEEPDATA: "&KEEPDATA;"
+        PDY: "&PDY;"
+        cyc: "&cyc;"
+        PTIME: "&PTIME;"
+      account: "&ACCOUNT;"
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "post_anal" "&HOMElandda;" "&MACHINE;"'
+      jobname: post_anal
+      cores: 1
+      walltime: 00:05:00
+      queue: batch
+      join: "&LOGDIR;/post_anal&LOGFN_SUFFIX;"
+      dependency:
+        taskdep:
+          attrs:
+            task: pre_anal
     task_forecast:
       attrs:
         cycledefs: cycled

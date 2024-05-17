@@ -5,13 +5,6 @@ set -xue
 ############################
 # copy restarts to workdir, convert to UFS tile for DA (all members)
 
-if [[ ${EXP_NAME} == "openloop" ]]; then
-  do_jedi="NO"
-else
-  do_jedi="YES"
-  SAVE_TILE="YES"
-fi
-
 TPATH=${FIXlandda}/forcing/${ATMOS_FORC}/orog_files/
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
@@ -26,8 +19,6 @@ FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 
 JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
 JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
-
-SAVE_INCR="YES"
 
 # load modulefiles
 BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
@@ -44,23 +35,23 @@ YAML_DA=construct
 GFSv17="NO"
 B=30 # back ground error std for LETKFOI
 
-if [[ $do_jedi == "YES" ]]; then
+for itile in {1..6}
+do
+  cp ${COMIN}/${FILEDATE}.sfc_data.ini.tile${itile}.nc ${FILEDATE}.sfc_data.tile${itile}.nc
+done
+ln -nsf ${COMIN}/OBS/*_${YYYY}${MM}${DD}${HH}.nc .
 
-  ln -nsf ${COMIN}/${FILEDATE}.sfc_data.tile*.nc .
-  ln -nsf ${COMIN}/OBS/*_${YYYY}${MM}${DD}${HH}.nc .
+cres_file=${DATA}/${FILEDATE}.coupler.res
+cp ${PARMlandda}/templates/template.coupler.res $cres_file
 
-  cres_file=${DATA}/${FILEDATE}.coupler.res
-  cp ${PARMlandda}/templates/template.coupler.res $cres_file
-
-  sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
-  sed -i -e "s/XXMM/${MM}/g" $cres_file
-  sed -i -e "s/XXDD/${DD}/g" $cres_file
-  sed -i -e "s/XXHH/${HH}/g" $cres_file
-  sed -i -e "s/XXYYYP/${YYYP}/g" $cres_file
-  sed -i -e "s/XXMP/${MP}/g" $cres_file
-  sed -i -e "s/XXDP/${DP}/g" $cres_file
-  sed -i -e "s/XXHP/${HP}/g" $cres_file
-fi
+sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
+sed -i -e "s/XXMM/${MM}/g" $cres_file
+sed -i -e "s/XXDD/${DD}/g" $cres_file
+sed -i -e "s/XXHH/${HH}/g" $cres_file
+sed -i -e "s/XXYYYP/${YYYP}/g" $cres_file
+sed -i -e "s/XXMP/${MP}/g" $cres_file
+sed -i -e "s/XXDP/${DP}/g" $cres_file
+sed -i -e "s/XXHP/${HP}/g" $cres_file
 
 ################################################
 # CREATE BACKGROUND ENSEMBLE (LETKFOI)
@@ -82,10 +73,7 @@ if [[ ${DAtype} == "letkfoi_snow" ]]; then
       rm -r $DATA/mem_${ens}
     fi
     mkdir -p $DATA/mem_${ens}
-    for tile in 1 2 3 4 5 6
-    do
-      cp ${COMIN}/${FILEDATE}.sfc_data.tile${tile}.nc ${DATA}/mem_${ens}/${FILEDATE}.sfc_data.tile${tile}.nc
-    done
+    cp ${FILEDATE}.sfc_data.tile*.nc ${DATA}/mem_${ens}
     cp ${DATA}/${FILEDATE}.coupler.res ${DATA}/mem_${ens}/${FILEDATE}.coupler.res
   done
 
@@ -246,17 +234,11 @@ EOF
 
 fi 
 
-################################################
-# CLEAN UP
-################################################
-
 if [[ -d output/DA/hofx ]]; then
-  mkdir -p ${COMOUT}/hofx
   cp -rp output/DA/hofx ${COMOUT}
 fi
 
-# keep increments
-if [ $SAVE_INCR == "YES" ] && [ $do_DA == "YES" ]; then
+if [[ $do_DA == "YES" ]]; then
   mkdir -p ${COMOUT}/jedi_incr
   cp -p ${DATA}/${FILEDATE}.xainc.sfc_data.tile*.nc  ${COMOUT}/jedi_incr
 fi 

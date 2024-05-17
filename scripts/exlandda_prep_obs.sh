@@ -5,13 +5,6 @@ set -xue
 ############################
 # copy restarts to workdir, convert to UFS tile for DA (all members) 
 
-if [[ ${EXP_NAME} == "openloop" ]]; then
-  do_jedi="NO"
-else
-  do_jedi="YES"
-  SAVE_TILE="YES"
-fi
-
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}

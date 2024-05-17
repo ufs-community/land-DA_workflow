@@ -85,7 +85,7 @@ setpdy.sh
 export pgmout="${DATA}/OUTPUT.$$"
 env
 
-${SCRIPTSlandda}/exlandda_prep_exp.sh
+${SCRIPTSlandda}/exlandda_pre_anal.sh
 export err=$?; err_chk
 
 if [ -e "$pgmout" ]; then

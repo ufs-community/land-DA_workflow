@@ -62,16 +62,6 @@ fi
 
 # Call J-job scripts
 #
-echo " ... PREP_EXP running ... "
-${HOMElandda}/parm/task_load_modules_run_jjob.sh "prep_exp" "${HOMElandda}" "${MACHINE}"
-export err=$?
-if [ $err = 0 ]; then
-  echo " === PREP_EXP completed successfully === "
-else
-  echo " ERROR: PREP_EXP failed !!! "
-  exit 1
-fi
-
 echo " ... PREP_OBS running ... "
 ${HOMElandda}/parm/task_load_modules_run_jjob.sh "prep_obs" "${HOMElandda}" "${MACHINE}"
 export err=$?
@@ -79,6 +69,16 @@ if [ $err = 0 ]; then
   echo " === PREP_OBS completed successfully === "
 else
   echo " ERROR: PREP_OBS failed !!! "
+  exit 1
+fi
+
+echo " ... PRE_ANAL running ... "
+${HOMElandda}/parm/task_load_modules_run_jjob.sh "pre_anal" "${HOMElandda}" "${MACHINE}"
+export err=$?
+if [ $err = 0 ]; then
+  echo " === PRE_ANAL completed successfully === "
+else
+  echo " ERROR: PRE_ANAL failed !!! "
   exit 2
 fi
 
@@ -89,6 +89,16 @@ if [ $err = 0 ]; then
   echo " === Task ANALYSIS completed successfully === "
 else
   echo " ERROR: ANALYSIS failed !!! "
+  exit 3
+fi
+
+echo " ... POST_ANAL running ... "
+${HOMElandda}/parm/task_load_modules_run_jjob.sh "post_anal" "${HOMElandda}" "${MACHINE}"
+export err=$?
+if [ $err = 0 ]; then
+  echo " === POST_ANAL completed successfully === "
+else
+  echo " ERROR: POST_ANAL failed !!! "
   exit 4
 fi
 
