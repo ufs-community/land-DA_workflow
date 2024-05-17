@@ -33,7 +33,7 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
 
   for itile in {1..6}
   do
-    cp ${COMIN}/RESTART/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${itile}.nc
+    cp ${COMIN}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${itile}.nc
   done
 
   TEST_NAME=datm_cdeps_lnd_gswp3
@@ -103,7 +103,10 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   # restart
   if [ $WARM_START = .true. ]; then
     # NoahMP restart files
-    cp ${COMOUT}/RESTART/ufs.cpld.lnd.out.${RESTART_FILE_SUFFIX_SECS}.tile*.nc RESTART/.
+    for itile in {1..6}
+    do
+      ln -nsf ${COMIN}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc RESTART/ufs.cpld.lnd.out.${RESTART_FILE_SUFFIX_SECS}.tile${itile}.nc
+    done
 
     # CMEPS restart and pointer files
     RFILE1=ufs.cpld.cpl.r.${RESTART_FILE_SUFFIX_SECS}.nc
@@ -163,12 +166,12 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   # copy model ouput to COM
   for itile in {1..6}
   do
-    cp -p ${DATA}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${itile}.nc ${COMOUT}/RESTART/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc
+    cp -p ${DATA}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${itile}.nc ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc
   done
 
   # link restart for next cycle
   for itile in {1..6}
   do
-    ln -nsf ${COMOUT}/RESTART/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc ${DATA_RESTART}
+    ln -nsf ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc ${DATA_RESTART}
   done
 fi

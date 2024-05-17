@@ -91,11 +91,10 @@ if [[ ${ATMOS_FORC} == "era5" ]]; then
     exit 10
   fi
 
-  mkdir -p ${COMOUT}/RESTART
-  cp -p ${DATA}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${COMOUT}/RESTART/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
+  cp -p ${DATA}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
 
   # link restart for next cycle
-  ln -nsf ${COMOUT}/RESTART/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${DATA_RESTART}
+  ln -nsf ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${DATA_RESTART}
 
 #  convert back to UFS tile, run model (all members)
 elif [[ ${ATMOS_FORC} == "gswp3" ]]; then  
@@ -125,7 +124,6 @@ elif [[ ${ATMOS_FORC} == "gswp3" ]]; then
   fi
 
   # save analysis restart
-  mkdir -p ${COMOUT}/RESTART
   for itile in {1..6}
   do
     cp -p ${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc ${COMOUT}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc
