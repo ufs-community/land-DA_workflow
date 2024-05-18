@@ -2,8 +2,6 @@
 
 set -xue
 
-############################
-# copy restarts to workdir, convert to UFS tile for DA (all members) 
 
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
