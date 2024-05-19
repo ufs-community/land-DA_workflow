@@ -8,6 +8,7 @@ YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}
 HH=${cyc}
+YYYYMMDD=${PDY}
 nYYYY=${NTIME:0:4}
 nMM=${NTIME:4:2}
 nDD=${NTIME:6:2}
@@ -69,15 +70,26 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
     fi
   fi
 
-  atparse < ${PATHRT}/parm/${MODEL_CONFIGURE:-model_configure.IN} > model_configure
+  # Set model_configure
+  cp ${PARMlandda}/templates/template.model_configure model_configure
+  sed -i -e "s/XXYYYY/${YYYY}/g" model_configure
+  sed -i -e "s/XXMM/${MM}/g" model_configure
+  sed -i -e "s/XXDD/${DD}/g" model_configure
+  sed -i -e "s/XXHH/${HH}/g" model_configure
+  sed -i -e "s/XXFCSTHR/${FCSTHR}/g" model_configure
 
   compute_petbounds_and_tasks
 
   atparse < ${PATHRT}/parm/${UFS_CONFIGURE:-ufs.configure} > ufs.configure
 
-  # diag table
+  # set diag table
   if [[ "Q${DIAG_TABLE:-}" != Q ]] ; then
-    atparse < ${PATHRT}/parm/diag_table/${DIAG_TABLE} > diag_table
+    cp ${PARMlandda}/templates/template.diag_table diag_table
+    sed -i -e "s/XXYYYYMMDD/${YYYYMMDD}/g" diag_table
+    sed -i -e "s/XXYYYY/${YYYY}/g" diag_table
+    sed -i -e "s/XXMM/${MM}/g" diag_table
+    sed -i -e "s/XXDD/${DD}/g" diag_table
+    sed -i -e "s/XXHH/${HH}/g" diag_table
   fi
 
   # Field table

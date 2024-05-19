@@ -213,6 +213,7 @@ workflow:
         cyc: "&cyc;"
         NTIME: "&NTIME;"
         DAtype: "&DAtype;"
+        FCSTHR: "&FCSTHR;"
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "forecast" "&HOMElandda;" "&MACHINE;"'
       jobname: forecast

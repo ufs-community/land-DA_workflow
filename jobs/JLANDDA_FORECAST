@@ -65,11 +65,11 @@ setpdy.sh
 if [ "${MACHINE}" = "WCOSS2" ]; then
   export COMIN="${COMIN:-$(compath.py -o ${NET}/${model_ver}/${RUN}.${PDY})}"
   export COMOUT="${COMOUT:-$(compath.py -o ${NET}/${model_ver}/${RUN}.${PDY})}"
-  export COMINm1="${COMIN:-$(compath.py -o ${NET}/${model_ver}/${RUN}.${PDYm1})}"
+  export COMINm1="${COMINm1:-$(compath.py -o ${NET}/${model_ver}/${RUN}.${PDYm1})}"
 else
   export COMIN="${COMIN:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
   export COMOUT="${COMOUT:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
-  export COMINm1="${COMIN:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDYm1}}"
+  export COMINm1="${COMINm1:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDYm1}}"
 fi
 
 mkdir -p ${COMOUT}
