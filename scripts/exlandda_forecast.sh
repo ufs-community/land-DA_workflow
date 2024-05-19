@@ -31,11 +31,6 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   echo '************************************************'
   echo 'running the forecast model' 
 
-  for itile in {1..6}
-  do
-    cp ${COMIN}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${itile}.nc
-  done
-
   TEST_NAME=datm_cdeps_lnd_gswp3
   TEST_NAME_RST=datm_cdeps_lnd_gswp3_rst
   PATHRT=${HOMElandda}/sorc/ufs_model.fd/tests
@@ -100,24 +95,35 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   cd -
 
   SUFFIX=${RT_SUFFIX}
-  # restart
-  if [ $WARM_START = .true. ]; then
-    # NoahMP restart files
-    for itile in {1..6}
-    do
-      ln -nsf ${COMIN}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc RESTART/ufs.cpld.lnd.out.${RESTART_FILE_SUFFIX_SECS}.tile${itile}.nc
-    done
 
-    # CMEPS restart and pointer files
-    RFILE1=ufs.cpld.cpl.r.${RESTART_FILE_SUFFIX_SECS}.nc
-    cp ${FIXlandda}/restarts/gswp3/${RFILE1} RESTART/.
-    ls -1 "RESTART/${RFILE1}">rpointer.cpl
+  # Retrieve input files for restart
+  # NoahMP restart files
+  for itile in {1..6}
+  do
+    ln -nsf ${COMIN}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc RESTART/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}_${HH}-0000.tile${itile}.nc
+  done
 
-    # CDEPS restart and pointer files
-    RFILE2=ufs.cpld.datm.r.${RESTART_FILE_SUFFIX_SECS}.nc
-    cp ${FIXlandda}/restarts/gswp3/${RFILE2} RESTART/.
-    ls -1 "RESTART/${RFILE2}">rpointer.atm
+  # CMEPS restart and pointer files
+  rfile1=ufs.cpld.cpl.r.${YYYY}-${MM}-${DD}_${HH}-0000.nc
+  if [[ -e "${COMINm1}/${rfile1}" ]]; then
+    cp "${COMINm1}/${rfile1}" RESTART/.
+  elif [[ -e "${WARMSTART_DIR}/${rfile1}" ]]; then
+    cp "${WARMSTART_DIR}/${rfile1}" RESTART/.
+  else
+    cp ${FIXlandda}/restarts/gswp3/${rfile1} RESTART/.
   fi
+  ls -1 "RESTART/${rfile11}">rpointer.cpl
+
+  # CDEPS restart and pointer files
+  rfile2=ufs.cpld.datm.r.${YYYY}-${MM}-${DD}_${HH}-0000.nc
+  if [[ -e "${COMINm1}/${rfile2}" ]]; then
+    cp "${COMINm1}/${rfile2}" RESTART/.
+  elif [[ -e "${WARMSTART_DIR}/${rfile2}" ]]; then
+    cp "${WARMSTART_DIR}/${rfile2}" RESTART/.
+  else
+    cp ${FIXlandda}/restarts/gswp3/${rfile2} RESTART/.
+  fi
+  ls -1 "RESTART/${rfile2}">rpointer.atm
 
   cd INPUT
   ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C96_init_fields.tile1.nc C96.initial.tile1.nc
@@ -168,6 +174,8 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   do
     cp -p ${DATA}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${itile}.nc ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc
   done
+  cp -p ${DATA}/ufs.cpld.datm.r.${nYYYY}-${nMM}-${nHH}-0000.nc ${COMOUT}
+  cp -p ${DATA}/RESTART/ufs.cpld.cpl.r.${nYYYY}-${nMM}-${nHH}-0000.nc ${COMOUT}
 
   # link restart for next cycle
   for itile in {1..6}
