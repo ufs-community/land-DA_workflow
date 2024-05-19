@@ -118,22 +118,22 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   # CMEPS restart and pointer files
   rfile1="ufs.cpld.cpl.r.${YYYY}-${MM}-${DD}-00000.nc"
   if [[ -e "${COMINm1}/${rfile1}" ]]; then
-    cp "${COMINm1}/${rfile1}" RESTART/.
+    ln -nsf "${COMINm1}/${rfile1}" RESTART/.
   elif [[ -e "${WARMSTART_DIR}/${rfile1}" ]]; then
-    cp "${WARMSTART_DIR}/${rfile1}" RESTART/.
+    ln -nsf "${WARMSTART_DIR}/${rfile1}" RESTART/.
   else
-    cp ${FIXlandda}/restarts/gswp3/${rfile1} RESTART/.
+    ln -nsf ${FIXlandda}/restarts/gswp3/${rfile1} RESTART/.
   fi
   ls -1 "RESTART/${rfile1}">rpointer.cpl
 
   # CDEPS restart and pointer files
   rfile2="ufs.cpld.datm.r.${YYYY}-${MM}-${DD}-00000.nc"
   if [[ -e "${COMINm1}/${rfile2}" ]]; then
-    cp "${COMINm1}/${rfile2}" RESTART/.
+    ln -nsf "${COMINm1}/${rfile2}" RESTART/.
   elif [[ -e "${WARMSTART_DIR}/${rfile2}" ]]; then
-    cp "${WARMSTART_DIR}/${rfile2}" RESTART/.
+    ln -nsf "${WARMSTART_DIR}/${rfile2}" RESTART/.
   else
-    cp ${FIXlandda}/restarts/gswp3/${rfile2} RESTART/.
+    ln -nsf ${FIXlandda}/restarts/gswp3/${rfile2} RESTART/.
   fi
   ls -1 "RESTART/${rfile2}">rpointer.atm
 
