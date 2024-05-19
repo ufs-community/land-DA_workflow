@@ -104,7 +104,7 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   done
 
   # CMEPS restart and pointer files
-  rfile1=ufs.cpld.cpl.r.${YYYY}-${MM}-${DD}_${HH}-0000.nc
+  rfile1="ufs.cpld.cpl.r.${YYYY}-${MM}-${DD}-00000.nc"
   if [[ -e "${COMINm1}/${rfile1}" ]]; then
     cp "${COMINm1}/${rfile1}" RESTART/.
   elif [[ -e "${WARMSTART_DIR}/${rfile1}" ]]; then
@@ -112,10 +112,10 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   else
     cp ${FIXlandda}/restarts/gswp3/${rfile1} RESTART/.
   fi
-  ls -1 "RESTART/${rfile11}">rpointer.cpl
+  ls -1 "RESTART/${rfile1}">rpointer.cpl
 
   # CDEPS restart and pointer files
-  rfile2=ufs.cpld.datm.r.${YYYY}-${MM}-${DD}_${HH}-0000.nc
+  rfile2="ufs.cpld.datm.r.${YYYY}-${MM}-${DD}-00000.nc"
   if [[ -e "${COMINm1}/${rfile2}" ]]; then
     cp "${COMINm1}/${rfile2}" RESTART/.
   elif [[ -e "${WARMSTART_DIR}/${rfile2}" ]]; then
@@ -174,8 +174,8 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   do
     cp -p ${DATA}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${itile}.nc ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc
   done
-  cp -p ${DATA}/ufs.cpld.datm.r.${nYYYY}-${nMM}-${nHH}-0000.nc ${COMOUT}
-  cp -p ${DATA}/RESTART/ufs.cpld.cpl.r.${nYYYY}-${nMM}-${nHH}-0000.nc ${COMOUT}
+  cp -p ${DATA}/ufs.cpld.datm.r.${nYYYY}-${nMM}-${nDD}-00000.nc ${COMOUT}
+  cp -p ${DATA}/RESTART/ufs.cpld.cpl.r.${nYYYY}-${nMM}-${nDD}-00000.nc ${COMOUT}
 
   # link restart for next cycle
   for itile in {1..6}

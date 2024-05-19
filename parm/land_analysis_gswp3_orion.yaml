@@ -202,6 +202,7 @@ workflow:
         ACCOUNT: "&ACCOUNT;"
         EXP_NAME: "&EXP_NAME;"
         ATMOS_FORC: "&FORCING;"
+        WARMSTART_DIR: "&WARMSTART_DIR;"
         model_ver: "&model_ver;"
         HOMElandda: "&HOMElandda;"
         COMROOT: "&COMROOT;"
