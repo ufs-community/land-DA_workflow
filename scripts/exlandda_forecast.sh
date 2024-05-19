@@ -100,7 +100,7 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   # NoahMP restart files
   for itile in {1..6}
   do
-    ln -nsf ${COMIN}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc RESTART/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}_${HH}-0000.tile${itile}.nc
+    ln -nsf ${COMIN}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc RESTART/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-00000.tile${itile}.nc
   done
 
   # CMEPS restart and pointer files
