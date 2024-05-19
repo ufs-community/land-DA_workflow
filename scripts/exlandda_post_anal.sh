@@ -11,6 +11,10 @@ YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}
 HH=${cyc}
+nYYYY=${NTIME:0:4}
+nMM=${NTIME:4:2}
+nDD=${NTIME:6:2}
+nHH=${NTIME:8:2}
 
 FREQ=$((${FCSTHR}*3600))
 RDD=$((${FCSTHR}/24))
@@ -31,13 +35,14 @@ FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 for itile in {1..6}
 do
   cp ${DATA_SHARE}/${FILEDATE}.sfc_data.tile${itile}.nc .
-  cp ${DATA_SHARE}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc .
 done
 
 #  convert back to vector, run model (all members) convert back to vector, run model (all members)
 if [[ ${ATMOS_FORC} == "era5" ]]; then
   echo '************************************************'
   echo 'calling tile2vector' 
+
+  cp ${DATA_SHARE}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc .
 
   cp ${PARMlandda}/templates/template.tile2vector tile2vector.namelist
 
@@ -46,7 +51,7 @@ if [[ ${ATMOS_FORC} == "era5" ]]; then
   sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
   sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
   sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
-  sed -i -e "s/MODEL_FORCING/${ATMOS_FORC}/g" vector2tile.namelist
+  sed -i -e "s/MODEL_FORCING/${ATMOS_FORC}/g" tile2vector.namelist
   sed -i -e "s/XXRES/${RES}/g" tile2vector.namelist
   sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
   sed -i -e "s#XXTPATH#${TPATH}#g" tile2vector.namelist
@@ -96,10 +101,15 @@ if [[ ${ATMOS_FORC} == "era5" ]]; then
   # link restart for next cycle
   ln -nsf ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${DATA_RESTART}
 
-#  convert back to UFS tile, run model (all members)
+#  convert back to UFS tile
 elif [[ ${ATMOS_FORC} == "gswp3" ]]; then  
   echo '************************************************'
   echo 'calling tile2tile' 
+
+  for itile in {1..6}
+  do
+    cp ${DATA_SHARE}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc .
+  done
 
   cp ${PARMlandda}/templates/template.jedi2ufs jedi2ufs.namelist
    

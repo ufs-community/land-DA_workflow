@@ -69,7 +69,6 @@ if [[ $ATMOS_FORC == "era5" ]]; then
     exit 12
   fi 
 
-
 elif [[ $ATMOS_FORC == "gswp3" ]]; then
   # tile2tile for DA
   echo '************************************************'
@@ -116,10 +115,11 @@ elif [[ $ATMOS_FORC == "gswp3" ]]; then
     exit 22 
   fi
 
-  #stage restarts for applying JEDI update to intermediate directory
-  for itile in {1..6}
-  do
-    cp -p ${DATA}/${FILEDATE}.sfc_data.tile${itile}.nc ${DATA_SHARE}/${FILEDATE}.sfc_data.tile${itile}.nc
-  done
 fi
+
+#stage restarts for applying JEDI update to intermediate directory
+for itile in {1..6}
+do
+  cp -p ${DATA}/${FILEDATE}.sfc_data.tile${itile}.nc ${DATA_SHARE}/${FILEDATE}.sfc_data.tile${itile}.nc
+done
 

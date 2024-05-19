@@ -7,8 +7,8 @@ workflow:
   cycledef:
     - attrs:
         group: cycled
-      spec: 200001030000 200001040000 24:00:00
-# for era5: spec:  201912210000 201912210000 24:00:00
+      spec: 200001030000 200001040000 24:00:00   # for gswp3
+#      spec: 201912210000 201912220000 24:00:00   # for era5
   entities:
     MACHINE: "orion"
     SCHED: "slurm"
@@ -17,7 +17,7 @@ workflow:
     EXP_BASEDIR: "/work/noaa/epic/{USER}/landda_test"
     JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7"
     WARMSTART_DIR: "/work/noaa/epic/UFS_Land-DA_Dev/DATA_RESTART"
-    FORCING: "gswp3"
+    FORCING: "gswp3"   # "gswp3" or "era5"
     RES: "96"
     FCSTHR: "24"
     NPROCS_ANALYSIS: "6"
@@ -179,6 +179,7 @@ workflow:
         PDY: "&PDY;"
         cyc: "&cyc;"
         PTIME: "&PTIME;"
+        NTIME: "&NTIME;"
         FCSTHR: "&FCSTHR;"
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "post_anal" "&HOMElandda;" "&MACHINE;"'

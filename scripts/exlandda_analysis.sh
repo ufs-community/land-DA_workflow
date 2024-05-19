@@ -32,6 +32,7 @@ YAML_DA=construct
 GFSv17="NO"
 B=30 # back ground error std for LETKFOI
 
+# Import input files
 for itile in {1..6}
 do
   cp ${DATA_SHARE}/${FILEDATE}.sfc_data.tile${itile}.nc .
@@ -168,7 +169,7 @@ fi
 ################################################
 
 if [[ ! -e Data ]]; then
-  ln -s $JEDI_STATICDIR Data 
+  ln -nsf $JEDI_STATICDIR Data 
 fi
 
 echo 'do_landDA: calling fv3-jedi'

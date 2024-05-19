@@ -27,7 +27,7 @@ for obs in "${OBS_TYPES[@]}"; do
     # obs are within DA window.
   elif [ $ATMOS_FORC == "era5" ] && [ ${obs} == "GHCN" ]; then
     OBSDIR_SUBDIR="${OBSDIR_SUBDIR:-snow_depth/GHCN/data_proc/v3}"
-    obsfile="${OBSDIR}/${OBSDIR_SUBDIR}/${YYYY}/ghcn_snwd_ioda_${YYYP}${MP}${DP}.nc"
+    obsfile="${OBSDIR}/${OBSDIR_SUBDIR}/${YYYY}/ghcn_snwd_ioda_${YYYP}${MP}${DP}_jediv7.nc"
   elif [ $ATMOS_FORC == "gswp3" ] && [ ${obs} == "GHCN" ]; then
     OBSDIR_SUBDIR="${OBSDIR_SUBDIR:-snow_depth/GHCN/data_proc/v3}"
     obsfile="${OBSDIR}/${OBSDIR_SUBDIR}/${YYYY}/ghcn_snwd_ioda_${YYYP}${MP}${DP}.nc"
