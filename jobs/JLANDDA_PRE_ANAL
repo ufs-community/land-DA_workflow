@@ -56,25 +56,27 @@ cd $DATA
 export NET="${NET:-landda}"
 export RUN="${RUN:-landda}"
 
+# Run setpdy to initialize PDYm and PDYp variables
+export cycle="${cycle:-t${cyc}z}"
+setpdy.sh
+. ./PDY
+
 [[ "$WORKFLOW_MANAGER" = "rocoto" ]] && export COMROOT=$COMROOT
 if [ "${MACHINE}" = "WCOSS2" ]; then
-  export COMIN="${COMIN:-$(compath.py -o ${NET}/${model_ver}/${RUN}.${PDY}/${cyc}${SLASH_ENSMEM_SUBDIR})}"
-  export COMOUT="${COMOUT:-$(compath.py -o ${NET}/${model_ver}/${RUN}.${PDY}/${cyc}${SLASH_ENSMEM_SUBDIR})}"
+  export COMIN="${COMIN:-$(compath.py -o ${NET}/${model_ver}/${RUN}.${PDY})}"
+  export COMOUT="${COMOUT:-$(compath.py -o ${NET}/${model_ver}/${RUN}.${PDY})}"
 else
-  export COMIN="${COMIN:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}/${cyc}${SLASH_ENSMEM_SUBDIR}}"
-  export COMOUT="${COMOUT:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}/${cyc}${SLASH_ENSMEM_SUBDIR}}"
+  export COMIN="${COMIN:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
+  export COMOUT="${COMOUT:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
 fi
 
 mkdir -p ${COMOUT}
 
 # Create a teomporary share directory
-export DATA_SHARE="${DATA_SHARE:-${DATAROOT}/DATA_SHARE/${PDY}${cyc}}"
+export DATA_SHARE="${DATA_SHARE:-${DATAROOT}/DATA_SHARE/${PDY}}"
 mkdir -p ${DATA_SHARE}
-
-# Run setpdy to initialize PDYm and PDYp variables
-export cycle="${cycle:-t${cyc}z}"
-setpdy.sh
-. ./PDY
+export DATA_RESTART="${DATA_RESTART:-${DATAROOT}/DATA_SHARE/RESTART}"
+mkdir -p ${DATA_RESTART}
 #
 #-----------------------------------------------------------------------
 #
@@ -85,7 +87,7 @@ setpdy.sh
 export pgmout="${DATA}/OUTPUT.$$"
 env
 
-${SCRIPTSlandda}/exlandda_prep_exp.sh
+${SCRIPTSlandda}/exlandda_pre_anal.sh
 export err=$?; err_chk
 
 if [ -e "$pgmout" ]; then

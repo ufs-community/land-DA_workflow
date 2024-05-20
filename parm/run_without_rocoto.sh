@@ -18,15 +18,19 @@ export FORCING="era5"
 if [ "${MACHINE}" = "hera" ]; then
   export EXP_BASEDIR="/scratch2/NAGAPE/epic/{USER}/landda_test"
   export JEDI_INSTALL="/scratch2/NAGAPE/epic/UFS_Land-DA/jedi_skylabv7.0"
+  export WARMSTART_DIR=""
 elif [ "${MACHINE}" = "orion" ]; then
-  export EXP_BASEDIR="/work/noaa/epic/chjeon/landda_test"
+  export EXP_BASEDIR="/work/noaa/epic/{USER}/landda_test"
   export JEDI_INSTALL="/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7"
+  export WARMSTART_DIR="/work/noaa/epic/UFS_Land-DA_Dev/DATA_RESTART"
 fi
 
 export RES="96"
 export FCSTHR="24"
 export NPROCS_ANALYSIS="6"
 export NPROCS_FORECAST="6"
+export OBSDIR=""
+export OBSDIR_SUBDIR=""
 export OBS_TYPES="GHCN"
 export DAtype="letkfoi_snow"
 export SNOWDEPTHVAR="snwdph"
@@ -60,16 +64,6 @@ fi
 
 # Call J-job scripts
 #
-echo " ... PREP_EXP running ... "
-${HOMElandda}/parm/task_load_modules_run_jjob.sh "prep_exp" "${HOMElandda}" "${MACHINE}"
-export err=$?
-if [ $err = 0 ]; then
-  echo " === PREP_EXP completed successfully === "
-else
-  echo " ERROR: PREP_EXP failed !!! "
-  exit 1
-fi
-
 echo " ... PREP_OBS running ... "
 ${HOMElandda}/parm/task_load_modules_run_jjob.sh "prep_obs" "${HOMElandda}" "${MACHINE}"
 export err=$?
@@ -77,17 +71,17 @@ if [ $err = 0 ]; then
   echo " === PREP_OBS completed successfully === "
 else
   echo " ERROR: PREP_OBS failed !!! "
-  exit 2
+  exit 1
 fi
 
-echo " ... PREP_BMAT running ... "
-${HOMElandda}/parm/task_load_modules_run_jjob.sh "prep_bmat" "${HOMElandda}" "${MACHINE}"
+echo " ... PRE_ANAL running ... "
+${HOMElandda}/parm/task_load_modules_run_jjob.sh "pre_anal" "${HOMElandda}" "${MACHINE}"
 export err=$?
 if [ $err = 0 ]; then
-  echo " === PREP_BMAT completed successfully === "
+  echo " === PRE_ANAL completed successfully === "
 else
-  echo " ERROR: PREP_BMAT failed !!! "
-  exit 3
+  echo " ERROR: PRE_ANAL failed !!! "
+  exit 2
 fi
 
 echo " ... ANALYSIS running ... "
@@ -97,6 +91,16 @@ if [ $err = 0 ]; then
   echo " === Task ANALYSIS completed successfully === "
 else
   echo " ERROR: ANALYSIS failed !!! "
+  exit 3
+fi
+
+echo " ... POST_ANAL running ... "
+${HOMElandda}/parm/task_load_modules_run_jjob.sh "post_anal" "${HOMElandda}" "${MACHINE}"
+export err=$?
+if [ $err = 0 ]; then
+  echo " === POST_ANAL completed successfully === "
+else
+  echo " ERROR: POST_ANAL failed !!! "
   exit 4
 fi
 

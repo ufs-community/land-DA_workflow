@@ -1,0 +1,9 @@
+start_year:              XXYYYY
+start_month:             XXMM
+start_day:               XXDD
+start_hour:              XXHH
+start_minute:            0
+start_second:            0
+nhours_fcst:             XXFCSTHR
+dt_atmos:                900
+fhrot:                   0
