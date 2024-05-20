@@ -202,16 +202,10 @@
 </div></blockquote>
 <p>Copy the experiment settings into <code class="docutils literal notranslate"><span class="pre">land_analysis.yaml</span></code>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $LANDDAROOT/land-DA_workflow/parm</span>
-<span class="go">cp land_analysis_&lt;forcing&gt;_&lt;platform&gt;.yaml land_analysis.yaml</span>
+<span class="go">cp land_analysis_&lt;platform&gt;.yaml land_analysis.yaml</span>
 </pre></div>
 </div>
-<p>where:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;forcing&gt;</span></code> is either <code class="docutils literal notranslate"><span class="pre">gswp3</span></code> or <code class="docutils literal notranslate"><span class="pre">era5</span></code> forcing data.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;platform&gt;</span></code> is <code class="docutils literal notranslate"><span class="pre">hera</span></code> or <code class="docutils literal notranslate"><span class="pre">orion</span></code>.</p></li>
-</ul>
-</div></blockquote>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;platform&gt;</span></code> is <code class="docutils literal notranslate"><span class="pre">hera</span></code> or <code class="docutils literal notranslate"><span class="pre">orion</span></code>.</p>
 <p>Users will need to configure certain elements of their experiment in <code class="docutils literal notranslate"><span class="pre">land_analysis.yaml</span></code>:</p>
 <blockquote>
 <div><ul class="simple">
@@ -219,7 +213,8 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">ACCOUNT:</span></code> A valid account name. Hera, Orion, and most NOAA RDHPCS systems require a valid account name; other systems may not</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">EXP_BASEDIR:</span></code> The full path to the directory where land-DA_workflow was cloned (i.e., <code class="docutils literal notranslate"><span class="pre">$LANDDAROOT</span></code>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">JEDI_INSTALL:</span></code> The full path to the system’s <code class="docutils literal notranslate"><span class="pre">jedi-bundle</span></code> installation</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">LANDDA_INPUTS:</span></code> The full path to the experiment data. See <a class="reference internal" href="#getdata"><span class="std std-ref">Data</span></a> below for information on prestaged data on Level 1 platforms.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FORCING:</span></code> Forcing options; <code class="docutils literal notranslate"><span class="pre">gswp3</span></code> or <code class="docutils literal notranslate"><span class="pre">era5</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cycledef/spec:</span></code> Cycle specification</p></li>
 </ul>
 </div></blockquote>
 <div class="admonition note">
@@ -246,7 +241,7 @@
 </tr>
 </tbody>
 </table>
-<p>Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in <a class="reference internal" href="Container.html#getdatac"><span class="std std-numref">Section 2.2.3</span></a> and set <code class="docutils literal notranslate"><span class="pre">LANDDA_INPUTS</span></code> to point to the location of the downloaded data. Similarly, users with access to data for additional experiments may set the path to that data in <code class="docutils literal notranslate"><span class="pre">LANDDA_INPUTS</span></code>.</p>
+<p>Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in <a class="reference internal" href="Container.html#getdatac"><span class="std std-numref">Section 2.2.3</span></a>. Its sub-directories are soft-linked to the <code class="docutils literal notranslate"><span class="pre">fix</span></code> directory of the land-DA workflow by the build script <code class="docutils literal notranslate"><span class="pre">sorc/app_build.sh</span></code>.</p>
 </section>
 </section>
 <section id="generate-the-rocoto-xml-file">
@@ -275,20 +270,20 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>JLANDDA_PREP_EXP</p></td>
-<td><p>Sets up the experiment</p></td>
+<tr class="row-even"><td><p>JLANDDA_PREP_OBS</p></td>
+<td><p>Sets up the observation data files</p></td>
 </tr>
-<tr class="row-odd"><td><p>JLANDDA_PREP_OBS</p></td>
-<td><p>Sets up the observation files</p></td>
+<tr class="row-odd"><td><p>JLANDDA_PRE_ANAL</p></td>
+<td><p>Transfers the snow data from the restart files to the surface data files</p></td>
 </tr>
-<tr class="row-even"><td><p>JLANDDA_PREP_BMAT</p></td>
-<td><p>Sets up the <a class="reference internal" href="../Reference/Glossary.html#term-JEDI"><span class="xref std std-term">JEDI</span></a> run</p></td>
+<tr class="row-even"><td><p>JLANDDA_ANALYSIS</p></td>
+<td><p>Runs <a class="reference internal" href="../Reference/Glossary.html#term-JEDI"><span class="xref std std-term">JEDI</span></a> and adds the increment to the surface data files</p></td>
 </tr>
-<tr class="row-odd"><td><p>JLANDDA_ANALYSIS</p></td>
-<td><p>Runs JEDI</p></td>
+<tr class="row-odd"><td><p>JLANDDA_POST_ANAL</p></td>
+<td><p>Transfers the JEDI result from the surface data files to the restart files</p></td>
 </tr>
 <tr class="row-even"><td><p>JLANDDA_FORECAST</p></td>
-<td><p>Runs forecast</p></td>
+<td><p>Runs the forecast model</p></td>
 </tr>
 </tbody>
 </table>
@@ -325,7 +320,7 @@
 </section>
 <section id="run-without-rocoto">
 <span id="run-batch-script"></span><h4><span class="section-number">2.1.5.2.2. </span>Run Without Rocoto<a class="headerlink" href="#run-without-rocoto" title="Link to this heading"></a></h4>
-<p>Users may choose not to run the workflow with uwtools and Rocoto. To run the <a class="reference internal" href="../Reference/Glossary.html#term-J-jobs"><span class="xref std std-term">J-jobs</span></a> scripts in the <code class="docutils literal notranslate"><span class="pre">jobs</span></code> directory, navigate to the <code class="docutils literal notranslate"><span class="pre">parm</span></code> directory and edit <code class="docutils literal notranslate"><span class="pre">run_without_rocoto.sh</span></code> (e.g., using vim or preferred command line editor). Users will likely need to change the <code class="docutils literal notranslate"><span class="pre">MACHINE</span></code>, <code class="docutils literal notranslate"><span class="pre">ACCOUNT</span></code>, and <code class="docutils literal notranslate"><span class="pre">EXP_BASEDIR</span></code> variables to match their system. Then, run <code class="docutils literal notranslate"><span class="pre">run_without_rocoto.sh</span></code>:</p>
+<p>Users may choose not to run the workflow with uwtools and Rocoto for a non-cycled run. To run the <a class="reference internal" href="../Reference/Glossary.html#term-J-jobs"><span class="xref std std-term">J-jobs</span></a> scripts in the <code class="docutils literal notranslate"><span class="pre">jobs</span></code> directory, navigate to the <code class="docutils literal notranslate"><span class="pre">parm</span></code> directory and edit <code class="docutils literal notranslate"><span class="pre">run_without_rocoto.sh</span></code> (e.g., using vim or preferred command line editor). Users will likely need to change the <code class="docutils literal notranslate"><span class="pre">MACHINE</span></code>, <code class="docutils literal notranslate"><span class="pre">ACCOUNT</span></code>, and <code class="docutils literal notranslate"><span class="pre">EXP_BASEDIR</span></code> variables to match their system. Then, run <code class="docutils literal notranslate"><span class="pre">run_without_rocoto.sh</span></code>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $LANDDAROOT/land-DA_workflow/parm</span>
 <span class="go">sbatch run_without_rocoto.sh</span>
 </pre></div>
@@ -340,35 +335,25 @@
 <span class="go"> ├── ptmp (&lt;PTMP&gt;)</span>
 <span class="go"> │     └── test (&lt;envir&gt;)</span>
 <span class="go"> │           └── com</span>
-<span class="go"> │                 ├── landda (&lt;NET&gt;)</span>
-<span class="go"> │                 │     └── vX.Y.Z (&lt;model_ver&gt;)</span>
-<span class="go"> │                 │           └── landda.YYYYMMDD (&lt;RUN&gt;.&lt;PDY&gt;)</span>
-<span class="go"> │                 │                 └── HH (&lt;cyc&gt;)</span>
-<span class="go"> │                 │                       ├── DA: Directory containing the output files of JEDI run</span>
-<span class="go"> │                 │                       │     ├── hofx</span>
-<span class="go"> │                 │                       │     └── jedi_incr</span>
-<span class="go"> │                 │                       └── mem000: Directory containing the output files</span>
-<span class="go"> │                 └── output</span>
-<span class="go"> │                       └── logs</span>
-<span class="go"> │                             └── run_&lt;forcing&gt; (&lt;LOGDIR&gt;): Directory containing the log file of the Rocoto workflow</span>
-<span class="go"> └── workdir(&lt;WORKDIR&gt;)</span>
-<span class="go">       └── run_&lt;forcing&gt;</span>
-<span class="go">             └── mem000: Working directory</span>
+<span class="go"> │                ├── landda (&lt;NET&gt;)</span>
+<span class="go"> │                │     └── vX.Y.Z (&lt;model_ver&gt;)</span>
+<span class="go"> │                │           └── landda.YYYYMMDD (&lt;RUN&gt;.&lt;PDY&gt;): Directory containing the output files</span>
+<span class="go"> │                └── output</span>
+<span class="go"> │                      └── logs</span>
+<span class="go"> │                            └── run_&lt;forcing&gt; (&lt;LOGDIR&gt;): Directory containing the log file of the Rocoto workflow</span>
+<span class="go"> └── tmp (&lt;DATAROOT&gt;)</span>
+<span class="go">      ├── &lt;jobid&gt; (&lt;DATA&gt;): Working directory</span>
+<span class="go">      └── DATA_SHARE</span>
+<span class="go">            ├── YYYYMMDD (&lt;PDY&gt;): Directory containing the intermediate or temporary files</span>
+<span class="go">            └── DATA_RESTART: Directory containing the soft-links to the restart files for the next cycles</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">&lt;forcing&gt;</span></code> refers to the type of forcing data used (<code class="docutils literal notranslate"><span class="pre">gswp3</span></code> or <code class="docutils literal notranslate"><span class="pre">era5</span></code>). Each variable in parentheses and angle brackets (e.g., <code class="docutils literal notranslate"><span class="pre">(&lt;VAR&gt;)</span></code>) is the name for the directory defined in the file <code class="docutils literal notranslate"><span class="pre">land_analysis.yaml</span></code>. In the future, this directory structure will be further modified to meet the <a class="reference external" href="https://www.nco.ncep.noaa.gov/idsb/implementation_standards/">NCO Implementation Standards</a>.</p>
-<p>Check for the background and analysis files in the experiment directory:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ls -l $LANDDAROOT/ptmp/test/com/landda/v1.2.1/landda.&lt;PDY&gt;/&lt;cyc&gt;/run_&lt;forcing&gt;/mem000/restarts/&lt;vector_or_tile&gt;</span>
+<p>Check for the output files for each cycle in the experiment directory:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ls -l $LANDDAROOT/ptmp/test/com/landda/v1.2.1/landda.YYYYMMDD</span>
 </pre></div>
 </div>
-<p>where:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;forcing&gt;</span></code> is either <code class="docutils literal notranslate"><span class="pre">era5</span></code> or <code class="docutils literal notranslate"><span class="pre">gswp3</span></code>, and</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;vector_or_tile&gt;</span></code> is either <code class="docutils literal notranslate"><span class="pre">vector</span></code> or <code class="docutils literal notranslate"><span class="pre">tile</span></code> depending on whether ERA5 or GSWP3 forcing data was used, respectively.</p></li>
-</ul>
-</div></blockquote>
-<p>The experiment should generate several restart files.</p>
+<p>where <code class="docutils literal notranslate"><span class="pre">YYYYMMDD</span></code> is the cycle date. The experiment should generate several restart files.</p>
 </section>
 </section>
 </section>

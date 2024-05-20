@@ -103,12 +103,15 @@
 <h2><span class="section-number">2.3.1. </span>Process<a class="headerlink" href="#process" title="Link to this heading"></a></h2>
 <p>From the working directory (<code class="docutils literal notranslate"><span class="pre">$LANDDAROOT</span></code>), navigate to <code class="docutils literal notranslate"><span class="pre">build</span></code>. Then run:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">salloc --ntasks 8 --exclusive --qos=debug --partition=debug --time=00:30:00 --account=&lt;account_name&gt;</span>
-<span class="go">module use modulefiles &amp;&amp; module load landda_&lt;platform&gt;.intel</span>
+<span class="go">cd land-DA_workflow/sorc/build</span>
+<span class="go">source ../../versions/build.ver_&lt;platform&gt;</span>
+<span class="go">module use ../../modulefiles</span>
+<span class="go">module load build_&lt;platform&gt;_intel</span>
 <span class="go">ctest</span>
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">&lt;account_name&gt;</span></code> corresponds to the user’s actual account name and <code class="docutils literal notranslate"><span class="pre">&lt;platform&gt;</span></code> is <code class="docutils literal notranslate"><span class="pre">hera</span></code> or <code class="docutils literal notranslate"><span class="pre">orion</span></code>.</p>
-<p>This will allocate a compute node, load the appropriate modulefiles, and run the CTests.</p>
+<p>This will submit an interactive job, load the appropriate modulefiles, and run the CTests.</p>
 </section>
 <section id="tests">
 <h2><span class="section-number">2.3.2. </span>Tests<a class="headerlink" href="#tests" title="Link to this heading"></a></h2>

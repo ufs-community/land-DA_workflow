@@ -18,12 +18,15 @@ From the working directory (``$LANDDAROOT``), navigate to ``build``. Then run:
 .. code-block:: console
    
    salloc --ntasks 8 --exclusive --qos=debug --partition=debug --time=00:30:00 --account=<account_name>
-   module use modulefiles && module load landda_<platform>.intel 
+   cd land-DA_workflow/sorc/build
+   source ../../versions/build.ver_<platform>
+   module use ../../modulefiles
+   module load build_<platform>_intel 
    ctest
 
 where ``<account_name>`` corresponds to the user's actual account name and ``<platform>`` is ``hera`` or ``orion``.
 
-This will allocate a compute node, load the appropriate modulefiles, and run the CTests. 
+This will submit an interactive job, load the appropriate modulefiles, and run the CTests. 
 
 Tests
 *******
