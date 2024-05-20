@@ -111,12 +111,9 @@ Copy the experiment settings into ``land_analysis.yaml``:
 .. code-block:: console
 
    cd $LANDDAROOT/land-DA_workflow/parm
-   cp land_analysis_<forcing>_<platform>.yaml land_analysis.yaml
+   cp land_analysis_<platform>.yaml land_analysis.yaml
 
-where: 
-
-   * ``<forcing>`` is either ``gswp3`` or ``era5`` forcing data.
-   * ``<platform>`` is ``hera`` or ``orion``.
+where ``<platform>`` is ``hera`` or ``orion``.
    
 Users will need to configure certain elements of their experiment in ``land_analysis.yaml``: 
 
@@ -124,7 +121,8 @@ Users will need to configure certain elements of their experiment in ``land_anal
    * ``ACCOUNT:`` A valid account name. Hera, Orion, and most NOAA RDHPCS systems require a valid account name; other systems may not
    * ``EXP_BASEDIR:`` The full path to the directory where land-DA_workflow was cloned (i.e., ``$LANDDAROOT``)
    * ``JEDI_INSTALL:`` The full path to the system's ``jedi-bundle`` installation
-   * ``LANDDA_INPUTS:`` The full path to the experiment data. See :ref:`Data <GetData>` below for information on prestaged data on Level 1 platforms. 
+   * ``FORCING:`` Forcing options; ``gswp3`` or ``era5``
+   * ``cycledef/spec:`` Cycle specification
 
 .. note::
 
@@ -151,7 +149,7 @@ Data
    | Orion     | /work/noaa/epic/UFS_Land-DA/inputs               |
    +-----------+--------------------------------------------------+
 
-Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetDataC>` and set ``LANDDA_INPUTS`` to point to the location of the downloaded data. Similarly, users with access to data for additional experiments may set the path to that data in ``LANDDA_INPUTS``. 
+Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetDataC>`. Its sub-directories are soft-linked to the ``fix`` directory of the land-DA workflow by the build script ``sorc/app_build.sh``.
 
 .. _generate-wflow:
 
@@ -186,16 +184,16 @@ Each Land DA experiment includes multiple tasks that must be run in order to sat
 
    * - J-job Task
      - Description
-   * - JLANDDA_PREP_EXP
-     - Sets up the experiment
    * - JLANDDA_PREP_OBS
-     - Sets up the observation files
-   * - JLANDDA_PREP_BMAT
-     - Sets up the :term:`JEDI` run
+     - Sets up the observation data files
+   * - JLANDDA_PRE_ANAL
+     - Transfers the snow data from the restart files to the surface data files
    * - JLANDDA_ANALYSIS
-     - Runs JEDI
+     - Runs :term:`JEDI` and adds the increment to the surface data files
+   * - JLANDDA_POST_ANAL
+     - Transfers the JEDI result from the surface data files to the restart files
    * - JLANDDA_FORECAST
-     - Runs forecast
+     - Runs the forecast model
 
 Users may run these tasks :ref:`using the Rocoto workflow manager <run-w-rocoto>` or :ref:`using a batch script <run-batch-script>`. 
 
@@ -246,7 +244,7 @@ The experiment has successfully completed when all tasks say SUCCEEDED under STA
 Run Without Rocoto
 --------------------
 
-Users may choose not to run the workflow with uwtools and Rocoto. To run the :term:`J-jobs` scripts in the ``jobs`` directory, navigate to the ``parm`` directory and edit ``run_without_rocoto.sh`` (e.g., using vim or preferred command line editor). Users will likely need to change the ``MACHINE``, ``ACCOUNT``, and ``EXP_BASEDIR`` variables to match their system. Then, run ``run_without_rocoto.sh``:
+Users may choose not to run the workflow with uwtools and Rocoto for a non-cycled run. To run the :term:`J-jobs` scripts in the ``jobs`` directory, navigate to the ``parm`` directory and edit ``run_without_rocoto.sh`` (e.g., using vim or preferred command line editor). Users will likely need to change the ``MACHINE``, ``ACCOUNT``, and ``EXP_BASEDIR`` variables to match their system. Then, run ``run_without_rocoto.sh``:
 
 .. code-block:: console
 
@@ -265,32 +263,24 @@ As the experiment progresses, it will generate a number of directories to hold i
     ├── ptmp (<PTMP>)
     │     └── test (<envir>)
     │           └── com
-    │                 ├── landda (<NET>)
-    │                 │     └── vX.Y.Z (<model_ver>)
-    │                 │           └── landda.YYYYMMDD (<RUN>.<PDY>)
-    │                 │                 └── HH (<cyc>)
-    │                 │                       ├── DA: Directory containing the output files of JEDI run
-    │                 │                       │     ├── hofx
-    │                 │                       │     └── jedi_incr
-    │                 │                       └── mem000: Directory containing the output files
-    │                 └── output
-    │                       └── logs
-    │                             └── run_<forcing> (<LOGDIR>): Directory containing the log file of the Rocoto workflow
-    └── workdir(<WORKDIR>)
-          └── run_<forcing>
-                └── mem000: Working directory
+    │                ├── landda (<NET>)
+    │                │     └── vX.Y.Z (<model_ver>)
+    │                │           └── landda.YYYYMMDD (<RUN>.<PDY>): Directory containing the output files
+    │                └── output
+    │                      └── logs
+    │                            └── run_<forcing> (<LOGDIR>): Directory containing the log file of the Rocoto workflow
+    └── tmp (<DATAROOT>)
+         ├── <jobid> (<DATA>): Working directory
+         └── DATA_SHARE
+               ├── YYYYMMDD (<PDY>): Directory containing the intermediate or temporary files
+               └── DATA_RESTART: Directory containing the soft-links to the restart files for the next cycles
 
 ``<forcing>`` refers to the type of forcing data used (``gswp3`` or ``era5``). Each variable in parentheses and angle brackets (e.g., ``(<VAR>)``) is the name for the directory defined in the file ``land_analysis.yaml``. In the future, this directory structure will be further modified to meet the :nco:`NCO Implementation Standards<>`.
 
-Check for the background and analysis files in the experiment directory:
+Check for the output files for each cycle in the experiment directory:
 
 .. code-block:: console
 
-   ls -l $LANDDAROOT/ptmp/test/com/landda/v1.2.1/landda.<PDY>/<cyc>/run_<forcing>/mem000/restarts/<vector_or_tile>
+   ls -l $LANDDAROOT/ptmp/test/com/landda/v1.2.1/landda.YYYYMMDD
 
-where: 
-
-   * ``<forcing>`` is either ``era5`` or ``gswp3``, and
-   * ``<vector_or_tile>`` is either ``vector`` or ``tile`` depending on whether ERA5 or GSWP3 forcing data was used, respectively. 
-
-The experiment should generate several restart files. 
+where ``YYYYMMDD`` is the cycle date. The experiment should generate several restart files. 
