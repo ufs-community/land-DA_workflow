@@ -5,7 +5,6 @@ loads modules necessary for building the land-DA workflow on Hera using Intel
 whatis([===[Loads modules necessary for building the land-DA workflow on Hera]===])
 
 prepend_path("MODULEPATH", os.getenv("modulepath_spack_stack"))
-prepend_path("MODULEPATH", os.getenv("modulepath_spack_stack_jedi"))
 
 load(pathJoin("stack-intel", stack_intel_ver))
 load(pathJoin("stack-intel-oneapi-mpi", stack_intel_oneapi_mpi_ver))
@@ -43,4 +42,4 @@ setenv("FC", "mpiifort")
 setenv("CMAKE_Platform", "hera.intel")
 
 setenv("EPICHOME", "/scratch2/NAGAPE/epic/UFS_Land-DA")
-setenv("JEDI_INSTALL", pathJoin(os.getenv("EPICHOME"),"jedi_skylabv7.0"))
+setenv("JEDI_INSTALL", "/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/jedi_v7")
