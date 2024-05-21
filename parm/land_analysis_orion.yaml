@@ -15,7 +15,7 @@ workflow:
     ACCOUNT: "epic"
     EXP_NAME: "LETKF"
     EXP_BASEDIR: "/work/noaa/epic/{USER}/landda_test"
-    JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7"
+    JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6"
     WARMSTART_DIR: "/work/noaa/epic/UFS_Land-DA_Dev/DATA_RESTART"
     FORCING: "gswp3"   # "gswp3" or "era5"
     RES: "96"
@@ -53,6 +53,7 @@ workflow:
     task_prep_obs:
       attrs:
         cycledefs: cycled
+        maxtries: 2
       envars:
         OBSDIR: "&OBSDIR;"
         OBSDIR_SUBDIR: "&OBSDIR_SUBDIR;"
@@ -80,6 +81,7 @@ workflow:
     task_pre_anal:
       attrs:
         cycledefs: cycled
+        maxtries: 2
       envars:
         MACHINE: "&MACHINE;"
         SCHED: "&SCHED;"
@@ -126,6 +128,7 @@ workflow:
     task_analysis:
       attrs:
         cycledefs: cycled
+        maxtries: 2
       envars:
         OBS_TYPES: "&OBS_TYPES;"
         MACHINE: "&MACHINE;"
@@ -162,6 +165,7 @@ workflow:
     task_post_anal:
       attrs:
         cycledefs: cycled
+        maxtries: 2
       envars:
         MACHINE: "&MACHINE;"
         SCHED: "&SCHED;"
@@ -195,6 +199,7 @@ workflow:
     task_forecast:
       attrs:
         cycledefs: cycled
+        maxtries: 2
       envars:
         OBS_TYPES: "&OBS_TYPES;"
         MACHINE: "&MACHINE;"
