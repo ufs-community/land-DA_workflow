@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 ################################################
 # pass arguments
 project_binary_dir=$1
@@ -37,8 +37,8 @@ RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-${BL_DATE}/${TEST_NAME}_${RT_COMPILER}
 INPUTDATA_ROOT=${INPUTDATA_ROOT:-$DISKNM/NEMSfv3gfs/input-data-20221101}
 
 if [[ ! -d ${INPUTDATA_ROOT} ]] || [[ ! -d ${RTPWD} ]]; then
-echo "Error: cannot find either folder for INPUTDATA_ROOT or RTPWD, please check!"
-exit 1
+  echo "Error: cannot find either folder for INPUTDATA_ROOT or RTPWD, please check!"
+  exit 1
 fi  
 
 # create test folder

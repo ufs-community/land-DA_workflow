@@ -5,7 +5,6 @@ loads modules necessary for building the land-DA workflow on Orion using Intel
 whatis([===[Loads modules necessary for building the land-DA workflow on Orion]===])
 
 prepend_path("MODULEPATH", os.getenv("modulepath_spack_stack"))
-prepend_path("MODULEPATH", os.getenv("modulepath_spack_stack_jedi"))
 
 load(pathJoin("stack-intel", stack_intel_ver))
 load(pathJoin("stack-intel-oneapi-mpi", stack_intel_oneapi_mpi_ver))
@@ -42,4 +41,4 @@ setenv("FC", "mpiifort")
 setenv("CMAKE_Platform", "orion.intel")
 
 setenv("EPICHOME", "/work/noaa/epic/UFS_Land-DA")
-setenv("JEDI_INSTALL", "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7")
+setenv("JEDI_INSTALL", "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6")
