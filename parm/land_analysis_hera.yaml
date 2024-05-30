@@ -42,8 +42,6 @@ workflow:
     PATHRT: "&EXP_BASEDIR;"
     PDY:  "<cyclestr>@Y@m@d</cyclestr>"
     cyc: "<cyclestr>@H</cyclestr>"
-    PTIME:  "<cyclestr offset='-24:00:00'>@Y@m@d@H</cyclestr>"
-    NTIME:  "<cyclestr offset='24:00:00'>@Y@m@d@H</cyclestr>"
     DATADEP_FILE1: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
     DATADEP_FILE2: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.nc</cyclestr>"
     DATADEP_FILE3: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
@@ -70,7 +68,6 @@ workflow:
         KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
-        PTIME: "&PTIME;"
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_obs" "&HOMElandda;" "&MACHINE;"'
       jobname: prep_obs
@@ -99,7 +96,6 @@ workflow:
         KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
-        PTIME: "&PTIME;"
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "pre_anal" "&HOMElandda;" "&MACHINE;"'
       jobname: pre_anal
@@ -145,8 +141,6 @@ workflow:
         KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
-        PTIME: "&PTIME;"
-        NTIME: "&NTIME;"
         DAtype: "&DAtype;"
         SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
         NPROC_JEDI: "&NPROCS_ANALYSIS;"
@@ -182,8 +176,6 @@ workflow:
         KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
-        PTIME: "&PTIME;"
-        NTIME: "&NTIME;"
         FCSTHR: "&FCSTHR;"
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "post_anal" "&HOMElandda;" "&MACHINE;"'
@@ -216,7 +208,6 @@ workflow:
         LOGDIR: "&LOGDIR;"
         PDY: "&PDY;"
         cyc: "&cyc;"
-        NTIME: "&NTIME;"
         DAtype: "&DAtype;"
         FCSTHR: "&FCSTHR;"
       account: "&ACCOUNT;"
