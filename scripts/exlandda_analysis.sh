@@ -17,14 +17,6 @@ FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
 JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
 
-# load modulefiles
-BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
-if [ -e ${BUILD_VERSION_FILE} ]; then
-  . ${BUILD_VERSION_FILE}
-fi
-mkdir -p modulefiles
-cp ${HOMElandda}/modulefiles/build_${MACHINE}_intel.lua $DATA/modulefiles/modules.landda.lua
-module use modulefiles; module load modules.landda
 MPIEXEC=`which mpiexec`
 
 #SNOWDEPTHVAR=snwdph

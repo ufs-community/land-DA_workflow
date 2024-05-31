@@ -32,9 +32,7 @@ load(pathJoin("w3emc", w3emc_ver))
 load(pathJoin("gftl-shared", gftl_shared_ver))
 load(pathJoin("mapl", mapl_ver))
 load(pathJoin("prod_util", prod_util_ver))
-
-load("ufs-pyenv")
-load("atlas")
+load(pathJoin("ufs-pyenv", ufs_pyenv_ver))
 
 setenv("CC", "mpiicc")
 setenv("CXX", "mpiicpc")

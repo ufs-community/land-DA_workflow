@@ -14,17 +14,7 @@ nMM=${NTIME:4:2}
 nDD=${NTIME:6:2}
 nHH=${NTIME:8:2}
 
-# load modulefiles
-BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
-if [ -e ${BUILD_VERSION_FILE} ]; then
-  . ${BUILD_VERSION_FILE}
-fi
-mkdir -p modulefiles
-cp ${HOMElandda}/modulefiles/build_${MACHINE}_intel.lua $DATA/modulefiles/modules.landda.lua
-module use modulefiles; module load modules.landda
-
 MPIEXEC=`which mpiexec`
-
 
 #  convert back to UFS tile, run model (all members)
 if [[ ${ATMOS_FORC} == "gswp3" ]]; then  

@@ -24,6 +24,7 @@ export sp_ver="2.5.0"
 export stack_intel_oneapi_mpi_ver="2021.5.1"
 export stack_intel_ver="2022.0.2"
 export stack_python_ver="3.10.13"
+export ufs_pyenv_ver="1.0.0"
 export w3emc_ver="2.10.0"
 export zlib_ver="1.2.13"
 
