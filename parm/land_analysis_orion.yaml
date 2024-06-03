@@ -209,7 +209,7 @@ workflow:
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "plot_stats" "&HOMElandda;" "&MACHINE;"'
       jobname: plot_stats
       cores: 1
-      walltime: 00:05:00
+      walltime: 00:10:00
       queue: batch
       join: "&LOGDIR;/plot_stats&LOGFN_SUFFIX;"
       dependency:
