@@ -14,16 +14,6 @@ HP=${PTIME:8:2}
 
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 
-mkdir -p modulefiles
-cp ${HOMElandda}/modulefiles/build_${MACHINE}_intel.lua $DATA/modulefiles/modules.landda.lua
-
-# load modulefiles
-BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
-if [ -e ${BUILD_VERSION_FILE} ]; then
-  . ${BUILD_VERSION_FILE}
-fi
-module use modulefiles; module load modules.landda
-
 if [[ $ATMOS_FORC == "era5" ]]; then
   # vector2tile for DA
   # copy restarts into work directory
