@@ -90,7 +90,7 @@ mkdir -p ${DATA_HOFX}
 export pgmout="${DATA}/OUTPUT.$$"
 env
 
-${SCRIPTSlandda}/exlandda_prep_obs.sh
+${SCRIPTSlandda}/exlandda_plot_stats.sh
 export err=$?; err_chk
 
 if [ -e "$pgmout" ]; then

@@ -1,7 +1,7 @@
-hofx_files: "XXINPUTFP"
-field_var: "XXFIELDVAR"
+hofx_files: 'INPUTFP'
+field_var: 'XXFIELDVAR'
 field_range: [-100,100]
 nbins: XXNBINS
-plottype: "XXPLOTTYPE"
-title_fig: "XXFIGTITLE"
-outputfig: "XXOUTPUTFN"
+plottype: 'XXPLOTTYPE'
+title_fig: 'XXFIGTITLE'
+outputfig: 'XXOUTPUTFN'

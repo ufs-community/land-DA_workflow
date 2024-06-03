@@ -236,6 +236,6 @@ done
 
 if [[ -d output/DA/hofx ]]; then
   cp -p output/DA/hofx/* ${COMOUThofx}
-  ln -nsf ${COMOUThofx}/* ${DATA_hofx}
+  ln -nsf ${COMOUThofx}/* ${DATA_HOFX}
 fi
 
