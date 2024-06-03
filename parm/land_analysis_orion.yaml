@@ -188,6 +188,34 @@ workflow:
         taskdep:
           attrs:
             task: analysis
+    task_plot_stats:
+      attrs:
+        cycledefs: cycled
+        maxtries: 2
+      envars:
+        MACHINE: "&MACHINE;"
+        SCHED: "&SCHED;"
+        ACCOUNT: "&ACCOUNT;"
+        EXP_NAME: "&EXP_NAME;"
+        model_ver: "&model_ver;"
+        RUN: "&RUN;"
+        HOMElandda: "&HOMElandda;"
+        COMROOT: "&COMROOT;"
+        DATAROOT: "&DATAROOT;"
+        KEEPDATA: "&KEEPDATA;"
+        PDY: "&PDY;"
+        cyc: "&cyc;"
+      account: "&ACCOUNT;"
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "plot_stats" "&HOMElandda;" "&MACHINE;"'
+      jobname: plot_stats
+      cores: 1
+      walltime: 00:05:00
+      queue: batch
+      join: "&LOGDIR;/plot_stats&LOGFN_SUFFIX;"
+      dependency:
+        taskdep:
+          attrs:
+            task: analysis
     task_forecast:
       attrs:
         cycledefs: cycled

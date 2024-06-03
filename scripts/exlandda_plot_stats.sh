@@ -16,7 +16,7 @@ HP=${PTIME:8:2}
 cp ${PARMlandda}/templates/template.plot_hofx.yaml plot_hofx.yaml
 
 # Path to the directory containing the input file
-INPUTFP="${COMINhofx}"
+INPUTFP="${DATA_HOFX}"
 # Field variable
 FIELDVAR="OMA"
 #
