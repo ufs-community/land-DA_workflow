@@ -12,8 +12,6 @@ MP=${PTIME:4:2}
 DP=${PTIME:6:2}
 HP=${PTIME:8:2}
 
-mkdir -p "${COMOUT}/obs"
-
 ################################################
 # 2. PREPARE OBS FILES
 ################################################
@@ -42,7 +40,7 @@ for obs in "${OBS_TYPES[@]}"; do
   # check obs are available
   if [[ -e $obsfile ]]; then
     echo "do_landDA: $obs observations found: $obsfile"
-    cp -p $obsfile ${COMOUT}/obs/${obs}_${YYYY}${MM}${DD}${HH}.nc
+    cp -p $obsfile ${COMOUTobs}/${obs}_${YYYY}${MM}${DD}${HH}.nc
   else
     echo "${obs} observations not found: $obsfile"
   fi

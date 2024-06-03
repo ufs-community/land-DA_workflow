@@ -32,7 +32,7 @@ if [[ $ATMOS_FORC == "era5" ]]; then
   echo 'calling vector2tile' 
 
   # update vec2tile and tile2vec namelists
-  cp  ${PARMlandda}/templates/template.vector2tile vector2tile.namelist
+  cp ${PARMlandda}/templates/template.vector2tile vector2tile.namelist
 
   sed -i "s|FIXlandda|${FIXlandda}|g" vector2tile.namelist
   sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist

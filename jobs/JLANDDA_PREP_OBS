@@ -71,6 +71,8 @@ else
 fi
 
 mkdir -p ${COMOUT}
+export COMOUTobs=${COMOUTobs:-${COMOUT}/obs}
+mkdir -p ${COMOUTobs}
 
 # Create a teomporary share directory
 export DATA_SHARE="${DATA_SHARE:-${DATAROOT}/DATA_SHARE/${PDY}}"

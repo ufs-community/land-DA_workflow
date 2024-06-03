@@ -1,0 +1,7 @@
+hofx_files: "XXINPUTFP"
+field_var: "XXFIELDVAR"
+field_range: [-100,100]
+nbins: XXNBINS
+plottype: "PLOTTYPE"
+title_fig: "XXFIGTITLE"
+outputfig: "XXOUTPUTFN"

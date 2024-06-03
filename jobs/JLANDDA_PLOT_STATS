@@ -71,17 +71,14 @@ else
 fi
 
 mkdir -p ${COMOUT}
-export COMOUThofx="${COMOUThofx:-${COMOUT}/hofx}"
-mkdir -p ${COMOUThofx}
+export COMINhofx="${COMINhofx:-${COMIN}/hofx}"
+export COMOUTplot="${COMOUTplot:-${COMOUT}/plot}"
+mkdir -p ${COMOUTplot}
 
 # Create a teomporary share directory
 export DATA_SHARE="${DATA_SHARE:-${DATAROOT}/DATA_SHARE/${PDY}}"
 mkdir -p ${DATA_SHARE}
-export DATA_HOFX="${DATA_HOFX:-${DATAROOT}/DATA_SHARE/hofx}"
-mkdir -p ${DATA_HOFX}
 
-# Set other dates
-export PTIME=$($NDATE -24 $PDY$cyc)
 #
 #-----------------------------------------------------------------------
 #
@@ -92,7 +89,7 @@ export PTIME=$($NDATE -24 $PDY$cyc)
 export pgmout="${DATA}/OUTPUT.$$"
 env
 
-${SCRIPTSlandda}/exlandda_analysis.sh
+${SCRIPTSlandda}/exlandda_prep_obs.sh
 export err=$?; err_chk
 
 if [ -e "$pgmout" ]; then
