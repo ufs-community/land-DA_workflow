@@ -24,17 +24,17 @@ def get_obs_stats(fdir, plottype):
     for fname in os.listdir(fdir):
         print("FN:",fname)
         f= netCDF4.Dataset(fdir+'/'+fname)
-        print("NETCDF:",f)
+#        print("NETCDF:",f)
         obs= f.groups['ObsValue'].variables['totalSnowDepth']
-        print("ObsValue:",obs)
+#        print("ObsValue:",obs)
         ombg= f.groups['ombg'].variables['totalSnowDepth']
-        print("OMBG:",ombg)
+#        print("OMBG:",ombg)
         oman= f.groups['oman'].variables['totalSnowDepth']
-        print("OMAN:",oman)
+#        print("OMAN:",oman)
         qc= f.groups['PreQC'].variables['totalSnowDepth']
-        print("PreQC:",qc)
+#        print("PreQC:",qc)
         obstime= f.groups['MetaData'].variables['dateTime']
-        print("OBS_TIME:",obstime)
+#        print("OBS_TIME:",obstime)
         if plottype == 'histogram':
             ombg_= np.ma.masked_where(qc != 0, ombg)
             ombg_= np.ma.masked_where(ombg == 0, ombg_) 
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     with open(yaml_file, 'r') as f:
         yaml_data= yaml.load(f, Loader=yaml.FullLoader)
     f.close()
-    print(yaml_data)
+    print("YAML_DATA:",yaml_data)
     oma,omb,lat,lon= get_obs_stats(yaml_data['hofx_files'],yaml_data['plottype'])
     
     if yaml_data['field_var'] == 'OMA':
