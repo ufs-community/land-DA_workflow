@@ -1,6 +1,6 @@
 hofx_files: 'INPUTFP'
 field_var: 'XXFIELDVAR'
-field_range: [-100,100]
+field_range: [XXFRLOW,XXFRHIGH]
 nbins: XXNBINS
 plottype: 'XXPLOTTYPE'
 title_fig: 'XXFIGTITLE'

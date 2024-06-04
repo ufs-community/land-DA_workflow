@@ -10,6 +10,8 @@ import cartopy
 import cartopy.crs as ccrs
 import xarray as xr
 import matplotlib.ticker
+import matplotlib as mpl
+from matplotlib.colors import ListedColormap
 
 def get_obs_stats(fdir, plottype):
     global lat,lon
@@ -63,31 +65,39 @@ def plot_scatter():
     print("===== PLOT: SCATTER =====")
     field_mean = float("{:.2f}".format(np.mean(np.absolute(field))))
     field_std = float("{:.2f}".format(np.std(np.absolute(field))))
+    print("Mean |OMA|=",field_mean)
+    print("STDV |OMA|=",field_std)
     crs = ccrs.PlateCarree()
     fig = plt.figure(figsize=(8,5))
     ax = plt.subplot(111, projection=crs)
     ax.coastlines(resolution='110m')
-    colors = ['red','red','red','blue','red','blue']
+    num_cmap = 20
+    cmap_neg = mpl.colormaps['Blues'].resampled(num_cmap)
+    cmap_pos = mpl.colormaps['Reds_r'].resampled(num_cmap)
+    cmap_color = np.vstack((cmap_neg(np.linspace(0,1,num_cmap)),cmap_pos(np.linspace(0,1,num_cmap))))
+    cmap_new = ListedColormap(cmap_color, name='BlueRed_rc')
     norm = plt.Normalize(yaml_data['field_range'][0],yaml_data['field_range'][1])
-    sc = ax.scatter(lon, lat, c=field, s=2.0, cmap='bwr', transform=crs, norm=norm)
+    sc = ax.scatter(lon, lat, c=field, s=1.5, cmap=cmap_new, transform=crs, norm=norm)
     cbar = plt.colorbar(sc, orientation="horizontal", shrink=0.5, pad=0.05)
     stitle = yaml_data['title_fig']+' \n '+'Mean |OMA| ='+str(field_mean)+', STDV |OMA| ='+str(field_std)
     plt.title(stitle)
     output_fn = yaml_data['output_prefix']+"_scatter.png"
-    plt.savefig(output_fn,dpi=300,bbox_inches='tight')
+    plt.savefig(output_fn,dpi=200,bbox_inches='tight')
     plt.close('all')
 
 def plot_histogram():
     print("===== PLOT: HISTOGRAM =====")    
     field_mean = float("{:.2f}".format(np.mean(field)))
     field_std = float("{:.2f}".format(np.std(field)))
+    print("Mean |OMA|=",field_mean)
+    print("STDV |OMA|=",field_std)
     nbins = yaml_data['nbins']
     xlimit = yaml_data['field_range']
     plt.hist(field[:], bins=nbins, range=xlimit, density=True, color ="blue")
     stitle = yaml_data['title_fig']+' \n '+'Mean(OMA) ='+str(field_mean)+', STDV(OMA) ='+str(field_std)
     plt.title(stitle)
     output_fn = yaml_data['output_prefix']+"_histogram.png"
-    plt.savefig(output_fn,dpi=300,bbox_inches='tight')
+    plt.savefig(output_fn,dpi=150,bbox_inches='tight')
     plt.close('all')
 
 if __name__ == '__main__':

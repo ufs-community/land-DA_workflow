@@ -12,6 +12,9 @@ cp ${PARMlandda}/templates/template.plot_hofx.yaml plot_hofx.yaml
 INPUTFP="${DATA_HOFX}"
 # Field variable
 FIELDVAR="OMA"
+# Field Range: [Low,High]
+FRLOW=-100
+FRHIGH=100
 #
 NBINS=100
 # Plot type (scatter/histogram/both)
@@ -23,6 +26,8 @@ PREOUTFN="hofx_oma_${PDY}"
 
 sed -i "s|INPUTFP|${INPUTFP}|g" plot_hofx.yaml
 sed -i -e "s/XXFIELDVAR/${FIELDVAR}/g" plot_hofx.yaml
+sed -i -e "s/XXFRLOW/${FRLOW}/g" plot_hofx.yaml
+sed -i -e "s/XXFRHIGH/${FRHIGH}/g" plot_hofx.yaml
 sed -i -e "s/XXNBINS/${NBINS}/g" plot_hofx.yaml
 sed -i -e "s/XXPLOTTYPE/${PLOTTYPE}/g" plot_hofx.yaml
 sed -i -e "s/XXFIGTITLE/${FIGTITLE}/g" plot_hofx.yaml
