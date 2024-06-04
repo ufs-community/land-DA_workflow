@@ -12,10 +12,10 @@ cp ${PARMlandda}/templates/template.plot_hofx.yaml plot_hofx.yaml
 INPUTFP="${DATA_HOFX}"
 # Field variable
 FIELDVAR="OMA"
-# Field Range: [Low,High]
-FRLOW=-100
-FRHIGH=100
-#
+# Field Range for scatter plot: [Low,High]
+FRLOW=-300
+FRHIGH=300
+# Number of bins in histogram plot
 NBINS=100
 # Plot type (scatter/histogram/both)
 PLOTTYPE="both"

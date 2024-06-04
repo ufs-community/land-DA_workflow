@@ -65,8 +65,12 @@ def plot_scatter():
     print("===== PLOT: SCATTER =====")
     field_mean = float("{:.2f}".format(np.mean(np.absolute(field))))
     field_std = float("{:.2f}".format(np.std(np.absolute(field))))
+    field_max = float("{:.2f}".format(np.max(np.absolute(field))))
+    field_min = float("{:.2f}".format(np.min(np.absolute(field))))
     print("Mean |OMA|=",field_mean)
     print("STDV |OMA|=",field_std)
+    print("Max |OMA|=",field_max)
+    print("Min |OMA|=",field_min)    
     crs = ccrs.PlateCarree()
     fig = plt.figure(figsize=(8,5))
     ax = plt.subplot(111, projection=crs)
@@ -89,15 +93,30 @@ def plot_histogram():
     print("===== PLOT: HISTOGRAM =====")    
     field_mean = float("{:.2f}".format(np.mean(field)))
     field_std = float("{:.2f}".format(np.std(field)))
+    field_max = float("{:.2f}".format(np.max(field)))
+    field_min = float("{:.2f}".format(np.min(field)))
     print("Mean OMA=",field_mean)
     print("STDV OMA=",field_std)
+    print("Max OMA=",field_max)
+    print("Min OMA=",field_min)
     nbins = yaml_data['nbins']
-    xlimit = yaml_data['field_range']
+
+    opt_xlimit = 'auto'
+    if opt_xlimit == 'auto':
+        fld_min = int(field_min)
+        fld_max = int(field_max)
+        xlimit = [fld_min,fld_max]
+        print("xlimit min=",fld_min)
+        print("xlimit max=",fld_max)
+        print("xlimit=",xlimit)
+    else:
+        xlimit = yaml_data['field_range']
+        
     plt.hist(field[:], bins=nbins, range=xlimit, density=True, color ="blue")
     stitle = yaml_data['title_fig']+' \n '+'Mean(OMA) ='+str(field_mean)+', STDV(OMA) ='+str(field_std)
     plt.title(stitle)
     output_fn = yaml_data['output_prefix']+"_histogram.png"
-    plt.savefig(output_fn,dpi=200,bbox_inches='tight')
+    plt.savefig(output_fn,dpi=150,bbox_inches='tight')
     plt.close('all')
 
 if __name__ == '__main__':
