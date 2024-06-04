@@ -72,10 +72,10 @@ def plot_scatter():
     ax = plt.subplot(111, projection=crs)
     ax.coastlines(resolution='110m')
     norm = plt.Normalize(yaml_data['field_range'][0],yaml_data['field_range'][1])
-    num_cmap = 20
+    num_cmap = 25
     cmap_neg = mpl.colormaps['Blues_r'].resampled(num_cmap)
     cmap_pos = mpl.colormaps['Reds'].resampled(num_cmap)
-    cmap_color = np.vstack((cmap_neg(np.linspace(0.2,0.8,num_cmap)),cmap_pos(np.linspace(0.2,0.8,num_cmap))))
+    cmap_color = np.vstack((cmap_neg(np.linspace(0.1,0.7,num_cmap)),cmap_pos(np.linspace(0.2,0.8,num_cmap))))
     cmap_new = ListedColormap(cmap_color, name='BlueRed_rw')
     sc = ax.scatter(lon, lat, c=field, s=1.5, cmap=cmap_new, transform=crs, norm=norm)
     cbar = plt.colorbar(sc, orientation="horizontal", shrink=0.5, pad=0.05)
@@ -97,7 +97,7 @@ def plot_histogram():
     stitle = yaml_data['title_fig']+' \n '+'Mean(OMA) ='+str(field_mean)+', STDV(OMA) ='+str(field_std)
     plt.title(stitle)
     output_fn = yaml_data['output_prefix']+"_histogram.png"
-    plt.savefig(output_fn,dpi=150,bbox_inches='tight')
+    plt.savefig(output_fn,dpi=200,bbox_inches='tight')
     plt.close('all')
 
 if __name__ == '__main__':
