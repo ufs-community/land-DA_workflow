@@ -71,12 +71,12 @@ def plot_scatter():
     fig = plt.figure(figsize=(8,5))
     ax = plt.subplot(111, projection=crs)
     ax.coastlines(resolution='110m')
-    num_cmap = 20
-    cmap_neg = mpl.colormaps['Blues'].resampled(num_cmap)
-    cmap_pos = mpl.colormaps['Reds_r'].resampled(num_cmap)
-    cmap_color = np.vstack((cmap_neg(np.linspace(0,1,num_cmap)),cmap_pos(np.linspace(0,1,num_cmap))))
-    cmap_new = ListedColormap(cmap_color, name='BlueRed_rc')
     norm = plt.Normalize(yaml_data['field_range'][0],yaml_data['field_range'][1])
+    num_cmap = 20
+    cmap_neg = mpl.colormaps['Blues_r'].resampled(num_cmap)
+    cmap_pos = mpl.colormaps['Reds'].resampled(num_cmap)
+    cmap_color = np.vstack((cmap_neg(np.linspace(0.1,0.7,num_cmap)),cmap_pos(np.linspace(0.3,0.9,num_cmap))))
+    cmap_new = ListedColormap(cmap_color, name='BlueRed_rw')
     sc = ax.scatter(lon, lat, c=field, s=1.5, cmap=cmap_new, transform=crs, norm=norm)
     cbar = plt.colorbar(sc, orientation="horizontal", shrink=0.5, pad=0.05)
     stitle = yaml_data['title_fig']+' \n '+'Mean |OMA| ='+str(field_mean)+', STDV |OMA| ='+str(field_std)
