@@ -35,7 +35,7 @@ sed -i -e "s/XXPREOUTFN/${PREOUTFN}/g" plot_hofx.yaml
 
 ${USHlandda}/hofx_analysis_stats.py
 if [[ $? != 0 ]]; then
-  echo "Scatter Plot failed"
+  echo "Scatter/Histogram plots failed"
   exit 33
 fi
 
