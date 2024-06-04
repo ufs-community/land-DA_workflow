@@ -89,8 +89,8 @@ def plot_histogram():
     print("===== PLOT: HISTOGRAM =====")    
     field_mean = float("{:.2f}".format(np.mean(field)))
     field_std = float("{:.2f}".format(np.std(field)))
-    print("Mean |OMA|=",field_mean)
-    print("STDV |OMA|=",field_std)
+    print("Mean OMA=",field_mean)
+    print("STDV OMA=",field_std)
     nbins = yaml_data['nbins']
     xlimit = yaml_data['field_range']
     plt.hist(field[:], bins=nbins, range=xlimit, density=True, color ="blue")
