@@ -5,3 +5,4 @@ nbins: XXNBINS
 plottype: 'XXPLOTTYPE'
 title_fig: 'XXFIGTITLE'
 output_prefix: 'XXPREOUTFN'
+machine: 'XXMACHINE'

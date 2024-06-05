@@ -32,6 +32,7 @@ sed -i -e "s/XXNBINS/${NBINS}/g" plot_hofx.yaml
 sed -i -e "s/XXPLOTTYPE/${PLOTTYPE}/g" plot_hofx.yaml
 sed -i -e "s/XXFIGTITLE/${FIGTITLE}/g" plot_hofx.yaml
 sed -i -e "s/XXPREOUTFN/${PREOUTFN}/g" plot_hofx.yaml
+sed -i -e "s/XXMACHINE/${MACHINE}/g" plot_hofx.yaml
 
 ${USHlandda}/hofx_analysis_stats.py
 if [[ $? != 0 ]]; then
