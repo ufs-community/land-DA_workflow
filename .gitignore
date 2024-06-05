@@ -7,7 +7,6 @@ sorc/lib/
 sorc/lib64
 parm/conda_loc
 parm/*.xml
-!parm/land_analysis_test.xml
 parm/*.db
 parm/*.out
 parm/*.err

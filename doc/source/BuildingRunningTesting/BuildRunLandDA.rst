@@ -192,6 +192,8 @@ Each Land DA experiment includes multiple tasks that must be run in order to sat
      - Runs :term:`JEDI` and adds the increment to the surface data files
    * - JLANDDA_POST_ANAL
      - Transfers the JEDI result from the surface data files to the restart files
+   * - JLANDDA_PLOT_STATS
+     - Plots the JEDI result (scatter/histogram)
    * - JLANDDA_FORECAST
      - Runs the forecast model
 
