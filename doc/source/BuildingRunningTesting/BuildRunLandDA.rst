@@ -91,7 +91,6 @@ To load the workflow environment, run:
 .. code-block:: console
 
    cd $LANDDAROOT/land-DA_workflow
-   source versions/build.ver_<platform>
    module use modulefiles
    module load wflow_<platform>
    conda activate land_da
@@ -144,9 +143,9 @@ Data
    +-----------+--------------------------------------------------+
    | Platform  | Data Location                                    |
    +===========+==================================================+
-   | Hera      | /scratch2/NAGAPE/epic/UFS_Land-DA/inputs         |
+   | Hera      | /scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs     |
    +-----------+--------------------------------------------------+
-   | Orion     | /work/noaa/epic/UFS_Land-DA/inputs               |
+   | Orion     | /work/noaa/epic/UFS_Land-DA_Dev/inputs           |
    +-----------+--------------------------------------------------+
 
 Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetDataC>`. Its sub-directories are soft-linked to the ``fix`` directory of the land-DA workflow by the build script ``sorc/app_build.sh``.

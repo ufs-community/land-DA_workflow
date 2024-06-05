@@ -5,6 +5,7 @@ load(pathJoin("stack-intel-oneapi-mpi", stack_intel_oneapi_mpi_ver))
 load(pathJoin("stack-python", stack_python_ver))
 
 load(pathJoin("prod_util", prod_util_ver))
+load(pathJoin("ufs-pyenv", ufs_pyenv_ver))
 load(pathJoin("py-cartopy", py_cartopy_ver))
 load(pathJoin("py-matplotlib", py_matplotlib_ver))
 load(pathJoin("py-netcdf4", py_netcdf4_ver))
