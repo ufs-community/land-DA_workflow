@@ -254,6 +254,8 @@ if __name__ == "__main__":
     args = parse_args(sys.argv[1:])
     if args.remove:
         delete_crontab_line(args.called_from_cron,args.machine,args.line,args.debug)
+    elif args.add:
+        add_crontab_line(args.called_from_cron,args.machine,args.line,args.debug)
     else:
         _,out = get_crontab_contents(args.called_from_cron,args.machine,args.debug)
         print_info_msg(out)
