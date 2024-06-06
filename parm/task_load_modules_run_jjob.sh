@@ -47,17 +47,5 @@ else
   echo "FATAL ERROR: task module file does not exist !!!"
 fi
 
-# Load conda env for plotting task
-if [ "${task_name}" = "plot_stats" ]; then
-  module unload python
-  module use ${home_dir}/modulefiles
-  module load conda
-  set +u
-  conda deactivate
-  conda activate land_da
-  conda list
-  set -u
-fi
-
 # Run J-job script
 ${home_dir}/jobs/JLANDDA_${task_name_upper}
