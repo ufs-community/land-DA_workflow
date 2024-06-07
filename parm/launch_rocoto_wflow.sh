@@ -29,7 +29,7 @@ WFLOW_LOG_FN="log.rocoto_launch"
 wflow_status="IN PROGRESS"
 
 # crontab line
-CRONTAB_LINE="*/2 * * * * cd ${PARMdir} && ./launch_rocoto_wflow.sh"
+CRONTAB_LINE="*/2 * * * * cd ${PARMdir} && ./launch_rocoto_wflow.sh >> ${WFLOW_LOG_FN}"
 
 if [ "$#" -eq 1 ] && [ "$1" == "add" ]; then
   msg="The crontab line is added:
