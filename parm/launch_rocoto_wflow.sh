@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 # Set shell options.
 set -u
@@ -9,15 +9,14 @@ source ${PARMdir}/detect_platform.sh
 
 # Load rocoto
 if [ "${MACHINE}" == "hera" ]; then
-  rocoto_path="/apps/rocoto/1.3.7/bin"
+  module load rocoto
 elif [ "${MACHINE}" == "orion" ]; then
-  rocoto_path="/apps/contrib/rocoto/1.3.6/bin"
+  module load contrib
+  module load rocoto
+  module load conda
 else
-  echo "FATAL ERROR: rocoto_path is not set"
-  exit 11
+  echo "FATAL ERROR: modules are not loaded"
 fi
-rocotorun_path="${rocoto_path}/rocotorun"
-rocotostat_path="${rocoto_path}/rocotostat"
 
 # Set file names.
 WFLOW_XML_FN="land_analysis.xml"
@@ -33,17 +32,18 @@ CRONTAB_LINE="*/2 * * * * cd ${PARMdir} && ./launch_rocoto_wflow.sh >> ${WFLOW_L
 
 if [ "$#" -eq 1 ] && [ "$1" == "add" ]; then
   msg="The crontab line is added:
-  CRONTAB_LINE = \"${CRONTAB_LINE}\" "
+  CRONTAB_LINE = \"${CRONTAB_LINE}\" 
+  "
 
   ${PARMdir}/get_crontab_contents.py --add -m=${MACHINE} -l="${CRONTAB_LINE}" -d
   printf "%s" "$msg"
 fi
 
 cd "${PARMdir}"
-rocotorun_cmd="${rocotorun_path} -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\""
+rocotorun_cmd="rocotorun -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\""
 eval ${rocotorun_cmd}
 
-rocotostat_output=$( ${rocotostat_path} -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} )
+rocotostat_output=$( rocotostat -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} )
 
 while read -r line; do
   if echo "$line" | grep -q "DEAD"; then
@@ -56,7 +56,7 @@ done <<< ${rocotostat_output}
 printf "%s" "${rocotostat_output}" > ${WFLOW_LOG_FN}
 
 # rocotostat with -s for cycle info
-rocotostat_s_output=$( ${rocotostat_path} -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} -s )
+rocotostat_s_output=$( rocotostat -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} -s )
 
 regex_search="^[ ]*([0-9]+)[ ]+([A-Za-z]+)[ ]+.*"
 cycle_str=()
