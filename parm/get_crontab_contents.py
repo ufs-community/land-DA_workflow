@@ -4,19 +4,17 @@ import os
 import sys
 import argparse
 import subprocess
+from textwrap import dedent, indent
 from logging import getLogger
 from datetime import datetime
 
-def get_crontab_contents(called_from_cron, machine, debug):
+def get_crontab_contents(machine, debug):
     """
     This function returns the contents of the user's cron table, as well as the command used to
     manipulate the cron table. Typically this latter value will be `crontab`, but on some 
-    platforms the version or location of this may change depending on other circumstances, e.g. on
-    Cheyenne, this depends on whether a script that wants to call `crontab` is itself being called
-    from a cron job.
+    platforms the version or location of this may change depending on other circumstances.
 
     Args:
-        called_from_cron  (bool): Set this to True if script is called from within a crontab
         machine           (str) : The name of the current machine
         debug             (bool): True will give more verbose output
     Returns:
@@ -53,11 +51,11 @@ def get_crontab_contents(called_from_cron, machine, debug):
     return crontab_cmd, crontab_contents
 
 
-def add_crontab_line(called_from_cron, machine, crontab_line, debug):
+def add_crontab_line(machine, crontab_line, debug):
     """Add crontab line to cron table"""
 
     # Get crontab contents
-    crontab_cmd, crontab_contents = get_crontab_contents(called_from_cron, machine, debug)
+    crontab_cmd, crontab_contents = get_crontab_contents(machine, debug)
 
     # Need to omit commented crontab entries for later logic
     lines = crontab_contents.split('\n')
@@ -104,14 +102,14 @@ def add_crontab_line(called_from_cron, machine, crontab_line, debug):
         )
 
 
-def delete_crontab_line(called_from_cron, machine, crontab_line, debug):
+def delete_crontab_line(machine, crontab_line, debug):
     """Delete crontab line after job is complete i.e. either SUCCESS/FAILURE
     but not IN PROGRESS status"""
 
     #
     # Get the full contents of the user's cron table.
     #
-    (crontab_cmd, crontab_contents) = get_crontab_contents(called_from_cron, machine, debug)
+    (crontab_cmd, crontab_contents) = get_crontab_contents(machine, debug)
     #
     # Remove the line in the contents of the cron table corresponding to the
     # current forecast experiment (if that line is part of the contents).
@@ -149,13 +147,6 @@ def parse_args(argv):
     If 'delete' argument is not passed, print the crontab contents
     """
     parser = argparse.ArgumentParser(description="Crontab job manipulation program.")
-
-    parser.add_argument(
-        "-c",
-        "--called_from_cron",
-        action="store_true",
-        help="Called from cron.",
-    )
 
     parser.add_argument(
         "-d",
@@ -245,9 +236,9 @@ def log_info(info_msg, verbose=True, dedent_=True):
 if __name__ == "__main__":
     args = parse_args(sys.argv[1:])
     if args.remove:
-        delete_crontab_line(args.called_from_cron,args.machine,args.line,args.debug)
+        delete_crontab_line(args.machine,args.line,args.debug)
     elif args.add:
-        add_crontab_line(args.called_from_cron,args.machine,args.line,args.debug)
+        add_crontab_line(args.machine,args.line,args.debug)
     else:
-        _,out = get_crontab_contents(args.called_from_cron,args.machine,args.debug)
+        _,out = get_crontab_contents(args.machine,args.debug)
         print_info_msg(out)

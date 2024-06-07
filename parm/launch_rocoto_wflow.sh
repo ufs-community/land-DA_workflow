@@ -31,9 +31,11 @@ if [ "$#" -eq 1 ] && [ "$1" == "add" ]; then
   msg="The crontab line is added:
   CRONTAB_LINE = \"${CRONTAB_LINE}\" "
 
-  $USHdir/get_crontab_contents.py --add -m=${MACHINE} -l="${CRONTAB_LINE}" -c -d
+  ${PARMdir}/get_crontab_contents.py --add -m=${MACHINE} -l="${CRONTAB_LINE}" -d
   printf "%s" "$msg"
 fi
+
+exit
 
 cd "${PARMdir}"
 rocotorun_cmd="rocotorun -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\""
@@ -96,7 +98,7 @@ if [ "${wflow_status}" = "SUCCESS" ] || [ "${wflow_status}" = "FAILURE" ]; then
   msg="The crontab line is removed:
   CRONTAB_LINE = \"${CRONTAB_LINE}\" "
 
-  $USHdir/get_crontab_contents.py --remove -m=${MACHINE} -l="${CRONTAB_LINE}" -c -d
+  ${PARMdir}/get_crontab_contents.py --remove -m=${MACHINE} -l="${CRONTAB_LINE}" -d
 
   printf "%s" "$msg" >> ${WFLOW_LOG_FN}
 fi
