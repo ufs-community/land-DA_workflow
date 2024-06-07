@@ -25,7 +25,15 @@ WFLOW_LOG_FN="log.rocoto_launch"
 wflow_status="IN PROGRESS"
 
 # crontab line
-CRONTAB_LINE=""
+CRONTAB_LINE="*/2 * * * * cd ${PARMdir} && ./launch_rocoto_wflow.sh > ${WFLOW_LOG_FN}"
+
+if [ "$#" -eq 1 ] && [ "$1" == "add" ]; then
+  msg="The crontab line is added:
+  CRONTAB_LINE = \"${CRONTAB_LINE}\" "
+
+  $USHdir/get_crontab_contents.py --add -m=${MACHINE} -l="${CRONTAB_LINE}" -c -d
+  printf "%s" "$msg"
+fi
 
 cd "${PARMdir}"
 rocotorun_cmd="rocotorun -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\""
@@ -42,9 +50,7 @@ while read -r line; do
 done <<< ${rocotostat_output}
 
 # Print out rocotostat
-printf "%s" "
-${rocotostat_output}
-" > "${WFLOW_LOG_FN}"
+printf "%s" "${rocotostat_output}"
 
 # rocotostat with -s for cycle info
 rocotostat_s_output=$( rocotostat -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} -s )
