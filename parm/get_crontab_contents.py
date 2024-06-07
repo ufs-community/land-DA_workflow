@@ -53,26 +53,11 @@ def get_crontab_contents(called_from_cron, machine, debug):
     return crontab_cmd, crontab_contents
 
 
-def add_crontab_line(called_from_cron, machine, crontab_line, exptdir, debug):
+def add_crontab_line(called_from_cron, machine, crontab_line, debug):
     """Add crontab line to cron table"""
-
-    #
-    # Make a backup copy of the user's crontab file and save it in a file.
-    #
-    time_stamp = datetime.now().strftime("%F_%T")
-    crontab_backup_fp = os.path.join(exptdir, f"crontab.bak.{time_stamp}")
-    log_info(
-        f"""
-        Copying contents of user cron table to backup file:
-          crontab_backup_fp = '{crontab_backup_fp}'""",
-        verbose=debug,
-    )
 
     # Get crontab contents
     crontab_cmd, crontab_contents = get_crontab_contents(called_from_cron, machine, debug)
-
-    # Create backup
-    run_command(f"""printf "%s" '{crontab_contents}' > '{crontab_backup_fp}'""")
 
     # Need to omit commented crontab entries for later logic
     lines = crontab_contents.split('\n')
@@ -180,6 +165,13 @@ def parse_args(argv):
     )
 
     parser.add_argument(
+        "-a",
+        "--add",
+        action="store_true",
+        help="Add specified crontab line.",
+    )
+
+    parser.add_argument(
         "-r",
         "--remove",
         action="store_true",
@@ -189,7 +181,7 @@ def parse_args(argv):
     parser.add_argument(
         "-l",
         "--line",
-        help="Line to remove from crontab. If --remove not specified, has no effect",
+        help="Line to remove from crontab. If --remove/add not specified, has no effect",
     )
 
     parser.add_argument(
@@ -202,9 +194,9 @@ def parse_args(argv):
     # Check that inputs are correct and consistent
     args = parser.parse_args(argv)
 
-    if args.remove:
+    if args.remove or args.add:
         if args.line is None:
-            raise argparse.ArgumentTypeError("--line is a required argument if --remove is specified")
+            raise argparse.ArgumentTypeError("--line is a required argument if --remove/add is specified")
 
     return args
 

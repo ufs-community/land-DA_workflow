@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set shell options.
-set -xue
+set +x
 
 # Set path
 PARMdir=$(cd "$(dirname "$(readlink -f -n "${BASH_SOURCE[0]}" )" )" && pwd -P)
@@ -25,7 +25,7 @@ WFLOW_LOG_FN="log.rocoto_launch"
 wflow_status="IN PROGRESS"
 
 # crontab line
-CRONTAB_LINE="*/2 * * * * cd ${PARMdir} && ./launch_rocoto_wflow.sh > ${WFLOW_LOG_FN}"
+CRONTAB_LINE="*/2 * * * * cd ${PARMdir} && ./launch_rocoto_wflow.sh"
 
 if [ "$#" -eq 1 ] && [ "$1" == "add" ]; then
   msg="The crontab line is added:
@@ -41,16 +41,15 @@ eval ${rocotorun_cmd}
 
 rocotostat_output=$( rocotostat -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} )
 
-error_msg="DEAD"
 while read -r line; do
-  if [ echo "$line" | grep -q "${error_msg}" ]; then
+  if echo "$line" | grep -q "DEAD"; then
     wflow_status="FAILURE"
     break
   fi
 done <<< ${rocotostat_output}
 
 # Print out rocotostat
-printf "%s" "${rocotostat_output}"
+printf "%s" "${rocotostat_output}" > ${WFLOW_LOG_FN}
 
 # rocotostat with -s for cycle info
 rocotostat_s_output=$( rocotostat -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} -s )
