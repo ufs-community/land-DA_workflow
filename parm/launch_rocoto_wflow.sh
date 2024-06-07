@@ -1,19 +1,23 @@
 #!/bin/bash
 
 # Set shell options.
-set +x
+set -u
 
 # Set path
 PARMdir=$(cd "$(dirname "$(readlink -f -n "${BASH_SOURCE[0]}" )" )" && pwd -P)
 source ${PARMdir}/detect_platform.sh
 
 # Load rocoto
-if [ "${MACHINE}" == "orion" ]; then
-  module load contrib
-  module load rocoto
+if [ "${MACHINE}" == "hera" ]; then
+  rocoto_path="/apps/rocoto/1.3.7/bin"
+elif [ "${MACHINE}" == "orion" ]; then
+  rocoto_path="/apps/contrib/rocoto/1.3.6/bin"
 else
-  module load rocoto
+  echo "FATAL ERROR: rocoto_path is not set"
+  exit 11
 fi
+rocotorun_path="${rocoto_path}/rocotorun"
+rocotostat_path="${rocoto_path}/rocotostat"
 
 # Set file names.
 WFLOW_XML_FN="land_analysis.xml"
@@ -35,13 +39,11 @@ if [ "$#" -eq 1 ] && [ "$1" == "add" ]; then
   printf "%s" "$msg"
 fi
 
-exit
-
 cd "${PARMdir}"
-rocotorun_cmd="rocotorun -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\""
+rocotorun_cmd="${rocotorun_path} -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\""
 eval ${rocotorun_cmd}
 
-rocotostat_output=$( rocotostat -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} )
+rocotostat_output=$( ${rocotostat_path} -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} )
 
 while read -r line; do
   if echo "$line" | grep -q "DEAD"; then
@@ -54,7 +56,7 @@ done <<< ${rocotostat_output}
 printf "%s" "${rocotostat_output}" > ${WFLOW_LOG_FN}
 
 # rocotostat with -s for cycle info
-rocotostat_s_output=$( rocotostat -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} -s )
+rocotostat_s_output=$( ${rocotostat_path} -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} -s )
 
 regex_search="^[ ]*([0-9]+)[ ]+([A-Za-z]+)[ ]+.*"
 cycle_str=()
