@@ -11,9 +11,12 @@ source ${PARMdir}/detect_platform.sh
 if [ "${MACHINE}" == "hera" ]; then
   module load rocoto
 elif [ "${MACHINE}" == "orion" ]; then
+  source ${PARMdir}/../versions/run.ver_${MACHINE}
+  module use $modulepath_spack_stack
+  module load stack-intel/$stack_intel_ver
+  module load stack-python/$stack_python_ver
   module load contrib
   module load rocoto
-  module load conda
 else
   echo "FATAL ERROR: modules are not loaded"
 fi
