@@ -26,9 +26,8 @@ EXAMPLE: Closes ufs-community/land-DA/issues/<issue_number>
 - RDHPCS
     - [ ] Hera
     - [ ] Orion
-    - [ ] Jet
-    - [ ] Gaea
-    - [ ] Cheyenne
+    - [ ] Hercules
+    - [ ] Derecho
 - CI
   - [ ] Completed
 - PW-Clouds

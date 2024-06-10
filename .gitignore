@@ -12,13 +12,8 @@ parm/*.out
 parm/*.err
 parm/*.log
 parm/land_analysis.yaml
+parm/log.rocoto_launch
 
 __pycache__
 *.swp
 
-cycle.log
-err_noahmp.*
-log_noahmp.*
-*.namelist
-exp_out/*
-analdates.sh
