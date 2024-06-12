@@ -1,6 +1,6 @@
 &run_setup
 
-   static_file      = "/FIXlandda/forcing/era5/static/ufs-land_C96_static_fields.nc"
+   static_file      = "/FIXlandda/static/ufs-land_C96_static_fields.nc"
    init_file        = "/FIXlandda/forcing/era5/init/ufs-land_C96_init_2010-12-31_23-00-00.nc"
    forcing_dir      = "/FIXlandda/forcing/era5/datm/C96/"
   

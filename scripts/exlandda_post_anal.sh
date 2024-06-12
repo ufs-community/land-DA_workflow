@@ -42,7 +42,6 @@ if [[ ${ATMOS_FORC} == "era5" ]]; then
   sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
   sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
   sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
-  sed -i -e "s/MODEL_FORCING/${ATMOS_FORC}/g" tile2vector.namelist
   sed -i -e "s/XXRES/${RES}/g" tile2vector.namelist
   sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
 
@@ -108,7 +107,6 @@ elif [[ ${ATMOS_FORC} == "gswp3" ]]; then
   sed -i -e "s/XXMM/${MM}/g" jedi2ufs.namelist
   sed -i -e "s/XXDD/${DD}/g" jedi2ufs.namelist
   sed -i -e "s/XXHH/${HH}/g" jedi2ufs.namelist
-  sed -i -e "s/MODEL_FORCING/${ATMOS_FORC}/g" jedi2ufs.namelist
   sed -i -e "s/XXRES/${RES}/g" jedi2ufs.namelist
   sed -i -e "s/XXTSTUB/${TSTUB}/g" jedi2ufs.namelist
 
