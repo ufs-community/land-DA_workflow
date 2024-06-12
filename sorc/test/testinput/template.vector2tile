@@ -18,7 +18,7 @@
   restart_date = "XXYYYY-XXMM-XXDD XXHH:00:00"
   
 ! Path for static file  
-  static_filename = "FIXlandda/forcing/MODEL_FORCING/static/ufs-land_CXXRES_static_fields.nc"
+  static_filename = "FIXlandda/static/ufs-land_CXXRES_static_fields.nc"
   
 ! Location of vector restart file (vector2tile direction)
 

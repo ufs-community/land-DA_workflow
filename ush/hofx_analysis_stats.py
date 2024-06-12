@@ -65,9 +65,9 @@ def get_obs_stats(fdir, plottype):
 def plot_scatter():
     print("===== PLOT: SCATTER =====")
     if yaml_data['machine']=='hera':
-        cartopy.config['data_dir']='/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/tools/NaturalEarth'
-    elif yaml_data['machine']=='orion': 
-        cartopy.config['data_dir']='/home/chjeon/tools/NaturalEarth'
+        cartopy.config['data_dir']='/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs/NaturalEarth'
+    elif yaml_data['machine']=='orion' or yaml_data['machine']=='hercules':
+        cartopy.config['data_dir']='/work/noaa/epic/UFS_Land-DA_Dev/inputs/NaturalEarth'
 
     field_mean=float("{:.2f}".format(np.mean(np.absolute(field))))
     field_std=float("{:.2f}".format(np.std(np.absolute(field))))
