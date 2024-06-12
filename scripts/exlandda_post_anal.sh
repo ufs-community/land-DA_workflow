@@ -6,7 +6,7 @@ set -xue
 # copy restarts to workdir, convert to UFS tile for DA (all members)
 
 MACHINE_ID=${MACHINE}
-TPATH=${FIXlandda}/forcing/${ATMOS_FORC}/orog_files/
+
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}
@@ -54,7 +54,6 @@ if [[ ${ATMOS_FORC} == "era5" ]]; then
   sed -i -e "s/MODEL_FORCING/${ATMOS_FORC}/g" tile2vector.namelist
   sed -i -e "s/XXRES/${RES}/g" tile2vector.namelist
   sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
-  sed -i -e "s#XXTPATH#${TPATH}#g" tile2vector.namelist
 
   export pgm="vector2tile_converter.exe"
   . prep_step
@@ -121,7 +120,6 @@ elif [[ ${ATMOS_FORC} == "gswp3" ]]; then
   sed -i -e "s/MODEL_FORCING/${ATMOS_FORC}/g" jedi2ufs.namelist
   sed -i -e "s/XXRES/${RES}/g" jedi2ufs.namelist
   sed -i -e "s/XXTSTUB/${TSTUB}/g" jedi2ufs.namelist
-  sed -i -e "s#XXTPATH#${TPATH}#g" jedi2ufs.namelist
 
   export pgm="tile2tile_converter.exe"
   . prep_step

@@ -3,7 +3,7 @@
 set -xue
 
 MACHINE_ID=${MACHINE}
-TPATH=${FIXlandda}/forcing/${ATMOS_FORC}/orog_files/
+
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}
