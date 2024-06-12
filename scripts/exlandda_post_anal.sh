@@ -20,15 +20,6 @@ FREQ=$((${FCSTHR}*3600))
 RDD=$((${FCSTHR}/24))
 RHH=$((${FCSTHR}%24))
 
-# load modulefiles
-BUILD_VERSION_FILE="${HOMElandda}/versions/build.ver_${MACHINE}"
-if [ -e ${BUILD_VERSION_FILE} ]; then
-  . ${BUILD_VERSION_FILE}
-fi
-mkdir -p modulefiles
-cp ${HOMElandda}/modulefiles/build_${MACHINE}_intel.lua $DATA/modulefiles/modules.landda.lua
-module use modulefiles; module load modules.landda
-
 MPIEXEC=`which mpiexec`
 
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
