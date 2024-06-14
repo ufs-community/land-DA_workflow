@@ -81,7 +81,6 @@ sed -i -e "s/XXYYYY/${YY}/g" vector2tile.namelist
 sed -i -e "s/XXMM/${MM}/g" vector2tile.namelist
 sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
 sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
-sed -i -e "s/MODEL_FORCING/${atmos_forc}/g" vector2tile.namelist
 sed -i -e "s/XXRES/${RES}/g" vector2tile.namelist
 sed -i -e "s#XXTPATH#${TPATH}#g" vector2tile.namelist
 sed -i -e "s/XXTSTUB/${TSTUB}/g" vector2tile.namelist

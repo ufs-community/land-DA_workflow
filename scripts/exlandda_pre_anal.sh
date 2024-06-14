@@ -2,7 +2,6 @@
 
 set -xue
 
-TPATH=${FIXlandda}/forcing/${ATMOS_FORC}/orog_files/
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}
@@ -40,10 +39,8 @@ if [[ $ATMOS_FORC == "era5" ]]; then
   sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
   sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
   sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
-  sed -i -e "s/MODEL_FORCING/${ATMOS_FORC}/g" vector2tile.namelist
   sed -i -e "s/XXRES/${RES}/g" vector2tile.namelist
   sed -i -e "s/XXTSTUB/${TSTUB}/g" vector2tile.namelist
-  sed -i -e "s#XXTPATH#${TPATH}#g" vector2tile.namelist
 
   # submit vec2tile 
   echo '************************************************'
@@ -89,10 +86,8 @@ elif [[ $ATMOS_FORC == "gswp3" ]]; then
   sed -i -e "s/XXDD/${DD}/g" ufs2jedi.namelist
   sed -i -e "s/XXHH/${HH}/g" ufs2jedi.namelist
   sed -i -e "s/XXHH/${HH}/g" ufs2jedi.namelist
-  sed -i -e "s/MODEL_FORCING/${ATMOS_FORC}/g" ufs2jedi.namelist
   sed -i -e "s/XXRES/${RES}/g" ufs2jedi.namelist
   sed -i -e "s/XXTSTUB/${TSTUB}/g" ufs2jedi.namelist
-  sed -i -e "s#XXTPATH#${TPATH}#g" ufs2jedi.namelist
 
   # submit tile2tile
   export pgm="tile2tile_converter.exe"
