@@ -9,7 +9,7 @@ project_source_dir=$2
 source ${project_source_dir}/test/runtime_vars.sh ${project_binary_dir} ${project_source_dir}
 
 # set baseline dir
-export TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/test_base/restarts/vector"}
+export TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/inputs/test_base/restarts/vector"}
 
 # compute the restart frequency, run_days and run_hours
 FREQ=$(( 3600 * $FCSTHR ))

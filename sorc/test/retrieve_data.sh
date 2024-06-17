@@ -23,11 +23,11 @@ export PATH=${HOME}/.local/bin:${PATH}
 
 # set envs
 DATA_ROOT=${project_source_dir}/../fix
-INPUTDATA_ROOT=${DATA_ROOT}/input/UFS_WM
+INPUTDATA_ROOT=${DATA_ROOT}/UFS_WM
 
 [[ ! -d ${INPUTDATA_ROOT} ]] && mkdir -p ${INPUTDATA_ROOT}
 RTPWD=${DATA_ROOT}/test_base
-AWS_URL=s3://noaa-ufs-regtests-pds
+AWS_URL=s3://noaa-ufs-land-da-pds/develop/inputs
 
 # baseline data
 DES_DIR=${RTPWD}/datm_cdeps_lnd_gswp3_intel

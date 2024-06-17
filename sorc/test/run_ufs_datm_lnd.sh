@@ -14,6 +14,7 @@ MACHINE_ID=${MACHINE_ID:-hera}
 TEST_NAME=datm_cdeps_lnd_gswp3
 PATHRT=${project_source_dir}/ufs_model.fd/tests
 FIXdir=${project_source_dir}/../fix
+INPUTDATA_ROOT=${FIXdir}/UFS_WM
 RT_COMPILER=${RT_COMPILER:-intel}
 ATOL="1e-7"
 source ${PATHRT}/detect_machine.sh
@@ -22,12 +23,10 @@ source ${PATHRT}/default_vars.sh
 source ${PATHRT}/tests/$TEST_NAME
 source ${PATHRT}/atparse.bash
 
-source ${PATHRT}/bl_date.conf
 RTPWD=${RTPWD:-$FIXdir/test_base/${TEST_NAME}_${RT_COMPILER}}
-INPUTDATA_ROOT=${INPUTDATA_ROOT:-$FIXdir/inputs/NEMSfv3gfs/input-data-20221101}
 
-if [[ ! -d ${INPUTDATA_ROOT} ]] || [[ ! -d ${RTPWD} ]]; then
-  echo "Error: cannot find either folder for INPUTDATA_ROOT or RTPWD, please check!"
+if [[ ! -d ${RTPWD} ]]; then
+  echo "Error: cannot find RTPWD, please check!"
   exit 1
 fi  
 
