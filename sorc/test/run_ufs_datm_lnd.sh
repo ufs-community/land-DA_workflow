@@ -13,6 +13,8 @@ echo ${project_source_dir}
 MACHINE_ID=${MACHINE_ID:-hera}
 TEST_NAME=datm_cdeps_lnd_gswp3
 PATHRT=${project_source_dir}/ufs_model.fd/tests
+FIXdir=${project_source_dir}/../fix
+INPUTDATA_ROOT=${FIXdir}/UFS_WM
 RT_COMPILER=${RT_COMPILER:-intel}
 ATOL="1e-7"
 source ${PATHRT}/detect_machine.sh
@@ -21,23 +23,10 @@ source ${PATHRT}/default_vars.sh
 source ${PATHRT}/tests/$TEST_NAME
 source ${PATHRT}/atparse.bash
 
-# Set inputdata location for each machines
-echo "MACHINE_ID: $MACHINE_ID"
-if [[ $MACHINE_ID = orion ]]; then
-  DISKNM=/work/noaa/epic/UFS-WM_RT
-elif [[ $MACHINE_ID = hera ]]; then
-  DISKNM=/scratch2/NAGAPE/epic/UFS-WM_RT
-else
-  echo "Warning: MACHINE_ID is default, users will have to define INPUTDATA_ROOT and RTPWD by themselves"
-fi
+RTPWD=${RTPWD:-$FIXdir/test_base/${TEST_NAME}_${RT_COMPILER}}
 
-source ${PATHRT}/bl_date.conf
-#BL_DATE=20230815
-RTPWD=${RTPWD:-$DISKNM/NEMSfv3gfs/develop-${BL_DATE}/${TEST_NAME}_${RT_COMPILER}}
-INPUTDATA_ROOT=${INPUTDATA_ROOT:-$DISKNM/NEMSfv3gfs/input-data-20221101}
-
-if [[ ! -d ${INPUTDATA_ROOT} ]] || [[ ! -d ${RTPWD} ]]; then
-  echo "Error: cannot find either folder for INPUTDATA_ROOT or RTPWD, please check!"
+if [[ ! -d ${RTPWD} ]]; then
+  echo "Error: cannot find RTPWD, please check!"
   exit 1
 fi  
 
