@@ -11,7 +11,7 @@ prefix=$4 #bkg or ana
 source ${project_source_dir}/test/runtime_vars.sh ${project_binary_dir} ${project_source_dir}
 
 # set baseline dir
-export TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/test_base/mem000/restarts/vector"}
+export TEST_BASEDIR=${TEST_BASEDIR:-"${EPICHOME}/test_base/restarts/vector"}
 
 # set executables
 TEST_EXEC="vector2tile_converter.exe"
