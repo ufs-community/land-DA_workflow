@@ -20,7 +20,20 @@ FREQ=$((${FCSTHR}*3600))
 RDD=$((${FCSTHR}/24))
 RHH=$((${FCSTHR}%24))
 
-MPIEXEC=`which mpiexec`
+case $MACHINE in
+  "hera")
+    RUN_CMD="srun"
+    ;;
+  "orion")
+    RUN_CMD="srun"
+    ;;
+  "hercules")
+    RUN_CMD="srun"
+    ;;
+  *)
+    RUN_CMD=`which mpiexec`
+    ;;
+esac
 
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 for itile in {1..6}
@@ -77,7 +90,7 @@ if [[ ${ATMOS_FORC} == "era5" ]]; then
 
   export pgm="ufsLand.exe"
   . prep_step
-  ${MPIEXEC} -n 1 ${EXEClandda}/$pgm >>$pgmout 2>errfile
+  ${RUN_CMD} -n 1 ${EXEClandda}/$pgm >>$pgmout 2>errfile
   export err=$?; err_chk
   cp errfile errfile_ufsLand
   if [[ $err != 0 ]]; then

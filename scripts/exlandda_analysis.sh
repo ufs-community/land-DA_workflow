@@ -17,7 +17,20 @@ FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 JEDI_STATICDIR=${JEDI_INSTALL}/jedi-bundle/fv3-jedi/test/Data
 JEDI_EXECDIR=${JEDI_INSTALL}/build/bin
 
-MPIEXEC=`which mpiexec`
+case $MACHINE in
+  "hera")
+    RUN_CMD="srun"
+    ;;
+  "orion")
+    RUN_CMD="srun"
+    ;;
+  "hercules")
+    RUN_CMD="srun"
+    ;;
+  *)
+    RUN_CMD=`which mpiexec`
+    ;;
+esac
 
 #SNOWDEPTHVAR=snwdph
 YAML_DA=construct
@@ -169,7 +182,7 @@ echo 'do_landDA: calling fv3-jedi'
 if [[ $do_DA == "YES" ]]; then
   export pgm="fv3jedi_letkf.x"
   . prep_step
-  ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXECDIR}/$pgm letkf_land.yaml >>$pgmout 2>errfile
+  ${RUN_CMD} -n $NPROC_JEDI ${JEDI_EXECDIR}/$pgm letkf_land.yaml >>$pgmout 2>errfile
   export err=$?; err_chk
   cp errfile errfile_jedi_letkf
   if [[ $err != 0 ]]; then
@@ -180,7 +193,7 @@ fi
 if [[ $do_HOFX == "YES" ]]; then
   export pgm="fv3jedi_letkf.x"
   . prep_step
-  ${MPIEXEC} -n $NPROC_JEDI ${JEDI_EXECDIR}/$pgm hofx_land.yaml >>$pgmout 2>errfile
+  ${RUN_CMD} -n $NPROC_JEDI ${JEDI_EXECDIR}/$pgm hofx_land.yaml >>$pgmout 2>errfile
   export err=$?; err_chk
   cp errfile errfile_jedi_hofx
   if [[ $err != 0 ]]; then
@@ -213,7 +226,7 @@ EOF
     export pgm="apply_incr.exe"
     . prep_step
     # (n=6) -> this is fixed, at one task per tile (with minor code change, could run on a single proc). 
-    ${MPIEXEC} -n 6 ${EXEClandda}/$pgm >>$pgmout 2>errfile
+    ${RUN_CMD} -n 6 ${EXEClandda}/$pgm >>$pgmout 2>errfile
     export err=$?; err_chk
     cp errfile errfile_apply_incr
     if [[ $err != 0 ]]; then
