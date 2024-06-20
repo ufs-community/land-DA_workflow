@@ -14,7 +14,20 @@ nMM=${NTIME:4:2}
 nDD=${NTIME:6:2}
 nHH=${NTIME:8:2}
 
-MPIEXEC=`which mpiexec`
+case $MACHINE in
+  "hera")
+    RUN_CMD="srun"
+    ;;
+  "orion")
+    RUN_CMD="srun"
+    ;;
+  "hercules")
+    RUN_CMD="srun"
+    ;;
+  *)
+    RUN_CMD=`which mpiexec`
+    ;;
+esac
 
 #  convert back to UFS tile, run model (all members)
 if [[ ${ATMOS_FORC} == "gswp3" ]]; then  
@@ -34,9 +47,9 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   source ${PATHRT}/tests/$TEST_NAME_RST
   source ${PATHRT}/atparse.bash
 
-  BL_DATE=20230816
-  RTPWD=${RTPWD:-${FIXlandda}/NEMSfv3gfs/develop-${BL_DATE}/INTEL/${TEST_NAME}}
-  INPUTDATA_ROOT=${INPUTDATA_ROOT:-${FIXlandda}/NEMSfv3gfs/input-data-20221101}
+#  BL_DATE=20230816
+  RTPWD=${RTPWD:-${FIXlandda}/test_base/${TEST_NAME}_intel}
+  INPUTDATA_ROOT=${INPUTDATA_ROOT:-${FIXlandda}/UFS_WM}
 
   echo "RTPWD= $RTPWD"
   echo "INPUTDATA_ROOT= $INPUTDATA_ROOT"
@@ -163,7 +176,7 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   echo "Start ufs-cdeps-land model run with TASKS: ${TASKS}"
   export pgm="ufs_model"
   . prep_step
-  ${MPIEXEC} -n ${TASKS} ${EXEClandda}/$pgm >>$pgmout 2>errfile
+  ${RUN_CMD} -n ${TASKS} ${EXEClandda}/$pgm >>$pgmout 2>errfile
   export err=$?; err_chk
   cp errfile errfile_ufs_model
   if [[ $err != 0 ]]; then
