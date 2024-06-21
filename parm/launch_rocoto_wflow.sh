@@ -16,7 +16,8 @@ elif [ "${MACHINE}" == "orion" ]; then
   module load stack-intel/$stack_intel_ver
   module load stack-python/$stack_python_ver
   module load contrib
-  module load rocoto
+  module load ruby/3.2.3
+  module load rocoto/1.3.7
 else
   echo "FATAL ERROR: modules are not loaded"
 fi
