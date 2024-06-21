@@ -27,6 +27,7 @@ WFLOW_XML_FN="land_analysis.xml"
 rocoto_xml_bn=$( basename "${WFLOW_XML_FN}" ".xml" )
 rocoto_database_fn="${rocoto_xml_bn}.db"
 WFLOW_LOG_FN="log.rocoto_launch"
+LOG_FN_ROCOTO_RUN="log.rocoto_run"
 
 # Initialize the default status of the workflow to "IN PROGRESS".
 wflow_status="IN PROGRESS"
@@ -44,8 +45,8 @@ if [ "$#" -eq 1 ] && [ "$1" == "add" ]; then
 fi
 
 cd "${PARMdir}"
-rocotorun_cmd="rocotorun -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\""
-eval ${rocotorun_cmd}
+rocotorun_cmd="rocotorun -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\" -v 10"
+eval ${rocotorun_cmd} > ${LOG_FN_ROCOTO_RUN} 2>&1
 
 rocotostat_output=$( rocotostat -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} )
 
