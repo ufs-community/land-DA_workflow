@@ -21,7 +21,7 @@ workflow:
     RES: "96"
     FCSTHR: "24"
     NPROCS_ANALYSIS: "6"
-    NPROCS_FORECAST: "6"
+    NPROCS_FORECAST: "7"
     OBSDIR: ""
     OBSDIR_SUBDIR: ""
     OBS_TYPES: "GHCN"

@@ -8,6 +8,7 @@ PARMdir=$(cd "$(dirname "$(readlink -f -n "${BASH_SOURCE[0]}" )" )" && pwd -P)
 source ${PARMdir}/detect_platform.sh
 
 # Load rocoto
+module purge
 if [ "${MACHINE}" == "hera" ]; then
   module load rocoto
 elif [ "${MACHINE}" == "orion" ]; then
