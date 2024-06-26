@@ -2,7 +2,7 @@
 
 set -xue
 
-TPATH="${FIXlandda}/FV3_fix_tiles/C${RES}/"
+TPATH="${FIXlandda}/FV3_fix_tiled/C${RES}"
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}
