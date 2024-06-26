@@ -143,7 +143,7 @@ workflow:
         cyc: "&cyc;"
         DAtype: "&DAtype;"
         SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
-        NPROC_JEDI: "&NPROCS_ANALYSIS;"
+        NPROCS_ANALYSIS: "&NPROCS_ANALYSIS;"
         JEDI_INSTALL: "&JEDI_INSTALL;"
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "analysis" "&HOMElandda;" "&MACHINE;"'
@@ -227,6 +227,7 @@ workflow:
         ACCOUNT: "&ACCOUNT;"
         EXP_NAME: "&EXP_NAME;"
         ATMOS_FORC: "&FORCING;"
+        RES: "&RES;"
         WARMSTART_DIR: "&WARMSTART_DIR;"
         model_ver: "&model_ver;"
         HOMElandda: "&HOMElandda;"
@@ -238,6 +239,7 @@ workflow:
         cyc: "&cyc;"
         DAtype: "&DAtype;"
         FCSTHR: "&FCSTHR;"
+        NPROCS_FORECAST: "&NPROCS_FORECAST;"          
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "forecast" "&HOMElandda;" "&MACHINE;"'
       jobname: forecast

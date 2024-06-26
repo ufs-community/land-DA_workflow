@@ -182,7 +182,7 @@ echo 'do_landDA: calling fv3-jedi'
 if [[ $do_DA == "YES" ]]; then
   export pgm="fv3jedi_letkf.x"
   . prep_step
-  ${RUN_CMD} -n $NPROC_JEDI ${JEDI_EXECDIR}/$pgm letkf_land.yaml >>$pgmout 2>errfile
+  ${RUN_CMD} -n ${NPROCS_ANALYSIS} ${JEDI_EXECDIR}/$pgm letkf_land.yaml >>$pgmout 2>errfile
   export err=$?; err_chk
   cp errfile errfile_jedi_letkf
   if [[ $err != 0 ]]; then
@@ -193,7 +193,7 @@ fi
 if [[ $do_HOFX == "YES" ]]; then
   export pgm="fv3jedi_letkf.x"
   . prep_step
-  ${RUN_CMD} -n $NPROC_JEDI ${JEDI_EXECDIR}/$pgm hofx_land.yaml >>$pgmout 2>errfile
+  ${RUN_CMD} -n ${NPROCS_ANALYSIS} ${JEDI_EXECDIR}/$pgm hofx_land.yaml >>$pgmout 2>errfile
   export err=$?; err_chk
   cp errfile errfile_jedi_hofx
   if [[ $err != 0 ]]; then

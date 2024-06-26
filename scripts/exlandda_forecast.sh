@@ -71,8 +71,6 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   ln -nsf ${FIXlandda}/UFS_WM/DATM_input_data/${ATMOS_FORC}/* .
   cd -
 
-  SUFFIX=${RT_SUFFIX}
-
   # Retrieve input files for restart
   # NoahMP restart files
   for itile in {1..6}
@@ -127,10 +125,10 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   cd -
 
   # start runs
-  echo "Start ufs-cdeps-land model run with TASKS: ${TASKS}"
+  echo "Start ufs-cdeps-land model run with TASKS: ${NPROCS_FORECAST}"
   export pgm="ufs_model"
   . prep_step
-  ${RUN_CMD} -n ${TASKS} ${EXEClandda}/$pgm >>$pgmout 2>errfile
+  ${RUN_CMD} -n ${NPROCS_FORECAST} ${EXEClandda}/$pgm >>$pgmout 2>errfile
   export err=$?; err_chk
   cp errfile errfile_ufs_model
   if [[ $err != 0 ]]; then
