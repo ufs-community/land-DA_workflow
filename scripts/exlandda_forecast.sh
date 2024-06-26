@@ -47,6 +47,7 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   cp ${PARMlandda}/templates/template.datm_in datm_in
   cp ${PARMlandda}/templates/template.datm.streams datm.streams
   cp ${PARMlandda}/templates/template.noahmptable.tbl noahmptable.tbl
+  cp ${PARMlandda}/templates/template.fd_ufs.yaml fd_ufs.yaml
 
   # Set model_configure
   cp ${PARMlandda}/templates/template.model_configure model_configure
@@ -57,22 +58,12 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   sed -i -e "s/XXFCSTHR/${FCSTHR}/g" model_configure
 
   # set diag table
-  if [[ "Q${DIAG_TABLE:-}" != Q ]] ; then
-    cp ${PARMlandda}/templates/template.diag_table diag_table
-    sed -i -e "s/XXYYYYMMDD/${YYYYMMDD}/g" diag_table
-    sed -i -e "s/XXYYYY/${YYYY}/g" diag_table
-    sed -i -e "s/XXMM/${MM}/g" diag_table
-    sed -i -e "s/XXDD/${DD}/g" diag_table
-    sed -i -e "s/XXHH/${HH}/g" diag_table
-  fi
-
-  # Field table
-  if [[ "Q${FIELD_TABLE:-}" != Q ]] ; then
-    cp ${PATHRT}/parm/field_table/${FIELD_TABLE} field_table
-  fi
-
-  # Field Dictionary
-  cp ${PATHRT}/parm/fd_ufs.yaml fd_ufs.yaml 
+  cp ${PARMlandda}/templates/template.diag_table diag_table
+  sed -i -e "s/XXYYYYMMDD/${YYYYMMDD}/g" diag_table
+  sed -i -e "s/XXYYYY/${YYYY}/g" diag_table
+  sed -i -e "s/XXMM/${MM}/g" diag_table
+  sed -i -e "s/XXDD/${DD}/g" diag_table
+  sed -i -e "s/XXHH/${HH}/g" diag_table
 
   # Set up the run directory
   mkdir -p RESTART INPUT
