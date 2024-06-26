@@ -12,7 +12,7 @@ parm/*.out
 parm/*.err
 parm/*.log
 parm/land_analysis.yaml
-parm/log.rocoto_launch
+parm/log.*
 
 __pycache__
 *.swp
