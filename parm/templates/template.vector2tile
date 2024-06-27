@@ -9,7 +9,7 @@
 ! FV3 resolution and path to oro files for restart/perturbation conversion
 
   tile_size = XXRES
-  tile_path = "FIXlandda/FV3_fix_tiled/C${RES}/"
+  tile_path = "FIXlandda/FV3_fix_tiled/XXRES/"
   tile_fstub = "XXTSTUB"
   
 !------------------- only restart conversion -------------------
