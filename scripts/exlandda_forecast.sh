@@ -66,12 +66,8 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   sed -i -e "s/XXHH/${HH}/g" diag_table
 
   # Set up the run directory
-  mkdir -p RESTART INPUT
-  cd INPUT
-  ln -nsf ${FIXlandda}/UFS_WM/DATM_input_data/${ATMOS_FORC}/* .
-  cd -
+  mkdir -p RESTART
 
-  # Retrieve input files for restart
   # NoahMP restart files
   for itile in {1..6}
   do
@@ -100,28 +96,25 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   fi
   ls -1 "RESTART/${rfile2}">rpointer.atm
 
+  mkdir -p INPUT
   cd INPUT
-  ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C${RES}_init_fields.tile1.nc C${RES}.initial.tile1.nc
-  ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C${RES}_init_fields.tile2.nc C${RES}.initial.tile2.nc
-  ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C${RES}_init_fields.tile3.nc C${RES}.initial.tile3.nc
-  ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C${RES}_init_fields.tile4.nc C${RES}.initial.tile4.nc
-  ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C${RES}_init_fields.tile5.nc C${RES}.initial.tile5.nc
-  ln -nsf ${FIXlandda}/UFS_WM/NOAHMP_IC/ufs-land_C${RES}_init_fields.tile6.nc C${RES}.initial.tile6.nc
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/C${RES}.maximum_snow_albedo.tile*.nc .
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/C${RES}.slope_type.tile*.nc .
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/C${RES}.soil_type.tile*.nc .
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/C${RES}.soil_color.tile*.nc .
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/C${RES}.substrate_temperature.tile*.nc .
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/C${RES}.vegetation_greenness.tile*.nc .
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/C${RES}.vegetation_type.tile*.nc .
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/oro_C${RES}.mx100.tile1.nc oro_data.tile1.nc
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/oro_C${RES}.mx100.tile2.nc oro_data.tile2.nc
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/oro_C${RES}.mx100.tile3.nc oro_data.tile3.nc
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/oro_C${RES}.mx100.tile4.nc oro_data.tile4.nc
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/oro_C${RES}.mx100.tile5.nc oro_data.tile5.nc
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/oro_C${RES}.mx100.tile6.nc oro_data.tile6.nc
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiled/C${RES}/C${RES}_grid.tile*.nc .
-  ln -nsf ${FIXlandda}/UFS_WM/FV3_fix_tiles/C${RES}/grid_spec.nc C${RES}_mosaic.nc
+
+  ln -nsf ${FIXlandda}/DATM_input_data/${ATMOS_FORC}/* .
+  for itile in {1..6}
+  do
+    ln -nsf ${FIXlandda}/NOAHMP_IC/ufs-land_C${RES}_init_fields.tile${itile}.nc C${RES}.initial.tile${itile}.nc
+    ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}.maximum_snow_albedo.tile${itile}.nc .
+    ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}.slope_type.tile${itile}.nc .
+    ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}.soil_type.tile${itile}.nc .
+    ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}.soil_color.tile${itile}.nc .
+    ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}.substrate_temperature.tile${itile}.nc .
+    ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}.vegetation_greenness.tile${itile}.nc .
+    ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}.vegetation_type.tile${itile}.nc .
+    ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/oro_C${RES}.mx100.tile${itile}.nc oro_data.tile${itile}.nc
+    ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}_grid.tile${itile}.nc .
+    ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/grid_spec.nc C${RES}_mosaic.nc
+  done
+
   cd -
 
   # start runs
