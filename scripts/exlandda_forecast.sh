@@ -2,8 +2,6 @@
 
 set -xue
 
-MACHINE_ID=${MACHINE}
-
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}
 DD=${PDY:6:2}
@@ -34,10 +32,6 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
 
   echo '************************************************'
   echo 'running the forecast model' 
-
-  PATHRT=${HOMElandda}/sorc/ufs_model.fd/tests
-  source ${PATHRT}/rt_utils.sh
-  source ${PATHRT}/default_vars.sh
 
   # modify some env variables - reduce core usage
   export ATM_compute_tasks=0
