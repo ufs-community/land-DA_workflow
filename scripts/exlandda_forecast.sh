@@ -35,6 +35,29 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   echo '************************************************'
   echo 'running the forecast model' 
 
+  TEST_NAME=datm_cdeps_lnd_gswp3
+  TEST_NAME_RST=datm_cdeps_lnd_gswp3_rst
+  PATHRT=${HOMElandda}/sorc/ufs_model.fd/tests
+  RT_COMPILER=${RT_COMPILER:-intel}
+  ATOL="1e-7"
+
+  cp $PARMlandda/$TEST_NAME_RST ${PATHRT}/tests/$TEST_NAME_RST 
+  source ${PATHRT}/rt_utils.sh
+  source ${PATHRT}/default_vars.sh
+  source ${PATHRT}/tests/$TEST_NAME_RST
+  source ${PATHRT}/atparse.bash
+
+#  RTPWD=${RTPWD:-${FIXlandda}/test_base/${TEST_NAME}_intel}
+#  INPUTDATA_ROOT=${INPUTDATA_ROOT:-${FIXlandda}/UFS_WM}
+
+#  echo "RTPWD= $RTPWD"
+#  echo "INPUTDATA_ROOT= $INPUTDATA_ROOT"
+
+#  if [[ ! -d ${INPUTDATA_ROOT} ]] || [[ ! -d ${RTPWD} ]]; then
+#    echo "Error: cannot find either folder for INPUTDATA_ROOT or RTPWD, please check!"
+#    exit 1
+#  fi
+
   # modify some env variables - reduce core usage
   export ATM_compute_tasks=0
   export ATM_io_tasks=1
@@ -98,7 +121,6 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
 
   mkdir -p INPUT
   cd INPUT
-
   ln -nsf ${FIXlandda}/DATM_input_data/${ATMOS_FORC}/* .
   for itile in {1..6}
   do
@@ -114,7 +136,6 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
     ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}_grid.tile${itile}.nc .
     ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/grid_spec.nc C${RES}_mosaic.nc
   done
-
   cd -
 
   # start runs
