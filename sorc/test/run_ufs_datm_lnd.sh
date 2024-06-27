@@ -14,6 +14,16 @@ TEST_NAME=datm_cdeps_lnd_gswp3
 PATHRT=${project_source_dir}/ufs_model.fd/tests
 FIXdir=${project_source_dir}/../fix
 
+source ${project_source_dir}/../parm/detect_platform.sh
+if [[ "${PLATFORM}" == "hera" ]]; then
+  INPUTDATA_ROOT="/scratch2/NAGAPE/epic/UFS-WM_RT/NEMSfv3gfs/input-data-20240501"
+elif [[ "${PLATFORM}" == "orion" ]] || [[ "${PLATFORM}" == "hercules" ]]; then
+  INPUTDATA_ROOT="/work/noaa/epic/UFS-WM_RT/NEMSfv3gfs/input-data-20240501"
+else
+  echo "WARNING: input data path is not specified for this machine."
+  INPUTDATA_ROOT=${FIXdir}
+fi
+MACHINE_ID=${PLATFORM}
 RT_COMPILER=${RT_COMPILER:-intel}
 ATOL="1e-7"
 source ${PATHRT}/detect_machine.sh
@@ -21,16 +31,6 @@ source ${PATHRT}/rt_utils.sh
 source ${PATHRT}/default_vars.sh
 source ${PATHRT}/tests/$TEST_NAME
 source ${PATHRT}/atparse.bash
-
-MACHINE_ID=${MACHINE_ID:-hera}
-if [[ "${MACHINE_ID}" == "hera" ]]; then
-  INPUTDATA_ROOT="/scratch2/NAGAPE/epic/UFS-WM_RT/NEMSfv3gfs/input-data-20240501"
-elif [[ "${MACHINE_ID}" == "orion" ]] || [[ "${MACHINE_ID}" == "hercules" ]]; then
-  INPUTDATA_ROOT="/work/noaa/epic/UFS-WM_RT/NEMSfv3gfs/input-data-20240501"
-else
-  echo "WARNING: input data path is not specified for this machine."
-  INPUTDATA_ROOT=${FIXdir}
-fi
 
 RTPWD=${RTPWD:-$FIXdir/test_base/${TEST_NAME}_${RT_COMPILER}}
 
