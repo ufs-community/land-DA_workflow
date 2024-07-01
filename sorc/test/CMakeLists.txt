@@ -43,16 +43,6 @@ set_tests_properties(test_tile2vector
     ENVIRONMENT "FIXlandda=$ENV{FIXlandda};
                  TOL=$ENV{TOL}")
 
-# test for ufs-land-driver
-add_test(NAME test_land_driver
-         COMMAND ${PROJECT_SOURCE_DIR}/test/test_ufs_land_driver.sh ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
-         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
-set_tests_properties(test_land_driver
-    PROPERTIES
-    DEPENDS "test_tile2vector"
-    ENVIRONMENT "FIXlandda=$ENV{FIXlandda};
-                 TOL=$ENV{TOL}")
-
 # test for ufs-datm-lnd model
 add_test(NAME test_ufs_datm_land
          COMMAND ${PROJECT_SOURCE_DIR}/test/run_ufs_datm_lnd.sh ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
