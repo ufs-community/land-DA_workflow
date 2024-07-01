@@ -10,11 +10,20 @@ echo ${project_binary_dir}
 echo ${project_source_dir}
 
 #
-MACHINE_ID=${MACHINE_ID:-hera}
 TEST_NAME=datm_cdeps_lnd_gswp3
 PATHRT=${project_source_dir}/ufs_model.fd/tests
 FIXdir=${project_source_dir}/../fix
-INPUTDATA_ROOT=${FIXdir}/UFS_WM
+
+source ${project_source_dir}/../parm/detect_platform.sh
+if [[ "${PLATFORM}" == "hera" ]]; then
+  INPUTDATA_ROOT="/scratch2/NAGAPE/epic/UFS-WM_RT/NEMSfv3gfs/input-data-20240501"
+elif [[ "${PLATFORM}" == "orion" ]] || [[ "${PLATFORM}" == "hercules" ]]; then
+  INPUTDATA_ROOT="/work/noaa/epic/UFS-WM_RT/NEMSfv3gfs/input-data-20240501"
+else
+  echo "WARNING: input data path is not specified for this machine."
+  INPUTDATA_ROOT=${FIXdir}
+fi
+MACHINE_ID=${PLATFORM}
 RT_COMPILER=${RT_COMPILER:-intel}
 ATOL="1e-7"
 source ${PATHRT}/detect_machine.sh
