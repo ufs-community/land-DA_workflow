@@ -6,8 +6,10 @@ Land DA Workflow (Hera & Orion)
 
 This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (:term:`UFS`) Land DA System. Users can choose between two options: 
 
-   * A Dec. 21, 2019 00z sample case using ERA5 data with the UFS Land Driver (``land_analysis_era5_<machine>``)
-   * A Jan. 3, 2000 00z sample case using GSWP3 data with the UFS Noah-MP land component (``land_analysis_gswp3_<machine>``). 
+   * A Dec. 21-22, 2019 00z sample case using ERA5 data with the UFS Land Driver (``land_analysis_era5_<machine>``)
+   * A Jan. 3-4, 2000 00z sample case using GSWP3 data with the UFS Noah-MP land component (``land_analysis_gswp3_<machine>``). 
+
+Land DA now includes cycling/restart capabilities to run a multi-day experiment. 
 
 .. attention::
    
@@ -207,11 +209,31 @@ Run With Rocoto
 
    Users who do not have Rocoto installed on their system can view :numref:`Section %s: Run Without Rocoto <run-batch-script>`.
 
+To run the experiment, users can automate job submission via crontab or submit tasks manually via ``rocotorun``. 
+
+Automated Run
+---------------
+
+To automate task submission, users must be on a system where cron is available. 
+
+.. code-block:: console
+
+   cd parm
+   conda deactivate        # optional
+   ./launch_rocoto_wflow.sh add
+
+
+
+Manual Submission
+-------------------
+
 To run the experiment, issue a ``rocotorun`` command from the ``parm`` directory: 
 
 .. code-block:: console
 
    rocotorun -w land_analysis.xml -d land_analysis.db
+
+Users will need to issue the ``rocotorun`` command multiple times. The tasks must run in order, and ``rocotorun`` initiates the next task once its dependencies have completed successfully. Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command. Details on checking experiment status are provided in the :ref:`next section <VerifySuccess>`.
 
 .. _VerifySuccess:
 
@@ -228,17 +250,29 @@ If ``rocotorun`` was successful, the ``rocotostat`` command will print a status 
 
 .. code-block:: console
 
-   CYCLE              TASK                 JOBID        STATE   EXIT STATUS   TRIES   DURATION
-   ======================================================================================================
-   200001030000    prepexp   druby://hfe08:41879   SUBMITTING             -       2        0.0
-   200001030000    prepobs                     -            -             -       -          -
-   200001030000   prepbmat                     -            -             -       -          -
-   200001030000     runana                     -            -             -       -          -
-   200001030000    runfcst                     -            -             -       -          -
+   CYCLE                TASK                       JOBID        STATE   EXIT STATUS   TRIES   DURATION
+   =========================================================================================================
+   200001030000     prep_obs                    61746064       QUEUED             -       1        0.0
+   200001030000     pre_anal   druby://10.184.3.62:41973   SUBMITTING             -       1        0.0
+   200001030000     analysis                           -            -             -       -          -
+   200001030000    post_anal                           -            -             -       -          -
+   200001030000   plot_stats                           -            -             -       -          -
+   200001030000     forecast                           -            -             -       -          -
+   ================================================================================================================================
+   200001040000     prep_obs   druby://10.184.3.62:41973   SUBMITTING             -       1        0.0
+   200001040000     pre_anal                           -            -             -       -          -
+   200001040000     analysis                           -            -             -       -          -
+   200001040000    post_anal                           -            -             -       -          -
+   200001040000   plot_stats                           -            -             -       -          -
+   200001040000     forecast                           -            -             -       -          -
+
+.. COMMENT: Add plotting task info!
 
 Users will need to issue the ``rocotorun`` command multiple times. The tasks must run in order, and ``rocotorun`` initiates the next task once its dependencies have completed successfully. Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command. For each task, a log file is generated. These files are stored in ``$LANDDAROOT/com/output/logs/run_<forcing>``, where ``<forcing>`` is either ``gswp3`` or ``era5``. 
 
 The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, and DEAD. Users may view the log files to determine why a task may have failed.
+
+.. COMMENT: Where are log files now?!
 
 .. _run-batch-script:
 
