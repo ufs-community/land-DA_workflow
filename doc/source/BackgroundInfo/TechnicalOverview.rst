@@ -29,8 +29,8 @@ The Land DA System requires:
    * Python
    * :term:`NetCDF`
    * Lmod 
-   * `spack-stack <https://github.com/JCSDA/spack-stack>`__
-   * `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`__ (Skylab v4.0)
+   * `spack-stack <https://github.com/JCSDA/spack-stack>`__ (v1.6.0)
+   * `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`__ (Skylab v7.0)
 
 These software prerequisites are pre-installed in the Land DA :term:`container` and on other Level 1 systems (see :ref:`below <LevelsOfSupport>` for details). However, users on non-Level 1 systems will need to install them.
 
@@ -71,6 +71,8 @@ Preconfigured (Level 1) systems for Land DA already have the required external l
 |           | intel-oneapi-mpi/2021.8.0         | /opt/jedi-bundle (inside the container)                         |
 +-----------+-----------------------------------+-----------------------------------------------------------------+
 
+.. COMMENT: Update paths!
+
 Level 2-4 Systems
 ===================
 
@@ -99,12 +101,8 @@ This :term:`umbrella repository` uses Git submodules and an ``app_build.sh`` fil
      - Repository Name
      - Repository Description
      - Authoritative Repository URL
-   * - DA_update
-     - land-DA
-     - Contains scripts and components for performing data assimilation (DA) procedures.
-     - https://github.com/ufs-community/land-DA/
-   * - *-- add_jedi_incr*
-     - *-- land-apply_jedi_incr*
+   * - apply_incr.fd
+     - land-apply_jedi_incr
      - Contains code that applies the JEDI-generated DA increment to UFS ``sfc_data`` restart 
      - https://github.com/NOAA-PSL/land-apply_jedi_incr
    * - ufsLand.fd
@@ -143,6 +141,7 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
    land-offline_workflow
     ├── doc
     ├── (exec)
+    ├── fix
     ├── jobs
     ├── (lib*)
     ├── modulefiles
@@ -150,30 +149,33 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     │     ├── check_release_outputs.sh
     │     ├── land_analysis_<forcing>_<platform>.yaml
     │     └── run_without_rocoto.sh
+    ├── scripts
     ├── sorc
+    |     ├── apply_incr.fd
+    |     |     ├── apply_incr_noahmp_snow.f90
+    |     |     └── NoahMPdisag_module.f90
     │     ├── (build)
     │     ├── cmake
-    │     │     ├── compiler_flags_*
-    │     │     └── landda_compiler_flags.cmake
+    │     │     └── compiler_flags_*.cmake
     │     ├── (conda)
-    │     ├── DA_update
-    │     │     ├── add_jedi_incr
-    │     │     ├── jedi/fv3-jedi
-    │     │     └── do_LandDA.sh
     │     ├── test
     │     ├── tile2tile_converter.fd
-    │     │     ├── cmake
-    │     │     └── config
     │     ├── ufsLand.fd
-    │     │     └── ccpp-physics
+    │     │     ├── ccpp-physics
+    │     │     └── driver
     │     ├── ufs_model.fd
     │     ├── vector2tile_converter.fd
-    │     │     ├── cmake
-    │     │     └── config
     │     ├── CMakeLists.txt
     │     └── app_build.sh
+    ├── ush
+    |     ├── hofx_analysis_stats.py
+    |     └── letkf_create_ens.py
+    ├── versions
     ├── LICENSE
-    ├── README.md
+    └── README.md
+
+
+.. COMMENT: Remove to other sections  
     ├── datm_cdeps_lnd_gswp3_rst
     ├── do_submit_cycle.sh
     ├── fv3_run
@@ -184,6 +186,8 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     ├── run_container_executable.sh
     ├── settings_DA_*
     └── submit_cycle.sh
+
+.. COMMENT: Update dir structure!
 
 :numref:`Table %s <Subdirectories>` describes the contents of the most important Land DA subdirectories. :numref:`Section %s <components>` describes the Land DA System components. Users can reference the :nco:`NCO Implementation Standards <ImplementationStandards.v11.0.0.pdf>` (p. 19) for additional details on repository structure in NCO-compliant repositories. 
 
