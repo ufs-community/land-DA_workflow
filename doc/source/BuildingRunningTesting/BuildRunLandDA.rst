@@ -11,6 +11,8 @@ This chapter provides instructions for building and running basic Land DA cases 
 
 Land DA now includes cycling/restart capabilities to run a multi-day experiment. 
 
+.. COMMENT: Remove land driver info?
+
 .. attention::
    
    These steps are designed for use on :ref:`Level 1 <LevelsOfSupport>` systems (i.e., Hera and Orion) and may require significant changes on other systems. It is recommended that users on other systems run the containerized version of Land DA. Users may reference :numref:`Chapter %s: Containerized Land DA Workflow <Container>` for instructions.
@@ -214,7 +216,7 @@ To run the experiment, users can automate job submission via crontab or submit t
 Automated Run
 ---------------
 
-To automate task submission, users must be on a system where cron is available. 
+To automate task submission, users must be on a system where cron is available. On Orion, 
 
 .. code-block:: console
 
@@ -319,3 +321,7 @@ Check for the output files for each cycle in the experiment directory:
    ls -l $LANDDAROOT/ptmp/test/com/landda/v1.2.1/landda.YYYYMMDD
 
 where ``YYYYMMDD`` is the cycle date. The experiment should generate several restart files. 
+
+Additionally, in the ``plot`` subdirectory, users will find images depicting the results of the ``analysis`` task for each cycle as a scatter plot (``hofx_oma_YYYMMDD_scatter.png``) and as a histogram (``hofx_oma_YYYYMMDD_histogram.png``). The scatter plot depicts a map of snow depth results, where red points indicate _____ and blue points indicate _____. The histogram shows ______. 
+
+.. COMMENT: What do the red/blue points indicate? Fill in above for map & histogram

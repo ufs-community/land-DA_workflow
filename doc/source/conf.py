@@ -50,6 +50,7 @@ rst_prolog = """
 .. |latestr| replace:: v1.2.0
 .. |tag| replace:: ``ufs-land-da-v1.2.0``
 .. |branch| replace:: ``release/public-v1.2.0``
+.. |skylabv| replace:: Skylab v7.0
 """
 
 # -- Linkcheck options -------------------------------------------------

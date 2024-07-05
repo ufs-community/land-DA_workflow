@@ -1,3 +1,6 @@
+.. role:: raw-html(raw)
+    :format: html
+
 .. _TechOverview:
 
 *********************
@@ -30,7 +33,7 @@ The Land DA System requires:
    * :term:`NetCDF`
    * Lmod 
    * `spack-stack <https://github.com/JCSDA/spack-stack>`__ (v1.6.0)
-   * `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`__ (Skylab v7.0)
+   * `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`__ (|skylabv|)
 
 These software prerequisites are pre-installed in the Land DA :term:`container` and on other Level 1 systems (see :ref:`below <LevelsOfSupport>` for details). However, users on non-Level 1 systems will need to install them.
 
@@ -51,25 +54,32 @@ Four levels of support have been defined for :term:`UFS` applications, and the L
 
 Level 1 Systems
 ==================
-Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and the ``jedi-bundle`` (Skylab v4.0). Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them. 
+Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and the ``jedi-bundle`` (|skylabv|). Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them. For the most updated information on stack locations, compilers, and MPI, users can check the :land-wflow-repo:`build and run version files <tree/develop/versions>` for their machine of choice. Similarly, users can check the :land-wflow-repo:`build_<machine>_intel <tree/develop/modulefiles>` file for the machine of their choice. 
 
-.. COMMENT: Update spack-stack to 1.5.1
+.. _stack-compiler-locations:
 
-+-----------+-----------------------------------+-----------------------------------------------------------------+
-| Platform  | Compiler/MPI                      | spack-stack & jedi-bundle Installations                         |
-+===========+===================================+=================================================================+
-| Hera      | intel/2022.1.2 /                  | /scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.3.0  |
-|           |                                   |                                                                 |
-|           | impi/2022.1.2                     | /scratch2/NAGAPE/epic/UFS_Land-DA/jedi/jedi-bundle              |
-+-----------+-----------------------------------+-----------------------------------------------------------------+
-| Orion     | intel/2022.1.2 /                  | /work/noaa/epic/role-epic/spack-stack/orion/spack-stack-1.3.0   |
-|           |                                   |                                                                 |
-|           | impi/2022.1.2                     | /work/noaa/epic/UFS_Land-DA/jedi/jedi-bundle                    |
-+-----------+-----------------------------------+-----------------------------------------------------------------+
-| Container | intel-oneapi-compilers/2021.8.0 / | /opt/spack-stack/ (inside the container)                        |
-|           |                                   |                                                                 |
-|           | intel-oneapi-mpi/2021.8.0         | /opt/jedi-bundle (inside the container)                         |
-+-----------+-----------------------------------+-----------------------------------------------------------------+
+.. list-table:: *Software Prerequisites & Locations*
+   :header-rows: 1
+   :widths: 10 20 70
+
+   * - Platform
+     - Compiler/MPI
+     - spack-stack & jedi-bundle Installations
+   * - Hera
+     - - intel/2021.5.0 / 
+       - impi/2021.5.1
+     - - /scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.6.0/envs/unified-env-rocky8/install/modulefiles/Core
+       - /scratch2/NAGAPE/epic/UFS_Land-DA_Dev/jedi_v7
+   * - Orion
+     - - intel/2021.9.0 /
+       - impi/2021.9.0
+     - - /work/noaa/epic/role-epic/spack-stack/orion/spack-stack-1.6.0/envs/unified-env-rocky9/install/modulefiles/Core
+       - /work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6
+   * - Container
+     - - intel-oneapi-compilers/2021.8.0 / 
+       - intel-oneapi-mpi/2021.8.0
+     - - /opt/spack-stack/ (inside the container)
+       - /opt/jedi-bundle (inside the container)
 
 .. COMMENT: Update paths!
 

@@ -6,7 +6,7 @@ Introduction
 
 This User's Guide provides guidance for running the Unified Forecast System 
 (:term:`UFS`) offline Land Data Assimilation (DA) System. Land DA is an offline version of the Noah Multi-Physics (Noah-MP) land surface model (LSM) used in the `UFS Weather Model <https://github.com/ufs-community/ufs-weather-model>`__ (WM). Its data assimilation framework uses 
-the Joint Effort for Data assimilation Integration (:term:`JEDI`) software. The offline UFS Land DA System currently only works with snow data. 
+the Joint Effort for Data assimilation Integration (:term:`JEDI`) software. Currently, the offline UFS Land DA System only works with snow data. 
 Thus, this User's Guide focuses primarily on the snow DA process.
 
 Since the |latestr| release, the following capabilities have been added to the Land DA System:
@@ -18,6 +18,7 @@ Since the |latestr| release, the following capabilities have been added to the L
 * Upgraded to spack-stack v1.6.0 (:land-wflow-repo:`PR #102 <pull/102>`)
 * Extended container support (:land-wflow-repo:`PR #85 <pull/85>`)
 * Updated directory structure for NCO compliance (:land-wflow-repo:`PR #75 <pull/75>`)
+* Removed land driver from CTest (:land-wflow-repo:`PR #123 <pull/123>`)
 
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
 
