@@ -4,18 +4,18 @@
 Land DA Workflow (Hera & Orion)
 ************************************
 
-This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (:term:`UFS`) Land DA System. Users can choose between two options: 
+This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (:term:`UFS`) Land DA System. Users can choose between two supported options: 
 
-   * A Dec. 21-22, 2019 00z sample case using ERA5 data with the UFS Land Driver (``land_analysis_era5_<machine>``)
-   * A Jan. 3-4, 2000 00z sample case using GSWP3 data with the UFS Noah-MP land component (``land_analysis_gswp3_<machine>``). 
+   * A Jan. 3-4, 2000 00z sample case using GSWP3 data with the UFS Noah-MP land component
+   * A Dec. 21-22, 2019 00z sample case using ERA5 data with the UFS Land Driver
 
-Land DA now includes cycling/restart capabilities to run a multi-day experiment. 
 
-.. COMMENT: Remove land driver info?
 
 .. attention::
    
    These steps are designed for use on :ref:`Level 1 <LevelsOfSupport>` systems (i.e., Hera and Orion) and may require significant changes on other systems. It is recommended that users on other systems run the containerized version of Land DA. Users may reference :numref:`Chapter %s: Containerized Land DA Workflow <Container>` for instructions.
+
+.. _create-dir:
 
 Create a Working Directory
 *****************************
@@ -101,13 +101,15 @@ To load the workflow environment, run:
 
 where ``<platform>`` is ``hera`` or ``orion``. 
 
+.. _configure-expt:
+
 Modify the Workflow Configuration YAML
 ========================================
 
 The ``develop`` branch includes two default experiments: 
 
-   * A Dec. 21, 2019 00z sample case using the UFS Land Driver.
    * A Jan. 3, 2000 00z sample case using the UFS Noah-MP land component. 
+   * A Dec. 21, 2019 00z sample case using the UFS Land Driver.
 
 Copy the experiment settings into ``land_analysis.yaml``:
 
@@ -120,10 +122,8 @@ where ``<platform>`` is ``hera`` or ``orion``.
    
 Users will need to configure certain elements of their experiment in ``land_analysis.yaml``: 
 
-   * ``MACHINE:`` A valid machine name (i.e., ``hera`` or ``orion``)
    * ``ACCOUNT:`` A valid account name. Hera, Orion, and most NOAA RDHPCS systems require a valid account name; other systems may not
    * ``EXP_BASEDIR:`` The full path to the directory where land-DA_workflow was cloned (i.e., ``$LANDDAROOT``)
-   * ``JEDI_INSTALL:`` The full path to the system's ``jedi-bundle`` installation
    * ``FORCING:`` Forcing options; ``gswp3`` or ``era5``
    * ``cycledef/spec:`` Cycle specification
 
@@ -138,7 +138,7 @@ Users may configure other elements of an experiment in ``land_analysis.yaml`` if
 Data
 ------
 
-:numref:`Table %s <Level1Data>` shows the locations of pre-staged data on NOAA :term:`RDHPCS` (i.e., Hera and Orion). 
+:numref:`Table %s <Level1Data>` shows the locations of pre-staged data on NOAA :term:`RDHPCS` (i.e., Hera and Orion). These data locations are already included in the ``land_analysis_*`` files but are provided here for informational purposes. 
    
 .. _Level1Data:
 
@@ -152,7 +152,7 @@ Data
    | Orion     | /work/noaa/epic/UFS_Land-DA_Dev/inputs           |
    +-----------+--------------------------------------------------+
 
-Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetDataC>`. Its sub-directories are soft-linked to the ``fix`` directory of the land-DA workflow by the build script ``sorc/app_build.sh``.
+Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetDataC>`. Its subdirectories are soft-linked to the ``fix`` directory of the land-DA workflow by the build script ``sorc/app_build.sh``.
 
 .. _generate-wflow:
 
@@ -268,11 +268,9 @@ If ``rocotorun`` was successful, the ``rocotostat`` command will print a status 
    200001040000   plot_stats                           -            -             -       -          -
    200001040000     forecast                           -            -             -       -          -
 
-Users will need to issue the ``rocotorun`` command multiple times. The tasks must run in order, and ``rocotorun`` initiates the next task once its dependencies have completed successfully. Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command. For each task, a log file is generated. These files are stored in ``$LANDDAROOT/com/output/logs/run_<forcing>``, where ``<forcing>`` is either ``gswp3`` or ``era5``. 
+Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command (whether issued manually or via cron automation). For each task, a log file is generated. These files are stored in ``$LANDDAROOT/ptmp/test/com/output/logs/run_<forcing>``, where ``<forcing>`` is either ``gswp3`` or ``era5``. 
 
 The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, and DEAD. Users may view the log files to determine why a task may have failed.
-
-.. COMMENT: Where are log files now?!
 
 .. _run-batch-script:
 
@@ -320,4 +318,7 @@ Check for the output files for each cycle in the experiment directory:
 
 where ``YYYYMMDD`` is the cycle date. The experiment should generate several restart files. 
 
-Additionally, in the ``plot`` subdirectory, users will find images depicting the results of the ``analysis`` task for each cycle as a scatter plot (``hofx_oma_YYYMMDD_scatter.png``) and as a histogram (``hofx_oma_YYYYMMDD_histogram.png``). The scatter plot is named OBS-ANA (i.e., Observation Minus Analysis [OMA]), and it depicts a map of snow depth results. Blue points indicate locations where the observed values are less than the analysis values, and red points indicate locations where the observed values are greater than the analysis values. The histogram plots *observation - analysis* values, with the difference in snow depth on the y-axis. 
+Plotting Results
+-----------------
+
+Additionally, in the ``plot`` subdirectory, users will find images depicting the results of the ``analysis`` task for each cycle as a scatter plot (``hofx_oma_YYYMMDD_scatter.png``) and as a histogram (``hofx_oma_YYYYMMDD_histogram.png``). The scatter plot is named OBS-ANA (i.e., Observation Minus Analysis [OMA]), and it depicts a map of snow depth results. Blue points indicate locations where the observed values are less than the analysis values, and red points indicate locations where the observed values are greater than the analysis values. The title lists the mean and standard deviation of the absolute value of the OMA values. The histogram plots OMA values on the x-axis and frequency density values on the y-axis. The title of the histogram lists the mean and standard deviation of the real value of the OMA values. 
