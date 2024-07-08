@@ -211,12 +211,12 @@ Run With Rocoto
 
    Users who do not have Rocoto installed on their system can view :numref:`Section %s: Run Without Rocoto <run-batch-script>`.
 
-To run the experiment, users can automate job submission via crontab or submit tasks manually via ``rocotorun``. 
+To run the experiment, users can automate job submission via :term:`crontab` or submit tasks manually via ``rocotorun``. 
 
 Automated Run
 ---------------
 
-To automate task submission, users must be on a system where cron is available. On Orion, 
+To automate task submission, users must be on a system where :term:`cron` is available. On Orion, cron is only available on the orion-login-1 node, so users will need to work on that node when running cron jobs on Orion.
 
 .. code-block:: console
 
@@ -224,7 +224,7 @@ To automate task submission, users must be on a system where cron is available. 
    conda deactivate        # optional
    ./launch_rocoto_wflow.sh add
 
-
+To check the status of the experiment, see :numref:`Section %s <VerifySuccess>` on tracking experiment progress.
 
 Manual Submission
 -------------------
@@ -235,7 +235,7 @@ To run the experiment, issue a ``rocotorun`` command from the ``parm`` directory
 
    rocotorun -w land_analysis.xml -d land_analysis.db
 
-Users will need to issue the ``rocotorun`` command multiple times. The tasks must run in order, and ``rocotorun`` initiates the next task once its dependencies have completed successfully. Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command. Details on checking experiment status are provided in the :ref:`next section <VerifySuccess>`.
+Users will need to issue the ``rocotorun`` command multiple times. The tasks must be run in order, and ``rocotorun`` initiates the next task once its dependencies have completed successfully. Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command. Details on checking experiment status are provided in the :ref:`next section <VerifySuccess>`.
 
 .. _VerifySuccess:
 
@@ -267,8 +267,6 @@ If ``rocotorun`` was successful, the ``rocotostat`` command will print a status 
    200001040000    post_anal                           -            -             -       -          -
    200001040000   plot_stats                           -            -             -       -          -
    200001040000     forecast                           -            -             -       -          -
-
-.. COMMENT: Add plotting task info!
 
 Users will need to issue the ``rocotorun`` command multiple times. The tasks must run in order, and ``rocotorun`` initiates the next task once its dependencies have completed successfully. Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command. For each task, a log file is generated. These files are stored in ``$LANDDAROOT/com/output/logs/run_<forcing>``, where ``<forcing>`` is either ``gswp3`` or ``era5``. 
 
@@ -322,6 +320,4 @@ Check for the output files for each cycle in the experiment directory:
 
 where ``YYYYMMDD`` is the cycle date. The experiment should generate several restart files. 
 
-Additionally, in the ``plot`` subdirectory, users will find images depicting the results of the ``analysis`` task for each cycle as a scatter plot (``hofx_oma_YYYMMDD_scatter.png``) and as a histogram (``hofx_oma_YYYYMMDD_histogram.png``). The scatter plot depicts a map of snow depth results, where red points indicate _____ and blue points indicate _____. The histogram shows ______. 
-
-.. COMMENT: What do the red/blue points indicate? Fill in above for map & histogram
+Additionally, in the ``plot`` subdirectory, users will find images depicting the results of the ``analysis`` task for each cycle as a scatter plot (``hofx_oma_YYYMMDD_scatter.png``) and as a histogram (``hofx_oma_YYYYMMDD_histogram.png``). The scatter plot is named OBS-ANA (i.e., Observation Minus Analysis [OMA]), and it depicts a map of snow depth results. Blue points indicate locations where the observed values are less than the analysis values, and red points indicate locations where the observed values are greater than the analysis values. The histogram plots *observation - analysis* values, with the difference in snow depth on the y-axis. 
