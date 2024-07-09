@@ -11,15 +11,15 @@ Joint Effort for Data Assimilation Integration (JEDI)
 
 .. attention::
 
-   Users are encouraged to visit the `JEDI Documentation <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/index.html>`__. Much of the information in this chapter is drawn directly from there with modifications to clarify JEDI's use specifically in the context of the Land DA System. 
+   Users are encouraged to visit the :jedi:`JEDI Documentation <inside/jedi-components/index.html>`. Much of the information in this chapter is drawn directly from there with modifications to clarify JEDI's use specifically in the context of the Land DA System. 
 
 The Joint Effort for Data assimilation Integration (:term:`JEDI`) is a unified and versatile :term:`data assimilation` (DA) system for Earth System Prediction that can be run on a variety of platforms. JEDI is developed by the Joint Center for Satellite Data Assimilation (`JCSDA <https://www.jcsda.org/>`__) and partner agencies, including NOAA. The core feature of JEDI is separation of concerns. The data assimilation update, observation selection and processing, and observation operators are all coded with no knowledge of or dependency on each other or on the forecast model. 
 
 The NOAH-MP offline Land DA System uses three JEDI components: 
    
    * The Object-Oriented Prediction System (:ref:`OOPS <jedi:top-oops>`) for the data assimilation algorithm 
-   * The Interface for Observation Data Access (`IODA <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ioda/index.html>`__) for the observation formatting and processing
-   * The Unified Forward Operator (`UFO <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ufo/index.html>`__) for comparing model forecasts and observations 
+   * The Interface for Observation Data Access (:jedi:`IODA <inside/jedi-components/ioda/index.html>`) for the observation formatting and processing
+   * The Unified Forward Operator (:jedi:`UFO <inside/jedi-components/ufo/index.html>`) for comparing model forecasts and observations 
 
 JEDI's Unified Forward Operator (UFO) links observation operators with the Object Oriented Prediction System (OOPS) to compute a simulated observation given a known model state. It does not restrict observation operators based on model-specific code structures or requirements. The UFO code structure provides generic classes for observation bias correction and quality control. Within this system, IODA converts the observation data into model-specific formats to be ingested by each model's data assimilation system. This involves model-specific data conversion efforts. 
 
@@ -31,7 +31,7 @@ A data assimilation experiment requires a ``.yaml`` configuration file that spec
 JEDI Configuration Files & Parameters
 ----------------------------------------
 
-To create the DA experiment, the user should create or modify an experiment-specific configuration ``.yaml`` file. This ``.yaml`` file should contain certain fundamental components: geometry, window begin, window length, background, driver, local ensemble DA, output increment, and observations. These components can be implemented differently for different models and observation types, so they frequently contain distinct parameters and variable names depending on the use case. Therefore, this section of the User's Guide focuses on assisting users with understanding and customizing these top-level configuration items in order to run Land DA experiments. Users may also reference the `JEDI Documentation <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/using/building_and_running/config_content.html>`__ for additional information. 
+To create the DA experiment, the user should create or modify an experiment-specific configuration ``.yaml`` file. This ``.yaml`` file should contain certain fundamental components: geometry, window begin, window length, background, driver, local ensemble DA, output increment, and observations. These components can be implemented differently for different models and observation types, so they frequently contain distinct parameters and variable names depending on the use case. Therefore, this section of the User's Guide focuses on assisting users with understanding and customizing these top-level configuration items in order to run Land DA experiments. Users may also reference the :jedi:`JEDI Documentation <using/building_and_running/config_content.html>` for additional information. 
 
 Users may find the following example ``GHCN.yaml`` configuration file to be a helpful starting point. A similar file (with user-appropriate modifications) is required by JEDI for snow data assimilation. The following subsections will explain the variables within each top-level item of the ``.yaml`` file. The ``GHCN.yaml`` file for the |latestr| release can be found within the cloned repository at ``DA_update/jedi/fv3-jedi/yaml_files/psl_develop/GHCN.yaml``. 
 
@@ -430,7 +430,7 @@ The ``obs error:`` section explains how to calculate the observation error covar
 Observation filters are used to define Quality Control (QC) filters. They have access to observation values and metadata, model values at observation locations, simulated observation value, and their own private data. See :ref:`Observation Filters <jedi:observation-filters>` in the JEDI Documentation for more detail. The ``obs filters:`` section contains the following fields:
 
    ``filter``
-      Describes the parameters of a given QC filter. Valid values include: ``Bounds Check`` | ``Background Check`` | ``Domain Check`` | ``RejectList``. See descriptions in the JEDI's `Generic QC Filters <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ufo/qcfilters/GenericQC.html>`__ Documentation for more. 
+      Describes the parameters of a given QC filter. Valid values include: ``Bounds Check`` | ``Background Check`` | ``Domain Check`` | ``RejectList``. See descriptions in the JEDI's :jedi:`Generic QC Filters <inside/jedi-components/ufo/qcfilters/GenericQC.html>` Documentation for more. 
 
       +--------------------+--------------------------------------------------+
       | Filter Name        | Description                                      |
@@ -475,7 +475,7 @@ Observation filters are used to define Quality Control (QC) filters. They have a
       Maximum value for variables in the filter. 
 
    ``threshold``
-      This variable may function differently depending on the filter it is used in. In the `Background Check Filter <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/inside/jedi-components/ufo/qcfilters/GenericQC.html#background-check-filter>`__, an observation is rejected when the difference between the observation value (*y*) and model simulated value (*H(x)*) is larger than the ``threshold`` * *observation error*. 
+      This variable may function differently depending on the filter it is used in. In the :jedi:`Background Check Filter <inside/jedi-components/ufo/qcfilters/GenericQC.html#background-check-filter>`, an observation is rejected when the difference between the observation value (*y*) and model simulated value (*H(x)*) is larger than the ``threshold`` * *observation error*. 
 
    ``action``
       Indicates which action to take once an observation has been flagged by a filter. See :ref:`Filter Actions <jedi:filter-actions>` in the JEDI documentation for a full explanation and list of valid values. 
@@ -539,7 +539,7 @@ The grid description files appear in :numref:`Section %s <V2TInputFiles>` and ar
 Observation Data
 ====================
 
-Observation data from 2000 and 2019 are provided in NetCDF format for the |latestr| release. Instructions for downloading the data are provided in :numref:`Section %s <GetDataC>`, and instructions for accessing the data on :ref:`Level 1 Systems <LevelsOfSupport>` are provided in :numref:`Section %s <GetData>`. Currently, data is taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`__ (GHCN), but eventually, data from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`__) will also be available for use. 
+Observation data from 2000 and 2019 are provided in NetCDF format for the |latestr| release. Instructions for downloading the data are provided in :numref:`Section %s <GetDataC>`, and instructions for accessing the data on :ref:`Level 1 Systems <LevelsOfSupport>` are provided in :numref:`Section %s <GetData>`. Currently, data is taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_ (GHCN), but eventually, data from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`_) will also be available for use. 
 
 Observation Types
 --------------------
@@ -547,7 +547,7 @@ Observation Types
 GHCN Snow Depth Files
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Snow depth observations are taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`__, which provides daily climate summaries sourced from a global network of 100,000 stations. NOAA's `NCEI <https://www.ncei.noaa.gov/>`__ provides access to these snow depth and snowfall measurements through daily-generated individual station ASCII files or GZipped tar files of full-network observations on the NCEI server or Climate Data Online. Alternatively, users may acquire yearly tarballs via ``wget``:
+Snow depth observations are taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_, which provides daily climate summaries sourced from a global network of 100,000 stations. NOAA's `NCEI <https://www.ncei.noaa.gov/>`_ provides access to these snow depth and snowfall measurements through daily-generated individual station ASCII files or GZipped tar files of full-network observations on the NCEI server or Climate Data Online. Alternatively, users may acquire yearly tarballs via ``wget``:
 
 .. code-block:: console
 
@@ -626,11 +626,11 @@ Observation Location and Processing
 GHCN
 ^^^^^^
 
-GHCN files for 2000 and 2019 are already provided in IODA format for the |latestr| release. :numref:`Table %s <GetData>` indicates where users can find data on NOAA :term:`RDHPCS` platforms. Tar files containing the 2000 and 2019 data are located in the publicly-available `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html>`__. Once untarred, the snow depth files are located in ``/inputs/DA/snow_depth/GHCN/data_proc/{YEAR}``. The 2019 GHCN IODA files were provided by Clara Draper (NOAA PSL). Each file follows the naming convention of ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc``, where ``${YYYY}`` is the four-digit cycle year, ``${MM}`` is the two-digit cycle month, and ``${DD}`` is the two-digit cycle day. 
+GHCN files for 2000 and 2019 are already provided in IODA format for the |latestr| release. :numref:`Table %s <GetData>` indicates where users can find data on NOAA :term:`RDHPCS` platforms. Tar files containing the 2000 and 2019 data are located in the publicly-available `Land DA Data Bucket <https://noaa-ufs-land-da-pds.s3.amazonaws.com/index.html>`_. Once untarred, the snow depth files are located in ``/inputs/DA/snow_depth/GHCN/data_proc/{YEAR}``. The 2019 GHCN IODA files were provided by Clara Draper (NOAA PSL). Each file follows the naming convention of ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc``, where ``${YYYY}`` is the four-digit cycle year, ``${MM}`` is the two-digit cycle month, and ``${DD}`` is the two-digit cycle day. 
 
 In each experiment, the ``DA_config`` file sets the name of the experiment configuration file. This configuration file is typically named ``settings_DA_test``. Before assimilation, if "GHCN" was specified as the observation type in the ``DA_config`` file, the ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` file corresponding to the specified cycle date is soft-linked to the JEDI working directory (``${JEDIWORKDIR}``) with a naming-convention change (i.e., ``GHCN_${YYYY}${MM}${DD}${HH}.nc``). Here, the GHCN IODA file is appended with the cycle hour, ``${HH}`` which is extracted from the ``${STARTDATE}`` variable defined in the relevant ``DA_config`` file. 
 
-Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, the observations are further quality controlled and checked using ``letkf_land.yaml`` (itself a concatenation of ``GHCN.yaml`` and ``letkfoi_snow.yaml``; see the `GitHub yaml files <https://github.com/ufs-community/land-DA/tree/660d64da52bbe6fd5ccf29dad05fe6be3f10e749/jedi/fv3-jedi/yaml_files>`__ for more detail). The GHCN-specific observation filters, domain checks, and quality control parameters from ``GHCN.yaml`` ensure that only snow depth observations which meet specific criteria are assimilated (the rest are rejected). The contents of ``GHCN.yaml`` are listed below:
+Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, the observations are further quality controlled and checked using ``letkf_land.yaml`` (itself a concatenation of ``GHCN.yaml`` and ``letkfoi_snow.yaml``; see the `GitHub yaml files <https://github.com/ufs-community/land-DA/tree/660d64da52bbe6fd5ccf29dad05fe6be3f10e749/jedi/fv3-jedi/yaml_files>`_ for more detail). The GHCN-specific observation filters, domain checks, and quality control parameters from ``GHCN.yaml`` ensure that only snow depth observations which meet specific criteria are assimilated (the rest are rejected). The contents of ``GHCN.yaml`` are listed below:
 
 .. code-block:: yaml
 

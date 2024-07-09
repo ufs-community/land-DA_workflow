@@ -15,11 +15,11 @@ Input Files
 The UFS land model requires multiple input files to run, including static datasets
 (fix files containing climatological information, terrain, and land use
 data), initial conditions files, and forcing files. Users may reference the `Community Noah-MP User's
-Guide <https://www.jsg.utexas.edu/noah-mp/files/Users_Guide_v0.pdf>`__
+Guide <https://www.jsg.utexas.edu/noah-mp/files/Users_Guide_v0.pdf>`_
 for a detailed technical description of certain elements of the Noah-MP model.
 
 In both the land component and land driver implementations of Noah-MP, static file(s) and initial conditions file(s) specify model parameters. 
-These files are publicly available via the `Land DA data bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. 
+These files are publicly available via the `Land DA data bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. 
 Users can download the data and untar the file via the command line:
 
 .. _TarFile:
@@ -64,7 +64,7 @@ Input Files for the ``DATM`` + ``LND`` Configuration with GSWP3 data
 
 With the integration of the UFS Noah-MP land component into the Land DA System in the v1.2.0 release, model forcing options have been enhanced so that users can run the UFS land component (:term:`LND`) with the data atmosphere component (:term:`DATM`). Updates provide a new analysis option on the cubed-sphere native grid using :term:`GSWP3` forcing data to run a single-day experiment for 2000-01-03. An artificial GHCN snow depth observation is provided for data assimilation (see :numref:`Section %s <observation-data>` for more on GHCN files). The GHCN observations will be extended in the near future. A new configuration setting file is also provided (``settings_DA_cycle_gswp3``). 
 
-On Level 1 platforms, the requisite data is pre-staged at the locations listed in :numref:`Section %s <Level1Data>`. The data are also publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. 
+On Level 1 platforms, the requisite data is pre-staged at the locations listed in :numref:`Section %s <Level1Data>`. The data are also publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. 
 
 .. attention::
 
@@ -73,7 +73,7 @@ On Level 1 platforms, the requisite data is pre-staged at the locations listed i
 Forcing Files
 ---------------
 
-:term:`Forcing files<forcing data>` for the land component configuration come from the Global Soil Wetness Project Phase 3 (`GSWP3 <https://hydro.iis.u-tokyo.ac.jp/GSWP3/>`__) dataset. They are located in the ``inputs/UFS_WM/DATM_GSWP3_input_data`` directory (downloaded :ref:`above <InputFiles>`).
+:term:`Forcing files<forcing data>` for the land component configuration come from the Global Soil Wetness Project Phase 3 (`GSWP3 <https://hydro.iis.u-tokyo.ac.jp/GSWP3/>`_) dataset. They are located in the ``inputs/UFS_WM/DATM_GSWP3_input_data`` directory (downloaded :ref:`above <InputFiles>`).
 
 .. code-block:: console 
 
@@ -96,7 +96,7 @@ Noah-MP Initial Conditions
 The offline Land DA System currently only supports snow DA. 
 The initial conditions files include the initial state variables that are required for the UFS land snow DA to begin a cycling run. The data must be provided in :term:`netCDF` format. 
 
-By default, on Level 1 systems and in the Land DA data bucket, the initial conditions files are located at ``inputs/UFS_WM/NOAHMP_IC`` (downloaded :ref:`above <InputFiles>`). Each file corresponds to one of the six tiles of the `global FV3 grid <https://www.gfdl.noaa.gov/fv3/fv3-grids/>`__.  
+By default, on Level 1 systems and in the Land DA data bucket, the initial conditions files are located at ``inputs/UFS_WM/NOAHMP_IC`` (downloaded :ref:`above <InputFiles>`). Each file corresponds to one of the six tiles of the `global FV3 grid <https://www.gfdl.noaa.gov/fv3/fv3-grids/>`_.  
 
 .. code-block:: console
 
@@ -184,7 +184,7 @@ the static file (``ufs-land_C96_static_fields.nc``),
 the initial conditions file (``ufs-land_C96_init_*.nc``), 
 and the model configuration file (``ufs-land.namelist.noahmp``). 
 These files and their parameters are described in the following subsections. 
-They are publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__. 
+They are publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. 
 
 Static File (``ufs-land_C96_static_fields.nc``)
 -------------------------------------------------

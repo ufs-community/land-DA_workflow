@@ -322,3 +322,16 @@ Plotting Results
 -----------------
 
 Additionally, in the ``plot`` subdirectory, users will find images depicting the results of the ``analysis`` task for each cycle as a scatter plot (``hofx_oma_YYYMMDD_scatter.png``) and as a histogram (``hofx_oma_YYYYMMDD_histogram.png``). The scatter plot is named OBS-ANA (i.e., Observation Minus Analysis [OMA]), and it depicts a map of snow depth results. Blue points indicate locations where the observed values are less than the analysis values, and red points indicate locations where the observed values are greater than the analysis values. The title lists the mean and standard deviation of the absolute value of the OMA values. The histogram plots OMA values on the x-axis and frequency density values on the y-axis. The title of the histogram lists the mean and standard deviation of the real value of the OMA values. 
+
+.. |logo1| image:: https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/images/LandDAScatterPlot.png
+   :alt: Map of snow depth in millimeters (observation minus analysis)
+
+.. |logo2| image:: https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/images/LandDAHistogram.png 
+   :alt: Histogram of snow depth in millimeters (observation minus analysis) on the x-axis and frequency density on the y-axis
+
+.. _sample-plots:
+
+.. list-table:: Snow Depth Plots for 2000-01-04
+
+   * - |logo1|
+     - |logo2|
