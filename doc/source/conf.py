@@ -113,7 +113,6 @@ def setup(app):
 intersphinx_mapping = {
    'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0', None),
    'spack-stack': ('https://spack-stack.readthedocs.io/en/1.3.0/', None),
-   'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/develop/', None),
    'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/', None),
 }
 
@@ -127,5 +126,6 @@ extlinks = {'github-docs': ('https://docs.github.com/en/%s', '%s'),
             'rtd': ('https://readthedocs.org/projects/land-da-workflow/%s', '%s'),
             'land-wflow-repo': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'land-wflow-wiki': ('https://github.com/ufs-community/land-DA_workflow/wiki/%s','%s'),
+            'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/develop/%s', '%s'),
             'uw': ('https://uwtools.readthedocs.io/en/main/%s', '%s'),
             }

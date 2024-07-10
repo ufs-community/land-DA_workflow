@@ -31,7 +31,7 @@ This will submit an interactive job, load the appropriate modulefiles, and run t
 Tests
 *******
 
-The ERA5 CTests test the operability of seven major elements of the Land DA System: ``vector2tile``, ``create_ens``, ``letkfoi_snowda``, ``apply_jediincr``, ``tile2vector``, ``land_driver``, and ``ufs_datm_land``. The tests and their dependencies are listed in the ``land-DA_workflow/test/CMakeLists.txt`` file. Currently, the CTests are only run on Hera and Orion; they cannot yet be run via container. 
+The ERA5 CTests test the operability of six major elements of the Land DA System: ``vector2tile``, ``create_ens``, ``letkfoi_snowda``, ``apply_jediincr``, ``tile2vector``, and ``ufs_datm_land``. The tests and their dependencies are listed in the ``land-DA_workflow/test/CMakeLists.txt`` file. Currently, the CTests are only run on Hera and Orion; they cannot yet be run via container. 
 
 .. list-table:: *Land DA CTests*
    :widths: 20 50
@@ -49,7 +49,5 @@ The ERA5 CTests test the operability of seven major elements of the Land DA Syst
      - Tests the ability to add a JEDI increment.
    * - ``test_tile2vector``
      - Tests the tile-to-vector function for use in ``ufs-land-driver``
-   * - ``test_land_driver``
-     - Tests proper functioning of ``ufs-land-driver``
    * - ``test_ufs_datm_land``
      - Tests proper functioning of the UFS land model (``ufs-datm-lnd``)

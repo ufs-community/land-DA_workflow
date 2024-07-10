@@ -32,12 +32,12 @@ The Land DA System requires:
    * Python
    * :term:`NetCDF`
    * Lmod 
-   * `spack-stack <https://github.com/JCSDA/spack-stack>`__ (v1.6.0)
-   * `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`__ (|skylabv|)
+   * `spack-stack <https://github.com/JCSDA/spack-stack>`_ (v1.6.0)
+   * `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`_ (|skylabv|)
 
 These software prerequisites are pre-installed in the Land DA :term:`container` and on other Level 1 systems (see :ref:`below <LevelsOfSupport>` for details). However, users on non-Level 1 systems will need to install them.
 
-Before using the Land DA container, users will need to install `Singularity/Apptainer <https://apptainer.org/docs/admin/1.2/installation.html>`__ and an **Intel** MPI (available `free here <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`__). 
+Before using the Land DA container, users will need to install `Singularity/Apptainer <https://apptainer.org/docs/admin/1.2/installation.html>`_ and an **Intel** MPI (available `free here <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`_). 
 
 
 .. _LevelsOfSupport:
@@ -80,8 +80,6 @@ Preconfigured (Level 1) systems for Land DA already have the required external l
        - intel-oneapi-mpi/2021.8.0
      - - /opt/spack-stack/ (inside the container)
        - /opt/jedi-bundle (inside the container)
-
-.. COMMENT: Update paths!
 
 Level 2-4 Systems
 ===================
@@ -184,21 +182,6 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     ├── LICENSE
     └── README.md
 
-
-.. COMMENT: Remove to other sections  
-    ├── datm_cdeps_lnd_gswp3_rst
-    ├── do_submit_cycle.sh
-    ├── fv3_run
-    ├── incdate.sh
-    ├── land_mods
-    ├── module_check.sh
-    ├── release.environment
-    ├── run_container_executable.sh
-    ├── settings_DA_*
-    └── submit_cycle.sh
-
-.. COMMENT: Update dir structure!
-
 :numref:`Table %s <Subdirectories>` describes the contents of the most important Land DA subdirectories. :numref:`Section %s <components>` describes the Land DA System components. Users can reference the :nco:`NCO Implementation Standards <ImplementationStandards.v11.0.0.pdf>` (p. 19) for additional details on repository structure in NCO-compliant repositories. 
 
 .. _Subdirectories:
@@ -213,6 +196,8 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
      - Repository documentation
    * - exec
      - Binary executables
+   * - fix
+     - Location of fix/static files 
    * - jobs
      - :term:`J-job <J-jobs>` scripts launched by Rocoto
    * - lib
