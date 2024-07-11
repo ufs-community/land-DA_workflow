@@ -6,10 +6,8 @@ Land DA Workflow (Hera & Orion)
 
 This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (:term:`UFS`) Land DA System. Users can choose between two supported options: 
 
-   * A Jan. 3-4, 2000 00z sample case using GSWP3 data with the UFS Noah-MP land component
-   * A Dec. 21-22, 2019 00z sample case using ERA5 data with the UFS Land Driver
-
-
+   * A Jan. 3-4, 2000 00z sample case using :term:`GSWP3` data with the UFS Noah-MP land component
+   * A Dec. 21-22, 2019 00z sample case using :term:`ERA5` data with the UFS Land Driver
 
 .. attention::
    
@@ -290,6 +288,8 @@ Check Experiment Output
 =========================
 
 As the experiment progresses, it will generate a number of directories to hold intermediate and output files. The directory structure for those files and directories appears below:
+
+.. _land-da-dir-structure:
 
 .. code-block:: console
 
