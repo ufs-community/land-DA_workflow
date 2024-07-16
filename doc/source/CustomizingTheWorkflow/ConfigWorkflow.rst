@@ -170,10 +170,16 @@ Entities are constants that can be referred to throughout the workflow using the
    Specifies the file stub/name for orography files in ``TPATH``. This file stub is named ``oro_C${RES}`` for atmosphere-only orography files and ``oro_C{RES}.mx100`` for atmosphere and ocean orography files. When Land DA is compiled with ``sorc/app_build.sh``, the subdirectories of the fix files should be linked into the ``fix`` directory, and orography files can be found in ``fix/FV3_fix_tiled/C96``. 
 
 ``DATADEP_FILE1:`` (Default: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>")
+   File name for the dependency check for the task ``pre_anal``. The ``pre_anal`` task is triggered only when one or more of the ``DATADEP_FILE#`` files exists. Otherwise, the task will not be submitted.
+
 ``DATADEP_FILE2:`` (Default: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.nc</cyclestr>")
+   File name for the dependency check for the task ``pre_anal``. The ``pre_anal`` task is triggered only when one or more of the ``DATADEP_FILE#`` files exists. Otherwise, the task will not be submitted.
+
 ``DATADEP_FILE3:`` (Default: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>")
+   File name for the dependency check for the task ``pre_anal``. The ``pre_anal`` task is triggered only when one or more of the ``DATADEP_FILE#`` files exists. Otherwise, the task will not be submitted.
+
 ``DATADEP_FILE4:`` (Default: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.nc</cyclestr>")
-   File names for the dependency check for the task ``pre_anal``. This means that ``pre_anal`` is triggered only when one of them exists. Otherwise, the task will not be submitted.
+   File name for the dependency check for the task ``pre_anal``. The ``pre_anal`` task is triggered only when one or more of the ``DATADEP_FILE#`` files exists. Otherwise, the task will not be submitted.
     
 
 NCO Directory Structure Entities
@@ -182,7 +188,7 @@ NCO Directory Structure Entities
 Standard environment variables are defined in the NCEP Central Operations :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` document. These variables are used in forming the path to various directories containing input, output, and workflow files. For a visual aid, see the :ref:`Land DA Directory Structure Diagram <land-da-dir-structure>`. The variables are defined in the WCOSS Implementation Standards document (pp. 4-5) as follows:
 
 ``HOMElandda:`` (Default: "&EXP_BASEDIR;/land-DA_workflow")
-   The location of the :github:`land-DA_workflow` clone. 
+   The location of the :github:`land-DA_workflow <>` clone. 
 
 ``PTMP:`` (Default: "&EXP_BASEDIR;/ptmp")
    User-defined path to the ``com``-type directories.
@@ -260,7 +266,7 @@ Each task may contain attributes (``attrs:``), just as in the overarching ``work
 
 The following subsections explain any variables that have not already been explained/defined above. 
 
-.. _sample_task:
+.. _sample-task:
 
 Sample Task: Analysis Task (``task_analysis``)
 ------------------------------------------------
@@ -364,7 +370,7 @@ For most workflow tasks, whatever value is set in the ``workflow.entities:`` sec
 Miscellaneous Task Values
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The authoritative :rocoto:`Rocoto documentation` discusses a number of miscellaneous task attributes in detail. A brief overview is provided in this section. 
+The authoritative :rocoto:`Rocoto documentation <>` discusses a number of miscellaneous task attributes in detail. A brief overview is provided in this section. 
 
 .. code-block:: console
    
@@ -448,14 +454,14 @@ Other tasks may list data or time dependencies. For example, the pre-analysis ta
                  age: 5
                value: "&DATADEP_FILE4;"
 
-For details on the dependency details (e.g., ``attrs:``, ``age:``, ``value:`` tags), view the authoritative :rocoto:`Rocoto documentation`.
+For details on the dependency details (e.g., ``attrs:``, ``age:``, ``value:`` tags), view the authoritative :rocoto:`Rocoto documentation <>`.
 
 .. _prep-obs:
 
 Observation Preparation Task (``task_prep_obs``)
 --------------------------------------------------
 
-Parameters for the observation preparation task are set in the ``task_prep_obs:`` section of the ``land_analysis_<machine>.yaml`` file. Most task variables are the same as the defaults set and defined in the :ref:`Workflow Entities <wf-entities>` section. Variables common to all tasks are discussed in more detail in the :ref:`Sample Task <sample_task>` section, although the default values may differ. 
+Parameters for the observation preparation task are set in the ``task_prep_obs:`` section of the ``land_analysis_<machine>.yaml`` file. Most task variables are the same as the defaults set and defined in the :ref:`Workflow Entities <wf-entities>` section. Variables common to all tasks are discussed in more detail in the :ref:`Sample Task <sample-task>` section, although the default values may differ. 
 
 .. code-block:: console
 
@@ -494,7 +500,7 @@ Parameters for the observation preparation task are set in the ``task_prep_obs:`
 Pre-Analysis Task (``task_pre_anal``)
 ---------------------------------------
 
-Parameters for the pre-analysis task are set in the ``task_pre_anal:`` section of the ``land_analysis_<machine>.yaml`` file. Most task variables are the same as the defaults set and defined in the :ref:`Workflow Entities <wf-entities>` section. Variables common to all tasks are discussed in more detail in the :ref:`Sample Task <sample_task>` section, although the default values may differ. 
+Parameters for the pre-analysis task are set in the ``task_pre_anal:`` section of the ``land_analysis_<machine>.yaml`` file. Most task variables are the same as the defaults set and defined in the :ref:`Workflow Entities <wf-entities>` section. Variables common to all tasks are discussed in more detail in the :ref:`Sample Task <sample-task>` section, although the default values may differ. 
 
 .. code-block:: console
 
@@ -560,7 +566,7 @@ Parameters for the analysis task are set in the ``task_analysis:`` section of th
 Post-Analysis Task (``task_post_anal``)
 -----------------------------------------
 
-Parameters for the post analysis task are set in the ``task_post_anal:`` section of the ``land_analysis_<machine>.yaml`` file. Most task variables are the same as the defaults set and defined in the :ref:`Workflow Entities <wf-entities>` section. Variables common to all tasks are discussed in more detail in the :ref:`Sample Task <sample_task>` section, although the default values may differ.
+Parameters for the post analysis task are set in the ``task_post_anal:`` section of the ``land_analysis_<machine>.yaml`` file. Most task variables are the same as the defaults set and defined in the :ref:`Workflow Entities <wf-entities>` section. Variables common to all tasks are discussed in more detail in the :ref:`Sample Task <sample-task>` section, although the default values may differ.
 
 .. code-block:: console
 
@@ -604,7 +610,7 @@ Parameters for the post analysis task are set in the ``task_post_anal:`` section
 Plotting Task (``task_plot_stats``)
 -------------------------------------
 
-Parameters for the plotting task are set in the ``task_plot_stats:`` section of the ``land_analysis_<machine>.yaml`` file. Most task variables are the same as the defaults set and defined in the :ref:`Workflow Entities <wf-entities>` section. Variables common to all tasks are discussed in more detail in the :ref:`Sample Task <sample_task>` section, although the default values may differ. 
+Parameters for the plotting task are set in the ``task_plot_stats:`` section of the ``land_analysis_<machine>.yaml`` file. Most task variables are the same as the defaults set and defined in the :ref:`Workflow Entities <wf-entities>` section. Variables common to all tasks are discussed in more detail in the :ref:`Sample Task <sample-task>` section, although the default values may differ. 
 
 .. code-block:: console
 
@@ -644,7 +650,7 @@ Parameters for the plotting task are set in the ``task_plot_stats:`` section of 
 Forecast Task (``task_forecast``)
 ----------------------------------
 
-Parameters for the forecast task are set in the ``task_forecast:`` section of the ``land_analysis_<machine>.yaml`` file. Most task variables are the same as the defaults set and defined in the :ref:`Workflow Entities <wf-entities>` section. Variables common to all tasks are discussed in more detail in the :ref:`Sample Task <sample_task>` section, although the default values may differ. 
+Parameters for the forecast task are set in the ``task_forecast:`` section of the ``land_analysis_<machine>.yaml`` file. Most task variables are the same as the defaults set and defined in the :ref:`Workflow Entities <wf-entities>` section. Variables common to all tasks are discussed in more detail in the :ref:`Sample Task <sample-task>` section, although the default values may differ. 
 
 .. code-block:: console
 
