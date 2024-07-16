@@ -17,16 +17,38 @@ From the working directory (``$LANDDAROOT``), navigate to ``build``. Then run:
 
 .. code-block:: console
    
-   salloc --ntasks 8 --exclusive --qos=debug --partition=debug --time=00:30:00 --account=<account_name>
+   salloc --ntasks 8 --exclusive --qos=debug --partition=<partition> --time=00:30:00 --account=<account_name>
    cd land-DA_workflow/sorc/build
    source ../../versions/build.ver_<platform>
    module use ../../modulefiles
    module load build_<platform>_intel 
    ctest
 
-where ``<account_name>`` corresponds to the user's actual account name and ``<platform>`` is ``hera`` or ``orion``.
+where ``<account_name>`` corresponds to the user's actual account name, ``<partition>`` is a valid partition on the platform of choice (e.g., ``debug`` or ``orion``), and ``<platform>`` is ``hera`` or ``orion``.
 
 This will submit an interactive job, load the appropriate modulefiles, and run the CTests. 
+
+If the tests are successful, a message will be printed to the console. For example:
+
+.. code-block:: console
+
+   Test project /work/noaa/epic/${USER}/landda/land-DA_workflow/sorc/build
+       Start 1: test_vector2tile
+   1/6 Test #1: test_vector2tile .................   Passed   12.01 sec
+       Start 2: test_create_ens
+   2/6 Test #2: test_create_ens ..................   Passed   13.91 sec
+       Start 3: test_letkfoi_snowda
+   3/6 Test #3: test_letkfoi_snowda ..............   Passed   67.94 sec
+       Start 4: test_apply_jediincr
+   4/6 Test #4: test_apply_jediincr ..............   Passed    6.88 sec
+       Start 5: test_tile2vector
+   5/6 Test #5: test_tile2vector .................   Passed   15.36 sec
+       Start 6: test_ufs_datm_land
+   6/6 Test #6: test_ufs_datm_land ...............   Passed   98.56 sec
+
+   100% tests passed, 0 tests failed out of 6
+
+   Total Test time (real) = 217.06 sec
 
 Tests
 *******
