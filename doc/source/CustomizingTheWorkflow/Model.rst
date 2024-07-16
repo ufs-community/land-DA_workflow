@@ -838,6 +838,7 @@ The input files containing grid information are listed in :numref:`Table %s <Gri
 .. _GridInputFiles:
 
 .. list-table:: Input Files Containing Grid Information
+   :widths: 30 70
    :header-rows: 1
 
    * - Filename
@@ -855,7 +856,7 @@ The input files containing grid information are listed in :numref:`Table %s <Gri
 Configuration File
 ======================
 
-This section describes the options in the ``namelist.vector2tile`` file.
+This section describes the options in the ``namelist.vector2tile`` file (derived from ``parm/template.vector2tile`` files. )
 
 Run Setup Parameters
 ----------------------
@@ -900,6 +901,9 @@ Parameters for Restart Conversion
 
 These parameters apply *only* to restart conversion.
 
+``restart_date``
+   Specifies the time stamp for restart conversion in "YYYY-MM-DD HH:00:00" format. 
+
 ``static_filename``
    Specifies the path for static file.
 
@@ -910,8 +914,7 @@ These parameters apply *only* to restart conversion.
    Specifies the location of tile restart file, tile-to-vector direction.
 
 ``output_path``
-   Specifies the path for converted files. If this is same
-   as tile/vector path, the files may be overwritten.
+   Specifies the path for converted files. If this is same as tile/vector path, the files may be overwritten.
 
 Perturbation Mapping Parameters
 ----------------------------------
