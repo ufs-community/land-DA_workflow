@@ -11,9 +11,9 @@ copyright = '2023, '
 author = ' '
 
 # The short X.Y version
-version = 'v1.2'
+version = 'develop'
 # The full version, including alpha/beta/rc tags
-release = 'v1.2.0'
+release = 'develop'
 
 numfig = True
 
@@ -113,7 +113,6 @@ def setup(app):
 intersphinx_mapping = {
    'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0', None),
    'spack-stack': ('https://spack-stack.readthedocs.io/en/1.3.0/', None),
-   'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/', None),
 }
 
 # -- Options for extlinks extension ---------------------------------------
@@ -121,6 +120,7 @@ intersphinx_mapping = {
 extlinks_detect_hardcoded_links = True
 extlinks = {'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'github-docs': ('https://docs.github.com/en/%s', '%s'),
+            'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/%s', '%s'),
             'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/%s', '%s'),
             'nco': ('https://www.nco.ncep.noaa.gov/idsb/implementation_standards/%s', '%s'),
             'rocoto': ('https://christopherwharrop.github.io/rocoto/%s', '%s'),
