@@ -123,7 +123,7 @@ This :term:`umbrella repository` uses Git submodules and an ``app_build.sh`` fil
      - https://github.com/ufs-community/ccpp-physics/
    * - ufs_model.fd
      - ufs-weather-model
-     - Repository for the UFS Weather Model (WM). This repository contains a number of subrepositories, which are documented :doc:`in the WM User's <ufs-wm:CodeOverview>`.
+     - Repository for the UFS Weather Model (WM). This repository contains a number of subrepositories, which are documented :ufs-wm:`in the WM User's <CodeOverview.html>`.
      - https://github.com/ufs-community/ufs-weather-model/
    * - vector2tile_converter.fd
      - land-vector2tile
