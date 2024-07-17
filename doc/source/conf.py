@@ -121,7 +121,7 @@ extlinks_detect_hardcoded_links = True
 extlinks = {'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'github-docs': ('https://docs.github.com/en/%s', '%s'),
             'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/%s', '%s'),
-            'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0/%s', '%s'),
+            'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/7.0.0/%s', '%s'),
             'nco': ('https://www.nco.ncep.noaa.gov/idsb/implementation_standards/%s', '%s'),
             'rocoto': ('https://christopherwharrop.github.io/rocoto/%s', '%s'),
             'rst': ('https://www.sphinx-doc.org/en/master/usage/restructuredtext/%s', '%s'),
