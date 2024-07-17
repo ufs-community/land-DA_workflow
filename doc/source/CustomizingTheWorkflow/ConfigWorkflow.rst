@@ -181,6 +181,7 @@ Entities are constants that can be referred to throughout the workflow using the
 ``DATADEP_FILE4:`` (Default: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.nc</cyclestr>")
    File name for the dependency check for the task ``pre_anal``. The ``pre_anal`` task is triggered only when one or more of the ``DATADEP_FILE#`` files exists. Otherwise, the task will not be submitted.
     
+.. _nco-dir-entities:
 
 NCO Directory Structure Entities
 ----------------------------------
