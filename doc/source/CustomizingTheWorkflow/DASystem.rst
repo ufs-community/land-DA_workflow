@@ -33,7 +33,7 @@ JEDI Configuration Files & Parameters
 
 The DA experiment integrates information from several YAML configuration files, which contain certain fundamental components such as geometry, time window, background, driver, local ensemble DA, output increment, and observations. These components can be implemented differently for different models and observation types, so they frequently contain distinct parameters and variable names depending on the use case. Therefore, this section of the User's Guide focuses on assisting users with understanding and customizing these top-level configuration items in order to run Land DA experiments. Users may also reference the :jedi:`JEDI Documentation <using/building_and_running/config_content.html>` for additional information. 
 
-In the Land DA workflow, ``letkfoi_snow.yaml`` contains most of the information on geometry, time window, background, driver, local ensemble DA, and output increment, while ``GHCN.yaml`` contains detailed information to configure observations. In the ``develop`` branch, :github:`these files <blob/develop/parm/jedi/>` reside in the ``land-DA_workflow/parm/jedi`` directory. Some of the variables in these files are templated, so they bring in information from other files, such as the workflow configuration file (``land_analysis.yaml``) and the actual netCDF observation file (e.g., ``ghcn_snwd_ioda_20000103.nc``). In the ``analysis`` task, this information is assembled into one ``hofx_land.yaml`` file that is used to perform the snow data assimilation analysis. The example below shows what the complete ``hofx_land.yaml`` file might look like. The following subsections explain the variables used within this YAML file. 
+In the Land DA workflow, ``letkfoi_snow.yaml`` contains most of the information on geometry, time window, background, driver, local ensemble DA, and output increment, while ``GHCN.yaml`` contains detailed information to configure observations. In the ``develop`` branch, :github:`these files <blob/develop/parm/jedi/>` reside in the ``land-DA_workflow/parm/jedi`` directory. Some of the variables in these files are templated, so they bring in information from other files, such as the workflow configuration file (``land_analysis.yaml``) and the actual netCDF observation file (e.g., ``ghcn_snwd_ioda_20000103.nc``). In the ``analysis`` task, this information is assembled into one ``letkf_land.yaml`` file that is used to perform the snow data assimilation. This file resides in the ``ptmp/test/tmp/analysis.${PDY}${cyc}.${jobid}/`` directory, where ``${PDY}${cyc}`` is in YYYYMMDDHH format (see :numref:`Section %s <nco-dir-entities>` for more on these variables), and the ``${jobid}`` is assigned by the system. The example below shows what the complete ``letkf_land.yaml`` file might look like for the 2000-01-03 00Z cycle. The following subsections explain the variables used within this YAML file. 
 
 .. code-block:: yaml
 
@@ -48,32 +48,33 @@ In the Land DA workflow, ``letkfoi_snow.yaml`` contains most of the information 
      field metadata override: gfs-land.yaml
      time invariant fields:
        state fields:
-         datetime: 2019-12-21T00:00:00Z
+         datetime: 2000-01-02T00:00:00Z
          filetype: fms restart
          skip coupler file: true
          state variables: [orog_filt]
-         datapath: /scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs/FV3_fix_tiled/C96
-         filename_orog: oro_C96.mx100
+         datapath: /scratch2/NAGAPE/epic/User.Name/landda/land-DA_workflow/fix/FV3_fix_tiled/C96
+         filename_orog: oro_C96.mx100.nc
        derived fields: [nominal_surface_pressure]
 
-   window begin: 2019-12-21T00:00:00Z
-   window length: PT24H
+   time window: 
+     begin: 2000-01-02T00:00:00Z
+     length: PT24H
 
    background:
-     date: &date 2019-12-21T00:00:00Z
+     date: &date 2000-01-03T00:00:00Z
      members:
-       - datetime: 2019-12-21T00:00:00Z
+       - datetime: 2000-01-03T00:00:00Z
          filetype: fms restart
          state variables: [snwdph,vtype,slmsk]
          datapath: mem_pos/
-         filename_sfcd: 20191221.000000.sfc_data.nc
-         filename_cplr: 20191221.000000.coupler.res
-       - datetime: 2019-12-21T00:00:00Z
+         filename_sfcd: 20000103.000000.sfc_data.nc
+         filename_cplr: 20000103.000000.coupler.res
+       - datetime: 2000-01-03T00:00:00Z
          filetype: fms restart
          state variables: [snwdph,vtype,slmsk]
          datapath: mem_neg/
-         filename_sfcd: 20191221.000000.sfc_data.nc
-         filename_cplr: 20191221.000000.coupler.res
+         filename_sfcd: 20000103.000000.sfc_data.nc
+         filename_cplr: 20000103.000000.coupler.res
 
    driver:
      save posterior mean: false
@@ -103,11 +104,11 @@ In the Land DA workflow, ``letkfoi_snow.yaml`` contains most of the information 
          obsdatain:
            engine:
              type: H5File
-             obsfile: GHCN_2019122100.nc
+             obsfile: GHCN_2000010300.nc
          obsdataout:
            engine:
              type: H5File
-             obsfile: output/DA/hofx/letkf_hofx_ghcn_2019122100.nc
+             obsfile: output/DA/hofx/letkf_hofx_ghcn_2000010300.nc
        obs operator:
          name: Identity
        obs error:
