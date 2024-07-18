@@ -51,7 +51,7 @@ export PYTHON_EXEC=${PYTHON_EXEC:-`which python`}
 # configurations
 export RES=96
 export atmos_forc=era5
-export TPATH="$FIXlandda/orog_files/"
+export TPATH="$FIXlandda/FV3_fix_tiled/C${RES}/"
 export TSTUB="oro_C${RES}.mx100"
 export GFSv17=NO
 export OBS_TYPES=("GHCN")
