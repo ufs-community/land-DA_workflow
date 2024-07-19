@@ -296,19 +296,22 @@ As the experiment progresses, it will generate a number of directories to hold i
    $LANDDAROOT: Base directory
     ├── land-DA_workflow(<CYCLEDIR>): Home directory of the land DA workflow
     └── ptmp (<PTMP>)
-          └── test (<envir>)
-                └── com
+          └── <envir> (<OPSROOT>)
+                └── com (<COMROOT>)
                 │     ├── landda (<NET>)
                 │     │     └── vX.Y.Z (<model_ver>)
                 │     │           └── landda.YYYYMMDD (<RUN>.<PDY>): Directory containing the output files
+                │     │                 ├── hofx
+                │     │                 └── plot
                 │     └── output
                 │           └── logs
-                │                 └── run_<forcing> (<LOGDIR>): Directory containing the log file of the Rocoto workflow
+                │                 └── run_<forcing> (<LOGDIR>): Directory containing the log files for the Rocoto workflow
                 └── tmp (<DATAROOT>)
                      ├── <jobid> (<DATA>): Working directory
                      └── DATA_SHARE
                            ├── YYYYMMDD (<PDY>): Directory containing the intermediate or temporary files
-                           └── DATA_RESTART: Directory containing the soft-links to the restart files for the next cycles
+                           ├── hofx: Directory containing the soft links to the results of the analysis task for plotting
+                           └── DATA_RESTART: Directory containing the soft links to the restart files for the next cycles
 
 ``<forcing>`` refers to the type of forcing data used (``gswp3`` or ``era5``). Each variable in parentheses and angle brackets (e.g., ``(<VAR>)``) is the name for the directory defined in the file ``land_analysis.yaml``. In the future, this directory structure will be further modified to meet the :nco:`NCO Implementation Standards<>`.
 
