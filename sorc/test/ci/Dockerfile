@@ -13,7 +13,7 @@ COPY . $HOME/land-offline_workflow
 ENV FIXlandda=$HOME/land-DA_workflow/fix
 ENV EPICHOME=/opt
 ENV JEDI_INSTALL=${EPICHOME}/jedi_skylabv7.0
-ENV TEST_BASEDIR=${EPICHOME}/test_base/mem000/restarts/vector"}
+ENV TEST_BASEDIR=${EPICHOME}/test_base/restarts/vector"}
 
 #build & unit testing
 WORKDIR $HOME/land-offline_workflow

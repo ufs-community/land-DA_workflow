@@ -4,7 +4,8 @@
 set -eux
 
 source ../../versions/build.ver_hera
-module use ../../modulefiles && module load build_hera_intel
+module use ../../modulefiles
+module load build_hera_intel
 
 ctest
 

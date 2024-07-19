@@ -8,6 +8,7 @@ PARMdir=$(cd "$(dirname "$(readlink -f -n "${BASH_SOURCE[0]}" )" )" && pwd -P)
 source ${PARMdir}/detect_platform.sh
 
 # Load rocoto
+module purge
 if [ "${MACHINE}" == "hera" ]; then
   module load rocoto
 elif [ "${MACHINE}" == "orion" ]; then
@@ -16,7 +17,8 @@ elif [ "${MACHINE}" == "orion" ]; then
   module load stack-intel/$stack_intel_ver
   module load stack-python/$stack_python_ver
   module load contrib
-  module load rocoto
+  module load ruby/3.2.3
+  module load rocoto/1.3.7
 else
   echo "FATAL ERROR: modules are not loaded"
 fi
@@ -26,6 +28,7 @@ WFLOW_XML_FN="land_analysis.xml"
 rocoto_xml_bn=$( basename "${WFLOW_XML_FN}" ".xml" )
 rocoto_database_fn="${rocoto_xml_bn}.db"
 WFLOW_LOG_FN="log.rocoto_launch"
+LOG_FN_ROCOTO_RUN="log.rocoto_run"
 
 # Initialize the default status of the workflow to "IN PROGRESS".
 wflow_status="IN PROGRESS"
@@ -43,8 +46,8 @@ if [ "$#" -eq 1 ] && [ "$1" == "add" ]; then
 fi
 
 cd "${PARMdir}"
-rocotorun_cmd="rocotorun -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\""
-eval ${rocotorun_cmd}
+rocotorun_cmd="rocotorun -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\" -v 10"
+eval ${rocotorun_cmd} > ${LOG_FN_ROCOTO_RUN} 2>&1
 
 rocotostat_output=$( rocotostat -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} )
 
