@@ -17,23 +17,23 @@ On platforms that utilize Rocoto workflow software (including Hera and Orion), i
 
 .. code-block:: console
 
-   rocotostat -w land_analysis.xml -d land_analysis.db
-   CYCLE              TASK       JOBID       STATE EXIT STATUS  TRIES   DURATION
-   =============================================================================
-   200001030000    prepexp    16779414   SUCCEEDED           0      1       11.0
-   200001030000    prepobs    16779415   SUCCEEDED           0      1        0.0
-   200001030000   prepbmat    16779416   SUCCEEDED           0      1        9.0
-   200001030000     runana    16779434   SUCCEEDED           0      1       68.0
-   200001030000    runfcst           -        DEAD         256      1     2186.0
+   $ rocotostat -w land_analysis.xml -d land_analysis.db
+
+   CYCLE                TASK     JOBID        STATE   EXIT STATUS   TRIES   DURATION
+   =======================================================================================
+   200001030000     prep_obs  61746034    SUCCEEDED             0       1       11.0
+   200001030000     pre_anal  61746035    SUCCEEDED             0       1       13.0
+   200001030000     analysis  61746081    SUCCEEDED             0       1       76.0
+   200001030000    post_anal  61746109    SUCCEEDED             0       1        4.0
+   200001030000   plot_stats  61746110    SUCCEEDED             0       1       70.0
+   200001030000     forecast  61746128         DEAD           256       1          -
 
 
-This means that the dead task has not completed successfully, so the workflow has stopped. Once the issue has been identified and fixed (by referencing the log files), users can re-run the failed task using the ``rocotorewind`` command:
-
-.. COMMENT: Where are the log files actually?
+This means that the dead task has not completed successfully, so the workflow has stopped. Once the issue has been identified and fixed (by referencing the log files in ``$LANDDAROOT/ptmp/test/com/output/logs/run_<forcing>``), users can re-run the failed task using the ``rocotorewind`` command:
 
 .. code-block:: console
 
-   rocotorewind -w land_analysis.xml -d land_analysis.db -v 10 -c 200001030000 -t runfcst
+   rocotorewind -w land_analysis.xml -d land_analysis.db -v 10 -c 200001030000 -t forecast
 
 where ``-c`` specifies the cycle date (first column of ``rocotostat`` output) and ``-t`` represents the task name
 (second column of ``rocotostat`` output). After using ``rocotorewind``, the next time ``rocotorun`` is used to

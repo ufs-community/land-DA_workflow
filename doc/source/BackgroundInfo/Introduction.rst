@@ -32,8 +32,8 @@ This User's Guide is organized into four sections: (1) *Background Information*;
 
 Background Information
 ========================
-   * This chapter (Introduction) provides background information on the Unified Forecast System (:term:`UFS`) and the NoahMP model. 
-   * :numref:`Chapter %s <TechOverview>` (Technical Overview) outlines prerequisites, user support levels, and directory structure. 
+   * This chapter (Introduction) provides user support information and background information on the Unified Forecast System (:term:`UFS`) and the Noah-MP model. 
+   * :numref:`Chapter %s <TechOverview>` (Technical Overview) outlines prerequisites, supported systems, and directory structure. 
 
 Building, Running, and Testing the Land DA System
 ===================================================
@@ -45,12 +45,15 @@ Building, Running, and Testing the Land DA System
 Customizing the Workflow
 =========================
 
+   * :numref:`Chapter %s: Available Workflow Configuration Parameters <ConfigWorkflow>` explains all of the user-configurable options currently available in the workflow configuration file (``land_analysis*.yaml``).
    * :numref:`Chapter %s: Model <Model>` provides information on input data and configuration parameters in the Noah-MP LSM and its Vector-to-Tile Converter.
    * :numref:`Chapter %s: DA Framework <DASystem>` provides information on the DA system, required data, and configuration parameters. 
 
 Reference
 ===========
 
+   * :numref:`Chapter %s: Rocoto <Rocoto>` provides background information on the Rocoto workflow manager as used in Land DA.  
+   * :numref:`Chapter %s: FAQ <FAQ>` addresses frequently asked questions. 
    * :numref:`Chapter %s: Glossary <Glossary>` lists important terms. 
 
 User Support and Documentation
