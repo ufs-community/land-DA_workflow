@@ -13,69 +13,25 @@ HP=${PTIME:8:2}
 
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 
-if [[ $ATMOS_FORC == "era5" ]]; then
-  # vector2tile for DA
-  # copy restarts into work directory
-  rst_fn="ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc"
+# tile2tile for DA
+echo '************************************************'
+echo 'calling tile2tile'    
+ 
+# copy restarts into work directory
+for itile in {1..6}
+do
+  rst_fn="ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc"
   if [[ -e ${DATA_RESTART}/${rst_fn} ]]; then
-    cp ${DATA_RESTART}/${rst_fn} .      
+    cp ${DATA_RESTART}/${rst_fn} .
   elif [[ -e ${WARMSTART_DIR}/${rst_fn} ]]; then
     cp ${WARMSTART_DIR}/${rst_fn} .
   else
-    echo "Initial restart file does not exist"
-    exit 11
+    echo "Initial restart files do not exist"
+    exit 21
   fi
+  # copy restart to data share dir for post_anal
   cp -p ${rst_fn} ${DATA_SHARE}
-
-  echo '************************************************'
-  echo 'calling vector2tile' 
-
-  # update vec2tile and tile2vec namelists
-  cp ${PARMlandda}/templates/template.vector2tile vector2tile.namelist
-
-  sed -i "s|FIXlandda|${FIXlandda}|g" vector2tile.namelist
-  sed -i -e "s/XXYYYY/${YYYY}/g" vector2tile.namelist
-  sed -i -e "s/XXMM/${MM}/g" vector2tile.namelist
-  sed -i -e "s/XXDD/${DD}/g" vector2tile.namelist
-  sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
-  sed -i -e "s/XXHH/${HH}/g" vector2tile.namelist
-  sed -i -e "s/XXRES/${RES}/g" vector2tile.namelist
-  sed -i -e "s/XXTSTUB/${TSTUB}/g" vector2tile.namelist
-
-  # submit vec2tile 
-  echo '************************************************'
-  echo 'calling vector2tile' 
-
-  export pgm="vector2tile_converter.exe"
-  . prep_step
-  ${EXEClandda}/$pgm vector2tile.namelist >>$pgmout 2>errfile
-  cp errfile errfile_vector2tile
-  export err=$?; err_chk
-  if [[ $err != 0 ]]; then
-    echo "vec2tile failed"
-    exit 12
-  fi 
-
-elif [[ $ATMOS_FORC == "gswp3" ]]; then
-  # tile2tile for DA
-  echo '************************************************'
-  echo 'calling tile2tile'    
- 
-  # copy restarts into work directory
-  for itile in {1..6}
-  do
-    rst_fn="ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc"
-    if [[ -e ${DATA_RESTART}/${rst_fn} ]]; then
-      cp ${DATA_RESTART}/${rst_fn} .
-    elif [[ -e ${WARMSTART_DIR}/${rst_fn} ]]; then
-      cp ${WARMSTART_DIR}/${rst_fn} .
-    else
-      echo "Initial restart files do not exist"
-      exit 21
-    fi
-    # copy restart to data share dir for post_anal
-    cp -p ${rst_fn} ${DATA_SHARE}
-  done
+done
 
   # update tile2tile namelist
   cp  ${PARMlandda}/templates/template.ufs2jedi ufs2jedi.namelist
@@ -99,8 +55,6 @@ elif [[ $ATMOS_FORC == "gswp3" ]]; then
     echo "tile2tile failed"
     exit 22 
   fi
-
-fi
 
 #stage restarts for applying JEDI update to intermediate directory
 for itile in {1..6}
