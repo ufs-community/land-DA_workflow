@@ -1,11 +1,3 @@
-[submodule "sorc/ufsLand.fd"]
-	path = sorc/ufsLand.fd
-	url = https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev.git
-	ignore = dirty
-[submodule "sorc/vector2tile_converter.fd"]
-	path = sorc/vector2tile_converter.fd
-	url = https://github.com/NOAA-PSL/land-vector2tile.git
-	ignore = dirty
 [submodule "sorc/ufs_model.fd"]
 	path = sorc/ufs_model.fd
 	url = https://github.com/ufs-community/ufs-weather-model.git
