@@ -348,7 +348,7 @@ To start the experiment, run:
 
 The ``do_submit_cycle.sh`` script will read the ``settings_DA_cycle_*`` file and the ``release.environment`` file, which contain sensible experiment default values to simplify the process of running the workflow for the first time. Advanced users will wish to modify the parameters in ``do_submit_cycle.sh`` to fit their particular needs. After reading the defaults and other variables from the settings files, ``do_submit_cycle.sh`` creates a working directory (named ``workdir`` by default) and an output directory called ``landda_expts`` in the parent directory of ``land-DA_workflow`` and then submits a job (``submit_cycle.sh``) to the queue that will run through the workflow. If all succeeds, users will see ``log`` and ``err`` files created in ``land-DA_workflow`` along with a ``cycle.log`` file, which will show where the cycle has ended. 
 
-
+.. _CheckProgress:
 
 Check Progress
 ----------------
@@ -381,19 +381,21 @@ Next, check for the background and analysis files in the test directory.
 
 .. code-block:: console
 
-   ls -l ../landda_expts/DA_<data_source>_test/mem000/restarts/<vector/tile>``
+   ls -l ../landda_expts/DA_<data_source>_test/mem000/restarts/<vector|tile>``
 
 where: 
 
    * ``<data_source>`` is either ``era5`` or ``gswp3``, and
-   * ``<vector/tile>`` is either ``vector`` or ``tile`` depending on whether ERA5 or GSWP3 forcing data was used, respectively. 
+   * ``<vector|tile>`` is either ``vector`` or ``tile`` depending on whether ERA5 or GSWP3 forcing data were used, respectively. 
 
 The experiment should populate the ``landda_expts`` directory with data in the following locations:
 
 .. code-block:: console
 
    landda_expts/DA_GHCN_test/DA/
+   # AND
    landda_expts/DA_GHCN_test/mem000/restarts/vector/
+   # OR
    landda_expts/DA_GHCN_test/mem000/restarts/tile/
 
 Depending on the experiment, either the ``vector`` or the ``tile`` directory will have data, but not both. 
@@ -404,7 +406,7 @@ Depending on the experiment, either the ``vector`` or the ``tile`` directory wil
 ERA5 Experiment Logs
 =====================
 
-For the ERA5 experiment, the ``log*`` file for a successful experiment will a message like:
+For the ERA5 experiment, the ``log*`` file for a successful experiment will contain a message like:
 
 .. code-block:: console
 
