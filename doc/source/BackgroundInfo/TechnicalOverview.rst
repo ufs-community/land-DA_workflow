@@ -60,26 +60,28 @@ Preconfigured (Level 1) systems for Land DA already have the required external l
 
 .. list-table:: *Software Prerequisites & Locations*
    :header-rows: 1
-   :widths: 10 20 70
+   :widths: 10 20 20 100 70
 
    * - Platform
-     - Compiler/MPI
-     - spack-stack & jedi-bundle Installations
+     - Compiler
+     - MPI
+     - ``spack-stack`` Installation
+     - ``jedi-bundle`` Installation
    * - Hera
-     - - intel/2021.5.0 / 
-       - impi/2021.5.1
-     - - /scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.6.0/envs/unified-env-rocky8/install/modulefiles/Core
-       - /scratch2/NAGAPE/epic/UFS_Land-DA_Dev/jedi_v7
+     - intel/2021.5.0 / 
+     - impi/2021.5.1
+     - /scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.6.0/envs/unified-env-rocky8/install/modulefiles/Core
+     - /scratch2/NAGAPE/epic/UFS_Land-DA_Dev/jedi_v7
    * - Orion
-     - - intel/2021.9.0 /
-       - impi/2021.9.0
-     - - /work/noaa/epic/role-epic/spack-stack/orion/spack-stack-1.6.0/envs/unified-env-rocky9/install/modulefiles/Core
-       - /work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6
+     - intel/2021.9.0 /
+     - impi/2021.9.0
+     - /work/noaa/epic/role-epic/spack-stack/orion/spack-stack-1.6.0/envs/unified-env-rocky9/install/modulefiles/Core
+     - /work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6
    * - Container
-     - - intel-oneapi-compilers/2021.8.0 / 
-       - intel-oneapi-mpi/2021.8.0
-     - - /opt/spack-stack/ (inside the container)
-       - /opt/jedi-bundle (inside the container)
+     - intel-oneapi-compilers/2021.8.0 / 
+     - intel-oneapi-mpi/2021.8.0
+     - /opt/spack-stack/ (inside the container)
+     - /opt/jedi-bundle (inside the container)
 
 Level 2-4 Systems
 ===================
