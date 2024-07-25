@@ -26,7 +26,7 @@ Create a directory for the Land DA experiment (``$LANDDAROOT``):
    cd /path/to/landda
    export LANDDAROOT=`pwd`
 
-where ``/path/to/landda`` is the path to the directory where the user plans to run Land DA experiments. In the experiment configuration file, ``$LANDDAROOT`` is referred to as ``$EXP_BASEDIR``, and refers to the Land DA workflow's parent directory. 
+where ``/path/to/landda`` is the path to the directory where the user plans to run Land DA experiments. In the experiment configuration file, ``$LANDDAROOT`` is referred to as ``$EXP_BASEDIR``. 
 
 .. _GetCode:
 
@@ -97,7 +97,7 @@ To load the workflow environment, run:
    module load wflow_<platform>
    conda activate land_da
 
-where ``<platform>`` is ``hera`` or ``orion``. This activates the land_da conda environment, and the user typically sees (land_da) in front of the Terminal prompt at this point.
+where ``<platform>`` is ``hera`` or ``orion``. This activates the ``land_da`` conda environment, and the user typically sees ``(land_da)`` in front of the Terminal prompt at this point.
 
 .. _configure-expt:
 
@@ -129,7 +129,7 @@ Users will need to configure certain elements of their experiment in ``land_anal
 
    To determine an appropriate ``ACCOUNT`` field for Level 1 systems that use the Slurm job scheduler, run ``saccount_params``. On other systems, running ``groups`` will return a list of projects that the user has permissions for. Not all listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
 
-Users may configure other elements of an experiment in ``land_analysis.yaml`` if desired. The ``land_analysis_*.yaml`` files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Sections :numref:`%s <Model>` & :numref:`%s <DASystem>`. 
+Users may configure other elements of an experiment in ``land_analysis.yaml`` if desired. The ``land_analysis_*.yaml`` files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Sections :numref:`%s <ConfigWorkflow>`, :numref:`%s <Model>`, and :numref:`%s <DASystem>`. 
 
 .. _GetData:
 
@@ -170,7 +170,7 @@ If the command runs without problems, ``uwtools`` will output a "0 errors found"
    [2024-03-01T20:36:03]     INFO 0 UW schema-validation errors found
    [2024-03-01T20:36:03]     INFO 0 Rocoto validation errors found
 
-The generated workflow XML file (``land_analysis.xml``) will be used by the Rocoto workflow manager to determine which tasks (or "jobs") to submit to the batch system and when to submit them (e.g., as soon as task dependencies are satisfied). 
+The generated workflow XML file (``land_analysis.xml``) will be used by the Rocoto workflow manager to determine which tasks (or "jobs") to submit to the batch system and when to submit them (e.g., when task dependencies are satisfied). 
 
 Run the Experiment
 ********************
@@ -282,7 +282,7 @@ The experiment has successfully completed when all tasks say SUCCEEDED under STA
 Run Without Rocoto
 --------------------
 
-Users may choose *not* to run the workflow with *uwtools* and Rocoto for a non-cycled run. To run the :term:`J-job <J-jobs>` scripts in the ``jobs`` directory, navigate to the ``parm`` directory and edit ``run_without_rocoto.sh`` (e.g., using vim or preferred command line editor). Users will likely need to change the ``MACHINE``, ``ACCOUNT``, and ``EXP_BASEDIR`` variables to match their system. Then, run the script:
+Users may choose to run the workflow *without* ``uwtools`` and Rocoto for a non-cycled run. To run the :term:`J-job <J-jobs>` scripts in the ``jobs`` directory, navigate to the ``parm`` directory and edit ``run_without_rocoto.sh`` (e.g., using vim or preferred command line editor). Users will likely need to change the ``MACHINE``, ``ACCOUNT``, and ``EXP_BASEDIR`` variables to match their system. Then, run the script:
 
 .. code-block:: console
 
