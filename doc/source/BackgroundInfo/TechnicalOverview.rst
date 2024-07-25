@@ -20,7 +20,7 @@ Minimum System Requirements
 Additionally, users will need:
 
    * Disk space: ~23GB (11GB for Land DA System [or 6.5GB for Land DA container], 11GB for Land DA data, and ~1GB for staging and output) 
-   * 6 CPU cores (or option to run with "oversubscribe")
+   * 7 CPU cores (or option to run with "oversubscribe")
 
 Software Prerequisites
 ========================
@@ -32,7 +32,7 @@ The Land DA System requires:
    * Python
    * :term:`NetCDF`
    * Lmod 
-   * `spack-stack <https://github.com/JCSDA/spack-stack>`_ (v1.6.0)
+   * `spack-stack <https://github.com/JCSDA/spack-stack>`_ (|spack-stack-ver|)
    * `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`_ (|skylabv|)
 
 These software prerequisites are pre-installed in the Land DA :term:`container` and on other Level 1 systems (see :ref:`below <LevelsOfSupport>` for details). However, users on non-Level 1 systems will need to install them.
@@ -54,7 +54,7 @@ Four levels of support have been defined for :term:`UFS` applications, and the L
 
 Level 1 Systems
 ==================
-Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and the ``jedi-bundle`` (|skylabv|). Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them. For the most updated information on stack locations, compilers, and MPI, users can check the :land-wflow-repo:`build and run version files <tree/develop/versions>` for their machine of choice. Similarly, users can check the :land-wflow-repo:`build_<machine>_intel <tree/develop/modulefiles>` file for the machine of their choice. 
+Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and the :term:`jedi-bundle` (Skylab |skylabv|). Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them. For the most updated information on stack locations, compilers, and MPI, users can check the :land-wflow-repo:`build and run version files <tree/develop/versions>` for their machine of choice. 
 
 .. _stack-compiler-locations:
 
@@ -84,7 +84,7 @@ Preconfigured (Level 1) systems for Land DA already have the required external l
 Level 2-4 Systems
 ===================
 
-On non-Level 1 platforms, the Land DA System can be run within a container that includes the prerequisite software; otherwise, the required libraries will need to be installed as part of the Land DA build process. Once these prerequisite libraries are installed, applications and models should build and run successfully. However, users may need to perform additional troubleshooting on Level 3 or 4 systems since little or no pre-release testing has been conducted on these systems.
+On non-Level 1 platforms, the Land DA System can be run within a container that includes the prerequisite software; otherwise, the required libraries will need to be installed as part of the Land DA build process. Once these prerequisite libraries are installed, Land DA should build and run successfully. However, users may need to perform additional troubleshooting on Level 3 or 4 systems since little or no pre-release testing has been conducted on these systems.
 
 .. _repos-dir-structure:
 
@@ -135,7 +135,7 @@ This :term:`umbrella repository` uses Git submodules and an ``app_build.sh`` fil
      - https://github.com/ufs-community/uwtools
 
 .. note::
-   The prerequisite libraries (including NCEP Libraries and external libraries) are not included in the UFS Land DA System repository. The `spack-stack <https://github.com/JCSDA/spack-stack>`__ repository assembles these prerequisite libraries. Spack-stack has already been built on `preconfigured (Level 1) platforms <https://github.com/ufs-community/ufs-srweather-app/wiki/Supported-Platforms-and-Compilers>`__. However, it must be built on other systems. See the :doc:`spack-stack Documentation <spack-stack:index>` for details on installing spack-stack. 
+   The prerequisite libraries (including NCEP Libraries and external libraries) are not included in the UFS Land DA System repository. The `spack-stack <https://github.com/JCSDA/spack-stack>`__ repository assembles these prerequisite libraries. Spack-stack has already been built on :ref:`preconfigured (Level 1) platforms <LevelsOfSupport>`. However, it must be built on other systems. See the :spack-stack:`spack-stack Documentation <>` for details on installing spack-stack. 
 
 .. _file-dir-structure:
 

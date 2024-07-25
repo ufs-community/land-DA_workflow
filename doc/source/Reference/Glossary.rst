@@ -73,6 +73,11 @@ Glossary
 
       JEDI is developed and distributed by the `Joint Center for Satellite Data Assimilation <https://www.jcsda.org/>`_, a multi-agency research center hosted by the University Corporation for Atmospheric Research (`UCAR <https://www.ucar.edu/>`_). JCSDA is dedicated to improving and accelerating the quantitative use of research and operational satellite data in weather, ocean, climate, and environmental analysis and prediction systems.
 
+   jedi-bundle
+   Skylab
+      `JEDI Skylab <https://www.jcsda.org/jediskylab>`_ is the name for roll-up releases of :term:`JCSDA`'s `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`_ repository. 
+      This software provides an integrated Earth System Data Assimilation capability. JCSDA has tested Skylab capabilities internally via the SkyLab testbed for the following components: atmosphere, land/snow, ocean, sea-ice, aerosols, and atmospheric composition. 
+
    LND
    land component
       The Noah Multi-Physics (Noah-MP) land surface model (LSM) is an open-source, community-developed LSM that has been incorporated into the UFS Weather Model (WM). It is the UFS WM's land component. 

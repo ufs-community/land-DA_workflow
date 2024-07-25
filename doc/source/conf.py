@@ -51,6 +51,7 @@ rst_prolog = """
 .. |tag| replace:: ``ufs-land-da-v1.2.0``
 .. |branch| replace:: ``release/public-v1.2.0``
 .. |skylabv| replace:: Skylab v7.0
+.. |spack-stack-ver| replace:: v1.6.0
 """
 
 # -- Linkcheck options -------------------------------------------------
@@ -128,6 +129,7 @@ extlinks = {'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '
             'rtd': ('https://readthedocs.org/projects/land-da-workflow/%s', '%s'),
             'land-wflow-repo': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'land-wflow-wiki': ('https://github.com/ufs-community/land-DA_workflow/wiki/%s','%s'),
+            'spack-stack': ('https://spack-stack.readthedocs.io/en/1.6.0/%s', '%s'),
             'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/develop/%s', '%s'),
             'uw': ('https://uwtools.readthedocs.io/en/main/%s', '%s'),
             }
