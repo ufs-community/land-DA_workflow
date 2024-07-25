@@ -65,8 +65,8 @@ Preconfigured (Level 1) systems for Land DA already have the required external l
    * - Platform
      - Compiler
      - MPI
-     - ``spack-stack`` Installation
-     - ``jedi-bundle`` Installation
+     - *spack-stack* Installation
+     - *jedi-bundle* Installation
    * - Hera
      - intel/2021.5.0 / 
      - impi/2021.5.1
