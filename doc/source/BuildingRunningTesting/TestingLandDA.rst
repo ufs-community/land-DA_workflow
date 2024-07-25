@@ -53,7 +53,7 @@ If the tests are successful, a message will be printed to the console. For examp
 Tests
 *******
 
-The ERA5 CTests test the operability of six major elements of the Land DA System: ``vector2tile``, ``create_ens``, ``letkfoi_snowda``, ``apply_jediincr``, ``tile2vector``, and ``ufs_datm_land``. The tests and their dependencies are listed in the ``land-DA_workflow/test/CMakeLists.txt`` file. Currently, the CTests are only run on Hera and Orion; they cannot yet be run via container. 
+The CTests test the operability of six major elements of the Land DA System: ``vector2tile``, ``create_ens``, ``letkfoi_snowda``, ``apply_jediincr``, ``tile2vector``, and ``ufs_datm_land``. The tests and their dependencies are listed in the ``land-DA_workflow/test/CMakeLists.txt`` file. Currently, the CTests are only run on Hera and Orion; they cannot yet be run via container. 
 
 .. list-table:: *Land DA CTests*
    :widths: 20 50
@@ -62,11 +62,11 @@ The ERA5 CTests test the operability of six major elements of the Land DA System
    * - Test
      - Description
    * - ``test_vector2tile``
-     - Tests the vector-to-tile function for use in JEDI
+     - Tests the vector-to-tile function for use in JEDI.
    * - ``test_create_ens``
      - Tests creation of a pseudo-ensemble for use in LETKF-OI.
    * - ``test_letkfoi_snowda``
-     - Tests the use of LETKF-OI to assimilate snow DA. 
+     - Tests the use of LETKF-OI to assimilate snow data. 
    * - ``test_apply_jediincr``
      - Tests the ability to add a JEDI increment.
    * - ``test_tile2vector``
