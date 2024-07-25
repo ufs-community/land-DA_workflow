@@ -37,7 +37,6 @@ workflow:
     KEEPDATA: "YES"
     LOGDIR: "&COMROOT;/output/logs"
     LOGFN_SUFFIX: "<cyclestr>_@Y@m@d@H.log</cyclestr>"
-    PATHRT: "&EXP_BASEDIR;"
     PDY:  "<cyclestr>@Y@m@d</cyclestr>"
     cyc: "<cyclestr>@H</cyclestr>"
     DATADEP_FILE1: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
