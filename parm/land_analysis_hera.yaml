@@ -1,6 +1,7 @@
 workflow:
   attrs:
     realtime: false
+    scheduler: slurm
     cyclethrottle: 24
     taskthrottle: 24
   cycledef:
