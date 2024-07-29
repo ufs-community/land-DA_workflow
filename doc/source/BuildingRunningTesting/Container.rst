@@ -95,8 +95,6 @@ NOAA RDHPCS Systems
 
 On many NOAA :term:`RDHPCS`, a container named ``ubuntu20.04-intel-landda-release-public-v1.2.0.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
 
-.. COMMENT: Is there a develop container now?
-
 .. _PreBuiltContainers:
 
 .. table:: Locations of Pre-Built Containers
@@ -117,15 +115,11 @@ On many NOAA :term:`RDHPCS`, a container named ``ubuntu20.04-intel-landda-releas
    | Orion/Hercules  | /work/noaa/epic/role-epic/contrib/containers           |
    +-----------------+--------------------------------------------------------+
 
-.. COMMENT: Check container locations.
-
 Users can simply set an environment variable to point to the container: 
 
 .. code-block:: console
 
    export img=path/to/ubuntu20.04-intel-landda-release-public-v1.2.0.img
-
-.. COMMENT: Check container path!
 
 If users prefer, they may copy the container to their local working directory. For example, on Jet:
 
@@ -133,14 +127,10 @@ If users prefer, they may copy the container to their local working directory. F
 
    cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu20.04-intel-landda-release-public-v1.2.0.img .
 
-.. COMMENT: Check container path!
-
 Other Systems
 ----------------
 
 On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu20.04-intel-landda-release-public-v1.2.0.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.2.0`` container rather than the updated ``develop`` branch container. 
-
-.. COMMENT: Check container name!
 
 To download from the data bucket, users can run:
 

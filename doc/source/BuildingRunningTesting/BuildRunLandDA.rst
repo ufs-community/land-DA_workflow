@@ -328,6 +328,8 @@ Check for the output files for each cycle in the experiment directory:
 
 where ``YYYYMMDD`` is the cycle date, and ``<model_ver>`` is the model version (currently ``v1.2.1`` in the ``develop`` branch). The experiment should generate several restart files. 
 
+.. _plotting:
+
 Plotting Results
 -----------------
 
