@@ -16,7 +16,7 @@ workflow:
     EXP_BASEDIR: "/work/noaa/epic/{USER}/landda_test"
     JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6"
     WARMSTART_DIR: "/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART"
-    ATMOS_FORC: "gswp3"   # "gswp3" or "era5"
+    ATMOS_FORC: "gswp3"
     RES: "96"
     FCSTHR: "24"
     NPROCS_ANALYSIS: "6"

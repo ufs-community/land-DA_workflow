@@ -16,7 +16,7 @@ workflow:
     EXP_BASEDIR: "/scratch2/NAGAPE/epic/{USER}/landda_test"
     JEDI_INSTALL: "/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/jedi_v7"
     WARMSTART_DIR: "/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART"
-    ATMOS_FORC: "gswp3"   # "gswp3" or "era5"
+    ATMOS_FORC: "gswp3"
     RES: "96"
     FCSTHR: "24"
     NPROCS_ANALYSIS: "6"
