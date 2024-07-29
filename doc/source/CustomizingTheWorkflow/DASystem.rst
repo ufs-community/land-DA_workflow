@@ -1,8 +1,8 @@
 .. _DASystem:
 
-***************************************************
-Land Data Assimilation System 
-***************************************************
+******************************************
+Input/Output Files & the JEDI DA System 
+******************************************
 
 This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which utilizes the UFS Noah-MP component together with the ``jedi-bundle`` (|skylabv|) to enable cycled model forecasts. The data assimilation framework applies the Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm to combine the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007).
 

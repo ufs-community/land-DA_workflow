@@ -5,7 +5,7 @@ Rocoto Introductory Information
 ==================================
 The tasks in the Land DA System are typically run using the Rocoto Workflow Manager (see :numref:`Table %s <WorkflowTasksTable>` for default tasks). Rocoto is a Ruby program that communicates with the batch system on an :term:`HPC` system to run and manage dependencies between the tasks. Rocoto submits jobs to the HPC batch system as the task dependencies allow and runs one instance of the workflow for a set of user-defined :term:`cycles <cycle>`. More information about Rocoto can be found on the `Rocoto Wiki <https://github.com/christopherwharrop/rocoto/wiki/documentation>`_.
 
-The Land DA workflow is defined in a Jinja-enabled Rocoto XML template called ``land_analysis.xml``, which is generated using the contents of ``land_analysis.yaml`` as input to the Unified Workflow's :uw:`Rocoto tool <sections/user_guide/cli/tools/rocoto.html>`. Both files reside in the ``parm`` directory. The completed XML file contains the workflow task names, parameters needed by the job scheduler, and task interdependencies. 
+The Land DA workflow is defined in a Jinja-enabled Rocoto XML template called ``land_analysis.xml``, which is generated using the contents of ``land_analysis.yaml`` as input to the Unified Workflow's :uw:`Rocoto tool <sections/user_guide/cli/tools/rocoto.html>`. Both files reside in the ``land-DA_workflow/parm`` directory. The completed XML file contains the workflow task names, parameters needed by the job scheduler, and task interdependencies. 
 
 There are a number of Rocoto commands available to run and monitor the workflow; users can find more information in the complete `Rocoto documentation <http://christopherwharrop.github.io/rocoto/>`_. Descriptions and examples of commonly used commands are discussed below.
 
@@ -22,8 +22,8 @@ The ``rocotorun`` command is used to run the workflow by submitting tasks to the
 
 where 				
 
-* ``-w`` specifies the name of the workflow definition file. This must be an XML file.
-* ``-d`` specifies the name of the database file that stores the state of the workflow. The database file is a binary file created and used only by Rocoto. It does not need to exist when the command is initially run. 
+* ``-w`` specifies the name of the workflow definition file. This must be an XML file (e.g., ``land_analysis.xml``).
+* ``-d`` specifies the name of the database file that stores the state of the workflow (e.g., ``land_analysis.db``). The database file is a binary file created and used only by Rocoto. It does not need to exist when the command is initially run. 
 * ``-v`` (optional) specified level of verbosity. If no level is specified, a level of 1 is used.
 
 From the ``parm`` directory, the ``rocotorun`` command for the workflow would be:
@@ -34,7 +34,7 @@ From the ``parm`` directory, the ``rocotorun`` command for the workflow would be
 
 Users will need to include the absolute or relative path to these files when running the command from another directory. 
 
-It is important to note that the ``rocotorun`` process is iterative; the command must be executed many times before the entire workflow is completed, usually every 1-10 minutes. This command can be placed in the user's :term:`crontab`, and cron will call it with the specified frequency. More information on this command can be found in the `Rocoto documentation <http://christopherwharrop.github.io/rocoto/>`_.
+It is important to note that the ``rocotorun`` process is iterative; the command must be executed many times before the entire workflow is completed, usually every 1-10 minutes. More information on this command can be found in the `Rocoto documentation <http://christopherwharrop.github.io/rocoto/>`_.
 
 The first time the ``rocotorun`` command is executed for a workflow, the files ``land_analysis.db`` and ``land_analysis_lock.db`` are created. There is usually no need for the user to modify these files. Each time the ``rocotorun`` command is executed, the last known state of the workflow is read from the ``land_analysis.db`` file, the batch system is queried, jobs are submitted for tasks whose dependencies have been satisfied, and the current state of the workflow is saved in ``land_analysis.db``. If there is a need to relaunch
 the workflow from scratch, both database files can be deleted, and the workflow can be run by executing the ``rocotorun`` command
