@@ -25,23 +25,23 @@ Attributes pertaining to the overall workflow are defined in the ``attrs:`` sect
        taskthrottle: 24
 
 ``realtime:`` (Default: false)
-   Indicates whether it is a realtime (true) or retrospective run (false). Valid values: ``true`` | ``false``
+   Indicates whether it is a realtime run (true) or a retrospective run (false). Valid values: ``true`` | ``false``
 
 ``scheduler:`` (Default: slurm)
    The job scheduler to use on the specified machine. Valid values: ``"slurm"``. Other options may work with a container but have not been tested: ``"pbspro"`` | ``"lsf"`` | ``"lsfcray"`` | ``"none"``
 
 ``cyclethrottle:`` (Default: 24)
-   The number of cycles that can be active at one time. Valid values: Integers >= 0.
+   The number of cycles that can be active at one time. Valid values: Integers > 0.
 
 ``taskthrottle:`` (Default: 24)
-   The number of tasks that can be active at one time. Valid values: Integers >= 0.
+   The number of tasks that can be active at one time. Valid values: Integers > 0.
 
 .. _wf-cycledef:
 
 Workflow Cycle Definition (``cycledef``)
 ==========================================
 
-Cycling information is defined in the ``cycledef:`` section under ``workflow:``. Each cycle definition starts with a ``-`` and has information on cycle attributes (``attrs:``) and a cycle specification (``spec:``). For example: 
+Cycling information is defined in the ``cycledef:`` section under ``workflow:``. Each cycle definition starts with a hyphen (``-``) and has information on cycle attributes (``attrs:``) and a cycle specification (``spec:``). For example: 
 
 .. code-block:: console 
 
@@ -52,7 +52,7 @@ Cycling information is defined in the ``cycledef:`` section under ``workflow:``.
          spec: 201912210000 201912220000 24:00:00
 
 ``attrs:``
-   Attributes of ``cycledef``. Includes ``group:`` but may also include ``activation_offset:``.
+   Attributes of ``cycledef``. Includes ``group:`` but may also include ``activation_offset:``. See the :rocoto:`Rocoto Documentation <>` for more information. 
 
    ``group:``
       The group attribute allows users to assign a set of cycles to a particular group. The group tag can later be used to control which tasks are run for which cycles. See the :rocoto:`Rocoto Documentation <>` for more information. 
@@ -66,7 +66,7 @@ Cycling information is defined in the ``cycledef:`` section under ``workflow:``.
 Workflow Entities
 ===================
 
-Entities are constants that can be referred to throughout the workflow using the ``&`` prefix and ``;`` suffix (e.g., ``&MACHINE;``) to avoid defining the same constants repetitively in each workflow task. For example, in ``land_analysis_orion.yaml``, the following entities are defined: 
+Entities are constants that can be referred to throughout the workflow using the ampersand (``&``) prefix and semicolon (``;``) suffix (e.g., ``&MACHINE;``) to avoid defining the same constants repetitively in each workflow task. For example, in ``land_analysis_orion.yaml``, the following entities are defined: 
 
 .. code-block:: console 
 
@@ -111,24 +111,22 @@ Entities are constants that can be referred to throughout the workflow using the
 
 .. note:: 
 
-   When two defaults are listed, one is the default on Hera, and one is the default on Orion, depending on ``land_analysis_<machine>.yaml`` file used. The default on Hera is listed first, followed by the default on Orion. 
+   When two defaults are listed, one is the default on Hera, and one is the default on Orion, depending on the ``land_analysis_<machine>.yaml`` file used. The default on Hera is listed first, followed by the default on Orion. 
 
 ``MACHINE:`` (Default: "hera" or "orion")
-   The machine (a.k.a. platform or system) on which the workflow will run. Currently supported platforms are listed in :numref:`Section %s <LevelsOfSupport>`. Valid values: ``"hera"`` | ``"orion"`` | ``"singularity"``
-
-.. COMMENT: Check Singularity or NOAA Cloud or anything?
+   The machine (a.k.a. platform or system) on which the workflow will run. Currently supported platforms are listed in :numref:`Section %s <LevelsOfSupport>`. Valid values: ``"hera"`` | ``"orion"``
 
 ``SCHED:`` (Default: "slurm")
    The job scheduler to use (e.g., Slurm) on the specified ``MACHINE``. Valid values: ``"slurm"``. Other options may work with a container but have not been tested: ``"pbspro"`` | ``"lsf"`` | ``"lsfcray"`` | ``"none"``
 
 ``ACCOUNT:`` (Default: "epic")
-   The account under which users submit jobs to the queue on the specified ``MACHINE``. To determine an appropriate ``ACCOUNT`` field on a system with a Slurm job scheduler, users may run the ``saccount_params`` command to display account details. On other systems, users may run the ``groups`` command, which will return a list of projects that the user has permissions for. Not all of the listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
+   An account where users can charge their compute resources on the specified ``MACHINE``. To determine an appropriate ``ACCOUNT`` field on a system with a Slurm job scheduler, users may run the ``saccount_params`` command to display account details. On other systems, users may run the ``groups`` command, which will return a list of projects that the user has permissions for. Not all of the listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
 
 ``EXP_NAME:`` (Default: "LETKF")
    Placeholder --- currently not used in workflow. 
 
 ``EXP_BASEDIR:`` (Default: "/scratch2/NAGAPE/epic/{USER}/landda_test" or "/work/noaa/epic/{USER}/landda_test")
-   The full path to the directory that ``land-DA_workflow`` was cloned into (i.e., ``$LANDDAROOT`` in the documentation).
+   The full path to the parent directory of ``land-DA_workflow`` (i.e., ``$LANDDAROOT`` in the documentation).
 
 ``JEDI_INSTALL:`` (Default: "/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/jedi_v7" or "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6")
    The path to the JEDI |skylabv| installation. 
@@ -143,7 +141,7 @@ Entities are constants that can be referred to throughout the workflow using the
    Resolution of FV3 grid. Currently, only C96 resolution is supported. 
 
 ``FCSTHR:`` (Default: "24")
-   Specifies the length of each forecast in hours. Valid values: Integers >= 0.
+   Specifies the length of each forecast in hours. Valid values: Integers > 0.
 
 ``NPROCS_ANALYSIS:`` (Default: "6")
    Number of processors for the analysis task. 
@@ -186,16 +184,16 @@ Entities are constants that can be referred to throughout the workflow using the
 NCO Directory Structure Entities
 ----------------------------------
 
-Standard environment variables are defined in the NCEP Central Operations :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` document. These variables are used in forming the path to various directories containing input, output, and workflow files. For a visual aid, see the :ref:`Land DA Directory Structure Diagram <land-da-dir-structure>`. The variables are defined in the WCOSS Implementation Standards document (pp. 4-5) as follows:
+Standard environment variables are defined in the NCEP Central Operations :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` document (pp. 4-5). These variables are used in forming the path to various directories containing input, output, and workflow files. For a visual aid, see the :ref:`Land DA Directory Structure Diagram <land-da-dir-structure>`. 
 
 ``HOMElandda:`` (Default: "&EXP_BASEDIR;/land-DA_workflow")
    The location of the :github:`land-DA_workflow <>` clone. 
 
 ``PTMP:`` (Default: "&EXP_BASEDIR;/ptmp")
-   User-defined path to the ``com``-type directories.
+   Product temporary (PTMP) experiment output space. This directory is used to mimic the operational file structure and contains all of the files and subdirectories used by or generated by the experiment. By default, it is a sibling to the ``land-DA_workflow`` directory. 
 
 ``envir:`` (Default: "test")
-   The run environment. Set to “test” during the initial testing phase, “para” when running in parallel (on a schedule), and “prod” in production. 
+   The run environment. Set to “test” during the initial testing phase, “para” when running in parallel (on a schedule), and “prod” in production. In operations, this is the operations root directory (aka ``$OPSROOT``). 
 
 ``COMROOT:`` (Default: "&PTMP;/&envir;/com")
    ``com`` root directory, which contains input/output data on current system. 
@@ -204,10 +202,10 @@ Standard environment variables are defined in the NCEP Central Operations :nco:`
    Model name (first level of ``com`` directory structure)
 
 ``model_ver:`` (Default: "v1.2.1")
-   Version number of package in three digits (second level of ``com`` directory)
+   Version number of package in three digits (e.g., v#.#.#); second level of ``com`` directory
 
 ``RUN:`` (Default: "landda")
-   Name of model run (third level of com directory structure). In general, same as ${NET}.
+   Name of model run (third level of ``com`` directory structure). In general, same as ``${NET}``.
 
 ``DATAROOT:`` (Default: "&PTMP;/&envir;/tmp")
    Directory location for the temporary working directories for running jobs. By default, this is a sibling to the ``$COMROOT`` directory and is located at ``ptmp/test/tmp``. 
@@ -219,7 +217,7 @@ Standard environment variables are defined in the NCEP Central Operations :nco:`
    Path to the directory containing log files for each workflow task. 
 
 ``LOGFN_SUFFIX:`` (Default: "<cyclestr>_@Y@m@d@H.log</cyclestr>")
-   The cycle suffix appended to each task's log file. It will be rendered in the form ``_YYYYMMDDHH.log``. For example, the ``prep_obs`` task log would become: ``prep_obs_2000010400.log``.
+   The cycle suffix appended to each task's log file. It will be rendered in the form ``_YYYYMMDDHH.log``. For example, the ``prep_obs`` task log file for the Jan. 4, 2000 00z cycle would be named: ``prep_obs_2000010400.log``.
 
 ``PATHRT:`` (Default: "&EXP_BASEDIR;")
    The path to the ``EXP_BASEDIR`` for regression tests (RTs).
@@ -235,7 +233,7 @@ Standard environment variables are defined in the NCEP Central Operations :nco:`
 Workflow Log
 ==============
 
-Information related to workflow progress is defined in the ``log:`` section under ``workflow:``:
+Information related to overall workflow progress is defined in the ``log:`` section under ``workflow:``:
 
 .. code-block:: console
 
@@ -387,7 +385,7 @@ The authoritative :rocoto:`Rocoto documentation <>` discusses a number of miscel
          join: "&LOGDIR;/analysis&LOGFN_SUFFIX;"
 
 ``ACCOUNT:`` (Default: "&ACCOUNT;")
-   The account under which users submit jobs to the queue on the specified ``MACHINE``. This value is typically the same for each task, so the default reuses the value set in the :ref:`Workflow Entities <wf-entities>` section. 
+   An account where users can charge their compute resources on the specified ``MACHINE``. This value is typically the same for each task, so the default is to reuse the value set in the :ref:`Workflow Entities <wf-entities>` section. 
 
 ``command:`` (Default: ``'&HOMElandda;/parm/task_load_modules_run_jjob.sh "analysis" "&HOMElandda;" "&MACHINE;"'``)
    The command that Rocoto will submit to the batch system to carry out the task's work. 
@@ -560,7 +558,7 @@ Parameters for the pre-analysis task are set in the ``task_pre_anal:`` section o
 Analysis Task (``task_analysis``)
 -----------------------------------
 
-Parameters for the analysis task are set in the ``task_analysis:`` section of the ``land_analysis_<machine>.yaml`` file. Most are the same as the defaults set in the :ref:`Workflow Entities <wf-entities>` section. The ``task_analysis:`` task is explained fully in the :ref:`Sample Task <sample-task>` section, although the default values may differ. 
+Parameters for the analysis task are set in the ``task_analysis:`` section of the ``land_analysis_<machine>.yaml`` file. Most are the same as the defaults set in the :ref:`Workflow Entities <wf-entities>` section. The ``task_analysis:`` task is explained fully in the :ref:`Sample Task <sample-task>` section. 
 
 .. _post-analysis:
 
