@@ -1,7 +1,7 @@
 .. _DASystem:
 
 ******************************************
-Input/Output Files & the JEDI DA System 
+Input/Output Files for the JEDI DA System 
 ******************************************
 
 This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which utilizes the UFS Noah-MP component together with the ``jedi-bundle`` (|skylabv|) to enable cycled model forecasts. The data assimilation framework applies the Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm to combine the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007).
@@ -166,10 +166,10 @@ The ``geometry:`` section is used in JEDI configuration files to specify the mod
       This section contains two parameters, ``namelist filename`` and ``field table filename``, which are required for :term:`FMS` initialization. 
 
       ``namelist filename`` (Default: Data/fv3files/fmsmpp.nml)
-         Specifies the path to the namelist filename.
+         Specifies the path to the namelist file.
 
       ``field table filename`` (Default: Data/fv3files/field_table)
-         Specifies the path to the field table filename.
+         Specifies the path to the field table file.
 
    ``akbk`` (Default: Data/fv3files/akbk64.nc4)
       Specifies the path to a file containing the coefficients that define the hybrid sigma-pressure vertical coordinate used in FV3. Files are provided with the repository containing ``ak`` and ``bk`` for some common choices of vertical resolution for GEOS and GFS. 
