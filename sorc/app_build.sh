@@ -198,17 +198,9 @@ if [ "${REMOVE}" = true ]; then
     printf "... Remove apply_incr.fd ...\n"
     rm -rf "${SORC_DIR}/apply_incr.fd"
   fi
-  if [ -d "${SORC_DIR}/ufsLand.fd" ]; then
-    printf "... Remove ufsLand.fd ...\n"
-    rm -rf "${SORC_DIR}/ufsLand.fd"
-  fi
   if [ -d "${SORC_DIR}/ufs_model.fd" ]; then
     printf "... Remove ufs_model.fd ...\n"
     rm -rf "${SORC_DIR}/ufs_model.fd"
-  fi
-  if [ -d "${SORC_DIR}/vector2tile_converter.fd" ]; then
-    printf "... Remove vector2tile_converter.fd ...\n"
-    rm -rf "${SORC_DIR}/vector2tile_converter.fd"
   fi
 
   cd "${HOME_DIR}"

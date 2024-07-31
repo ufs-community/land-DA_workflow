@@ -27,18 +27,16 @@ case $MACHINE in
     ;;
 esac
 
-#  convert back to UFS tile, run model (all members)
-if [[ ${ATMOS_FORC} == "gswp3" ]]; then  
 
-  echo '************************************************'
-  echo 'running the forecast model' 
+echo '************************************************'
+echo 'running the forecast model' 
 
-  # modify some env variables - reduce core usage
-  export ATM_compute_tasks=0
-  export ATM_io_tasks=1
-  export LND_tasks=6
-  export layout_x=1
-  export layout_y=1
+# modify some env variables - reduce core usage
+export ATM_compute_tasks=0
+export ATM_io_tasks=1
+export LND_tasks=6
+export layout_x=1
+export layout_y=1
 
   cp ${PARMlandda}/templates/template.input.nml input.nml
   cp ${PARMlandda}/templates/template.ufs.configure ufs.configure
@@ -138,4 +136,3 @@ if [[ ${ATMOS_FORC} == "gswp3" ]]; then
   do
     ln -nsf ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc ${DATA_RESTART}
   done
-fi

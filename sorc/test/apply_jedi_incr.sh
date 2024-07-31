@@ -9,7 +9,7 @@ project_source_dir=$2
 source ${project_source_dir}/test/runtime_vars.sh ${project_binary_dir} ${project_source_dir}
 
 # set extra paths
-RSTDIR=$project_binary_dir/test/bkg/restarts/tile
+RSTDIR=$project_source_dir/../fix/test_base/sfc_data
 INCDIR=$project_binary_dir/test
 
 # set executables

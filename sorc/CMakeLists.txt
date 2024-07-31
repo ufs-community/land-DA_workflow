@@ -67,8 +67,6 @@ ExternalProject_Add(ufs_model.fd
   )
 
 add_subdirectory(tile2tile_converter.fd)
-add_subdirectory(vector2tile_converter.fd)
-add_subdirectory(ufsLand.fd)
 add_subdirectory(apply_incr.fd)
 # Include testing.
 add_subdirectory(test)
