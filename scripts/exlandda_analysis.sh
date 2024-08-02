@@ -251,3 +251,26 @@ if [[ -d output/DA/hofx ]]; then
   ln -nsf ${COMOUThofx}/* ${DATA_HOFX}
 fi
 
+# WE2E V&V
+if [[ "${WE2E_VAV}" == "YES" ]]; then
+  path_fbase="${FIXlandda}/test_base/we2e_com/${RUN}.${PDY}"
+  fn_sfc="${FILEDATE}.sfc_data.tile"
+  fn_inc="${FILEDATE}.xainc.sfc_data.tile"
+  fn_hofx="letkf_hofx_ghcn_${PDY}${cyc}.nc"
+  we2e_log_fp="${LOGDIR}/${WE2E_LOG_FN}"
+  if [[ ! -e "${we2e_log_fp}" ]]; then
+    touch ${we2e_log_fp}
+  fi
+  # surface data tiles
+  for itile in {1..6}
+  do
+    ${USHlandda}/compare.py "${path_fbase}/${fn_sfc}${itile}.nc" "${COMOUT}/${fn_sfc}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "ANALYSIS" ${FILEDATE} "sfc_data.tile${itile}"
+  done
+  # increment tiles
+  for itile in {1..6}
+  do
+    ${USHlandda}/compare.py "${path_fbase}/${fn_inc}${itile}.nc" "${COMOUT}/${fn_inc}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "ANALYSIS" ${FILEDATE} "xinc.tile${itile}"
+  done
+  # H(x)
+  ${USHlandda}/compare.py "${path_fbase}/hofx/${fn_hofx}" "${COMOUT}/hofx/${fn_hofx}" ${WE2E_ATOL} ${we2e_log_fp} "ANALYSIS" ${FILEDATE} "HofX"
+fi

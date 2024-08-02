@@ -23,4 +23,6 @@ load(pathJoin("w3emc", w3emc_ver))
 load(pathJoin("gftl-shared", gftl_shared_ver))
 load(pathJoin("mapl", mapl_ver))
 load(pathJoin("prod_util", prod_util_ver))
-load(pathJoin("ufs-pyenv", ufs_pyenv_ver))
+load(pathJoin("py-netcdf4", py_netcdf4_ver))
+load(pathJoin("py-numpy", py_numpy_ver))
+
