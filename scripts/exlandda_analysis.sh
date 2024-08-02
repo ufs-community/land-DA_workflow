@@ -32,7 +32,6 @@ case $MACHINE in
     ;;
 esac
 
-#SNOWDEPTHVAR=snwdph
 YAML_DA=construct
 GFSv17="NO"
 B=30 # back ground error std for LETKFOI
