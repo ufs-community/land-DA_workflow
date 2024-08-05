@@ -101,7 +101,7 @@ After issuing the ``rocotorun`` command several times (over the course of severa
    200001040000       plot_stats     18347592       SUCCEEDED            0       1       48.0
    200001040000         forecast     18347593       RUNNING              -       1        0.0
 
-When the workflow runs to completion, all tasks will be marked as SUCCEEDED. The log file for each task is located in ``$LANDDAROOT/ptmp/test/com/output/logs/run_<forcing>``, where ``<forcing>`` is either ``gswp3`` or ``era5``. If any task fails, the corresponding log file can be checked for error messages. Optional arguments for the ``rocotostat`` command can be found in the `Rocoto documentation <http://christopherwharrop.github.io/rocoto/>`_.
+When the workflow runs to completion, all tasks will be marked as SUCCEEDED. The log file for each task is located in ``$LANDDAROOT/ptmp/test/com/output/logs``. If any task fails, the corresponding log file can be checked for error messages. Optional arguments for the ``rocotostat`` command can be found in the `Rocoto documentation <http://christopherwharrop.github.io/rocoto/>`_.
 
 .. _rocotocheck:
 
@@ -150,7 +150,6 @@ Running ``rocotocheck`` will result in output similar to the following:
          COMROOT ==> /work/noaa/epic/$USER/landda/ptmp/test/com
          DATAROOT ==> /work/noaa/epic/$USER/landda/ptmp/test/tmp
          DAtype ==> letkfoi_snow
-         EXP_NAME ==> LETKF
          HOMElandda ==> /work/noaa/epic/$USER/landda/land-DA_workflow
          JEDI_INSTALL ==> /work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6
          KEEPDATA ==> YES

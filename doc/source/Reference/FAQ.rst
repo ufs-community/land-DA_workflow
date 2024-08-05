@@ -29,7 +29,7 @@ On platforms that utilize Rocoto workflow software (including Hera and Orion), i
    200001030000     forecast  61746128         DEAD           256       1          -
 
 
-This means that the dead task has not completed successfully, so the workflow has stopped. Once the issue has been identified and fixed (by referencing the log files in ``$LANDDAROOT/ptmp/test/com/output/logs/run_<forcing>``), users can re-run the failed task using the ``rocotorewind`` command:
+This means that the dead task has not completed successfully, so the workflow has stopped. Once the issue has been identified and fixed (by referencing the log files in ``$LANDDAROOT/ptmp/test/com/output/logs``), users can re-run the failed task using the ``rocotorewind`` command:
 
 .. code-block:: console
 
