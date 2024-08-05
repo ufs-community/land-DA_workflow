@@ -19,6 +19,7 @@ Since the |latestr| release, the following capabilities have been added to the L
 * Extended container support (:land-wflow-repo:`PR #85 <pull/85>`)
 * Updated directory structure for NCO compliance (:land-wflow-repo:`PR #75 <pull/75>`)
 * Removed land driver from CTest (:land-wflow-repo:`PR #123 <pull/123>`)
+* Removed land-driver and vector2tile (:land-wflow-repo:`PR #129 <pull/129>`)
 
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
 
@@ -46,7 +47,7 @@ Customizing the Workflow
 =========================
 
    * :numref:`Chapter %s: Available Workflow Configuration Parameters <ConfigWorkflow>` explains all of the user-configurable options currently available in the workflow configuration file (``land_analysis*.yaml``).
-   * :numref:`Chapter %s: Model <Model>` provides information on input data and configuration parameters in the Noah-MP LSM and its Vector-to-Tile Converter.
+   * :numref:`Chapter %s: Model <Model>` provides information on input data and configuration parameters in the Noah-MP LSM.
    * :numref:`Chapter %s: DA Framework <DASystem>` provides information on the DA system, required data, and configuration parameters. 
 
 Reference

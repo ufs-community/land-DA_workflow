@@ -309,8 +309,7 @@ As the experiment progresses, it will generate a number of directories to hold i
                 │     │                 ├── hofx
                 │     │                 └── plot
                 │     └── output
-                │           └── logs
-                │                 └── run_<forcing> (<LOGDIR>): Directory containing the log files for the Rocoto workflow
+                │           └── logs (<LOGDIR>): Directory containing the log files for the Rocoto workflow
                 └── tmp (<DATAROOT>)
                      ├── <jobid> (<DATA>): Working directory
                      └── DATA_SHARE

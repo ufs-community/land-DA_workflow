@@ -115,22 +115,10 @@ This :term:`umbrella repository` uses Git submodules and an ``app_build.sh`` fil
      - land-apply_jedi_incr
      - Contains code that applies the JEDI-generated DA increment to UFS ``sfc_data`` restart 
      - https://github.com/NOAA-PSL/land-apply_jedi_incr
-   * - ufsLand.fd
-     - ufs-land-driver-emc-dev
-     - Repository for the UFS Land Driver
-     - https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev
-   * - *-- ccpp-physics*
-     - *-- ccpp-physics*
-     - Repository for the Common Community Physics Package (CCPP)
-     - https://github.com/ufs-community/ccpp-physics/
    * - ufs_model.fd
      - ufs-weather-model
      - Repository for the UFS Weather Model (WM). This repository contains a number of subrepositories, which are documented :ufs-wm:`in the WM User's <CodeOverview.html>`.
      - https://github.com/ufs-community/ufs-weather-model/
-   * - vector2tile_converter.fd
-     - land-vector2tile
-     - Contains code to map between the vector format used by the Noah-MP offline driver, and the tile format used by the UFS atmospheric model. 
-     - https://github.com/NOAA-PSL/land-vector2tile
 
 .. note::
    The prerequisite libraries (including NCEP Libraries and external libraries) are not included in the UFS Land DA System repository. The `spack-stack <https://github.com/JCSDA/spack-stack>`_ repository assembles these prerequisite libraries. Spack-stack has already been built on :ref:`preconfigured (Level 1) platforms <LevelsOfSupport>`. However, it must be built on other systems. See the :spack-stack:`spack-stack Documentation <>` for details on installing spack-stack. 
@@ -166,11 +154,7 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     │     ├── (conda)
     │     ├── test
     │     ├── tile2tile_converter.fd
-    │     ├── ufsLand.fd
-    │     │     ├── ccpp-physics
-    │     │     └── driver
     │     ├── ufs_model.fd
-    │     ├── vector2tile_converter.fd
     │     ├── CMakeLists.txt
     │     └── app_build.sh
     ├── ush

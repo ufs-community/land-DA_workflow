@@ -75,11 +75,10 @@ Entities are constants that can be referred to throughout the workflow using the
        MACHINE: "orion"
        SCHED: "slurm"
        ACCOUNT: "epic"
-       EXP_NAME: "LETKF"
        EXP_BASEDIR: "/work/noaa/epic/{USER}/landda_test"
        JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6"
        WARMSTART_DIR: "/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART"
-       FORCING: "gswp3"
+       ATMOS_FORC: "gswp3"
        RES: "96"
        FCSTHR: "24"
        NPROCS_ANALYSIS: "6"
@@ -99,9 +98,8 @@ Entities are constants that can be referred to throughout the workflow using the
        COMROOT: "&PTMP;/&envir;/com"
        DATAROOT: "&PTMP;/&envir;/tmp"
        KEEPDATA: "YES"
-       LOGDIR: "&COMROOT;/output/logs/run_&FORCING;"
+       LOGDIR: "&COMROOT;/output/logs;"
        LOGFN_SUFFIX: "<cyclestr>_@Y@m@d@H.log</cyclestr>"
-       PATHRT: "&EXP_BASEDIR;"
        PDY:  "<cyclestr>@Y@m@d</cyclestr>"
        cyc: "<cyclestr>@H</cyclestr>"
        DATADEP_FILE1: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>"
@@ -122,9 +120,6 @@ Entities are constants that can be referred to throughout the workflow using the
 ``ACCOUNT:`` (Default: "epic")
    An account where users can charge their compute resources on the specified ``MACHINE``. To determine an appropriate ``ACCOUNT`` field on a system with a Slurm job scheduler, users may run the ``saccount_params`` command to display account details. On other systems, users may run the ``groups`` command, which will return a list of projects that the user has permissions for. Not all of the listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
 
-``EXP_NAME:`` (Default: "LETKF")
-   Placeholder --- currently not used in workflow. 
-
 ``EXP_BASEDIR:`` (Default: "/scratch2/NAGAPE/epic/{USER}/landda_test" or "/work/noaa/epic/{USER}/landda_test")
    The full path to the parent directory of ``land-DA_workflow`` (i.e., ``$LANDDAROOT`` in the documentation).
 
@@ -134,8 +129,8 @@ Entities are constants that can be referred to throughout the workflow using the
 ``WARMSTART_DIR:`` (Default: "/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART" or "/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART")
    The path to restart files for a warmstart experiment. 
 
-``FORCING:`` (Default: "gswp3")
-   Type of atmospheric forcing data used. Valid values: ``"gswp3"`` | ``"era5"``
+``ATMOS_FORC:`` (Default: "gswp3")
+   Type of atmospheric forcing data used. Valid values: ``"gswp3"``
 
 ``RES:`` (Default: "96")
    Resolution of FV3 grid. Currently, only C96 resolution is supported. 
@@ -213,14 +208,11 @@ Standard environment variables are defined in the NCEP Central Operations :nco:`
 ``KEEPDATA:`` (Default: "YES")
    Flag to keep data ("YES") or not ("NO") that is copied to the ``$DATAROOT`` directory during the forecast experiment.
 
-``LOGDIR:`` (Default: "&COMROOT;/output/logs/run_&FORCING;")
+``LOGDIR:`` (Default: "&COMROOT;/output/logs;")
    Path to the directory containing log files for each workflow task. 
 
 ``LOGFN_SUFFIX:`` (Default: "<cyclestr>_@Y@m@d@H.log</cyclestr>")
    The cycle suffix appended to each task's log file. It will be rendered in the form ``_YYYYMMDDHH.log``. For example, the ``prep_obs`` task log file for the Jan. 4, 2000 00z cycle would be named: ``prep_obs_2000010400.log``.
-
-``PATHRT:`` (Default: "&EXP_BASEDIR;")
-   The path to the ``EXP_BASEDIR`` for regression tests (RTs).
 
 ``PDY:``  (Default: "<cyclestr>@Y@m@d</cyclestr>")
    Date in YYYYMMDD format.
@@ -288,7 +280,6 @@ Parameters for a particular task are set in the ``workflow.tasks.task_<name>:`` 
            SCHED: "&SCHED;"
            ACCOUNT: "&ACCOUNT;"
            EXP_NAME: "&EXP_NAME;"
-           ATMOS_FORC: "&FORCING;"
            RES: "&RES;"
            TSTUB: "&TSTUB;"
            model_ver: "&model_ver;"
@@ -334,13 +325,13 @@ The ``attrs:`` section for each task includes the ``cycledefs:`` attribute and t
 Task Environment Variables (``envars``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The ``envars:`` section for each task reuses many of the same variables and values defined as ``entities:`` for the overall workflow. These values are needed for each task, but setting them individually is error-prone. Instead, a specific workflow task can reference workflow entities using the ``&VAR;`` syntax. For example, to set the ``ATMOS_FORC:`` value in ``task_analysis:`` to the value of the workflow ``FORCING`` entity, the following statement can be added to the task's ``envars:`` section:
+The ``envars:`` section for each task reuses many of the same variables and values defined as ``entities:`` for the overall workflow. These values are needed for each task, but setting them individually is error-prone. Instead, a specific workflow task can reference workflow entities using the ``&VAR;`` syntax. For example, to set the ``ACCOUNT:`` value in ``task_analysis:`` to the value of the workflow ``ACCOUNT:`` entity, the following statement can be added to the task's ``envars:`` section:
 
 .. code-block:: console
 
    task_analysis:
       envars:
-        ATMOS_FORC: "&FORCING;"
+        ACCOUNT: "&ACCOUNT;"
 
 For most workflow tasks, whatever value is set in the ``workflow.entities:`` section should be reused/referenced in other tasks. For example, the ``MACHINE`` variable must be defined for each task, and users cannot switch machines mid-workflow. Therefore, users should set the ``MACHINE`` variable in the ``workflow.entities:`` section and reference that definition in each workflow task. For example:
 
@@ -477,8 +468,7 @@ Parameters for the observation preparation task are set in the ``task_prep_obs:`
            MACHINE: "&MACHINE;"
            SCHED: "&SCHED;"
            ACCOUNT: "&ACCOUNT;"
-           EXP_NAME: "&EXP_NAME;"
-           ATMOS_FORC: "&FORCING;"
+           ATMOS_FORC: "&ATMOS_FORC;"
            model_ver: "&model_ver;"
            HOMElandda: "&HOMElandda;"
            COMROOT: "&COMROOT;"
@@ -513,8 +503,6 @@ Parameters for the pre-analysis task are set in the ``task_pre_anal:`` section o
            MACHINE: "&MACHINE;"
            SCHED: "&SCHED;"
            ACCOUNT: "&ACCOUNT;"
-           EXP_NAME: "&EXP_NAME;"
-           ATMOS_FORC: "&FORCING;"
            RES: "&RES;"
            TSTUB: "&TSTUB;"
            WARMSTART_DIR: "&WARMSTART_DIR;"
@@ -579,8 +567,6 @@ Parameters for the post analysis task are set in the ``task_post_anal:`` section
            MACHINE: "&MACHINE;"
            SCHED: "&SCHED;"
            ACCOUNT: "&ACCOUNT;"
-           EXP_NAME: "&EXP_NAME;"
-           ATMOS_FORC: "&FORCING;"
            RES: "&RES;"
            TSTUB: "&TSTUB;"
            model_ver: "&model_ver;"
@@ -623,7 +609,6 @@ Parameters for the plotting task are set in the ``task_plot_stats:`` section of 
            MACHINE: "&MACHINE;"
            SCHED: "&SCHED;"
            ACCOUNT: "&ACCOUNT;"
-           EXP_NAME: "&EXP_NAME;"
            model_ver: "&model_ver;"
            RUN: "&RUN;"
            HOMElandda: "&HOMElandda;"
@@ -664,8 +649,7 @@ Parameters for the forecast task are set in the ``task_forecast:`` section of th
            MACHINE: "&MACHINE;"
            SCHED: "&SCHED;"
            ACCOUNT: "&ACCOUNT;"
-           EXP_NAME: "&EXP_NAME;"
-           ATMOS_FORC: "&FORCING;"
+           ATMOS_FORC: "&ATMOS_FORC;"
            RES: "&RES;"
            WARMSTART_DIR: "&WARMSTART_DIR;"
            model_ver: "&model_ver;"
