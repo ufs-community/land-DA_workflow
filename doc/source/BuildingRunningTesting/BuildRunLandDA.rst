@@ -108,11 +108,6 @@ where ``<platform>`` is ``hera`` or ``orion``. This activates the ``land_da`` co
 Modify the Workflow Configuration YAML
 ========================================
 
-The ``develop`` branch includes two default experiments: 
-
-   * A Jan. 3, 2000 00z sample case using the UFS Noah-MP land component. 
-   * A Dec. 21, 2019 00z sample case using the UFS Land Driver.
-
 Copy the experiment settings into ``land_analysis.yaml``:
 
 .. code-block:: console
