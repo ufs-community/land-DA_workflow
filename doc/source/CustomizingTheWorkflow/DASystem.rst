@@ -654,7 +654,7 @@ Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, th
 Restart Files
 ================
 
-To restart the UFS land driver successfully after land model execution, all parameters, states, and fluxes used for a subsequent time iteration are stored in a restart file. This restart file is named ``ufs_land_restart.${FILEDATE}.nc`` where ``FILEDATE`` is in YYYY-MM-DD_HH-mm-SS format (e.g., ``ufs_land_restart.2019-12-21_00-00-00.nc``). The restart file contains all the model fields and their values at a specific point in time; this information can be used to restart the model immediately to run the next cycle. The Land DA System reads the states from the restart file and replaces them after the DA step with the updated analysis. :numref:`Table %s <RestartFiles>` lists the fields in the Land DA restart file. Within the UFS land driver (submodule ``ufs-land-driver-emc-dev``), read/write of the restart file is performed in ``ufsLandNoahMPRestartModule.f90``. 
+To restart the Land DA System successfully after land model execution, all parameters, states, and fluxes used for a subsequent time iteration are stored in a restart file. This restart file is named ``ufs_land_restart.${FILEDATE}.tile#.nc`` where ``FILEDATE`` is in YYYY-MM-DD_HH-mm-SS format and ``#`` is 1-6 (e.g., ``ufs_land_restart.2000-01-05_00-00-00.tile1.nc``). The restart file contains all the model fields and their values at a specific point in time; this information can be used to restart the model immediately to run the next cycle. The Land DA System reads the states from the restart file and replaces them after the DA step with the updated analysis. :numref:`Table %s <RestartFiles>` lists the fields in the Land DA restart file. 
 
 .. _RestartFiles:
 

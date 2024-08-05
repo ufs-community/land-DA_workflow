@@ -4,10 +4,7 @@
 Land DA Workflow (Hera & Orion)
 ************************************
 
-This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (:term:`UFS`) Land DA System. Users can choose between two supported options: 
-
-   * A Jan. 3-4, 2000 00z sample case using :term:`GSWP3` data with the UFS Noah-MP land component
-   * A Dec. 21-22, 2019 00z sample case using :term:`ERA5` data with the UFS Land Driver
+This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (:term:`UFS`) Land DA System using a Jan. 3-4, 2000 00z sample case using :term:`GSWP3` data with the UFS Noah-MP land component.
 
 .. attention::
    
@@ -18,15 +15,22 @@ This chapter provides instructions for building and running basic Land DA cases 
 Create a Working Directory
 *****************************
 
-Create a directory for the Land DA experiment (``$LANDDAROOT``):
+Create a base directory for the Land DA experiment and navigate into it:
 
 .. code-block:: console
 
    mkdir /path/to/landda
    cd /path/to/landda
+
+where ``/path/to/landda`` is the path to the directory where the user plans to run Land DA experiments. In the experiment configuration file, this directory is referred to as ``$EXP_BASEDIR``. 
+
+Optionally, users can save this directory path in an environment variable (e.g., ``$LANDDAROOT``) to avoid typing out full path names later. 
+
+.. code-block:: console
+
    export LANDDAROOT=`pwd`
 
-where ``/path/to/landda`` is the path to the directory where the user plans to run Land DA experiments. In the experiment configuration file, ``$LANDDAROOT`` is referred to as ``$EXP_BASEDIR``. 
+In this documentation, ``$LANDDAROOT`` is used, but users are welcome to choose another name for this variable if they prefer. 
 
 .. _GetCode:
 
@@ -122,7 +126,6 @@ Users will need to configure certain elements of their experiment in ``land_anal
 
    * ``ACCOUNT:`` A valid account name. Hera, Orion, and most NOAA RDHPCS systems require a valid account name; other systems may not (in which case, any value will do).
    * ``EXP_BASEDIR:`` The full path to the directory where land-DA_workflow was cloned (i.e., ``$LANDDAROOT``)
-   * ``FORCING:`` Forcing options; ``gswp3`` or ``era5``
    * ``cycledef/spec:`` Cycle specification
 
 .. note::
