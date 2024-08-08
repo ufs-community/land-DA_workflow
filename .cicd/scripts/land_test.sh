@@ -81,7 +81,7 @@ if [[ true = ${LAND_DA_RUN_TESTS:=false} ]] ; then
                                             
 	echo "Pipeline Running Land-DA Tests on ${UFS_PLATFORM} ${UFS_COMPILER} with Account=${ACCNR}."
 	/usr/bin/time -p \
-		-o ${WORKSPACE}/${UFS_PLATFORM}-${UFS_COMPILER}-time-land_test.json \
+		-o ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-time-land_test.json \
 		-f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
 		./run_${machine}_ctest.sh | awk 'f;/^+ ctest$/{f=1}' | tee ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-test-log.txt
 	status=${PIPESTATUS[0]}
@@ -101,7 +101,7 @@ git status
 
 test_exit=$?
 echo "STAGE_NAME=${STAGE_NAME:=manual}"
-env | grep = | sort > ${WORKSPACE:=$(pwd)}/${UFS_PLATFORM}-${UFS_COMPILER}-env.txt
+env | grep = | sort > ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-env.txt
 set -e
 cd -
 pwd

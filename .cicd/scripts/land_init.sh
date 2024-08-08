@@ -40,17 +40,22 @@ cd ${workspace}
 pwd
 set +e
 rm -rf sorc/build
-/usr/bin/time -p \
-	-o ${WORKSPACE:=$(pwd)}/${UFS_PLATFORM}-${UFS_COMPILER}-time-land_init.json \
-	-f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
-	find . -name .git -type d
+
+(
+set -x
 git branch
 git log -1 --oneline
 git status
+)
+
+/usr/bin/time -p \
+	-o ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-time-land_init.json \
+	-f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
+	find . -name .git -type d
 
 init_exit=$?
 echo "STAGE_NAME=${STAGE_NAME:=manual}"
-env | grep = | sort > ${WORKSPACE:=$(pwd)}/${UFS_PLATFORM}-${UFS_COMPILER}-env.txt
+env | grep = | sort > ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-env.txt
 set -e
 cd -
 pwd

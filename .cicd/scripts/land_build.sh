@@ -66,7 +66,7 @@ pwd
 set +e
 echo "Pipeline Building Land-DA on ${UFS_PLATFORM} ${UFS_COMPILER} with Account=${ACCNR}."
 /usr/bin/time -p \
-	-o ${WORKSPACE:=$(pwd)}/${UFS_PLATFORM}-${UFS_COMPILER}-time-land_build.json \
+	-o ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-time-land_build.json \
 	-f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
 	sorc/app_build.sh -p=${machine} -c=${compiler} --conda=off --build 2>&1 | tee ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-build-log.txt
 status=${PIPESTATUS[0]}
@@ -78,7 +78,7 @@ ls -l sorc/build
 
 build_exit=$?
 echo "STAGE_NAME=${STAGE_NAME:=manual}"
-env | grep = | sort > ${WORKSPACE:=$(pwd)}/${UFS_PLATFORM}-${UFS_COMPILER}-env.txt
+env | grep = | sort > ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-env.txt
 set -e
 cd -
 pwd
