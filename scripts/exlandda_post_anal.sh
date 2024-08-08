@@ -41,77 +41,14 @@ do
   cp ${DATA_SHARE}/${FILEDATE}.sfc_data.tile${itile}.nc .
 done
 
-#  convert back to vector, run model (all members) convert back to vector, run model (all members)
-if [[ ${ATMOS_FORC} == "era5" ]]; then
-  echo '************************************************'
-  echo 'calling tile2vector' 
+#  convert back to UFS tile 
+echo '************************************************'
+echo 'calling tile2tile' 
 
-  cp ${DATA_SHARE}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc .
-
-  cp ${PARMlandda}/templates/template.tile2vector tile2vector.namelist
-
-  sed -i "s|FIXlandda|${FIXlandda}|g" tile2vector.namelist
-  sed -i -e "s/XXYYYY/${YYYY}/g" tile2vector.namelist
-  sed -i -e "s/XXMM/${MM}/g" tile2vector.namelist
-  sed -i -e "s/XXDD/${DD}/g" tile2vector.namelist
-  sed -i -e "s/XXHH/${HH}/g" tile2vector.namelist
-  sed -i -e "s/XXRES/${RES}/g" tile2vector.namelist
-  sed -i -e "s/XXTSTUB/${TSTUB}/g" tile2vector.namelist
-
-  export pgm="vector2tile_converter.exe"
-  . prep_step
-  ${EXEClandda}/$pgm tile2vector.namelist >>$pgmout 2>errfile
-  export err=$?; err_chk
-  cp errfile errfile_tile2vector
-  if [[ $err != 0 ]]; then
-    echo "tile2vector failed"
-    exit 10
-  fi
-
-  # save analysis restart
-  cp -p ${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.nc ${COMOUT}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.nc
-
-  echo '************************************************'
-  echo 'running the forecast model' 
-      
-  # update model namelist 
-  cp ${PARMlandda}/templates/template.ufs-noahMP.namelist.${ATMOS_FORC} ufs-land.namelist
-  
-  sed -i "s|FIXlandda|${FIXlandda}|g" ufs-land.namelist
-  sed -i -e "s/XXYYYY/${YYYY}/g" ufs-land.namelist
-  sed -i -e "s/XXMM/${MM}/g" ufs-land.namelist
-  sed -i -e "s/XXDD/${DD}/g" ufs-land.namelist
-  sed -i -e "s/XXHH/${HH}/g" ufs-land.namelist
-  sed -i -e "s/XXFREQ/${FREQ}/g" ufs-land.namelist
-  sed -i -e "s/XXRDD/${RDD}/g" ufs-land.namelist
-  sed -i -e "s/XXRHH/${RHH}/g" ufs-land.namelist
-
-  nt=$SLURM_NTASKS
-
-  export pgm="ufsLand.exe"
-  . prep_step
-  ${RUN_CMD} -n 1 ${EXEClandda}/$pgm >>$pgmout 2>errfile
-  export err=$?; err_chk
-  cp errfile errfile_ufsLand
-  if [[ $err != 0 ]]; then
-    echo "ufsLand failed"
-    exit 10
-  fi
-
-  cp -p ${DATA}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc
-
-  # link restart for next cycle
-  ln -nsf ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.nc ${DATA_RESTART}
-
-#  convert back to UFS tile
-elif [[ ${ATMOS_FORC} == "gswp3" ]]; then  
-  echo '************************************************'
-  echo 'calling tile2tile' 
-
-  for itile in {1..6}
-  do
-    cp ${DATA_SHARE}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc .
-  done
+for itile in {1..6}
+do
+  cp ${DATA_SHARE}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc .
+done
 
   cp ${PARMlandda}/templates/template.jedi2ufs jedi2ufs.namelist
    
@@ -133,9 +70,8 @@ elif [[ ${ATMOS_FORC} == "gswp3" ]]; then
     exit 10
   fi
 
-  # save analysis restart
-  for itile in {1..6}
-  do
-    cp -p ${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc ${COMOUT}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc
-  done  
-fi
+# save analysis restart
+for itile in {1..6}
+do
+  cp -p ${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc ${COMOUT}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc
+done

@@ -1,18 +1,9 @@
-# test for vector2tile for use in jedi-fv3
-add_test(NAME test_vector2tile
-         COMMAND ${PROJECT_SOURCE_DIR}/test/test_vector2tile.sh ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR} vector2tile bkg
-         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
-set_tests_properties(test_vector2tile
-    PROPERTIES
-    ENVIRONMENT "FIXlandda=$ENV{FIXlandda}")
-
 # test for creating pseudo ensemble for use in letkfoi
 add_test(NAME test_create_ens
          COMMAND ${PROJECT_SOURCE_DIR}/test/create_bkg_ens.sh ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
          WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
 set_tests_properties(test_create_ens
     PROPERTIES
-    DEPENDS     "test_vector2title"
     ENVIRONMENT "FIXlandda=$ENV{FIXlandda}") 
 
 # test for running letkfoi to assimilate snow DA
@@ -33,17 +24,8 @@ set_tests_properties(test_apply_jediincr
     DEPENDS "test_letkfoi_snowda"
     ENVIRONMENT "FIXlandda=$ENV{FIXlandda}")
 
-# test for tile2vector for use in ufs-land-driver
-add_test(NAME test_tile2vector
-         COMMAND ${PROJECT_SOURCE_DIR}/test/test_vector2tile.sh ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR} tile2vector ana
-         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
-set_tests_properties(test_tile2vector
-    PROPERTIES
-    DEPENDS "test_apply_jediincr" 
-    ENVIRONMENT "FIXlandda=$ENV{FIXlandda};
-                 TOL=$ENV{TOL}")
-
 # test for ufs-datm-lnd model
 add_test(NAME test_ufs_datm_land
          COMMAND ${PROJECT_SOURCE_DIR}/test/run_ufs_datm_lnd.sh ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}
          WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/test)
+

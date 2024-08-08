@@ -8,9 +8,7 @@ Provide a detailed description of what this PR does. What bug does it fix, or wh
 
 ## Subcomponents involved:
 - [ ] apply_incr.fd (NOAA-PSL/land-apply_jedi_incr)
-- [ ] ufsLand.fd (NOAA-EPIC/ufs-land-driver-emc-dev)
 - [ ] ufs_model.fd (ufs-community/ufs-weather-model)
-- [ ] vector2tile_converter.fd (NOAA-PSL/land-vector2tile)
 - [ ] none
 
 ## Linked PR's and Issues:
@@ -27,7 +25,6 @@ EXAMPLE: Closes ufs-community/land-DA/issues/<issue_number>
     - [ ] Hera
     - [ ] Orion
     - [ ] Hercules
-    - [ ] Derecho
 - CI
   - [ ] Completed
 - PW-Clouds
