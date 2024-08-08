@@ -1,3 +1,6 @@
+.. role:: raw-html(raw)
+    :format: html
+
 .. _TechOverview:
 
 *********************
@@ -17,7 +20,7 @@ Minimum System Requirements
 Additionally, users will need:
 
    * Disk space: ~23GB (11GB for Land DA System [or 6.5GB for Land DA container], 11GB for Land DA data, and ~1GB for staging and output) 
-   * 6 CPU cores (or option to run with "oversubscribe")
+   * 7 CPU cores (or option to run with "oversubscribe")
 
 Software Prerequisites
 ========================
@@ -29,12 +32,12 @@ The Land DA System requires:
    * Python
    * :term:`NetCDF`
    * Lmod 
-   * `spack-stack <https://github.com/JCSDA/spack-stack>`__
-   * `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`__ (Skylab v4.0)
+   * `spack-stack <https://github.com/JCSDA/spack-stack>`_ (|spack-stack-ver|)
+   * `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`_ (|skylabv|)
 
 These software prerequisites are pre-installed in the Land DA :term:`container` and on other Level 1 systems (see :ref:`below <LevelsOfSupport>` for details). However, users on non-Level 1 systems will need to install them.
 
-Before using the Land DA container, users will need to install `Singularity/Apptainer <https://apptainer.org/docs/admin/1.2/installation.html>`__ and an **Intel** MPI (available `free here <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`__). 
+Before using the Land DA container, users will need to install `Singularity/Apptainer <https://apptainer.org/docs/admin/1.2/installation.html>`_ and an **Intel** MPI (available `free here <https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html>`_). 
 
 
 .. _LevelsOfSupport:
@@ -51,30 +54,39 @@ Four levels of support have been defined for :term:`UFS` applications, and the L
 
 Level 1 Systems
 ==================
-Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and the ``jedi-bundle`` (Skylab v4.0). Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them. 
+Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and the :term:`jedi-bundle` (Skylab |skylabv|). Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them. For the most updated information on stack locations, compilers, and MPI, users can check the :land-wflow-repo:`build and run version files <tree/develop/versions>` for their machine of choice. 
 
-.. COMMENT: Update spack-stack to 1.5.1
+.. _stack-compiler-locations:
 
-+-----------+-----------------------------------+-----------------------------------------------------------------+
-| Platform  | Compiler/MPI                      | spack-stack & jedi-bundle Installations                         |
-+===========+===================================+=================================================================+
-| Hera      | intel/2022.1.2 /                  | /scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.3.0  |
-|           |                                   |                                                                 |
-|           | impi/2022.1.2                     | /scratch2/NAGAPE/epic/UFS_Land-DA/jedi/jedi-bundle              |
-+-----------+-----------------------------------+-----------------------------------------------------------------+
-| Orion     | intel/2022.1.2 /                  | /work/noaa/epic/role-epic/spack-stack/orion/spack-stack-1.3.0   |
-|           |                                   |                                                                 |
-|           | impi/2022.1.2                     | /work/noaa/epic/UFS_Land-DA/jedi/jedi-bundle                    |
-+-----------+-----------------------------------+-----------------------------------------------------------------+
-| Container | intel-oneapi-compilers/2021.8.0 / | /opt/spack-stack/ (inside the container)                        |
-|           |                                   |                                                                 |
-|           | intel-oneapi-mpi/2021.8.0         | /opt/jedi-bundle (inside the container)                         |
-+-----------+-----------------------------------+-----------------------------------------------------------------+
+.. list-table:: *Software Prerequisites & Locations*
+   :header-rows: 1
+   :widths: 10 20 20 100 70
+
+   * - Platform
+     - Compiler
+     - MPI
+     - *spack-stack* Installation
+     - *jedi-bundle* Installation
+   * - Hera
+     - intel/2021.5.0 / 
+     - impi/2021.5.1
+     - /scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.6.0/envs/unified-env-rocky8/install/modulefiles/Core
+     - /scratch2/NAGAPE/epic/UFS_Land-DA_Dev/jedi_v7
+   * - Orion
+     - intel/2021.9.0 /
+     - impi/2021.9.0
+     - /work/noaa/epic/role-epic/spack-stack/orion/spack-stack-1.6.0/envs/unified-env-rocky9/install/modulefiles/Core
+     - /work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6
+   * - Container
+     - intel-oneapi-compilers/2021.8.0 / 
+     - intel-oneapi-mpi/2021.8.0
+     - /opt/spack-stack/ (inside the container)
+     - /opt/jedi-bundle (inside the container)
 
 Level 2-4 Systems
 ===================
 
-On non-Level 1 platforms, the Land DA System can be run within a container that includes the prerequisite software; otherwise, the required libraries will need to be installed as part of the Land DA build process. Once these prerequisite libraries are installed, applications and models should build and run successfully. However, users may need to perform additional troubleshooting on Level 3 or 4 systems since little or no pre-release testing has been conducted on these systems.
+On non-Level 1 platforms, the Land DA System can be run within a container that includes the prerequisite software; otherwise, the required libraries will need to be installed as part of the Land DA build process. Once these prerequisite libraries are installed, Land DA should build and run successfully. However, users may need to perform additional troubleshooting on Level 3 or 4 systems since little or no pre-release testing has been conducted on these systems.
 
 .. _repos-dir-structure:
 
@@ -99,37 +111,17 @@ This :term:`umbrella repository` uses Git submodules and an ``app_build.sh`` fil
      - Repository Name
      - Repository Description
      - Authoritative Repository URL
-   * - DA_update
-     - land-DA
-     - Contains scripts and components for performing data assimilation (DA) procedures.
-     - https://github.com/ufs-community/land-DA/
-   * - *-- add_jedi_incr*
-     - *-- land-apply_jedi_incr*
+   * - apply_incr.fd
+     - land-apply_jedi_incr
      - Contains code that applies the JEDI-generated DA increment to UFS ``sfc_data`` restart 
      - https://github.com/NOAA-PSL/land-apply_jedi_incr
-   * - ufsLand.fd
-     - ufs-land-driver-emc-dev
-     - Repository for the UFS Land Driver
-     - https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev
-   * - *-- ccpp-physics*
-     - *-- ccpp-physics*
-     - Repository for the Common Community Physics Package (CCPP)
-     - https://github.com/ufs-community/ccpp-physics/
    * - ufs_model.fd
      - ufs-weather-model
-     - Repository for the UFS Weather Model (WM). This repository contains a number of subrepositories, which are documented :doc:`in the WM User's <ufs-wm:CodeOverview>`.
+     - Repository for the UFS Weather Model (WM). This repository contains a number of subrepositories, which are documented :ufs-wm:`in the WM User's <CodeOverview.html>`.
      - https://github.com/ufs-community/ufs-weather-model/
-   * - vector2tile_converter.fd
-     - land-vector2tile
-     - Contains code to map between the vector format used by the Noah-MP offline driver, and the tile format used by the UFS atmospheric model. 
-     - https://github.com/NOAA-PSL/land-vector2tile
-   * - N/A 
-     - uwtools 
-     - Repository for the Unified Workflow (UW) Toolkit. This repository is not a Git submodule, but the build script installs UW tools, if desired, as part of the build.
-     - https://github.com/ufs-community/uwtools
 
 .. note::
-   The prerequisite libraries (including NCEP Libraries and external libraries) are not included in the UFS Land DA System repository. The `spack-stack <https://github.com/JCSDA/spack-stack>`__ repository assembles these prerequisite libraries. Spack-stack has already been built on `preconfigured (Level 1) platforms <https://github.com/ufs-community/ufs-srweather-app/wiki/Supported-Platforms-and-Compilers>`__. However, it must be built on other systems. See the :doc:`spack-stack Documentation <spack-stack:index>` for details on installing spack-stack. 
+   The prerequisite libraries (including NCEP Libraries and external libraries) are not included in the UFS Land DA System repository. The `spack-stack <https://github.com/JCSDA/spack-stack>`_ repository assembles these prerequisite libraries. Spack-stack has already been built on :ref:`preconfigured (Level 1) platforms <LevelsOfSupport>`. However, it must be built on other systems. See the :spack-stack:`spack-stack Documentation <>` for details on installing spack-stack. 
 
 .. _file-dir-structure:
 
@@ -143,6 +135,7 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
    land-offline_workflow
     ├── doc
     ├── (exec)
+    ├── fix
     ├── jobs
     ├── (lib*)
     ├── modulefiles
@@ -150,40 +143,26 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     │     ├── check_release_outputs.sh
     │     ├── land_analysis_<forcing>_<platform>.yaml
     │     └── run_without_rocoto.sh
+    ├── scripts
     ├── sorc
+    |     ├── apply_incr.fd
+    |     |     ├── apply_incr_noahmp_snow.f90
+    |     |     └── NoahMPdisag_module.f90
     │     ├── (build)
     │     ├── cmake
-    │     │     ├── compiler_flags_*
-    │     │     └── landda_compiler_flags.cmake
+    │     │     └── compiler_flags_*.cmake
     │     ├── (conda)
-    │     ├── DA_update
-    │     │     ├── add_jedi_incr
-    │     │     ├── jedi/fv3-jedi
-    │     │     └── do_LandDA.sh
     │     ├── test
     │     ├── tile2tile_converter.fd
-    │     │     ├── cmake
-    │     │     └── config
-    │     ├── ufsLand.fd
-    │     │     └── ccpp-physics
     │     ├── ufs_model.fd
-    │     ├── vector2tile_converter.fd
-    │     │     ├── cmake
-    │     │     └── config
     │     ├── CMakeLists.txt
     │     └── app_build.sh
+    ├── ush
+    |     ├── hofx_analysis_stats.py
+    |     └── letkf_create_ens.py
+    ├── versions
     ├── LICENSE
-    ├── README.md
-    ├── datm_cdeps_lnd_gswp3_rst
-    ├── do_submit_cycle.sh
-    ├── fv3_run
-    ├── incdate.sh
-    ├── land_mods
-    ├── module_check.sh
-    ├── release.environment
-    ├── run_container_executable.sh
-    ├── settings_DA_*
-    └── submit_cycle.sh
+    └── README.md
 
 :numref:`Table %s <Subdirectories>` describes the contents of the most important Land DA subdirectories. :numref:`Section %s <components>` describes the Land DA System components. Users can reference the :nco:`NCO Implementation Standards <ImplementationStandards.v11.0.0.pdf>` (p. 19) for additional details on repository structure in NCO-compliant repositories. 
 
@@ -199,6 +178,8 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
      - Repository documentation
    * - exec
      - Binary executables
+   * - fix
+     - Location of fix/static files 
    * - jobs
      - :term:`J-job <J-jobs>` scripts launched by Rocoto
    * - lib
@@ -211,8 +192,10 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
      - Scripts launched by the :term:`J-jobs`
    * - sorc
      - External source code used to build the Land DA System
+   * - ush
+     - Utility scripts
    * - versions
-     - Contain run.ver and build.ver, which are files that get automatically sourced in order to track package versions at run and compile time respectively.
+     - Contains ``build.ver_*`` and ``run.ver_*``, which are files that get automatically sourced in order to track package versions at compile and run time respectively.
 
 .. _land-component:
 
@@ -227,4 +210,4 @@ Unlike the standalone Noah-MP land driver, the Noah-MP :term:`NUOPC cap` is able
 
 Unified Workflow (UW) Tools
 ============================
-The Unified Workflow (UW) is a set of tools intended to unify the workflow for various UFS applications under one framework. The UW toolkit currently includes rocoto, template, and configuration (config) tools, which are being incorporated into the Land DA workflow. Additional tools are under development. More details about UW tools can be found in the `uwtools <https://github.com/ufs-community/uwtools>` GitHub repository and in the :uw:`UW Documentation <>`.
+The Unified Workflow (UW) is a set of tools intended to unify the workflow for various UFS applications under one framework. The UW toolkit currently includes rocoto, template, and configuration (config) tools, which are being incorporated into the Land DA workflow. Additional tools are under development. More details about UW tools can be found in the `uwtools <https://github.com/ufs-community/uwtools>`_ GitHub repository and in the :uw:`UW Documentation <>`.

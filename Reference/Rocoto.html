@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4.1. Rocoto Introductory Information &mdash; UFS Offline Land DA User&#39;s Guide develop documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=044582d4" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=3db8afb0" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=16816911"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="4.2. Frequently Asked Questions (FAQ)" href="FAQ.html" />
+    <link rel="prev" title="4. Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            UFS Offline Land DA User's Guide
+              <img src="https://github.com/ufs-community/ufs/wiki/images/ufs-epic-logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                develop
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../BackgroundInfo/index.html">1. Background Information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../BuildingRunningTesting/index.html">2. Building, Running, and Testing the Land DA System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../CustomizingTheWorkflow/index.html">3. Customizing the Workflow</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">4. Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4.1. Rocoto Introductory Information</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rocotorun">4.1.1. rocotorun</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rocotostat">4.1.2. rocotostat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rocotocheck">4.1.3. rocotocheck</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rocotorewind">4.1.4. rocotorewind</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rocotoboot">4.1.5. rocotoboot</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="FAQ.html">4.2. Frequently Asked Questions (FAQ)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Glossary.html">4.3. Glossary</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">UFS Offline Land DA User's Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html"><span class="section-number">4. </span>Reference</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">4.1. </span>Rocoto Introductory Information</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Reference/Rocoto.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rocoto-introductory-information">
+<span id="rocotoinfo"></span><h1><span class="section-number">4.1. </span>Rocoto Introductory Information<a class="headerlink" href="#rocoto-introductory-information" title="Link to this heading"></a></h1>
+<p>The tasks in the Land DA System are typically run using the Rocoto Workflow Manager (see <a class="reference internal" href="../BuildingRunningTesting/BuildRunLandDA.html#workflowtaskstable"><span class="std std-numref">Table 2.2</span></a> for default tasks). Rocoto is a Ruby program that communicates with the batch system on an <a class="reference internal" href="Glossary.html#term-HPC"><span class="xref std std-term">HPC</span></a> system to run and manage dependencies between the tasks. Rocoto submits jobs to the HPC batch system as the task dependencies allow and runs one instance of the workflow for a set of user-defined <a class="reference internal" href="Glossary.html#term-cycle"><span class="xref std std-term">cycles</span></a>. More information about Rocoto can be found on the <a class="reference external" href="https://github.com/christopherwharrop/rocoto/wiki/documentation">Rocoto Wiki</a>.</p>
+<p>The Land DA workflow is defined in a Jinja-enabled Rocoto XML template called <code class="docutils literal notranslate"><span class="pre">land_analysis.xml</span></code>, which is generated using the contents of <code class="docutils literal notranslate"><span class="pre">land_analysis.yaml</span></code> as input to the Unified Workflow’s <a class="reference external" href="https://uwtools.readthedocs.io/en/main/sections/user_guide/cli/tools/rocoto.html">Rocoto tool</a>. Both files reside in the <code class="docutils literal notranslate"><span class="pre">land-DA_workflow/parm</span></code> directory. The completed XML file contains the workflow task names, parameters needed by the job scheduler, and task interdependencies.</p>
+<p>There are a number of Rocoto commands available to run and monitor the workflow; users can find more information in the complete <a class="reference external" href="http://christopherwharrop.github.io/rocoto/">Rocoto documentation</a>. Descriptions and examples of commonly used commands are discussed below.</p>
+<section id="rocotorun">
+<span id="rocotoruncmd"></span><h2><span class="section-number">4.1.1. </span>rocotorun<a class="headerlink" href="#rocotorun" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command is used to run the workflow by submitting tasks to the batch system. It will automatically resubmit failed tasks and can recover from system outages without user intervention. The command takes the following format:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">rocotorun -w /path/to/workflow/xml/file -d /path/to/workflow/database/file -v 10</span>
+</pre></div>
+</div>
+<p>where</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-w</span></code> specifies the name of the workflow definition file. This must be an XML file (e.g., <code class="docutils literal notranslate"><span class="pre">land_analysis.xml</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-d</span></code> specifies the name of the database file that stores the state of the workflow (e.g., <code class="docutils literal notranslate"><span class="pre">land_analysis.db</span></code>). The database file is a binary file created and used only by Rocoto. It does not need to exist when the command is initially run.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-v</span></code> (optional) specified level of verbosity. If no level is specified, a level of 1 is used.</p></li>
+</ul>
+<p>From the <code class="docutils literal notranslate"><span class="pre">parm</span></code> directory, the <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command for the workflow would be:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">rocotorun -w land_analysis.xml -d land_analysis.db</span>
+</pre></div>
+</div>
+<p>Users will need to include the absolute or relative path to these files when running the command from another directory.</p>
+<p>It is important to note that the <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> process is iterative; the command must be executed many times before the entire workflow is completed, usually every 1-10 minutes. More information on this command can be found in the <a class="reference external" href="http://christopherwharrop.github.io/rocoto/">Rocoto documentation</a>.</p>
+<p>The first time the <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command is executed for a workflow, the files <code class="docutils literal notranslate"><span class="pre">land_analysis.db</span></code> and <code class="docutils literal notranslate"><span class="pre">land_analysis_lock.db</span></code> are created. There is usually no need for the user to modify these files. Each time the <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command is executed, the last known state of the workflow is read from the <code class="docutils literal notranslate"><span class="pre">land_analysis.db</span></code> file, the batch system is queried, jobs are submitted for tasks whose dependencies have been satisfied, and the current state of the workflow is saved in <code class="docutils literal notranslate"><span class="pre">land_analysis.db</span></code>. If there is a need to relaunch
+the workflow from scratch, both database files can be deleted, and the workflow can be run by executing the <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command
+or the launch script (<code class="docutils literal notranslate"><span class="pre">launch_rocoto_wflow.sh</span></code>) multiple times.</p>
+</section>
+<section id="rocotostat">
+<span id="rocotostatcmd"></span><h2><span class="section-number">4.1.2. </span>rocotostat<a class="headerlink" href="#rocotostat" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">rocotostat</span></code> is a tool for querying the status of tasks in an active Rocoto workflow. Once the workflow has been started with the <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command, Rocoto can check the status of the workflow using the <code class="docutils literal notranslate"><span class="pre">rocotostat</span></code> command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">rocotostat -w /path/to/workflow/xml/file -d /path/to/workflow/database/file</span>
+</pre></div>
+</div>
+<p>Concretely, this will look like:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">rocotostat -w land_analysis.xml -d land_analysis.db</span>
+</pre></div>
+</div>
+<p>Executing this command will generate a workflow status table similar to the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">CYCLE                TASK                       JOBID        STATE   EXIT STATUS   TRIES   DURATION</span>
+<span class="go">=========================================================================================================</span>
+<span class="go">200001030000     prep_obs                    61746064       QUEUED             -       1        0.0</span>
+<span class="go">200001030000     pre_anal   druby://10.184.3.62:41973   SUBMITTING             -       1        0.0</span>
+<span class="go">200001030000     analysis                           -            -             -       -          -</span>
+<span class="go">200001030000    post_anal                           -            -             -       -          -</span>
+<span class="go">200001030000   plot_stats                           -            -             -       -          -</span>
+<span class="go">200001030000     forecast                           -            -             -       -          -</span>
+<span class="go">================================================================================================================================</span>
+<span class="go">200001040000     prep_obs   druby://10.184.3.62:41973   SUBMITTING             -       1        0.0</span>
+<span class="go">200001040000     pre_anal                           -            -             -       -          -</span>
+<span class="go">200001040000     analysis                           -            -             -       -          -</span>
+<span class="go">200001040000    post_anal                           -            -             -       -          -</span>
+<span class="go">200001040000   plot_stats                           -            -             -       -          -</span>
+<span class="go">200001040000     forecast                           -            -             -       -          -</span>
+</pre></div>
+</div>
+<p>This table indicates that the <code class="docutils literal notranslate"><span class="pre">prep_obs</span></code> task for cycle 200001030000 was sent to the batch system and is now queued, while the <code class="docutils literal notranslate"><span class="pre">pre_anal</span></code> task for cycle 200001030000 and the <code class="docutils literal notranslate"><span class="pre">prep_obs</span></code> task for cycle 200001040000 are currently being submitted to the batch system.</p>
+<p>Note that issuing a <code class="docutils literal notranslate"><span class="pre">rocotostat</span></code> command without an intervening <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command will not result in an updated workflow status table; it will print out the same table. It is the <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command that updates the workflow database file (in this case <code class="docutils literal notranslate"><span class="pre">land_analysis.db</span></code>, located in <code class="docutils literal notranslate"><span class="pre">parm</span></code>). The <code class="docutils literal notranslate"><span class="pre">rocotostat</span></code> command reads the database file and prints the table to the screen. To see an updated table, the <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command must be executed first, followed by the <code class="docutils literal notranslate"><span class="pre">rocotostat</span></code> command.</p>
+<p>After issuing the <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command several times (over the course of several minutes or longer, depending on the grid size and computational resources available), the output of the <code class="docutils literal notranslate"><span class="pre">rocotostat</span></code> command should look like this:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">       CYCLE             TASK        JOBID           STATE   EXIT STATUS   TRIES   DURATION</span>
+<span class="go">============================================================================================</span>
+<span class="go">200001030000         prep_obs     18347451       SUCCEEDED            0       1        3.0</span>
+<span class="go">200001030000         pre_anal     18347452       SUCCEEDED            0       1        5.0</span>
+<span class="go">200001030000         analysis     18347525       SUCCEEDED            0       1       65.0</span>
+<span class="go">200001030000        post_anal     18347558       SUCCEEDED            0       1       10.0</span>
+<span class="go">200001030000       plot_stats     18347559       SUCCEEDED            0       1       73.0</span>
+<span class="go">200001030000         forecast     18347562       SUCCEEDED            0       1      103.0</span>
+<span class="go">==========================================================================================</span>
+<span class="go">200001040000         prep_obs     18347453       SUCCEEDED            0       1        3.0</span>
+<span class="go">200001040000         pre_anal     18347568       SUCCEEDED            0       1        4.0</span>
+<span class="go">200001040000         analysis     18347584       SUCCEEDED            0       1       70.0</span>
+<span class="go">200001040000        post_anal     18347591       SUCCEEDED            0       1        4.0</span>
+<span class="go">200001040000       plot_stats     18347592       SUCCEEDED            0       1       48.0</span>
+<span class="go">200001040000         forecast     18347593       RUNNING              -       1        0.0</span>
+</pre></div>
+</div>
+<p>When the workflow runs to completion, all tasks will be marked as SUCCEEDED. The log file for each task is located in <code class="docutils literal notranslate"><span class="pre">$LANDDAROOT/ptmp/test/com/output/logs</span></code>. If any task fails, the corresponding log file can be checked for error messages. Optional arguments for the <code class="docutils literal notranslate"><span class="pre">rocotostat</span></code> command can be found in the <a class="reference external" href="http://christopherwharrop.github.io/rocoto/">Rocoto documentation</a>.</p>
+</section>
+<section id="rocotocheck">
+<span id="id3"></span><h2><span class="section-number">4.1.3. </span>rocotocheck<a class="headerlink" href="#rocotocheck" title="Link to this heading"></a></h2>
+<p>Sometimes, issuing a <code class="docutils literal notranslate"><span class="pre">rocotorun</span></code> command will not cause the next task to launch. <code class="docutils literal notranslate"><span class="pre">rocotocheck</span></code> is a tool that can be used to query detailed information about a task or cycle in the Rocoto workflow. To determine why a particular task has not been submitted, the <code class="docutils literal notranslate"><span class="pre">rocotocheck</span></code> command can be used from the <code class="docutils literal notranslate"><span class="pre">parm</span></code> directory as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">rocotocheck -w land_analysis.xml -d land_analysis.db -c &lt;YYYYMMDDHHmm&gt; -t &lt;taskname&gt;</span>
+</pre></div>
+</div>
+<p>where</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-c</span></code> is the cycle to query in YYYYMMDDHHmm format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-t</span></code> is the task name (e.g., <code class="docutils literal notranslate"><span class="pre">prep_obs</span></code>, <code class="docutils literal notranslate"><span class="pre">analysis</span></code>, <code class="docutils literal notranslate"><span class="pre">forecast</span></code>).</p></li>
+</ul>
+<p>The cycle and task names appear in the first and second columns of the table output by <code class="docutils literal notranslate"><span class="pre">rocotostat</span></code>. Users will need to include the absolute or relative path to the workflow XML and database files when running the command from another directory.</p>
+<p>A specific example is:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">rocotocheck -w /Users/John.Doe/landda/land-DA_workflow/parm/land_analysis.xml -d /Users/John.Doe/landda/land-DA_workflow/parm/land_analysis.db -v 10 -c 200001040000 -t analysis</span>
+</pre></div>
+</div>
+<p>Running <code class="docutils literal notranslate"><span class="pre">rocotocheck</span></code> will result in output similar to the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Task: analysis</span>
+<span class="go">   account: epic</span>
+<span class="go">   command: /work/noaa/epic/$USER/landda/land-DA_workflow/parm/task_load_modules_run_jjob.sh &quot;analysis&quot; &quot;/work/noaa/epic/$USER/landda/land-DA_workflow&quot; &quot;orion&quot;</span>
+<span class="go">   cores: 6</span>
+<span class="go">   cycledefs: cycled</span>
+<span class="go">   final: false</span>
+<span class="go">   jobname: analysis</span>
+<span class="go">   join: /work/noaa/epic/$USER/landda/ptmp/test/com/output/logs/run_gswp3/analysis_2000010400.log</span>
+<span class="hll"><span class="go">   maxtries: 2</span>
+</span><span class="go">   name: analysis</span>
+<span class="go">   queue: batch</span>
+<span class="go">   throttle: 9999999</span>
+<span class="go">   walltime: 00:15:00</span>
+<span class="go">   environment</span>
+<span class="go">      ACCOUNT ==&gt; epic</span>
+<span class="go">      ATMOS_FORC ==&gt; gswp3</span>
+<span class="go">      COMROOT ==&gt; /work/noaa/epic/$USER/landda/ptmp/test/com</span>
+<span class="go">      DATAROOT ==&gt; /work/noaa/epic/$USER/landda/ptmp/test/tmp</span>
+<span class="go">      DAtype ==&gt; letkfoi_snow</span>
+<span class="go">      HOMElandda ==&gt; /work/noaa/epic/$USER/landda/land-DA_workflow</span>
+<span class="go">      JEDI_INSTALL ==&gt; /work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6</span>
+<span class="go">      KEEPDATA ==&gt; YES</span>
+<span class="go">      MACHINE ==&gt; orion</span>
+<span class="go">      NPROCS_ANALYSIS ==&gt; 6</span>
+<span class="go">      OBS_TYPES ==&gt; GHCN</span>
+<span class="go">      PDY ==&gt; 20000104</span>
+<span class="go">      RES ==&gt; 96</span>
+<span class="go">      SCHED ==&gt; slurm</span>
+<span class="go">      SNOWDEPTHVAR ==&gt; snwdph</span>
+<span class="go">      TSTUB ==&gt; oro_C96.mx100</span>
+<span class="go">      cyc ==&gt; 00</span>
+<span class="go">      model_ver ==&gt; v1.2.1</span>
+<span class="go">   dependencies</span>
+<span class="hll"><span class="go">     pre_anal of cycle 200001040000 is SUCCEEDED</span>
+</span><span class="hll">
+</span><span class="go">Cycle: 200001040000</span>
+<span class="go">   Valid for this task: YES</span>
+<span class="go">   State: active</span>
+<span class="go">   Activated: 2024-07-05 17:44:40 UTC</span>
+<span class="go">   Completed: -</span>
+<span class="go">   Expired: -</span>
+
+<span class="go">Job: 18347584</span>
+<span class="go">   State:  DEAD (FAILED)</span>
+<span class="go">   Exit Status: 1</span>
+<span class="go">   Tries: 2</span>
+<span class="hll"><span class="go">   Unknown count: 0</span>
+</span><span class="go">   Duration: 70.0</span>
+</pre></div>
+</div>
+<p>This output shows that although all dependencies for this task are satisfied (see the dependencies section, highlighted above), it cannot run because its <code class="docutils literal notranslate"><span class="pre">maxtries</span></code> value (highlighted) is 2. Rocoto will attempt to launch it at most 2 times, and it has already been tried 2 times (note the <code class="docutils literal notranslate"><span class="pre">Tries</span></code> value, also highlighted).</p>
+<p>The output of the <code class="docutils literal notranslate"><span class="pre">rocotocheck</span></code> command is often useful in determining whether the dependencies for a given task have been met. If not, the dependencies section in the output of <code class="docutils literal notranslate"><span class="pre">rocotocheck</span></code> will indicate this by stating that a dependency “is NOT satisfied”.</p>
+</section>
+<section id="rocotorewind">
+<h2><span class="section-number">4.1.4. </span>rocotorewind<a class="headerlink" href="#rocotorewind" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">rocotorewind</span></code> is a tool that attempts to undo the effects of running a task. It is commonly used to rerun part of a workflow that has failed. If a task fails to run (the STATE is DEAD) and needs to be restarted, the <code class="docutils literal notranslate"><span class="pre">rocotorewind</span></code> command will rerun tasks in the workflow. The command line options are the same as those described for <code class="docutils literal notranslate"><span class="pre">rocotocheck</span></code> (in <a class="reference internal" href="#rocotocheck"><span class="std std-numref">Section 4.1.3</span></a>), and the general usage statement looks like this:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">rocotorewind -w /path/to/workflow/xml/file -d /path/to/workflow/database/file -c &lt;YYYYMMDDHHmm&gt; -t &lt;taskname&gt;</span>
+</pre></div>
+</div>
+<p>Running this command will edit the Rocoto database file <code class="docutils literal notranslate"><span class="pre">land_analysis.db</span></code> to remove evidence that the job has been run. <code class="docutils literal notranslate"><span class="pre">rocotorewind</span></code> is recommended over <code class="docutils literal notranslate"><span class="pre">rocotoboot</span></code> for restarting a task, since <code class="docutils literal notranslate"><span class="pre">rocotoboot</span></code> will force a specific task to run, ignoring all dependencies and throttle limits. The throttle limit, denoted by the variable <code class="docutils literal notranslate"><span class="pre">cyclethrottle</span></code> in the <code class="docutils literal notranslate"><span class="pre">land_analysis.xml</span></code> file, limits how many cycles can be active at one time. An example of how to use the <code class="docutils literal notranslate"><span class="pre">rocotorewind</span></code> command to rerun the forecast task from <code class="docutils literal notranslate"><span class="pre">parm</span></code> is:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">rocotorewind -w land_analysis.xml -d land_analysis.db -v 10 -c 200001040000 -t forecast</span>
+</pre></div>
+</div>
+</section>
+<section id="rocotoboot">
+<h2><span class="section-number">4.1.5. </span>rocotoboot<a class="headerlink" href="#rocotoboot" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">rocotoboot</span></code> will force a specific task of a cycle in a Rocoto workflow to run. All dependencies and throttle limits are ignored, and it is generally recommended to use <code class="docutils literal notranslate"><span class="pre">rocotorewind</span></code> instead. An example of how to use this command to rerun the <code class="docutils literal notranslate"><span class="pre">prep_obs</span></code> task from <code class="docutils literal notranslate"><span class="pre">parm</span></code> is:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">rocotoboot -w land_analysis.xml -d land_analysis.db -v 10 -c 200001040000 -t prep_obs</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="4. Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="FAQ.html" class="btn btn-neutral float-right" title="4.2. Frequently Asked Questions (FAQ)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

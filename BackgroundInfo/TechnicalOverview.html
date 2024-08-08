@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>1.2. Technical Overview &mdash; UFS Offline Land DA User&#39;s Guide v1.2.0 documentation</title>
+  <title>1.2. Technical Overview &mdash; UFS Offline Land DA User&#39;s Guide develop documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=044582d4" />
@@ -17,7 +17,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=95484ca5"></script>
+        <script src="../_static/documentation_options.js?v=16816911"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -40,7 +40,7 @@
               <img src="https://github.com/ufs-community/ufs/wiki/images/ufs-epic-logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                v1.2
+                develop
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -117,7 +117,7 @@
 <blockquote>
 <div><ul class="simple">
 <li><p>Disk space: ~23GB (11GB for Land DA System [or 6.5GB for Land DA container], 11GB for Land DA data, and ~1GB for staging and output)</p></li>
-<li><p>6 CPU cores (or option to run with “oversubscribe”)</p></li>
+<li><p>7 CPU cores (or option to run with “oversubscribe”)</p></li>
 </ul>
 </div></blockquote>
 </section>
@@ -131,8 +131,8 @@
 <li><p>Python</p></li>
 <li><p><a class="reference internal" href="../Reference/Glossary.html#term-netCDF"><span class="xref std std-term">NetCDF</span></a></p></li>
 <li><p>Lmod</p></li>
-<li><p><a class="reference external" href="https://github.com/JCSDA/spack-stack">spack-stack</a></p></li>
-<li><p><a class="reference external" href="https://github.com/JCSDA/jedi-bundle">jedi-bundle</a> (Skylab v4.0)</p></li>
+<li><p><a class="reference external" href="https://github.com/JCSDA/spack-stack">spack-stack</a> (v1.6.0)</p></li>
+<li><p><a class="reference external" href="https://github.com/JCSDA/jedi-bundle">jedi-bundle</a> (Skylab v7.0)</p></li>
 </ul>
 </div></blockquote>
 <p>These software prerequisites are pre-installed in the Land DA <a class="reference internal" href="../Reference/Glossary.html#term-container"><span class="xref std std-term">container</span></a> and on other Level 1 systems (see <a class="reference internal" href="#levelsofsupport"><span class="std std-ref">below</span></a> for details). However, users on non-Level 1 systems will need to install them.</p>
@@ -150,45 +150,49 @@
 </ul>
 <section id="level-1-systems">
 <h3><span class="section-number">1.2.2.1. </span>Level 1 Systems<a class="headerlink" href="#level-1-systems" title="Link to this heading"></a></h3>
-<p>Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via <a class="reference internal" href="../Reference/Glossary.html#term-spack-stack"><span class="xref std std-term">spack-stack</span></a> and the <code class="docutils literal notranslate"><span class="pre">jedi-bundle</span></code> (Skylab v4.0). Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them.</p>
-<table class="docutils align-default">
+<p>Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via <a class="reference internal" href="../Reference/Glossary.html#term-spack-stack"><span class="xref std std-term">spack-stack</span></a> and the <a class="reference internal" href="../Reference/Glossary.html#term-jedi-bundle"><span class="xref std std-term">jedi-bundle</span></a> (Skylab Skylab v7.0). Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them. For the most updated information on stack locations, compilers, and MPI, users can check the <a class="reference external" href="https://github.com/ufs-community/land-DA_workflow/tree/develop/versions">build and run version files</a> for their machine of choice.</p>
+<span id="stack-compiler-locations"></span><table class="docutils align-default" id="id3">
+<caption><span class="caption-number">Table 1.1 </span><span class="caption-text"><em>Software Prerequisites &amp; Locations</em></span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 4.5%" />
+<col style="width: 9.1%" />
+<col style="width: 9.1%" />
+<col style="width: 45.5%" />
+<col style="width: 31.8%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Platform</p></th>
-<th class="head"><p>Compiler/MPI</p></th>
-<th class="head"><p>spack-stack &amp; jedi-bundle Installations</p></th>
+<th class="head"><p>Compiler</p></th>
+<th class="head"><p>MPI</p></th>
+<th class="head"><p><em>spack-stack</em> Installation</p></th>
+<th class="head"><p><em>jedi-bundle</em> Installation</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Hera</p></td>
-<td><p>intel/2022.1.2 /</p>
-<p>impi/2022.1.2</p>
-</td>
-<td><p>/scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.3.0</p>
-<p>/scratch2/NAGAPE/epic/UFS_Land-DA/jedi/jedi-bundle</p>
-</td>
+<td><p>intel/2021.5.0 /</p></td>
+<td><p>impi/2021.5.1</p></td>
+<td><p>/scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.6.0/envs/unified-env-rocky8/install/modulefiles/Core</p></td>
+<td><p>/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/jedi_v7</p></td>
 </tr>
 <tr class="row-odd"><td><p>Orion</p></td>
-<td><p>intel/2022.1.2 /</p>
-<p>impi/2022.1.2</p>
-</td>
-<td><p>/work/noaa/epic/role-epic/spack-stack/orion/spack-stack-1.3.0</p>
-<p>/work/noaa/epic/UFS_Land-DA/jedi/jedi-bundle</p>
-</td>
+<td><p>intel/2021.9.0 /</p></td>
+<td><p>impi/2021.9.0</p></td>
+<td><p>/work/noaa/epic/role-epic/spack-stack/orion/spack-stack-1.6.0/envs/unified-env-rocky9/install/modulefiles/Core</p></td>
+<td><p>/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6</p></td>
 </tr>
 <tr class="row-even"><td><p>Container</p></td>
-<td><p>intel-oneapi-compilers/2021.8.0 /</p>
-<p>intel-oneapi-mpi/2021.8.0</p>
-</td>
-<td><p>/opt/spack-stack/ (inside the container)</p>
-<p>/opt/jedi-bundle (inside the container)</p>
-</td>
+<td><p>intel-oneapi-compilers/2021.8.0 /</p></td>
+<td><p>intel-oneapi-mpi/2021.8.0</p></td>
+<td><p>/opt/spack-stack/ (inside the container)</p></td>
+<td><p>/opt/jedi-bundle (inside the container)</p></td>
 </tr>
 </tbody>
 </table>
 </section>
 <section id="level-2-4-systems">
 <h3><span class="section-number">1.2.2.2. </span>Level 2-4 Systems<a class="headerlink" href="#level-2-4-systems" title="Link to this heading"></a></h3>
-<p>On non-Level 1 platforms, the Land DA System can be run within a container that includes the prerequisite software; otherwise, the required libraries will need to be installed as part of the Land DA build process. Once these prerequisite libraries are installed, applications and models should build and run successfully. However, users may need to perform additional troubleshooting on Level 3 or 4 systems since little or no pre-release testing has been conducted on these systems.</p>
+<p>On non-Level 1 platforms, the Land DA System can be run within a container that includes the prerequisite software; otherwise, the required libraries will need to be installed as part of the Land DA build process. Once these prerequisite libraries are installed, Land DA should build and run successfully. However, users may need to perform additional troubleshooting on Level 3 or 4 systems since little or no pre-release testing has been conducted on these systems.</p>
 </section>
 </section>
 <section id="code-repositories-and-directory-structure">
@@ -197,9 +201,9 @@
 <span id="components"></span><h3><span class="section-number">1.2.3.1. </span>Hierarchical Repository Structure<a class="headerlink" href="#hierarchical-repository-structure" title="Link to this heading"></a></h3>
 <p>The main repository for the Land DA System is named <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code>;
 it is available on GitHub at <a class="reference external" href="https://github.com/ufs-community/land-DA_workflow">https://github.com/ufs-community/land-DA_workflow</a>.
-This <a class="reference internal" href="../Reference/Glossary.html#term-Umbrella-repository"><span class="xref std std-term">umbrella repository</span></a> uses Git submodules and an <code class="docutils literal notranslate"><span class="pre">app_build.sh</span></code> file to pull in the appropriate versions of external repositories associated with the Land DA System. <a class="reference internal" href="#landdacomponents"><span class="std std-numref">Table 1.1</span></a> describes the various subrepositories that form the UFS Land DA System.</p>
-<span id="landdacomponents"></span><table class="docutils align-default" id="id2">
-<caption><span class="caption-number">Table 1.1 </span><span class="caption-text">UFS Land DA System Components</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+This <a class="reference internal" href="../Reference/Glossary.html#term-Umbrella-repository"><span class="xref std std-term">umbrella repository</span></a> uses Git submodules and an <code class="docutils literal notranslate"><span class="pre">app_build.sh</span></code> file to pull in the appropriate versions of external repositories associated with the Land DA System. <a class="reference internal" href="#landdacomponents"><span class="std std-numref">Table 1.2</span></a> describes the various subrepositories that form the UFS Land DA System.</p>
+<span id="landdacomponents"></span><table class="docutils align-default" id="id4">
+<caption><span class="caption-number">Table 1.2 </span><span class="caption-text">UFS Land DA System Components</span><a class="headerlink" href="#id4" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>Land DA Submodule Name</p></th>
 <th class="head"><p>Repository Name</p></th>
@@ -208,46 +212,21 @@ This <a class="reference internal" href="../Reference/Glossary.html#term-Umbrell
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>DA_update</p></td>
-<td><p>land-DA</p></td>
-<td><p>Contains scripts and components for performing data assimilation (DA) procedures.</p></td>
-<td><p><a class="reference external" href="https://github.com/ufs-community/land-DA/">https://github.com/ufs-community/land-DA/</a></p></td>
-</tr>
-<tr class="row-odd"><td><p><em>– add_jedi_incr</em></p></td>
-<td><p><em>– land-apply_jedi_incr</em></p></td>
+<tr class="row-even"><td><p>apply_incr.fd</p></td>
+<td><p>land-apply_jedi_incr</p></td>
 <td><p>Contains code that applies the JEDI-generated DA increment to UFS <code class="docutils literal notranslate"><span class="pre">sfc_data</span></code> restart</p></td>
 <td><p><a class="reference external" href="https://github.com/NOAA-PSL/land-apply_jedi_incr">https://github.com/NOAA-PSL/land-apply_jedi_incr</a></p></td>
 </tr>
-<tr class="row-even"><td><p>ufsLand.fd</p></td>
-<td><p>ufs-land-driver-emc-dev</p></td>
-<td><p>Repository for the UFS Land Driver</p></td>
-<td><p><a class="reference external" href="https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev">https://github.com/NOAA-EPIC/ufs-land-driver-emc-dev</a></p></td>
-</tr>
-<tr class="row-odd"><td><p><em>– ccpp-physics</em></p></td>
-<td><p><em>– ccpp-physics</em></p></td>
-<td><p>Repository for the Common Community Physics Package (CCPP)</p></td>
-<td><p><a class="reference external" href="https://github.com/ufs-community/ccpp-physics/">https://github.com/ufs-community/ccpp-physics/</a></p></td>
-</tr>
-<tr class="row-even"><td><p>ufs_model.fd</p></td>
+<tr class="row-odd"><td><p>ufs_model.fd</p></td>
 <td><p>ufs-weather-model</p></td>
-<td><p>Repository for the UFS Weather Model (WM). This repository contains a number of subrepositories, which are documented <a class="reference external" href="https://ufs-weather-model.readthedocs.io/en/develop/CodeOverview.html" title="(in UFS Weather Model Users Guide)"><span class="xref std std-doc">in the WM User’s</span></a>.</p></td>
+<td><p>Repository for the UFS Weather Model (WM). This repository contains a number of subrepositories, which are documented <a class="reference external" href="https://ufs-weather-model.readthedocs.io/en/develop/CodeOverview.html">in the WM User’s</a>.</p></td>
 <td><p><a class="reference external" href="https://github.com/ufs-community/ufs-weather-model/">https://github.com/ufs-community/ufs-weather-model/</a></p></td>
-</tr>
-<tr class="row-odd"><td><p>vector2tile_converter.fd</p></td>
-<td><p>land-vector2tile</p></td>
-<td><p>Contains code to map between the vector format used by the Noah-MP offline driver, and the tile format used by the UFS atmospheric model.</p></td>
-<td><p><a class="reference external" href="https://github.com/NOAA-PSL/land-vector2tile">https://github.com/NOAA-PSL/land-vector2tile</a></p></td>
-</tr>
-<tr class="row-even"><td><p>N/A</p></td>
-<td><p>uwtools</p></td>
-<td><p>Repository for the Unified Workflow (UW) Toolkit. This repository is not a Git submodule, but the build script installs UW tools, if desired, as part of the build.</p></td>
-<td><p><a class="reference external" href="https://github.com/ufs-community/uwtools">https://github.com/ufs-community/uwtools</a></p></td>
 </tr>
 </tbody>
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The prerequisite libraries (including NCEP Libraries and external libraries) are not included in the UFS Land DA System repository. The <a class="reference external" href="https://github.com/JCSDA/spack-stack">spack-stack</a> repository assembles these prerequisite libraries. Spack-stack has already been built on <a class="reference external" href="https://github.com/ufs-community/ufs-srweather-app/wiki/Supported-Platforms-and-Compilers">preconfigured (Level 1) platforms</a>. However, it must be built on other systems. See the <a class="reference external" href="https://spack-stack.readthedocs.io/en/1.3.0/index.html" title="(in spack-stack)"><span class="xref std std-doc">spack-stack Documentation</span></a> for details on installing spack-stack.</p>
+<p>The prerequisite libraries (including NCEP Libraries and external libraries) are not included in the UFS Land DA System repository. The <a class="reference external" href="https://github.com/JCSDA/spack-stack">spack-stack</a> repository assembles these prerequisite libraries. Spack-stack has already been built on <a class="reference internal" href="#levelsofsupport"><span class="std std-ref">preconfigured (Level 1) platforms</span></a>. However, it must be built on other systems. See the <a class="reference external" href="https://spack-stack.readthedocs.io/en/1.6.0/">spack-stack Documentation</a> for details on installing spack-stack.</p>
 </div>
 </section>
 <section id="file-directory-structure">
@@ -256,6 +235,7 @@ This <a class="reference internal" href="../Reference/Glossary.html#term-Umbrell
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">land-offline_workflow</span>
 <span class="go"> ├── doc</span>
 <span class="go"> ├── (exec)</span>
+<span class="go"> ├── fix</span>
 <span class="go"> ├── jobs</span>
 <span class="go"> ├── (lib*)</span>
 <span class="go"> ├── modulefiles</span>
@@ -263,45 +243,31 @@ This <a class="reference internal" href="../Reference/Glossary.html#term-Umbrell
 <span class="go"> │     ├── check_release_outputs.sh</span>
 <span class="go"> │     ├── land_analysis_&lt;forcing&gt;_&lt;platform&gt;.yaml</span>
 <span class="go"> │     └── run_without_rocoto.sh</span>
+<span class="go"> ├── scripts</span>
 <span class="go"> ├── sorc</span>
+<span class="go"> |     ├── apply_incr.fd</span>
+<span class="go"> |     |     ├── apply_incr_noahmp_snow.f90</span>
+<span class="go"> |     |     └── NoahMPdisag_module.f90</span>
 <span class="go"> │     ├── (build)</span>
 <span class="go"> │     ├── cmake</span>
-<span class="go"> │     │     ├── compiler_flags_*</span>
-<span class="go"> │     │     └── landda_compiler_flags.cmake</span>
+<span class="go"> │     │     └── compiler_flags_*.cmake</span>
 <span class="go"> │     ├── (conda)</span>
-<span class="go"> │     ├── DA_update</span>
-<span class="go"> │     │     ├── add_jedi_incr</span>
-<span class="go"> │     │     ├── jedi/fv3-jedi</span>
-<span class="go"> │     │     └── do_LandDA.sh</span>
 <span class="go"> │     ├── test</span>
 <span class="go"> │     ├── tile2tile_converter.fd</span>
-<span class="go"> │     │     ├── cmake</span>
-<span class="go"> │     │     └── config</span>
-<span class="go"> │     ├── ufsLand.fd</span>
-<span class="go"> │     │     └── ccpp-physics</span>
 <span class="go"> │     ├── ufs_model.fd</span>
-<span class="go"> │     ├── vector2tile_converter.fd</span>
-<span class="go"> │     │     ├── cmake</span>
-<span class="go"> │     │     └── config</span>
 <span class="go"> │     ├── CMakeLists.txt</span>
 <span class="go"> │     └── app_build.sh</span>
+<span class="go"> ├── ush</span>
+<span class="go"> |     ├── hofx_analysis_stats.py</span>
+<span class="go"> |     └── letkf_create_ens.py</span>
+<span class="go"> ├── versions</span>
 <span class="go"> ├── LICENSE</span>
-<span class="go"> ├── README.md</span>
-<span class="go"> ├── datm_cdeps_lnd_gswp3_rst</span>
-<span class="go"> ├── do_submit_cycle.sh</span>
-<span class="go"> ├── fv3_run</span>
-<span class="go"> ├── incdate.sh</span>
-<span class="go"> ├── land_mods</span>
-<span class="go"> ├── module_check.sh</span>
-<span class="go"> ├── release.environment</span>
-<span class="go"> ├── run_container_executable.sh</span>
-<span class="go"> ├── settings_DA_*</span>
-<span class="go"> └── submit_cycle.sh</span>
+<span class="go"> └── README.md</span>
 </pre></div>
 </div>
-<p><a class="reference internal" href="#subdirectories"><span class="std std-numref">Table 1.2</span></a> describes the contents of the most important Land DA subdirectories. <a class="reference internal" href="#components"><span class="std std-numref">Section 1.2.3.1</span></a> describes the Land DA System components. Users can reference the <a class="reference external" href="https://www.nco.ncep.noaa.gov/idsb/implementation_standards/ImplementationStandards.v11.0.0.pdf">NCO Implementation Standards</a> (p. 19) for additional details on repository structure in NCO-compliant repositories.</p>
-<span id="subdirectories"></span><table class="docutils align-default" id="id3">
-<caption><span class="caption-number">Table 1.2 </span><span class="caption-text"><em>Subdirectories of the land-DA_workflow repository</em></span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
+<p><a class="reference internal" href="#subdirectories"><span class="std std-numref">Table 1.3</span></a> describes the contents of the most important Land DA subdirectories. <a class="reference internal" href="#components"><span class="std std-numref">Section 1.2.3.1</span></a> describes the Land DA System components. Users can reference the <a class="reference external" href="https://www.nco.ncep.noaa.gov/idsb/implementation_standards/ImplementationStandards.v11.0.0.pdf">NCO Implementation Standards</a> (p. 19) for additional details on repository structure in NCO-compliant repositories.</p>
+<span id="subdirectories"></span><table class="docutils align-default" id="id5">
+<caption><span class="caption-number">Table 1.3 </span><span class="caption-text"><em>Subdirectories of the land-DA_workflow repository</em></span><a class="headerlink" href="#id5" title="Link to this table"></a></caption>
 <colgroup>
 <col style="width: 28.6%" />
 <col style="width: 71.4%" />
@@ -318,26 +284,32 @@ This <a class="reference internal" href="../Reference/Glossary.html#term-Umbrell
 <tr class="row-odd"><td><p>exec</p></td>
 <td><p>Binary executables</p></td>
 </tr>
-<tr class="row-even"><td><p>jobs</p></td>
+<tr class="row-even"><td><p>fix</p></td>
+<td><p>Location of fix/static files</p></td>
+</tr>
+<tr class="row-odd"><td><p>jobs</p></td>
 <td><p><a class="reference internal" href="../Reference/Glossary.html#term-J-jobs"><span class="xref std std-term">J-job</span></a> scripts launched by Rocoto</p></td>
 </tr>
-<tr class="row-odd"><td><p>lib</p></td>
+<tr class="row-even"><td><p>lib</p></td>
 <td><p>Model-specific libraries</p></td>
 </tr>
-<tr class="row-even"><td><p>modulefiles</p></td>
+<tr class="row-odd"><td><p>modulefiles</p></td>
 <td><p>Files that load the modules required for building and running the workflow</p></td>
 </tr>
-<tr class="row-odd"><td><p>parm</p></td>
+<tr class="row-even"><td><p>parm</p></td>
 <td><p>Parameter files used to configure the model, physics, workflow, and various components</p></td>
 </tr>
-<tr class="row-even"><td><p>scripts</p></td>
+<tr class="row-odd"><td><p>scripts</p></td>
 <td><p>Scripts launched by the <a class="reference internal" href="../Reference/Glossary.html#term-J-jobs"><span class="xref std std-term">J-jobs</span></a></p></td>
 </tr>
-<tr class="row-odd"><td><p>sorc</p></td>
+<tr class="row-even"><td><p>sorc</p></td>
 <td><p>External source code used to build the Land DA System</p></td>
 </tr>
+<tr class="row-odd"><td><p>ush</p></td>
+<td><p>Utility scripts</p></td>
+</tr>
 <tr class="row-even"><td><p>versions</p></td>
-<td><p>Contain run.ver and build.ver, which are files that get automatically sourced in order to track package versions at run and compile time respectively.</p></td>
+<td><p>Contains <code class="docutils literal notranslate"><span class="pre">build.ver_*</span></code> and <code class="docutils literal notranslate"><span class="pre">run.ver_*</span></code>, which are files that get automatically sourced in order to track package versions at compile and run time respectively.</p></td>
 </tr>
 </tbody>
 </table>
@@ -351,7 +323,7 @@ Unlike the standalone Noah-MP land driver, the Noah-MP <a class="reference inter
 </section>
 <section id="unified-workflow-uw-tools">
 <h3><span class="section-number">1.2.3.4. </span>Unified Workflow (UW) Tools<a class="headerlink" href="#unified-workflow-uw-tools" title="Link to this heading"></a></h3>
-<p>The Unified Workflow (UW) is a set of tools intended to unify the workflow for various UFS applications under one framework. The UW toolkit currently includes rocoto, template, and configuration (config) tools, which are being incorporated into the Land DA workflow. Additional tools are under development. More details about UW tools can be found in the <cite>uwtools &lt;https://github.com/ufs-community/uwtools&gt;</cite> GitHub repository and in the <a class="reference external" href="https://uwtools.readthedocs.io/en/main/">UW Documentation</a>.</p>
+<p>The Unified Workflow (UW) is a set of tools intended to unify the workflow for various UFS applications under one framework. The UW toolkit currently includes rocoto, template, and configuration (config) tools, which are being incorporated into the Land DA workflow. Additional tools are under development. More details about UW tools can be found in the <a class="reference external" href="https://github.com/ufs-community/uwtools">uwtools</a> GitHub repository and in the <a class="reference external" href="https://uwtools.readthedocs.io/en/main/">UW Documentation</a>.</p>
 </section>
 </section>
 </section>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2.3. Testing the Land DA Workflow &mdash; UFS Offline Land DA User&#39;s Guide v1.2.0 documentation</title>
+  <title>2.3. Testing the Land DA Workflow &mdash; UFS Offline Land DA User&#39;s Guide develop documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=044582d4" />
@@ -17,7 +17,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=95484ca5"></script>
+        <script src="../_static/documentation_options.js?v=16816911"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -40,7 +40,7 @@
               <img src="https://github.com/ufs-community/ufs/wiki/images/ufs-epic-logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                v1.2
+                develop
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -102,7 +102,7 @@
 <section id="process">
 <h2><span class="section-number">2.3.1. </span>Process<a class="headerlink" href="#process" title="Link to this heading"></a></h2>
 <p>From the working directory (<code class="docutils literal notranslate"><span class="pre">$LANDDAROOT</span></code>), navigate to <code class="docutils literal notranslate"><span class="pre">build</span></code>. Then run:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">salloc --ntasks 8 --exclusive --qos=debug --partition=debug --time=00:30:00 --account=&lt;account_name&gt;</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">salloc --ntasks 8 --exclusive --qos=debug --partition=&lt;partition&gt; --time=00:30:00 --account=&lt;account_name&gt;</span>
 <span class="go">cd land-DA_workflow/sorc/build</span>
 <span class="go">source ../../versions/build.ver_&lt;platform&gt;</span>
 <span class="go">module use ../../modulefiles</span>
@@ -110,14 +110,30 @@
 <span class="go">ctest</span>
 </pre></div>
 </div>
-<p>where <code class="docutils literal notranslate"><span class="pre">&lt;account_name&gt;</span></code> corresponds to the user’s actual account name and <code class="docutils literal notranslate"><span class="pre">&lt;platform&gt;</span></code> is <code class="docutils literal notranslate"><span class="pre">hera</span></code> or <code class="docutils literal notranslate"><span class="pre">orion</span></code>.</p>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;account_name&gt;</span></code> corresponds to the user’s actual account name, <code class="docutils literal notranslate"><span class="pre">&lt;partition&gt;</span></code> is a valid partition on the platform of choice (e.g., <code class="docutils literal notranslate"><span class="pre">debug</span></code> or <code class="docutils literal notranslate"><span class="pre">orion</span></code>), and <code class="docutils literal notranslate"><span class="pre">&lt;platform&gt;</span></code> is <code class="docutils literal notranslate"><span class="pre">hera</span></code> or <code class="docutils literal notranslate"><span class="pre">orion</span></code>.</p>
 <p>This will submit an interactive job, load the appropriate modulefiles, and run the CTests.</p>
+<p>If the tests are successful, a message will be printed to the console. For example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Test project /work/noaa/epic/${USER}/landda/land-DA_workflow/sorc/build</span>
+<span class="go">    Start 1: test_create_ens</span>
+<span class="go">1/4 Test #1: test_create_ens ..................   Passed   13.91 sec</span>
+<span class="go">    Start 2: test_letkfoi_snowda</span>
+<span class="go">2/4 Test #2: test_letkfoi_snowda ..............   Passed   67.94 sec</span>
+<span class="go">    Start 3: test_apply_jediincr</span>
+<span class="go">3/4 Test #3: test_apply_jediincr ..............   Passed    6.88 sec</span>
+<span class="go">    Start 4: test_ufs_datm_land</span>
+<span class="go">4/4 Test #4: test_ufs_datm_land ...............   Passed   98.56 sec</span>
+
+<span class="go">100% tests passed, 0 tests failed out of 4</span>
+
+<span class="go">Total Test time (real) = 187.29 sec</span>
+</pre></div>
+</div>
 </section>
 <section id="tests">
 <h2><span class="section-number">2.3.2. </span>Tests<a class="headerlink" href="#tests" title="Link to this heading"></a></h2>
-<p>The ERA5 CTests test the operability of seven major elements of the Land DA System: <code class="docutils literal notranslate"><span class="pre">vector2tile</span></code>, <code class="docutils literal notranslate"><span class="pre">create_ens</span></code>, <code class="docutils literal notranslate"><span class="pre">letkfoi_snowda</span></code>, <code class="docutils literal notranslate"><span class="pre">apply_jediincr</span></code>, <code class="docutils literal notranslate"><span class="pre">tile2vector</span></code>, <code class="docutils literal notranslate"><span class="pre">land_driver</span></code>, and <code class="docutils literal notranslate"><span class="pre">ufs_datm_land</span></code>. The tests and their dependencies are listed in the <code class="docutils literal notranslate"><span class="pre">land-DA_workflow/test/CMakeLists.txt</span></code> file. Currently, the CTests are only run on Hera and Orion; they cannot yet be run via container.</p>
+<p>The CTests test the operability of four major elements of the Land DA System: <code class="docutils literal notranslate"><span class="pre">create_ens</span></code>, <code class="docutils literal notranslate"><span class="pre">letkfoi_snowda</span></code>, <code class="docutils literal notranslate"><span class="pre">apply_jediincr</span></code>, and <code class="docutils literal notranslate"><span class="pre">ufs_datm_land</span></code>. The tests and their dependencies are listed in the <code class="docutils literal notranslate"><span class="pre">land-DA_workflow/test/CMakeLists.txt</span></code> file. Currently, the CTests are only run on Hera and Orion; they cannot yet be run via container.</p>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-number">Table 2.5 </span><span class="caption-text"><em>Land DA CTests</em></span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<caption><span class="caption-number">Table 2.6 </span><span class="caption-text"><em>Land DA CTests</em></span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
 <colgroup>
 <col style="width: 28.6%" />
 <col style="width: 71.4%" />
@@ -128,25 +144,16 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">test_vector2tile</span></code></p></td>
-<td><p>Tests the vector-to-tile function for use in JEDI</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">test_create_ens</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">test_create_ens</span></code></p></td>
 <td><p>Tests creation of a pseudo-ensemble for use in LETKF-OI.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">test_letkfoi_snowda</span></code></p></td>
-<td><p>Tests the use of LETKF-OI to assimilate snow DA.</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">test_letkfoi_snowda</span></code></p></td>
+<td><p>Tests the use of LETKF-OI to assimilate snow data.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">test_apply_jediincr</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">test_apply_jediincr</span></code></p></td>
 <td><p>Tests the ability to add a JEDI increment.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">test_tile2vector</span></code></p></td>
-<td><p>Tests the tile-to-vector function for use in <code class="docutils literal notranslate"><span class="pre">ufs-land-driver</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">test_land_driver</span></code></p></td>
-<td><p>Tests proper functioning of <code class="docutils literal notranslate"><span class="pre">ufs-land-driver</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">test_ufs_datm_land</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">test_ufs_datm_land</span></code></p></td>
 <td><p>Tests proper functioning of the UFS land model (<code class="docutils literal notranslate"><span class="pre">ufs-datm-lnd</span></code>)</p></td>
 </tr>
 </tbody>

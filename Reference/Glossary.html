@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>4.2. Glossary &mdash; UFS Offline Land DA User&#39;s Guide v1.2.0 documentation</title>
+  <title>4.3. Glossary &mdash; UFS Offline Land DA User&#39;s Guide develop documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=044582d4" />
@@ -17,13 +17,13 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=95484ca5"></script>
+        <script src="../_static/documentation_options.js?v=16816911"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="4.1. Frequently Asked Questions (FAQ)" href="FAQ.html" /> 
+    <link rel="prev" title="4.2. Frequently Asked Questions (FAQ)" href="FAQ.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,7 +39,7 @@
               <img src="https://github.com/ufs-community/ufs/wiki/images/ufs-epic-logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                v1.2
+                develop
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -55,8 +55,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../BuildingRunningTesting/index.html">2. Building, Running, and Testing the Land DA System</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../CustomizingTheWorkflow/index.html">3. Customizing the Workflow</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">4. Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="FAQ.html">4.1. Frequently Asked Questions (FAQ)</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">4.2. Glossary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Rocoto.html">4.1. Rocoto Introductory Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="FAQ.html">4.2. Frequently Asked Questions (FAQ)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4.3. Glossary</a></li>
 </ul>
 </li>
 </ul>
@@ -76,7 +77,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html"><span class="section-number">4. </span>Reference</a></li>
-      <li class="breadcrumb-item active"><span class="section-number">4.2. </span>Glossary</li>
+      <li class="breadcrumb-item active"><span class="section-number">4.3. </span>Glossary</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/Reference/Glossary.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -87,15 +88,27 @@
            <div itemprop="articleBody">
              
   <section id="glossary">
-<span id="id1"></span><h1><span class="section-number">4.2. </span>Glossary<a class="headerlink" href="#glossary" title="Link to this heading"></a></h1>
+<span id="id1"></span><h1><span class="section-number">4.3. </span>Glossary<a class="headerlink" href="#glossary" title="Link to this heading"></a></h1>
 <dl class="glossary">
+<dt id="term-ATM">ATM<a class="headerlink" href="#term-ATM" title="Link to this term"></a></dt><dd><p>The Weather Model configuration that runs only the standalone atmospheric model.</p>
+</dd>
 <dt id="term-CCPP">CCPP<a class="headerlink" href="#term-CCPP" title="Link to this term"></a></dt><dd><p>The <a class="reference external" href="https://dtcenter.org/community-code/common-community-physics-package-ccpp">Common Community Physics Package</a> is a forecast-model agnostic, vetted collection of code containing atmospheric physical parameterizations and suites of parameterizations for use in Numerical Weather Prediction (NWP) along with a framework that connects the physics to the host forecast model.</p>
 </dd>
+<dt id="term-CDEPS">CDEPS<a class="headerlink" href="#term-CDEPS" title="Link to this term"></a></dt><dd><p>The <a class="reference external" href="https://github.com/NOAA-EMC/CDEPS/">Community Data Models for Earth Predictive Systems</a> repository (CDEPS) contains a set of <a class="reference internal" href="#term-NUOPC"><span class="xref std std-term">NUOPC</span></a>-compliant data components and <a class="reference internal" href="#term-ESMF"><span class="xref std std-term">ESMF</span></a>-based “stream” code that selectively removes feedback in coupled model systems. In essence, CDEPS handles the static Data Atmosphere (<a class="reference internal" href="#term-DATM"><span class="xref std std-term">DATM</span></a>) integration with dynamic coupled model components (e.g., <a class="reference internal" href="#term-MOM6"><span class="xref std std-term">MOM6</span></a>). The CDEPS data models perform the basic function of reading external data files, modifying those data, and then sending the data back to the <a class="reference internal" href="#term-CMEPS"><span class="xref std std-term">CMEPS</span></a> mediator. The fields sent to the <a class="reference internal" href="#term-Mediator"><span class="xref std std-term">mediator</span></a> are the same as those that would be sent by an active component. This takes advantage of the fact that the mediator and other CMEPS-compliant model components have no fundamental knowledge of whether another component is fully active or just a data component. More information about DATM is available in the CDEPS <a class="reference external" href="https://escomp.github.io/CDEPS/versions/master/html/index.html">Documentation</a>.</p>
+</dd>
+<dt id="term-CESM">CESM<a class="headerlink" href="#term-CESM" title="Link to this term"></a></dt><dd><p>The <a class="reference external" href="https://www.cesm.ucar.edu/">Community Earth System Model</a> (CESM) is a fully-coupled global climate model developed at the National Center for Atmospheric Research (<a class="reference internal" href="#term-NCAR"><span class="xref std std-term">NCAR</span></a>) in collaboration with colleagues in the research community.</p>
+</dd>
+<dt id="term-CMEPS">CMEPS<a class="headerlink" href="#term-CMEPS" title="Link to this term"></a></dt><dd><p>The <a class="reference external" href="https://github.com/NOAA-EMC/CMEPS">Community Mediator for Earth Prediction Systems</a> (CMEPS) is a <a class="reference internal" href="#term-NUOPC"><span class="xref std std-term">NUOPC</span></a>-compliant <a class="reference internal" href="#term-Mediator"><span class="xref std std-term">mediator</span></a> used for coupling Earth system model components. It is currently being used in NCAR’s Community Earth System Model (<a class="reference internal" href="#term-CESM"><span class="xref std std-term">CESM</span></a>) and NOAA’s subseasonal-to-seasonal (S2S) coupled system. More information is available in the <a class="reference external" href="https://escomp.github.io/CMEPS/versions/master/html/index.html">CMEPS Documentation</a>.</p>
+</dd>
 <dt id="term-container">container<a class="headerlink" href="#term-container" title="Link to this term"></a></dt><dd><p><a class="reference external" href="https://www.docker.com/resources/what-container">Docker</a> describes a container as “a standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another.”</p>
+</dd>
+<dt id="term-cron">cron<a class="headerlink" href="#term-cron" title="Link to this term"></a></dt><dt id="term-cron-job">cron job<a class="headerlink" href="#term-cron-job" title="Link to this term"></a></dt><dt id="term-crontab">crontab<a class="headerlink" href="#term-crontab" title="Link to this term"></a></dt><dt id="term-cron-table">cron table<a class="headerlink" href="#term-cron-table" title="Link to this term"></a></dt><dd><p>Cron is a job scheduler accessed through the command-line on UNIX-like operating systems. It is useful for automating tasks such as regression testing. Cron periodically checks a cron table (aka crontab) to see if any tasks are are ready to execute. If so, it runs them.</p>
 </dd>
 <dt id="term-cycle">cycle<a class="headerlink" href="#term-cycle" title="Link to this term"></a></dt><dd><p>An hour of the day on which a forecast is started. In the Land DA System, it usually follows YYYYMMDD-HHmmss format.</p>
 </dd>
 <dt id="term-data-assimilation">data assimilation<a class="headerlink" href="#term-data-assimilation" title="Link to this term"></a></dt><dd><p>One of the major sources of error in weather and climate forecasts is uncertainty related to the initial conditions that are used to generate future predictions. Even the most precise instruments have a small range of unavoidable measurement error, which means that tiny measurement errors (e.g., related to atmospheric conditions and instrument location) can compound over time. These small differences result in very similar forecasts in the short term (i.e., minutes, hours), but they cause widely divergent forecasts in the long term. Errors in weather and climate forecasts can also arise because models are imperfect representations of reality. Data assimilation systems seek to mitigate these problems by combining the most timely observational data with a “first guess” of the atmospheric state (usually a previous forecast) and other sources of data to provide a “best guess” analysis of the atmospheric state to start a weather or climate simulation. When combined with an “ensemble” of model runs (many forecasts with slightly different conditions), data assimilation helps predict a range of possible atmospheric states, giving an overall measure of uncertainty in a given forecast.</p>
+</dd>
+<dt id="term-DATM">DATM<a class="headerlink" href="#term-DATM" title="Link to this term"></a></dt><dd><p>DATM is the <em>Data Atmosphere</em> component of <a class="reference internal" href="#term-CDEPS"><span class="xref std std-term">CDEPS</span></a>. It uses static atmospheric forcing files (derived from observations or previous atmospheric model runs) instead of output from an active atmospheric model. This reduces the complexity and computational cost associated with coupling to an active atmospheric model. The <em>Data Atmosphere</em> component is particularly useful when employing computationally intensive Data Assimilation (DA) techniques to update ocean and/or sea ice fields in a coupled model. In general, use of DATM in place of <a class="reference internal" href="#term-ATM"><span class="xref std std-term">ATM</span></a> can be appropriate when users are running a coupled model and only want certain components of the model to be active. More information about DATM is available in the <a class="reference external" href="https://escomp.github.io/CDEPS/versions/master/html/datm.html">CDEPS Documentation</a>.</p>
 </dd>
 <dt id="term-ERA5">ERA5<a class="headerlink" href="#term-ERA5" title="Link to this term"></a></dt><dd><p>The ECMWF Reanalysis v5 (<a class="reference external" href="https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5">ERA5</a>) dataset “is the fifth generation ECMWF atmospheric reanalysis of the global climate covering the period from January 1940 to present.” It “provides hourly estimates of a large number of atmospheric, land and oceanic climate variables.”</p>
 </dd>
@@ -111,18 +124,29 @@ oceanic, and climate system models.</p>
 </dd>
 <dt id="term-FV3">FV3<a class="headerlink" href="#term-FV3" title="Link to this term"></a></dt><dd><p>The Finite-Volume Cubed-Sphere dynamical core (dycore). Developed at NOAA’s <a class="reference external" href="https://www.gfdl.noaa.gov/fv3/">Geophysical Fluid Dynamics Laboratory</a> (GFDL), it is a scalable and flexible dycore capable of both hydrostatic and non-hydrostatic atmospheric simulations. It is the dycore used in the UFS Weather Model.</p>
 </dd>
-<dt id="term-GSWP3">GSWP3<a class="headerlink" href="#term-GSWP3" title="Link to this term"></a></dt><dd><p>The Global Soil Wetness Project Phase 3 (<a class="reference external" href="https://hydro.iis.u-tokyo.ac.jp/GSWP3/">GSWP3</a>) dataset is a century-long comprehensive set of data documenting several variables for hydro-energy-eco systems.</p>
+<dt id="term-GSWP3">GSWP3<a class="headerlink" href="#term-GSWP3" title="Link to this term"></a></dt><dd><p>The Global Soil Wetness Project Phase 3 dataset is a century-long comprehensive set of data documenting several variables for hydro-energy-eco systems.</p>
 </dd>
-<dt id="term-J-jobs">J-jobs<a class="headerlink" href="#term-J-jobs" title="Link to this term"></a></dt><dd><p>Scripting layer (contained in <code class="docutils literal notranslate"><span class="pre">land-DA_workflow/jobs/</span></code>) that should be directly called for each workflow component (either on the command line or by the workflow manager) to run a specific task in the workflow. The different scripting layers are described in detail in the <a class="reference external" href="https://www.nco.ncep.noaa.gov/idsb/implementation_standards/ImplementationStandards.v11.0.0.pdf">NCO Implementation Standards document</a>.</p>
+<dt id="term-HPC">HPC<a class="headerlink" href="#term-HPC" title="Link to this term"></a></dt><dd><p>High-Performance Computing.</p>
+</dd>
+<dt id="term-J-jobs">J-jobs<a class="headerlink" href="#term-J-jobs" title="Link to this term"></a></dt><dd><p>Scripts (contained in <code class="docutils literal notranslate"><span class="pre">land-DA_workflow/jobs/</span></code>) that should be directly called for each workflow component (either on the command line or by the workflow manager) to run a specific task in the workflow. The different scripting layers are described in detail in the <a class="reference external" href="https://www.nco.ncep.noaa.gov/idsb/implementation_standards/ImplementationStandards.v11.0.0.pdf">NCO Implementation Standards document</a>.</p>
 </dd>
 <dt id="term-JEDI">JEDI<a class="headerlink" href="#term-JEDI" title="Link to this term"></a></dt><dd><p>The Joint Effort for Data assimilation Integration (<a class="reference external" href="https://www.jcsda.org/jcsda-project-jedi">JEDI</a>) is a unified and versatile data assimilation (DA) system for Earth System Prediction. It aims to enable efficient research and accelerated transition from research to operations by providing a framework that takes into account all components of the Earth system in a consistent manner. The JEDI software package can run on a variety of platforms and for a variety of purposes, and it is designed to readily accommodate new atmospheric and oceanic models and new observation systems. The <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/">JEDI User’s Guide</a> contains extensive information on the software.</p>
 <p>JEDI is developed and distributed by the <a class="reference external" href="https://www.jcsda.org/">Joint Center for Satellite Data Assimilation</a>, a multi-agency research center hosted by the University Corporation for Atmospheric Research (<a class="reference external" href="https://www.ucar.edu/">UCAR</a>). JCSDA is dedicated to improving and accelerating the quantitative use of research and operational satellite data in weather, ocean, climate, and environmental analysis and prediction systems.</p>
 </dd>
-<dt id="term-HPC">HPC<a class="headerlink" href="#term-HPC" title="Link to this term"></a></dt><dd><p>High-Performance Computing.</p>
+<dt id="term-jedi-bundle">jedi-bundle<a class="headerlink" href="#term-jedi-bundle" title="Link to this term"></a></dt><dt id="term-Skylab">Skylab<a class="headerlink" href="#term-Skylab" title="Link to this term"></a></dt><dd><p><a class="reference external" href="https://www.jcsda.org/jediskylab">JEDI Skylab</a> is the name for roll-up releases of <a class="reference external" href="https://spack-stack.readthedocs.io/en/1.3.0/Glossary.html#term-JCSDA" title="(in spack-stack)"><span class="xref std std-term">JCSDA</span></a>’s <a class="reference external" href="https://github.com/JCSDA/jedi-bundle">jedi-bundle</a> repository.
+This software provides an integrated Earth System Data Assimilation capability. JCSDA has tested Skylab capabilities internally via the SkyLab testbed for the following components: atmosphere, land/snow, ocean, sea-ice, aerosols, and atmospheric composition.</p>
+</dd>
+<dt id="term-LND">LND<a class="headerlink" href="#term-LND" title="Link to this term"></a></dt><dt id="term-land-component">land component<a class="headerlink" href="#term-land-component" title="Link to this term"></a></dt><dd><p>The Noah Multi-Physics (Noah-MP) land surface model (LSM) is an open-source, community-developed LSM that has been incorporated into the UFS Weather Model (WM). It is the UFS WM’s land component.</p>
 </dd>
 <dt id="term-LETKF-OI">LETKF-OI<a class="headerlink" href="#term-LETKF-OI" title="Link to this term"></a></dt><dd><p>Local Ensemble Transform Kalman Filter-Optimal Interpolation (see <span id="id2">Hunt <em>et al.</em> [<a class="reference internal" href="../BackgroundInfo/Introduction.html#id19" title="B.R. Hunt, E.J. Kostelich, and I. Szunyogh. Efficient data assimilation for spatiotemporal chaos: a local ensemble transform kalman filter. Physica D: Nonlinear Phenomena, 230(1–2):112–126, 2007. doi:10.1016/j.physd.2006.11.008.">HEJKS07</a>]</span>, 2007).</p>
 </dd>
+<dt id="term-Mediator">Mediator<a class="headerlink" href="#term-Mediator" title="Link to this term"></a></dt><dd><p>A mediator, sometimes called a coupler, is a software component that includes code for representing component interactions. Typical operations include merging data fields, ensuring consistent treatment of coastlines, computing fluxes, and temporal averaging.</p>
+</dd>
+<dt id="term-MOM">MOM<a class="headerlink" href="#term-MOM" title="Link to this term"></a></dt><dt id="term-MOM6">MOM6<a class="headerlink" href="#term-MOM6" title="Link to this term"></a></dt><dt id="term-Modular-Ocean-Model">Modular Ocean Model<a class="headerlink" href="#term-Modular-Ocean-Model" title="Link to this term"></a></dt><dd><p>MOM6 is the latest generation of the Modular Ocean Model. It is numerical model code for simulating the ocean general circulation. MOM6 was originally developed by the <a class="reference external" href="https://www.gfdl.noaa.gov/mom-ocean-model/">Geophysical Fluid Dynamics Laboratory</a>. Currently, <a class="reference external" href="https://github.com/mom-ocean/MOM6">MOM6 code</a> and an <a class="reference external" href="https://github.com/NOAA-GFDL/MOM6-examples/wiki">extensive suite of test cases</a> are available under an open-development software framework. Although there are many public forks of MOM6, the <a class="reference external" href="https://github.com/NOAA-EMC/MOM6">NOAA EMC fork</a> is used in the UFS Weather Model.</p>
+</dd>
 <dt id="term-MPI">MPI<a class="headerlink" href="#term-MPI" title="Link to this term"></a></dt><dd><p>MPI stands for Message Passing Interface. An MPI is a standardized communication system used in parallel programming. It establishes portable and efficient syntax for the exchange of messages and data between multiple processors that are used by a single computer program. An MPI is required for high-performance computing (HPC) systems.</p>
+</dd>
+<dt id="term-NCAR">NCAR<a class="headerlink" href="#term-NCAR" title="Link to this term"></a></dt><dd><p>The <a class="reference external" href="https://ncar.ucar.edu/">National Center for Atmospheric Research</a>.</p>
 </dd>
 <dt id="term-netCDF">netCDF<a class="headerlink" href="#term-netCDF" title="Link to this term"></a></dt><dd><p>NetCDF (<a class="reference external" href="https://www.unidata.ucar.edu/software/netcdf/">Network Common Data Form</a>) is a file format and community standard for storing multidimensional scientific data. It includes a set of software libraries and machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.</p>
 </dd>
@@ -143,7 +167,7 @@ NUOPC applications are built on four generic components: driver, model, mediator
 </dd>
 <dt id="term-Spack">Spack<a class="headerlink" href="#term-Spack" title="Link to this term"></a></dt><dd><p><a class="reference external" href="https://spack.readthedocs.io/en/latest/">Spack</a> is a package management tool designed to support multiple versions and configurations of software on a wide variety of platforms and environments. It was designed for large supercomputing centers, where many users and application teams share common installations of software on clusters with exotic architectures.</p>
 </dd>
-<dt id="term-spack-stack">spack-stack<a class="headerlink" href="#term-spack-stack" title="Link to this term"></a></dt><dd><p>The <a class="reference external" href="https://github.com/JCSDA/spack-stack">spack-stack</a> is a collaborative effort between the NOAA Environmental Modeling Center (EMC), the UCAR Joint Center for Satellite Data Assimilation (JCSDA), and the Earth Prediction Innovation Center (EPIC). <em>spack-stack</em> is a repository that provides a <a class="reference internal" href="#term-Spack"><span class="xref std std-term">Spack</span></a>-based method for building the software stack required for numerical weather prediction (NWP) tools such as the <a class="reference external" href="https://ufscommunity.org/">Unified Forecast System (UFS)</a> and the <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/">Joint Effort for Data assimilation Integration (JEDI)</a> framework. <em>spack-stack</em> uses the Spack package manager along with custom Spack configuration files and Python scripts to simplify installation of the libraries required to run various applications. The <em>spack-stack</em> can be installed on a range of platforms and comes pre-configured for many systems. Users can install the necessary packages for a particular application and later add the missing packages for another application without having to rebuild the entire stack.</p>
+<dt id="term-spack-stack">spack-stack<a class="headerlink" href="#term-spack-stack" title="Link to this term"></a></dt><dd><p>The <a class="reference external" href="https://github.com/JCSDA/spack-stack">spack-stack</a> is a collaborative effort between the NOAA Environmental Modeling Center (EMC), the UCAR Joint Center for Satellite Data Assimilation (JCSDA), and the Earth Prediction Innovation Center (EPIC). <em>spack-stack</em> is a repository that provides a <a class="reference internal" href="#term-Spack"><span class="xref std std-term">Spack</span></a>-based method for building the software stack required for numerical weather prediction (NWP) tools such as the <a class="reference external" href="https://ufs.epic.noaa.gov/">Unified Forecast System (UFS)</a> and the <a class="reference external" href="https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/7.0.0/">Joint Effort for Data assimilation Integration (JEDI)</a> framework. <em>spack-stack</em> uses the Spack package manager along with custom Spack configuration files and Python scripts to simplify installation of the libraries required to run various applications. The <em>spack-stack</em> can be installed on a range of platforms and comes pre-configured for many systems. Users can install the necessary packages for a particular application and later add the missing packages for another application without having to rebuild the entire stack.</p>
 </dd>
 <dt id="term-UFS">UFS<a class="headerlink" href="#term-UFS" title="Link to this term"></a></dt><dd><p>The Unified Forecast System (UFS) is a community-based, coupled, comprehensive Earth modeling system consisting of several applications (apps). These apps span regional to global domains and sub-hourly to seasonal time scales. The UFS is designed to support the <a class="reference internal" href="#term-Weather-Enterprise"><span class="xref std std-term">Weather Enterprise</span></a> and to be the source system for NOAA’s operational numerical weather prediction applications. For more information, visit <a class="reference external" href="https://ufscommunity.org/">https://ufscommunity.org/</a>.</p>
 </dd>
@@ -158,7 +182,7 @@ NUOPC applications are built on four generic components: driver, model, mediator
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="FAQ.html" class="btn btn-neutral float-left" title="4.1. Frequently Asked Questions (FAQ)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="FAQ.html" class="btn btn-neutral float-left" title="4.2. Frequently Asked Questions (FAQ)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

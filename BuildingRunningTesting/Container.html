@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2.2. Containerized Land DA Workflow &mdash; UFS Offline Land DA User&#39;s Guide v1.2.0 documentation</title>
+  <title>2.2. Containerized Land DA Workflow &mdash; UFS Offline Land DA User&#39;s Guide develop documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=044582d4" />
@@ -17,7 +17,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=95484ca5"></script>
+        <script src="../_static/documentation_options.js?v=16816911"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -40,7 +40,7 @@
               <img src="https://github.com/ufs-community/ufs/wiki/images/ufs-epic-logo.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                v1.2
+                develop
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -77,7 +77,12 @@
 <li class="toctree-l5"><a class="reference internal" href="#modify-experiment-settings">2.2.4.2.2. Modify Experiment Settings</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="#run-the-experiment">2.2.4.3. Run the Experiment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#run-the-experiment">2.2.4.3. Run the Experiment</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#check-progress">2.2.4.3.1. Check Progress</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#era5-experiment-logs">2.2.4.4. ERA5 Experiment Logs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gswp3-experiment-logs">2.2.4.5. GSWP3 Experiment Logs</a></li>
 </ul>
 </li>
 </ul>
@@ -116,12 +121,12 @@
              
   <section id="containerized-land-da-workflow">
 <span id="container"></span><h1><span class="section-number">2.2. </span>Containerized Land DA Workflow<a class="headerlink" href="#containerized-land-da-workflow" title="Link to this heading"></a></h1>
-<p>These instructions will help users build and run a basic case for the Unified Forecast System (<a class="reference internal" href="../Reference/Glossary.html#term-UFS"><span class="xref std std-term">UFS</span></a>) Land Data Assimilation (DA) System using a <a class="reference external" href="https://apptainer.org/docs/user/main/">Singularity/Apptainer</a> container. The Land DA <a class="reference internal" href="../Reference/Glossary.html#term-container"><span class="xref std std-term">container</span></a> packages together the Land DA System with its dependencies (e.g., <a class="reference internal" href="../Reference/Glossary.html#term-spack-stack"><span class="xref std std-term">spack-stack</span></a>, <a class="reference internal" href="../Reference/Glossary.html#term-JEDI"><span class="xref std std-term">JEDI</span></a>) and provides a uniform environment in which to build and run the Land DA System. Normally, the details of building and running Earth systems models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, <a class="reference internal" href="../Reference/Glossary.html#term-MPI"><span class="xref std std-term">MPIs</span></a>, and package versions available. Installation via Singularity/Apptainer container reduces this variability and allows for a smoother experience building and running Land DA. This approach is recommended for users not running Land DA on a supported <a class="reference internal" href="../BackgroundInfo/TechnicalOverview.html#levelsofsupport"><span class="std std-ref">Level 1</span></a> system (i.e., Hera, Orion).</p>
-<p>This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (<a class="reference internal" href="../Reference/Glossary.html#term-UFS"><span class="xref std std-term">UFS</span></a>) Land DA System. Users can choose between two options:</p>
+<p>These instructions will help users build and run a basic case for the Unified Forecast System (<a class="reference internal" href="../Reference/Glossary.html#term-UFS"><span class="xref std std-term">UFS</span></a>) Land Data Assimilation (DA) System using a <a class="reference external" href="https://apptainer.org/docs/user/latest/">Singularity/Apptainer</a> container. The Land DA <a class="reference internal" href="../Reference/Glossary.html#term-container"><span class="xref std std-term">container</span></a> packages together the Land DA System with its dependencies (e.g., <a class="reference internal" href="../Reference/Glossary.html#term-spack-stack"><span class="xref std std-term">spack-stack</span></a>, <a class="reference internal" href="../Reference/Glossary.html#term-JEDI"><span class="xref std std-term">JEDI</span></a>) and provides a uniform environment in which to build and run the Land DA System. Normally, the details of building and running Earth systems models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, <a class="reference internal" href="../Reference/Glossary.html#term-MPI"><span class="xref std std-term">MPIs</span></a>, and package versions available. Installation via Singularity/Apptainer container reduces this variability and allows for a smoother experience building and running Land DA. This approach is recommended for users not running Land DA on a supported <a class="reference internal" href="../BackgroundInfo/TechnicalOverview.html#levelsofsupport"><span class="std std-ref">Level 1</span></a> system (i.e., Hera, Orion).</p>
+<p>This chapter provides instructions for building and running basic Land DA cases in a container. Users can choose between two options:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>A Dec. 21, 2019 00z sample case using <a class="reference internal" href="../Reference/Glossary.html#term-ERA5"><span class="xref std std-term">ERA5</span></a> data with the UFS Land Driver (<code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_era5</span></code>)</p></li>
-<li><p>A Jan. 3, 2000 00z sample case using <a class="reference internal" href="../Reference/Glossary.html#term-GSWP3"><span class="xref std std-term">GSWP3</span></a> data with the UFS Noah-MP land component (<code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_gswp3</span></code>).</p></li>
+<li><p>A Jan. 3-4, 2000 00z sample case using <a class="reference internal" href="../Reference/Glossary.html#term-GSWP3"><span class="xref std std-term">GSWP3</span></a> data with the UFS Noah-MP land component</p></li>
+<li><p>A Dec. 21-22, 2019 00z sample case using <a class="reference internal" href="../Reference/Glossary.html#term-ERA5"><span class="xref std std-term">ERA5</span></a> data with the UFS Land Driver</p></li>
 </ul>
 </div></blockquote>
 <div class="admonition attention">
@@ -133,16 +138,16 @@
 <p>The containerized version of Land DA requires:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><a class="reference external" href="https://apptainer.org/docs/admin/1.2/installation.html">Installation of Apptainer</a></p></li>
+<li><p><a class="reference external" href="https://apptainer.org/docs/admin/latest/installation.html">Installation of Apptainer</a></p></li>
 <li><p>At least 6 CPU cores</p></li>
-<li><p>An <strong>Intel</strong> compiler and <a class="reference internal" href="../Reference/Glossary.html#term-MPI"><span class="xref std std-term">MPI</span></a> (available for free <a class="reference external" href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html">here</a>)</p></li>
+<li><p>An <strong>Intel</strong> compiler and <a class="reference internal" href="../Reference/Glossary.html#term-MPI"><span class="xref std std-term">MPI</span></a> (available for <a class="reference external" href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/hpc-toolkit-download.html">free here</a>)</p></li>
 </ul>
 </div></blockquote>
 <section id="install-singularity-apptainer">
 <h3><span class="section-number">2.2.1.1. </span>Install Singularity/Apptainer<a class="headerlink" href="#install-singularity-apptainer" title="Link to this heading"></a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>As of November 2021, the Linux-supported version of Singularity has been <a class="reference external" href="https://apptainer.org/news/community-announcement-20211130/">renamed</a> to <em>Apptainer</em>. Apptainer has maintained compatibility with Singularity, so <code class="docutils literal notranslate"><span class="pre">singularity</span></code> commands should work with either Singularity or Apptainer (see compatibility details <a class="reference external" href="https://apptainer.org/docs/user/1.2/introduction.html">here</a>.)</p>
+<p>As of November 2021, the Linux-supported version of Singularity has been <a class="reference external" href="https://apptainer.org/news/community-announcement-20211130/">renamed</a> to <em>Apptainer</em>. Apptainer has maintained compatibility with Singularity, so <code class="docutils literal notranslate"><span class="pre">singularity</span></code> commands should work with either Singularity or Apptainer (see <a class="reference external" href="https://apptainer.org/docs/user/1.2/introduction.html">compatibility details here</a>.)</p>
 </div>
 <p>To build and run Land DA using a Singularity/Apptainer container, first install the software according to the <a class="reference external" href="https://apptainer.org/docs/admin/1.2/installation.html">Apptainer Installation Guide</a>. This will include the installation of all dependencies.</p>
 <div class="admonition attention">
@@ -161,7 +166,7 @@
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">/absolute/path/to/writable/directory/</span></code> refers to a writable directory (usually a project or user directory within <code class="docutils literal notranslate"><span class="pre">/lustre</span></code>, <code class="docutils literal notranslate"><span class="pre">/work</span></code>, <code class="docutils literal notranslate"><span class="pre">/scratch</span></code>, or <code class="docutils literal notranslate"><span class="pre">/glade</span></code> on NOAA <a class="reference internal" href="../Reference/Glossary.html#term-RDHPCS"><span class="xref std std-term">RDHPCS</span></a> systems). If the <code class="docutils literal notranslate"><span class="pre">cache</span></code> and <code class="docutils literal notranslate"><span class="pre">tmp</span></code> directories do not exist already, they must be created with a <code class="docutils literal notranslate"><span class="pre">mkdir</span></code> command.</p>
-<p>On NOAA Cloud systems, the <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">su</span></code> command may also be required:</p>
+<p>On NOAA Cloud systems, the <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">su</span></code> command may also be required. For example, users would run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">lustre</span><span class="o">/</span><span class="n">cache</span>
 <span class="n">mkdir</span> <span class="o">/</span><span class="n">lustre</span><span class="o">/</span><span class="n">tmp</span>
 <span class="n">sudo</span> <span class="n">su</span>
@@ -190,9 +195,9 @@
 </div>
 <section id="noaa-rdhpcs-systems">
 <h4><span class="section-number">2.2.2.2.1. </span>NOAA RDHPCS Systems<a class="headerlink" href="#noaa-rdhpcs-systems" title="Link to this heading"></a></h4>
-<p>On many NOAA <a class="reference internal" href="../Reference/Glossary.html#term-RDHPCS"><span class="xref std std-term">RDHPCS</span></a> systems, a container named <code class="docutils literal notranslate"><span class="pre">ubuntu20.04-intel-landda-release-public-v1.2.0.img</span></code> has already been built, and users may access the container at the locations in <a class="reference internal" href="#prebuiltcontainers"><span class="std std-numref">Table 2.3</span></a>.</p>
+<p>On many NOAA <a class="reference internal" href="../Reference/Glossary.html#term-RDHPCS"><span class="xref std std-term">RDHPCS</span></a>, a container named <code class="docutils literal notranslate"><span class="pre">ubuntu20.04-intel-landda-release-public-v1.2.0.img</span></code> has already been built, and users may access the container at the locations in <a class="reference internal" href="#prebuiltcontainers"><span class="std std-numref">Table 2.4</span></a>.</p>
 <span id="prebuiltcontainers"></span><table class="docutils align-default" id="id2">
-<caption><span class="caption-number">Table 2.3 </span><span class="caption-text">Locations of Pre-Built Containers</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<caption><span class="caption-number">Table 2.4 </span><span class="caption-text">Locations of Pre-Built Containers</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>Machine</p></th>
 <th class="head"><p>File location</p></th>
@@ -287,7 +292,7 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">singularity build --sandbox ubuntu20.04-intel-landda-release-public-v1.2.0 $img</span>
 </pre></div>
 </div>
-<p>When making a writable sandbox on NOAA RDHPCS systems, the following warnings commonly appear and can be ignored:</p>
+<p>When making a writable sandbox on NOAA <a class="reference internal" href="../Reference/Glossary.html#term-RDHPCS"><span class="xref std std-term">RDHPCS</span></a>, the following warnings commonly appear and can be ignored:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">INFO:    Starting build...</span>
 <span class="go">INFO:    Verifying bootstrap image ubuntu20.04-intel-landda-release-public-v1.2.0.img</span>
 <span class="go">WARNING: integrity: signature not found for object group 1</span>
@@ -302,7 +307,7 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">singularity exec -B /&lt;local_base_dir&gt;:/&lt;container_dir&gt; $img cp -r /opt/land-DA_workflow .</span>
 </pre></div>
 </div>
-<p>where <code class="docutils literal notranslate"><span class="pre">&lt;local_base_dir&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;container_dir&gt;</span></code> are replaced with a top-level directory on the local system and in the container, respectively. Additional directories can be bound by adding another <code class="docutils literal notranslate"><span class="pre">-B</span> <span class="pre">/&lt;local_base_dir&gt;:/&lt;container_dir&gt;</span></code> argument before the container location (<code class="docutils literal notranslate"><span class="pre">$img</span></code>).</p>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;local_base_dir&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;container_dir&gt;</span></code> are replaced with a top-level directory on the local system and in the container, respectively. Additional directories can be bound by adding another <code class="docutils literal notranslate"><span class="pre">-B</span> <span class="pre">/&lt;local_base_dir&gt;:/&lt;container_dir&gt;</span></code> argument before the container location (<code class="docutils literal notranslate"><span class="pre">$img</span></code>). Note that if previous steps included a <code class="docutils literal notranslate"><span class="pre">sudo</span></code> command, <code class="docutils literal notranslate"><span class="pre">sudo</span></code> may be required in front of this command.</p>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
 <p>Be sure to bind the directory that contains the experiment data!</p>
@@ -327,9 +332,9 @@
 </div>
 <p>Then they should be able to load the appropriate modules.</p>
 </div>
-<p>The remaining Level 1 systems that do not have Intel MPI available will need to load a different Intel compiler and MPI combination. Refer to <a class="reference internal" href="#nonimpicompilers"><span class="std std-numref">Table 2.4</span></a> for which Intel compiler and MPI to load for these systems.</p>
+<p>The remaining Level 1 systems that do not have Intel MPI available will need to load a different Intel compiler and MPI combination. Refer to <a class="reference internal" href="#nonimpicompilers"><span class="std std-numref">Table 2.5</span></a> for which Intel compiler and MPI to load for these systems.</p>
 <span id="nonimpicompilers"></span><table class="docutils align-default" id="id3">
-<caption><span class="caption-number">Table 2.4 </span><span class="caption-text">Intel compilers and MPIs for non-Intel MPI Level 1 systems</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
+<caption><span class="caption-number">Table 2.5 </span><span class="caption-text">Intel compilers and MPIs for non-Intel MPI Level 1 systems</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>Machine</p></th>
 <th class="head"><p>Intel compiler and MPI combinations</p></th>
@@ -347,10 +352,11 @@
 </tr>
 </tbody>
 </table>
-<p>For Derecho and Gaea, an additional script is needed to help set up the land-DA workflow scripts so that the container can run there.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./setup_container.sh -p=&lt;derecho|gaea&gt;</span>
+<p>For Derecho and Gaea, an additional script is needed to help set up the <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code> scripts so that the container can run there.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./setup_container.sh -p=&lt;platform&gt;</span>
 </pre></div>
 </div>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;platform&gt;</span></code> is <code class="docutils literal notranslate"><span class="pre">derecho</span></code> or <code class="docutils literal notranslate"><span class="pre">gaea</span></code>.</p>
 </section>
 <section id="configure-the-experiment">
 <span id="configureexptc"></span><h3><span class="section-number">2.2.4.2. </span>Configure the Experiment<a class="headerlink" href="#configure-the-experiment" title="Link to this heading"></a></h3>
@@ -371,7 +377,7 @@
 <p>The Land DA System uses a script-based workflow that is launched using the <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code> script. That script requires an input file that details all the specifics of a given experiment. EPIC has provided two sample <code class="docutils literal notranslate"><span class="pre">settings_*</span></code> files as examples: <code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_era5</span></code> and <code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_gswp3</span></code>.</p>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
-<p>Note that the GSWP3 option will only run as-is on Hera and Orion. Users on other systems may need to make significant changes to configuration files, which is not a supported option for the v1.2.0 release. It is recommended that users on these systems use the UFS land driver ERA5 sample experiment set in <code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_era5</span></code>.</p>
+<p>Note that the GSWP3 option will only run as-is on Hera and Orion. Users on other systems may need to make significant changes to configuration files, which is not a supported option for the v1.2.0 release. It is recommended that users on other systems use the UFS land driver ERA5 sample experiment set in <code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_era5</span></code>.</p>
 </div>
 <p>First, update the <code class="docutils literal notranslate"><span class="pre">$BASELINE</span></code> environment variable in the selected <code class="docutils literal notranslate"><span class="pre">settings_DA_*</span></code> file to say <code class="docutils literal notranslate"><span class="pre">singularity.internal</span></code> instead of <code class="docutils literal notranslate"><span class="pre">hera.internal</span></code>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export BASELINE=singularity.internal</span>
@@ -386,14 +392,83 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./do_submit_cycle.sh settings_DA_cycle_era5</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code> script will read the <code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_*</span></code> file and the <code class="docutils literal notranslate"><span class="pre">release.environment</span></code> file, which contain sensible experiment default values to simplify the process of running the workflow for the first time. Advanced users will wish to modify the parameters in <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code> to fit their particular needs. After reading the defaults and other variables from the settings files, <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code> creates a working directory (named <code class="docutils literal notranslate"><span class="pre">workdir</span></code> by default) and an output directory called <code class="docutils literal notranslate"><span class="pre">landda_expts</span></code> in the parent directory of <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code> and then submits a job (<code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code>) to the queue that will run through the workflow. If all succeeds, users will see <code class="docutils literal notranslate"><span class="pre">log</span></code> and <code class="docutils literal notranslate"><span class="pre">err</span></code> files created in <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code> along with a <code class="docutils literal notranslate"><span class="pre">cycle.log</span></code> file, which will show where the cycle has ended. The <code class="docutils literal notranslate"><span class="pre">landda_expts</span></code> directory will also be populated with data in the following directories:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code> script will read the <code class="docutils literal notranslate"><span class="pre">settings_DA_cycle_*</span></code> file and the <code class="docutils literal notranslate"><span class="pre">release.environment</span></code> file, which contain sensible experiment default values to simplify the process of running the workflow for the first time. Advanced users will wish to modify the parameters in <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code> to fit their particular needs. After reading the defaults and other variables from the settings files, <code class="docutils literal notranslate"><span class="pre">do_submit_cycle.sh</span></code> creates a working directory (named <code class="docutils literal notranslate"><span class="pre">workdir</span></code> by default) and an output directory called <code class="docutils literal notranslate"><span class="pre">landda_expts</span></code> in the parent directory of <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code> and then submits a job (<code class="docutils literal notranslate"><span class="pre">submit_cycle.sh</span></code>) to the queue that will run through the workflow. If all succeeds, users will see <code class="docutils literal notranslate"><span class="pre">log</span></code> and <code class="docutils literal notranslate"><span class="pre">err</span></code> files created in <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code> along with a <code class="docutils literal notranslate"><span class="pre">cycle.log</span></code> file, which will show where the cycle has ended.</p>
+<section id="check-progress">
+<span id="checkprogress"></span><h4><span class="section-number">2.2.4.3.1. </span>Check Progress<a class="headerlink" href="#check-progress" title="Link to this heading"></a></h4>
+<p>To check on the experiment status, users on a system with a Slurm job scheduler may run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">squeue -u $USER</span>
+</pre></div>
+</div>
+<p>To view progress, users can open the <code class="docutils literal notranslate"><span class="pre">log*</span></code> and <code class="docutils literal notranslate"><span class="pre">err*</span></code> files once they have been generated:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">tail -f log* err*</span>
+</pre></div>
+</div>
+<p>Users will need to type <code class="docutils literal notranslate"><span class="pre">Ctrl+C</span></code> to exit the files. For examples of what the log and error files should look like in a successful experiment, reference <a class="reference internal" href="#era5-log-output"><span class="std std-ref">ERA5 Experiment Logs</span></a> or <a class="reference internal" href="#gswp3-log-output"><span class="std std-ref">GSWP3 Experiment Logs</span></a> below.</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>If the log file contains a NetCDF error (e.g., <code class="docutils literal notranslate"><span class="pre">ModuleNotFoundError:</span> <span class="pre">No</span> <span class="pre">module</span> <span class="pre">named</span> <span class="pre">'netCDF4'</span></code>), run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install netCDF4</span>
+</pre></div>
+</div>
+<p>Then, resubmit the job (<code class="docutils literal notranslate"><span class="pre">sbatch</span> <span class="pre">submit_cycle.sh</span></code>).</p>
+</div>
+<p>Next, check for the background and analysis files in the test directory.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ls -l ../landda_expts/DA_&lt;data_source&gt;_test/mem000/restarts/&lt;vector|tile&gt;``</span>
+</pre></div>
+</div>
+<p>where:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;data_source&gt;</span></code> is either <code class="docutils literal notranslate"><span class="pre">era5</span></code> or <code class="docutils literal notranslate"><span class="pre">gswp3</span></code>, and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;vector|tile&gt;</span></code> is either <code class="docutils literal notranslate"><span class="pre">vector</span></code> or <code class="docutils literal notranslate"><span class="pre">tile</span></code> depending on whether ERA5 or GSWP3 forcing data were used, respectively.</p></li>
+</ul>
+</div></blockquote>
+<p>The experiment should populate the <code class="docutils literal notranslate"><span class="pre">landda_expts</span></code> directory with data in the following locations:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">landda_expts/DA_GHCN_test/DA/</span>
+<span class="gp"># </span>AND
 <span class="go">landda_expts/DA_GHCN_test/mem000/restarts/vector/</span>
+<span class="gp"># </span>OR
 <span class="go">landda_expts/DA_GHCN_test/mem000/restarts/tile/</span>
 </pre></div>
 </div>
 <p>Depending on the experiment, either the <code class="docutils literal notranslate"><span class="pre">vector</span></code> or the <code class="docutils literal notranslate"><span class="pre">tile</span></code> directory will have data, but not both.</p>
-<p>Users can check experiment progress/success according to the instructions in <a class="reference internal" href="BuildRunLandDA.html#verifysuccess"><span class="std std-numref">Section 2.1.5.2.1</span></a>, which apply to both containerized and non-containerized versions of the Land DA System.</p>
+</section>
+</section>
+<section id="era5-experiment-logs">
+<span id="era5-log-output"></span><h3><span class="section-number">2.2.4.4. </span>ERA5 Experiment Logs<a class="headerlink" href="#era5-experiment-logs" title="Link to this heading"></a></h3>
+<p>For the ERA5 experiment, the <code class="docutils literal notranslate"><span class="pre">log*</span></code> file for a successful experiment will contain a message like:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Creating: .//ufs_land_restart.2019-12-22_00-00-00.nc</span>
+<span class="go">Searching for forcing at time: 2019-12-22 01:00:00</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">err*</span></code> file for a successful experiment will end with something similar to:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">+ THISDATE=2019122200</span>
+<span class="go">+ date_count=1</span>
+<span class="go">+ &#39;[&#39; 1 -lt 1 &#39;]&#39;</span>
+<span class="go">+ &#39;[&#39; 2019122200 -lt 2019122200 &#39;]&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="gswp3-experiment-logs">
+<span id="gswp3-log-output"></span><h3><span class="section-number">2.2.4.5. </span>GSWP3 Experiment Logs<a class="headerlink" href="#gswp3-experiment-logs" title="Link to this heading"></a></h3>
+<p>For the GSWP3 experiment, the <code class="docutils literal notranslate"><span class="pre">log*</span></code> file for a successful experiment will end with a list of resource statistics. For example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Number of times filesystem performed OUTPUT          = 250544</span>
+<span class="go">Number of Voluntary Context Switches                 = 3252</span>
+<span class="go">Number of InVoluntary Context Switches               = 183</span>
+<span class="go">*****************END OF RESOURCE STATISTICS*************************</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">err*</span></code> file for a successful experiment will end with something similar to:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">+ echo &#39;do_landDA: calling apply snow increment&#39;</span>
+<span class="go">+ [[ &#39;&#39; =~ hera\.internal ]]</span>
+<span class="go">+ /apps/intel-2022.1.2/intel-2022.1.2/mpi/2021.5.1/bin/mpiexec -n 6 /path/to/land-DA_workflow/build/bin/apply_incr.exe /path/to/landda_expts/DA_GSWP3_test/DA/logs//apply_incr.log</span>
+<span class="go">+ [[ 0 != 0 ]]</span>
+<span class="go">+ &#39;[&#39; YES == YES &#39;]&#39;</span>
+<span class="go">+ &#39;[&#39; YES == YES &#39;]&#39;</span>
+<span class="go">+ cp /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile1.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile2.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile3.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile4.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile5.nc /path/to/workdir/mem000/jedi/20000103.000000.xainc.sfc_data.tile6.nc /path/to/landda_expts/DA_GSWP3_test/DA/jedi_incr/</span>
+<span class="go">+ [[ YES == \N\O ]]</span>
+</pre></div>
+</div>
 </section>
 </section>
 </section>

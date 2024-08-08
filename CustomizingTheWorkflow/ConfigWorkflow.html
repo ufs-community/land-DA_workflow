@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3.1. Available Workflow Configuration Parameters &mdash; UFS Offline Land DA User&#39;s Guide develop documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=044582d4" />
+      <link rel="stylesheet" type="text/css" href="../_static/theme_overrides.css?v=3db8afb0" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=16816911"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3.2. Input/Output Files for the Noah-MP Model" href="Model.html" />
+    <link rel="prev" title="3. Customizing the Workflow" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            UFS Offline Land DA User's Guide
+              <img src="https://github.com/ufs-community/ufs/wiki/images/ufs-epic-logo.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                develop
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../BackgroundInfo/index.html">1. Background Information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../BuildingRunningTesting/index.html">2. Building, Running, and Testing the Land DA System</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">3. Customizing the Workflow</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3.1. Available Workflow Configuration Parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#workflow-attributes-attrs">3.1.1. Workflow Attributes (<code class="docutils literal notranslate"><span class="pre">attrs:</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#workflow-cycle-definition-cycledef">3.1.2. Workflow Cycle Definition (<code class="docutils literal notranslate"><span class="pre">cycledef</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#workflow-entities">3.1.3. Workflow Entities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nco-directory-structure-entities">3.1.3.1. NCO Directory Structure Entities</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#workflow-log">3.1.4. Workflow Log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#workflow-tasks">3.1.5. Workflow Tasks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#sample-task-analysis-task-task-analysis">3.1.5.1. Sample Task: Analysis Task (<code class="docutils literal notranslate"><span class="pre">task_analysis</span></code>)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#task-attributes-attrs">3.1.5.1.1. Task Attributes (<code class="docutils literal notranslate"><span class="pre">attrs:</span></code>)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#task-environment-variables-envars">3.1.5.1.2. Task Environment Variables (<code class="docutils literal notranslate"><span class="pre">envars</span></code>)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#miscellaneous-task-values">3.1.5.1.3. Miscellaneous Task Values</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#dependencies">3.1.5.1.4. Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#observation-preparation-task-task-prep-obs">3.1.5.2. Observation Preparation Task (<code class="docutils literal notranslate"><span class="pre">task_prep_obs</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pre-analysis-task-task-pre-anal">3.1.5.3. Pre-Analysis Task (<code class="docutils literal notranslate"><span class="pre">task_pre_anal</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#analysis-task-task-analysis">3.1.5.4. Analysis Task (<code class="docutils literal notranslate"><span class="pre">task_analysis</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#post-analysis-task-task-post-anal">3.1.5.5. Post-Analysis Task (<code class="docutils literal notranslate"><span class="pre">task_post_anal</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#plotting-task-task-plot-stats">3.1.5.6. Plotting Task (<code class="docutils literal notranslate"><span class="pre">task_plot_stats</span></code>)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#forecast-task-task-forecast">3.1.5.7. Forecast Task (<code class="docutils literal notranslate"><span class="pre">task_forecast</span></code>)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Model.html">3.2. Input/Output Files for the Noah-MP Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DASystem.html">3.3. Input/Output Files for the JEDI DA System</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../Reference/index.html">4. Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">UFS Offline Land DA User's Guide</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html"><span class="section-number">3. </span>Customizing the Workflow</a></li>
+      <li class="breadcrumb-item active"><span class="section-number">3.1. </span>Available Workflow Configuration Parameters</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/CustomizingTheWorkflow/ConfigWorkflow.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="available-workflow-configuration-parameters">
+<span id="configworkflow"></span><h1><span class="section-number">3.1. </span>Available Workflow Configuration Parameters<a class="headerlink" href="#available-workflow-configuration-parameters" title="Link to this heading"></a></h1>
+<p>To run the Land DA System, users must create an experiment configuration file (named <code class="docutils literal notranslate"><span class="pre">land_analysis.yaml</span></code> by default). This file contains experiment-specific information, such as forecast/cycle dates, grid and physics suite choices, data directories, and other relevant settings. To help the user, two sample <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code> configuration files have been included in the <code class="docutils literal notranslate"><span class="pre">parm</span></code> directory for use on Hera and Orion. They contain reasonable experiment default values that work on those machines. The content of these files can be copied into <code class="docutils literal notranslate"><span class="pre">land_analysis.yaml</span></code> and used as the starting point from which to generate a variety of experiment configurations for Land DA.</p>
+<p>The following is a list of the parameters in the <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code> files. For each parameter, the default value and a brief description are provided.</p>
+<section id="workflow-attributes-attrs">
+<span id="wf-attributes"></span><h2><span class="section-number">3.1.1. </span>Workflow Attributes (<code class="docutils literal notranslate"><span class="pre">attrs:</span></code>)<a class="headerlink" href="#workflow-attributes-attrs" title="Link to this heading"></a></h2>
+<p>Attributes pertaining to the overall workflow are defined in the <code class="docutils literal notranslate"><span class="pre">attrs:</span></code> section under <code class="docutils literal notranslate"><span class="pre">workflow:</span></code>. For example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  attrs:</span>
+<span class="go">    realtime: false</span>
+<span class="go">    scheduler: slurm</span>
+<span class="go">    cyclethrottle: 24</span>
+<span class="go">    taskthrottle: 24</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">realtime:</span></code> (Default: false)</dt><dd><p>Indicates whether it is a realtime run (true) or a retrospective run (false). Valid values: <code class="docutils literal notranslate"><span class="pre">true</span></code> | <code class="docutils literal notranslate"><span class="pre">false</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">scheduler:</span></code> (Default: slurm)</dt><dd><p>The job scheduler to use on the specified machine. Valid values: <code class="docutils literal notranslate"><span class="pre">&quot;slurm&quot;</span></code>. Other options may work with a container but have not been tested: <code class="docutils literal notranslate"><span class="pre">&quot;pbspro&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;lsf&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;lsfcray&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cyclethrottle:</span></code> (Default: 24)</dt><dd><p>The number of cycles that can be active at one time. Valid values: Integers &gt; 0.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">taskthrottle:</span></code> (Default: 24)</dt><dd><p>The number of tasks that can be active at one time. Valid values: Integers &gt; 0.</p>
+</dd>
+</dl>
+</section>
+<section id="workflow-cycle-definition-cycledef">
+<span id="wf-cycledef"></span><h2><span class="section-number">3.1.2. </span>Workflow Cycle Definition (<code class="docutils literal notranslate"><span class="pre">cycledef</span></code>)<a class="headerlink" href="#workflow-cycle-definition-cycledef" title="Link to this heading"></a></h2>
+<p>Cycling information is defined in the <code class="docutils literal notranslate"><span class="pre">cycledef:</span></code> section under <code class="docutils literal notranslate"><span class="pre">workflow:</span></code>. Each cycle definition starts with a hyphen (<code class="docutils literal notranslate"><span class="pre">-</span></code>) and has information on cycle attributes (<code class="docutils literal notranslate"><span class="pre">attrs:</span></code>) and a cycle specification (<code class="docutils literal notranslate"><span class="pre">spec:</span></code>). For example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  cycledef:</span>
+<span class="go">    - attrs:</span>
+<span class="go">        group: cycled</span>
+<span class="go">      spec: 201912210000 201912220000 24:00:00</span>
+</pre></div>
+</div>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">attrs:</span></code></dt><dd><p>Attributes of <code class="docutils literal notranslate"><span class="pre">cycledef</span></code>. Includes <code class="docutils literal notranslate"><span class="pre">group:</span></code> but may also include <code class="docutils literal notranslate"><span class="pre">activation_offset:</span></code>. See the <a class="reference external" href="https://christopherwharrop.github.io/rocoto/">Rocoto Documentation</a> for more information.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">group:</span></code></dt><dd><p>The group attribute allows users to assign a set of cycles to a particular group. The group tag can later be used to control which tasks are run for which cycles. See the <a class="reference external" href="https://christopherwharrop.github.io/rocoto/">Rocoto Documentation</a> for more information.</p>
+</dd>
+</dl>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">spec:</span></code></dt><dd><p>The cycle is defined using the “start stop step” method, with the cycle start date listed first in YYYMMDDHHmm format, followed by the end date and then the step in HH:mm:SS format (e.g., <code class="docutils literal notranslate"><span class="pre">201912210000</span> <span class="pre">201912220000</span> <span class="pre">24:00:00</span></code>).</p>
+</dd>
+</dl>
+</section>
+<section id="workflow-entities">
+<span id="wf-entities"></span><h2><span class="section-number">3.1.3. </span>Workflow Entities<a class="headerlink" href="#workflow-entities" title="Link to this heading"></a></h2>
+<p>Entities are constants that can be referred to throughout the workflow using the ampersand (<code class="docutils literal notranslate"><span class="pre">&amp;</span></code>) prefix and semicolon (<code class="docutils literal notranslate"><span class="pre">;</span></code>) suffix (e.g., <code class="docutils literal notranslate"><span class="pre">&amp;MACHINE;</span></code>) to avoid defining the same constants repetitively in each workflow task. For example, in <code class="docutils literal notranslate"><span class="pre">land_analysis_orion.yaml</span></code>, the following entities are defined:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  entities:</span>
+<span class="go">    MACHINE: &quot;orion&quot;</span>
+<span class="go">    SCHED: &quot;slurm&quot;</span>
+<span class="go">    ACCOUNT: &quot;epic&quot;</span>
+<span class="go">    EXP_BASEDIR: &quot;/work/noaa/epic/{USER}/landda_test&quot;</span>
+<span class="go">    JEDI_INSTALL: &quot;/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6&quot;</span>
+<span class="go">    WARMSTART_DIR: &quot;/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART&quot;</span>
+<span class="go">    ATMOS_FORC: &quot;gswp3&quot;</span>
+<span class="go">    RES: &quot;96&quot;</span>
+<span class="go">    FCSTHR: &quot;24&quot;</span>
+<span class="go">    NPROCS_ANALYSIS: &quot;6&quot;</span>
+<span class="go">    NPROCS_FORECAST: &quot;7&quot;</span>
+<span class="go">    OBSDIR: &quot;&quot;</span>
+<span class="go">    OBSDIR_SUBDIR: &quot;&quot;</span>
+<span class="go">    OBS_TYPES: &quot;GHCN&quot;</span>
+<span class="go">    DAtype: &quot;letkfoi_snow&quot;</span>
+<span class="go">    SNOWDEPTHVAR: &quot;snwdph&quot;</span>
+<span class="go">    TSTUB: &quot;oro_C96.mx100&quot;</span>
+<span class="go">    NET: &quot;landda&quot;</span>
+<span class="go">    envir: &quot;test&quot;</span>
+<span class="go">    model_ver: &quot;v1.2.1&quot;</span>
+<span class="go">    RUN: &quot;landda&quot;</span>
+<span class="go">    HOMElandda: &quot;&amp;EXP_BASEDIR;/land-DA_workflow&quot;</span>
+<span class="go">    PTMP: &quot;&amp;EXP_BASEDIR;/ptmp&quot;</span>
+<span class="go">    COMROOT: &quot;&amp;PTMP;/&amp;envir;/com&quot;</span>
+<span class="go">    DATAROOT: &quot;&amp;PTMP;/&amp;envir;/tmp&quot;</span>
+<span class="go">    KEEPDATA: &quot;YES&quot;</span>
+<span class="go">    LOGDIR: &quot;&amp;COMROOT;/output/logs;&quot;</span>
+<span class="go">    LOGFN_SUFFIX: &quot;&lt;cyclestr&gt;_@Y@m@d@H.log&lt;/cyclestr&gt;&quot;</span>
+<span class="go">    PDY:  &quot;&lt;cyclestr&gt;@Y@m@d&lt;/cyclestr&gt;&quot;</span>
+<span class="go">    cyc: &quot;&lt;cyclestr&gt;@H&lt;/cyclestr&gt;&quot;</span>
+<span class="go">    DATADEP_FILE1: &quot;&lt;cyclestr&gt;&amp;WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc&lt;/cyclestr&gt;&quot;</span>
+<span class="go">    DATADEP_FILE2: &quot;&lt;cyclestr&gt;&amp;WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.nc&lt;/cyclestr&gt;&quot;</span>
+<span class="go">    DATADEP_FILE3: &quot;&lt;cyclestr&gt;&amp;DATAROOT;/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc&lt;/cyclestr&gt;&quot;</span>
+<span class="go">    DATADEP_FILE4: &quot;&lt;cyclestr&gt;&amp;DATAROOT;/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.nc&lt;/cyclestr&gt;&quot;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When two defaults are listed, one is the default on Hera, and one is the default on Orion, depending on the <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code> file used. The default on Hera is listed first, followed by the default on Orion.</p>
+</div>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">MACHINE:</span></code> (Default: “hera” or “orion”)</dt><dd><p>The machine (a.k.a. platform or system) on which the workflow will run. Currently supported platforms are listed in <a class="reference internal" href="../BackgroundInfo/TechnicalOverview.html#levelsofsupport"><span class="std std-numref">Section 1.2.2</span></a>. Valid values: <code class="docutils literal notranslate"><span class="pre">&quot;hera&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;orion&quot;</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">SCHED:</span></code> (Default: “slurm”)</dt><dd><p>The job scheduler to use (e.g., Slurm) on the specified <code class="docutils literal notranslate"><span class="pre">MACHINE</span></code>. Valid values: <code class="docutils literal notranslate"><span class="pre">&quot;slurm&quot;</span></code>. Other options may work with a container but have not been tested: <code class="docutils literal notranslate"><span class="pre">&quot;pbspro&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;lsf&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;lsfcray&quot;</span></code> | <code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ACCOUNT:</span></code> (Default: “epic”)</dt><dd><p>An account where users can charge their compute resources on the specified <code class="docutils literal notranslate"><span class="pre">MACHINE</span></code>. To determine an appropriate <code class="docutils literal notranslate"><span class="pre">ACCOUNT</span></code> field on a system with a Slurm job scheduler, users may run the <code class="docutils literal notranslate"><span class="pre">saccount_params</span></code> command to display account details. On other systems, users may run the <code class="docutils literal notranslate"><span class="pre">groups</span></code> command, which will return a list of projects that the user has permissions for. Not all of the listed projects/groups have an HPC allocation, but those that do are potentially valid account names.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">EXP_BASEDIR:</span></code> (Default: “/scratch2/NAGAPE/epic/{USER}/landda_test” or “/work/noaa/epic/{USER}/landda_test”)</dt><dd><p>The full path to the parent directory of <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code> (i.e., <code class="docutils literal notranslate"><span class="pre">$LANDDAROOT</span></code> in the documentation).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">JEDI_INSTALL:</span></code> (Default: “/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/jedi_v7” or “/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6”)</dt><dd><p>The path to the JEDI Skylab v7.0 installation.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">WARMSTART_DIR:</span></code> (Default: “/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART” or “/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART”)</dt><dd><p>The path to restart files for a warmstart experiment.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ATMOS_FORC:</span></code> (Default: “gswp3”)</dt><dd><p>Type of atmospheric forcing data used. Valid values: <code class="docutils literal notranslate"><span class="pre">&quot;gswp3&quot;</span></code></p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">RES:</span></code> (Default: “96”)</dt><dd><p>Resolution of FV3 grid. Currently, only C96 resolution is supported.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">FCSTHR:</span></code> (Default: “24”)</dt><dd><p>Specifies the length of each forecast in hours. Valid values: Integers &gt; 0.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">NPROCS_ANALYSIS:</span></code> (Default: “6”)</dt><dd><p>Number of processors for the analysis task.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">NPROCS_FORECAST:</span></code> (Default: “7”)</dt><dd><p>Number of processors for the forecast task.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OBSDIR:</span></code> (Default: “”)</dt><dd><p>The path to the directory where DA fix files are located. In <code class="docutils literal notranslate"><span class="pre">scripts/exlandda_prep_obs.sh</span></code>, this value is set to <code class="docutils literal notranslate"><span class="pre">${FIXlandda}/DA</span></code> unless the user specifies a different path in <code class="docutils literal notranslate"><span class="pre">land_analysis.yaml</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OBSDIR_SUBDIR:</span></code> (Default: “”)</dt><dd><p>The path to the directories where different types of fix data (e.g., ERA5, GSWP3, GTS, NOAH-MP) are located. In <code class="docutils literal notranslate"><span class="pre">scripts/exlandda_prep_obs.sh</span></code>, this value is set based on the type(s) of data requested. The user may choose to set a different value.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">OBS_TYPES:</span></code> (Default: “GHCN”)</dt><dd><p>Specifies the observation type. Format is “Obs1” “Obs2”. Currently, only GHCN observation data is available.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DAtype:</span></code> (Default: “letkfoi_snow”)</dt><dd><p>Type of data assimilation. Valid values: <code class="docutils literal notranslate"><span class="pre">letkfoi_snow</span></code>. Currently, Land DA only performs snow DA using the LETKF-OI algorithm. As the application expands, more options may be added.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">SNOWDEPTHVAR:</span></code> (Default: “snwdph”)</dt><dd><p>Placeholder — currently not used in workflow. This value is currently hard-coded into <code class="docutils literal notranslate"><span class="pre">scripts/exlandda_analysis.sh</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">TSTUB:</span></code> (Default: “oro_C96.mx100”)</dt><dd><p>Specifies the file stub/name for orography files in <code class="docutils literal notranslate"><span class="pre">TPATH</span></code>. This file stub is named <code class="docutils literal notranslate"><span class="pre">oro_C${RES}</span></code> for atmosphere-only orography files and <code class="docutils literal notranslate"><span class="pre">oro_C{RES}.mx100</span></code> for atmosphere and ocean orography files. When Land DA is compiled with <code class="docutils literal notranslate"><span class="pre">sorc/app_build.sh</span></code>, the subdirectories of the fix files should be linked into the <code class="docutils literal notranslate"><span class="pre">fix</span></code> directory, and orography files can be found in <code class="docutils literal notranslate"><span class="pre">fix/FV3_fix_tiled/C96</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DATADEP_FILE1:</span></code> (Default: “&lt;cyclestr&gt;&amp;WARMSTART_DIR;/ufs_land_restart.&#64;Y-&#64;m-&#64;d_&#64;H-00-00.tile1.nc&lt;/cyclestr&gt;”)</dt><dd><p>File name for the dependency check for the task <code class="docutils literal notranslate"><span class="pre">pre_anal</span></code>. The <code class="docutils literal notranslate"><span class="pre">pre_anal</span></code> task is triggered only when one or more of the <code class="docutils literal notranslate"><span class="pre">DATADEP_FILE#</span></code> files exists. Otherwise, the task will not be submitted.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DATADEP_FILE2:</span></code> (Default: “&lt;cyclestr&gt;&amp;WARMSTART_DIR;/ufs_land_restart.&#64;Y-&#64;m-&#64;d_&#64;H-00-00.nc&lt;/cyclestr&gt;”)</dt><dd><p>File name for the dependency check for the task <code class="docutils literal notranslate"><span class="pre">pre_anal</span></code>. The <code class="docutils literal notranslate"><span class="pre">pre_anal</span></code> task is triggered only when one or more of the <code class="docutils literal notranslate"><span class="pre">DATADEP_FILE#</span></code> files exists. Otherwise, the task will not be submitted.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DATADEP_FILE3:</span></code> (Default: “&lt;cyclestr&gt;&amp;DATAROOT;/DATA_SHARE/RESTART/ufs_land_restart.&#64;Y-&#64;m-&#64;d_&#64;H-00-00.tile1.nc&lt;/cyclestr&gt;”)</dt><dd><p>File name for the dependency check for the task <code class="docutils literal notranslate"><span class="pre">pre_anal</span></code>. The <code class="docutils literal notranslate"><span class="pre">pre_anal</span></code> task is triggered only when one or more of the <code class="docutils literal notranslate"><span class="pre">DATADEP_FILE#</span></code> files exists. Otherwise, the task will not be submitted.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DATADEP_FILE4:</span></code> (Default: “&lt;cyclestr&gt;&amp;DATAROOT;/DATA_SHARE/RESTART/ufs_land_restart.&#64;Y-&#64;m-&#64;d_&#64;H-00-00.nc&lt;/cyclestr&gt;”)</dt><dd><p>File name for the dependency check for the task <code class="docutils literal notranslate"><span class="pre">pre_anal</span></code>. The <code class="docutils literal notranslate"><span class="pre">pre_anal</span></code> task is triggered only when one or more of the <code class="docutils literal notranslate"><span class="pre">DATADEP_FILE#</span></code> files exists. Otherwise, the task will not be submitted.</p>
+</dd>
+</dl>
+<section id="nco-directory-structure-entities">
+<span id="nco-dir-entities"></span><h3><span class="section-number">3.1.3.1. </span>NCO Directory Structure Entities<a class="headerlink" href="#nco-directory-structure-entities" title="Link to this heading"></a></h3>
+<p>Standard environment variables are defined in the NCEP Central Operations <a class="reference external" href="https://www.nco.ncep.noaa.gov/idsb/implementation_standards/ImplementationStandards.v11.0.0.pdf">WCOSS Implementation Standards</a> document (pp. 4-5). These variables are used in forming the path to various directories containing input, output, and workflow files. For a visual aid, see the <a class="reference internal" href="../BuildingRunningTesting/BuildRunLandDA.html#land-da-dir-structure"><span class="std std-ref">Land DA Directory Structure Diagram</span></a>.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">HOMElandda:</span></code> (Default: “&amp;EXP_BASEDIR;/land-DA_workflow”)</dt><dd><p>The location of the <a class="reference external" href="https://github.com/ufs-community/land-DA_workflow/">land-DA_workflow</a> clone.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">PTMP:</span></code> (Default: “&amp;EXP_BASEDIR;/ptmp”)</dt><dd><p>Product temporary (PTMP) experiment output space. This directory is used to mimic the operational file structure and contains all of the files and subdirectories used by or generated by the experiment. By default, it is a sibling to the <code class="docutils literal notranslate"><span class="pre">land-DA_workflow</span></code> directory.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">envir:</span></code> (Default: “test”)</dt><dd><p>The run environment. Set to “test” during the initial testing phase, “para” when running in parallel (on a schedule), and “prod” in production. In operations, this is the operations root directory (aka <code class="docutils literal notranslate"><span class="pre">$OPSROOT</span></code>).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">COMROOT:</span></code> (Default: “&amp;PTMP;/&amp;envir;/com”)</dt><dd><p><code class="docutils literal notranslate"><span class="pre">com</span></code> root directory, which contains input/output data on current system.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">NET:</span></code> (Default: “landda”)</dt><dd><p>Model name (first level of <code class="docutils literal notranslate"><span class="pre">com</span></code> directory structure)</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">model_ver:</span></code> (Default: “v1.2.1”)</dt><dd><p>Version number of package in three digits (e.g., v#.#.#); second level of <code class="docutils literal notranslate"><span class="pre">com</span></code> directory</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">RUN:</span></code> (Default: “landda”)</dt><dd><p>Name of model run (third level of <code class="docutils literal notranslate"><span class="pre">com</span></code> directory structure). In general, same as <code class="docutils literal notranslate"><span class="pre">${NET}</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">DATAROOT:</span></code> (Default: “&amp;PTMP;/&amp;envir;/tmp”)</dt><dd><p>Directory location for the temporary working directories for running jobs. By default, this is a sibling to the <code class="docutils literal notranslate"><span class="pre">$COMROOT</span></code> directory and is located at <code class="docutils literal notranslate"><span class="pre">ptmp/test/tmp</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">KEEPDATA:</span></code> (Default: “YES”)</dt><dd><p>Flag to keep data (“YES”) or not (“NO”) that is copied to the <code class="docutils literal notranslate"><span class="pre">$DATAROOT</span></code> directory during the forecast experiment.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">LOGDIR:</span></code> (Default: “&amp;COMROOT;/output/logs;”)</dt><dd><p>Path to the directory containing log files for each workflow task.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">LOGFN_SUFFIX:</span></code> (Default: “&lt;cyclestr&gt;_&#64;Y&#64;m&#64;d&#64;H.log&lt;/cyclestr&gt;”)</dt><dd><p>The cycle suffix appended to each task’s log file. It will be rendered in the form <code class="docutils literal notranslate"><span class="pre">_YYYYMMDDHH.log</span></code>. For example, the <code class="docutils literal notranslate"><span class="pre">prep_obs</span></code> task log file for the Jan. 4, 2000 00z cycle would be named: <code class="docutils literal notranslate"><span class="pre">prep_obs_2000010400.log</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">PDY:</span></code>  (Default: “&lt;cyclestr&gt;&#64;Y&#64;m&#64;d&lt;/cyclestr&gt;”)</dt><dd><p>Date in YYYYMMDD format.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cyc:</span></code> (Default: “&lt;cyclestr&gt;&#64;H&lt;/cyclestr&gt;”)</dt><dd><p>Cycle time in GMT hours, formatted HH.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="workflow-log">
+<span id="wf-log"></span><h2><span class="section-number">3.1.4. </span>Workflow Log<a class="headerlink" href="#workflow-log" title="Link to this heading"></a></h2>
+<p>Information related to overall workflow progress is defined in the <code class="docutils literal notranslate"><span class="pre">log:</span></code> section under <code class="docutils literal notranslate"><span class="pre">workflow:</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  log: &quot;&amp;LOGDIR;/workflow.log&quot;</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">log:</span></code> (Default: “&amp;LOGDIR;/workflow.log”)</dt><dd><p>Path and name of Rocoto log file(s).</p>
+</dd>
+</dl>
+</section>
+<section id="workflow-tasks">
+<span id="wf-tasks"></span><h2><span class="section-number">3.1.5. </span>Workflow Tasks<a class="headerlink" href="#workflow-tasks" title="Link to this heading"></a></h2>
+<p>The workflow is divided into discrete tasks, and details of each task are defined within the <code class="docutils literal notranslate"><span class="pre">tasks:</span></code> section under <code class="docutils literal notranslate"><span class="pre">workflow:</span></code>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  tasks:</span>
+<span class="go">    task_prep_obs:</span>
+<span class="go">    task_pre_anal:</span>
+<span class="go">    task_analysis:</span>
+<span class="go">    task_post_anal:</span>
+<span class="go">    task_plot_stats:</span>
+<span class="go">    task_forecast:</span>
+</pre></div>
+</div>
+<p>Each task may contain attributes (<code class="docutils literal notranslate"><span class="pre">attrs:</span></code>), just as in the overarching <code class="docutils literal notranslate"><span class="pre">workflow:</span></code> section. Instead of entities, each task contains an <code class="docutils literal notranslate"><span class="pre">envars:</span></code> section to define environment variables that must be passed to the task when it is executed. Any task dependencies are listed under the <code class="docutils literal notranslate"><span class="pre">dependency:</span></code> section. Additional details, such as <code class="docutils literal notranslate"><span class="pre">jobname:</span></code>, <code class="docutils literal notranslate"><span class="pre">walltime:</span></code>, and <code class="docutils literal notranslate"><span class="pre">queue:</span></code> may also be set within a specific task.</p>
+<p>The following subsections explain any variables that have not already been explained/defined above.</p>
+<section id="sample-task-analysis-task-task-analysis">
+<span id="sample-task"></span><h3><span class="section-number">3.1.5.1. </span>Sample Task: Analysis Task (<code class="docutils literal notranslate"><span class="pre">task_analysis</span></code>)<a class="headerlink" href="#sample-task-analysis-task-task-analysis" title="Link to this heading"></a></h3>
+<p>This section walks users through the structure of the analysis task (<code class="docutils literal notranslate"><span class="pre">task_analysis</span></code>) to explain how configuration information is provided in the <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code> file for each task. Since each task has a similar structure, common information is explained in this section. Variables unique to a particular task are defined in their respective <code class="docutils literal notranslate"><span class="pre">task_</span></code> sections below.</p>
+<p>Parameters for a particular task are set in the <code class="docutils literal notranslate"><span class="pre">workflow.tasks.task_&lt;name&gt;:</span></code> section of the <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code> file. For example, settings for the analysis task are provided in the <code class="docutils literal notranslate"><span class="pre">task_analysis:</span></code> section of <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code>. The following is an excerpt of the <code class="docutils literal notranslate"><span class="pre">task_analysis:</span></code> section of <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  tasks:</span>
+<span class="go">    task_analysis:</span>
+<span class="go">      attrs:</span>
+<span class="go">        cycledefs: cycled</span>
+<span class="go">        maxtries: 2</span>
+<span class="go">      envars:</span>
+<span class="go">        OBS_TYPES: &quot;&amp;OBS_TYPES;&quot;</span>
+<span class="go">        MACHINE: &quot;&amp;MACHINE;&quot;</span>
+<span class="go">        SCHED: &quot;&amp;SCHED;&quot;</span>
+<span class="go">        ACCOUNT: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">        EXP_NAME: &quot;&amp;EXP_NAME;&quot;</span>
+<span class="go">        RES: &quot;&amp;RES;&quot;</span>
+<span class="go">        TSTUB: &quot;&amp;TSTUB;&quot;</span>
+<span class="go">        model_ver: &quot;&amp;model_ver;&quot;</span>
+<span class="go">        HOMElandda: &quot;&amp;HOMElandda;&quot;</span>
+<span class="go">        COMROOT: &quot;&amp;COMROOT;&quot;</span>
+<span class="go">        DATAROOT: &quot;&amp;DATAROOT;&quot;</span>
+<span class="go">        KEEPDATA: &quot;&amp;KEEPDATA;&quot;</span>
+<span class="go">        PDY: &quot;&amp;PDY;&quot;</span>
+<span class="go">        cyc: &quot;&amp;cyc;&quot;</span>
+<span class="go">        DAtype: &quot;&amp;DAtype;&quot;</span>
+<span class="go">        SNOWDEPTHVAR: &quot;&amp;SNOWDEPTHVAR;&quot;</span>
+<span class="go">        NPROCS_ANALYSIS: &quot;&amp;NPROCS_ANALYSIS;&quot;</span>
+<span class="go">        JEDI_INSTALL: &quot;&amp;JEDI_INSTALL;&quot;</span>
+<span class="go">      account: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">      command: &#39;&amp;HOMElandda;/parm/task_load_modules_run_jjob.sh &quot;analysis&quot; &quot;&amp;HOMElandda;&quot; &quot;&amp;MACHINE;&quot;&#39;</span>
+<span class="go">      jobname: analysis</span>
+<span class="go">      nodes: &quot;1:ppn=&amp;NPROCS_ANALYSIS;&quot;</span>
+<span class="go">      walltime: 00:15:00</span>
+<span class="go">      queue: batch</span>
+<span class="go">      join: &quot;&amp;LOGDIR;/analysis&amp;LOGFN_SUFFIX;&quot;</span>
+<span class="go">      dependency:</span>
+<span class="go">        taskdep:</span>
+<span class="go">          attrs:</span>
+<span class="go">            task: pre_anal</span>
+</pre></div>
+</div>
+<section id="task-attributes-attrs">
+<span id="task-attributes"></span><h4><span class="section-number">3.1.5.1.1. </span>Task Attributes (<code class="docutils literal notranslate"><span class="pre">attrs:</span></code>)<a class="headerlink" href="#task-attributes-attrs" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">attrs:</span></code> section for each task includes the <code class="docutils literal notranslate"><span class="pre">cycledefs:</span></code> attribute and the <code class="docutils literal notranslate"><span class="pre">maxtries:</span></code> attribute.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">cycledefs:</span></code> (Default: cycled)</dt><dd><p>A comma-separated list of <code class="docutils literal notranslate"><span class="pre">cycledef:</span></code> group names. A task with a <code class="docutils literal notranslate"><span class="pre">cycledefs:</span></code> group ID will be run only if its group ID matches one of the workflow’s <code class="docutils literal notranslate"><span class="pre">cycledef:</span></code> group IDs.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">maxtries:</span></code> (Default: 2)</dt><dd><p>The maximum number of times Rocoto can resumbit a failed task.</p>
+</dd>
+</dl>
+</section>
+<section id="task-environment-variables-envars">
+<span id="task-envars"></span><h4><span class="section-number">3.1.5.1.2. </span>Task Environment Variables (<code class="docutils literal notranslate"><span class="pre">envars</span></code>)<a class="headerlink" href="#task-environment-variables-envars" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">envars:</span></code> section for each task reuses many of the same variables and values defined as <code class="docutils literal notranslate"><span class="pre">entities:</span></code> for the overall workflow. These values are needed for each task, but setting them individually is error-prone. Instead, a specific workflow task can reference workflow entities using the <code class="docutils literal notranslate"><span class="pre">&amp;VAR;</span></code> syntax. For example, to set the <code class="docutils literal notranslate"><span class="pre">ACCOUNT:</span></code> value in <code class="docutils literal notranslate"><span class="pre">task_analysis:</span></code> to the value of the workflow <code class="docutils literal notranslate"><span class="pre">ACCOUNT:</span></code> entity, the following statement can be added to the task’s <code class="docutils literal notranslate"><span class="pre">envars:</span></code> section:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">task_analysis:</span>
+<span class="go">   envars:</span>
+<span class="go">     ACCOUNT: &quot;&amp;ACCOUNT;&quot;</span>
+</pre></div>
+</div>
+<p>For most workflow tasks, whatever value is set in the <code class="docutils literal notranslate"><span class="pre">workflow.entities:</span></code> section should be reused/referenced in other tasks. For example, the <code class="docutils literal notranslate"><span class="pre">MACHINE</span></code> variable must be defined for each task, and users cannot switch machines mid-workflow. Therefore, users should set the <code class="docutils literal notranslate"><span class="pre">MACHINE</span></code> variable in the <code class="docutils literal notranslate"><span class="pre">workflow.entities:</span></code> section and reference that definition in each workflow task. For example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  entities:</span>
+<span class="go">    MACHINE: &quot;orion&quot;</span>
+<span class="go">  tasks:</span>
+<span class="go">    task_prep_obs:</span>
+<span class="go">      envars:</span>
+<span class="go">        MACHINE: &quot;&amp;MACHINE;&quot;</span>
+<span class="go">    task_pre_anal:</span>
+<span class="go">      envars:</span>
+<span class="go">        MACHINE: &quot;&amp;MACHINE;&quot;</span>
+<span class="go">    task_analysis:</span>
+<span class="go">      envars:</span>
+<span class="go">        MACHINE: &quot;&amp;MACHINE;&quot;</span>
+<span class="go">    ...</span>
+<span class="go">    task_forecast:</span>
+<span class="go">      envars:</span>
+<span class="go">        MACHINE: &quot;&amp;MACHINE;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="miscellaneous-task-values">
+<span id="misc-tasks"></span><h4><span class="section-number">3.1.5.1.3. </span>Miscellaneous Task Values<a class="headerlink" href="#miscellaneous-task-values" title="Link to this heading"></a></h4>
+<p>The authoritative <a class="reference external" href="https://christopherwharrop.github.io/rocoto/">Rocoto documentation</a> discusses a number of miscellaneous task attributes in detail. A brief overview is provided in this section.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  tasks:</span>
+<span class="go">    task_analysis:</span>
+<span class="go">      account: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">      command: &#39;&amp;HOMElandda;/parm/task_load_modules_run_jjob.sh &quot;analysis&quot; &quot;&amp;HOMElandda;&quot; &quot;&amp;MACHINE;&quot;&#39;</span>
+<span class="go">      jobname: analysis</span>
+<span class="go">      nodes: &quot;1:ppn=&amp;NPROCS_ANALYSIS;&quot;</span>
+<span class="go">      walltime: 00:15:00</span>
+<span class="go">      queue: batch</span>
+<span class="go">      join: &quot;&amp;LOGDIR;/analysis&amp;LOGFN_SUFFIX;&quot;</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">ACCOUNT:</span></code> (Default: “&amp;ACCOUNT;”)</dt><dd><p>An account where users can charge their compute resources on the specified <code class="docutils literal notranslate"><span class="pre">MACHINE</span></code>. This value is typically the same for each task, so the default is to reuse the value set in the <a class="reference internal" href="#wf-entities"><span class="std std-ref">Workflow Entities</span></a> section.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">command:</span></code> (Default: <code class="docutils literal notranslate"><span class="pre">'&amp;HOMElandda;/parm/task_load_modules_run_jjob.sh</span> <span class="pre">&quot;analysis&quot;</span> <span class="pre">&quot;&amp;HOMElandda;&quot;</span> <span class="pre">&quot;&amp;MACHINE;&quot;'</span></code>)</dt><dd><p>The command that Rocoto will submit to the batch system to carry out the task’s work.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">jobname:</span></code> (Default: analysis)</dt><dd><p>Name of the task/job (default will vary based on the task).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">nodes:</span></code> (Default: “1:ppn=&amp;NPROCS_ANALYSIS;”)</dt><dd><p>Number of nodes required for the task (default will vary based on the task).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">walltime:</span></code> (Default: 00:15:00)</dt><dd><p>Time allotted for the task (default will vary based on the task).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">queue:</span></code> (Default: batch)</dt><dd><p>The batch system queue or “quality of servie” (QOS) that Rocoto will submit the task to for execution.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">join:</span></code> (Default: “&amp;LOGDIR;/analysis&amp;LOGFN_SUFFIX;”)</dt><dd><p>The full path to the task’s log file, which records output from <code class="docutils literal notranslate"><span class="pre">stdout</span></code> and <code class="docutils literal notranslate"><span class="pre">stderr</span></code>.</p>
+</dd>
+</dl>
+<p>Some tasks include a <code class="docutils literal notranslate"><span class="pre">cores:</span></code> value instead of a <code class="docutils literal notranslate"><span class="pre">nodes:</span></code> value. For example:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">cores:</span></code> (Default: 1)</dt><dd><p>The number of cores required for the task.</p>
+</dd>
+</dl>
+</section>
+<section id="dependencies">
+<span id="task-dependencies"></span><h4><span class="section-number">3.1.5.1.4. </span>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">dependency:</span></code> section of a task defines what prerequisites must be met for the task to run. In the case of <code class="docutils literal notranslate"><span class="pre">task_analysis:</span></code>, it must be run after the <code class="docutils literal notranslate"><span class="pre">pre_anal</span></code> task. Therefore, the dependecy section lists a task dependency (<code class="docutils literal notranslate"><span class="pre">taskdep:</span></code>).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  tasks:</span>
+<span class="go">    task_analysis:</span>
+<span class="go">      dependency:</span>
+<span class="go">        taskdep:</span>
+<span class="go">          attrs:</span>
+<span class="go">            task: pre_anal</span>
+</pre></div>
+</div>
+<p>Other tasks may list data or time dependencies. For example, the pre-analysis task (<code class="docutils literal notranslate"><span class="pre">task_pre_anal:</span></code>) requires at least one of four possible data files to be available before it can run.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  tasks:</span>
+<span class="go">    task_pre_anal:</span>
+<span class="go">      dependency:</span>
+<span class="go">        or:</span>
+<span class="go">          datadep_file1:</span>
+<span class="go">            attrs:</span>
+<span class="go">              age: 5</span>
+<span class="go">            value: &quot;&amp;DATADEP_FILE1;&quot;</span>
+<span class="go">          datadep_file2:</span>
+<span class="go">            attrs:</span>
+<span class="go">              age: 5</span>
+<span class="go">            value: &quot;&amp;DATADEP_FILE2;&quot;</span>
+<span class="go">          datadep_file3:</span>
+<span class="go">            attrs:</span>
+<span class="go">              age: 5</span>
+<span class="go">            value: &quot;&amp;DATADEP_FILE3;&quot;</span>
+<span class="go">          datadep_file4:</span>
+<span class="go">            attrs:</span>
+<span class="go">              age: 5</span>
+<span class="go">            value: &quot;&amp;DATADEP_FILE4;&quot;</span>
+</pre></div>
+</div>
+<p>For details on the dependency details (e.g., <code class="docutils literal notranslate"><span class="pre">attrs:</span></code>, <code class="docutils literal notranslate"><span class="pre">age:</span></code>, <code class="docutils literal notranslate"><span class="pre">value:</span></code> tags), view the authoritative <a class="reference external" href="https://christopherwharrop.github.io/rocoto/">Rocoto documentation</a>.</p>
+</section>
+</section>
+<section id="observation-preparation-task-task-prep-obs">
+<span id="prep-obs"></span><h3><span class="section-number">3.1.5.2. </span>Observation Preparation Task (<code class="docutils literal notranslate"><span class="pre">task_prep_obs</span></code>)<a class="headerlink" href="#observation-preparation-task-task-prep-obs" title="Link to this heading"></a></h3>
+<p>Parameters for the observation preparation task are set in the <code class="docutils literal notranslate"><span class="pre">task_prep_obs:</span></code> section of the <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code> file. Most task variables are the same as the defaults set and defined in the <a class="reference internal" href="#wf-entities"><span class="std std-ref">Workflow Entities</span></a> section. Variables common to all tasks are discussed in more detail in the <a class="reference internal" href="#sample-task"><span class="std std-ref">Sample Task</span></a> section, although the default values may differ.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  tasks:</span>
+<span class="go">    task_prep_obs:</span>
+<span class="go">      attrs:</span>
+<span class="go">        cycledefs: cycled</span>
+<span class="go">        maxtries: 2</span>
+<span class="go">      envars:</span>
+<span class="go">        OBSDIR: &quot;&amp;OBSDIR;&quot;</span>
+<span class="go">        OBSDIR_SUBDIR: &quot;&amp;OBSDIR_SUBDIR;&quot;</span>
+<span class="go">        OBS_TYPES: &quot;&amp;OBS_TYPES;&quot;</span>
+<span class="go">        MACHINE: &quot;&amp;MACHINE;&quot;</span>
+<span class="go">        SCHED: &quot;&amp;SCHED;&quot;</span>
+<span class="go">        ACCOUNT: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">        ATMOS_FORC: &quot;&amp;ATMOS_FORC;&quot;</span>
+<span class="go">        model_ver: &quot;&amp;model_ver;&quot;</span>
+<span class="go">        HOMElandda: &quot;&amp;HOMElandda;&quot;</span>
+<span class="go">        COMROOT: &quot;&amp;COMROOT;&quot;</span>
+<span class="go">        DATAROOT: &quot;&amp;DATAROOT;&quot;</span>
+<span class="go">        KEEPDATA: &quot;&amp;KEEPDATA;&quot;</span>
+<span class="go">        PDY: &quot;&amp;PDY;&quot;</span>
+<span class="go">        cyc: &quot;&amp;cyc;&quot;</span>
+<span class="go">      account: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">      command: &#39;&amp;HOMElandda;/parm/task_load_modules_run_jjob.sh &quot;prep_obs&quot; &quot;&amp;HOMElandda;&quot; &quot;&amp;MACHINE;&quot;&#39;</span>
+<span class="go">      jobname: prep_obs</span>
+<span class="go">      cores: 1</span>
+<span class="go">      walltime: 00:02:00</span>
+<span class="go">      queue: batch</span>
+<span class="go">      join: &quot;&amp;LOGDIR;/prep_obs&amp;LOGFN_SUFFIX;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="pre-analysis-task-task-pre-anal">
+<span id="pre-anal"></span><h3><span class="section-number">3.1.5.3. </span>Pre-Analysis Task (<code class="docutils literal notranslate"><span class="pre">task_pre_anal</span></code>)<a class="headerlink" href="#pre-analysis-task-task-pre-anal" title="Link to this heading"></a></h3>
+<p>Parameters for the pre-analysis task are set in the <code class="docutils literal notranslate"><span class="pre">task_pre_anal:</span></code> section of the <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code> file. Most task variables are the same as the defaults set and defined in the <a class="reference internal" href="#wf-entities"><span class="std std-ref">Workflow Entities</span></a> section. Variables common to all tasks are discussed in more detail in the <a class="reference internal" href="#sample-task"><span class="std std-ref">Sample Task</span></a> section, although the default values may differ.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  tasks:</span>
+<span class="go">    task_pre_anal:</span>
+<span class="go">      attrs:</span>
+<span class="go">        cycledefs: cycled</span>
+<span class="go">        maxtries: 2</span>
+<span class="go">      envars:</span>
+<span class="go">        MACHINE: &quot;&amp;MACHINE;&quot;</span>
+<span class="go">        SCHED: &quot;&amp;SCHED;&quot;</span>
+<span class="go">        ACCOUNT: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">        RES: &quot;&amp;RES;&quot;</span>
+<span class="go">        TSTUB: &quot;&amp;TSTUB;&quot;</span>
+<span class="go">        WARMSTART_DIR: &quot;&amp;WARMSTART_DIR;&quot;</span>
+<span class="go">        model_ver: &quot;&amp;model_ver;&quot;</span>
+<span class="go">        RUN: &quot;&amp;RUN;&quot;</span>
+<span class="go">        HOMElandda: &quot;&amp;HOMElandda;&quot;</span>
+<span class="go">        COMROOT: &quot;&amp;COMROOT;&quot;</span>
+<span class="go">        DATAROOT: &quot;&amp;DATAROOT;&quot;</span>
+<span class="go">        KEEPDATA: &quot;&amp;KEEPDATA;&quot;</span>
+<span class="go">        PDY: &quot;&amp;PDY;&quot;</span>
+<span class="go">        cyc: &quot;&amp;cyc;&quot;</span>
+<span class="go">      account: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">      command: &#39;&amp;HOMElandda;/parm/task_load_modules_run_jjob.sh &quot;pre_anal&quot; &quot;&amp;HOMElandda;&quot; &quot;&amp;MACHINE;&quot;&#39;</span>
+<span class="go">      jobname: pre_anal</span>
+<span class="go">      cores: 1</span>
+<span class="go">      walltime: 00:05:00</span>
+<span class="go">      queue: batch</span>
+<span class="go">      join: &quot;&amp;LOGDIR;/pre_anal&amp;LOGFN_SUFFIX;&quot;</span>
+<span class="go">      dependency:</span>
+<span class="go">        or:</span>
+<span class="go">          datadep_file1:</span>
+<span class="go">            attrs:</span>
+<span class="go">              age: 5</span>
+<span class="go">            value: &quot;&amp;DATADEP_FILE1;&quot;</span>
+<span class="go">          datadep_file2:</span>
+<span class="go">            attrs:</span>
+<span class="go">              age: 5</span>
+<span class="go">            value: &quot;&amp;DATADEP_FILE2;&quot;</span>
+<span class="go">          datadep_file3:</span>
+<span class="go">            attrs:</span>
+<span class="go">              age: 5</span>
+<span class="go">            value: &quot;&amp;DATADEP_FILE3;&quot;</span>
+<span class="go">          datadep_file4:</span>
+<span class="go">            attrs:</span>
+<span class="go">              age: 5</span>
+<span class="go">            value: &quot;&amp;DATADEP_FILE4;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="analysis-task-task-analysis">
+<span id="analysis"></span><h3><span class="section-number">3.1.5.4. </span>Analysis Task (<code class="docutils literal notranslate"><span class="pre">task_analysis</span></code>)<a class="headerlink" href="#analysis-task-task-analysis" title="Link to this heading"></a></h3>
+<p>Parameters for the analysis task are set in the <code class="docutils literal notranslate"><span class="pre">task_analysis:</span></code> section of the <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code> file. Most are the same as the defaults set in the <a class="reference internal" href="#wf-entities"><span class="std std-ref">Workflow Entities</span></a> section. The <code class="docutils literal notranslate"><span class="pre">task_analysis:</span></code> task is explained fully in the <a class="reference internal" href="#sample-task"><span class="std std-ref">Sample Task</span></a> section.</p>
+</section>
+<section id="post-analysis-task-task-post-anal">
+<span id="post-analysis"></span><h3><span class="section-number">3.1.5.5. </span>Post-Analysis Task (<code class="docutils literal notranslate"><span class="pre">task_post_anal</span></code>)<a class="headerlink" href="#post-analysis-task-task-post-anal" title="Link to this heading"></a></h3>
+<p>Parameters for the post analysis task are set in the <code class="docutils literal notranslate"><span class="pre">task_post_anal:</span></code> section of the <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code> file. Most task variables are the same as the defaults set and defined in the <a class="reference internal" href="#wf-entities"><span class="std std-ref">Workflow Entities</span></a> section. Variables common to all tasks are discussed in more detail in the <a class="reference internal" href="#sample-task"><span class="std std-ref">Sample Task</span></a> section, although the default values may differ.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  tasks:</span>
+<span class="go">    task_post_anal:</span>
+<span class="go">      attrs:</span>
+<span class="go">        cycledefs: cycled</span>
+<span class="go">        maxtries: 2</span>
+<span class="go">      envars:</span>
+<span class="go">        MACHINE: &quot;&amp;MACHINE;&quot;</span>
+<span class="go">        SCHED: &quot;&amp;SCHED;&quot;</span>
+<span class="go">        ACCOUNT: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">        RES: &quot;&amp;RES;&quot;</span>
+<span class="go">        TSTUB: &quot;&amp;TSTUB;&quot;</span>
+<span class="go">        model_ver: &quot;&amp;model_ver;&quot;</span>
+<span class="go">        RUN: &quot;&amp;RUN;&quot;</span>
+<span class="go">        HOMElandda: &quot;&amp;HOMElandda;&quot;</span>
+<span class="go">        COMROOT: &quot;&amp;COMROOT;&quot;</span>
+<span class="go">        DATAROOT: &quot;&amp;DATAROOT;&quot;</span>
+<span class="go">        KEEPDATA: &quot;&amp;KEEPDATA;&quot;</span>
+<span class="go">        PDY: &quot;&amp;PDY;&quot;</span>
+<span class="go">        cyc: &quot;&amp;cyc;&quot;</span>
+<span class="go">        FCSTHR: &quot;&amp;FCSTHR;&quot;</span>
+<span class="go">      account: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">      command: &#39;&amp;HOMElandda;/parm/task_load_modules_run_jjob.sh &quot;post_anal&quot; &quot;&amp;HOMElandda;&quot; &quot;&amp;MACHINE;&quot;&#39;</span>
+<span class="go">      jobname: post_anal</span>
+<span class="go">      cores: 1</span>
+<span class="go">      walltime: 00:05:00</span>
+<span class="go">      queue: batch</span>
+<span class="go">      join: &quot;&amp;LOGDIR;/post_anal&amp;LOGFN_SUFFIX;&quot;</span>
+<span class="go">      dependency:</span>
+<span class="go">        taskdep:</span>
+<span class="go">          attrs:</span>
+<span class="go">            task: analysis</span>
+</pre></div>
+</div>
+</section>
+<section id="plotting-task-task-plot-stats">
+<span id="plot-stats"></span><h3><span class="section-number">3.1.5.6. </span>Plotting Task (<code class="docutils literal notranslate"><span class="pre">task_plot_stats</span></code>)<a class="headerlink" href="#plotting-task-task-plot-stats" title="Link to this heading"></a></h3>
+<p>Parameters for the plotting task are set in the <code class="docutils literal notranslate"><span class="pre">task_plot_stats:</span></code> section of the <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code> file. Most task variables are the same as the defaults set and defined in the <a class="reference internal" href="#wf-entities"><span class="std std-ref">Workflow Entities</span></a> section. Variables common to all tasks are discussed in more detail in the <a class="reference internal" href="#sample-task"><span class="std std-ref">Sample Task</span></a> section, although the default values may differ.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  tasks:</span>
+<span class="go">    task_plot_stats:</span>
+<span class="go">      attrs:</span>
+<span class="go">        cycledefs: cycled</span>
+<span class="go">        maxtries: 2</span>
+<span class="go">      envars:</span>
+<span class="go">        MACHINE: &quot;&amp;MACHINE;&quot;</span>
+<span class="go">        SCHED: &quot;&amp;SCHED;&quot;</span>
+<span class="go">        ACCOUNT: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">        model_ver: &quot;&amp;model_ver;&quot;</span>
+<span class="go">        RUN: &quot;&amp;RUN;&quot;</span>
+<span class="go">        HOMElandda: &quot;&amp;HOMElandda;&quot;</span>
+<span class="go">        COMROOT: &quot;&amp;COMROOT;&quot;</span>
+<span class="go">        DATAROOT: &quot;&amp;DATAROOT;&quot;</span>
+<span class="go">        KEEPDATA: &quot;&amp;KEEPDATA;&quot;</span>
+<span class="go">        PDY: &quot;&amp;PDY;&quot;</span>
+<span class="go">        cyc: &quot;&amp;cyc;&quot;</span>
+<span class="go">      account: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">      command: &#39;&amp;HOMElandda;/parm/task_load_modules_run_jjob.sh &quot;plot_stats&quot; &quot;&amp;HOMElandda;&quot; &quot;&amp;MACHINE;&quot;&#39;</span>
+<span class="go">      jobname: plot_stats</span>
+<span class="go">      cores: 1</span>
+<span class="go">      walltime: 00:10:00</span>
+<span class="go">      queue: batch</span>
+<span class="go">      join: &quot;&amp;LOGDIR;/plot_stats&amp;LOGFN_SUFFIX;&quot;</span>
+<span class="go">      dependency:</span>
+<span class="go">        taskdep:</span>
+<span class="go">          attrs:</span>
+<span class="go">            task: analysis</span>
+</pre></div>
+</div>
+</section>
+<section id="forecast-task-task-forecast">
+<span id="forecast"></span><h3><span class="section-number">3.1.5.7. </span>Forecast Task (<code class="docutils literal notranslate"><span class="pre">task_forecast</span></code>)<a class="headerlink" href="#forecast-task-task-forecast" title="Link to this heading"></a></h3>
+<p>Parameters for the forecast task are set in the <code class="docutils literal notranslate"><span class="pre">task_forecast:</span></code> section of the <code class="docutils literal notranslate"><span class="pre">land_analysis_&lt;machine&gt;.yaml</span></code> file. Most task variables are the same as the defaults set and defined in the <a class="reference internal" href="#wf-entities"><span class="std std-ref">Workflow Entities</span></a> section. Variables common to all tasks are discussed in more detail in the <a class="reference internal" href="#sample-task"><span class="std std-ref">Sample Task</span></a> section, although the default values may differ.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">workflow:</span>
+<span class="go">  tasks:</span>
+<span class="go">    task_forecast:</span>
+<span class="go">      attrs:</span>
+<span class="go">        cycledefs: cycled</span>
+<span class="go">        maxtries: 2</span>
+<span class="go">      envars:</span>
+<span class="go">        OBS_TYPES: &quot;&amp;OBS_TYPES;&quot;</span>
+<span class="go">        MACHINE: &quot;&amp;MACHINE;&quot;</span>
+<span class="go">        SCHED: &quot;&amp;SCHED;&quot;</span>
+<span class="go">        ACCOUNT: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">        ATMOS_FORC: &quot;&amp;ATMOS_FORC;&quot;</span>
+<span class="go">        RES: &quot;&amp;RES;&quot;</span>
+<span class="go">        WARMSTART_DIR: &quot;&amp;WARMSTART_DIR;&quot;</span>
+<span class="go">        model_ver: &quot;&amp;model_ver;&quot;</span>
+<span class="go">        HOMElandda: &quot;&amp;HOMElandda;&quot;</span>
+<span class="go">        COMROOT: &quot;&amp;COMROOT;&quot;</span>
+<span class="go">        DATAROOT: &quot;&amp;DATAROOT;&quot;</span>
+<span class="go">        KEEPDATA: &quot;&amp;KEEPDATA;&quot;</span>
+<span class="go">        LOGDIR: &quot;&amp;LOGDIR;&quot;</span>
+<span class="go">        PDY: &quot;&amp;PDY;&quot;</span>
+<span class="go">        cyc: &quot;&amp;cyc;&quot;</span>
+<span class="go">        DAtype: &quot;&amp;DAtype;&quot;</span>
+<span class="go">        FCSTHR: &quot;&amp;FCSTHR;&quot;</span>
+<span class="go">        NPROCS_FORECAST: &quot;&amp;NPROCS_FORECAST;&quot;</span>
+<span class="go">      account: &quot;&amp;ACCOUNT;&quot;</span>
+<span class="go">      command: &#39;&amp;HOMElandda;/parm/task_load_modules_run_jjob.sh &quot;forecast&quot; &quot;&amp;HOMElandda;&quot; &quot;&amp;MACHINE;&quot;&#39;</span>
+<span class="go">      jobname: forecast</span>
+<span class="go">      nodes: &quot;1:ppn=&amp;NPROCS_FORECAST;&quot;</span>
+<span class="go">      walltime: 01:00:00</span>
+<span class="go">      queue: batch</span>
+<span class="go">      join: &quot;&amp;LOGDIR;/forecast&amp;LOGFN_SUFFIX;&quot;</span>
+<span class="go">      dependency:</span>
+<span class="go">        taskdep:</span>
+<span class="go">          attrs:</span>
+<span class="go">            task: post_anal</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="3. Customizing the Workflow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Model.html" class="btn btn-neutral float-right" title="3.2. Input/Output Files for the Noah-MP Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
