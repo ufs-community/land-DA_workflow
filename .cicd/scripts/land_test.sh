@@ -75,6 +75,7 @@ if [[ true = ${LAND_DA_RUN_TESTS:=false} ]] ; then
 	cp sorc/test/run_${machine}_ctest.sh sorc/build/
                                         
 	cd sorc/build/
+	rm -f out.*
 	set +x
  	echo $(pwd)
                                             
@@ -82,10 +83,10 @@ if [[ true = ${LAND_DA_RUN_TESTS:=false} ]] ; then
 	/usr/bin/time -p \
 		-o ${WORKSPACE}/${UFS_PLATFORM}-${UFS_COMPILER}-time-land_test.json \
 		-f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
-		./run_${machine}_ctest.sh | awk 'f;/^+ ctest$/{f=1}' | tee ${WORKSPACE}/${UFS_PLATFORM}/test-log.txt
+		./run_${machine}_ctest.sh | awk 'f;/^+ ctest$/{f=1}' | tee ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-test-log.txt
 	status=${PIPESTATUS[0]}
 	echo "Pipeline Completed Land-DA Tests on ${UFS_PLATFORM} ${UFS_COMPILER}. status=$status"
-	rc=$(( status+=$(egrep " ***Failed " ${WORKSPACE}/${UFS_PLATFORM}/test-log.txt 2>/dev/null | wc -l) ))
+	rc=$(( status+=$(egrep " ***Failed " ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-test-log.txt 2>/dev/null | wc -l) ))
 	echo "rc=$rc status=$status"
 	set -x
 	cd -
