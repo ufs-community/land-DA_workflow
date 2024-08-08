@@ -15,7 +15,7 @@ This chapter provides instructions for building and running basic Land DA cases 
 Create a Working Directory
 *****************************
 
-Create a base directory for the Land DA experiment and navigate into it:
+Users can either create a new directory for their Land DA work or choose an existing directory, depending on preference. Then, users should navigate to this directory. For example, to create a new directory and navigate to it, run: 
 
 .. code-block:: console
 
