@@ -5,25 +5,21 @@ Introduction
 ****************
 
 This User's Guide provides guidance for running the Unified Forecast System 
-(:term:`UFS`) offline Land Data Assimilation (DA) System. Land DA is an offline version of the Noah Multi-Physics (Noah-MP) land surface model (LSM) used in the `UFS Weather Model <https://github.com/ufs-community/ufs-weather-model>`__ (WM). Its data assimilation framework uses 
-the Joint Effort for Data assimilation Integration (:term:`JEDI`) software. The offline UFS Land DA System currently only works with snow data. 
+(:term:`UFS`) offline Land Data Assimilation (DA) System. Land DA is an offline version of the Noah Multi-Physics (Noah-MP) land surface model (LSM) used in the `UFS Weather Model <https://github.com/ufs-community/ufs-weather-model>`_ (WM). Its data assimilation framework uses 
+the Joint Effort for Data assimilation Integration (:term:`JEDI`) software. Currently, the offline UFS Land DA System only works with snow data. 
 Thus, this User's Guide focuses primarily on the snow DA process.
 
-Since the last release, developers have added a variety of features:
+Since the |latestr| release, the following capabilities have been added to the Land DA System:
 
-* Integration of the UFS Noah-MP land component into the Land DA System for use as an alternative to the Common Community Physics Package (:term:`CCPP`) Noah-MP LSM land driver
-* Model forcing options for use with the UFS land component:
-
-   * Provided a new analysis option in the cubed-sphere native grid using :term:`GSWP3` forcing
-   * Established global land grid-point consistency with the head of the UFS WM baseline test cases (New global land grid point is changed from 18360 to 18322.)
-   * Added a new sample configuration file (``settings_DA_cycle_gswp3``)
-   * Included a new ECMWF :term:`ERA5` reanalysis forcing option in the existing vector-to-tile conversion analysis process
-
-* CTest suite upgrades --- the ERA5 CTests now test the operability of seven major components of Land DA: vector2tile, create_ens, letkfoi_snowda, apply_jediincr, tile2vector, land_driver, and UFS datm_land.
-* Upgrade of JEDI :term:`DA <data assimilation>` framework to use JEDI Skylab v4.0 (`PR #28 <https://github.com/ufs-community/land-DA_workflow/pull/28>`__)
-* Updates to sample datasets for the release (see the `Land DA data bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`__)
-* Singularity/Apptainer container (``ubuntu20.04-intel-landda-release-public-v1.2.0``) updates to support the changes described above
-* Documentation updates to reflect the changes above
+* Added cycled run capability (:land-wflow-repo:`PR #101 <pull/101/>`)
+* Provide automated run option using cron (:land-wflow-repo:`PR #110 <pull/110>`)
+* Added analysis plotting task (:land-wflow-repo:`PR #107 <pull/107>`)
+* Upgraded to JEDI Skylab v7.0 (:land-wflow-repo:`PR #92 <pull/92/>`)
+* Upgraded to spack-stack v1.6.0 (:land-wflow-repo:`PR #102 <pull/102>`)
+* Extended container support (:land-wflow-repo:`PR #85 <pull/85>`)
+* Updated directory structure for NCO compliance (:land-wflow-repo:`PR #75 <pull/75>`)
+* Removed land driver from CTest (:land-wflow-repo:`PR #123 <pull/123>`)
+* Removed land-driver and vector2tile (:land-wflow-repo:`PR #129 <pull/129>`)
 
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
 
@@ -37,8 +33,8 @@ This User's Guide is organized into four sections: (1) *Background Information*;
 
 Background Information
 ========================
-   * This chapter (Introduction) provides background information on the Unified Forecast System (:term:`UFS`) and the NoahMP model. 
-   * :numref:`Chapter %s <TechOverview>` (Technical Overview) outlines prerequisites, user support levels, and directory structure. 
+   * This chapter (Introduction) provides user support information and background information on the Unified Forecast System (:term:`UFS`) and the Noah-MP model. 
+   * :numref:`Chapter %s <TechOverview>` (Technical Overview) outlines prerequisites, supported systems, and directory structure. 
 
 Building, Running, and Testing the Land DA System
 ===================================================
@@ -50,12 +46,15 @@ Building, Running, and Testing the Land DA System
 Customizing the Workflow
 =========================
 
-   * :numref:`Chapter %s: Model <Model>` provides information on input data and configuration parameters in the Noah-MP LSM and its Vector-to-Tile Converter.
+   * :numref:`Chapter %s: Available Workflow Configuration Parameters <ConfigWorkflow>` explains all of the user-configurable options currently available in the workflow configuration file (``land_analysis*.yaml``).
+   * :numref:`Chapter %s: Model <Model>` provides information on input data and configuration parameters in the Noah-MP LSM.
    * :numref:`Chapter %s: DA Framework <DASystem>` provides information on the DA system, required data, and configuration parameters. 
 
 Reference
 ===========
 
+   * :numref:`Chapter %s: Rocoto <RocotoInfo>` provides background information on the Rocoto workflow manager as used in Land DA.  
+   * :numref:`Chapter %s: FAQ <FAQ>` addresses frequently asked questions. 
    * :numref:`Chapter %s: Glossary <Glossary>` lists important terms. 
 
 User Support and Documentation
@@ -85,10 +84,11 @@ If users (especially new users) believe they have identified a bug in the system
 Feature Requests and Enhancements
 ==================================
 
-Users who want to request a feature enhancement or the addition of a new feature have two options: 
+Users who want to request a feature enhancement or the addition of a new feature have a few options: 
 
    #. File a `GitHub Issue <https://github.com/ufs-community/land-DA_workflow/issues/new>`__ and add (or request that a code manager add) the ``EPIC Support Requested`` label. 
    #. Post a request for a feature or enhancement in the `Enhancements <https://github.com/ufs-community/land-DA_workflow/discussions/categories/enhancements>`__ category of GitHub Discussions. These feature requests will be forwarded to the Earth Prediction Innovation Center (`EPIC <https://epic.noaa.gov/>`__) management team for prioritization and eventual addition to the Land DA System. 
+   #. Email the request to support.epic@noaa.gov. 
 
 
 .. _Background:
@@ -131,7 +131,7 @@ The Noah-MP LSM has evolved through community efforts to pursue and refine a mod
 
 Noah-MP has been implemented in the UFS via the :term:`CCPP` physics package and 
 is currently being tested for operational use in GFSv17 and RRFS v2. Additionally, the UFS Weather Model now contains a Noah-MP land component. Noah-MP has 
-also been used operationally in the NOAA National Water Model (NWM) since 2016. Details about the model's physical parameterizations can be found in :cite:t:`NiuEtAl2011` (2011). 
+also been used operationally in the NOAA National Water Model (NWM) since 2016. Details about the model's physical parameterizations can be found in :cite:t:`NiuEtAl2011` (2011), and a full description of the model is available in the `Community Noah-MP Land Surface Modeling System Technical Description Version 5.0 <https://opensky.ucar.edu/islandora/object/technotes:599>`_. 
 
 Disclaimer 
 *************
