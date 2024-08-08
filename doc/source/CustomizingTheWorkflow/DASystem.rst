@@ -542,7 +542,26 @@ The Land DA System requires grid description files, observation files, and resta
 Grid Description Files
 =========================
 
-The grid description files appear in :numref:`Section %s <V2TInputFiles>` and are also used as input files to the Vector-to-Tile Converter and the UFS land component. See :numref:`Table %s <GridInputFiles>` for a description of these files. 
+The grid description files appear in :numref:`Table %s <GridInputFiles>` below: 
+
+.. _GridInputFiles:
+
+.. list-table:: Input Files Containing Grid Information
+   :widths: 30 70
+   :header-rows: 1
+
+   * - Filename
+     - Description
+   * - Cxx_grid.tile[1-6].nc
+     - Cxx grid information for tiles 1-6, where ``xx`` is the grid resolution.
+   * - Cxx_oro_data.tile[1-6].nc 
+       
+       oro_Cxx.mx100.tile[1-6].nc
+
+     - Orography files that contain grid and land mask information. 
+       Cxx refers to the atmospheric resolution, and mx100 refers to the ocean 
+       resolution (100=1º). Both file names refer to the same file; there are symbolic links between them. 
+
 
 .. _observation-data:
 
