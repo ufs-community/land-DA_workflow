@@ -207,10 +207,6 @@ Users may run these tasks :ref:`using the Rocoto workflow manager <run-w-rocoto>
 Run With Rocoto
 =================
 
-.. note:: 
-
-   Users who do not have Rocoto installed on their system can view :numref:`Section %s: Run Without Rocoto <run-batch-script>`.
-
 To run the experiment, users can automate job submission via :term:`crontab` or submit tasks manually via ``rocotorun``. 
 
 Automated Run
@@ -275,17 +271,7 @@ Note that the status table printed by ``rocotostat`` only updates after each ``r
 
 The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, and DEAD. Users may view the log files to determine why a task may have failed.
 
-.. _run-batch-script:
-
-Run Without Rocoto
---------------------
-
-Users may choose to run the workflow *without* ``uwtools`` and Rocoto for a non-cycled run. To run the :term:`J-job <J-jobs>` scripts in the ``jobs`` directory, navigate to the ``parm`` directory and edit ``run_without_rocoto.sh`` (e.g., using vim or preferred command line editor). Users will likely need to change the ``MACHINE``, ``ACCOUNT``, and ``EXP_BASEDIR`` variables to match their system. Then, run the script:
-
-.. code-block:: console
-
-   cd $LANDDAROOT/land-DA_workflow/parm
-   sbatch run_without_rocoto.sh
+.. _check-output:
 
 Check Experiment Output
 =========================
