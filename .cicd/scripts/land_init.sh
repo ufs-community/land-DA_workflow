@@ -45,11 +45,13 @@ fi
 # Initialize
 cd ${workspace}
 pwd
+rm -f ${workspace}/${UFS_PLATFORM,,}-*.txt ${workspace}/${UFS_PLATFORM,,}-*.json
+rm -f ${workspace}/${platform}-*.txt ${workspace}/${platform}-*.json
 set +e
 
 rm -rf sorc/build
 
-git checkout ${BRANCH_NAME:=develop}
+[[ -n ${BRANCH_NAME:=} ]] && git checkout ${BRANCH_NAME} || true
 status=${PIPESTATUS[0]}
 
 git branch
