@@ -55,6 +55,10 @@ echo "ACCNR=${ACCNR:=}"
 cd ${workspace}
 pwd
 set +e
+
+git branch
+git log -1 --oneline
+
 echo "Pipeline Building Land-DA on ${UFS_PLATFORM} ${UFS_COMPILER} with Account=${ACCNR:=}."
 /usr/bin/time -p \
 	-o ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-time-land_build.json \
@@ -63,10 +67,11 @@ echo "Pipeline Building Land-DA on ${UFS_PLATFORM} ${UFS_COMPILER} with Account=
 status=${PIPESTATUS[0]}
 cat sorc/build/log.ecbuild sorc/build/log.make >> ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-build-log.txt
 echo "Pipeline Completed Land-DA build on ${UFS_PLATFORM} ${UFS_COMPILER}. status=$status"
-git status -u
-                                    
+
 ls -l sorc/build/*
 
+git status -u
+                                    
 build_exit=$status
 echo "STAGE_NAME=${STAGE_NAME:=manual}"
 env | grep = | sort > ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-env.txt

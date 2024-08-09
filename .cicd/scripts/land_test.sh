@@ -74,6 +74,10 @@ cd ${workspace}
 pwd
 set +e
 ls -l sorc/build/*
+status=$?
+
+git branch
+git log -1 --oneline
 
 if [[ true = ${LAND_DA_RUN_TESTS:=false} ]] ; then
 
@@ -99,7 +103,6 @@ if [[ true = ${LAND_DA_RUN_TESTS:=false} ]] ; then
 	cd -
 else
 	echo "Pipeline skipping Tests on ${UFS_PLATFORM} (${machine})"
-	status=0
 fi
 
 git status -u

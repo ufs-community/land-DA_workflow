@@ -56,12 +56,13 @@ status=${PIPESTATUS[0]}
 
 git branch
 git log -1 --oneline
-git status -u
 
 /usr/bin/time -p \
 	-o ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-time-land_init.json \
 	-f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
 	find . -name .git -type d
+
+git status -u
 
 init_exit=$status
 echo "STAGE_NAME=${STAGE_NAME:=manual}"
