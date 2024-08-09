@@ -27,6 +27,8 @@ EXAMPLE: Closes ufs-community/land-DA/issues/<issue_number>
     - [ ] Hercules
 - CI
   - [ ] Completed
+- WE2E
+  - [ ] Completed
 - PW-Clouds
   - [ ] AWS
   - [ ] AZURE
