@@ -72,19 +72,23 @@ echo "ACCNR=${ACCNR}"
 # Test
 cd ${workspace}
 pwd
-set +e
 ls -l sorc/build/*
-status=$?
+set +e
+
 
 git branch
 git log -1 --oneline
 
 if [[ true = ${LAND_DA_RUN_TESTS:=false} ]] ; then
+                                        
+    ls -l sorc/build/bin/*.exe sorc/build/lib/*.so
+    status=$?
+    if [[ ${status} = 0 ]] ; then
 
 	cp sorc/test/${machine}_ctest.sh sorc/build/
 	cp sorc/test/check_ctest.sh sorc/build/
 	cp sorc/test/run_${machine}_ctest.sh sorc/build/
-                                        
+
 	cd sorc/build/
 	rm -f out.*
 	set +x
@@ -101,6 +105,9 @@ if [[ true = ${LAND_DA_RUN_TESTS:=false} ]] ; then
 	echo "rc=$rc status=$status"
 	set -x
 	cd -
+    else
+	echo "Error: bin/* or lib/* not available."
+    fi
 else
 	echo "Pipeline skipping Tests on ${UFS_PLATFORM} (${machine})"
 fi
