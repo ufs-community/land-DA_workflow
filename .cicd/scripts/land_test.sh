@@ -3,6 +3,10 @@
 # A unified test script for the Land-DA_workflow application. This script is expected to
 # test Land-DA_workflow model for any supported platforms.
 #
+# Usage:
+#  UFS_PLATFORM=<platform> UFS_COMPILER=<compiler> [ LAND_DA_RUN_TESTS=true ] .cicd/scripts/land_test.sh
+#  .cicd/scripts/land_test.sh <platform> <compiler> [ true|false ]
+#
 pwd
 set +x
 echo "UFS_PLATFORM=${UFS_PLATFORM}"
@@ -33,6 +37,9 @@ echo "NODE_PATH=${NODE_PATH}"
 [[ ${machine} = hercules ]] && ls -l /work/noaa/epic/UFS_Land-DA/inputs
 
 set -e -u -x
+
+echo "UFS_PLATFORM=${UFS_PLATFORM}"
+echo "UFS_COMPILER=${UFS_COMPILER}"
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
 
@@ -66,7 +73,7 @@ echo "ACCNR=${ACCNR}"
 cd ${workspace}
 pwd
 set +e
-ls -l sorc/build
+ls -l sorc/build/*
 
 if [[ true = ${LAND_DA_RUN_TESTS:=false} ]] ; then
 
@@ -92,14 +99,12 @@ if [[ true = ${LAND_DA_RUN_TESTS:=false} ]] ; then
 	cd -
 else
 	echo "Pipeline skipping Tests on ${UFS_PLATFORM} (${machine})"
-	rc=0
 	status=0
 fi
 
-echo "Pipeline Completed Land-DA test on ${UFS_PLATFORM} ${UFS_COMPILER}. status=$status"
-git status
+git status -u
 
-test_exit=$?
+test_exit=$status
 echo "STAGE_NAME=${STAGE_NAME:=manual}"
 env | grep = | sort > ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-env.txt
 set -e

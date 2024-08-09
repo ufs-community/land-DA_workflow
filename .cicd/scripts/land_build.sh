@@ -3,6 +3,10 @@
 # A unified build script for the Land-DA_workflow application. This script is expected to
 # build Land-DA_workflow model from source for all supported platforms.
 #
+# Usage:
+#  UFS_PLATFORM=<platform> UFS_COMPILER=<compiler> .cicd/scripts/land_build.sh
+#  .cicd/scripts/land_build.sh <platform> <compiler>
+#
 pwd
 set +x
 echo "UFS_PLATFORM=${UFS_PLATFORM}"
@@ -14,23 +18,10 @@ echo "machine=${machine}"
 echo "compiler=${compiler}"
 echo "workspace=${workspace}"
 
-echo "HOME=${HOME}"
-[[ ${machine} = hera ]] && NODE_PATH="/scratch2/NAGAPE/epic/role.epic"
-[[ ${machine} = jet ]] && NODE_PATH="/mnt/lfs4/HFIP/hfv3gfs/role.epic"
-[[ ${machine} = gaea ]] && NODE_PATH=""
-[[ ${machine} = orion ]] && NODE_PATH="/work/noaa/epic/role-epic"
-[[ ${machine} = hercules ]] && NODE_PATH="/work/noaa/epic/role-epic"
-echo "NODE_PATH=${NODE_PATH}"
-
-( set -x ; ls -ld ${NODE_PATH} && ls -al ${NODE_PATH}/. )
-
-[[ ${machine} = hera ]] && ls -l /scratch2/NAGAPE/epic/UFS_Land-DA/inputs
-[[ ${machine} = jet ]] && echo "where are inputs?"
-[[ ${machine} = gaea ]] && echo "where are inputs?"
-[[ ${machine} = orion ]] && ls -l /work/noaa/epic/UFS_Land-DA/inputs
-[[ ${machine} = hercules ]] && ls -l /work/noaa/epic/UFS_Land-DA/inputs
-
 set -e -u -x
+
+echo "UFS_PLATFORM=${UFS_PLATFORM}"
+echo "UFS_COMPILER=${UFS_COMPILER}"
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
 
@@ -51,20 +42,20 @@ else
     platform="${UFS_PLATFORM}"
 fi
 
-if [[ ${platform} = derecho ]] ; then
-	export ACCNR=nral0032
-elif [[ ${platform} = jet ]] ; then
-	export ACCNR=hfv3gfs
-else
-	export ACCNR=epic
-fi
-echo "ACCNR=${ACCNR}"
+#if [[ ${platform} = derecho ]] ; then
+#	export ACCNR=nral0032
+#elif [[ ${platform} = jet ]] ; then
+#	export ACCNR=hfv3gfs
+#else
+#	export ACCNR=epic
+#fi
+echo "ACCNR=${ACCNR:=}"
 
 # Build
 cd ${workspace}
 pwd
 set +e
-echo "Pipeline Building Land-DA on ${UFS_PLATFORM} ${UFS_COMPILER} with Account=${ACCNR}."
+echo "Pipeline Building Land-DA on ${UFS_PLATFORM} ${UFS_COMPILER} with Account=${ACCNR:=}."
 /usr/bin/time -p \
 	-o ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-time-land_build.json \
 	-f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
@@ -72,11 +63,11 @@ echo "Pipeline Building Land-DA on ${UFS_PLATFORM} ${UFS_COMPILER} with Account=
 status=${PIPESTATUS[0]}
 cat sorc/build/log.ecbuild sorc/build/log.make >> ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-build-log.txt
 echo "Pipeline Completed Land-DA build on ${UFS_PLATFORM} ${UFS_COMPILER}. status=$status"
-git status
+git status -u
                                     
-ls -l sorc/build
+ls -l sorc/build/*
 
-build_exit=$?
+build_exit=$status
 echo "STAGE_NAME=${STAGE_NAME:=manual}"
 env | grep = | sort > ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-env.txt
 set -e

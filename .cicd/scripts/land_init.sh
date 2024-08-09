@@ -3,6 +3,10 @@
 # A unified init script for the Land-DA_workflow application. This script is expected to
 # fetch and dependent source for the Land-DA_workflow application for all supported platforms.
 #
+# Usage:
+#  UFS_PLATFORM=<platform> UFS_COMPILER=<compiler> [ BRANCH_NAME=<branch> ] .cicd/scripts/land_init.sh
+#  .cicd/scripts/land_init.sh <platform> <compiler> [ <branch> ]
+#
 pwd
 set +x
 echo "UFS_PLATFORM=${UFS_PLATFORM}"
@@ -15,6 +19,9 @@ echo "compiler=${compiler}"
 echo "workspace=${workspace}"
 
 set -e -u -x
+
+echo "UFS_PLATFORM=${UFS_PLATFORM}"
+echo "UFS_COMPILER=${UFS_COMPILER}"
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)"
 
@@ -39,21 +46,22 @@ fi
 cd ${workspace}
 pwd
 set +e
+
 rm -rf sorc/build
 
-(
-set -x
+git checkout ${BRANCH_NAME:=develop}
+status=${PIPESTATUS[0]}
+
 git branch
 git log -1 --oneline
-git status
-)
+git status -u
 
 /usr/bin/time -p \
 	-o ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-time-land_init.json \
 	-f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
 	find . -name .git -type d
 
-init_exit=$?
+init_exit=$status
 echo "STAGE_NAME=${STAGE_NAME:=manual}"
 env | grep = | sort > ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-env.txt
 set -e
