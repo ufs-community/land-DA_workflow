@@ -5,7 +5,6 @@ sorc/build/
 sorc/conda/
 sorc/lib/
 sorc/lib64
-sorc/test/out.*
 parm/conda_loc
 parm/*.xml
 parm/*.db
