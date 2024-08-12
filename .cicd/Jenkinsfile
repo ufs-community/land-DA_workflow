@@ -129,10 +129,13 @@ pipeline {
                                 cleanWs()
                                 checkout scm
                                 sh '''
-                                set -x
-                                pwd
-                                ls -al . .cicd/*
-                                ${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_init.sh ${UFS_PLATFORM} ${UFS_COMPILER}
+                                    echo "WORKSPACE=${WORKSPACE}"
+                                    echo "UFS_PLATFORM=${UFS_PLATFORM}"
+                                    echo "UFS_COMPILER=${UFS_COMPILER}"
+                                    set -x
+                                    pwd
+                                    ls -la . .cicd/*
+                                    ${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_init.sh ${UFS_PLATFORM} ${UFS_COMPILER}
                                 '''
                                 //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
                             }
@@ -155,12 +158,14 @@ pipeline {
                             dir ("${env.UFS_PLATFORM}") {
                                 echo "${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
                                 sh '''
-                                    pwd
                                     echo "WORKSPACE=${WORKSPACE}"
                                     echo "UFS_PLATFORM=${UFS_PLATFORM}"
                                     echo "UFS_COMPILER=${UFS_COMPILER}"
+                                    set -x
+                                    pwd
+                                    ls -la sorc/*
                                     ${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_build.sh ${UFS_PLATFORM} ${UFS_COMPILER}
-                                    ls -l sorc/build/bin/*.exe sorc/build/lib/*.so
+                                    ls -la sorc/build/bin/*.exe sorc/build/lib/*.so
                                 '''
                                 //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
                             }
