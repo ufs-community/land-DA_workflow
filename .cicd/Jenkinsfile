@@ -58,7 +58,7 @@ pipeline {
                     }
                     
                     //expression { env.UFS_PLATFORM != 'hera' }
-                    expression { env.UFS_PLATFORM != 'orion' }
+                    //expression { env.UFS_PLATFORM != 'orion' }
                     expression { env.UFS_PLATFORM != 'hercules' }
                     expression { env.UFS_PLATFORM != 'jet' }
                     expression { env.UFS_PLATFORM != 'gaea' }
@@ -123,23 +123,6 @@ pipeline {
 
                 stages {
                     // Clean and create the workspace , checkout the repository into ${env.UFS_PLATFORM}
-                    stage('Checkout scm') {
-                        steps {
-                                echo "${env.STAGE_NAME} WM (${env.UFS_COMPILER}) create environment on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
-                                //cleanWs()
-                                sh "env | egrep = | egrep -v ' ' | sort | tee ${env.UFS_PLATFORM}-${env.UFS_COMPILER}-build-env.txt | egrep '^HOST|^LOGNAME=|^USER=|^HOME=|^PATH=|^PWD=|^NODE|^WORKSPACE|^JOB|^BUILD|^BRANCH|^UFS'"
-                                sh '''
-                                    echo "checkout scm ${BRANCH_NAME} on ${UFS_PLATFORM}"
-                                    [[ ${BRANCH_NAME} =~ feature/cicd_ ]] && export REPO_PROJECT="BruceKropp-Raytheon"
-                                    rm -f ${UFS_PLATFORM}-${UFS_COMPILER}-time-*
-                                    /usr/bin/time -p \
-                                        -o ${UFS_PLATFORM}-${UFS_COMPILER}-time-da_scm.json \
-                                        -f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
-                                    echo "git clone --quiet --recurse-submodules https://github.com/${REPO_PROJECT}/land-DA_workflow.git -b ${BRANCH_NAME} ${UFS_PLATFORM}"
-                                '''
-                        }
-                    }
-
                     // In the workspace repository directory, run initialization
                     stage('Initialize') {
                         steps {
