@@ -19,6 +19,9 @@ elif [ "${MACHINE}" == "orion" ]; then
   module load contrib
   module load ruby/3.2.3
   module load rocoto/1.3.7
+elif [ "${MACHINE}" == "hercules" ]; then
+  module load contrib
+  module load rocoto
 else
   echo "FATAL ERROR: modules are not loaded"
 fi
