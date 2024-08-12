@@ -1,0 +1,254 @@
+pipeline {
+    agent none
+
+    options {
+        disableConcurrentBuilds()
+        overrideIndexTriggers(false)
+        skipDefaultCheckout(true)
+        timestamps()
+        timeout(time: 6, unit: 'HOURS')
+    }
+
+    parameters {
+        // Allow job runner to filter based on platform
+        choice(name: 'UFS_PLATFORM_FILTER', choices: ['all', 'hera', 'orion', 'hercules', 'jet', 'gaea', 'derecho', 'pclusternoaav2use1', 'azclusternoaav2use1', 'gclusternoaav2usc1'], description: 'Specify the platform(s) to use')
+        // Allow job runner to filter based on compiler
+        choice(name: 'UFS_COMPILER_FILTER', choices: ['all', 'gnu', 'intel'], description: 'Specify the compiler(s) to use to build')
+    }
+
+    stages {
+        stage('Launch SonarQube') {
+            steps {
+                        echo "SonarQube: ${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) build environment on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
+                /*
+                script {
+                    build job: '/land-DA_workflow/land-da-sonarqube', parameters: [
+                        string(name: 'BRANCH_NAME', value: env.CHANGE_BRANCH ?: 'develop'),
+                        string(name: 'FORK_NAME', value: env.CHANGE_FORK ?: '')
+                    ], wait: false
+                }
+                */
+            }
+        }
+
+        /*
+        stage('Check Nodes') {
+            steps {
+                script {
+                    build job: '/infrastructure/is_up', parameters: [string(name: 'NODE_CHOICE', value: 'pclusternoaav2use1'  ?: 'none')], wait: false
+                    build job: '/infrastructure/is_up', parameters: [string(name: 'NODE_CHOICE', value: 'azclusternoaav2use1' ?: 'none')], wait: false
+                    build job: '/infrastructure/is_up', parameters: [string(name: 'NODE_CHOICE', value: 'gclusternoaav2usc1'  ?: 'none')], wait: false
+                    sleep time: 120, unit: 'SECONDS'
+                }
+            }
+        }
+        */
+
+        // Build and test the Land-DA application on all supported platforms using the supported compilers for each platform
+        stage('Build and Test') {
+            matrix {
+                // Run on all platform/compiler combinations by default or build and test only on the platform(s) and
+                // compiler(s) specified by UFS_PLATFORM_FILTER and UFS_COMPILER_FILTER
+                when {
+                    beforeAgent true
+                    expression {
+                        return nodesByLabel(env.UFS_PLATFORM).size() > 0
+                    }
+                    
+                    //expression { env.UFS_PLATFORM != 'hera' }
+                    expression { env.UFS_PLATFORM != 'orion' }
+                    expression { env.UFS_PLATFORM != 'hercules' }
+                    expression { env.UFS_PLATFORM != 'jet' }
+                    expression { env.UFS_PLATFORM != 'gaea' }
+                    expression { env.UFS_PLATFORM != 'derecho' }
+                    expression { env.UFS_PLATFORM != 'pclusternoaav2use1'}
+                    expression { env.UFS_PLATFORM != 'azclusternoaav2use1'}
+                    expression { env.UFS_PLATFORM != 'gclusternoaav2usc1' }
+
+                    allOf {
+                        anyOf {
+                            expression { params.UFS_PLATFORM_FILTER == 'all' }
+                            expression { params.UFS_PLATFORM_FILTER == env.UFS_PLATFORM }
+                        }
+
+                        anyOf {
+                            expression { params.UFS_COMPILER_FILTER == 'all' }
+                            expression { params.UFS_COMPILER_FILTER == env.UFS_COMPILER }
+                        }
+                    }
+                }
+
+                axes {
+                    axis {
+                        name 'UFS_PLATFORM'
+                        values 'hera', 'orion', 'hercules', 'jet', 'gaea', 'derecho' , 'pclusternoaav2use1', 'azclusternoaav2use1', 'gclusternoaav2usc1'
+                    }
+
+                    axis {
+                        name 'UFS_COMPILER'
+                        values 'gnu', 'intel'
+                    }
+                }
+
+                excludes {
+                    // Exclude GNU from platforms that don't support it
+                    exclude {
+                            axis {
+                            name 'UFS_PLATFORM'
+                            values 'hera', 'orion', 'hercules', 'jet', 'gaea', 'derecho', 'pclusternoaav2use1', 'azclusternoaav2use1', 'gclusternoaav2usc1'
+                        }
+
+                        axis {
+                            name 'UFS_COMPILER'
+                            values 'gnu'
+                        }
+                    }
+                }
+
+                agent {
+                    label env.UFS_PLATFORM
+                }
+
+                environment {
+                    REPO_PROJECT="ufs-community"
+                    BRANCH_NAME_ESCAPED = env.BRANCH_NAME.replace('/', '_')
+                    BUILD_VERSION = "${env.UFS_PLATFORM}-${env.UFS_COMPILER}-${env.BRANCH_NAME_ESCAPED}-${env.BUILD_NUMBER}"
+                    BUILD_NAME = "land-DA_workflow_${env.BUILD_VERSION}"
+                    INSTALL_NAME = "install_${env.UFS_COMPILER}"
+                    ACCNR = "epic"
+                    CMAKE_FLAGS = "-DAPP=ATM -DCCPP_SUITES=FV3_GFS_v16"
+                }
+
+                stages {
+                    // Clean and create the workspace , checkout the repository into ${env.UFS_PLATFORM}
+                    stage('Checkout scm') {
+                        steps {
+                                echo "${env.STAGE_NAME} WM (${env.UFS_COMPILER}) create environment on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
+                                cleanWs()
+                                sh "env | egrep = | egrep -v ' ' | sort | tee ${env.UFS_PLATFORM}-${env.UFS_COMPILER}-build-env.txt | egrep '^HOST|^LOGNAME=|^USER=|^HOME=|^PATH=|^PWD=|^NODE|^WORKSPACE|^JOB|^BUILD|^BRANCH|^UFS'"
+                                sh '''
+                                    echo "checkout scm ${BRANCH_NAME} on ${UFS_PLATFORM}"
+                                    [[ ${BRANCH_NAME} =~ feature/cicd_ ]] && export REPO_PROJECT="BruceKropp-Raytheon"
+                                    rm -f ${UFS_PLATFORM}-${UFS_COMPILER}-time-*
+                                    /usr/bin/time -p \
+                                        -o ${UFS_PLATFORM}-${UFS_COMPILER}-time-da_scm.json \
+                                        -f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
+                                    git clone --quiet --recurse-submodules https://github.com/${REPO_PROJECT}/land-DA_workflow.git -b ${BRANCH_NAME} ${UFS_PLATFORM}
+                                '''
+                        }
+                    }
+
+                    // In the workspace repository directory, run initialization
+                    stage('Initialize') {
+                        steps {
+                            dir ("${env.UFS_PLATFORM}") {
+                                echo "${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) build environment on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
+                                sh '''
+                                    pwd
+                                    echo "NODE_NAME=${NODE_NAME}"
+                                    echo "UFS_PLATFORM=${UFS_PLATFORM}"
+                                    .cicd/scripts/land_init.sh ${UFS_PLATFORM} ${UFS_COMPILER}
+                                '''
+                                //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
+                            }
+                        }
+
+                        post {
+                            always {
+                                echo "#### Initialize COMPLETE."
+                            }
+                        }
+                    }
+
+                    // Run the build script; if successful create a tarball of the build and upload to S3
+                    stage('Build') {
+                        options {
+                            timeout(time: 4, unit: 'HOURS')
+                        }
+
+                        steps {
+                            dir ("${env.UFS_PLATFORM}") {
+                                echo "${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
+                                sh '''
+                                    pwd
+                                    echo "UFS_PLATFORM=${UFS_PLATFORM}"
+                                    echo "UFS_COMPILER=${UFS_COMPILER}"
+                                    .cicd/scripts/land_build.sh ${UFS_PLATFORM} ${UFS_COMPILER}
+                                    ls -l sorc/build/bin/*.exe sorc/build/lib/*.so
+                                '''
+                                //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
+                            }
+                        }
+
+                        post {
+                            success {
+                                echo "#### Build SUCCESS."
+                            }
+                            always {
+                                echo "#### Build COMPLETE."
+                            }
+                        }
+                    }
+
+                    // Run the test script
+                    stage('Test') {
+                        // when { not { expression { return env.UFS_PLATFORM == jet }}}
+                        options {
+                            timeout(time: 4, unit: 'HOURS')
+                        }
+
+                        environment {
+                            EXPERIMENT_BASE_DIR = "${env.WORKSPACE}/${env.UFS_PLATFORM}/tests"
+                        }
+
+                        steps {
+                            dir ("${env.UFS_PLATFORM}") {
+                                echo "${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
+
+                                script {
+                                    def run_tests = params.LAND_DA_RUN_TESTS
+                                sh '''
+                                    pwd
+                                    echo "UFS_PLATFORM=<${UFS_PLATFORM}>"
+                                    echo "UFS_COMPILER=<${UFS_COMPILER}>"
+                                    .cicd/scripts/land_test.sh ${UFS_PLATFORM} ${UFS_COMPILER} ${LAND_DA_RUN_TESTS}
+                                    status=$?
+                                    [[ $status = 0 ]]
+                                '''
+                                //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
+                                }
+                            }
+                        }
+
+                        post {
+                            success {
+                                echo "#### Test SUCCESS."
+                            }
+                            always {
+                                echo "#### Test COMPLETE."
+                            }
+                        }
+                    }
+                } // stages
+            } // matrix
+        } // stage
+    } // stages
+
+    post {
+        always {
+            script {
+                // Trigger another job to collect all build statistics
+                CI_JOB_NAME=env.JOB_NAME.replace("/${env.BRANCH_NAME}","")
+                CI_BRANCH_NAME=env.BRANCH_NAME.replace("%2F","%252F")
+                echo "post: Triggering ufs-weather-model/ufs-wm-metrics job for ${CI_JOB_NAME} on branch build ${CI_BRANCH_NAME}/${env.BUILD_NUMBER} ..."
+                /*
+                build job: '/ufs-srweather-app/ufs-srw-metrics', parameters: [
+                        string(name: 'CI_JOB_NAME', value: "${CI_JOB_NAME}"),
+                        string(name: 'CI_BUILD_NUMBER', value: "${CI_BRANCH_NAME}/${env.BUILD_NUMBER}")
+                ], wait: false
+                */
+                echo "#### post: ufs-weather-model/ufs-wm-metrics COMPLETE."
+            }
+        }
+    }
+} // pipeline
