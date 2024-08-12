@@ -15,7 +15,7 @@ pipeline {
         // Allow job runner to filter based on compiler
         choice(name: 'UFS_COMPILER_FILTER', choices: ['all', 'gnu', 'intel'], description: 'Specify the compiler(s) to use to build')
         // Run tests ?
-        booleanParam name: 'LAND_DA_RUN_TESTS', defaultValue: true, description: 'Whether to execute the tests'
+        // booleanParam name: 'LAND_DA_RUN_TESTS', defaultValue: true, description: 'Whether to execute the tests'
     }
 
     stages {
@@ -119,7 +119,7 @@ pipeline {
                     INSTALL_NAME = "install_${env.UFS_COMPILER}"
                     ACCNR = "epic"
                     CMAKE_FLAGS = "-DAPP=ATM -DCCPP_SUITES=FV3_GFS_v16"
-                    LAND_DA_RUN_TESTS = "${params.LAND_DA_RUN_TESTS}"
+                    LAND_DA_RUN_TESTS = true
                 }
 
                 stages {
