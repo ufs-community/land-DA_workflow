@@ -18,17 +18,19 @@ HP=${PTIME:8:2}
 OBSDIR="${OBSDIR:-${FIXlandda}/DA}"
 for obs in "${OBS_TYPES[@]}"; do
   # get the obs file name
-  if [ ${obs} == "GTS" ]; then
+  if [ "${obs}" == "GTS" ]; then
     OBSDIR_SUBDIR="${OBSDIR_SUBDIR:-snow_depth/GTS/data_proc}"
     obsfile="${OBSDIR}/${OBSDIR_SUBDIR}/${YYYY}${MM}/adpsfc_snow_${YYYY}${MM}${DD}${HH}.nc4"
+  elif [ "${obs}" == "GHCN" ]; then
     # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, so that
     # obs are within DA window.
-  elif [ $ATMOS_FORC == "era5" ] && [ ${obs} == "GHCN" ]; then
-    OBSDIR_SUBDIR="${OBSDIR_SUBDIR:-snow_depth/GHCN/data_proc/v3}"
-    obsfile="${OBSDIR}/${OBSDIR_SUBDIR}/${YYYY}/ghcn_snwd_ioda_${YYYP}${MP}${DP}_jediv7.nc"
-  elif [ $ATMOS_FORC == "gswp3" ] && [ ${obs} == "GHCN" ]; then
-    OBSDIR_SUBDIR="${OBSDIR_SUBDIR:-snow_depth/GHCN/data_proc/v3}"
-    obsfile="${OBSDIR}/${OBSDIR_SUBDIR}/${YYYY}/ghcn_snwd_ioda_${YYYP}${MP}${DP}.nc"
+    if [ "${ATMOS_FORC}" == "era5" ]; then
+      OBSDIR_SUBDIR="${OBSDIR_SUBDIR:-snow_depth/GHCN/data_proc/v3}"
+      obsfile="${OBSDIR}/${OBSDIR_SUBDIR}/${YYYY}/ghcn_snwd_ioda_${YYYP}${MP}${DP}_jediv7.nc"
+    elif [ "${ATMOS_FORC}" == "gswp3" ]; then
+      OBSDIR_SUBDIR="${OBSDIR_SUBDIR:-snow_depth/GHCN/data_proc/v3}"
+      obsfile="${OBSDIR}/${OBSDIR_SUBDIR}/${YYYY}/ghcn_snwd_ioda_${YYYP}${MP}${DP}.nc"
+    fi
   elif [ ${obs} == "SYNTH" ]; then
     OBSDIR_SUBDIR="${OBSDIR_SUBDIR:-synthetic_noahmp}"
     obsfile="${OBSDIR}/${OBSDIR_SUBDIR}/IODA.synthetic_gswp_obs.${YYYY}${MM}${DD}${HH}.nc"

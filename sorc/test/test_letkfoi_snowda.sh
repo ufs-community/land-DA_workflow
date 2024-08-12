@@ -10,7 +10,7 @@ source ${project_source_dir}/test/runtime_vars.sh ${project_binary_dir} ${projec
 
 # set extra paths
 OROG_PATH=$TPATH
-OBSDIR=${FIXlandda}/DA/
+OBSDIR="${FIXlandda}/DA"
 
 # set executables
 JEDI_EXEC=${JEDI_EXEC:-$JEDI_EXECDIR/fv3jedi_letkf.x}
@@ -31,21 +31,21 @@ done
 cp $project_source_dir/../parm/jedi/${DAtype}.yaml letkf_land.yaml
 for ii in "${!OBS_TYPES[@]}";
 do
-    echo "============================= ${OBS_TYPES[$ii]}" 
-    cat $project_source_dir/../parm/jedi/${OBS_TYPES[$ii]}.yaml >> letkf_land.yaml
+  echo "============================= ${OBS_TYPES[$ii]}" 
+  cat $project_source_dir/../parm/jedi/${OBS_TYPES[$ii]}.yaml >> letkf_land.yaml
 
-    # link ioda obs file
-    # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, so that
-    # obs are within DA window.
-    [[ -e ${OBS_TYPES[$ii]}_${YY}${MP}${DP}${HP}.nc ]] && rm ${OBS_TYPES[$ii]}_${YY}${MP}${DP}${HP}.nc
-    obs_file=${OBSDIR}/snow_depth/${OBS_TYPES[$ii]}/data_proc/v3/${YY}/${OBS_TYPES[$ii],,}_snwd_ioda_${YY}${MP}${DP}_jediv7.nc
-    if [[ -e $obs_file ]]; then
-      echo "${OBS_TYPES[$ii]} observations found: $obs_file"
-    else
-      echo "${OBS_TYPES[$ii]} observations not found: $obs_file"
-    fi
-    ln -fs $obs_file ./${OBS_TYPES[$ii]}_${YY}${MM}${DD}${HH}.nc 
-
+  # link ioda obs file
+  # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, so that
+  # obs are within DA window.
+  [[ -e ${OBS_TYPES[$ii]}_${YY}${MP}${DP}${HP}.nc ]] && rm ${OBS_TYPES[$ii]}_${YY}${MP}${DP}${HP}.nc
+  obs_file=${OBSDIR}/snow_depth/${OBS_TYPES[$ii]}/data_proc/v3/${YY}/${OBS_TYPES[$ii],,}_snwd_ioda_${YY}${MP}${DP}.nc
+  if [[ -e $obs_file ]]; then
+    echo "${OBS_TYPES[$ii]} observations found: $obs_file"
+  else
+    echo "${OBS_TYPES[$ii]} observations not found: $obs_file"
+    exit 11
+  fi
+  ln -fs $obs_file ./${OBS_TYPES[$ii]}_${YY}${MM}${DD}${HH}.nc 
 done
 
 sed -i -e "s/XXYYYY/${YY}/g" letkf_land.yaml
