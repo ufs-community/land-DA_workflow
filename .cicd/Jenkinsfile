@@ -15,7 +15,7 @@ pipeline {
         // Allow job runner to filter based on compiler
         choice(name: 'UFS_COMPILER_FILTER', choices: ['all', 'gnu', 'intel'], description: 'Specify the compiler(s) to use to build')
         // Run tests ?
-        booleanParam name: 'LAND_DA_RUN_TESTS', defaultValue: false, description: 'Whether to execute the tests'
+        booleanParam name: 'LAND_DA_RUN_TESTS', defaultValue: true, description: 'Whether to execute the tests'
     }
 
     stages {
@@ -59,7 +59,7 @@ pipeline {
                     
                     //expression { env.UFS_PLATFORM != 'hera' }
                     //expression { env.UFS_PLATFORM != 'orion' }
-                    expression { env.UFS_PLATFORM != 'hercules' }
+                    //expression { env.UFS_PLATFORM != 'hercules' }
                     expression { env.UFS_PLATFORM != 'jet' }
                     expression { env.UFS_PLATFORM != 'gaea' }
                     expression { env.UFS_PLATFORM != 'derecho' }
@@ -131,12 +131,6 @@ pipeline {
                                 cleanWs()
                                 checkout scm
                                 sh '''
-                                    echo "WORKSPACE=${WORKSPACE}"
-                                    echo "UFS_PLATFORM=${UFS_PLATFORM}"
-                                    echo "UFS_COMPILER=${UFS_COMPILER}"
-                                    set -x
-                                    pwd
-                                    ls -la . .cicd/*
                                     ${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_init.sh ${UFS_PLATFORM} ${UFS_COMPILER}
                                 '''
                                 //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
@@ -191,7 +185,7 @@ pipeline {
                         }
 
                         environment {
-                            EXPERIMENT_BASE_DIR = "${env.WORKSPACE}/${env.UFS_PLATFORM}/tests"
+                            LAND_DA_RUN_TESTS = params.LAND_DA_RUN_TESTS
                         }
 
                         steps {
@@ -205,7 +199,8 @@ pipeline {
                                     echo "WORKSPACE=${WORKSPACE}"
                                     echo "UFS_PLATFORM=<${UFS_PLATFORM}>"
                                     echo "UFS_COMPILER=<${UFS_COMPILER}>"
-                                    echo "LAND_DA_RUN_TESTS=<${run_tests}>"
+                                    echo "LAND_DA_RUN_TESTS=<${LAND_DA_RUN_TESTS}>"
+                                    echo "run_tests=<${run_tests}>"
                                     ${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_test.sh ${UFS_PLATFORM} ${UFS_COMPILER} ${run_tests}
                                     status=$?
                                     [[ $status = 0 ]]
