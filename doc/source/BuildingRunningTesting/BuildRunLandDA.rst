@@ -77,8 +77,6 @@ Build the Land DA System
    Additionally, the ``exec`` directory will contain the following executables: 
 
       * ``apply_incr.exe``
-      * ``ufsLand.exe``
-      * ``vector2tile_converter.exe``
       * ``tile2tile_converter.exe``
       * ``ufs_model``
 
