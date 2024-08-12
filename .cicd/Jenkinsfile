@@ -126,9 +126,14 @@ pipeline {
                         steps {
                             dir ("${env.UFS_PLATFORM}") {
                                 echo "${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) build environment on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
-                                //cleanWs()
+                                cleanWs()
                                 checkout scm
-                                sh '"${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_init.sh ${UFS_PLATFORM} ${UFS_COMPILER}"'
+                                sh '''
+                                set -x
+                                pwd
+                                ls -al . .cicd/*
+                                ${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_init.sh ${UFS_PLATFORM} ${UFS_COMPILER}
+                                '''
                                 //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
                             }
                         }
