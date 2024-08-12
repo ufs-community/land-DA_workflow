@@ -200,7 +200,7 @@ Each Land DA experiment includes multiple tasks that must be run in order to sat
    * - JLANDDA_FORECAST
      - Runs the forecast model
 
-Users may run these tasks :ref:`using the Rocoto workflow manager <run-w-rocoto>` or :ref:`using a batch script <run-batch-script>`. 
+Users may run these tasks :ref:`using the Rocoto workflow manager <run-w-rocoto>`. 
 
 .. _run-w-rocoto:
 
