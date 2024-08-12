@@ -14,6 +14,8 @@ pipeline {
         choice(name: 'UFS_PLATFORM_FILTER', choices: ['all', 'hera', 'orion', 'hercules', 'jet', 'gaea', 'derecho', 'pclusternoaav2use1', 'azclusternoaav2use1', 'gclusternoaav2usc1'], description: 'Specify the platform(s) to use')
         // Allow job runner to filter based on compiler
         choice(name: 'UFS_COMPILER_FILTER', choices: ['all', 'gnu', 'intel'], description: 'Specify the compiler(s) to use to build')
+        // Run tests ?
+        booleanParam name: 'LAND_DA_RUN_TESTS', defaultValue: true, description: 'Whether to execute the tests'
     }
 
     stages {
