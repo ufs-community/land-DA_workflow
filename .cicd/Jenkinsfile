@@ -113,12 +113,13 @@ pipeline {
 
                 environment {
                     REPO_PROJECT="ufs-community"
-                    // BRANCH_NAME_ESCAPED = env.BRANCH_NAME.replace('/', '_')
-                    // BUILD_VERSION = "${env.UFS_PLATFORM}-${env.UFS_COMPILER}-${env.BRANCH_NAME_ESCAPED}-${env.BUILD_NUMBER}"
-                    // BUILD_NAME = "land-DA_workflow_${env.BUILD_VERSION}"
-                    // INSTALL_NAME = "install_${env.UFS_COMPILER}"
+                    BRANCH_NAME_ESCAPED = env.BRANCH_NAME.replace('/', '_')
+                    BUILD_VERSION = "${env.UFS_PLATFORM}-${env.UFS_COMPILER}-${env.BRANCH_NAME_ESCAPED}-${env.BUILD_NUMBER}"
+                    BUILD_NAME = "land-DA_workflow_${env.BUILD_VERSION}"
+                    INSTALL_NAME = "install_${env.UFS_COMPILER}"
                     ACCNR = "epic"
                     CMAKE_FLAGS = "-DAPP=ATM -DCCPP_SUITES=FV3_GFS_v16"
+                    LAND_DA_RUN_TESTS = "${params.LAND_DA_RUN_TESTS}"
                 }
 
                 stages {
@@ -222,6 +223,7 @@ pipeline {
                                     echo "WORKSPACE=${WORKSPACE}"
                                     echo "UFS_PLATFORM=<${UFS_PLATFORM}>"
                                     echo "UFS_COMPILER=<${UFS_COMPILER}>"
+                                    echo "LAND_DA_RUN_TESTS=<${LAND_DA_RUN_TESTS}>"
                                     ${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_test.sh ${UFS_PLATFORM} ${UFS_COMPILER} ${LAND_DA_RUN_TESTS}
                                     status=$?
                                     [[ $status = 0 ]]
