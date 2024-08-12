@@ -72,12 +72,13 @@ echo "ACCNR=${ACCNR}"
 # Test
 cd ${workspace}
 pwd
-ls -l sorc/build/*
+ls -l sorc/build/bin/*.exe sorc/build/lib/*.so
 set +e
-
 
 git branch
 git log -1 --oneline
+
+status=0
 
 if [[ true = ${LAND_DA_RUN_TESTS:=false} ]] ; then
                                         
