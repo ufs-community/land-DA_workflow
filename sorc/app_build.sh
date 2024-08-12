@@ -387,7 +387,7 @@ fi
 # Link land-DA input files to FIXlandda directory
 if [ "${PLATFORM}" = "hera" ]; then
   landda_fix_orig="/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs"
-elif [ "${PLATFORM}" = "orion" ]; then
+elif [ "${PLATFORM}" = "orion" ] || [ "${PLATFORM}" = "hercules" ]; then
   landda_fix_orig="/work/noaa/epic/UFS_Land-DA_Dev/inputs"
 fi
 ln -nsf ${landda_fix_orig}/* ${HOME_DIR}/fix
