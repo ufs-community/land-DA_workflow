@@ -111,10 +111,10 @@ pipeline {
 
                 environment {
                     REPO_PROJECT="ufs-community"
-                    BRANCH_NAME_ESCAPED = env.BRANCH_NAME.replace('/', '_')
-                    BUILD_VERSION = "${env.UFS_PLATFORM}-${env.UFS_COMPILER}-${env.BRANCH_NAME_ESCAPED}-${env.BUILD_NUMBER}"
-                    BUILD_NAME = "land-DA_workflow_${env.BUILD_VERSION}"
-                    INSTALL_NAME = "install_${env.UFS_COMPILER}"
+                    // BRANCH_NAME_ESCAPED = env.BRANCH_NAME.replace('/', '_')
+                    // BUILD_VERSION = "${env.UFS_PLATFORM}-${env.UFS_COMPILER}-${env.BRANCH_NAME_ESCAPED}-${env.BUILD_NUMBER}"
+                    // BUILD_NAME = "land-DA_workflow_${env.BUILD_VERSION}"
+                    // INSTALL_NAME = "install_${env.UFS_COMPILER}"
                     ACCNR = "epic"
                     CMAKE_FLAGS = "-DAPP=ATM -DCCPP_SUITES=FV3_GFS_v16"
                 }
