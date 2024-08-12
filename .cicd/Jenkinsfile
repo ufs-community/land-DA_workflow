@@ -132,11 +132,11 @@ pipeline {
                                 sh '''
                                     echo "checkout scm ${BRANCH_NAME} on ${UFS_PLATFORM}"
                                     [[ ${BRANCH_NAME} =~ feature/cicd_ ]] && export REPO_PROJECT="BruceKropp-Raytheon"
-                                    #rm -f ${UFS_PLATFORM}-${UFS_COMPILER}-time-*
-                                    #/usr/bin/time -p \
-                                    #    -o ${UFS_PLATFORM}-${UFS_COMPILER}-time-da_scm.json \
-                                    #    -f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
-                                    #git clone --quiet --recurse-submodules https://github.com/${REPO_PROJECT}/land-DA_workflow.git -b ${BRANCH_NAME} ${UFS_PLATFORM}
+                                    rm -f ${UFS_PLATFORM}-${UFS_COMPILER}-time-*
+                                    /usr/bin/time -p \
+                                        -o ${UFS_PLATFORM}-${UFS_COMPILER}-time-da_scm.json \
+                                        -f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
+                                    echo "git clone --quiet --recurse-submodules https://github.com/${REPO_PROJECT}/land-DA_workflow.git -b ${BRANCH_NAME} ${UFS_PLATFORM}"
                                 '''
                         }
                     }
