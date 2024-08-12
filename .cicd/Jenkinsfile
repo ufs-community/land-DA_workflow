@@ -112,7 +112,7 @@ pipeline {
                 }
 
                 environment {
-                    REPO_PROJECT="ufs-community"
+                    REPO_PROJECT = "ufs-community"
                     BRANCH_NAME_ESCAPED = env.BRANCH_NAME.replace('/', '_')
                     BUILD_VERSION = "${env.UFS_PLATFORM}-${env.UFS_COMPILER}-${env.BRANCH_NAME_ESCAPED}-${env.BUILD_NUMBER}"
                     BUILD_NAME = "land-DA_workflow_${env.BUILD_VERSION}"
@@ -185,7 +185,7 @@ pipeline {
                         }
 
                         environment {
-                            LAND_DA_RUN_TESTS = params.LAND_DA_RUN_TESTS
+                            LAND_DA_RUN_TESTS = "${params.LAND_DA_RUN_TESTS}"
                         }
 
                         steps {
