@@ -121,34 +121,14 @@ pipeline {
 
                 stages {
                     // Clean and create the workspace , checkout the repository into ${env.UFS_PLATFORM}
-                    stage('Checkout scm') {
-                        steps {
-                                echo "${env.STAGE_NAME} WM (${env.UFS_COMPILER}) create environment on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
-                                cleanWs()
-                                sh "env | egrep = | egrep -v ' ' | sort | tee ${env.UFS_PLATFORM}-${env.UFS_COMPILER}-build-env.txt | egrep '^HOST|^LOGNAME=|^USER=|^HOME=|^PATH=|^PWD=|^NODE|^WORKSPACE|^JOB|^BUILD|^BRANCH|^UFS'"
-                                sh '''
-                                    echo "checkout scm ${BRANCH_NAME} on ${UFS_PLATFORM}"
-                                    [[ ${BRANCH_NAME} =~ feature/cicd_ ]] && export REPO_PROJECT="BruceKropp-Raytheon"
-                                    rm -f ${UFS_PLATFORM}-${UFS_COMPILER}-time-*
-                                    /usr/bin/time -p \
-                                        -o ${UFS_PLATFORM}-${UFS_COMPILER}-time-da_scm.json \
-                                        -f '{\n  "cpu": "%P"\n, "memMax": "%M"\n, "mem": {"text": "%X", "data": "%D", "swaps": "%W", "context": "%c", "waits": "%w"}\n, "pagefaults": {"major": "%F", "minor": "%R"}\n, "filesystem": {"inputs": "%I", "outputs": "%O"}\n, "time": {"real": "%e", "user": "%U", "sys": "%S"}\n}' \
-                                    git clone --quiet --recurse-submodules https://github.com/${REPO_PROJECT}/land-DA_workflow.git -b ${BRANCH_NAME} ${UFS_PLATFORM}
-                                '''
-                        }
-                    }
-
                     // In the workspace repository directory, run initialization
                     stage('Initialize') {
                         steps {
                             dir ("${env.UFS_PLATFORM}") {
                                 echo "${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) build environment on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
-                                sh '''
-                                    pwd
-                                    echo "NODE_NAME=${NODE_NAME}"
-                                    echo "UFS_PLATFORM=${UFS_PLATFORM}"
-                                    .cicd/scripts/land_init.sh ${UFS_PLATFORM} ${UFS_COMPILER}
-                                '''
+                                cleanWs()
+                                checkout scm
+                                sh '"${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_init.sh ${UFS_PLATFORM} ${UFS_COMPILER}"'
                                 //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
                             }
                         }
@@ -171,9 +151,10 @@ pipeline {
                                 echo "${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
                                 sh '''
                                     pwd
+                                    echo "WORKSPACE=${WORKSPACE}"
                                     echo "UFS_PLATFORM=${UFS_PLATFORM}"
                                     echo "UFS_COMPILER=${UFS_COMPILER}"
-                                    .cicd/scripts/land_build.sh ${UFS_PLATFORM} ${UFS_COMPILER}
+                                    ${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_build.sh ${UFS_PLATFORM} ${UFS_COMPILER}
                                     ls -l sorc/build/bin/*.exe sorc/build/lib/*.so
                                 '''
                                 //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
@@ -209,9 +190,10 @@ pipeline {
                                     def run_tests = params.LAND_DA_RUN_TESTS
                                 sh '''
                                     pwd
+                                    echo "WORKSPACE=${WORKSPACE}"
                                     echo "UFS_PLATFORM=<${UFS_PLATFORM}>"
                                     echo "UFS_COMPILER=<${UFS_COMPILER}>"
-                                    .cicd/scripts/land_test.sh ${UFS_PLATFORM} ${UFS_COMPILER} ${LAND_DA_RUN_TESTS}
+                                    ${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_test.sh ${UFS_PLATFORM} ${UFS_COMPILER} ${LAND_DA_RUN_TESTS}
                                     status=$?
                                     [[ $status = 0 ]]
                                 '''
