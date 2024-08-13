@@ -60,19 +60,18 @@ else
     platform="${UFS_PLATFORM}"
 fi
 
-if [[ ${platform} = derecho ]] ; then
-	export ACCNR=nral0032
-elif [[ ${platform} = jet ]] ; then
-	export ACCNR=hfv3gfs
-else
-	export ACCNR=epic
-fi
+#if [[ ${platform} = derecho ]] ; then
+#	export ACCNR=nral0032
+#elif [[ ${platform} = jet ]] ; then
+#	export ACCNR=hfv3gfs
+#else
+#	export ACCNR=epic
+#fi
 echo "ACCNR=${ACCNR}"
 
 # Test
 cd ${workspace}
 pwd
-ls -l sorc/build/bin/*.exe sorc/build/lib/*.so
 set +e
 
 git branch

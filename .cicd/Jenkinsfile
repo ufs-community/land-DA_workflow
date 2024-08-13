@@ -131,8 +131,14 @@ pipeline {
                                 cleanWs()
                                 checkout scm
                                 sh '''
-                                    ${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_init.sh ${UFS_PLATFORM} ${UFS_COMPILER}
+                                    echo "WORKSPACE=${WORKSPACE}"
+                                    echo "UFS_PLATFORM=${UFS_PLATFORM}"
+                                    echo "UFS_COMPILER=${UFS_COMPILER}"
+                                    set -x
+                                    pwd
+                                    echo "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_init.sh ${UFS_PLATFORM} ${UFS_COMPILER}"
                                 '''
+                                sh 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_init.sh"'
                                 //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
                             }
                         }
