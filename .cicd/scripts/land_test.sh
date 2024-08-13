@@ -60,13 +60,6 @@ else
     platform="${UFS_PLATFORM}"
 fi
 
-#if [[ ${platform} = derecho ]] ; then
-#	export ACCNR=nral0032
-#elif [[ ${platform} = jet ]] ; then
-#	export ACCNR=hfv3gfs
-#else
-#	export ACCNR=epic
-#fi
 echo "ACCNR=${ACCNR}"
 
 # Test

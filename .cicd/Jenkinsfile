@@ -151,16 +151,6 @@ pipeline {
                         steps {
                             dir ("${env.UFS_PLATFORM}") {
                                 echo "${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
-                                sh '''
-                                    echo "WORKSPACE=${WORKSPACE}"
-                                    echo "UFS_PLATFORM=${UFS_PLATFORM}"
-                                    echo "UFS_COMPILER=${UFS_COMPILER}"
-                                    set -x
-                                    pwd
-                                    ls -la sorc/*
-                                    echo "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_build.sh ${UFS_PLATFORM} ${UFS_COMPILER}"
-                                    echo "ls -la sorc/build/bin/*.exe sorc/build/lib/*.so"
-                                '''
                                 sh 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_build.sh"'
                                 //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
                             }
@@ -189,24 +179,9 @@ pipeline {
 
                         steps {
                             dir ("${env.UFS_PLATFORM}") {
-                                echo "${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
-
-                                script {
-                                    def run_tests = params.LAND_DA_RUN_TESTS
-                                sh '''
-                                    pwd
-                                    echo "WORKSPACE=${WORKSPACE}"
-                                    echo "UFS_PLATFORM=<${UFS_PLATFORM}>"
-                                    echo "UFS_COMPILER=<${UFS_COMPILER}>"
-                                    echo "LAND_DA_RUN_TESTS=<${LAND_DA_RUN_TESTS}>"
-                                    echo "run_tests=<${run_tests}>"
-                                    echo "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_test.sh ${UFS_PLATFORM} ${UFS_COMPILER} ${run_tests}"
-                                    status=$?
-                                    [[ $status = 0 ]]
-                                '''
+                                echo "${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM}) ${env.LAND_DA_RUN_TESTS}"
                                 sh 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_test.sh"'
                                 //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
-                                }
                             }
                         }
 
