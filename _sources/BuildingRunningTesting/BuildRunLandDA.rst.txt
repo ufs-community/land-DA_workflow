@@ -1,8 +1,8 @@
 .. _BuildRunLandDA:
 
-************************************
-Land DA Workflow (Hera & Orion)
-************************************
+***************************************
+Land DA Workflow (Hera/Orion/Hercules)
+***************************************
 
 This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (:term:`UFS`) Land DA System using a Jan. 3-4, 2000 00z sample case using :term:`GSWP3` data with the UFS Noah-MP land component.
 
@@ -77,8 +77,6 @@ Build the Land DA System
    Additionally, the ``exec`` directory will contain the following executables: 
 
       * ``apply_incr.exe``
-      * ``ufsLand.exe``
-      * ``vector2tile_converter.exe``
       * ``tile2tile_converter.exe``
       * ``ufs_model``
 
@@ -138,15 +136,15 @@ Data
    
 .. _Level1Data:
 
-.. table:: Level 1 RDHPCS Data
+.. list-table:: Level 1 RDHPCS Data
+   :header-rows: 1
 
-   +-----------+--------------------------------------------------+
-   | Platform  | Data Location                                    |
-   +===========+==================================================+
-   | Hera      | /scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs     |
-   +-----------+--------------------------------------------------+
-   | Orion     | /work/noaa/epic/UFS_Land-DA_Dev/inputs           |
-   +-----------+--------------------------------------------------+
+   * - Platform
+     - Data Location
+   * - Hera
+     - /scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs
+   * - Hercules & Orion
+     - /work/noaa/epic/UFS_Land-DA_Dev/inputs
 
 Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetDataC>`. Its subdirectories are soft-linked to the ``fix`` directory of ``land-DA_workflow`` by the build script ``sorc/app_build.sh``.
 
@@ -316,7 +314,7 @@ where ``YYYYMMDD`` is the cycle date, and ``<model_ver>`` is the model version (
 Plotting Results
 -----------------
 
-Additionally, in the ``plot`` subdirectory, users will find images depicting the results of the ``analysis`` task for each cycle as a scatter plot (``hofx_oma_YYYMMDD_scatter.png``) and as a histogram (``hofx_oma_YYYYMMDD_histogram.png``). 
+Additionally, in the ``plot`` subdirectory, users will find images depicting the results of the ``analysis`` task for each cycle as a scatter plot (``hofx_oma_YYYYMMDD_scatter.png``) and as a histogram (``hofx_oma_YYYYMMDD_histogram.png``). 
 
 The scatter plot is named OBS-ANA (i.e., Observation Minus Analysis [OMA]), and it depicts a map of snow depth results. Blue points indicate locations where the observed values are less than the analysis values, and red points indicate locations where the observed values are greater than the analysis values. The title lists the mean and standard deviation of the absolute value of the OMA values. 
 

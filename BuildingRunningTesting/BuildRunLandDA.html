@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2.1. Land DA Workflow (Hera &amp; Orion) &mdash; UFS Offline Land DA User&#39;s Guide develop documentation</title>
+  <title>2.1. Land DA Workflow (Hera/Orion/Hercules) &mdash; UFS Offline Land DA User&#39;s Guide develop documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=044582d4" />
@@ -54,7 +54,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../BackgroundInfo/index.html">1. Background Information</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">2. Building, Running, and Testing the Land DA System</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">2.1. Land DA Workflow (Hera &amp; Orion)</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.1. Land DA Workflow (Hera/Orion/Hercules)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#create-a-working-directory">2.1.1. Create a Working Directory</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#get-code">2.1.2. Get Code</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#build-the-land-da-system">2.1.3. Build the Land DA System</a></li>
@@ -106,7 +106,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html"><span class="section-number">2. </span>Building, Running, and Testing the Land DA System</a></li>
-      <li class="breadcrumb-item active"><span class="section-number">2.1. </span>Land DA Workflow (Hera &amp; Orion)</li>
+      <li class="breadcrumb-item active"><span class="section-number">2.1. </span>Land DA Workflow (Hera/Orion/Hercules)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/BuildingRunningTesting/BuildRunLandDA.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -116,8 +116,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="land-da-workflow-hera-orion">
-<span id="buildrunlandda"></span><h1><span class="section-number">2.1. </span>Land DA Workflow (Hera &amp; Orion)<a class="headerlink" href="#land-da-workflow-hera-orion" title="Link to this heading"></a></h1>
+  <section id="land-da-workflow-hera-orion-hercules">
+<span id="buildrunlandda"></span><h1><span class="section-number">2.1. </span>Land DA Workflow (Hera/Orion/Hercules)<a class="headerlink" href="#land-da-workflow-hera-orion-hercules" title="Link to this heading"></a></h1>
 <p>This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (<a class="reference internal" href="../Reference/Glossary.html#term-UFS"><span class="xref std std-term">UFS</span></a>) Land DA System using a Jan. 3-4, 2000 00z sample case using <a class="reference internal" href="../Reference/Glossary.html#term-GSWP3"><span class="xref std std-term">GSWP3</span></a> data with the UFS Noah-MP land component.</p>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
@@ -170,8 +170,6 @@
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">apply_incr.exe</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ufsLand.exe</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">vector2tile_converter.exe</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">tile2tile_converter.exe</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ufs_model</span></code></p></li>
 </ul>
@@ -227,7 +225,7 @@
 <tr class="row-even"><td><p>Hera</p></td>
 <td><p>/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs</p></td>
 </tr>
-<tr class="row-odd"><td><p>Orion</p></td>
+<tr class="row-odd"><td><p>Hercules &amp; Orion</p></td>
 <td><p>/work/noaa/epic/UFS_Land-DA_Dev/inputs</p></td>
 </tr>
 </tbody>
@@ -367,7 +365,7 @@
 <p>where <code class="docutils literal notranslate"><span class="pre">YYYYMMDD</span></code> is the cycle date, and <code class="docutils literal notranslate"><span class="pre">&lt;model_ver&gt;</span></code> is the model version (currently <code class="docutils literal notranslate"><span class="pre">v1.2.1</span></code> in the <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch). The experiment should generate several restart files.</p>
 <section id="plotting-results">
 <span id="plotting"></span><h4><span class="section-number">2.1.5.3.1. </span>Plotting Results<a class="headerlink" href="#plotting-results" title="Link to this heading"></a></h4>
-<p>Additionally, in the <code class="docutils literal notranslate"><span class="pre">plot</span></code> subdirectory, users will find images depicting the results of the <code class="docutils literal notranslate"><span class="pre">analysis</span></code> task for each cycle as a scatter plot (<code class="docutils literal notranslate"><span class="pre">hofx_oma_YYYMMDD_scatter.png</span></code>) and as a histogram (<code class="docutils literal notranslate"><span class="pre">hofx_oma_YYYYMMDD_histogram.png</span></code>).</p>
+<p>Additionally, in the <code class="docutils literal notranslate"><span class="pre">plot</span></code> subdirectory, users will find images depicting the results of the <code class="docutils literal notranslate"><span class="pre">analysis</span></code> task for each cycle as a scatter plot (<code class="docutils literal notranslate"><span class="pre">hofx_oma_YYYYMMDD_scatter.png</span></code>) and as a histogram (<code class="docutils literal notranslate"><span class="pre">hofx_oma_YYYYMMDD_histogram.png</span></code>).</p>
 <p>The scatter plot is named OBS-ANA (i.e., Observation Minus Analysis [OMA]), and it depicts a map of snow depth results. Blue points indicate locations where the observed values are less than the analysis values, and red points indicate locations where the observed values are greater than the analysis values. The title lists the mean and standard deviation of the absolute value of the OMA values.</p>
 <p>The histogram plots OMA values on the x-axis and frequency density values on the y-axis. The title of the histogram lists the mean and standard deviation of the real value of the OMA values.</p>
 <span id="sample-plots"></span><table class="docutils align-default" id="id3">
