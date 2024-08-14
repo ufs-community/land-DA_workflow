@@ -21,7 +21,7 @@ pipeline {
     stages {
         stage('Launch SonarQube') {
             steps {
-                        echo "SonarQube: ${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) build environment on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
+                echo "SonarQube: ${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) build environment on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
                 /*
                 script {
                     build job: '/land-DA_workflow/land-da-sonarqube', parameters: [
@@ -131,13 +131,15 @@ pipeline {
                                 cleanWs()
                                 checkout scm
                                 sh 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_init.sh"'
-                                //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
+                                sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
                             }
                         }
 
                         post {
                             always {
                                 echo "#### Initialize COMPLETE."
+                                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.SRW_PLATFORM}-*-time-land_init.json", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
+                                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.SRW_PLATFORM}-*-disk-usage${env.STAGE_NAME}.csv", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
                             }
                         }
                     }
@@ -152,7 +154,7 @@ pipeline {
                             dir ("${env.UFS_PLATFORM}") {
                                 echo "${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
                                 sh 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_build.sh"'
-                                //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
+                                sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
                             }
                         }
 
@@ -162,6 +164,9 @@ pipeline {
                             }
                             always {
                                 echo "#### Build COMPLETE."
+                                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.SRW_PLATFORM}-*-env.txt", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
+                                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.SRW_PLATFORM}-*-time-land_build.json", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
+                                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.SRW_PLATFORM}-*-disk-usage${env.STAGE_NAME}.csv", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
                             }
                         }
                     }
@@ -181,16 +186,20 @@ pipeline {
                             dir ("${env.UFS_PLATFORM}") {
                                 echo "${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM}) ${env.LAND_DA_RUN_TESTS}"
                                 sh 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/land_test.sh"'
-                                //sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
+                                sh "STAGE_NAME=${env.STAGE_NAME} " + 'bash --login "${WORKSPACE}/${UFS_PLATFORM}/.cicd/scripts/disk_usage.sh"'
                             }
                         }
 
                         post {
                             success {
                                 echo "#### Test SUCCESS."
+                                // Archive the test log files
+                                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.SRW_PLATFORM}/*-test-log.txt", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
                             }
                             always {
                                 echo "#### Test COMPLETE."
+                                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.SRW_PLATFORM}-*-time-ufs_test.json", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
+                                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'noaa-epic-prod-jenkins-artifacts', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: true, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: "${env.SRW_PLATFORM}-*-disk-usage${env.STAGE_NAME}.csv", storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'main', userMetadata: []
                             }
                         }
                     }
