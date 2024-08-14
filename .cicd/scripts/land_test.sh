@@ -9,8 +9,8 @@
 #
 pwd
 set +x
-echo "UFS_PLATFORM=${UFS_PLATFORM}"
-echo "UFS_COMPILER=${UFS_COMPILER}"
+#echo "UFS_PLATFORM=${UFS_PLATFORM}"
+#echo "UFS_COMPILER=${UFS_COMPILER}"
 echo "LAND_DA_RUN_TESTS=${LAND_DA_RUN_TESTS}"
 [[ -n $1 ]] && export UFS_PLATFORM=${1} && export machine=${1,,} || export machine=${UFS_PLATFORM,,}
 [[ -n $2 ]] && export UFS_COMPILER=${2} && export compiler=${2} || export compiler=${UFS_COMPILER}

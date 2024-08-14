@@ -19,7 +19,7 @@ script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)
 # Get repository root from Jenkins WORKSPACE variable if set, otherwise, set
 # relative to script directory.
 declare workspace
-if [[ -n "${WORKSPACE}/${UFS_PLATFORM}" ]]; then
+if [[ -d "${WORKSPACE}/${UFS_PLATFORM}" ]]; then
     workspace="${WORKSPACE}/${UFS_PLATFORM}"
 else
     workspace="$(cd -- "${script_dir}/../.." && pwd)"

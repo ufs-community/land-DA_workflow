@@ -214,14 +214,14 @@ pipeline {
                 // Trigger another job to collect all build statistics
                 CI_JOB_NAME=env.JOB_NAME.replace("/${env.BRANCH_NAME}","")
                 CI_BRANCH_NAME=env.BRANCH_NAME.replace("%2F","%252F")
-                echo "post: Triggering ufs-weather-model/ufs-wm-metrics job for ${CI_JOB_NAME} on branch build ${CI_BRANCH_NAME}/${env.BUILD_NUMBER} ..."
+                echo "#### post: Triggering land-DA_workflow/ufs-land-metrics job for ${CI_JOB_NAME} on branch build ${CI_BRANCH_NAME}/${env.BUILD_NUMBER} ..."
                 /*
-                build job: '/ufs-srweather-app/ufs-srw-metrics', parameters: [
+                build job: '/land-DA_workflow/ufs-land-metrics', parameters: [
                         string(name: 'CI_JOB_NAME', value: "${CI_JOB_NAME}"),
                         string(name: 'CI_BUILD_NUMBER', value: "${CI_BRANCH_NAME}/${env.BUILD_NUMBER}")
                 ], wait: false
                 */
-                echo "#### post: ufs-weather-model/ufs-wm-metrics COMPLETE."
+                echo "#### post: land-DA_workflow/ufs-land-metrics COMPLETE."
             }
         }
     }
