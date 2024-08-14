@@ -11,9 +11,9 @@ copyright = '2023, '
 author = ' '
 
 # The short X.Y version
-version = 'v1.2'
+version = 'develop'
 # The full version, including alpha/beta/rc tags
-release = 'v1.2.0'
+release = 'develop'
 
 numfig = True
 
@@ -50,6 +50,8 @@ rst_prolog = """
 .. |latestr| replace:: v1.2.0
 .. |tag| replace:: ``ufs-land-da-v1.2.0``
 .. |branch| replace:: ``release/public-v1.2.0``
+.. |skylabv| replace:: Skylab v7.0
+.. |spack-stack-ver| replace:: v1.6.0
 """
 
 # -- Linkcheck options -------------------------------------------------
@@ -94,7 +96,7 @@ html_logo= "https://github.com/ufs-community/ufs/wiki/images/ufs-epic-logo.png"
 # further. 
 html_theme_options = {
     "body_max_width": "none", 
-    'navigation_depth': 6,
+    'navigation_depth': 8,
     }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -112,18 +114,22 @@ def setup(app):
 intersphinx_mapping = {
    'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0', None),
    'spack-stack': ('https://spack-stack.readthedocs.io/en/1.3.0/', None),
-   'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/develop/', None),
-   'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/', None),
 }
 
 # -- Options for extlinks extension ---------------------------------------
 
 extlinks_detect_hardcoded_links = True
-extlinks = {'github-docs': ('https://docs.github.com/en/%s', '%s'),
+extlinks = {'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
+            'github-docs': ('https://docs.github.com/en/%s', '%s'),
+            'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/%s', '%s'),
+            'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/7.0.0/%s', '%s'),
             'nco': ('https://www.nco.ncep.noaa.gov/idsb/implementation_standards/%s', '%s'),
+            'rocoto': ('https://christopherwharrop.github.io/rocoto/%s', '%s'),
             'rst': ('https://www.sphinx-doc.org/en/master/usage/restructuredtext/%s', '%s'),
             'rtd': ('https://readthedocs.org/projects/land-da-workflow/%s', '%s'),
             'land-wflow-repo': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'land-wflow-wiki': ('https://github.com/ufs-community/land-DA_workflow/wiki/%s','%s'),
+            'spack-stack': ('https://spack-stack.readthedocs.io/en/1.6.0/%s', '%s'),
+            'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/develop/%s', '%s'),
             'uw': ('https://uwtools.readthedocs.io/en/main/%s', '%s'),
             }

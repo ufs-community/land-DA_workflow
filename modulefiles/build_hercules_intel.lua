@@ -1,8 +1,17 @@
+help([[
+loads modules necessary for building the land-DA workflow on Hercules using Intel
+]])
+
+whatis([===[Loads modules necessary for building the land-DA workflow on Hercules]===])
+
 prepend_path("MODULEPATH", os.getenv("modulepath_spack_stack"))
 
 load(pathJoin("stack-intel", stack_intel_ver))
 load(pathJoin("stack-intel-oneapi-mpi", stack_intel_oneapi_mpi_ver))
 load(pathJoin("stack-python", stack_python_ver))
+
+load(pathJoin("cmake", cmake_ver))
+load(pathJoin("ecbuild", ecbuild_ver))
 
 load(pathJoin("jasper", jasper_ver))
 load(pathJoin("zlib", zlib_ver))
@@ -23,6 +32,15 @@ load(pathJoin("w3emc", w3emc_ver))
 load(pathJoin("gftl-shared", gftl_shared_ver))
 load(pathJoin("mapl", mapl_ver))
 load(pathJoin("prod_util", prod_util_ver))
-load(pathJoin("py-netcdf4", py_netcdf4_ver))
-load(pathJoin("py-numpy", py_numpy_ver))
+load(pathJoin("ufs-pyenv", ufs_pyenv_ver))
 
+setenv("CFLAGS","-diag-disable=10441")
+setenv("FFLAGS","-diag-disable=10441")
+
+setenv("CC", "mpiicc")
+setenv("CXX", "mpiicpc")
+setenv("FC", "mpiifort")
+setenv("CMAKE_Platform", "hercules.intel")
+
+setenv("EPICHOME", "/work/noaa/epic/UFS_Land-DA_Dev")
+setenv("JEDI_INSTALL", "/work2/noaa/epic/UFS_Land-DA_Dev/jedi_v7_hercules")

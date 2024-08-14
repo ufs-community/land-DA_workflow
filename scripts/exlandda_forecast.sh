@@ -12,6 +12,8 @@ nMM=${NTIME:4:2}
 nDD=${NTIME:6:2}
 nHH=${NTIME:8:2}
 
+FILEDATE=${YYYY}${MM}${DD}.${HH}0000
+
 case $MACHINE in
   "hera")
     RUN_CMD="srun"
@@ -123,16 +125,33 @@ export layout_y=1
     exit 10
   fi
 
-  # copy model ouput to COM
-  for itile in {1..6}
-  do
-    cp -p ${DATA}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${itile}.nc ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc
-  done
-  cp -p ${DATA}/ufs.cpld.datm.r.${nYYYY}-${nMM}-${nDD}-00000.nc ${COMOUT}
-  cp -p ${DATA}/RESTART/ufs.cpld.cpl.r.${nYYYY}-${nMM}-${nDD}-00000.nc ${COMOUT}
+# copy model ouput to COM
+for itile in {1..6}
+do
+  cp -p ${DATA}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-00000.tile${itile}.nc ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc
+done
+cp -p ${DATA}/ufs.cpld.datm.r.${nYYYY}-${nMM}-${nDD}-00000.nc ${COMOUT}
+cp -p ${DATA}/RESTART/ufs.cpld.cpl.r.${nYYYY}-${nMM}-${nDD}-00000.nc ${COMOUT}
 
-  # link restart for next cycle
+# link restart for next cycle
+for itile in {1..6}
+do
+  ln -nsf ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc ${DATA_RESTART}
+done
+
+# WE2E V&V
+if [[ "${WE2E_VAV}" == "YES" ]]; then
+  path_fbase="${FIXlandda}/test_base/we2e_com/${RUN}.${PDY}"
+  fn_res="ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile"
+  we2e_log_fp="${LOGDIR}/${WE2E_LOG_FN}"
+  
+  if [[ ! -e "${we2e_log_fp}" ]]; then
+    touch ${we2e_log_fp}
+  fi
+  # restart files
   for itile in {1..6}
   do
-    ln -nsf ${COMOUT}/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc ${DATA_RESTART}
+    ${USHlandda}/compare.py "${path_fbase}/${fn_res}${itile}.nc" "${COMOUT}/${fn_res}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "FORECAST" ${FILEDATE} "ufs_land_restart.tile${itile}"
   done
+fi
+

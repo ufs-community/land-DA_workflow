@@ -75,3 +75,19 @@ for itile in {1..6}
 do
   cp -p ${DATA}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc ${COMOUT}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc
 done
+
+# WE2E V&V
+if [[ "${WE2E_VAV}" == "YES" ]]; then
+  path_fbase="${FIXlandda}/test_base/we2e_com/${RUN}.${PDY}"
+  fn_res="ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile"
+  we2e_log_fp="${LOGDIR}/${WE2E_LOG_FN}"
+  if [[ ! -e "${we2e_log_fp}" ]]; then
+    touch ${we2e_log_fp}
+  fi
+  # restart files
+  for itile in {1..6}
+  do
+    ${USHlandda}/compare.py "${path_fbase}/${fn_res}${itile}.nc" "${COMOUT}/${fn_res}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "POST_ANAL" ${FILEDATE} "ufs_land_restart.anal.tile${itile}"
+  done
+fi
+
