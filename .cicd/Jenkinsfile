@@ -22,7 +22,7 @@ pipeline {
         stage('Launch SonarQube') {
             steps {
                 script {
-                    echo "SonarQube: ${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) build environment on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
+                    echo "SonarQube: Scan land-DA_workflow code"
                 /*
                     build job: '/land-DA_workflow/land-da-sonarqube', parameters: [
                         string(name: 'BRANCH_NAME', value: env.CHANGE_BRANCH ?: 'develop'),
