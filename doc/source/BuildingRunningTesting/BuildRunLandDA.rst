@@ -1,8 +1,8 @@
 .. _BuildRunLandDA:
 
-************************************
-Land DA Workflow (Hera & Orion)
-************************************
+***************************************
+Land DA Workflow (Hera/Orion/Hercules)
+***************************************
 
 This chapter provides instructions for building and running basic Land DA cases for the Unified Forecast System (:term:`UFS`) Land DA System using a Jan. 3-4, 2000 00z sample case using :term:`GSWP3` data with the UFS Noah-MP land component.
 
