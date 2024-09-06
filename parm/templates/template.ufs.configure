@@ -14,7 +14,7 @@ EARTH_attributes::
 
 # MED #
 MED_model:                      cmeps
-MED_petlist_bounds:             0 -1
+MED_petlist_bounds:             0 143
 MED_omp_num_threads:            1
 MED_attributes::
   Verbosity = 1
@@ -26,15 +26,11 @@ MED_attributes::
   history_option = nhours
   history_ymd = -999
   coupling_mode = ufs.nfrac.aoflux
-  history_tile_lnd = 96
-  history_n_lnd_inst = 6
-  history_option_lnd_inst = nhours
-  pio_rearranger = box
 ::
 
 # ATM #
 ATM_model:                      datm
-ATM_petlist_bounds:             0 0
+ATM_petlist_bounds:             0 143
 ATM_omp_num_threads:            1
 ATM_attributes::
   Verbosity = 0
@@ -43,7 +39,7 @@ ATM_attributes::
 
 # LND #
 LND_model:                      noahmp
-LND_petlist_bounds:             1 6
+LND_petlist_bounds:             144 287
 LND_omp_num_threads:            1
 LND_attributes::
   Verbosity = 1
@@ -51,7 +47,7 @@ LND_attributes::
   mosaic_file = INPUT/C96_mosaic.nc
   input_dir = INPUT/
   ic_type = custom
-  layout = 1:1 # need to be consistent with number of PEs
+  layout = 3:8 # need to be consistent with number of PEs
   num_soil_levels = 4
   forcing_height = 10
   soil_level_thickness = 0.10:0.30:0.60:1.00
@@ -71,8 +67,10 @@ LND_attributes::
   surface_evap_resistance_option = 1 # not used, it is fixed to 4 in sfc_noahmp_drv.F90
   glacier_option = 1
   surface_thermal_roughness_option = 2
-  output_freq = 10800
+  output_freq = 3600
+  restart_freq = -1
   calc_snet = .true.
+  initial_albedo = 0.25
 ::
 
 # cold
@@ -98,15 +96,16 @@ DRIVER_attributes::
 ::
 
 ALLCOMP_attributes::
-  ScalarFieldCount = 3
+  ScalarFieldCount = 4
   ScalarFieldIdxGridNX = 1
   ScalarFieldIdxGridNY = 2
-  ScalarFieldIdxNextSwCday = 3 # required for data atmosphere configurations
+  ScalarFieldIdxGridNTile = 3
+  ScalarFieldIdxNextSwCday = 4 # required for data atmosphere configurations
   ScalarFieldName = cpl_scalars
-  start_type = continue
+  start_type = startup
   restart_dir = ./RESTART/
   case_name = ufs.cpld
-  restart_n = 12
+  restart_n = 1
   restart_option = nhours
   restart_ymd = -999
   dbug_flag = 0
