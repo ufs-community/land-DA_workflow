@@ -13,8 +13,8 @@ load("intel-oneapi-mpi/2021.9.0")
 stack_intel_oneapi_mpi_ver=os.getenv("stack_intel_oneapi_mpi_ver") or "2021.9.0"
 load(pathJoin("stack-intel-oneapi-mpi", stack_intel_oneapi_mpi_ver))
 
-stack_python_ver=os.getenv("stack_python_ver") or "3.10.13"
-load(pathJoin("stack-python", stack_python_ver))
+--stack_python_ver=os.getenv("stack_python_ver") or "3.10.13"
+--load(pathJoin("stack-python", stack_python_ver))
 
 cmake_ver=os.getenv("cmake_ver") or "3.23.1"
 load(pathJoin("cmake", cmake_ver))
@@ -88,9 +88,12 @@ load("py-pyyaml/6.0")
 
 load("atlas")
 
-setenv("CC", "mpiicc")
-setenv("CXX", "mpiicpc")
-setenv("FC", "mpiifort")
+setenv("CMAKE_C_COMPILER","mpiicc")
+setenv("CMAKE_CXX_COMPILER","mpicxx")
+setenv("CMAKE_Fortran_COMPILER","mpif90")
+--setenv("CC", "mpiicc")
+--setenv("CXX", "mpiicpc")
+--setenv("FC", "mpiifort")
 
 setenv("JEDI_INSTALL", pathJoin(os.getenv("EPICHOME"),""))
 
