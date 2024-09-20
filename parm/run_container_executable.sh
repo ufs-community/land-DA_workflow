@@ -3,7 +3,7 @@
 export SINGULARITYENV_FI_PROVIDER=tcp
 export SINGULARITY_SHELL=/bin/bash
 BINDDIR="/"`pwd | awk -F"/" '{print $2}'`
-img=$IMAGE
+img=IMAGE
 CONTAINERBASE="/"`echo $img | xargs realpath | awk -F"/" '{print $2}'`
 cmd=$(basename "$0")
 arg="$@"
