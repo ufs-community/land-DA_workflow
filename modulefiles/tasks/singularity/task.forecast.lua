@@ -1,2 +1,2 @@
-load("$COMPILER")
-load("$MPI")
+load("COMPILER")
+load("MPI")
