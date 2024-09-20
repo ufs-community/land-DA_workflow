@@ -1,5 +1,5 @@
 help([[
-loads UFS Model prerequisites for Hera/Intel
+loads UFS Model prerequisites for Singularity container
 ]])
 
 setenv("EPICHOME", "/opt")
