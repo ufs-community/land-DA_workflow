@@ -2,6 +2,7 @@
 
 export SINGULARITYENV_FI_PROVIDER=tcp
 export SINGULARITY_SHELL=/bin/bash
+SINGULARITYBIN=`which singularity`
 BINDDIR="/"`pwd | awk -F"/" '{print $2}'`
 img=IMAGE
 CONTAINERBASE="/"`echo $img | xargs realpath | awk -F"/" '{print $2}'`
@@ -13,7 +14,9 @@ if [ ! -z "$LANDDAROOT" ]; then
 else
   INPUTBIND=""
 fi
-container_env=$PWD/container.env
-echo running: ${SINGULARITYBIN} exec --env-file $container_env -B $BINDDIR:$BINDDIR -B $CONTAINERBASE:$CONTAINERBASE $INPUTBIND $img $cmd $arg
-${SINGULARITYBIN} exec --env-file $container_env -B $BINDDIR:$BINDDIR -B $CONTAINERBASE:$CONTAINERBASE $INPUTBIND $img $cmd $arg
+# Remove echo for ndate command as it messes with the PTIME variable 
+if [ $cmd != "ndate" ]; then
+  echo running: ${SINGULARITYBIN} exec -B $BINDDIR:$BINDDIR -B $CONTAINERBASE:$CONTAINERBASE $INPUTBIND $img $cmd $arg
+fi
+${SINGULARITYBIN} exec -B $BINDDIR:$BINDDIR -B $CONTAINERBASE:$CONTAINERBASE $INPUTBIND $img $cmd $arg
 
