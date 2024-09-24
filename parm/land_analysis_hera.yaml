@@ -19,7 +19,7 @@ workflow:
     RES: "96"
     FCSTHR: "24"
     NPROCS_ANALYSIS: "6"
-    NPROCS_FORECAST: "7"
+    NPROCS_FORECAST: "320"
     OBSDIR: ""
     OBSDIR_SUBDIR: ""
     OBS_TYPES: "GHCN"
@@ -244,8 +244,8 @@ workflow:
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "forecast" "&HOMElandda;" "&MACHINE;"'
       jobname: forecast
-      nodes: "1:ppn=&NPROCS_FORECAST;"
-      walltime: 01:00:00
+      nodes: "8:ppn=40"
+      walltime: 00:30:00
       queue: batch
       join: "&LOGDIR;/forecast&LOGFN_SUFFIX;"
       dependency:
