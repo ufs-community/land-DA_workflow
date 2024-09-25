@@ -42,13 +42,6 @@ nHH=${NTIME:8:2}
 
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 
-
-export ATM_compute_tasks=0
-export ATM_io_tasks=1
-export LND_tasks=6
-export layout_x=1
-export layout_y=1
-
 # Copy input namelist data files
 cp ${PARMlandda}/templates/template.input.nml input.nml
 cp ${PARMlandda}/templates/template.ufs.configure ufs.configure
