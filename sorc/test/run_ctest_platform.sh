@@ -14,7 +14,7 @@ export MACHINE_ID=${PLATFORM}
 cd ${BUILD_DIR}
 cp -p "${TEST_DIR}/${PLATFORM}_ctest.sh" ${BUILD_DIR}/.
 cp -p "${TEST_DIR}/run_${PLATFORM}_ctest.sh" ${BUILD_DIR}/.
-cp -p "${TEST_DIR}/check_ctest.sh" ${BUILD_DIR}/.
+#cp -p "${TEST_DIR}/check_ctest.sh" ${BUILD_DIR}/.
 
 if [ "${PLATFORM}" = "hera" ] || [ "${PLATFORM}" = "orion" ] || [ "${PLATFORM}" = "hercules" ]; then
   JOB_ID=$(sbatch --job-name=ctest --account=epic --qos=batch --ntasks-per-node=40 --nodes=8 --time=00:30:00 ./${PLATFORM}_ctest.sh | awk '{print $4}')

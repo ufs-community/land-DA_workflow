@@ -23,10 +23,15 @@ else
   echo "WARNING: input data path is not specified for this machine."
   INPUTDATA_ROOT=${FIXdir}
 fi
-MACHINE_ID=${PLATFORM}
-RT_COMPILER=${RT_COMPILER:-intel}
+export MACHINE_ID=${PLATFORM}
+export RT_COMPILER=${RT_COMPILER:-intel}
+export CREATE_BASELINE=false
+export skip_check_result=false
+export RTVERBOSE=false
+export delete_rundir=false
+export WLCLK=30
 ATOL="1e-7"
-source ${PATHRT}/detect_machine.sh
+
 source ${PATHRT}/rt_utils.sh
 source ${PATHRT}/default_vars.sh
 source ${PATHRT}/tests/$TEST_NAME
