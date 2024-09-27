@@ -45,13 +45,6 @@ RUNDIR=${project_binary_dir}/test/${TEST_NAME}
 mkdir -p ${RUNDIR}
 cd ${RUNDIR}
 
-# modify some env variables - reduce core usage
-export ATM_compute_tasks=0
-export ATM_io_tasks=1
-export LND_tasks=6
-export layout_x=1
-export layout_y=1
-
 # FV3 executable:
 cp ${project_binary_dir}/ufs_model.fd/src/ufs_model.fd-build/ufs_model ./ufs_model
 

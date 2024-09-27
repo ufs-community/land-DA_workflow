@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -o out.ctest
-#SBATCH --account=epic
+
 set -eux
 
 source ../../versions/build.ver_hercules
