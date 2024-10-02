@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-JOB_ID=$(sbatch --job-name=ctest --account=epic --qos=batch --ntasks-per-node=40 --nodes=8 --time=00:30:00 ./hercules_ctest.sh | awk '{print $4}')
+JOB_ID=$(sbatch --job-name=ctest --account=epic --qos=batch --ntasks-per-node=13 --nodes=1 --time=00:30:00 ./hercules_ctest.sh | awk '{print $4}')
 
 CHECK_ID=$(sbatch --job-name=ctest --account=epic --qos=batch --ntasks-per-node=1 --nodes=1 --time=00:01:00 --dependency=afterok:$JOB_ID ./check_ctest.sh)
 

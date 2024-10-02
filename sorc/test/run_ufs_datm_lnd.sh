@@ -67,9 +67,11 @@ fi
 
 atparse < ${PATHRT}/parm/${MODEL_CONFIGURE:-model_configure.IN} > model_configure
 
-compute_petbounds_and_tasks
+#compute_petbounds_and_tasks
+#atparse < ${PATHRT}/parm/${UFS_CONFIGURE:-ufs.configure} > ufs.configure
 
-atparse < ${PATHRT}/parm/${UFS_CONFIGURE:-ufs.configure} > ufs.configure
+cp -p ${project_source_dir}/test/parm/ufs.configure .
+NPROCS_FORECAST="13"
 
 # diag table
 if [[ "Q${DIAG_TABLE:-}" != Q ]] ; then
@@ -95,9 +97,13 @@ fi
 cp ${PATHRT}/parm/noahmptable.tbl noahmptable.tbl
 
 # start runs
-echo "Start ufs-cdeps-land model run with TASKS: ${TASKS}"
-export MPIRUN=${MPIRUN:-`which mpiexec`}
-${MPIRUN} -n ${TASKS} ./ufs_model
+echo "Start ufs-weather-model run"
+if [ "${PLATFORM}" = "hera" ] || [ "${PLATFORM}" = "orion" ] || [ "${PLATFORM}" = "hercules" ]; then 
+  export MPIRUN="srun"
+else
+  export MPIRUN=${MPIRUN:-`which mpiexec`}
+fi
+${MPIRUN} -n ${NPROCS_FORECAST} ./ufs_model
 
 #
 echo "Now check model output with ufs-wm baseline!"
