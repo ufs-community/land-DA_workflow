@@ -5,5 +5,5 @@ start_hour:              XXHH
 start_minute:            0
 start_second:            0
 nhours_fcst:             XXFCSTHR
-dt_atmos:                900
+dt_atmos:                XXDT_ATMOS
 fhrot:                   0

@@ -9,7 +9,7 @@ workflow:
         group: cycled
       spec: 200001030000 200001040000 24:00:00
   entities:
-    MACHINE: "orion"
+    MACHINE: "hercules"
     SCHED: "slurm"
     ACCOUNT: "epic"
     EXP_BASEDIR: "/work2/noaa/epic/{USER}/landda_test"
@@ -17,9 +17,18 @@ workflow:
     WARMSTART_DIR: "/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART"
     ATMOS_FORC: "gswp3"
     RES: "96"
-    FCSTHR: "24"
     NPROCS_ANALYSIS: "6"
-    NPROCS_FORECAST: "320"
+    FCSTHR: "24"
+    DT_ATMOS: "900"
+    DT_RUNSEQ: "3600"
+    NPROCS_FORECAST: "40"
+    NPROCS_FORECAST_ATM: "18"
+    NPROCS_FORECAST_LND: "18"
+    LND_LAYOUT_X: "1"
+    LND_LAYOUT_Y: "3"
+    LND_OUTPUT_FREQ_SEC: "21600"
+    NNODES_FORECAST: "1"
+    NPROCS_PER_NODE: "40"
     OBSDIR: ""
     OBSDIR_SUBDIR: ""
     OBS_TYPES: "GHCN"
@@ -240,11 +249,20 @@ workflow:
         cyc: "&cyc;"
         DAtype: "&DAtype;"
         FCSTHR: "&FCSTHR;"
-        NPROCS_FORECAST: "&NPROCS_FORECAST;"          
+        DT_ATMOS: "&DT_ATMOS;"
+        DT_RUNSEQ: "&DT_RUNSEQ;"
+        NPROCS_FORECAST: "&NPROCS_FORECAST;"
+        NPROCS_FORECAST_ATM: "&NPROCS_FORECAST_ATM;"
+        NPROCS_FORECAST_LND: "&NPROCS_FORECAST_LND;"
+        LND_LAYOUT_X: "&LND_LAYOUT_X;"
+        LND_LAYOUT_Y: "&LND_LAYOUT_Y;"
+        LND_OUTPUT_FREQ_SEC: "&LND_OUTPUT_FREQ_SEC;"
+        NNODES_FORECAST: "&NNODES_FORECAST;"
+        NPROCS_PER_NODE: "&NPROCS_PER_NODE;"
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "forecast" "&HOMElandda;" "&MACHINE;"'
       jobname: forecast
-      nodes: "8:ppn=40"
+      nodes: "&NNODES_FORECAST;:ppn=&NPROCS_PER_NODE;"
       walltime: 00:30:00
       queue: batch
       join: "&LOGDIR;/forecast&LOGFN_SUFFIX;"

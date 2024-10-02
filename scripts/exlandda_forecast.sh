@@ -43,24 +43,36 @@ nHH=${NTIME:8:2}
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 
 # Copy input namelist data files
-cp ${PARMlandda}/templates/template.input.nml input.nml
-cp ${PARMlandda}/templates/template.ufs.configure ufs.configure
-cp ${PARMlandda}/templates/template.datm_in datm_in
-cp ${PARMlandda}/templates/template.datm.streams datm.streams
-cp ${PARMlandda}/templates/template.noahmptable.tbl noahmptable.tbl
-cp ${PARMlandda}/templates/template.fd_ufs.yaml fd_ufs.yaml
-cp ${PARMlandda}/templates/template.data_table data_table
+cp -p ${PARMlandda}/templates/template.input.nml input.nml
+cp -p ${PARMlandda}/templates/template.datm_in datm_in
+cp -p ${PARMlandda}/templates/template.datm.streams datm.streams
+cp -p ${PARMlandda}/templates/template.noahmptable.tbl noahmptable.tbl
+cp -p ${PARMlandda}/templates/template.fd_ufs.yaml fd_ufs.yaml
+cp -p ${PARMlandda}/templates/template.data_table data_table
+
+# Set ufs.configure
+cp -p ${PARMlandda}/templates/template.ufs.configure ufs.configure
+nprocs_atm_m1=$(( NPROCS_FORECAST_ATM - 1 ))
+sed -i -e "s/XXNPROCS_ATM_M1/${nprocs_atm_m1}/g" ufs.configure
+sed -i -e "s/XXNPROCS_FORECAST_ATM/${NPROCS_FORECAST_ATM}/g" ufs.configure
+nprocs_atm_lnd_m1=$(( NPROCS_FORECAST_ATM + NPROCS_FORECAST_LND - 1 ))
+sed -i -e "s/XXNPROCS_ATM_LND_M1/${nprocs_atm_lnd_m1}/g" ufs.configure
+sed -i -e "s/XXLND_LAYOUT_X/${LND_LAYOUT_X}/g" ufs.configure
+sed -i -e "s/XXLND_LAYOUT_Y/${LND_LAYOUT_Y}/g" ufs.configure
+sed -i -e "s/XXLND_OUTPUT_FREQ_SEC/${LND_OUTPUT_FREQ_SEC}/g" ufs.configure
+sed -i -e "s/XXDT_RUNSEQ/${DT_RUNSEQ}/g" ufs.configure
 
 # Set model_configure
-cp ${PARMlandda}/templates/template.model_configure model_configure
+cp -p ${PARMlandda}/templates/template.model_configure model_configure
 sed -i -e "s/XXYYYY/${YYYY}/g" model_configure
 sed -i -e "s/XXMM/${MM}/g" model_configure
 sed -i -e "s/XXDD/${DD}/g" model_configure
 sed -i -e "s/XXHH/${HH}/g" model_configure
 sed -i -e "s/XXFCSTHR/${FCSTHR}/g" model_configure
+sed -i -e "s/XXDT_ATMOS/${DT_ATMOS}/g" model_configure
 
 # set diag table
-cp ${PARMlandda}/templates/template.diag_table diag_table
+cp -p ${PARMlandda}/templates/template.diag_table diag_table
 sed -i -e "s/XXYYYYMMDD/${YYYYMMDD}/g" diag_table
 sed -i -e "s/XXYYYY/${YYYY}/g" diag_table
 sed -i -e "s/XXMM/${MM}/g" diag_table
