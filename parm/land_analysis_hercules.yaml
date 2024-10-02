@@ -13,7 +13,7 @@ workflow:
     SCHED: "slurm"
     ACCOUNT: "epic"
     EXP_BASEDIR: "/work2/noaa/epic/{USER}/landda_test"
-    JEDI_INSTALL: "/work2/noaa/epic/UFS_Land-DA_Dev/jedi_v7_hercules"
+    JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_hercules"
     WARMSTART_DIR: "/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART"
     ATMOS_FORC: "gswp3"
     RES: "96"
