@@ -2,8 +2,13 @@
 
 set -xue
 
+YYYY=${PDY:0:4}
+MM=${PDY:4:2}
+DD=${PDY:6:2}
+HH=${cyc}
+
 ############################################################
-# Scatter Plot
+# Stats Plot
 ############################################################
 
 cp ${PARMlandda}/templates/template.plot_hofx.yaml plot_hofx.yaml
@@ -36,9 +41,44 @@ sed -i -e "s/XXMACHINE/${MACHINE}/g" plot_hofx.yaml
 
 ${USHlandda}/hofx_analysis_stats.py
 if [[ $? != 0 ]]; then
-  echo "Scatter/Histogram plots failed"
+  echo "FATAL ERROR: Scatter/Histogram plots failed"
   exit 33
 fi
 
 # Copy result files to COMOUT
 cp -p ${PREOUTFN}* ${COMOUTplot}
+
+
+############################################################
+# Restart Plot
+############################################################
+
+nYYYY=${NTIME:0:4}
+nMM=${NTIME:4:2}
+nDD=${NTIME:6:2}
+nHH=${NTIME:8:2}
+
+FP_INPUT_DATA="${COMIN}"
+FN_DATA_BASE="ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile"
+FN_DATA_EXT=".nc"
+SOIL_LEVEL_NUMBER="1"
+OUT_TITLE_BASE="Land-DA::restart::${nYYYY}-${nMM}-${nDD}_${nHH}::"
+OUT_FN_BASE="landda_out_restart_${nYYYY}-${nMM}-${nDD}_${nHH}_"
+
+sed -i "s|FP_INPUT_DATA|${FP_INPUT_DATA}|g" plot_restart.yaml
+sed -i -e "s/XXFN_DATA_BASE/${FN_DATA_BASE}/g" plot_restart.yaml
+sed -i -e "s/XXFN_DATA_EXT/${FN_DATA_EXT}/g" plot_restart.yaml
+sed -i -e "s/XXSOIL_LEVEL_NUMBER/${SOIL_LEVEL_NUMBER}/g" plot_restart.yaml
+sed -i -e "s/XXOUT_TITLE_BASE/${OUT_TITLE_BASE}/g" plot_restart.yaml
+sed -i -e "s/XXOUT_FN_BASE/${OUT_FN_BASE}/g" plot_restart.yaml
+sed -i -e "s/XXMACHINE/${MACHINE}/g" plot_restart.yaml
+
+${USHlandda}/plot_forecast_restart.py
+if [[ $? != 0 ]]; then
+  echo "FATAL ERROR: Forecast restart plots failed"
+  exit 44
+fi
+
+# Copy result files to COMOUT
+cp -p ${OUT_FN_BASE}* ${COMOUTplot}
+
