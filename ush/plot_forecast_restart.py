@@ -11,6 +11,7 @@
 ###################################################################### CHJ #####
 
 import os, sys
+import yaml
 import numpy as np
 import netCDF4 as nc
 import cartopy
@@ -30,11 +31,20 @@ def main():
 
     global num_tiles
 
-    yaml_file="plot_hofx.yaml"
+    yaml_file="plot_restart.yaml"
     with open(yaml_file, 'r') as f:
         yaml_data=yaml.load(f, Loader=yaml.FullLoader)
     f.close()
     print("YAML_DATA:",yaml_data)
+
+    path_data=yaml_data['path_data']
+    work_dir=yaml_data['work_dir']
+    fn_data_base=yaml_data['fn_data_base']
+    fn_data_ext=yaml_data['fn_data_ext']
+    soil_lvl_num=yaml_data['soil_lvl_number']
+    out_title_base=yaml_data['out_title_base']
+    out_fn_base=yaml_data['out_fn_base']
+    machine=yaml_data['machine']
 
     if yaml_data['machine']=='hera':
         cartopy.config['data_dir']='/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs/NaturalEarth'
@@ -47,14 +57,14 @@ def main():
     num_tiles=6
 
     # get lon, lat
-    get_geo()
+    get_geo(path_data,fn_data_base,fn_data_ext)
     # plot restart file
     for var_nm in var_list:
-        plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num)
+        plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num,out_title_base,out_fn_base,work_dir)
        
 
 # geo lon/lat from orography ======================================== CHJ =====
-def get_geo():
+def get_geo(path_data,fn_data_base,fn_data_ext):
 # =================================================================== CHJ =====
 
     global glon,glat
@@ -95,11 +105,9 @@ def get_geo():
 
 
 # Get sfc_data from files and plot ================================== CHJ =====
-def plot_data(path_data,fn_data_base,fn_data_ext,var_nm):
+def plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num,out_title_base,out_fn_base,work_dir):
 # =================================================================== CHJ =====
 
-    # Resolution of background natural earth data ('50m' or '110m')
-    back_res='50m'
     # center of map
     c_lon=-77.0369
 
@@ -180,12 +188,16 @@ def plot_data(path_data,fn_data_base,fn_data_ext,var_nm):
 
         # Output figure
         ndpi=300
-        out_file(out_fn,ndpi)
+        out_file(work_dir,out_fn,ndpi)
 
 
 # Background plot ==================================================== CHJ =====
 def back_plot(ax):
 # ==================================================================== CHJ =====
+
+    # Resolution of background natural earth data ('50m' or '110m')
+    back_res='50m'
+
     fline_wd=0.5  # line width
     falpha=0.7 # transparency
 
@@ -214,10 +226,10 @@ def back_plot(ax):
 
 
 # Output file ======================================================= CHJ =====
-def out_file(out_file,ndpi):
+def out_file(work_dir,out_file,ndpi):
 # =================================================================== CHJ =====
     # Output figure
-    fp_out=os.path.join(out_fig_dir,out_file)
+    fp_out=os.path.join(work_dir,out_file)
     plt.savefig(fp_out+'.png',dpi=ndpi,bbox_inches='tight')
     plt.close('all')
 
