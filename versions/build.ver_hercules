@@ -4,7 +4,7 @@ export modulepath_spack_stack="/work/noaa/epic/role-epic/spack-stack/hercules/sp
 
 export bacio_ver="2.4.1"
 export cmake_ver="3.23.1"
-export crtm_ver="2.4.0.1"
+export crtm_ver="2.4.0"
 export ecbuild_ver="3.7.2"
 export esmf_ver="8.6.0"
 export fms_ver="2024.01"
