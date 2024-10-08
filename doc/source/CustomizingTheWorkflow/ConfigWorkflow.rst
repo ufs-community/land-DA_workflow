@@ -72,7 +72,7 @@ Entities are constants that can be referred to throughout the workflow using the
 
    workflow:
      entities:
-       MACHINE: "orion"
+       MACHINE: "<platform name>"
        SCHED: "slurm"
        ACCOUNT: "epic"
        EXP_BASEDIR: "/work/noaa/epic/{USER}/landda_test"
@@ -80,9 +80,18 @@ Entities are constants that can be referred to throughout the workflow using the
        WARMSTART_DIR: "/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART"
        ATMOS_FORC: "gswp3"
        RES: "96"
-       FCSTHR: "24"
        NPROCS_ANALYSIS: "6"
-       NPROCS_FORECAST: "7"
+       FCSTHR: "24"
+       DT_ATMOS: "900"
+       DT_RUNSEQ: "3600"
+       NPROCS_FORECAST: "26"
+       NPROCS_FORECAST_ATM: "12"
+       NPROCS_FORECAST_LND: "12"
+       LND_LAYOUT_X: "1"
+       LND_LAYOUT_Y: "2"
+       LND_OUTPUT_FREQ_SEC: "21600"
+       NNODES_FORECAST: "1"
+       NPROCS_PER_NODE: "26"
        OBSDIR: ""
        OBSDIR_SUBDIR: ""
        OBS_TYPES: "GHCN"
@@ -141,9 +150,26 @@ Entities are constants that can be referred to throughout the workflow using the
 ``NPROCS_ANALYSIS:`` (Default: "6")
    Number of processors for the analysis task. 
 
-``NPROCS_FORECAST:`` (Default: "7")
-   Number of processors for the forecast task. 
+``DT_ATMOS:`` (Default: "900")
 
+``DT_RUNSEQ:`` (Default: "6")
+
+``NPROCS_FORECAST:`` (Default: "26")
+
+``NPROCS_FORECAST_ATM:`` (Default: "12")
+
+``NPROCS_FORECAST_LND:`` (Default: "12")
+
+``LND_LAYOUT_X:`` (Default: "1")
+
+``LND_LAYOUT_Y:`` (Default: "2")
+
+``LND_OUTPUT_FREQ_SEC:`` (Default: "21600")
+
+``NNODES_FORECAST:`` (Default: "1")
+
+``NPROCS_PER_NODE:`` (Default: "26")
+ 
 ``OBSDIR:`` (Default: "")
    The path to the directory where DA fix files are located. In ``scripts/exlandda_prep_obs.sh``, this value is set to ``${FIXlandda}/DA`` unless the user specifies a different path in ``land_analysis.yaml``. 
 
@@ -662,16 +688,24 @@ Parameters for the forecast task are set in the ``task_forecast:`` section of th
            cyc: "&cyc;"
            DAtype: "&DAtype;"
            FCSTHR: "&FCSTHR;"
-           NPROCS_FORECAST: "&NPROCS_FORECAST;"          
+           DT_ATMOS: "&DT_ATMOS;"
+           DT_RUNSEQ: "&DT_RUNSEQ;"
+           NPROCS_FORECAST: "&NPROCS_FORECAST;"
+           NPROCS_FORECAST_ATM: "&NPROCS_FORECAST_ATM;"
+           NPROCS_FORECAST_LND: "&NPROCS_FORECAST_LND;"
+           LND_LAYOUT_X: "&LND_LAYOUT_X;"
+           LND_LAYOUT_Y: "&LND_LAYOUT_Y;"
+           LND_OUTPUT_FREQ_SEC: "&LND_OUTPUT_FREQ_SEC;"
+           NNODES_FORECAST: "&NNODES_FORECAST;"
+           NPROCS_PER_NODE: "&NPROCS_PER_NODE;"
          account: "&ACCOUNT;"
          command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "forecast" "&HOMElandda;" "&MACHINE;"'
          jobname: forecast
-         nodes: "1:ppn=&NPROCS_FORECAST;"
-         walltime: 01:00:00
+         nodes: "1:ppn=&NPROCS_FORECAST;:ppn=&NPROCS_PER_NODE;"
+         walltime: 00:30:00
          queue: batch
          join: "&LOGDIR;/forecast&LOGFN_SUFFIX;"
          dependency:
            taskdep:
              attrs:
                task: post_anal
-
