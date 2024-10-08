@@ -90,7 +90,7 @@ where ``/path/to/landda`` is the path to this top-level directory (e.g., ``/User
 NOAA RDHPCS Systems
 ----------------------
 
-On many NOAA :term:`RDHPCS`, a container named ``ubuntu22.04-intel-ue-1.6.0-landda-dev.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
+On many NOAA :term:`RDHPCS`, a container named ``ubuntu22.04-intel-landda-release-public-v2.0.0.img`` has already been built, and users may access the container at the locations in :numref:`Table %s <PreBuiltContainers>`.
 
 .. _PreBuiltContainers:
 
@@ -116,30 +116,30 @@ Users can simply set an environment variable to point to the container:
 
 .. code-block:: console
 
-   export img=path/to/ubuntu22.04-intel-ue-1.6.0-landda-dev.img
+   export img=path/to/ubuntu22.04-intel-landda-release-public-v2.0.0.img
 
 If users prefer, they may copy the container to their local working directory. For example, on Jet:
 
 .. code-block:: console
 
-   cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu22.04-intel-ue-1.6.0-landda-dev.img .
+   cp /mnt/lfs4/HFIP/hfv3gfs/role.epic/containers/ubuntu22.04-intel-landda-release-public-v2.0.0.img .
 
 Other Systems
 ----------------
 
-On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu22.04-intel-ue-1.6.0-landda-dev.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v1.2.0`` container rather than the updated ``develop`` branch container. 
+On other systems, users can build the Singularity container from a public Docker :term:`container` image or download the ``ubuntu22.04-intel-landda-release-public-v2.0.0.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. Downloading may be faster depending on the download speed on the user's system. However, the container in the data bucket is the ``release/v2.0.0`` container rather than the updated ``develop`` branch container. 
 
 To download from the data bucket, users can run:
 
 .. code-block:: console
 
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/ubuntu20.04-intel-landda-release-public-v1.2.0.img
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v2.0.0/ubuntu22.04-intel-landda-release-public-v2.0.0.img
 
 To build the container from a Docker image, users can run:
 
 .. code-block:: console
 
-   singularity build --force ubuntu22.04-intel-ue-1.6.0-landda-dev.img docker://noaaepic/ubuntu22.04-intel21.10-landda:ue160-dev
+   singularity build --force ubuntu22.04-intel-landda-release-public-v2.0.0.img docker://noaaepic/ubuntu22.04-intel21.10-landda:ue160-fms2024.01-release
 
 This process may take several hours depending on the system. 
 
@@ -190,20 +190,20 @@ Save the location of the container in an environment variable.
 
 .. code-block:: console
 
-   export img=/path/to/ubuntu22.04-intel-ue-1.6.0-landda-dev.img
+   export img=/path/to/ubuntu22.04-intel-landda-release-public-v2.0.0.img
 
 Users may convert a container ``.img`` file to a writable sandbox. This step is optional on most systems:
 
 .. code-block:: console
 
-   singularity build --sandbox ubuntu22.04-intel-ue-1.6.0-landda-dev $img
+   singularity build --sandbox ubuntu22.04-intel-landda-release-public-v2.0.0 $img
 
 When making a writable sandbox on NOAA :term:`RDHPCS`, the following warnings commonly appear and can be ignored:
 
 .. code-block:: console
 
    INFO:    Starting build...
-   INFO:    Verifying bootstrap image ubuntu20.04-intel-landda-release-public-v1.2.0.img
+   INFO:    Verifying bootstrap image ubuntu22.04-intel-landda-release-public-v2.0.0.img
    WARNING: integrity: signature not found for object group 1
    WARNING: Bootstrap image could not be verified, but build will continue.
 
@@ -239,7 +239,7 @@ where:
 
    * ``-c`` is the compiler on the user's local machine (e.g., ``intel/2022.1.2``)
    * ``-m`` is the :term:`MPI` on the user's local machine (e.g., ``impi/2022.1.2``)
-   * ``-i`` is the full path to the container image ( e.g., ``$LANDDAROOT/ubuntu22.04-intel-ue-1.6.0-landda-dev.img``).
+   * ``-i`` is the full path to the container image ( e.g., ``$LANDDAROOT/ubuntu22.04-intel-landda-release-public-v2.0.0.img``).
    
 When using a Singularity container, Intel compilers and Intel :term:`MPI` (preferably 2020 versions or newer) need to be available on the host system to properly launch MPI jobs. Generally, this is accomplished by loading a module with a recent Intel compiler and then loading the corresponding Intel MPI. 
 
