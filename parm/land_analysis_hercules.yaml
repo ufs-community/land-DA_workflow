@@ -9,7 +9,7 @@ workflow:
         group: cycled
       spec: 200001030000 200001040000 24:00:00
   entities:
-    MACHINE: "orion"
+    MACHINE: "hercules"
     SCHED: "slurm"
     ACCOUNT: "epic"
     EXP_BASEDIR: "/work2/noaa/epic/{USER}/landda_test"
@@ -187,33 +187,6 @@ workflow:
         taskdep:
           attrs:
             task: analysis
-    task_plot_stats:
-      attrs:
-        cycledefs: cycled
-        maxtries: 2
-      envars:
-        MACHINE: "&MACHINE;"
-        SCHED: "&SCHED;"
-        ACCOUNT: "&ACCOUNT;"
-        model_ver: "&model_ver;"
-        RUN: "&RUN;"
-        HOMElandda: "&HOMElandda;"
-        COMROOT: "&COMROOT;"
-        DATAROOT: "&DATAROOT;"
-        KEEPDATA: "&KEEPDATA;"
-        PDY: "&PDY;"
-        cyc: "&cyc;"
-      account: "&ACCOUNT;"
-      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "plot_stats" "&HOMElandda;" "&MACHINE;"'
-      jobname: plot_stats
-      cores: 1
-      walltime: 00:10:00
-      queue: batch
-      join: "&LOGDIR;/plot_stats&LOGFN_SUFFIX;"
-      dependency:
-        taskdep:
-          attrs:
-            task: analysis
     task_forecast:
       attrs:
         cycledefs: cycled
@@ -252,3 +225,31 @@ workflow:
         taskdep:
           attrs:
             task: post_anal
+    task_plot_stats:
+      attrs:
+        cycledefs: cycled
+        maxtries: 2
+      envars:
+        MACHINE: "&MACHINE;"
+        SCHED: "&SCHED;"
+        ACCOUNT: "&ACCOUNT;"
+        model_ver: "&model_ver;"
+        RUN: "&RUN;"
+        HOMElandda: "&HOMElandda;"
+        COMROOT: "&COMROOT;"
+        DATAROOT: "&DATAROOT;"
+        KEEPDATA: "&KEEPDATA;"
+        PDY: "&PDY;"
+        cyc: "&cyc;"
+      account: "&ACCOUNT;"
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "plot_stats" "&HOMElandda;" "&MACHINE;"'
+      jobname: plot_stats
+      cores: 1
+      walltime: 00:10:00
+      queue: batch
+      join: "&LOGDIR;/plot_stats&LOGFN_SUFFIX;"
+      dependency:
+        taskdep:
+          attrs:
+            task: forecast
+
