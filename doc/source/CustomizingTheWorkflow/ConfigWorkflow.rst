@@ -151,24 +151,35 @@ Entities are constants that can be referred to throughout the workflow using the
    Number of processors for the analysis task. 
 
 ``DT_ATMOS:`` (Default: "900")
-
+   Time integration step of the atmospheric component of the UFS weather model (in seconds).
+   
 ``DT_RUNSEQ:`` (Default: "6")
+   Time interval of run sequence (coupling interval) between the model components of the UFS 
+weather model (in seconds).
 
 ``NPROCS_FORECAST:`` (Default: "26")
+   Total number of processes for the FORECAST task.
 
 ``NPROCS_FORECAST_ATM:`` (Default: "12")
+   Number of processes for the atmospheric model component (DATM) in the FORECAST task.
 
 ``NPROCS_FORECAST_LND:`` (Default: "12")
+   Number of processes for the land model component (Noah-MP) in the FORECAST task.
 
 ``LND_LAYOUT_X:`` (Default: "1")
+   Number of processes in the x direction per tile for the land model component.
 
 ``LND_LAYOUT_Y:`` (Default: "2")
+   Number of processes in the y direction per tile for the land model component.
 
 ``LND_OUTPUT_FREQ_SEC:`` (Default: "21600")
+   Output frequency of the land model component (in seconds).
 
 ``NNODES_FORECAST:`` (Default: "1")
+   Number of nodes for the FORECAST task.
 
 ``NPROCS_PER_NODE:`` (Default: "26")
+   Number of processes per node for the FORECAST task.
  
 ``OBSDIR:`` (Default: "")
    The path to the directory where DA fix files are located. In ``scripts/exlandda_prep_obs.sh``, this value is set to ``${FIXlandda}/DA`` unless the user specifies a different path in ``land_analysis.yaml``. 
