@@ -72,7 +72,7 @@ Entities are constants that can be referred to throughout the workflow using the
 
    workflow:
      entities:
-       MACHINE: "<platform name>"
+       MACHINE: "orion"
        SCHED: "slurm"
        ACCOUNT: "epic"
        EXP_BASEDIR: "/work/noaa/epic/{USER}/landda_test"
@@ -118,10 +118,10 @@ Entities are constants that can be referred to throughout the workflow using the
 
 .. note:: 
 
-   When two defaults are listed, one is the default on Hera, and one is the default on Orion, depending on the ``land_analysis_<machine>.yaml`` file used. The default on Hera is listed first, followed by the default on Orion. 
+   When two or three defaults are listed, one is the default on Hera, one is the default on Orion and one is the default on Hercules depending on the ``land_analysis_<machine>.yaml`` file used. The default on Hera is listed first, followed by the default on Orion and then last the default on Hercules.
 
-``MACHINE:`` (Default: "hera" or "orion")
-   The machine (a.k.a. platform or system) on which the workflow will run. Currently supported platforms are listed in :numref:`Section %s <LevelsOfSupport>`. Valid values: ``"hera"`` | ``"orion"``
+``MACHINE:`` (Default: "hera" or "orion" or "hercules")
+   The machine (a.k.a. platform or system) on which the workflow will run. Currently supported platforms are listed in :numref:`Section %s <LevelsOfSupport>`. Valid values: ``"hera"`` | ``"orion"`` | ``"hercules"``
 
 ``SCHED:`` (Default: "slurm")
    The job scheduler to use (e.g., Slurm) on the specified ``MACHINE``. Valid values: ``"slurm"``. Other options may work with a container but have not been tested: ``"pbspro"`` | ``"lsf"`` | ``"lsfcray"`` | ``"none"``
@@ -129,13 +129,13 @@ Entities are constants that can be referred to throughout the workflow using the
 ``ACCOUNT:`` (Default: "epic")
    An account where users can charge their compute resources on the specified ``MACHINE``. To determine an appropriate ``ACCOUNT`` field on a system with a Slurm job scheduler, users may run the ``saccount_params`` command to display account details. On other systems, users may run the ``groups`` command, which will return a list of projects that the user has permissions for. Not all of the listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
 
-``EXP_BASEDIR:`` (Default: "/scratch2/NAGAPE/epic/{USER}/landda_test" or "/work/noaa/epic/{USER}/landda_test")
+``EXP_BASEDIR:`` (Default: "/scratch2/NAGAPE/epic/{USER}/landda_test" or "/work/noaa/epic/{USER}/landda_test" or "/work2/noaa/epic/{USER}/landda_test")
    The full path to the parent directory of ``land-DA_workflow`` (i.e., ``$LANDDAROOT`` in the documentation).
 
-``JEDI_INSTALL:`` (Default: "/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/jedi_v7" or "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6")
+``JEDI_INSTALL:`` (Default: "/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/jedi_v7" or "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6" or "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_hercules")
    The path to the JEDI |skylabv| installation. 
 
-``WARMSTART_DIR:`` (Default: "/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART" or "/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART")
+``WARMSTART_DIR:`` (Default: "/scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART" or "/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART" or "/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART")
    The path to restart files for a warmstart experiment. 
 
 ``ATMOS_FORC:`` (Default: "gswp3")
