@@ -69,7 +69,7 @@ User Support and Documentation
 Questions
 ==========
 
-The Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__ forum provides online support for UFS users and developers to post questions and exchange information. When users encounter difficulties running the Land DA System, this is the place to post. Users can expect an initial response within two business days. 
+The Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`_ forum provides online support for UFS users and developers to post questions and exchange information. When users encounter difficulties running the Land DA System, this is the place to post. Users can expect an initial response within two business days. 
 
 When posting a question, it is recommended that users provide the following information: 
 
@@ -92,8 +92,8 @@ Feature Requests and Enhancements
 
 Users who want to request a feature enhancement or the addition of a new feature have a few options: 
 
-   #. File a `GitHub Issue <https://github.com/ufs-community/land-DA_workflow/issues/new>`__ and add (or request that a code manager add) the ``EPIC Support Requested`` label. 
-   #. Post a request for a feature or enhancement in the `Enhancements <https://github.com/ufs-community/land-DA_workflow/discussions/categories/enhancements>`__ category of GitHub Discussions. These feature requests will be forwarded to the Earth Prediction Innovation Center (`EPIC <https://epic.noaa.gov/>`__) management team for prioritization and eventual addition to the Land DA System. 
+   #. File a `GitHub Issue <https://github.com/ufs-community/land-DA_workflow/issues/new>`_ and add (or request that a code manager add) the ``EPIC Support Requested`` label. 
+   #. Post a request for a feature or enhancement in the `Enhancements <https://github.com/ufs-community/land-DA_workflow/discussions/categories/enhancements>`_ category of GitHub Discussions. These feature requests will be forwarded to the Earth Prediction Innovation Center (`EPIC <https://epic.noaa.gov/>`_) management team for prioritization and eventual addition to the Land DA System. 
    #. Email the request to support.epic@noaa.gov. 
 
 
@@ -135,7 +135,7 @@ radiation transfer, stomatal resistance, soil moisture stress factor for stomata
 resistance, aerodynamic resistance, runoff, snowfall, snow surface albedo, 
 supercooled liquid water in frozen soil, and frozen soil permeability. 
 
-The Noah-MP LSM has evolved through community efforts to pursue and refine a modern-era LSM suitable for use in the National Centers for Environmental Prediction (NCEP) operational weather and climate prediction models. This collaborative effort continues with participation from entities such as NCAR, NCEP, NASA, and university groups. 
+The Noah-MP LSM has evolved through community efforts to pursue and refine a modern-era LSM suitable for use in the National Centers for Environmental Prediction (:term:`NCEP`) operational weather and climate prediction models. This collaborative effort continues with participation from entities such as NCAR, NCEP, NASA, and university groups. 
 
 Noah-MP has been implemented in the UFS via the :term:`CCPP` physics package and 
 is currently being tested for operational use in GFSv17 and RRFS v2. Additionally, the UFS Weather Model now contains a Noah-MP land component. Noah-MP has 
