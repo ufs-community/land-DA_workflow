@@ -234,7 +234,7 @@ def plot_data(var_dict_anal,var_dict_fcst,out_title_anal_base,out_fn_anal_base,o
     axes[0].plot(dfa['Date'],dfa['wtime_oops'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Wall-clock')
     axes[0].set_ylabel('Wall-clock time: OOPS (s)', fontsize=txt_fnt-1)
     axes[0].tick_params(axis="y",labelsize=txt_fnt-2)
-    axes[0].legend(fontsize=txt_fnt-1)
+    #axes[0].legend(fontsize=txt_fnt-1)
     axes[0].grid(linewidth=0.2)
 
     axes[1].plot(dff['Date'],dff['wtime_uwm'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Wall-clock')
