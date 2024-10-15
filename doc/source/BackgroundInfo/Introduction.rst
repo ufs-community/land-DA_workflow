@@ -108,7 +108,7 @@ Unified Forecast System (UFS)
 The UFS is a community-based, coupled, comprehensive Earth modeling system. It includes :ufs:`multiple applications <applications>` that support different forecast durations and spatial domains. NOAA's operational model suite for numerical weather prediction (:term:`NWP`) is quickly transitioning to the UFS from many different modeling systems. 
 The UFS is designed to enable research, development, and contribution
 opportunities within the broader :term:`Weather Enterprise` (including
-government, industry, and academia). For more information about the UFS, visit the :ufs:`UFS Portal <>`.
+government, industry, and academia). For more information about the UFS, visit the :ufs:`UFS Portal <>`.
 
 
 .. _NoahMP:
@@ -118,14 +118,16 @@ Noah-MP
 
 The offline Noah-MP LSM is a stand-alone, uncoupled model used to execute land surface simulations. In this traditional uncoupled mode, near-surface atmospheric :term:`forcing data` are required as input forcing. This LSM simulates soil moisture (both liquid and frozen), soil temperature, skin temperature, snow depth, snow water equivalent (SWE), snow density, canopy water content, and the energy flux and water flux terms of the surface energy balance and surface water balance.
 
-Noah-MP uses a big-leaf approach with a separated vegetation canopy accounting 
-for vegetation effects on surface energy and water balances, a modified two-stream 
-approximation scheme to include the effects of vegetation canopy gaps that vary 
-with solar zenith angle and the canopy 3-D structure on radiation transfer, 
-a 3-layer physically-based snow model, a more permeable frozen soil by separating 
-a grid cell into a permeable fraction and impermeable fraction, a simple 
-groundwater model with a TOPMODEL-based runoff scheme, and a short-term leaf 
-phenology model. Noah-MP LSM enables a modular framework for diagnosing differences 
+Noah-MP uses: 
+
+* a big-leaf approach with a separated vegetation canopy accounting for vegetation effects on surface energy and water balances, 
+* a modified two-stream approximation scheme to include the effects of vegetation canopy gaps that vary with solar zenith angle and the canopy 3-D structure on radiation transfer, 
+* a 3-layer physically-based snow model
+* a more permeable frozen soil by separating a grid cell into a permeable fraction and impermeable fraction, 
+* a simple groundwater model with a TOPMODEL-based runoff scheme, and 
+* a short-term leaf phenology model. 
+
+Noah-MP LSM enables a modular framework for diagnosing differences 
 in process representation, facilitating ensemble forecasts and uncertainty 
 quantification, and choosing process presentations appropriate for the application. 
 Noah-MP developers designed multiple parameterization options for leaf dynamics, 
