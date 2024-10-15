@@ -9,21 +9,21 @@ This User's Guide provides guidance for running the Unified Forecast System
 the Joint Effort for Data assimilation Integration (:term:`JEDI`) software. Currently, the offline UFS Land DA System only works with snow data. 
 Thus, this User's Guide focuses primarily on the snow DA process.
 
-Since the |latestr| release, the following updates have been added to the Land DA System:
+Since the |latestr| release, the following improvements have been made to the Land DA System:
 
 * Added cycled run capability (:land-wflow-repo:`PR #101 <pull/101/>`)
-* Provide automated run option using cron (:land-wflow-repo:`PR #110 <pull/110>`)
+* Provided automated run option using cron (:land-wflow-repo:`PR #110 <pull/110>`)
 * Added analysis plotting task (:land-wflow-repo:`PR #107 <pull/107>`)
 * Added plotting option for forecast task restart files (:land-wflow-repo:`PR #149 <pull/149>`)
 * Extended and updated container support (:land-wflow-repo:`PR #85 <pull/85>` and :land-wflow-repo:`PR #147 <pull/147>`)
-* Port ``land-DA_workflow`` to Hercules (:land-wflow-repo:`PR #133 <pull/133>`)
-* Add verification and validation (VAV) capability (:land-wflow-repo:`PR #131 <pull/131>`)
+* Ported ``land-DA_workflow`` to Hercules (:land-wflow-repo:`PR #133 <pull/133>`)
+* Added verification and validation (VAV) capability (:land-wflow-repo:`PR #131 <pull/131>`)
 * Upgraded to JEDI Skylab v7.0 (:land-wflow-repo:`PR #92 <pull/92/>`)
 * Upgraded to spack-stack v1.6.0 (:land-wflow-repo:`PR #102 <pull/102>`)
 * Updated directory structure for NCO compliance (:land-wflow-repo:`PR #75 <pull/75>`)
 * Added platform test to CTest & updated version of UFS WM (:land-wflow-repo:`PR #146 <pull/146>`)
 * Removed land driver from CTest (:land-wflow-repo:`PR #123 <pull/123>`)
-* Removed land-driver and vector2tile (:land-wflow-repo:`PR #129 <pull/129>`)
+* Removed land driver and vector2tile (:land-wflow-repo:`PR #129 <pull/129>`)
 
 
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
@@ -45,9 +45,9 @@ Background Information
 Building, Running, and Testing the Land DA System
 ===================================================
 
-   * :numref:`Chapter %s: Land DA Workflow <BuildRunLandDA>` explains how to build and run the Land DA System on :ref:`Level 1 <LevelsOfSupport>` systems (currently Hera and Orion).
+   * :numref:`Chapter %s: Land DA Workflow <BuildRunLandDA>` explains how to build and run the Land DA System on :ref:`Level 1 <LevelsOfSupport>` systems (currently Hera, Orion, and Hercules).
    * :numref:`Chapter %s: Containerized Land DA Workflow <Container>` explains how to build and run the containerized Land DA System on non-Level 1 systems. 
-   * :numref:`Chapter %s: Testing the Land DA Workflow <TestingLandDA>` explains how to run the Land DA CTests. 
+   * :numref:`Chapter %s: Testing the Land DA Workflow <TestingLandDA>` explains how to run Land DA System tests. 
 
 Customizing the Workflow
 =========================
@@ -73,7 +73,7 @@ The Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-
 
 When posting a question, it is recommended that users provide the following information: 
 
-* The platform or system being used (e.g., Hera, Orion, container, MacOS, Linux)
+* The platform or system being used (e.g., Hera, Orion, container)
 * The version of the Land DA System being used (e.g., ``develop``, ``release/public-v1.1.0``). (To determine this, users can run ``git branch``, and the name of the branch with an asterisk ``*`` in front of it is the name of the branch or tag they are working with.) Note that the Land DA version being used and the version of the documentation being used should match, or users will run into difficulties.
 * Stage of the application when the issue appeared (i.e., build/compilation, configuration, or forecast run)
 * Contents of relevant configuration files
@@ -105,10 +105,10 @@ Background Information
 Unified Forecast System (UFS)
 ===============================
 
-The UFS is a community-based, coupled, comprehensive Earth modeling system. It includes `multiple applications <https://ufscommunity.org/science/aboutapps/>`__ that support different forecast durations and spatial domains. NOAA's operational model suite for numerical weather prediction (:term:`NWP`) is quickly transitioning to the UFS from many different modeling systems. 
+The UFS is a community-based, coupled, comprehensive Earth modeling system. It includes :ufs:`multiple applications <applications>` that support different forecast durations and spatial domains. NOAA's operational model suite for numerical weather prediction (:term:`NWP`) is quickly transitioning to the UFS from many different modeling systems. 
 The UFS is designed to enable research, development, and contribution
 opportunities within the broader :term:`Weather Enterprise` (including
-government, industry, and academia). For more information about the UFS, visit the `UFS Portal <https://ufscommunity.org/>`__.
+government, industry, and academia). For more information about the UFS, visit the :ufs:`UFS Portal <>`.
 
 
 .. _NoahMP:
