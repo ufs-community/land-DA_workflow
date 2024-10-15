@@ -47,7 +47,7 @@ To clone the most recent release, run the same command with |branch| in place of
 
 .. code-block:: console
 
-   git clone -b release/public-v1.2.0 --recursive https://github.com/ufs-community/land-DA_workflow.git
+   git clone -b release/public-v2.0.0 --recursive https://github.com/ufs-community/land-DA_workflow.git
 
 .. _build-land-da:
 
@@ -118,7 +118,8 @@ where ``<platform>`` is ``hera`` or ``orion``.
 Users will need to configure certain elements of their experiment in ``land_analysis.yaml``: 
 
    * ``ACCOUNT:`` A valid account name. Hera, Orion, and most NOAA RDHPCS systems require a valid account name; other systems may not (in which case, any value will do).
-   * ``EXP_BASEDIR:`` The full path to the directory where land-DA_workflow was cloned (i.e., ``$LANDDAROOT``)
+   * ``EXP_BASEDIR:`` The full path to the directory where ``land-DA_workflow`` was cloned (i.e., ``$LANDDAROOT``). 
+      * For example, if ``land-DA_workflow`` is located at ``/scratch2/NAGAPE/epic/User.Name/landda/land-DA_workflow`` on Hera, set ``EXP_BASEDIR:`` to ``/scratch2/NAGAPE/epic/User.Name/landda``. 
    * ``cycledef/spec:`` Cycle specification
 
 .. note::
