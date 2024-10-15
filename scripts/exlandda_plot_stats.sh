@@ -90,7 +90,7 @@ fi
 
 # Copy result files to COMOUT
 cp -p ${OUT_FN_ANAL_BASE}* ${COMOUTplot}
-cp -p ${OUT_FN_TIME} ${COMOUTplot}
+cp -p ${OUT_FN_TIME}* ${COMOUTplot}
 
 
 ############################################################
