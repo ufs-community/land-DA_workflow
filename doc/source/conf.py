@@ -131,5 +131,6 @@ extlinks = {'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '
             'land-wflow-wiki': ('https://github.com/ufs-community/land-DA_workflow/wiki/%s','%s'),
             'spack-stack': ('https://spack-stack.readthedocs.io/en/1.6.0/%s', '%s'),
             'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/develop/%s', '%s'),
+            'ufs': ('https://ufs.epic.noaa.gov/%s', '%s'),
             'uw': ('https://uwtools.readthedocs.io/en/main/%s', '%s'),
             }
