@@ -70,12 +70,15 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,nprocs_a
     files.sort()
     #print("Files=",files)
 
+    nobs_qc_prefix = "QC SnowDepthGHCN totalSnowDepth"
     wtime_oops_prefix = "OOPS_STATS util::Timers::Total"
 
     file_date = []
     min_val_final = []
     max_val_final = []
     rms_val_final = []
+    nobs_qc_final = []
+    nobs_in_final = []
     wtime_oops = []
     for file_fp in files:
         file_date_raw = file_fp.removeprefix(fp_data_anal_prefix)
@@ -87,6 +90,8 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,nprocs_a
         min_val_file = []
         max_val_file = []
         rms_val_file = []
+        nobs_qc_file = []
+        nobs_in_file = []
         with open(file_fp, 'r') as file:
             for line in file:
                 if line.startswith(var_nm):
@@ -109,6 +114,18 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,nprocs_a
                     rms_val = float(rms_val)
                     rms_val_file.append(rms_val)
                     #print(rms_var,"=",rms_val,type(rms_val))
+
+                if line.startswith(nobs_qc_prefix):
+                    line_data_raw = line
+                    line_split = line.split(': ')[1].split(' ')
+                    #print("QC split=",line_split)
+                    if len(line_split) == 6 and line_split[4] != "of":
+                        nobs_qc_val = int(line_split[0])
+                        nobs_qc_file.append(nobs_qc_val)
+                        nobs_in_val = int(line_split[4])
+                        nobs_in_file.append(nobs_in_val)
+                        #print("NOBS ini=",nobs_in_file,", QC=",nobs_qc_file)
+
                 if line.startswith(wtime_oops_prefix):
                     line_wtime_raw = line
                     line_split = line.split(' : ')[1].split(' ')
@@ -120,6 +137,8 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,nprocs_a
         min_val_final.append(min_val_file[-1])
         max_val_final.append(max_val_file[-1])
         rms_val_final.append(rms_val_file[-1])
+        nobs_qc_final.append(nobs_qc_file[-1])
+        nobs_in_final.append(nobs_in_file[-1])
         wtime_oops.append(wtime_oops_file)
     # ms to sec 
     wtime_oops = [x * 0.001 for x in wtime_oops]
@@ -131,6 +150,8 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,nprocs_a
         "Min": min_val_final,
         "Max": max_val_final,
         "RMS": rms_val_final,
+        "nobs_QC": nobs_qc_final,
+        "nobs_in": nobs_in_final,
         "wtime_oops": wtime_oops,
         "tcpu_oops": tcpu_oops
     }
@@ -203,22 +224,29 @@ def plot_data(var_dict_anal,var_dict_fcst,out_title_anal_base,out_fn_anal_base,o
     
     # PLOT 1
     # figsize=(width,height) in inches
-    fig, axes = plt.subplots(nrows=2, ncols=1, sharex=True, figsize=(6,4))
-    fig.suptitle(out_title_anal,fontsize=txt_fnt+1,y=0.95)
+    fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(6,6))
+    fig.suptitle(out_title_anal,fontsize=txt_fnt+1,y=0.97)
 
     axes[0].plot(dfa['Date'],dfa['Min'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Min')
     axes[0].plot(dfa['Date'],dfa['Max'],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='Max')
     axes[0].set_ylabel('Min / Max', fontsize=txt_fnt-1)
     axes[0].tick_params(axis="y",labelsize=txt_fnt-2)
-    axes[0].legend(fontsize=txt_fnt-1)
+    axes[0].legend(fontsize=txt_fnt-1, loc='center right')
     axes[0].grid(linewidth=0.2)
 
     axes[1].plot(dfa['Date'],dfa['RMS'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz)
-    axes[1].set_xlabel('Date', fontsize=txt_fnt-1)
     axes[1].set_ylabel('RMS', fontsize=txt_fnt-1)
-    axes[1].tick_params(axis="x",labelsize=txt_fnt-2)
     axes[1].tick_params(axis="y",labelsize=txt_fnt-2)
     axes[1].grid(linewidth=0.2)
+
+    axes[2].plot(dfa['Date'],dfa['nobs_in'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='N_obs:raw')
+    axes[2].plot(dfa['Date'],dfa['nobs_QC'],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='N_obs:QC')
+    axes[2].set_xlabel('Date', fontsize=txt_fnt-1)
+    axes[2].set_ylabel('Number of observations', fontsize=txt_fnt-1)
+    axes[2].tick_params(axis="x",labelsize=txt_fnt-2)
+    axes[2].tick_params(axis="y",labelsize=txt_fnt-2)
+    axes[2].legend(fontsize=txt_fnt-1, loc='center right')
+    axes[2].grid(linewidth=0.2)
 
     plt.xticks(rotation=30, ha='right')
     plt.tight_layout()
