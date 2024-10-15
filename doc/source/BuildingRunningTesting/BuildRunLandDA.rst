@@ -332,3 +332,15 @@ The histogram plots OMA values on the x-axis and frequency density values on the
 
    * - |logo1|
      - |logo2|
+
+.. note::
+
+   There are many options for viewing plots, and instructions for this are highly machine dependent. Users should view the data transfer documentation for their system to secure copy files from a remote system (such as :term:`RDHPCS`) to their local system. 
+   Another option is to download `Xming <https://sourceforge.net/projects/xming/>`_ (for Windows) or `XQuartz <https://www.xquartz.org/>`_ (for Mac) and run:
+
+   .. code-block:: console
+
+      module load imagemagick
+      display file_name.png
+
+   where ``file_name.png`` is the name of the file to display/view. 
