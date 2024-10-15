@@ -31,18 +31,18 @@ def main():
     f.close()
 #    print("YAML_DATA:",yaml_data)
 
-    path_data = yaml_data['PATH_DIR']
-    work_dir = yaml_data['WORK_DIR']
-    fn_data_anal_prefix = yaml_data['FN_DATA_ANAL_PREFIX']
-    fn_data_anal_suffix = yaml_data['FN_DATA_ANAL_SUFFIX']
-    fn_data_fcst_prefix = yaml_data['FN_DATA_FCST_PREFIX']
-    fn_data_fcst_suffix = yaml_data['FN_DATA_FCST_SUFFIX']
-    nprocs_anal = yaml_data['NPROCS_ANAL']
-    nprocs_fcst = yaml_data['NPROCS_FCST']
-    out_title_anal_base = yaml_data['OUT_TITLE_ANAL_BASE']
-    out_fn_anal_base = yaml_data['OUT_FN_ANAL_BASE']
-    out_title_time = yaml_data['OUT_TITLE_TIME']
-    out_fn_time = yaml_data['OUT_FN_TIME']
+    path_data = yaml_data['path_data']
+    work_dir = yaml_data['work_dir']
+    fn_data_anal_prefix = yaml_data['fn_data_anal_prefix']
+    fn_data_anal_suffix = yaml_data['fn_data_anal_suffix']
+    fn_data_fcst_prefix = yaml_data['fn_data_fcst_prefix']
+    fn_data_fcst_suffix = yaml_data['fn_data_fcst_suffix']
+    nprocs_anal = yaml_data['nprocs_anal']
+    nprocs_fcst = yaml_data['nprocs_fcst']
+    out_title_anal_base = yaml_data['out_title_anal_base']
+    out_fn_anal_base = yaml_data['out_fn_anal_base']
+    out_title_time = yaml_data['out_title_time']
+    out_fn_time = yaml_data['out_fn_time']
 
     var_list = ["totalSnowDepth"]
     nprocs_anal = int(nprocs_anal)

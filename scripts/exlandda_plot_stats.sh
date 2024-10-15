@@ -66,17 +66,17 @@ FN_DATA_FCST_PREFIX="forecast_"
 FN_DATA_FCST_SUFFIX=".log"
 OUT_TITLE_ANAL_BASE="Land-DA::Analysis::QC SnowDepthGHCN::"
 OUT_FN_ANAL_BASE="landda_timehistory_"
-OUT_TITLE_TIME="'Land-DA::Wall-clock time"
+OUT_TITLE_TIME="Land-DA::Wall-clock time"
 OUT_FN_TIME="landda_timehistory_wtime"
 
-sed -i "s|PATH_DATA|${COMIN}|g" plot_timehistory.yaml
+sed -i "s|PATH_DATA|${LOGDIR}|g" plot_timehistory.yaml
 sed -i "s|WORK_DIR|${DATA}|g" plot_timehistory.yaml
 sed -i -e "s/XXFN_DATA_ANAL_PREFIX/${FN_DATA_ANAL_PREFIX}/g" plot_timehistory.yaml
 sed -i -e "s/XXFN_DATA_ANAL_SUFFIX/${FN_DATA_ANAL_SUFFIX}/g" plot_timehistory.yaml
 sed -i -e "s/XXFN_DATA_FCST_PREFIX/${FN_DATA_FCST_PREFIX}/g" plot_timehistory.yaml
 sed -i -e "s/XXFN_DATA_FCST_SUFFIX/${FN_DATA_FCST_SUFFIX}/g" plot_timehistory.yaml
-sed -i -e "s/XXNPROCS_ANAL/${NPROCS_ANAL}/g" plot_timehistory.yaml
-sed -i -e "s/XXNPROCS_FCST/${NPROCS_FCST}/g" plot_timehistory.yaml
+sed -i -e "s/XXNPROCS_ANAL/${NPROCS_ANALYSIS}/g" plot_timehistory.yaml
+sed -i -e "s/XXNPROCS_FCST/${NPROCS_FORECAST}/g" plot_timehistory.yaml
 sed -i -e "s/XXOUT_TITLE_ANAL_BASE/${OUT_TITLE_ANAL_BASE}/g" plot_timehistory.yaml
 sed -i -e "s/XXOUT_FN_ANAL_BASE/${OUT_FN_ANAL_BASE}/g" plot_timehistory.yaml
 sed -i -e "s/XXOUT_TITLE_TIME/${OUT_TITLE_TIME}/g" plot_timehistory.yaml
