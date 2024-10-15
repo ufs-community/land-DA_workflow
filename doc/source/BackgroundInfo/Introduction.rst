@@ -9,22 +9,28 @@ This User's Guide provides guidance for running the Unified Forecast System
 the Joint Effort for Data assimilation Integration (:term:`JEDI`) software. Currently, the offline UFS Land DA System only works with snow data. 
 Thus, this User's Guide focuses primarily on the snow DA process.
 
-Since the |latestr| release, the following capabilities have been added to the Land DA System:
+Since the |latestr| release, the following updates have been added to the Land DA System:
 
 * Added cycled run capability (:land-wflow-repo:`PR #101 <pull/101/>`)
 * Provide automated run option using cron (:land-wflow-repo:`PR #110 <pull/110>`)
 * Added analysis plotting task (:land-wflow-repo:`PR #107 <pull/107>`)
+* Added plotting option for forecast task restart files (:land-wflow-repo:`PR #149 <pull/149>`)
+* Extended and updated container support (:land-wflow-repo:`PR #85 <pull/85>` and :land-wflow-repo:`PR #147 <pull/147>`)
+* Port ``land-DA_workflow`` to Hercules (:land-wflow-repo:`PR #133 <pull/133>`)
+* Add verification and validation (VAV) capability (:land-wflow-repo:`PR #131 <pull/131>`)
 * Upgraded to JEDI Skylab v7.0 (:land-wflow-repo:`PR #92 <pull/92/>`)
 * Upgraded to spack-stack v1.6.0 (:land-wflow-repo:`PR #102 <pull/102>`)
-* Extended container support (:land-wflow-repo:`PR #85 <pull/85>`)
 * Updated directory structure for NCO compliance (:land-wflow-repo:`PR #75 <pull/75>`)
+* Added platform test to CTest & updated version of UFS WM (:land-wflow-repo:`PR #146 <pull/146>`)
 * Removed land driver from CTest (:land-wflow-repo:`PR #123 <pull/123>`)
 * Removed land-driver and vector2tile (:land-wflow-repo:`PR #129 <pull/129>`)
 
+
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
 
-UFS Development Team. (2023, December 11). Unified Forecast System (UFS) Land Data Assimilation (DA) System (Version v1.2.0). Zenodo. https://doi.org/10.5281/zenodo.7675721
+UFS Development Team. (2024, October 30). Unified Forecast System (UFS) Land Data Assimilation (DA) System (Version v2.0.0). Zenodo. https://doi.org/10.5281/zenodo.7675721
 
+.. COMMENT: Update DOI!
 
 Organization
 **************
