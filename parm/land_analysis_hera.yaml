@@ -259,6 +259,8 @@ workflow:
         KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
+        NNODES_ANALYSIS: "&NNODES_ANALYSIS;"
+        NNODES_FORECAST: "&NNODES_FORECAST;"
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "plot_stats" "&HOMElandda;" "&MACHINE;"'
       jobname: plot_stats

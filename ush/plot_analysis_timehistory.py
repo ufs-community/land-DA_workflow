@@ -7,6 +7,7 @@
 ## NOAA/EPIC
 ## History ===============================
 ## V000: 2024/10/14: Chan-Hoo Jeon : Preliminary version
+## V001: 2024/10/15: Chan-Hoo Jeon : Add wall-clock time plot
 ###################################################################### CHJ #####
 
 import os, sys
@@ -24,32 +25,26 @@ import matplotlib as mpl
 def main():
 # =================================================================== CHJ =====
 
-#    yaml_file="plot_restart.yaml"
-#    with open(yaml_file, 'r') as f:
-#        yaml_data=yaml.load(f, Loader=yaml.FullLoader)
-#    f.close()
+    yaml_file="plot_timehistory.yaml"
+    with open(yaml_file, 'r') as f:
+        yaml_data=yaml.load(f, Loader=yaml.FullLoader)
+    f.close()
 #    print("YAML_DATA:",yaml_data)
 
-#    path_data=yaml_data['path_data']
-#    work_dir=yaml_data['work_dir']
-#    fn_data_base=yaml_data['fn_data_base']
-#    out_title_base=yaml_data['out_title_base']
-#    out_fn_base=yaml_data['out_fn_base']
+    path_data = yaml_data['PATH_DIR']
+    work_dir = yaml_data['WORK_DIR']
+    fn_data_anal_prefix = yaml_data['FN_DATA_ANAL_PREFIX']
+    fn_data_anal_suffix = yaml_data['FN_DATA_ANAL_SUFFIX']
+    fn_data_fcst_prefix = yaml_data['FN_DATA_FCST_PREFIX']
+    fn_data_fcst_suffix = yaml_data['FN_DATA_FCST_SUFFIX']
+    nprocs_anal = yaml_data['NPROCS_ANAL']
+    nprocs_fcst = yaml_data['NPROCS_FCST']
+    out_title_anal_base = yaml_data['OUT_TITLE_ANAL_BASE']
+    out_fn_anal_base = yaml_data['OUT_FN_ANAL_BASE']
+    out_title_time = yaml_data['OUT_TITLE_TIME']
+    out_fn_time = yaml_data['OUT_FN_TIME']
 
-    path_data='/scratch2/NAGAPE/epic/Chan-hoo.Jeon/landda_benchmark/ptmp/test/com/output/logs'
-    work_dir='/scratch2/NCEPDEV/fv3-cam/Chan-hoo.Jeon/landda_test/land-DA_workflow/ush'
-    fn_data_anal_prefix='analysis_'
-    fn_data_anal_suffix='.log'
-    fn_data_fcst_prefix='forecast_'
-    fn_data_fcst_suffix='.log'
-    nprocs_anal="6"
-    nprocs_fcst="26"
-    out_title_anal_base='land-DA::Analysis::QC SnowDepthGHCN::'
-    out_fn_anal_base='landda_timehistory_'
-    out_title_time='land-DA::Wall-clock/Total-CPU time'
-    out_fn_time='landda_wtime_'
-
-    var_list=["totalSnowDepth"]
+    var_list = ["totalSnowDepth"]
     nprocs_anal = int(nprocs_anal)
     nprocs_fcst = int(nprocs_fcst)
 
@@ -199,24 +194,26 @@ def plot_data(var_dict_anal,var_dict_fcst,out_title_anal_base,out_fn_anal_base,o
     out_title_anal = out_title_anal_base+var_nm
     out_fn_anal = out_fn_anal_base+var_nm
 
-    df = pd.DataFrame(var_dict_anal)
+    dfa = pd.DataFrame(var_dict_anal)
+    dff = pd.DataFrame(var_dict_fcst)
 
     txt_fnt=7
     ln_wdth=0.75
     mk_sz=3
     
+    # PLOT 1
     # figsize=(width,height) in inches
     fig, axes = plt.subplots(nrows=2, ncols=1, sharex=True, figsize=(6,4))
     fig.suptitle(out_title_anal,fontsize=txt_fnt+1,y=0.95)
 
-    axes[0].plot(df['Date'],df['Min'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Min')
-    axes[0].plot(df['Date'],df['Max'],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='Max')
+    axes[0].plot(dfa['Date'],dfa['Min'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Min')
+    axes[0].plot(dfa['Date'],dfa['Max'],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='Max')
     axes[0].set_ylabel('Min / Max', fontsize=txt_fnt-1)
     axes[0].tick_params(axis="y",labelsize=txt_fnt-2)
     axes[0].legend(fontsize=txt_fnt-1)
     axes[0].grid(linewidth=0.2)
 
-    axes[1].plot(df['Date'],df['RMS'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz)
+    axes[1].plot(dfa['Date'],dfa['RMS'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz)
     axes[1].set_xlabel('Date', fontsize=txt_fnt-1)
     axes[1].set_ylabel('RMS', fontsize=txt_fnt-1)
     axes[1].tick_params(axis="x",labelsize=txt_fnt-2)
@@ -225,10 +222,33 @@ def plot_data(var_dict_anal,var_dict_fcst,out_title_anal_base,out_fn_anal_base,o
 
     plt.xticks(rotation=30, ha='right')
     plt.tight_layout()
-
     # Output figure
     ndpi = 300
     out_file(work_dir,out_fn_anal,ndpi)
+
+    # PLOT 2
+    # figsize=(width,height) in inches
+    fig, axes = plt.subplots(nrows=2, ncols=1, sharex=True, figsize=(6,4))
+    fig.suptitle(out_title_time,fontsize=txt_fnt+1,y=0.95)
+
+    axes[0].plot(dfa['Date'],dfa['wtime_oops'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Wall-clock')
+    axes[0].set_ylabel('Wall-clock time: OOPS (s)', fontsize=txt_fnt-1)
+    axes[0].tick_params(axis="y",labelsize=txt_fnt-2)
+    axes[0].legend(fontsize=txt_fnt-1)
+    axes[0].grid(linewidth=0.2)
+
+    axes[1].plot(dff['Date'],dff['wtime_uwm'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Wall-clock')
+    axes[1].set_xlabel('Date', fontsize=txt_fnt-1)
+    axes[1].set_ylabel('Wall-clock time: ufs_model (s)', fontsize=txt_fnt-1)
+    axes[1].tick_params(axis="x",labelsize=txt_fnt-2)
+    axes[1].tick_params(axis="y",labelsize=txt_fnt-2)
+    axes[1].grid(linewidth=0.2)
+
+    plt.xticks(rotation=30, ha='right')
+    plt.tight_layout()
+    # Output figure
+    ndpi = 300
+    out_file(work_dir,out_fn_time,ndpi)
 
 
 # Output file ======================================================= CHJ =====

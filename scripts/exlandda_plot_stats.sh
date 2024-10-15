@@ -7,6 +7,11 @@ MM=${PDY:4:2}
 DD=${PDY:6:2}
 HH=${cyc}
 
+nYYYY=${NTIME:0:4}
+nMM=${NTIME:4:2}
+nDD=${NTIME:6:2}
+nHH=${NTIME:8:2}
+
 ############################################################
 # Stats Plot
 ############################################################
@@ -50,26 +55,58 @@ cp -p ${PREOUTFN}* ${COMOUTplot}
 
 
 ############################################################
+# Time-history Plot
+############################################################
+
+cp -p ${PARMlandda}/templates/template.plot_timehistory.yaml plot_timehistory.yaml
+
+FN_DATA_ANAL_PREFIX="analysis_"
+FN_DATA_ANAL_SUFFIX=".log"
+FN_DATA_FCST_PREFIX="forecast_"
+FN_DATA_FCST_SUFFIX=".log"
+OUT_TITLE_ANAL_BASE="Land-DA::Analysis::QC SnowDepthGHCN::"
+OUT_FN_ANAL_BASE="landda_timehistory_"
+OUT_TITLE_TIME="'Land-DA::Wall-clock time"
+OUT_FN_TIME="landda_timehistory_wtime"
+
+sed -i "s|PATH_DATA|${COMIN}|g" plot_timehistory.yaml
+sed -i "s|WORK_DIR|${DATA}|g" plot_timehistory.yaml
+sed -i -e "s/XXFN_DATA_ANAL_PREFIX/${FN_DATA_ANAL_PREFIX}/g" plot_timehistory.yaml
+sed -i -e "s/XXFN_DATA_ANAL_SUFFIX/${FN_DATA_ANAL_SUFFIX}/g" plot_timehistory.yaml
+sed -i -e "s/XXFN_DATA_FCST_PREFIX/${FN_DATA_FCST_PREFIX}/g" plot_timehistory.yaml
+sed -i -e "s/XXFN_DATA_FCST_SUFFIX/${FN_DATA_FCST_SUFFIX}/g" plot_timehistory.yaml
+sed -i -e "s/XXNPROCS_ANAL/${NPROCS_ANAL}/g" plot_timehistory.yaml
+sed -i -e "s/XXNPROCS_FCST/${NPROCS_FCST}/g" plot_timehistory.yaml
+sed -i -e "s/XXOUT_TITLE_ANAL_BASE/${OUT_TITLE_ANAL_BASE}/g" plot_timehistory.yaml
+sed -i -e "s/XXOUT_FN_ANAL_BASE/${OUT_FN_ANAL_BASE}/g" plot_timehistory.yaml
+sed -i -e "s/XXOUT_TITLE_TIME/${OUT_TITLE_TIME}/g" plot_timehistory.yaml
+sed -i -e "s/XXOUT_FN_TIME/${OUT_FN_TIME}/g" plot_timehistory.yaml
+
+${USHlandda}/plot_analysis_timehistory.py
+if [[ $? != 0 ]]; then
+  echo "FATAL ERROR: Time-history plots failed"
+  exit 44
+fi
+
+# Copy result files to COMOUT
+cp -p ${OUT_FN_ANAL_BASE}* ${COMOUTplot}
+cp -p ${OUT_FN_TIME} ${COMOUTplot}
+
+
+############################################################
 # Restart Plot
 ############################################################
 
-nYYYY=${NTIME:0:4}
-nMM=${NTIME:4:2}
-nDD=${NTIME:6:2}
-nHH=${NTIME:8:2}
-
 cp -p ${PARMlandda}/templates/template.plot_restart.yaml plot_restart.yaml
 
-PATH_DATA="${COMIN}"
-WORK_DIR="${DATA}"
 FN_DATA_BASE="ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile"
 FN_DATA_EXT=".nc"
 SOIL_LEVEL_NUMBER="1"
 OUT_TITLE_BASE="Land-DA::restart::${nYYYY}-${nMM}-${nDD}_${nHH}::"
 OUT_FN_BASE="landda_out_restart_${nYYYY}-${nMM}-${nDD}_${nHH}_"
 
-sed -i "s|PATH_DATA|${PATH_DATA}|g" plot_restart.yaml
-sed -i "s|WORK_DIR|${WORK_DIR}|g" plot_restart.yaml
+sed -i "s|PATH_DATA|${COMIN}|g" plot_restart.yaml
+sed -i "s|WORK_DIR|${DATA}|g" plot_restart.yaml
 sed -i -e "s/XXFN_DATA_BASE/${FN_DATA_BASE}/g" plot_restart.yaml
 sed -i -e "s/XXFN_DATA_EXT/${FN_DATA_EXT}/g" plot_restart.yaml
 sed -i -e "s/XXSOIL_LEVEL_NUMBER/${SOIL_LEVEL_NUMBER}/g" plot_restart.yaml
