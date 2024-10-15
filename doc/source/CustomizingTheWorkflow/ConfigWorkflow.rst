@@ -96,11 +96,13 @@ Entities are constants that can be referred to throughout the workflow using the
        OBSDIR_SUBDIR: ""
        OBS_TYPES: "GHCN"
        DAtype: "letkfoi_snow"
-       SNOWDEPTHVAR: "snwdph"
        TSTUB: "oro_C96.mx100"
+       WE2E_VAV: "YES"
+       WE2E_ATOL: "1e-7"
+       WE2E_LOG_FN: "we2e.log"
        NET: "landda"
        envir: "test"
-       model_ver: "v1.2.1"
+       model_ver: "v2.0.0"
        RUN: "landda"
        HOMElandda: "&EXP_BASEDIR;/land-DA_workflow"
        PTMP: "&EXP_BASEDIR;/ptmp"
@@ -154,8 +156,7 @@ Entities are constants that can be referred to throughout the workflow using the
    Time integration step of the atmospheric component of the UFS weather model (in seconds).
    
 ``DT_RUNSEQ:`` (Default: "6")
-   Time interval of run sequence (coupling interval) between the model components of the UFS 
-weather model (in seconds).
+   Time interval of run sequence (coupling interval) between the model components of the UFS weather model (in seconds).
 
 ``NPROCS_FORECAST:`` (Default: "26")
    Total number of processes for the FORECAST task.
@@ -193,11 +194,17 @@ weather model (in seconds).
 ``DAtype:`` (Default: "letkfoi_snow")
    Type of data assimilation. Valid values: ``letkfoi_snow``. Currently, Land DA only performs snow DA using the LETKF-OI algorithm. As the application expands, more options may be added. 
 
-``SNOWDEPTHVAR:`` (Default: "snwdph")
-   Placeholder --- currently not used in workflow. This value is currently hard-coded into ``scripts/exlandda_analysis.sh``.
-
 ``TSTUB:`` (Default: "oro_C96.mx100")
    Specifies the file stub/name for orography files in ``TPATH``. This file stub is named ``oro_C${RES}`` for atmosphere-only orography files and ``oro_C{RES}.mx100`` for atmosphere and ocean orography files. When Land DA is compiled with ``sorc/app_build.sh``, the subdirectories of the fix files should be linked into the ``fix`` directory, and orography files can be found in ``fix/FV3_fix_tiled/C96``. 
+
+``WE2E_VAV:`` (Default: "YES")
+   Flag of the workflow end-to-end (WE2E) test for the verification and validation ("YES"/"NO")
+
+``WE2E_ATOL:`` (Default: "1e-7")
+   Tolerance of the WE2E test
+
+``WE2E_LOG_FN:`` (Default: "we2e.log")
+   Log file name of the WE2E test
 
 ``DATADEP_FILE1:`` (Default: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>")
    File name for the dependency check for the task ``pre_anal``. The ``pre_anal`` task is triggered only when one or more of the ``DATADEP_FILE#`` files exists. Otherwise, the task will not be submitted.
@@ -233,7 +240,7 @@ Standard environment variables are defined in the NCEP Central Operations :nco:`
 ``NET:`` (Default: "landda")
    Model name (first level of ``com`` directory structure)
 
-``model_ver:`` (Default: "v1.2.1")
+``model_ver:`` (Default: "v2.0.0")
    Version number of package in three digits (e.g., v#.#.#); second level of ``com`` directory
 
 ``RUN:`` (Default: "landda")
@@ -319,6 +326,10 @@ Parameters for a particular task are set in the ``workflow.tasks.task_<name>:`` 
            EXP_NAME: "&EXP_NAME;"
            RES: "&RES;"
            TSTUB: "&TSTUB;"
+           WE2E_VAV: "&WE2E_VAV;"
+           WE2E_ATOL: "&WE2E_ATOL;"
+           WE2E_LOG_FN: "&WE2E_LOG_FN;"
+           LOGDIR: "&LOGDIR;
            model_ver: "&model_ver;"
            HOMElandda: "&HOMElandda;"
            COMROOT: "&COMROOT;"
@@ -327,7 +338,6 @@ Parameters for a particular task are set in the ``workflow.tasks.task_<name>:`` 
            PDY: "&PDY;"
            cyc: "&cyc;"
            DAtype: "&DAtype;"
-           SNOWDEPTHVAR: "&SNOWDEPTHVAR;"
            NPROCS_ANALYSIS: "&NPROCS_ANALYSIS;"
            JEDI_INSTALL: "&JEDI_INSTALL;"
          account: "&ACCOUNT;"
