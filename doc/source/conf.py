@@ -7,13 +7,13 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "UFS Offline Land DA User's Guide"
-copyright = '2023, '
+copyright = '2024, '
 author = ' '
 
 # The short X.Y version
-version = 'develop'
+version = 'v2.0'
 # The full version, including alpha/beta/rc tags
-release = 'develop'
+release = 'v2.0.0'
 
 numfig = True
 
@@ -47,7 +47,7 @@ pygments_style = 'sphinx'
 # Documentation-wide substitutions
 
 rst_prolog = """
-.. |latestr| replace:: v1.2.0
+.. |latestr| replace:: v2.0.0
 .. |tag| replace:: ``ufs-land-da-v2.0.0``
 .. |branch| replace:: ``release/public-v2.0.0``
 .. |skylabv| replace:: Skylab v7.0

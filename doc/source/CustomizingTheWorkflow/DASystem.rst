@@ -568,7 +568,7 @@ The grid description files appear in :numref:`Table %s <GridInputFiles>` below:
 Observation Data
 ====================
 
-Observation data from 2000 and 2019 are provided in NetCDF format for the |latestr| release. Instructions for downloading the data are provided in :numref:`Section %s <GetDataC>`, and instructions for accessing the data on :ref:`Level 1 Systems <LevelsOfSupport>` are provided in :numref:`Section %s <GetData>`. Currently, data is taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_ (GHCN), but eventually, data from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`_) will also be available for use. 
+Observation data from 2000 are provided in NetCDF format for the |latestr| release. Instructions for downloading the data are provided in :numref:`Section %s <GetDataC>`, and instructions for accessing the data on :ref:`Level 1 Systems <LevelsOfSupport>` are provided in :numref:`Section %s <GetData>`. Currently, data is taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_ (GHCN), but eventually, data from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`_) will also be available for use. 
 
 Users can view file header information and notes for NetCDF formatted files using the instructions in :numref:`Section %s <view-netcdf-files>`. For example, on Orion, users can run:
 
@@ -579,6 +579,8 @@ Users can view file header information and notes for NetCDF formatted files usin
    ncdump -h /work/noaa/epic/UFS_Land-DA_Dev/inputs/DA/snow_depth/GHCN/data_proc/v3/2019/ghcn_snwd_ioda_20191221.nc
 
 to see the header contents of the 2019-12-21 GHCN snow depth file. Users may need to modify the module load command and the file path to reflect module versions/file paths that are available on their system. 
+
+.. COMMENT: Update to use the 2000 files
 
 Observation Types
 --------------------

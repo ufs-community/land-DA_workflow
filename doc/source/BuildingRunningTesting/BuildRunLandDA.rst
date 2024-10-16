@@ -117,7 +117,7 @@ where ``<platform>`` is ``hera`` or ``orion``.
    
 Users will need to configure certain elements of their experiment in ``land_analysis.yaml``: 
 
-   * ``ACCOUNT:`` A valid account name. Hera, Orion, and most NOAA RDHPCS systems require a valid account name; other systems may not (in which case, any value will do).
+   * ``ACCOUNT:`` A valid account name. Hera, Orion, Hercules, and most NOAA RDHPCS systems require a valid account name; other systems may not (in which case, any value will do).
    * ``EXP_BASEDIR:`` The full path to the directory where ``land-DA_workflow`` was cloned (i.e., ``$LANDDAROOT``). 
       * For example, if ``land-DA_workflow`` is located at ``/scratch2/NAGAPE/epic/User.Name/landda/land-DA_workflow`` on Hera, set ``EXP_BASEDIR:`` to ``/scratch2/NAGAPE/epic/User.Name/landda``. 
    * ``cycledef/spec:`` Cycle specification
@@ -126,7 +126,7 @@ Users will need to configure certain elements of their experiment in ``land_anal
 
    To determine an appropriate ``ACCOUNT`` field for Level 1 systems that use the Slurm job scheduler, run ``saccount_params``. On other systems, running ``groups`` will return a list of projects that the user has permissions for. Not all listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
 
-Users may configure other elements of an experiment in ``land_analysis.yaml`` if desired. The ``land_analysis_*.yaml`` files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Sections :numref:`%s <ConfigWorkflow>`, :numref:`%s <Model>`, and :numref:`%s <DASystem>`. 
+Users may configure other elements of an experiment in ``land_analysis.yaml`` if desired. The ``land_analysis_*.yaml`` files contain reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in these files and the files they reference using information in Sections :numref:`%s: Workflow Configuration Parameters <ConfigWorkflow>`, :numref:`%s: I/O for the Noah-MP Model <Model>`, and :numref:`%s: I/O for JEDI DA <DASystem>`. 
 
 .. _GetData:
 

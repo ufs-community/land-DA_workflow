@@ -12,7 +12,5 @@ The Land DA System User's Guide associated with the development branch is at: ht
 
 For any publications based on work with the UFS Offline Land Data Assimilation System, please include a citation to the DOI below:
 
-UFS Development Team. (2024, October 30). Unified Forecast System (UFS) Land Data Assimilation (DA) System (Version v2.0.0). Zenodo. https://doi.org/10.5281/zenodo.7675721
-
-### Fix DOI above!!!
+UFS Development Team. (2024, October 30). Unified Forecast System (UFS) Land Data Assimilation (DA) System (Version v2.0.0). Zenodo. https://doi.org/10.5281/zenodo.13909475
 

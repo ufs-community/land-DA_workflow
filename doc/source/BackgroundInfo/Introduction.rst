@@ -9,12 +9,14 @@ This User's Guide provides guidance for running the Unified Forecast System
 the Joint Effort for Data assimilation Integration (:term:`JEDI`) software. Currently, the offline UFS Land DA System only works with snow data. 
 Thus, this User's Guide focuses primarily on the snow DA process.
 
-Since the |latestr| release, the following improvements have been made to the Land DA System:
+The following improvements have been made to the Land DA System ahead of the |latestr| release:
 
 * Added cycled run capability (:land-wflow-repo:`PR #101 <pull/101/>`)
 * Provided automated run option using cron (:land-wflow-repo:`PR #110 <pull/110>`)
-* Added analysis plotting task (:land-wflow-repo:`PR #107 <pull/107>`)
-* Added plotting option for forecast task restart files (:land-wflow-repo:`PR #149 <pull/149>`)
+* Added plotting options: 
+   * Analysis plotting task (:land-wflow-repo:`PR #107 <pull/107>`)
+   * Plotting option for forecast task restart files (:land-wflow-repo:`PR #149 <pull/149>`)
+   * Time-history plots (:land-wflow-repo:`PR #151 <pull/151>`)
 * Extended and updated container support (:land-wflow-repo:`PR #85 <pull/85>` and :land-wflow-repo:`PR #147 <pull/147>`)
 * Ported ``land-DA_workflow`` to Hercules (:land-wflow-repo:`PR #133 <pull/133>`)
 * Added verification and validation (VAV) capability (:land-wflow-repo:`PR #131 <pull/131>`)
@@ -28,9 +30,7 @@ Since the |latestr| release, the following improvements have been made to the La
 
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
 
-UFS Development Team. (2024, October 30). Unified Forecast System (UFS) Land Data Assimilation (DA) System (Version v2.0.0). Zenodo. https://doi.org/10.5281/zenodo.7675721
-
-.. COMMENT: Update DOI!
+UFS Development Team. (2024, October 30). Unified Forecast System (UFS) Land Data Assimilation (DA) System (Version v2.0.0). Zenodo. https://doi.org/10.5281/zenodo.13909475
 
 Organization
 **************

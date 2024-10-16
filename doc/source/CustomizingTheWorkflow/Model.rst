@@ -13,9 +13,9 @@ Input Files
 **************
 
 The UFS land model requires multiple input files to run, including static datasets (fix files containing climatological information, terrain, and land use data), initial conditions files, and forcing files. 
-Users may reference the `Community Noah-MP Land Surface Modeling System Technical Description Version 5.0 <https://opensky.ucar.edu/islandora/object/technotes:599>`_ (2023) and the `Community Noah-MP User's Guide <https://www.jsg.utexas.edu/noah-mp/files/Users_Guide_v0.pdf>`_ (2011) for a detailed technical description of certain elements of the Noah-MP model.
+Users may reference the `Community Noah-MP Land Surface Modeling System Technical Description Version 5.0 <https://opensky.ucar.edu/islandora/object/technotes:599>`_ (2023) for a detailed technical description of certain elements of the Noah-MP model.
 
-In both the land component and land driver implementations of Noah-MP, static file(s) and initial conditions file(s) specify model parameters. 
+In Noah-MP, the static file(s) and initial conditions file(s) specify model parameters. 
 These files are publicly available in the `Land DA data bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. 
 Users can download the data and untar the file via the command line:
 
@@ -32,6 +32,8 @@ For data specific to the latest release (|latestr|), users can run:
    
    wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v1.2.0/Landdav1.2.0_input_data.tar.gz
    tar xvfz Landdav1.2.0_input_data.tar.gz
+
+.. COMMENT: Update tar file name for v2.0.0 release! 
 
 These files and their parameters are described in the following subsections.
 
