@@ -198,7 +198,7 @@ Entities are constants that can be referred to throughout the workflow using the
    Specifies the file stub/name for orography files in ``TPATH``. This file stub is named ``oro_C${RES}`` for atmosphere-only orography files and ``oro_C{RES}.mx100`` for atmosphere and ocean orography files. When Land DA is compiled with ``sorc/app_build.sh``, the subdirectories of the fix files should be linked into the ``fix`` directory, and orography files can be found in ``fix/FV3_fix_tiled/C96``. 
 
 ``WE2E_VAV:`` (Default: "YES")
-   Flag of the workflow end-to-end (WE2E) test for the verification and validation ("YES"/"NO")
+   Flag to turn on the workflow end-to-end (WE2E) test. When WE2E_VAV="YES", the result files from the experiment are compared to the test baseline files, located in ``fix/test_base/we2e_com``. If the results are within the tolerance set (via ``WE2E_ATOL``) at the end of the three main tasks --- ``analysis``, ``forecast``, and ``post_anal`` --- then the experiment passes. Valid values: ``"YES"`` | ``"NO"``
 
 ``WE2E_ATOL:`` (Default: "1e-7")
    Tolerance of the WE2E test
