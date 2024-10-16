@@ -145,31 +145,39 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     ├── (lib*)
     ├── modulefiles
     ├── parm
+    │     ├── jedi
+    │     ├── templates
     │     ├── check_release_outputs.sh
-    │     ├── land_analysis_<forcing>_<platform>.yaml
-    │     └── run_without_rocoto.sh
+    │     ├── detect_platform.sh
+    │     ├── land_analysis_<platform>.yaml
+    │     └── launch_rocoto_wflow.sh
     ├── scripts
     ├── sorc
     |     ├── apply_incr.fd
-    |     |     ├── apply_incr_noahmp_snow.f90
-    |     |     └── NoahMPdisag_module.f90
+    |     |     └── sorc
+    |     |           ├── apply_incr_noahmp_snow.f90
+    |     |           └── NoahMPdisag_module.f90
     │     ├── (build)
     │     ├── cmake
-    │     │     └── compiler_flags_*.cmake
     │     ├── (conda)
+    |     |     └── envs
+    |     |           └── land_da 
     │     ├── test
+    │     │     ├── <platform>_ctest.sh
+    │     │     └── run_<platform>_ctest.sh
     │     ├── tile2tile_converter.fd
     │     ├── ufs_model.fd
     │     ├── CMakeLists.txt
     │     └── app_build.sh
     ├── ush
     |     ├── hofx_analysis_stats.py
-    |     └── letkf_create_ens.py
+    |     ├── letkf_create_ens.py
+    |     └── plot_forecast_restart.py
     ├── versions
     ├── LICENSE
     └── README.md
 
-:numref:`Table %s <Subdirectories>` describes the contents of the most important Land DA subdirectories. :numref:`Section %s <components>` describes the Land DA System components. Users can reference the :nco:`NCO Implementation Standards <ImplementationStandards.v11.0.0.pdf>` (p. 19) for additional details on repository structure in NCO-compliant repositories. 
+:numref:`Table %s <Subdirectories>` describes the contents of the most important Land DA subdirectories. :numref:`Section %s <components>` describes the Land DA System components. Users may reference the :nco:`NCO Implementation Standards <ImplementationStandards.v11.0.0.pdf>` (p. 19) for additional details on repository structure in NCO-compliant repositories. 
 
 .. _Subdirectories:
 
@@ -207,12 +215,9 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
 The UFS Land Component
 =========================
 
-The UFS Land DA System has been updated to build the UFS Noah-MP land component as part of the build process. 
-Updates allowing the Land DA System to run with the land component are underway. 
-
-The land component makes use of a National Unified Operational Prediction Capability (:term:`NUOPC`) cap to interface with a coupled modeling system. 
+The UFS Land DA System has been updated to build and run the UFS Noah-MP land component. The land component makes use of a National Unified Operational Prediction Capability (:term:`NUOPC`) cap to interface with a coupled modeling system. 
 Unlike the standalone Noah-MP land driver, the Noah-MP :term:`NUOPC cap` is able to create an :term:`ESMF` multi-tile grid by reading in a mosaic grid file. For the domain, the :term:`FMS` initializes reading and writing of the cubed-sphere tiled output. Then, the Noah-MP land component reads static information and initial conditions (e.g., surface albedo) and interpolates the data to the date of the simulation. The solar zenith angle is calculated based on the time information. 
 
 Unified Workflow (UW) Tools
 ============================
-The Unified Workflow (UW) is a set of tools intended to unify the workflow for various UFS applications under one framework. The UW toolkit currently includes rocoto, template, and configuration (config) tools, which are being incorporated into the Land DA workflow. Additional tools are under development. More details about UW tools can be found in the `uwtools <https://github.com/ufs-community/uwtools>`_ GitHub repository and in the :uw:`UW Documentation <>`.
+The Unified Workflow (UW) is a set of tools intended to unify the workflow for various UFS applications under one framework. The UW toolkit includes rocoto, template, and configuration (config) tools, and additional tools and drivers are under development. The Land DA workflow makes use of the rocoto tool to generate a workflow XML file; other UW tools may be incorporated into the workflow in the future. More details about UW tools can be found in the `uwtools <https://github.com/ufs-community/uwtools>`_ GitHub repository and in the :uw:`UW Documentation <>`.
