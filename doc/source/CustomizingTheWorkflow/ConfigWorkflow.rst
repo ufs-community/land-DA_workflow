@@ -204,7 +204,7 @@ Entities are constants that can be referred to throughout the workflow using the
    Tolerance of the WE2E test
 
 ``WE2E_LOG_FN:`` (Default: "we2e.log")
-   Log file name of the WE2E test
+   Name of the WE2E test log file
 
 ``DATADEP_FILE1:`` (Default: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.tile1.nc</cyclestr>")
    File name for the dependency check for the task ``pre_anal``. The ``pre_anal`` task is triggered only when one or more of the ``DATADEP_FILE#`` files exists. Otherwise, the task will not be submitted.
