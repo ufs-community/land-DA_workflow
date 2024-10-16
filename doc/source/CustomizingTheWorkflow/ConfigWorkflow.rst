@@ -156,7 +156,7 @@ Entities are constants that can be referred to throughout the workflow using the
    The main integration time step of the atmospheric component of the UFS Weather Model (in seconds). This is the time step for the outermost atmospheric model loop and must be a positive integer value. It corresponds to the frequency at which the physics routines and the top level dynamics routine are called. (Note that one call to the top-level dynamics routine results in multiple calls to the horizontal dynamics, tracer transport, and vertical dynamics routines; see the `FV3 dycore scientific documentation <https://repository.library.noaa.gov/view/noaa/30725>`_ for details.) 
    
 ``DT_RUNSEQ:`` (Default: "6")
-   Time interval of run sequence (coupling interval) between the model components of the UFS weather model (in seconds).
+   Time interval of run sequence (coupling interval) between the model components of the UFS Weather Model (in seconds).
 
 ``NPROCS_FORECAST:`` (Default: "26")
    Total number of processes for the FORECAST task.
