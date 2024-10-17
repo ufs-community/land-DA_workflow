@@ -19,7 +19,7 @@ The following improvements have been made to the Land DA System ahead of the |la
    * Time-history plots (:land-wflow-repo:`PR #151 <pull/151>`)
 * Extended and updated container support (:land-wflow-repo:`PR #85 <pull/85>` and :land-wflow-repo:`PR #147 <pull/147>`)
 * Ported ``land-DA_workflow`` to Hercules (:land-wflow-repo:`PR #133 <pull/133>`)
-* Added verification and validation (VAV) capability (:land-wflow-repo:`PR #131 <pull/131>`)
+* Added prerequisites for workflow end-to-end (WE2E) testing capability (:land-wflow-repo:`PR #131 <pull/131>`)
 * Upgraded to JEDI Skylab v7.0 (:land-wflow-repo:`PR #92 <pull/92/>`)
 * Upgraded to spack-stack v1.6.0 (:land-wflow-repo:`PR #102 <pull/102>`)
 * Updated directory structure for NCO compliance (:land-wflow-repo:`PR #75 <pull/75>`)

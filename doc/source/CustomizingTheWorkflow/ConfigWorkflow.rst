@@ -4,7 +4,7 @@
 Available Workflow Configuration Parameters
 ***************************************************
 
-To run the Land DA System, users must create an experiment configuration file (named ``land_analysis.yaml`` by default). This file contains experiment-specific information, such as forecast/cycle dates, grid and physics suite choices, data directories, and other relevant settings. To help the user, two sample ``land_analysis_<machine>.yaml`` configuration files have been included in the ``parm`` directory for use on Hera and Orion. They contain reasonable experiment default values that work on those machines. The content of these files can be copied into ``land_analysis.yaml`` and used as the starting point from which to generate a variety of experiment configurations for Land DA. 
+To run the Land DA System, users must create an experiment configuration file (named ``land_analysis.yaml`` by default). This file contains experiment-specific information, such as forecast/cycle dates, grid and physics suite choices, data directories, and other relevant settings. To help the user, two sample ``land_analysis_<machine>.yaml`` configuration files have been included in the ``parm`` directory for use on Hera, Orion, and Hercules. They contain reasonable experiment default values that work on those machines. The content of these files can be copied into ``land_analysis.yaml`` and used as the starting point from which to generate a variety of experiment configurations for Land DA. 
 
 The following is a list of the parameters in the ``land_analysis_<machine>.yaml`` files. For each parameter, the default value and a brief description are provided. 
 

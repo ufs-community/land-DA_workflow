@@ -8,6 +8,16 @@ Frequently Asked Questions (FAQ)
    :depth: 2
    :local:
 
+.. _DeadTask:
+
+My tasks went DEAD. Why might this be?
+========================================
+
+The most common reason for the first few tasks to go DEAD is an improper path in the ``land_analysis.yaml`` configuration file. 
+In particular, ``EXP_BASEDIR`` must be set to the directory above ``land-DA_workflow``. For example, if ``land-DA_workflow`` resides at ``Users/Jane.Doe/landda/land-DA_workflow``, then ``EXP_BASEDIR`` must be set to ``Users/Jane.Doe/landda``. 
+If the first few tasks run successfully, but future tasks go DEAD, users will need to check the experiment log files, located at ``$EXP_BASEDIR/ptmp/test/com/output/logs``.
+
+
 .. _RestartTask:
 
 How do I restart a DEAD task?

@@ -119,8 +119,11 @@ Users will need to configure certain elements of their experiment in ``land_anal
 
    * ``ACCOUNT:`` A valid account name. Hera, Orion, Hercules, and most NOAA RDHPCS systems require a valid account name; other systems may not (in which case, any value will do).
    * ``EXP_BASEDIR:`` The full path to the directory where ``land-DA_workflow`` was cloned (i.e., ``$LANDDAROOT``). 
-      * For example, if ``land-DA_workflow`` is located at ``/scratch2/NAGAPE/epic/User.Name/landda/land-DA_workflow`` on Hera, set ``EXP_BASEDIR:`` to ``/scratch2/NAGAPE/epic/User.Name/landda``. 
-   * ``cycledef/spec:`` Cycle specification
+      
+      .. hint:: 
+         For example, if ``land-DA_workflow`` is located at ``/scratch2/NAGAPE/epic/User.Name/landda/land-DA_workflow`` on Hera, set ``EXP_BASEDIR:`` to ``/scratch2/NAGAPE/epic/User.Name/landda``. 
+
+   * ``cycledef.spec:`` Cycle specification using start, stop, step method to indicate the start cycle, the end cycle, and an increment.
 
 .. note::
 
@@ -133,7 +136,7 @@ Users may configure other elements of an experiment in ``land_analysis.yaml`` if
 Data
 ------
 
-:numref:`Table %s <Level1Data>` shows the locations of pre-staged data on NOAA :term:`RDHPCS` (i.e., Hera and Orion). These data locations are already included in the ``land_analysis_*.yaml`` files but are provided here for informational purposes. 
+:numref:`Table %s <Level1Data>` shows the locations of pre-staged data on NOAA :term:`RDHPCS` (e.g., Hera and Orion). These data locations are already included in the ``land_analysis_*.yaml`` files but are provided here for informational purposes. 
    
 .. _Level1Data:
 
@@ -147,7 +150,7 @@ Data
    * - Hercules & Orion
      - /work/noaa/epic/UFS_Land-DA_Dev/inputs
 
-Users who have difficulty accessing the data on Hera or Orion may download it according to the instructions in :numref:`Section %s <GetDataC>`. Its subdirectories are soft-linked to the ``fix`` directory of ``land-DA_workflow`` by the build script ``sorc/app_build.sh``.
+Users who have difficulty accessing the data on Hera, Orion, or Hercules may download it according to the instructions in :numref:`Section %s <GetDataC>`. Its subdirectories are soft-linked to the ``fix`` directory of ``land-DA_workflow`` by the build script ``sorc/app_build.sh``.
 
 .. _generate-wflow:
 
@@ -194,10 +197,10 @@ Each Land DA experiment includes multiple tasks that must be run in order to sat
      - Runs :term:`JEDI` and adds the increment to the surface data files
    * - JLANDDA_POST_ANAL
      - Transfers the JEDI result from the surface data files to the restart files
-   * - JLANDDA_PLOT_STATS
-     - Plots the JEDI result (scatter/histogram)
    * - JLANDDA_FORECAST
      - Runs the forecast model
+   * - JLANDDA_PLOT_STATS
+     - Plots the JEDI result (scatter/histogram) and the restart files
 
 Users may run these tasks :ref:`using the Rocoto workflow manager <run-w-rocoto>`. 
 
@@ -266,7 +269,7 @@ If ``rocotorun`` was successful, the ``rocotostat`` command will print a status 
    200001040000   plot_stats                           -            -             -       -          -
    200001040000     forecast                           -            -             -       -          -
 
-Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command (whether issued manually or via cron automation). For each task, a log file is generated. These files are stored in ``$LANDDAROOT/ptmp/test/com/output/logs/run_<forcing>``, where ``<forcing>`` is either ``gswp3`` or ``era5``. 
+Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command (whether issued manually or via cron automation). For each task, a log file is generated. These files are stored in ``$LANDDAROOT/ptmp/test/com/output/logs``. 
 
 The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, and DEAD. Users may view the log files to determine why a task may have failed.
 
