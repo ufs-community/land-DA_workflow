@@ -20,7 +20,7 @@ In particular, ``EXP_BASEDIR`` must be set to the directory above ``land-DA_work
 
    uw rocoto realize --input-file land_analysis.yaml --output-file land_analysis.xml
 
-Then, rewind the DEAD tasks as described :ref:`below <RestartTask>` using ``rocotorewind``, and us ``rocotorun``/``rocotostat`` to advance and check the workflow. 
+Then, rewind the DEAD tasks as described :ref:`below <RestartTask>` using ``rocotorewind``, and use ``rocotorun``/``rocotostat`` to advance/check on the workflow. 
 
 If the first few tasks run successfully, but future tasks go DEAD, users will need to check the experiment log files, located at ``$EXP_BASEDIR/ptmp/test/com/output/logs``. It may also be useful to check that the JEDI directory and other paths are correct in ``land_analysis.yaml``. 
 

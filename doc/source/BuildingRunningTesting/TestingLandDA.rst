@@ -15,7 +15,7 @@ This chapter provides instructions for using the Land DA CTest suite. These step
 Process
 *********
 
-From the working directory (``$LANDDAROOT``), navigate to ``build``. Then run: 
+From the working directory (``$LANDDAROOT``), navigate to ``build`` and run: 
 
 .. code-block:: console
    
@@ -69,3 +69,8 @@ The CTests test the operability of four major elements of the Land DA System: ``
      - Tests the ability to add a JEDI increment.
    * - ``test_ufs_datm_land``
      - Tests proper functioning of the UFS land model (``ufs-datm-lnd``)
+
+.. note::
+
+   There are plans to add workflow end-to-end (WE2E) tests to the Land DA System. Currently, when ``WE2E_VAV: "YES"``, this functionality checks that the output from the Jan. 3-4, 2000 sample case is within the tolerance set (via the ``WE2E_ATOL`` variable) at the end of the three main tasks --- analysis, forecast, and post_anal. The results are logged by default in ``we2e.log``. In the future, this functionality will be expanded to encompass a full range of WE2E tests. 
+

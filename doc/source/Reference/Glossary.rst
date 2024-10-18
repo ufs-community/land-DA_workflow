@@ -124,7 +124,7 @@ Glossary
       Numerical Weather Prediction (NWP) takes current observations of weather and processes them with computer models to forecast the future state of the weather. 
 
    RDHPCS
-      Research and Development High-Performance Computing Systems. 
+      `Research and Development High-Performance Computing Systems <https://docs.rdhpcs.noaa.gov/systems/index.html>`_. 
 
    Spack
       `Spack <https://spack.readthedocs.io/en/latest/>`_ is a package management tool designed to support multiple versions and configurations of software on a wide variety of platforms and environments. It was designed for large supercomputing centers where many users and application teams share common installations of software on clusters with exotic architectures. 
