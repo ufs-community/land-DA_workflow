@@ -14,6 +14,7 @@ The following improvements have been made to the Land DA System ahead of the |la
 * Added cycled run capability (:land-wflow-repo:`PR #101 <pull/101/>`)
 * Provided automated run option using cron (:land-wflow-repo:`PR #110 <pull/110>`)
 * Added plotting options: 
+
    * Analysis plotting task (:land-wflow-repo:`PR #107 <pull/107>`)
    * Plotting option for forecast task restart files (:land-wflow-repo:`PR #149 <pull/149>`)
    * Time-history plots (:land-wflow-repo:`PR #151 <pull/151>`)

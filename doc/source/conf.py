@@ -11,7 +11,7 @@ copyright = '2024, '
 author = ' '
 
 # The short X.Y version
-version = 'v2.0'
+version = 'v2.0.0'
 # The full version, including alpha/beta/rc tags
 release = 'v2.0.0'
 

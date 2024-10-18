@@ -4,7 +4,7 @@
 Input/Output Files for the Noah-MP Model
 *****************************************
 
-This chapter provides practical information on input files and parameters for the Noah-MP Land Surface Model (LSM) and its Vector-to-Tile Converter component.
+This chapter provides practical information on input files and parameters for the Noah-MP Land Surface Model (LSM).
 For background information on the Noah-MP LSM, see :numref:`Section %s <NoahMP>` of the Introduction. 
 
 .. _InputFiles:
@@ -44,6 +44,8 @@ Viewing netCDF Files
 ======================
 
 Users can view file information, variables, and notes for NetCDF files using the ``ncdump`` module. On Level 1 platforms, users can load the Land DA environment from ``land-DA_workflow`` as described in :numref:`Section %s <config-wflow>`. 
+
+.. include:: ../doc-snippets/load-env.rst
 
 Then, users can run ``ncdump -h path/to/filename.nc``, where ``path/to/filename.nc`` is replaced with the path to the file. For example, on Orion, users might run: 
 
