@@ -51,7 +51,7 @@ Then, users can run ``ncdump -h path/to/filename.nc``, where ``path/to/filename.
 
 .. code-block:: console
 
-   module load netcdf-c/4.9.2
+   module load netcdf/4.7.0
    ncdump -h /work/noaa/epic/UFS_Land-DA_Dev/inputs/NOAHMP_IC/ufs-land_C96_init_fields.tile1.nc
 
 
@@ -59,7 +59,7 @@ On other systems, users can load a compiler, MPI, and NetCDF modules before runn
 
 .. code-block:: console
 
-   module load intel/2022.1.2 impi/2022.1.2 netcdf-c/4.9.2
+   module load intel/2022.1.2 impi/2022.1.2 netcdf/4.7.0
    ncdump -h /path/to/inputs/NOAHMP_IC/ufs-land_C96_init_fields.tile1.nc
 
 Users may need to modify the ``module load`` command to reflect modules that are available on their system. 

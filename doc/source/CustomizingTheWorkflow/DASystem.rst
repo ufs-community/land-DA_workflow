@@ -4,7 +4,7 @@
 Input/Output Files for the JEDI DA System 
 ******************************************
 
-This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which utilizes the UFS Noah-MP component together with the ``jedi-bundle`` (|skylabv|) to enable cycled model forecasts. The data assimilation framework applies the Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm to combine the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007).
+This chapter describes the configuration of the offline Land :term:`Data Assimilation` (DA) System, which utilizes the UFS Noah-MP component together with the ``jedi-bundle`` (|skylabv|) to enable cycled model forecasts. The data assimilation framework applies the Local Ensemble Transform Kalman Filter-Optimal Interpolation (:term:`LETKF-OI`) algorithm to combine the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007).
 
 Joint Effort for Data Assimilation Integration (JEDI)
 ********************************************************
@@ -575,12 +575,10 @@ Users can view file header information and notes for NetCDF formatted files usin
 .. code-block:: console
 
    # Load modules:
-   module load netcdf-c/4.9.2
-   ncdump -h /work/noaa/epic/UFS_Land-DA_Dev/inputs/DA/snow_depth/GHCN/data_proc/v3/2019/ghcn_snwd_ioda_20191221.nc
+   module load netcdf/4.7.0
+   ncdump -h /work/noaa/epic/UFS_Land-DA_Dev/inputs/DA/snow_depth/GHCN/data_proc/v3/2000/ghcn_snwd_ioda_20000103.nc
 
-to see the header contents of the 2019-12-21 GHCN snow depth file. Users may need to modify the module load command and the file path to reflect module versions/file paths that are available on their system. 
-
-.. COMMENT: Update to use the 2000 files
+to see the header contents of the 2000-01-03 GHCN snow depth file. Users may need to modify the module load command and the file path to reflect module versions/file paths that are available on their system. 
 
 Observation Types
 --------------------
@@ -602,19 +600,20 @@ The IODA-formatted GHCN files are available in the ``inputs/DA/snow_depth/GHCN/d
 
 .. code-block:: console
    
-   netcdf ghcn_snwd_ioda_20191221 {
+
+   netcdf ghcn_snwd_ioda_20000103 {
    dimensions:
-      Location = UNLIMITED ; // (10466 currently) ;
+      Location = UNLIMITED ; // (10423 currently)
    variables:
       int64 Location(Location) ;
          Location:suggested_chunk_dim = 10000LL ;
 
    // global attributes:
-         string :_ioda_layout = "ObsGroup" ;
-         :_ioda_layout_version = 0 ;
-         string :converter = "ghcn_snod2ioda.py" ;
-         string :date_time_string = "2000-01-01T18:00:00Z" ;
-         :nlocs = 10466 ;
+		string :_ioda_layout = "ObsGroup" ;
+		:_ioda_layout_version = 0 ;
+		string :converter = "ghcn_snod2ioda.py" ;
+		string :date_time_string = "2000-01-03T18:00:00Z" ;
+		:nlocs = 10423 ;
 
    group: MetaData {
       variables:
@@ -641,7 +640,7 @@ The IODA-formatted GHCN files are available in the ``inputs/DA/snow_depth/GHCN/d
             string totalSnowDepth:coordinates = "longitude latitude" ;
             string totalSnowDepth:units = "mm" ;
       } // group ObsError
-
+   
    group: ObsValue {
       variables:
          float totalSnowDepth(Location) ;
@@ -667,6 +666,8 @@ GHCN
 ^^^^^^
 
 GHCN files for 2000 and 2019 are already provided in IODA format for the |latestr| release. :numref:`Table %s <GetData>` indicates where users can find data on NOAA :term:`RDHPCS` platforms. Tar files containing the 2000 and 2019 data are located in the publicly-available `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. Once untarred, the snow depth files are located in ``/inputs/DA/snow_depth/GHCN/data_proc/${YEAR}``. The 2019 GHCN IODA files were provided by Clara Draper (NOAA PSL). Each file follows the naming convention of ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc``, where ``${YYYY}`` is the four-digit cycle year, ``${MM}`` is the two-digit cycle month, and ``${DD}`` is the two-digit cycle day. 
+
+.. COMMENT: Ensure that 2019 files are also in the tar file for the release. 
 
 In each experiment, the ``land_analysis_*.yaml`` file sets the type of observation file (e.g., ``OBS_TYPES: "GHCN"``). Before assimilation, if "GHCN" was specified as the observation type, the ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` file corresponding to the specified cycle date is copied to the run directory (usually ``$LANDDAROOT/ptmp/test/com/landda/$model_ver/landda.$PDY$cyc/obs`` by default --- see :numref:`Section %s <nco-dir-entities>` for more on these variables) with a naming-convention change (i.e., ``GHCN_${YYYY}${MM}${DD}${HH}.nc``). 
 
@@ -848,13 +849,5 @@ To restart the Land DA System successfully after land model execution, all param
    | snow_level_liquid        | liquid content of snow levels     | "mm"                  |
    +--------------------------+-----------------------------------+-----------------------+
 
-The restart files also include one text file, ``${FILEDATE}.coupler.res``, which contains metadata for the restart.
-
-Example of ``${FILEDATE}.coupler.res``:
-
-.. code-block:: console
-
-   2        (Calendar: no_calendar=0, thirty_day_months=1, julian=2, gregorian=3, noleap=4)
-   2019     12     22     0     0     0    Model start time:   year, month, day, hour, minute, second
-   2019     12     22     0     0     0    Current model time: year, month, day, hour, minute, second
+.. COMMENT: Add info about ufs.cpld.cpl.r.2000-01-03-00000.nc and ufs.cpld.datm.r.2000-01-03-00000.nc ???
 
