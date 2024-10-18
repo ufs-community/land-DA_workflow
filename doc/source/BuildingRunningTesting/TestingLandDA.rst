@@ -19,14 +19,14 @@ From the working directory (``$LANDDAROOT``), navigate to ``build``. Then run:
 
 .. code-block:: console
    
-   salloc --ntasks 8 --exclusive --qos=debug --partition=<partition> --time=00:30:00 --account=<account_name>
    cd land-DA_workflow/sorc/build
+   salloc --ntasks 8 --exclusive --qos=debug --partition=<partition> --time=00:30:00 --account=<account_name>
    source ../../versions/build.ver_<platform>
    module use ../../modulefiles
    module load build_<platform>_intel 
    ctest
 
-where ``<account_name>`` corresponds to the user's actual account name, ``<partition>`` is a valid partition on the platform of choice (e.g., ``debug`` or ``orion``), and ``<platform>`` is ``hera`` or ``orion``.
+where ``<account_name>`` corresponds to the user's actual account name, ``<partition>`` is a valid partition on the platform of choice (e.g., ``debug`` or ``orion``), and ``<platform>`` is ``hera``, ``orion``, or ``hercules``.
 
 This will submit an interactive job, load the appropriate modulefiles, and run the CTests. 
 
@@ -51,7 +51,9 @@ If the tests are successful, a message will be printed to the console. For examp
 Tests
 *******
 
-The CTests test the operability of four major elements of the Land DA System: ``create_ens``, ``letkfoi_snowda``, ``apply_jediincr``, and ``ufs_datm_land``. The tests and their dependencies are listed in the ``land-DA_workflow/test/CMakeLists.txt`` file. Currently, the CTests are only run on Hera and Orion; they cannot yet be run via container. 
+The CTests test the operability of four major elements of the Land DA System: ``create_ens``, ``letkfoi_snowda``, ``apply_jediincr``, and ``ufs_datm_land``. The tests and their dependencies are listed in the ``land-DA_workflow/test/CMakeLists.txt`` file. Currently, the CTests are only run on Hera, Orion, and Hercules; they cannot yet be run via container. 
+
+.. COMMENT: Is this still true?
 
 .. list-table:: *Land DA CTests*
    :widths: 20 50
@@ -60,7 +62,7 @@ The CTests test the operability of four major elements of the Land DA System: ``
    * - Test
      - Description
    * - ``test_create_ens``
-     - Tests creation of a pseudo-ensemble for use in LETKF-OI.
+     - Tests creation of a pseudo-ensemble for use in :term:`LETKF-OI`.
    * - ``test_letkfoi_snowda``
      - Tests the use of LETKF-OI to assimilate snow data. 
    * - ``test_apply_jediincr``

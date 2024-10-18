@@ -491,7 +491,7 @@ Other tasks may list data or time dependencies. For example, the pre-analysis ta
                  age: 5
                value: "&DATADEP_FILE4;"
 
-For details on the dependency details (e.g., ``attrs:``, ``age:``, ``value:`` tags), view the authoritative :rocoto:`Rocoto documentation <>`.
+For details on dependencies (e.g., ``attrs:``, ``age:``, ``value:`` tags), view the authoritative :rocoto:`Rocoto documentation <>`.
 
 .. _prep-obs:
 

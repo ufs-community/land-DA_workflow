@@ -14,8 +14,15 @@ My tasks went DEAD. Why might this be?
 ========================================
 
 The most common reason for the first few tasks to go DEAD is an improper path in the ``land_analysis.yaml`` configuration file. 
-In particular, ``EXP_BASEDIR`` must be set to the directory above ``land-DA_workflow``. For example, if ``land-DA_workflow`` resides at ``Users/Jane.Doe/landda/land-DA_workflow``, then ``EXP_BASEDIR`` must be set to ``Users/Jane.Doe/landda``. 
-If the first few tasks run successfully, but future tasks go DEAD, users will need to check the experiment log files, located at ``$EXP_BASEDIR/ptmp/test/com/output/logs``.
+In particular, ``EXP_BASEDIR`` must be set to the directory above ``land-DA_workflow``. For example, if ``land-DA_workflow`` resides at ``Users/Jane.Doe/landda/land-DA_workflow``, then ``EXP_BASEDIR`` must be set to ``Users/Jane.Doe/landda``. After modifying ``land_analysis.yaml``, users will need to regenerate the workflow XML by running: 
+
+.. code-block:: console
+
+   uw rocoto realize --input-file land_analysis.yaml --output-file land_analysis.xml
+
+Then, rewind the DEAD tasks as described :ref:`below <RestartTask>` using ``rocotorewind``, and us ``rocotorun``/``rocotostat`` to advance and check the workflow. 
+
+If the first few tasks run successfully, but future tasks go DEAD, users will need to check the experiment log files, located at ``$EXP_BASEDIR/ptmp/test/com/output/logs``. It may also be useful to check that the JEDI directory and other paths are correct in ``land_analysis.yaml``. 
 
 
 .. _RestartTask:
@@ -39,13 +46,12 @@ On platforms that utilize Rocoto workflow software (including Hera and Orion), i
    200001030000     forecast  61746128         DEAD           256       1          -
 
 
-This means that the dead task has not completed successfully, so the workflow has stopped. Once the issue has been identified and fixed (by referencing the log files in ``$LANDDAROOT/ptmp/test/com/output/logs``), users can re-run the failed task using the ``rocotorewind`` command:
+This means that the DEAD task has not completed successfully, so the workflow has stopped. Once the issue has been identified and fixed (e.g., by referencing the log files in ``$LANDDAROOT/ptmp/test/com/output/logs``), users can rewind, or "undo," the failed task using the ``rocotorewind`` command:
 
 .. code-block:: console
 
    rocotorewind -w land_analysis.xml -d land_analysis.db -v 10 -c 200001030000 -t forecast
 
 where ``-c`` specifies the cycle date (first column of ``rocotostat`` output) and ``-t`` represents the task name
-(second column of ``rocotostat`` output). After using ``rocotorewind``, the next time ``rocotorun`` is used to
-advance the workflow, the job will be resubmitted.
+(second column of ``rocotostat`` output). This will set the number of tries to 0, as though the task has not been run. After using ``rocotorewind``, the next time ``rocotorun`` is used to advance the workflow, the job will be resubmitted.
 

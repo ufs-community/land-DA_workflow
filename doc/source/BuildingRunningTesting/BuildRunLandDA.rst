@@ -214,7 +214,7 @@ To run the experiment, users can automate job submission via :term:`crontab` or 
 Automated Run
 ---------------
 
-To automate task submission, users must be on a system where :term:`cron` is available. On Orion, cron is only available on the orion-login-1 node, so users will need to work on that node when running cron jobs on Orion.
+To automate task submission, users must be on a system where :term:`cron` is available. On Orion, cron is only available on the orion-login-1 node, and likewise on Hercules, it is only available on hercules-login-1, so users will need to work on those nodes when running cron jobs on Orion/Hercules.
 
 .. code-block:: console
 
@@ -303,7 +303,7 @@ As the experiment progresses, it will generate a number of directories to hold i
                            ├── hofx: Directory containing the soft links to the results of the analysis task for plotting
                            └── DATA_RESTART: Directory containing the soft links to the restart files for the next cycles
 
-``<forcing>`` refers to the type of forcing data used (``gswp3`` or ``era5``). Each variable in parentheses and angle brackets (e.g., ``(<VAR>)``) is the name for the directory defined in the file ``land_analysis.yaml``. In the future, this directory structure will be further modified to meet the :nco:`NCO Implementation Standards<>`.
+Each variable in parentheses and angle brackets (e.g., ``(<VAR>)``) is the name for the directory defined in the file ``land_analysis.yaml``. In the future, this directory structure will be further modified to meet the :nco:`NCO Implementation Standards<>`.
 
 Check for the output files for each cycle in the experiment directory:
 
@@ -311,7 +311,7 @@ Check for the output files for each cycle in the experiment directory:
 
    ls -l $LANDDAROOT/ptmp/test/com/landda/<model_ver>/landda.YYYYMMDD
 
-where ``YYYYMMDD`` is the cycle date, and ``<model_ver>`` is the model version (currently ``v1.2.1`` in the ``develop`` branch). The experiment should generate several restart files. 
+where ``YYYYMMDD`` is the cycle date, and ``<model_ver>`` is the model version (currently |latestr| in the ``develop`` branch). The experiment should generate several restart files. 
 
 .. _plotting:
 
