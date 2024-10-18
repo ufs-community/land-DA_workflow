@@ -279,8 +279,8 @@ As the experiment progresses, it will generate a number of directories to hold i
 
 .. code-block:: console
 
-   $LANDDAROOT: Base directory
-    ├── land-DA_workflow(<CYCLEDIR>): Home directory of the land DA workflow (<HOMElandda>)
+   $LANDDAROOT (<EXP_BASEDIR>): Base directory
+    ├── land-DA_workflow (<HOMElandda> or <CYCLEDIR>): Home directory of the land DA workflow
     └── ptmp (<PTMP>)
           └── test (<envir> or <OPSROOT>)
                 └── com (<COMROOT>)
