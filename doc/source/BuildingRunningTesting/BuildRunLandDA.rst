@@ -94,6 +94,8 @@ To load the workflow environment, run:
 
 .. include:: ../doc-snippets/load-env.rst
 
+This activates the ``land_da`` conda environment, and the user typically sees ``(land_da)`` in front of the Terminal prompt at this point.
+
 .. _configure-expt:
 
 Modify the Workflow Configuration YAML
