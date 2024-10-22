@@ -43,17 +43,21 @@ do
 done
 ln -nsf ${COMIN}/obs/*_${YYYY}${MM}${DD}${HH}.nc .
 
-cres_file=${DATA}/${FILEDATE}.coupler.res
-cp ${PARMlandda}/templates/template.coupler.res $cres_file
+# update tile2tile namelist
+settings="\
+  'yyyy': !!str ${YYYY}
+  'mm': !!str ${MM}
+  'dd': !!str ${DD}
+  'hh': !!str ${HH}
+  'yyyp': !!str ${YYYP}
+  'mp': !!str ${MP}
+  'dp': !!str ${DP}
+  'hp': !!str ${HP}
+" # End of settins variable
 
-sed -i -e "s/XXYYYY/${YYYY}/g" $cres_file
-sed -i -e "s/XXMM/${MM}/g" $cres_file
-sed -i -e "s/XXDD/${DD}/g" $cres_file
-sed -i -e "s/XXHH/${HH}/g" $cres_file
-sed -i -e "s/XXYYYP/${YYYP}/g" $cres_file
-sed -i -e "s/XXMP/${MP}/g" $cres_file
-sed -i -e "s/XXDP/${DP}/g" $cres_file
-sed -i -e "s/XXHP/${HP}/g" $cres_file
+fp_template="${PARMlandda}/templates/template.coupler.res"
+fn_namelist="${DATA}/${FILEDATE}.coupler.res"
+${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
 
 ################################################
 # CREATE BACKGROUND ENSEMBLE (LETKFOI)
