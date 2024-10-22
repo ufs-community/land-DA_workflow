@@ -50,25 +50,30 @@ do
   cp ${DATA_SHARE}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc .
 done
 
-  cp ${PARMlandda}/templates/template.jedi2ufs jedi2ufs.namelist
-   
-  sed -i "s|FIXlandda|${FIXlandda}|g" jedi2ufs.namelist
-  sed -i -e "s/XXYYYY/${YYYY}/g" jedi2ufs.namelist
-  sed -i -e "s/XXMM/${MM}/g" jedi2ufs.namelist
-  sed -i -e "s/XXDD/${DD}/g" jedi2ufs.namelist
-  sed -i -e "s/XXHH/${HH}/g" jedi2ufs.namelist
-  sed -i -e "s/XXRES/${RES}/g" jedi2ufs.namelist
-  sed -i -e "s/XXTSTUB/${TSTUB}/g" jedi2ufs.namelist
+# update tile2tile namelist
+settings="\
+  'fix_landda': ${FIXlandda}
+  'res': ${RES}
+  'yyyy': !!str ${YYYY}
+  'mm': !!str ${MM}
+  'dd': !!str ${DD}
+  'hh': !!str ${HH}
+  'tstub': ${TSTUB}
+" # End of settins variable
 
-  export pgm="tile2tile_converter.exe"
-  . prep_step
-  ${EXEClandda}/$pgm jedi2ufs.namelist >>$pgmout 2>errfile
-  export err=$?; err_chk
-  cp errfile errfile_tile2tile
-  if [[ $err != 0 ]]; then
-    echo "tile2tile failed"
-    exit 10
-  fi
+fp_template="${PARMlandda}/templates/template.jedi2ufs"
+fn_namelist="jedi2ufs.namelist"
+${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
+
+export pgm="tile2tile_converter.exe"
+. prep_step
+${EXEClandda}/$pgm jedi2ufs.namelist >>$pgmout 2>errfile
+export err=$?; err_chk
+cp errfile errfile_tile2tile
+if [[ $err != 0 ]]; then
+  echo "tile2tile failed"
+  exit 10
+fi
 
 # save analysis restart
 for itile in {1..6}
