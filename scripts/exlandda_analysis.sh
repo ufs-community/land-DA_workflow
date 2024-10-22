@@ -43,7 +43,7 @@ do
 done
 ln -nsf ${COMIN}/obs/*_${YYYY}${MM}${DD}${HH}.nc .
 
-# update tile2tile namelist
+# update coupler.res file
 settings="\
   'yyyy': !!str ${YYYY}
   'mm': !!str ${MM}
@@ -116,7 +116,7 @@ if [[ $do_DA == "YES" ]]; then
     cp ${PARMlandda}/jedi/${YAML_DA} ${DATA}/letkf_land.yaml
   fi
 
-  # update tile2tile namelist
+  # update jedi yaml file
   settings="\
     'yyyy': !!str ${YYYY}
     'mm': !!str ${MM}
@@ -153,7 +153,7 @@ if [[ $do_HOFX == "YES" ]]; then
     cp ${PARMlandda}/jedi/${YAML_HOFX} ${DATA}/hofx_land.yaml
   fi
 
-  # update tile2tile namelist
+  # update jedi yaml file
   settings="\
     'yyyy': !!str ${YYYY}
     'mm': !!str ${MM}
