@@ -9,12 +9,12 @@ workflow:
         group: cycled
       spec: 200001030000 200001040000 24:00:00
   entities:
-    MACHINE: "orion"
+    MACHINE: "{{ machine }}"
     SCHED: "slurm"
-    ACCOUNT: "epic"
-    EXP_BASEDIR: "/work/noaa/epic/{USER}/landda_test"
-    JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6"
-    WARMSTART_DIR: "/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART"
+    ACCOUNT: "{{ account }}"
+    EXP_BASEDIR: "{{ exp_basedir }}"
+    JEDI_INSTALL: "{{ jedi_install }}"
+    WARMSTART_DIR: "{{ warmstart_dir }}"
     ATMOS_FORC: "gswp3"
     RES: "96"
     NPROCS_ANALYSIS: "6"
@@ -34,7 +34,7 @@ workflow:
     OBS_TYPES: "GHCN"
     DAtype: "letkfoi_snow"
     TSTUB: "oro_C96.mx100"
-    WE2E_TEST: "NO"
+    WE2E_TEST: "{{ we2e_test }}"
     WE2E_ATOL: "1e-7"
     WE2E_LOG_FN: "we2e.log"
     NET: "landda"
