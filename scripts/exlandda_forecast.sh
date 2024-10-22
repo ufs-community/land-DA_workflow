@@ -57,7 +57,7 @@ nprocs_atm_lnd_m1=$(( NPROCS_FORECAST_ATM + NPROCS_FORECAST_LND - 1 ))
 settings="\
   'nprocs_atm_m1': ${nprocs_atm_m1}
   'nprocs_forecast_atm': ${NPROCS_FORECAST_ATM}
-  'nprocs_atm_lnd_m1': ${nprocs_atm_land_m1}
+  'nprocs_atm_lnd_m1': ${nprocs_atm_lnd_m1}
   'lnd_layout_x': ${LND_LAYOUT_X}
   'lnd_layout_y': ${LND_LAYOUT_Y}
   'lnd_output_freq_sec': ${LND_OUTPUT_FREQ_SEC}
