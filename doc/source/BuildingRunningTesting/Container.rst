@@ -256,19 +256,20 @@ Because of a conda conflict between the container and the host system, it is bes
 
    module load rocoto
    
-The ``setup_container.sh`` script creates the ``land_analysis.yaml`` from the ``land_analysis_singularity.yaml`` file. Update any relevant variables in this file (e.g. ``ACCOUNT`` or ``cycledef/spec``) before creating the Rocoto XML file.
+The ``setup_container.sh`` script creates the ``parm_xml.yaml`` from the ``parm_xml_singularity.yaml`` file. Update any relevant variables in this file (e.g. ``ACCOUNT`` or ``cycledef/spec``) before creating the Rocoto XML file.
 
 .. code-block:: console
 
    cd $LANDDAROOT/land-DA_workflow/parm
-   vi land_analysis.yaml
+   vi parm_xml.yaml
 
 Save and close the file.
 
-Once everything looks good, run the uwtools script to create the Rocoto XML file:
+Once everything looks good, run the uwtools scripts to create the Rocoto XML file:
 
 .. code-block:: console
 
+   ../sorc/conda/envs/land_da/bin/uw template render --input-file templates/template.land_analysis.yaml --values-file parm_xml.yaml --output-file land_analysis.yaml
    ../sorc/conda/envs/land_da/bin/uw rocoto realize --input-file land_analysis.yaml --output-file land_analysis.xml
 
 A successful run of this command will output a “0 errors found” message.
