@@ -83,5 +83,5 @@ ln -fs $JEDI_STATICDIR ./
 cp $project_source_dir/../parm/jedi/gfs-land.yaml .
 
 #
-echo "============================= calling ${JEDI_EXEC}"
+echo "============================= calling ${JEDI_EXEC} with ${MPIRUN}"
 ${MPIRUN} -n $NPROC ${JEDI_EXEC} letkf_land.yaml
