@@ -4,7 +4,7 @@ loads UFS Model prerequisites for Singularity container
 
 setenv("EPICHOME", "/opt")
 
-prepend_path("MODULEPATH", pathJoin(os.getenv("EPICHOME"),"spack-stack/spack-stack-1.6.0/envs/unified-env/install/modulefiles/Core"))
+prepend_path("MODULEPATH", pathJoin(os.getenv("EPICHOME"),"spack-stack/spack-stack-1.6.0/envs/fms-2024.01/install/modulefiles/Core"))
 
 stack_intel_ver=os.getenv("stack_intel_ver") or "2021.10.0"
 load(pathJoin("stack-intel", stack_intel_ver))
@@ -43,22 +43,22 @@ load(pathJoin("netcdf-fortran", netcdf_fortran_ver))
 pio_ver=os.getenv("pio_ver") or "2.5.10"
 load(pathJoin("parallelio", pio_ver))
 
-esmf_ver=os.getenv("esmf_ver") or "8.5.0"
+esmf_ver=os.getenv("esmf_ver") or "8.6.0"
 load(pathJoin("esmf", esmf_ver))
 
-fms_ver=os.getenv("fms_ver") or "2023.04"
+fms_ver=os.getenv("fms_ver") or "2024.01"
 load(pathJoin("fms",fms_ver))
 
 bacio_ver=os.getenv("bacio_ver") or "2.4.1"
 load(pathJoin("bacio", bacio_ver))
 
-crtm_ver=os.getenv("crtm_ver") or "2.4.0.1"
+crtm_ver=os.getenv("crtm_ver") or "2.4.0"
 load(pathJoin("crtm", crtm_ver))
 
-g2_ver=os.getenv("g2_ver") or "3.4.5"
+g2_ver=os.getenv("g2_ver") or "3.5.1"
 load(pathJoin("g2", g2_ver))
 
-g2tmpl_ver=os.getenv("g2tmpl_ver") or "1.10.2"
+g2tmpl_ver=os.getenv("g2tmpl_ver") or "1.13.0"
 load(pathJoin("g2tmpl", g2tmpl_ver))
 
 ip_ver=os.getenv("ip_ver") or "4.3.0"
@@ -73,8 +73,11 @@ load(pathJoin("w3emc", w3emc_ver))
 gftl_shared_ver=os.getenv("gftl_shared_ver") or "1.6.1"
 load(pathJoin("gftl-shared", gftl_shared_ver))
 
-mapl_ver=os.getenv("mapl_ver") or "2.40.3-esmf-8.5.0"
+mapl_ver=os.getenv("mapl_ver") or "2.40.3-esmf-8.6.0"
 load(pathJoin("mapl", mapl_ver))
+
+scotch_ver=os.getenv("scotch_ver") or "7.0.4"
+load(pathJoin("scotch", scotch_ver))
 
 load("py-cftime/1.0.3.4")
 load("py-cython/0.29.36")
@@ -86,14 +89,16 @@ load("py-pandas/1.5.3")
 load("py-python-dateutil/2.8.2")
 load("py-pyyaml/6.0")
 
-load("atlas")
+setenv("CFLAGS","-diag-disable=10448")
+setenv("FFLAGS","-diag-disable=10448")
 
-setenv("CMAKE_C_COMPILER","mpiicc")
-setenv("CMAKE_CXX_COMPILER","mpicxx")
-setenv("CMAKE_Fortran_COMPILER","mpif90")
---setenv("CC", "mpiicc")
---setenv("CXX", "mpiicpc")
---setenv("FC", "mpiifort")
+prepend_path("PATH","/opt/intel/oneapi/compiler/2024.0/bin:/opt/intel/oneapi/compiler/2023.2.3/linux/bin/intel64")
+--setenv("CMAKE_C_COMPILER","mpiicc")
+--setenv("CMAKE_CXX_COMPILER","mpicxx")
+--setenv("CMAKE_Fortran_COMPILER","mpif90")
+setenv("CC", "mpiicc")
+setenv("CXX", "mpiicpc")
+setenv("FC", "mpiifort")
 
 setenv("JEDI_INSTALL", pathJoin(os.getenv("EPICHOME"),""))
 
