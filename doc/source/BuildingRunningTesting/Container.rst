@@ -159,7 +159,7 @@ Users on any system may download and untar the data from the `Land DA Data Bucke
 .. code-block:: console
 
    cd $LANDDAROOT
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/develop-20240809/inputs.tar.gz
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/develop-20241024/inputs.tar.gz
    tar xvfz inputs.tar.gz
 
 If users choose to add data in a location other than ``$LANDDAROOT``, they can set the input data directory by running:
