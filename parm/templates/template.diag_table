@@ -1,5 +1,5 @@
-XXYYYYMMDD.00Z.1760x880.64bit.non-mono
-XXYYYY XXMM XXDD XXHH 0 0
+{{ yyyymmdd }}.00Z.1760x880.64bit.non-mono
+{{ yyyy }} {{ mm }} {{ dd }} {{ hh }} 0 0
 
 "fv3_history",    0,  "hours",  1,  "hours",  "time"
 "fv3_history2d",  0,  "hours",  1,  "hours",  "time"
@@ -75,6 +75,7 @@ XXYYYY XXMM XXDD XXHH 0 0
 "gfs_dyn",     "delp",        "dpres",     "fv3_history",    "all",  .false.,  "none",  2
 "gfs_dyn",     "delz",        "delz",      "fv3_history",    "all",  .false.,  "none",  2
 "gfs_dyn",     "w",           "dzdt",      "fv3_history",    "all",  .false.,  "none",  2
+"gfs_dyn",     "omga",        "omga",      "fv3_history",    "all",  .false.,  "none",  2
 "gfs_dyn",     "ice_wat",     "icmr",      "fv3_history",    "all",  .false.,  "none",  2
 "gfs_dyn",     "rainwat",     "rwmr",      "fv3_history",    "all",  .false.,  "none",  2
 "gfs_dyn",     "snowwat",     "snmr",      "fv3_history",    "all",  .false.,  "none",  2

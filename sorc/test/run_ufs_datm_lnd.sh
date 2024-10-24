@@ -23,10 +23,15 @@ else
   echo "WARNING: input data path is not specified for this machine."
   INPUTDATA_ROOT=${FIXdir}
 fi
-MACHINE_ID=${PLATFORM}
-RT_COMPILER=${RT_COMPILER:-intel}
+export MACHINE_ID=${PLATFORM}
+export RT_COMPILER=${RT_COMPILER:-intel}
+export CREATE_BASELINE=false
+export skip_check_result=false
+export RTVERBOSE=false
+export delete_rundir=false
+export WLCLK=30
 ATOL="1e-7"
-source ${PATHRT}/detect_machine.sh
+
 source ${PATHRT}/rt_utils.sh
 source ${PATHRT}/default_vars.sh
 source ${PATHRT}/tests/$TEST_NAME
@@ -45,13 +50,6 @@ RUNDIR=${project_binary_dir}/test/${TEST_NAME}
 mkdir -p ${RUNDIR}
 cd ${RUNDIR}
 
-# modify some env variables - reduce core usage
-export ATM_compute_tasks=0
-export ATM_io_tasks=1
-export LND_tasks=6
-export layout_x=1
-export layout_y=1
-
 # FV3 executable:
 cp ${project_binary_dir}/ufs_model.fd/src/ufs_model.fd-build/ufs_model ./ufs_model
 
@@ -69,9 +67,11 @@ fi
 
 atparse < ${PATHRT}/parm/${MODEL_CONFIGURE:-model_configure.IN} > model_configure
 
-compute_petbounds_and_tasks
+#compute_petbounds_and_tasks
+#atparse < ${PATHRT}/parm/${UFS_CONFIGURE:-ufs.configure} > ufs.configure
 
-atparse < ${PATHRT}/parm/${UFS_CONFIGURE:-ufs.configure} > ufs.configure
+cp -p ${project_source_dir}/test/parm/ufs.configure .
+NPROCS_FORECAST="13"
 
 # diag table
 if [[ "Q${DIAG_TABLE:-}" != Q ]] ; then
@@ -97,9 +97,13 @@ fi
 cp ${PATHRT}/parm/noahmptable.tbl noahmptable.tbl
 
 # start runs
-echo "Start ufs-cdeps-land model run with TASKS: ${TASKS}"
-export MPIRUN=${MPIRUN:-`which mpiexec`}
-${MPIRUN} -n ${TASKS} ./ufs_model
+echo "Start ufs-weather-model run"
+if [ "${PLATFORM}" = "hera" ] || [ "${PLATFORM}" = "orion" ] || [ "${PLATFORM}" = "hercules" ]; then 
+  export MPIRUN="srun"
+else
+  export MPIRUN=${MPIRUN:-`which mpiexec`}
+fi
+${MPIRUN} -n ${NPROCS_FORECAST} ./ufs_model
 
 #
 echo "Now check model output with ufs-wm baseline!"

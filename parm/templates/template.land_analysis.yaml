@@ -9,23 +9,32 @@ workflow:
         group: cycled
       spec: 200001030000 200001040000 24:00:00
   entities:
-    MACHINE: "orion"
+    MACHINE: "{{ machine }}"
     SCHED: "slurm"
-    ACCOUNT: "epic"
-    EXP_BASEDIR: "/work/noaa/epic/{USER}/landda_test"
-    JEDI_INSTALL: "/work/noaa/epic/UFS_Land-DA_Dev/jedi_v7_stack1.6"
-    WARMSTART_DIR: "/work/noaa/epic/UFS_Land-DA_Dev/inputs/DATA_RESTART"
+    ACCOUNT: "{{ account }}"
+    EXP_BASEDIR: "{{ exp_basedir }}"
+    JEDI_INSTALL: "{{ jedi_install }}"
+    WARMSTART_DIR: "{{ warmstart_dir }}"
     ATMOS_FORC: "gswp3"
     RES: "96"
-    FCSTHR: "24"
     NPROCS_ANALYSIS: "6"
-    NPROCS_FORECAST: "7"
+    FCSTHR: "24"
+    DT_ATMOS: "900"
+    DT_RUNSEQ: "3600"
+    NPROCS_FORECAST: "26"
+    NPROCS_FORECAST_ATM: "12"
+    NPROCS_FORECAST_LND: "12"
+    LND_LAYOUT_X: "1"
+    LND_LAYOUT_Y: "2"
+    LND_OUTPUT_FREQ_SEC: "21600"
+    NNODES_FORECAST: "1"
+    NPROCS_PER_NODE: "26"
     OBSDIR: ""
     OBSDIR_SUBDIR: ""
     OBS_TYPES: "GHCN"
     DAtype: "letkfoi_snow"
     TSTUB: "oro_C96.mx100"
-    WE2E_VAV: "YES"
+    WE2E_TEST: "{{ we2e_test }}"
     WE2E_ATOL: "1e-7"
     WE2E_LOG_FN: "we2e.log"
     NET: "landda"
@@ -128,7 +137,7 @@ workflow:
         ACCOUNT: "&ACCOUNT;"
         RES: "&RES;"
         TSTUB: "&TSTUB;"
-        WE2E_VAV: "&WE2E_VAV;"
+        WE2E_TEST: "&WE2E_TEST;"
         WE2E_ATOL: "&WE2E_ATOL;"
         WE2E_LOG_FN: "&WE2E_LOG_FN;"
         LOGDIR: "&LOGDIR;"
@@ -163,7 +172,7 @@ workflow:
         ACCOUNT: "&ACCOUNT;"
         RES: "&RES;"
         TSTUB: "&TSTUB;"
-        WE2E_VAV: "&WE2E_VAV;"
+        WE2E_TEST: "&WE2E_TEST;"
         WE2E_ATOL: "&WE2E_ATOL;"
         WE2E_LOG_FN: "&WE2E_LOG_FN;"
         LOGDIR: "&LOGDIR;"
@@ -187,6 +196,53 @@ workflow:
         taskdep:
           attrs:
             task: analysis
+    task_forecast:
+      attrs:
+        cycledefs: cycled
+        maxtries: 2
+      envars:
+        OBS_TYPES: "&OBS_TYPES;"
+        MACHINE: "&MACHINE;"
+        SCHED: "&SCHED;"
+        ACCOUNT: "&ACCOUNT;"
+        ATMOS_FORC: "&ATMOS_FORC;"
+        RES: "&RES;"
+        WARMSTART_DIR: "&WARMSTART_DIR;"
+        WE2E_TEST: "&WE2E_TEST;"
+        WE2E_ATOL: "&WE2E_ATOL;"
+        WE2E_LOG_FN: "&WE2E_LOG_FN;"
+        LOGDIR: "&LOGDIR;"
+        model_ver: "&model_ver;"
+        HOMElandda: "&HOMElandda;"
+        COMROOT: "&COMROOT;"
+        DATAROOT: "&DATAROOT;"
+        KEEPDATA: "&KEEPDATA;"
+        LOGDIR: "&LOGDIR;"
+        PDY: "&PDY;"
+        cyc: "&cyc;"
+        DAtype: "&DAtype;"
+        FCSTHR: "&FCSTHR;"
+        DT_ATMOS: "&DT_ATMOS;"
+        DT_RUNSEQ: "&DT_RUNSEQ;"
+        NPROCS_FORECAST: "&NPROCS_FORECAST;"
+        NPROCS_FORECAST_ATM: "&NPROCS_FORECAST_ATM;"
+        NPROCS_FORECAST_LND: "&NPROCS_FORECAST_LND;"
+        LND_LAYOUT_X: "&LND_LAYOUT_X;"
+        LND_LAYOUT_Y: "&LND_LAYOUT_Y;"
+        LND_OUTPUT_FREQ_SEC: "&LND_OUTPUT_FREQ_SEC;"
+        NNODES_FORECAST: "&NNODES_FORECAST;"
+        NPROCS_PER_NODE: "&NPROCS_PER_NODE;"
+      account: "&ACCOUNT;"
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "forecast" "&HOMElandda;" "&MACHINE;"'
+      jobname: forecast
+      nodes: "&NNODES_FORECAST;:ppn=&NPROCS_PER_NODE;"
+      walltime: 00:30:00
+      queue: batch
+      join: "&LOGDIR;/forecast&LOGFN_SUFFIX;"
+      dependency:
+        taskdep:
+          attrs:
+            task: post_anal
     task_plot_stats:
       attrs:
         cycledefs: cycled
@@ -203,6 +259,9 @@ workflow:
         KEEPDATA: "&KEEPDATA;"
         PDY: "&PDY;"
         cyc: "&cyc;"
+        LOGDIR: "&LOGDIR;"
+        NPROCS_ANALYSIS: "&NPROCS_ANALYSIS;"
+        NPROCS_FORECAST: "&NPROCS_FORECAST;"
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "plot_stats" "&HOMElandda;" "&MACHINE;"'
       jobname: plot_stats
@@ -213,42 +272,5 @@ workflow:
       dependency:
         taskdep:
           attrs:
-            task: analysis
-    task_forecast:
-      attrs:
-        cycledefs: cycled
-        maxtries: 2
-      envars:
-        OBS_TYPES: "&OBS_TYPES;"
-        MACHINE: "&MACHINE;"
-        SCHED: "&SCHED;"
-        ACCOUNT: "&ACCOUNT;"
-        ATMOS_FORC: "&ATMOS_FORC;"
-        RES: "&RES;"
-        WARMSTART_DIR: "&WARMSTART_DIR;"
-        WE2E_VAV: "&WE2E_VAV;"
-        WE2E_ATOL: "&WE2E_ATOL;"
-        WE2E_LOG_FN: "&WE2E_LOG_FN;"
-        LOGDIR: "&LOGDIR;"
-        model_ver: "&model_ver;"
-        HOMElandda: "&HOMElandda;"
-        COMROOT: "&COMROOT;"
-        DATAROOT: "&DATAROOT;"
-        KEEPDATA: "&KEEPDATA;"
-        LOGDIR: "&LOGDIR;"
-        PDY: "&PDY;"
-        cyc: "&cyc;"
-        DAtype: "&DAtype;"
-        FCSTHR: "&FCSTHR;"
-        NPROCS_FORECAST: "&NPROCS_FORECAST;"          
-      account: "&ACCOUNT;"
-      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "forecast" "&HOMElandda;" "&MACHINE;"'
-      jobname: forecast
-      nodes: "1:ppn=&NPROCS_FORECAST;"
-      walltime: 01:00:00
-      queue: batch
-      join: "&LOGDIR;/forecast&LOGFN_SUFFIX;"
-      dependency:
-        taskdep:
-          attrs:
-            task: post_anal
+            task: forecast
+
