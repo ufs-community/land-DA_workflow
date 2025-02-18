@@ -52,7 +52,7 @@ settings="\
   'snow_obsdatain_path': obs
   'snow_obsdatain_prefix': "obs.${cycle}."
   'snow_obsdataout_path': diags
-  'snow_obsdataout_prefix': "diag_"
+  'snow_obsdataout_prefix': "diag."
   'snow_obsdataout_suffix': "_${cdate}.nc"
   'OBS_TYPE': ${OBS_TYPE}
 " # End of settings variable

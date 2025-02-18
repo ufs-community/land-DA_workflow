@@ -51,11 +51,7 @@ done
 # Copy obserbation file to work directory
 mkdir -p ${DATA}/obs
 obs_type_lower="${OBS_TYPE,,}"
-if [ "${obs_type_lower}" = "ghcn" ]; then
-  obs_suffix="${obs_type_lower}_snow_skylab.nc"
-else
-  obs_suffix="${obs_type_lower}_snow.nc"
-fi
+obs_suffix="${obs_type_lower}_snow.nc"
 ln -nsf "${COMIN}/obs/${obs_type_lower}_snow_${PDY}${cyc}.nc" "${DATA}/obs/obs.${cycle}.${obs_suffix}"
 
 # update coupler.res file
@@ -77,8 +73,9 @@ ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${f
 
 # Copy static data files
 mkdir -p ${DATA}/Data/fv3files
+mkdir -p ${DATA}/Data/fieldmetadata
 cp -p ${PARMlandda}/jedi/fv3files/fmsmpp.nml ${DATA}/Data/fv3files/.
-cp -p ${PARMlandda}/jedi/fv3files/field_table ${DATA}/Data/fv3files/.
+cp -p ${JEDI_STATICDIR}/fv3files/field_table_ufs ${DATA}/Data/fv3files/field_table
 ln -nsf ${JEDI_STATICDIR}/fv3files/akbk${NPZ}.nc4 ${DATA}/Data/fv3files/akbk.nc4
 
 # Output directory
@@ -87,11 +84,10 @@ mkdir -p ${DATA}/diags
 # Prepare JEDI input yaml file
 if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
 
-  if [ "${FRAC_GRID}" = "NO" ]; then
-    cp -p ${PARMlandda}/jedi/gfs-land.yaml ${DATA}/Data/fv3files/fv3jedi_fieldmetadata_restart.yaml
+  if [ "${FRAC_GRID}" = "YES" ]; then
+    cp -p ${JEDI_STATICDIR}/fieldmetadata/gfs_v17-land.yaml ${DATA}/Data/fieldmetadata/gfs-land.yaml
   else
-    cp -p ${PARMlandda}/jedi/fv3files/fv3jedi_fieldmetadata_restart.yaml ${DATA}/Data/fv3files/fv3jedi_fie
-ldmetadata_restart.yaml
+    cp -p ${PARMlandda}/jedi/fieldmetadata/gfs-land.yaml ${DATA}/Data/fieldmetadata/gfs-land.yaml
   fi
 
   # Set up backgroud and output directories
@@ -118,10 +114,10 @@ ldmetadata_restart.yaml
 else # letkf
   if [ "${FRAC_GRID}" = "YES" ]; then
     snowdepth_vn="snodl"
-    cp -p ${PARMlandda}/jedi/gfs-land.yaml ${DATA}/gfs-land.yaml
+    cp -p ${JEDI_STATICDIR}/fieldmetadata/gfs_v17-land.yaml ${DATA}/gfs-land.yaml
   else
     snowdepth_vn="snwdph"
-    cp -p ${JEDI_STATICDIR}/fieldmetadata/gfs_v17-land.yaml ${DATA}/gfs-land.yaml
+    cp -p ${PARMlandda}/jedi/fieldmetadata/gfs-land.yaml ${DATA}/gfs-land.yaml
   fi
   # For LETKF, create pseudo-ensemble
   for ens in pos neg
@@ -201,10 +197,10 @@ do
   ln -nsf ${FILEDATE}.snowinc.sfc_data.tile${itile}.nc ${FILEDATE}.xainc.sfc_data.tile${itile}.nc
 done
 
-if [ "${FRAC_GRID}" = "NO" ]; then
-  frac_grid=".false."
-else
+if [ "${FRAC_GRID}" = "YES" ]; then
   frac_grid=".true."
+else
+  frac_grid=".false."
 fi
 orog_path="${FIXlandda}/FV3_fix_tiled/C${RES}"
 orog_fn_base="C${RES}_oro_data"
@@ -294,7 +290,7 @@ if [ "${WE2E_TEST}" == "YES" ]; then
   path_fbase="${FIXlandda}/test_base/we2e_com/${RUN}.${PDY}"
   fn_sfc="${FILEDATE}.sfc_data.tile"
   fn_inc="${FILEDATE}.snowinc.sfc_data.tile"
-  fn_hofx="diag_ghcn_snow_${PDY}${cyc}.nc"
+  fn_hofx="diag.ghcn_snow_${PDY}${cyc}.nc"
   we2e_log_fp="${LOGDIR}/${WE2E_LOG_FN}"
   if [ ! -f "${we2e_log_fp}" ]; then
     touch ${we2e_log_fp}
