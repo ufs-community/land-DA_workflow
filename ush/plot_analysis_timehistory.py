@@ -75,7 +75,7 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
     if jedi_exe == 'letkf':
         nobs_qc_prefix = "QC SnowDepthGHCN totalSnowDepth"
     else:
-        nobs_qc_prefix = "QC Snow depth totalSnowDepth"
+        nobs_qc_prefix = "QC ghcn_snow totalSnowDepth"
     wtime_oops_prefix = "OOPS_STATS util::Timers::Total"
 
     file_date = []
