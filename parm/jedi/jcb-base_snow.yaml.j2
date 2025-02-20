@@ -1,17 +1,37 @@
 # JCB general
-algorithm: 3dvar.skylab
-algorithm_path: "{{ PARMlandda }}/jedi/jcb-algorithms"
-app_path_algorithm: "{{ PARMlandda }}/jedi/jcb-gdas/algorithm/snow"
-app_path_model: "{{ PARMlandda }}/jedi/jcb-gdas/model/snow"
-app_path_observations: "{{ PARMlandda }}/jedi/jcb-gdas/observations/snow"
-app_path_observation_chronicle: "{{ PARMlandda }}/jedi/jcb-gdas/observation_chronicle/snow"
+JEDI_ALGORITHM: "{{ JEDI_ALGORITHM }}"
+snowdepth_vn: "{{ snowdepth_vn }}"
+algorithm: {{ JEDI_ALGORITHM }}.skylab
+#algorithm_path: "{{ PARMlandda }}/jedi/jcb-algorithms"
+#app_path_algorithm: "{{ PARMlandda }}/jedi/jcb-gdas/algorithm/snow"
+#app_path_model: "{{ PARMlandda }}/jedi/jcb-gdas/model/snow"
+#app_path_observations: "{{ PARMlandda }}/jedi/jcb-gdas/observations/snow"
+#app_path_observation_chronicle: "{{ PARMlandda }}/jedi/jcb-gdas/observation_chronicle/snow"
+algorithm_path: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/jcb_epic/jcb-algorithms"
+app_path_algorithm: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/jcb_epic/jcb-gdas/algorithm/snow"
+app_path_model: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/jcb_epic/jcb-gdas/model/snow"
+app_path_observations: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/jcb_epic/jcb-gdas/observations/snow"
+app_path_observation_chronicle: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/jcb_epic/jcb-gdas/observation_chronicle/snow"
+
+# Template file name for each section (if not defined, default files in jcb-algorithms will be used)
+{%- if JEDI_ALGORITHM == "letkf" %}
+geometry_file: snow_geometry_letkf
+background_ensemble_file: snow_background_ensemble
+posterior_output_file: snow_output
+output_increment_file: snow_output_increment
+{%- elif JEDI_ALGORITHM == "3dvar" %}
+geometry_background_file: snow_geometry_background
+background_file: snow_background
+background_error_file: snow_background_error
+final_increment_file: snow_final_increment_fms
+output_file: snow_output
+{%- endif %}
 
 # Time window
 window_begin: "{{ snow_window_begin }}"
 window_length: "{{ snow_window_length }}"
 
 # Geometry
-geometry_background_file: snow_geometry_background
 snow_fv3jedi_files_path: "{{ snow_fv3jedi_files_path }}"
 snow_layout_x: {{ snow_layout_x }}
 snow_layout_y: {{ snow_layout_y }}
@@ -27,13 +47,23 @@ snow_orog_prefix: "C{{ RES }}"
 # Final/minimization
 analysis_variables: [totalSnowDepth]
 final_diagnostics_departures: oman
-final_increment_file: snow_final_increment_fms
-snow_final_inc_file_path: {{ snow_final_inc_file_path }}
+snow_final_inc_file_path: "{{ snow_final_inc_file_path }}"
 minimizer: DRPCG
 number_of_outer_loops: 1
 
+# Local Ensemble DA
+local_ensemble_da_solver: "{{ local_ensemble_da_solver }}"
+inflation_rtps: "{{ inflation_rtps }}"
+inflation_rtpp: "{{ inflation_rtpp }}"
+inflation_mult: "{{ inflation_mult }}"
+
+# Driver
+driver_update_obs_config_with_geometry_info: "{{ driver_update_obs_config_with_geometry_info }}"
+driver_save_posterior_mean: "{{ driver_save_posterior_mean }}"
+driver_save_posterior_ensemble: "{{ driver_save_posterior_ensemble }}"
+driver_save_posterior_mean_increment: "{{ driver_save_posterior_mean_increment }}"
+
 # Background
-background_file: snow_background
 snow_background_path: "{{ snow_bkg_path }}"
 snow_background_time_fv3: "{{ snow_bkg_time_fv3 }}"
 snow_background_time_iso: "{{ snow_bkg_time_iso }}"
@@ -41,11 +71,7 @@ snow_increment_time_fv3: "{{ snow_bkg_time_fv3 }}"
 snow_increment_time_iso: "{{ snow_bkg_time_iso }}"
 
 # Background error
-background_error_file: snow_background_error
 snow_bump_data_directory: "{{ snow_bump_data_dir }}"
-
-# Output
-output_file: snow_output
 
 # Observation
 observations:

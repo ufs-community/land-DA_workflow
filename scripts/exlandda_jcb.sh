@@ -22,17 +22,43 @@ MHP=${HPTIME:4:2}
 DHP=${HPTIME:6:2}
 HHP=${HPTIME:8:2}
 
+driver_save_posterior_ensemble="false"
+driver_save_posterior_mean="true"
+driver_save_posterior_mean_increment="true"
+driver_update_obs_config_with_geometry_info="false"
+inflation_mult="1.0"
+inflation_rtpp="0.0"
+inflation_rtps="0.0"
+local_ensemble_da_solver="${JEDI_ALGORITHM^^}"
 snow_bkg_time_fv3="${YYYY}${MM}${DD}.${HH}0000"
 snow_bkg_time_iso="${YYYY}-${MM}-${DD}T${HH}:00:00Z"
 snow_fv3jedi_files_path="Data/fv3files"
-snow_window_begin="${YYYHP}-${MHP}-${DHP}T${HHP}:00:00Z"
+if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
+  snow_window_begin="${YYYHP}-${MHP}-${DHP}T${HHP}:00:00Z"
+else
+  snow_window_begin="${YYYP}-${MP}-${DP}T${HP}:00:00Z"
+fi
 snow_window_length="PT${DATE_CYCLE_FREQ_HR}H"
+if [ "${FRAC_GRID}" = "YES" ]; then
+  snowdepth_vn="snodl"
+else
+  snowdepth_vn="snwdph"
+fi
 
 # update jcb-base yaml file
 settings="\
   'FIXlandda': ${FIXlandda}
+  'JEDI_ALGORITHM': ${JEDI_ALGORITHM}
   'PARMlandda': ${PARMlandda}
   'RES': ${RES}
+  'driver_save_posterior_ensemble': ${driver_save_posterior_ensemble}
+  'driver_save_posterior_mean': ${driver_save_posterior_mean}
+  'driver_save_posterior_mean_increment': ${driver_save_posterior_mean_increment}
+  'driver_update_obs_config_with_geometry_info': ${driver_update_obs_config_with_geometry_info}
+  'inflation_mult': ${inflation_mult}
+  'inflation_rtpp': ${inflation_rtpp}
+  'inflation_rtps': ${inflation_rtps}
+  'local_ensemble_da_solver': ${local_ensemble_da_solver}
   'snow_window_begin': !!str ${snow_window_begin}
   'snow_window_length': ${snow_window_length}
   'snow_final_inc_file_path': ./
@@ -54,6 +80,7 @@ settings="\
   'snow_obsdataout_path': diags
   'snow_obsdataout_prefix': "diag."
   'snow_obsdataout_suffix': "_${cdate}.nc"
+  'snowdepth_vn': ${snowdepth_vn}
   'OBS_TYPE': ${OBS_TYPE}
 " # End of settings variable
 
