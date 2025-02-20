@@ -86,7 +86,7 @@ else
   cp -p ${PARMlandda}/jedi/fieldmetadata/gfs-land.yaml ${DATA}/Data/fieldmetadata/gfs-land.yaml
 fi
 
-# Output directory
+# Intermediate/Output directories
 mkdir -p ${DATA}/diags
 mkdir -p ${DATA}/anl
 mkdir -p ${DATA}/bkg
@@ -113,7 +113,7 @@ else # letkf
     cp -p ${FILEDATE}.sfc_data.tile*.nc ${DATA}/mem${ens}
     cp -p ${FILEDATE}.coupler.res ${DATA}/mem${ens}
   done
-  # using ioda mods to get a python version with netCDF4
+
   ${USHlandda}/letkf_create_ens.py $FILEDATE $snowdepth_vn 30
   if [[ $? != 0 ]]; then
     err_exit "letkf create failed"
@@ -123,13 +123,13 @@ else # letkf
   jedi_exe_fn="fv3jedi_letkf.x"
 fi
 
-################################################
-# RUN JEDI
-################################################
-
 # Copy JEDI input yaml file
 jedi_nml_fn="jedi_${JEDI_ALGORITHM}_snow.yaml"
 cp -p "${COMIN}/${jedi_nml_fn}" .
+
+################################################
+# RUN JEDI
+################################################
 
 export pgm="${jedi_exe_fn}"
 . prep_step
