@@ -78,23 +78,22 @@ cp -p ${PARMlandda}/jedi/fv3files/fmsmpp.nml ${DATA}/Data/fv3files/.
 cp -p ${JEDI_STATICDIR}/fv3files/field_table_ufs ${DATA}/Data/fv3files/field_table
 ln -nsf ${JEDI_STATICDIR}/fv3files/akbk${NPZ}.nc4 ${DATA}/Data/fv3files/akbk.nc4
 
+if [ "${FRAC_GRID}" = "YES" ]; then
+  snowdepth_vn="snodl"
+  cp -p ${JEDI_STATICDIR}/fieldmetadata/gfs_v17-land.yaml ${DATA}/Data/fieldmetadata/gfs-land.yaml
+else
+  snowdepth_vn="snwdph"
+  cp -p ${PARMlandda}/jedi/fieldmetadata/gfs-land.yaml ${DATA}/Data/fieldmetadata/gfs-land.yaml
+fi
+
 # Output directory
 mkdir -p ${DATA}/diags
+mkdir -p ${DATA}/anl
+mkdir -p ${DATA}/bkg
+mkdir -p ${DATA}/test
 
-# Prepare JEDI input yaml file
+# Set up background
 if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
-
-  if [ "${FRAC_GRID}" = "YES" ]; then
-    cp -p ${JEDI_STATICDIR}/fieldmetadata/gfs_v17-land.yaml ${DATA}/Data/fieldmetadata/gfs-land.yaml
-  else
-    cp -p ${PARMlandda}/jedi/fieldmetadata/gfs-land.yaml ${DATA}/Data/fieldmetadata/gfs-land.yaml
-  fi
-
-  # Set up backgroud and output directories
-  mkdir -p ${DATA}/anl
-  mkdir -p ${DATA}/bkg
-  mkdir -p ${DATA}/test
-
   for itile in {1..6}
   do
     sfc_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
@@ -104,30 +103,15 @@ if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
   done
   cp -p ${FILEDATE}.coupler.res ${DATA}/bkg
 
-  # Copy JEDI yaml file
-  jedi_nml_fn="jedi_${JEDI_ALGORITHM}_snow.yaml"
-  cp -p "${COMIN}/${jedi_nml_fn}" .
-
   # Set JEDI executable
   jedi_exe_fn="fv3jedi_var.x"
 
 else # letkf
-  if [ "${FRAC_GRID}" = "YES" ]; then
-    snowdepth_vn="snodl"
-    cp -p ${JEDI_STATICDIR}/fieldmetadata/gfs_v17-land.yaml ${DATA}/gfs-land.yaml
-  else
-    snowdepth_vn="snwdph"
-    cp -p ${PARMlandda}/jedi/fieldmetadata/gfs-land.yaml ${DATA}/gfs-land.yaml
-  fi
-  # For LETKF, create pseudo-ensemble
-  for ens in pos neg
+  for ens in {1..2}
   do
-    if [ -e $DATA/mem_${ens} ]; then
-      rm -r $DATA/mem_${ens}
-    fi
-    mkdir -p $DATA/mem_${ens}
-    cp -p ${FILEDATE}.sfc_data.tile*.nc ${DATA}/mem_${ens}
-    cp -p ${FILEDATE}.coupler.res ${DATA}/mem_${ens}
+    mkdir -p $DATA/mem${ens}
+    cp -p ${FILEDATE}.sfc_data.tile*.nc ${DATA}/mem${ens}
+    cp -p ${FILEDATE}.coupler.res ${DATA}/mem${ens}
   done
   # using ioda mods to get a python version with netCDF4
   ${USHlandda}/letkf_create_ens.py $FILEDATE $snowdepth_vn 30
@@ -135,41 +119,17 @@ else # letkf
     err_exit "letkf create failed"
   fi
 
-  # Create JEDI input yaml
-  jedi_nml_fn="jedi_letkf_snow.yaml"
-  cp -p "${PARMlandda}/jedi/${jedi_nml_fn}" "${DATA}/${jedi_nml_fn}"
-  cat ${PARMlandda}/jedi/${OBS_TYPE}.yaml >> ${jedi_nml_fn}
-
-  # update JEDI yaml file
-  settings="\
-  'yyyy': !!str ${YYYY}
-  'mm': !!str ${MM}
-  'dd': !!str ${DD}
-  'hh': !!str ${HH}
-  'yyyymmdd': !!str ${PDY}
-  'yyyymmddhh': !!str ${PDY}${cyc}
-  'yyyp': !!str ${YYYP}
-  'mp': !!str ${MP}
-  'dp': !!str ${DP}
-  'hp': !!str ${HP}
-  'fn_orog': C${RES}_oro_data
-  'datapath': ${FIXlandda}/FV3_fix_tiled/C${RES}
-  'DATE_CYCLE_FREQ_HR': ${DATE_CYCLE_FREQ_HR}
-  'NPZ': ${NPZ}
-  'res_p1': ${res_p1}
-" # End of settings variable
-
-  fp_template="${DATA}/${jedi_nml_fn}"
-  ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${jedi_nml_fn}"
-
   # Set JEDI executable
   jedi_exe_fn="fv3jedi_letkf.x"
 fi
 
-
 ################################################
 # RUN JEDI
 ################################################
+
+# Copy JEDI input yaml file
+jedi_nml_fn="jedi_${JEDI_ALGORITHM}_snow.yaml"
+cp -p "${COMIN}/${jedi_nml_fn}" .
 
 export pgm="${jedi_exe_fn}"
 . prep_step

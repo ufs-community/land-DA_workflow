@@ -17,8 +17,8 @@ app_path_observation_chronicle: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/jcb_epic/jc
 {%- if JEDI_ALGORITHM == "letkf" %}
 geometry_file: snow_geometry_letkf
 background_ensemble_file: snow_background_ensemble
-posterior_output_file: snow_output
-output_increment_file: snow_output_increment
+posterior_output_file: snow_output_letkf
+output_increment_file: snow_output_increment_letkf
 {%- elif JEDI_ALGORITHM == "3dvar" %}
 geometry_background_file: snow_geometry_background
 background_file: snow_background

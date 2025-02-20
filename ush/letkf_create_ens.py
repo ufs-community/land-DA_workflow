@@ -3,10 +3,9 @@
 import numpy as np
 from netCDF4 import Dataset
 import sys
+
 # routine to create pseudo-ensemble for use in LETKF-OI for snow depth
-# reads in sfc_data restarts, and sets snowdepth to +/- 
-# perturbation, given stdev(ensemble) of B
-# Clara Draper, October, 2021.
+# sets snowdepth to +/- perturbation, given stdev(ensemble) of B
 
 if (len(sys.argv) != 4): 
     print('argument error, usage: letkf_create file_stub variable back_error' ) 
@@ -21,7 +20,7 @@ offset=b/np.sqrt(2)
 print('adjusting '+fstub+'* by '+str(offset))
 
 sign = [1,-1]
-ens_dirs=['mem_pos','mem_neg'] 
+ens_dirs=['mem1','mem2'] 
 
 for ens in range(2): 
     for tt in range(6):

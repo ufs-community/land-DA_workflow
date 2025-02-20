@@ -23,7 +23,7 @@ DHP=${HPTIME:6:2}
 HHP=${HPTIME:8:2}
 
 driver_save_posterior_ensemble="false"
-driver_save_posterior_mean="true"
+driver_save_posterior_mean="false"
 driver_save_posterior_mean_increment="true"
 driver_update_obs_config_with_geometry_info="false"
 inflation_mult="1.0"
