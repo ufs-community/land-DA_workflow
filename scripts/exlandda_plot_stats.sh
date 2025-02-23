@@ -15,9 +15,9 @@ nMM=${NTIME:4:2}
 nDD=${NTIME:6:2}
 nHH=${NTIME:8:2}
 
-DO_PLOT_STATS="NO"
-DO_PLOT_TIME_HISTORY="NO"
-DO_PLOT_RESTART="NO"
+DO_PLOT_STATS="YES"
+DO_PLOT_TIME_HISTORY="YES"
+DO_PLOT_RESTART="YES"
 DO_PLOT_COMBINE_TILES="YES"
 
 ############################################################
