@@ -15,9 +15,10 @@ nMM=${NTIME:4:2}
 nDD=${NTIME:6:2}
 nHH=${NTIME:8:2}
 
-DO_PLOT_STATS="YES"
-DO_PLOT_TIME_HISTORY="YES"
-DO_PLOT_RESTART="YES"
+DO_PLOT_STATS="NO"
+DO_PLOT_TIME_HISTORY="NO"
+DO_PLOT_RESTART="NO"
+DO_PLOT_COMBINE_TILES="YES"
 
 ############################################################
 # Stats Plot
@@ -115,6 +116,37 @@ cartopy_ne_path: '${FIXlandda}/NaturalEarth'
 EOF
 
   ${USHlandda}/plot_forecast_restart.py
+  if [ $? -ne 0 ]; then
+    err_exit "Forecast restart plots failed"
+  fi
+
+  # Copy result files to COMOUT
+  cp -p ${out_fn_base}* ${COMOUTplot}
+fi
+
+
+###########################################################
+# Combine and plot restart tiles
+###########################################################
+if [ "${DO_PLOT_COMBINE_TILES}" = "YES" ]; then
+  fn_data_base="ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile"
+  fn_data_ext=".nc"
+  soil_level_number="1"
+  out_title_base="Land-DA::${nYYYY}-${nMM}-${nDD}_${nHH}::"
+  out_fn_base="landda_out_combined_${nYYYY}-${nMM}-${nDD}_${nHH}_"
+
+  cat > plot_combine_tiles.yaml <<EOF
+path_data: '${COMIN}/RESTART'
+work_dir: '${DATA}'
+fn_data_base: '${fn_data_base}'
+fn_data_ext: '${fn_data_ext}'
+soil_lvl_number: '${soil_level_number}'
+out_title_base: '${out_title_base}'
+out_fn_base: '${out_fn_base}'
+cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+EOF
+
+  ${USHlandda}/plot_combine_tiles.py
   if [ $? -ne 0 ]; then
     err_exit "Forecast restart plots failed"
   fi
