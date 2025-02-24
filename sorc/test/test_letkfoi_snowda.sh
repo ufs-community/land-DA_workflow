@@ -28,12 +28,10 @@ do
 done
 mkdir -p obs
 # prepare yaml files
-cp $project_source_dir/../parm/jedi/jedi_letkf_snow.yaml letkf_land.yaml
+cp $project_source_dir/test/parm/letkf_land.yaml .
 for ii in "${!OBS_TYPES[@]}";
 do
   echo "============================= ${OBS_TYPES[$ii]}" 
-  cat $project_source_dir/../parm/jedi/${OBS_TYPES[$ii]}.yaml >> letkf_land.yaml
-
   # link ioda obs file
   # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, so that
   # obs are within DA window.
@@ -48,31 +46,6 @@ do
   fi
   ln -fs $obs_file_orig ./obs/${obs_fn}
 done
-
-RESP1=$((RES+1))
-yyyymmdd="${YY}${MM}${DD}"
-yyyymmddhh="${yyyymmdd}${HH}"
-# update jedi yaml file
-settings="\
-  'yyyy': !!str ${YY}
-  'mm': !!str ${MM}
-  'dd': !!str ${DD}
-  'hh': !!str ${HH}
-  'yyyymmdd': !!str ${yyyymmdd}
-  'yyyymmddhh': !!str ${yyyymmddhh}
-  'yyyp': !!str ${YP}
-  'mp': !!str ${MP}
-  'dp': !!str ${DP}
-  'hp': !!str ${HP}
-  'fn_orog': C${RES}_oro_data
-  'datapath': ${FIXlandda}/FV3_fix_tiled/C${RES}
-  'DATE_CYCLE_FREQ_HR': 24
-  'NPZ': 64
-  'res_p1': ${RESP1}
-" # End of settins variable
-fp_template="letkf_land.yaml"
-fn_namelist="letkf_land.yaml"
-${project_source_dir}/../ush/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
 
 # create folder for hofx
 mkdir -p ./diags

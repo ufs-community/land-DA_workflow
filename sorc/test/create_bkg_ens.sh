@@ -21,18 +21,18 @@ cd $WORKDIR
 if [[ ${DAtype} == 'letkfoi_snow' ]]; then
 
   # FOR LETKFOI, CREATE THE PSEUDO-ENSEMBLE
-  for ens in pos neg
+  for ens in {1..2}
   do
     #clean results from previous test
-    if [ -e $WORKDIR/mem_${ens} ]; then
-      rm -rf $WORKDIR/mem_${ens}
+    if [ -e $WORKDIR/mem${ens} ]; then
+      rm -rf $WORKDIR/mem${ens}
     fi
 
-    mkdir -p $WORKDIR/mem_${ens}
+    mkdir -p $WORKDIR/mem${ens}
 
     for i in ${RSTDIR}/${FILEDATE}.sfc_data.tile*.nc;
     do
-      cp $i ${WORKDIR}/mem_${ens}
+      cp $i ${WORKDIR}/mem${ens}
     done
 
     # update coupler.res file
@@ -48,7 +48,7 @@ if [[ ${DAtype} == 'letkfoi_snow' ]]; then
       'hp': !!str ${HP}
     " # End of settins variable
     fp_template="${project_source_dir}/../parm/templates/template.coupler.res"
-    fn_namelist="${WORKDIR}/mem_${ens}/${FILEDATE}.coupler.res"
+    fn_namelist="${WORKDIR}/mem${ens}/${FILEDATE}.coupler.res"
     ${project_source_dir}/../ush/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
   done
 
