@@ -134,6 +134,14 @@ if [ "${DO_PLOT_COMBINE_TILES}" = "YES" ]; then
   soil_level_number="1"
   out_title_base="Land-DA::${nYYYY}-${nMM}-${nDD}_${nHH}::"
   out_fn_base="landda_out_combined_${nYYYY}-${nMM}-${nDD}_${nHH}_"
+  # Number of mesh (grid) points in longitudinal direction
+  nlon_plot=400
+  # Number of mesh (grid) points in latitudinal direction
+  nlat_plot=200
+  # SciPy griddata methods: linear, nearest, cubic
+  griddata_method="nearest"
+  # matplolib pcolormesh shading options: flat, nearest, auto, gouraud
+  shading_option="auto"
 
   cat > plot_combine_tiles.yaml <<EOF
 path_data: '${COMIN}/RESTART'
@@ -144,6 +152,10 @@ soil_lvl_number: '${soil_level_number}'
 out_title_base: '${out_title_base}'
 out_fn_base: '${out_fn_base}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+nlon_plot: ${nlon_plot}
+nlat_plot: ${nlat_plot}
+griddata_method: '${griddata_method}'
+shading_option: '${shading_option}'
 EOF
 
   ${USHlandda}/plot_combine_tiles.py
