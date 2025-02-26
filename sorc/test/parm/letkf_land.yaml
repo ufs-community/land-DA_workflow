@@ -13,7 +13,7 @@ geometry:
       filetype: fms restart
       skip coupler file: true
       state variables: [orog_filt]
-      datapath: /scratch2/NAGAPE/epic/Chan-hoo.Jeon/landda_dev/land-DA_workflow/fix/FV3_fix_tiled/C96
+      datapath: {{ datapath }}
       filename_orog: C96_oro_data.nc
     derived fields: [nominal_surface_pressure]
 

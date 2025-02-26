@@ -29,6 +29,13 @@ done
 mkdir -p obs
 # prepare yaml files
 cp $project_source_dir/test/parm/letkf_land.yaml .
+settings="\
+  'datapath': ${FIXlandda}/FV3_fix_tiled/C${RES}
+" # End of settins variable
+fp_template="letkf_land.yaml"
+fn_namelist="letkf_land.yaml"
+${project_source_dir}/../ush/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
+
 for ii in "${!OBS_TYPES[@]}";
 do
   echo "============================= ${OBS_TYPES[$ii]}" 
