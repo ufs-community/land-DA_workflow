@@ -15,10 +15,10 @@ nMM=${NTIME:4:2}
 nDD=${NTIME:6:2}
 nHH=${NTIME:8:2}
 
-DO_PLOT_STATS="YES"
+DO_PLOT_STATS="NO"
 DO_PLOT_TIME_HISTORY="YES"
-DO_PLOT_RESTART="YES"
-DO_PLOT_COMBINE_TILES="YES"
+DO_PLOT_RESTART="NO"
+DO_PLOT_COMBINE_TILES="NO"
 
 ############################################################
 # Stats Plot
@@ -48,6 +48,8 @@ plottype: '${plottype}'
 title_fig: '${title_fig}'
 output_prefix: '${output_prefix}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+hofx_data_path: '${DATA_HOFX_OMA}'
+cdate: '${YYYY}-${MM}-${DD}-${HH}'
 EOF
   
   ${USHlandda}/hofx_analysis_stats.py
@@ -57,6 +59,7 @@ EOF
   
   # Copy result files to COMOUT
   cp -p ${output_prefix}* ${COMOUTplot}
+  cp -p "${DATA_HOFX_OMA}/hofx_oma_timehis"* ${COMOUThofx}
 fi
 
 
@@ -82,6 +85,7 @@ nprocs_anal: '${NPROCS_ANALYSIS}'
 nprocs_fcst: '${nprocs_forecast}'
 obs_type: '${OBS_TYPE}'
 out_fn_base: '${out_fn_base}'
+hofx_data_path: '${DATA_HOFX_OMA}'
 EOF
 
   ${USHlandda}/plot_analysis_timehistory.py
@@ -95,7 +99,7 @@ fi
 
 
 ###########################################################
-# Restart Plot
+# Plot restart tiles
 ###########################################################
 if [ "${DO_PLOT_RESTART}" = "YES" ]; then
   fn_data_base="ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile"

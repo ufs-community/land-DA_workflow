@@ -9,6 +9,7 @@
 ## V000: 2024/10/14: Chan-Hoo Jeon : Preliminary version
 ## V001: 2024/10/15: Chan-Hoo Jeon : Add wall-clock time plot
 ## V002: 2024/10/31: Chan-Hoo Jeon : Fix input log file name issue
+## V003: 2025/02/26: Chan-Hoo Jeon : Add h(x) Obs-ana plot
 ###################################################################### CHJ #####
 
 import os, sys
@@ -43,6 +44,7 @@ def main():
     nprocs_fcst = yaml_data['nprocs_fcst']
     obs_type = yaml_data['obs_type']
     out_fn_base = yaml_data['out_fn_base']
+    hofx_data_path = yaml_data['hofx_data_path']
 
     var_list = ["totalSnowDepth"]
     nprocs_anal = int(nprocs_anal)
@@ -53,6 +55,7 @@ def main():
         var_dict_anal = get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm)
         var_dict_fcst = get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_fcst)
         plot_data(var_dict_anal,var_dict_fcst,jedi_exe,obs_type,out_fn_base,work_dir,var_nm)
+        plot_his_oma(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path)
 
 
 # Get data from files =============================================== CHJ =====
@@ -340,6 +343,58 @@ def plot_his_qc(dfa,min_var,max_var,rms_var,out_title_qc,out_fn_qc,work_dir,qc_t
     # Output figure
     ndpi = 300
     out_file(work_dir,out_fn_qc,ndpi)
+
+
+# Plot time-history of H(x) OMA data ================================ CHJ =====
+def plot_his_oma(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
+# =================================================================== CHJ =====
+
+    dfa = pd.DataFrame(var_dict_anal)
+
+    oma_fp = os.path.join(hofx_data_path,"hofx_oma_timehis.txt")
+    with open(oma_fp, 'r') as f:
+        lines = f.readlines()
+    column_data = [line.strip().split(' ') for line in lines]
+    num_columns = len(column_data[0]) if column_data else 0
+    columns = [[] for _ in range(num_columns)]
+    for row in column_data:
+        for i, value in enumerate(row):
+            columns[i].append(value)
+
+    out_title_oma = f'''Land-DA::OMA (observation-analysis)::{var_nm}'''
+    out_fn_oma = f'''{out_fn_base}_oma_{var_nm}'''
+
+    # figsize=(width,height) in inches
+    fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(6,6))
+    fig.suptitle(out_title_oma,fontsize=txt_fnt+1,y=0.97)
+
+    axes[0].plot(dfa['Date'],columns[1],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Mean')
+    axes[0].plot(dfa['Date'],columns[2],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='STD')
+    axes[0].set_ylabel('OMA: Mean', fontsize=txt_fnt-1)
+    axes[0].tick_params(axis="y",labelsize=txt_fnt-2)
+    axes[0].legend(fontsize=txt_fnt-1, loc='center')
+    axes[0].grid(linewidth=0.2)
+
+    axes[1].plot(dfa['Date'],columns[3],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Min')
+    axes[1].plot(dfa['Date'],columns[4],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='max')
+    axes[1].set_ylabel('OMA: STD', fontsize=txt_fnt-1)
+    axes[1].tick_params(axis="y",labelsize=txt_fnt-2)
+    axes[1].grid(linewidth=0.2)
+
+    axes[2].plot(dfa['Date'],dfa['nobs_in'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='N_obs:raw')
+    axes[2].plot(dfa['Date'],dfa['nobs_QC'],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='N_obs:QC')
+    axes[2].set_xlabel('Date', fontsize=txt_fnt-1)
+    axes[2].set_ylabel('Number of observations', fontsize=txt_fnt-1)
+    axes[2].tick_params(axis="x",labelsize=txt_fnt-2)
+    axes[2].tick_params(axis="y",labelsize=txt_fnt-2)
+    axes[2].legend(fontsize=txt_fnt-1, loc='center right')
+    axes[2].grid(linewidth=0.2)
+
+    plt.xticks(rotation=30, ha='right')
+    plt.tight_layout()
+    # Output figure
+    ndpi = 300
+    out_file(work_dir,out_fn_oma,ndpi)
 
 
 # Output file ======================================================= CHJ =====
