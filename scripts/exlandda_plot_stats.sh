@@ -48,6 +48,8 @@ plottype: '${plottype}'
 title_fig: '${title_fig}'
 output_prefix: '${output_prefix}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+hofx_data_path: '${DATA_HOFX_OMA}'
+cdate: '${YYYY}-${MM}-${DD}-${HH}'
 EOF
   
   ${USHlandda}/hofx_analysis_stats.py
@@ -57,6 +59,7 @@ EOF
   
   # Copy result files to COMOUT
   cp -p ${output_prefix}* ${COMOUTplot}
+  cp -p "${DATA_HOFX_OMA}/hofx_oma_timehis"* ${COMOUThofx}
 fi
 
 
@@ -82,6 +85,7 @@ nprocs_anal: '${NPROCS_ANALYSIS}'
 nprocs_fcst: '${nprocs_forecast}'
 obs_type: '${OBS_TYPE}'
 out_fn_base: '${out_fn_base}'
+hofx_data_path: '${DATA_HOFX_OMA}'
 EOF
 
   ${USHlandda}/plot_analysis_timehistory.py
@@ -95,7 +99,7 @@ fi
 
 
 ###########################################################
-# Restart Plot
+# Plot restart tiles
 ###########################################################
 if [ "${DO_PLOT_RESTART}" = "YES" ]; then
   fn_data_base="ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile"
@@ -103,6 +107,7 @@ if [ "${DO_PLOT_RESTART}" = "YES" ]; then
   soil_level_number="1"
   out_title_base="Land-DA::restart::${nYYYY}-${nMM}-${nDD}_${nHH}::"
   out_fn_base="landda_out_restart_${nYYYY}-${nMM}-${nDD}_${nHH}_"
+  plot_cs_cmap="gist_ncar_r"
 
   cat > plot_restart.yaml <<EOF
 path_data: '${COMIN}/RESTART'
@@ -113,6 +118,7 @@ soil_lvl_number: '${soil_level_number}'
 out_title_base: '${out_title_base}'
 out_fn_base: '${out_fn_base}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+plot_cs_cmap: '${plot_cs_cmap}'
 EOF
 
   ${USHlandda}/plot_forecast_restart.py
@@ -134,6 +140,14 @@ if [ "${DO_PLOT_COMBINE_TILES}" = "YES" ]; then
   soil_level_number="1"
   out_title_base="Land-DA::${nYYYY}-${nMM}-${nDD}_${nHH}::"
   out_fn_base="landda_out_combined_${nYYYY}-${nMM}-${nDD}_${nHH}_"
+  # Number of mesh (grid) points in longitudinal direction
+  nlon_plot=400
+  # Number of mesh (grid) points in latitudinal direction
+  nlat_plot=200
+  # SciPy griddata methods: linear, nearest, cubic
+  griddata_method="nearest"
+  # matplolib pcolormesh shading options: flat, nearest, auto, gouraud
+  shading_option="auto"
 
   cat > plot_combine_tiles.yaml <<EOF
 path_data: '${COMIN}/RESTART'
@@ -144,6 +158,10 @@ soil_lvl_number: '${soil_level_number}'
 out_title_base: '${out_title_base}'
 out_fn_base: '${out_fn_base}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+nlon_plot: ${nlon_plot}
+nlat_plot: ${nlat_plot}
+griddata_method: '${griddata_method}'
+shading_option: '${shading_option}'
 EOF
 
   ${USHlandda}/plot_combine_tiles.py

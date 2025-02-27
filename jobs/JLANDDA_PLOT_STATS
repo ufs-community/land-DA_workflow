@@ -67,12 +67,16 @@ export COMIN="${COMIN:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
 export COMOUT="${COMOUT:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
 
 mkdir -p ${COMOUT}
+export COMOUThofx="${COMOUThofx:-${COMOUT}/hofx}"
+mkdir -p ${COMOUThofx}
 export COMOUTplot="${COMOUTplot:-${COMOUT}/plot}"
 mkdir -p ${COMOUTplot}
 
 # Create a teomporary share directory
 export DATA_HOFX="${DATA_HOFX:-${DATAROOT}/DATA_SHARE/hofx}"
 mkdir -p ${DATA_HOFX}
+export DATA_HOFX_OMA="${DATA_HOFX_OMA:-${DATAROOT}/DATA_SHARE/hofx_oma}"
+mkdir -p ${DATA_HOFX_OMA}
 #
 #-----------------------------------------------------------------------
 #

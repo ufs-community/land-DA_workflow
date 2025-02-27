@@ -202,7 +202,7 @@ done
 
 if [ -d diags ]; then
   cp -p diags/* ${COMOUThofx}
-  ln -nsf ${COMOUThofx}/* ${DATA_HOFX}
+  ln -nsf ${COMOUThofx}/*.nc ${DATA_HOFX}
 fi
 
 

@@ -45,6 +45,12 @@ def main():
     out_title_base=yaml_data['out_title_base']
     out_fn_base=yaml_data['out_fn_base']
     cartopy_ne_path=yaml_data['cartopy_ne_path']
+    nlon_plot=yaml_data['nlon_plot']
+    nlat_plot=yaml_data['nlat_plot']
+    nlon_plot=int(nlon_plot)
+    nlat_plot=int(nlat_plot)
+    griddata_method=yaml_data['griddata_method']
+    shading_option=yaml_data['shading_option']
     
     # Set the path to Natural Earth dataset
     cartopy.config['data_dir']=cartopy_ne_path
@@ -59,7 +65,8 @@ def main():
     # plot restart file
     for var_nm in var_list:
         sfc_data = get_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num)
-        plot_data(glon,glat,sfc_data,var_nm,out_title_base,out_fn_base,work_dir)
+        plot_data(glon,glat,sfc_data,var_nm,out_title_base,out_fn_base,work_dir,
+                  nlon_plot,nlat_plot,griddata_method,shading_option)
        
 
 # geo lon/lat from orography ======================================== CHJ =====
@@ -149,7 +156,8 @@ def get_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num):
 
 
 # Plot data ========================================================= CHJ =====
-def plot_data(glon,glat,sfc_data,var_nm,out_title_base,out_fn_base,work_dir):
+def plot_data(glon,glat,sfc_data,var_nm,out_title_base,out_fn_base,work_dir,
+              nlon_plot,nlat_plot,griddata_method,shading_option):
 # =================================================================== CHJ =====
 
     print(' ===== Plotting data ================================')
@@ -159,8 +167,8 @@ def plot_data(glon,glat,sfc_data,var_nm,out_title_base,out_fn_base,work_dir):
     print('Fill value:',sfc_fill_value)
 
     # Define and interpolate the grid/data for mesh plot
-    num_glon_mesh=200
-    num_glat_mesh=100
+    num_glon_mesh=nlon_plot
+    num_glat_mesh=nlat_plot
     lon_min=np.min(glon)
     lon_max=np.max(glon)
     lat_min=round(np.min(glat))
@@ -177,7 +185,7 @@ def plot_data(glon,glat,sfc_data,var_nm,out_title_base,out_fn_base,work_dir):
     print('Min glat mesh:', np.min(glat_m))
     print(glon_m.shape)
     print(glat_m.shape)
-    sfc_data_m = griddata((glon,glat),sfc_data,(glon_m,glat_m),method='nearest',fill_value=sfc_fill_value)
+    sfc_data_m = griddata((glon,glat),sfc_data,(glon_m,glat_m),method=griddata_method,fill_value=sfc_fill_value)
     sfc_data_m_masked = np.ma.masked_where(sfc_data_m == sfc_fill_value, sfc_data_m)
     print(sfc_data_m_masked.shape)
 
@@ -201,7 +209,7 @@ def plot_data(glon,glat,sfc_data,var_nm,out_title_base,out_fn_base,work_dir):
     back_plot(ax)
 
     cs=ax.pcolormesh(glon_m,glat_m,sfc_data_m_masked,cmap=cs_cmap,rasterized=True,
-       vmin=cs_min,vmax=cs_max,transform=ccrs.PlateCarree())
+       shading=shading_option,vmin=cs_min,vmax=cs_max,transform=ccrs.PlateCarree())
 
     divider=make_axes_locatable(ax)
     ax_cb=divider.new_horizontal(size="3%",pad=0.1,axes_class=plt.Axes)

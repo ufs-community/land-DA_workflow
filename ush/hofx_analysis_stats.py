@@ -66,7 +66,7 @@ def get_obs_stats(fdir, plottype, jedi_exe):
 
     return total_oma,total_omb,total_lat,total_lon
 
-def plot_scatter():
+def plot_scatter(hofx_data_path,cdate):
     print("===== PLOT: SCATTER =====")
     
     # Set the path to Natural Earth dataset
@@ -79,7 +79,23 @@ def plot_scatter():
     print("Mean |OMA|=",field_mean)
     print("STDV |OMA|=",field_std)
     print("Max |OMA|=",field_max)
-    print("Min |OMA|=",field_min)    
+    print("Min |OMA|=",field_min)
+
+    # Print out OMA values to file
+    hofx_data_fp=os.path.join(hofx_data_path,"hofx_oma_timehis_abs.txt")
+    if os.path.exists(hofx_data_fp):
+        # Remove line for same date
+        with open(hofx_data_fp, 'r') as f:
+            lines = f.readlines()
+        with open(hofx_data_fp, 'w') as f:
+            for line in lines:
+                columns = line.strip().split(' ')
+                if columns and columns[0].strip() != cdate:
+                    f.write(line)
+                    
+    with open(hofx_data_fp, 'a') as f:
+        print(cdate,field_mean,field_std,field_max,field_min, file=f)
+
     crs=ccrs.PlateCarree()
     fig=plt.figure(figsize=(8,5))
     ax=plt.subplot(111, projection=crs)
@@ -100,7 +116,7 @@ def plot_scatter():
     plt.savefig(output_fn,dpi=200,bbox_inches='tight')
     plt.close('all')
 
-def plot_histogram():
+def plot_histogram(hofx_data_path,cdate):
     print("===== PLOT: HISTOGRAM =====")    
     field_mean=float("{:.2f}".format(np.mean(field)))
     field_std=float("{:.2f}".format(np.std(field)))
@@ -110,8 +126,23 @@ def plot_histogram():
     print("STDV OMA=",field_std)
     print("Max OMA=",field_max)
     print("Min OMA=",field_min)
-    nbins=yaml_data['nbins']
 
+    # Print out OMA values to file
+    hofx_data_fp=os.path.join(hofx_data_path,"hofx_oma_timehis.txt")
+    if os.path.exists(hofx_data_fp):
+        # Remove line for same date
+        with open(hofx_data_fp, 'r') as f:
+            lines = f.readlines()
+        with open(hofx_data_fp, 'w') as f:
+            for line in lines:
+                columns = line.strip().split(' ')
+                if columns and columns[0].strip() != cdate:
+                    f.write(line)
+
+    with open(hofx_data_fp, 'a') as f:
+        print(cdate,field_mean,field_std,field_max,field_min, file=f)
+
+    nbins=yaml_data['nbins']
     opt_xlimit='auto'
     if opt_xlimit=='auto':
         fld_min=int(field_min)
@@ -138,6 +169,8 @@ if __name__ == '__main__':
         yaml_data=yaml.load(f, Loader=yaml.FullLoader)
     f.close()
     print("YAML_DATA:",yaml_data)
+    hofx_data_path=yaml_data['hofx_data_path']
+    cdate=yaml_data['cdate']
 
     oma,omb,lat,lon=get_obs_stats(yaml_data['hofx_files'],yaml_data['plottype'],yaml_data['jedi_exe'])
     if yaml_data['field_var']=='OMA':
@@ -146,6 +179,6 @@ if __name__ == '__main__':
         field=omb    
 
     if yaml_data['plottype']=='scatter' or yaml_data['plottype']=='both': 
-        plot_scatter()
+        plot_scatter(hofx_data_path,cdate)
     if yaml_data['plottype']=='histogram' or yaml_data['plottype']=='both':
-        plot_histogram()
+        plot_histogram(hofx_data_path,cdate)

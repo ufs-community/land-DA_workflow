@@ -45,7 +45,8 @@ def main():
     out_title_base=yaml_data['out_title_base']
     out_fn_base=yaml_data['out_fn_base']
     cartopy_ne_path=yaml_data['cartopy_ne_path']
-    
+    plot_cs_cmap=yaml_data['plot_cs_cmap']   
+ 
     # Set the path to Natural Earth dataset
     cartopy.config['data_dir']=cartopy_ne_path
 
@@ -58,7 +59,8 @@ def main():
     get_geo(path_data,fn_data_base,fn_data_ext)
     # plot restart file
     for var_nm in var_list:
-        plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num,out_title_base,out_fn_base,work_dir)
+        plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num,
+                  out_title_base,out_fn_base,work_dir,plot_cs_cmap)
        
 
 # geo lon/lat from orography ======================================== CHJ =====
@@ -103,7 +105,8 @@ def get_geo(path_data,fn_data_base,fn_data_ext):
 
 
 # Get sfc_data from files and plot ================================== CHJ =====
-def plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num,out_title_base,out_fn_base,work_dir):
+def plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num,
+              out_title_base,out_fn_base,work_dir,plot_cs_cmap):
 # =================================================================== CHJ =====
 
     # center of map
@@ -143,9 +146,10 @@ def plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num,out_title_b
     print('cs_max=',cs_max)
     print('cs_min=',cs_min)
 
-    cs_cmap='gist_ncar_r'
+    cs_cmap=plot_cs_cmap
     cbar_extend='neither'
 
+    # Plot each tile
     for it in range(num_tiles):
         itp=it+1
         glon_tile=np.squeeze(glon[it,:,:])
@@ -156,7 +160,6 @@ def plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num,out_title_b
         c_glon=np.round(np.mean(glon_tile),decimals=2)
         c_glat=np.round(np.mean(glat_tile),decimals=2)
         print("c_glon, c_glat for tile",str(it+1),"=",c_glon,c_glat)
-
         out_title=out_title_base+var_nm+'::Tile'+str(itp)
         out_fn=out_fn_base+var_nm+'_tile'+str(itp)
 
@@ -164,7 +167,6 @@ def plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num,out_title_b
         ax.set_title(out_title, fontsize=6)
         # Call background plot
         back_plot(ax)
-
         cs=ax.pcolormesh(glon_tile,glat_tile,var_tile,cmap=cs_cmap,
             rasterized=True,vmin=cs_min,vmax=cs_max,transform=ccrs.PlateCarree())
         divider=make_axes_locatable(ax)
@@ -173,20 +175,30 @@ def plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num,out_title_b
         cbar=plt.colorbar(cs,cax=ax_cb,extend='neither')
         cbar.ax.tick_params(labelsize=6)
         cbar.set_label(var_nm,fontsize=6)
-
-#    for it in range(num_tiles):
-#        cs=ax.pcolormesh(glon[it,:,:],glat[it,:,:],plt_var[it,:,:],cmap=cs_cmap,rasterized=True,
-#            vmin=cs_min,vmax=cs_max,transform=ccrs.PlateCarree())
-#    divider=make_axes_locatable(ax)
-#    ax_cb=divider.new_horizontal(size="3%",pad=0.1,axes_class=plt.Axes)
-#    fig.add_axes(ax_cb)
-#    cbar=plt.colorbar(cs,cax=ax_cb,extend=cbar_extend)
-#    cbar.ax.tick_params(labelsize=6)
-#    cbar.set_label(var_nm,fontsize=6)
-
         # Output figure
         ndpi=300
         out_file(work_dir,out_fn,ndpi)
+
+    # Plot all tiles together
+    out_title=f'''{out_title_base}{var_nm}::All tiles'''
+    out_fn=f'''{out_fn_base}{var_nm}_alltiles'''
+
+    fig,ax=plt.subplots(1,1,subplot_kw=dict(projection=ccrs.Robinson(c_lon)))
+    ax.set_title(out_title, fontsize=6)
+    # Call background plot
+    back_plot(ax)
+    for it in range(num_tiles):
+        cs=ax.pcolormesh(glon[it,:,:],glat[it,:,:],plt_var[it,:,:],cmap=cs_cmap,rasterized=True,
+           vmin=cs_min,vmax=cs_max,transform=ccrs.PlateCarree())
+    divider=make_axes_locatable(ax)
+    ax_cb=divider.new_horizontal(size="3%",pad=0.1,axes_class=plt.Axes)
+    fig.add_axes(ax_cb)
+    cbar=plt.colorbar(cs,cax=ax_cb,extend=cbar_extend)
+    cbar.ax.tick_params(labelsize=6)
+    cbar.set_label(var_nm,fontsize=6)
+    # Output figure
+    ndpi=300
+    out_file(work_dir,out_fn,ndpi)
 
 
 # Background plot ==================================================== CHJ =====
