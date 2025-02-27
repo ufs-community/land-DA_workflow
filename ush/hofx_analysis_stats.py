@@ -83,7 +83,17 @@ def plot_scatter(hofx_data_path,cdate):
 
     # Print out OMA values to file
     hofx_data_fp=os.path.join(hofx_data_path,"hofx_oma_timehis_abs.txt")
-    with open(hofx_data_fp, "a") as f:
+    if os.path.exists(hofx_data_fp):
+        # Remove line for same date
+        with open(hofx_data_fp, 'r') as f:
+            lines = f.readlines()
+        with open(hofx_data_fp, 'w') as f:
+            for line in lines:
+                columns = line.strip().split(' ')
+                if columns and columns[0].strip() != cdate:
+                    f.write(line)
+                    
+    with open(hofx_data_fp, 'a') as f:
         print(cdate,field_mean,field_std,field_max,field_min, file=f)
 
     crs=ccrs.PlateCarree()
@@ -119,7 +129,17 @@ def plot_histogram(hofx_data_path,cdate):
 
     # Print out OMA values to file
     hofx_data_fp=os.path.join(hofx_data_path,"hofx_oma_timehis.txt")
-    with open(hofx_data_fp, "a") as f:
+    if os.path.exists(hofx_data_fp):
+        # Remove line for same date
+        with open(hofx_data_fp, 'r') as f:
+            lines = f.readlines()
+        with open(hofx_data_fp, 'w') as f:
+            for line in lines:
+                columns = line.strip().split(' ')
+                if columns and columns[0].strip() != cdate:
+                    f.write(line)
+
+    with open(hofx_data_fp, 'a') as f:
         print(cdate,field_mean,field_std,field_max,field_min, file=f)
 
     nbins=yaml_data['nbins']

@@ -359,7 +359,11 @@ def plot_his_oma(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
     columns = [[] for _ in range(num_columns)]
     for row in column_data:
         for i, value in enumerate(row):
+            if i>0:
+                value = float(value)
             columns[i].append(value)
+
+    print(columns[1])
 
     out_title_oma = f'''Land-DA::OMA (observation-analysis)::{var_nm}'''
     out_fn_oma = f'''{out_fn_base}_oma_{var_nm}'''
@@ -369,17 +373,15 @@ def plot_his_oma(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
     fig.suptitle(out_title_oma,fontsize=txt_fnt+1,y=0.97)
 
     axes[0].plot(dfa['Date'],columns[1],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Mean')
-    axes[0].plot(dfa['Date'],columns[2],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='STD')
     axes[0].set_ylabel('OMA: Mean', fontsize=txt_fnt-1)
     axes[0].tick_params(axis="y",labelsize=txt_fnt-2)
-    axes[0].legend(fontsize=txt_fnt-1, loc='center')
+#    axes[0].legend(fontsize=txt_fnt-1, loc='center')
     axes[0].grid(linewidth=0.2)
 
-    axes[1].plot(dfa['Date'],columns[4],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Min')
-    axes[1].plot(dfa['Date'],columns[3],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='max')
+    axes[1].plot(dfa['Date'],columns[2],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='STD')
     axes[1].set_ylabel('OMA: STD', fontsize=txt_fnt-1)
     axes[1].tick_params(axis="y",labelsize=txt_fnt-2)
-    axes[0].legend(fontsize=txt_fnt-1, loc='center')
+#    axes[1].legend(fontsize=txt_fnt-1, loc='center')
     axes[1].grid(linewidth=0.2)
 
     axes[2].plot(dfa['Date'],dfa['nobs_in'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='N_obs:raw')
