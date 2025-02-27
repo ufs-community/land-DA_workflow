@@ -107,6 +107,7 @@ if [ "${DO_PLOT_RESTART}" = "YES" ]; then
   soil_level_number="1"
   out_title_base="Land-DA::restart::${nYYYY}-${nMM}-${nDD}_${nHH}::"
   out_fn_base="landda_out_restart_${nYYYY}-${nMM}-${nDD}_${nHH}_"
+  plot_cs_cmap="gist_ncar_r"
 
   cat > plot_restart.yaml <<EOF
 path_data: '${COMIN}/RESTART'
@@ -117,6 +118,7 @@ soil_lvl_number: '${soil_level_number}'
 out_title_base: '${out_title_base}'
 out_fn_base: '${out_fn_base}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+plot_cs_cmap: '${plot_cs_cmap}'
 EOF
 
   ${USHlandda}/plot_forecast_restart.py
