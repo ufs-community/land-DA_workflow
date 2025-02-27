@@ -379,7 +379,7 @@ def plot_his_oma(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
     axes[0].grid(linewidth=0.2)
 
     axes[1].plot(dfa['Date'],columns[2],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='STD')
-    axes[1].set_ylabel('OMA: STD', fontsize=txt_fnt-1)
+    axes[1].set_ylabel('OMA: STDV', fontsize=txt_fnt-1)
     axes[1].tick_params(axis="y",labelsize=txt_fnt-2)
 #    axes[1].legend(fontsize=txt_fnt-1, loc='center')
     axes[1].grid(linewidth=0.2)
