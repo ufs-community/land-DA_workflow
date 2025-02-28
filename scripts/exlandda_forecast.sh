@@ -52,8 +52,72 @@ cp -p "${PARMlandda}/templates/template.noahmptable.tbl" noahmptable.tbl
 cp -p "${PARMlandda}/templates/template.fd_ufs.yaml" fd_ufs.yaml
 if [ "${APP}" = "LND" ]; then
   cp -p "${PARMlandda}/templates/template.${APP}.datm_in" datm_in
-  cp -p "${PARMlandda}/templates/template.${APP}.datm.streams" datm.streams
   cp -p "${PARMlandda}/templates/template.${APP}.data_table" data_table
+  # datm.streams file
+  year_first="${DATE_FIRST_CYCLE:0:4}"
+  month_first="${DATE_FIRST_CYCLE:4:2}"
+  year_last="${DATE_LAST_CYCLE:0:4}"
+  month_last="${DATE_LAST_CYCLE:4:2}"
+  year_align="${year_first}"
+
+  settings="\
+    'year_first': '${year_first}'
+    'year_last': '${year_last}'
+    'year_align': '${year_align}'
+    'month_first': '${month_first}'
+    'month_last': '${month_last}'
+  " # End of settings variable
+  fp_template="${PARMlandda}/templates/template.${APP}.datm.streams"
+  fn_namelist="datm.streams"
+  ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
+
+  # Soft-link forcing files
+  mkdir -p INPUT_DATM
+  if [ "${ATMOS_FORC}" = "gswp3" ]; then
+    gswp3_path="${FIXlandda}/DATM_input_data/gswp3"
+    var_fp_prefix="${gswp3_path}/clmforc.GSWP3.c2011.0.5x0.5"
+    gswp3_vars=( "Solr" "Prec" "TPQWL" "ESMFmesh" )
+    for var in "${gswp3_vars[@]}" ; do
+      if [ "${var}" = "ESMFmesh" ]; then
+        var_fp="${var_fp_prefix}.TPQWL.SCRIP.210520_${var}.nc"
+        if [ -f ${var_fp} ]; then
+          ln -nsf "${var_fp}" INPUT_DATM/.
+        else
+          err_exit "DATM forcing mesh file ${var_fp} does not exist."
+        fi
+      else
+        # Calculate number of months
+        given_date="${year_first}-${month_first}-08"
+        num_months_m1=$(( (year_last - year_first) * 12 + (month_last - month_first) + 1 ))
+        for imon in $( seq 1 $num_months_m1 ) ; do
+          idate=$( date -d "$given_date + $((imon-1)) months" +%Y%m )
+          iyyyy="${idate:0:4}"
+          imm="${idate:4:2}"
+          var_fp="${var_fp_prefix}.${var}.${iyyyy}-${imm}.nc"
+          if [ -f ${var_fp} ]; then
+            ln -nsf "${var_fp}" INPUT_DATM/.
+          else
+            err_exit "DATM forcing data file ${var_fp} does not exist."
+          fi
+        done
+      fi
+    done
+    topo_fns=( 
+      "topodata_0.9x1.SCRIP.210520_ESMFmesh.nc" 
+      "topodata_0.9x1.25_USGS_070110_stream_c151201.nc" 
+      "fv1.9x2.5_141008_ESMFmesh.nc"
+    )
+    for tfn in "${topo_fns[@]}" ; do
+      tfp="${gswp3_path}/${tfn}"
+      if [ -f ${tfp} ]; then
+        ln -nsf "${tfp}" INPUT_DATM/.       
+      else
+        err_exit "DATM topo file ${tfp} does not exist."
+      fi
+    done
+  else
+    ln -nsf ${FIXlandda}/DATM_input_data/${ATMOS_FORC}/* INPUT_DATM/.
+  fi
 elif [ "${APP}" = "ATML" ]; then
   cp -p "${PARMlandda}/templates/template.${APP}.field_table" field_table
 fi
@@ -328,13 +392,7 @@ if [ "${APP}" = "ATML" ]; then
 
   fi
 fi
-
 cd -
-
-if [ "${APP}" = "LND" ]; then
-  mkdir -p INPUT_DATM
-  ln -nsf ${FIXlandda}/DATM_input_data/${ATMOS_FORC}/* INPUT_DATM/.
-fi
 
 # start runs
 echo "Start ufs-cdeps-land model run with TASKS: ${nprocs_forecast}"
