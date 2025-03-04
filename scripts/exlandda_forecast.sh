@@ -47,15 +47,118 @@ nHHsec_5d=$(printf "%05d" "${nHHsec}")
 
 FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 
-# Copy input namelist data files
+# Copy input namelist data / restart files
 cp -p "${PARMlandda}/templates/template.noahmptable.tbl" noahmptable.tbl
 cp -p "${PARMlandda}/templates/template.fd_ufs.yaml" fd_ufs.yaml
 if [ "${APP}" = "LND" ]; then
+  # CDEPS datm input / restart files
   cp -p "${PARMlandda}/templates/template.${APP}.datm_in" datm_in
-  cp -p "${PARMlandda}/templates/template.${APP}.datm.streams" datm.streams
   cp -p "${PARMlandda}/templates/template.${APP}.data_table" data_table
+  # datm.streams file
+  # Set up data file list and soft-link forcing files
+  mkdir -p INPUT_DATM
+  data_files01_list=()
+  data_files02_list=()
+  data_files03_list=()
+  if [ "${ATMOS_FORC}" = "gswp3" ]; then
+    gswp3_path="${FIXlandda}/DATM_input_data/gswp3"
+    var_fn_prefix="clmforc.GSWP3.c2011.0.5x0.5"
+    gswp3_vars=( "Solr" "Prec" "TPQWL" "ESMFmesh" )
+    for var in "${gswp3_vars[@]}" ; do
+      if [ "${var}" = "ESMFmesh" ]; then
+        var_fp="${gswp3_path}/${var_fn_prefix}.TPQWL.SCRIP.210520_${var}.nc"
+        if [ -f ${var_fp} ]; then
+          ln -nsf "${var_fp}" INPUT_DATM/.
+        else
+          err_exit "DATM forcing mesh file ${var_fp} does not exist."
+        fi
+      else
+        if [ "${COLDSTART}" = "YES" ] && [ "${PDY}${cyc}" = "${DATE_FIRST_CYCLE:0:10}" ]; then
+          # Calculate number of months
+          year_first="${DATE_FIRST_CYCLE:0:4}"
+          month_first="${DATE_FIRST_CYCLE:4:2}"
+          year_last="${DATE_LAST_CYCLE:0:4}"
+          month_last="${DATE_LAST_CYCLE:4:2}"
+        else  # warm start
+          # CDEPS restart and pointer files for DATM (LND)
+          rfile2="ufs.cpld.datm.r.${YYYY}-${MM}-${DD}-${HHsec_5d}.nc"
+          if [ -f "${COMINm1}/${rfile2}" ]; then
+            ln -nsf "${COMINm1}/${rfile2}" .
+          elif [ -f "${WARMSTART_DIR}/${rfile2}" ]; then
+            ln -nsf "${WARMSTART_DIR}/${rfile2}" .
+          else
+            ln -nsf ${FIXlandda}/restarts/${ATMOS_FORC}/${rfile2} .
+          fi
+          ls -1 "${rfile2}">rpointer.atm
+          
+          # Extract info from datm restart file
+          ${USHlandda}/datm_rfile_info.py -i ${rfile2}
+          # Read result file
+          while IFS= read -r line; do
+            year_first=$(echo "$line" | cut -d',' -f1)
+            month_first=$(echo "$line" | cut -d',' -f2)
+            year_last=$(echo "$line" | cut -d',' -f3)
+            month_last=$(echo "$line" | cut -d',' -f4) 
+          done < "first_last_date.txt"
+        fi
+        given_date="${year_first}-${month_first}-08"
+        num_months_m1=$(( (year_last - year_first) * 12 + (month_last - month_first) + 1 ))
+        for imon in $( seq 1 $num_months_m1 ) ; do
+          idate=$( date -d "$given_date + $((imon-1)) months" +%Y%m )
+          iyyyy="${idate:0:4}"
+          imm="${idate:4:2}"
+          var_fn="${var_fn_prefix}.${var}.${iyyyy}-${imm}.nc"
+          if [ "${var}" = "Solr" ]; then
+            data_files01_list+=("\"INPUT_DATM/${var_fn}\"")
+          elif [ "${var}" = "Prec" ]; then
+            data_files02_list+=("\"INPUT_DATM/${var_fn}\"")
+          elif [ "${var}" = "TPQWL" ]; then
+            data_files03_list+=("\"INPUT_DATM/${var_fn}\"")
+          fi
+          var_fp="${gswp3_path}/${var_fn}"
+          if [ -f ${var_fp} ]; then
+            ln -nsf "${var_fp}" INPUT_DATM/.
+          else
+            err_exit "DATM forcing data file ${var_fp} does not exist."
+          fi
+        done
+      fi
+    done
+    topo_fns=( 
+      "topodata_0.9x1.SCRIP.210520_ESMFmesh.nc" 
+      "topodata_0.9x1.25_USGS_070110_stream_c151201.nc" 
+      "fv1.9x2.5_141008_ESMFmesh.nc"
+    )
+    for tfn in "${topo_fns[@]}" ; do
+      tfp="${gswp3_path}/${tfn}"
+      if [ -f ${tfp} ]; then
+        ln -nsf "${tfp}" INPUT_DATM/.       
+      else
+        err_exit "DATM topo file ${tfp} does not exist."
+      fi
+    done
+  elif [ "${ATMOS_FORC}" = "era5" ]; then
+    err_exit "ERA5 is not available yet !!!"
+  else
+    ln -nsf ${FIXlandda}/DATM_input_data/${ATMOS_FORC}/* INPUT_DATM/.
+  fi
+  year_align="${year_first}"
+  settings="\
+    'ATMOS_FORC': '${ATMOS_FORC}'
+    'year_first': '${year_first}'
+    'year_last': '${year_last}'
+    'year_align': '${year_align}'
+    'data_files01': '${data_files01_list[@]}'
+    'data_files02': '${data_files02_list[@]}'
+    'data_files03': '${data_files03_list[@]}'
+  " # End of settings variable
+  fp_template="${PARMlandda}/templates/template.${APP}.datm.streams"
+  fn_namelist="datm.streams"
+  ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
+
 elif [ "${APP}" = "ATML" ]; then
   cp -p "${PARMlandda}/templates/template.${APP}.field_table" field_table
+  ln -nsf ${FIXlandda}/FV3_fix_global/* .
 fi
 
 # Set input.nml
@@ -176,22 +279,7 @@ fp_template="${PARMlandda}/templates/template.${APP}.diag_table"
 fn_namelist="diag_table"
 ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
 
-if [ "${APP}" = "LND" ]; then
-  # CDEPS restart and pointer files for DATM (LND)
-  rfile2="ufs.cpld.datm.r.${YYYY}-${MM}-${DD}-${HHsec_5d}.nc"
-  if [ -f "${COMINm1}/${rfile2}" ]; then
-    ln -nsf "${COMINm1}/${rfile2}" .
-  elif [ -f "${WARMSTART_DIR}/${rfile2}" ]; then
-    ln -nsf "${WARMSTART_DIR}/${rfile2}" .
-  else
-    ln -nsf ${FIXlandda}/restarts/${ATMOS_FORC}/${rfile2} .
-  fi
-  ls -1 "${rfile2}">rpointer.atm
-elif [ "${APP}" = "ATML" ]; then
-  ln -nsf ${FIXlandda}/FV3_fix_global/* .
-fi
-
-###############################
+################################
 # Set up RESTART directory
 ################################
 mkdir -p RESTART
@@ -328,13 +416,7 @@ if [ "${APP}" = "ATML" ]; then
 
   fi
 fi
-
 cd -
-
-if [ "${APP}" = "LND" ]; then
-  mkdir -p INPUT_DATM
-  ln -nsf ${FIXlandda}/DATM_input_data/${ATMOS_FORC}/* INPUT_DATM/.
-fi
 
 # start runs
 echo "Start ufs-cdeps-land model run with TASKS: ${nprocs_forecast}"

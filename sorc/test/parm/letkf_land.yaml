@@ -9,7 +9,7 @@ geometry:
   field metadata override: gfs-land.yaml
   time invariant fields:
     state fields:
-      datetime: 2000-01-04T00:00:00Z
+      datetime: 2000-02-01T00:00:00Z
       filetype: fms restart
       skip coupler file: true
       state variables: [orog_filt]
@@ -18,23 +18,23 @@ geometry:
     derived fields: [nominal_surface_pressure]
 
 time window:
-  begin: 2000-01-04T00:00:00Z
+  begin: 2000-02-01T00:00:00Z
   length: PT24H
 
 background:
  members:
-   - datetime: 2000-01-05T00:00:00Z
+   - datetime: 2000-02-02T00:00:00Z
      filetype: fms restart
      state variables: [snwdph,vtype,slmsk]
-     datapath: mem1/
-     filename_sfcd: 20000105.000000.sfc_data.nc
-     filename_cplr: 20000105.000000.coupler.res
-   - datetime: 2000-01-05T00:00:00Z
+     datapath: mem1
+     filename_sfcd: 20000202.000000.sfc_data.nc
+     filename_cplr: 20000202.000000.coupler.res
+   - datetime: 2000-02-02T00:00:00Z
      filetype: fms restart
      state variables: [snwdph,vtype,slmsk]
-     datapath: mem2/
-     filename_sfcd: 20000105.000000.sfc_data.nc
-     filename_cplr: 20000105.000000.coupler.res
+     datapath: mem2
+     filename_sfcd: 20000202.000000.sfc_data.nc
+     filename_cplr: 20000202.000000.coupler.res
 
 driver:
   save posterior mean: false
@@ -67,7 +67,7 @@ observations:
       obsdataout:
         engine:
           type: H5File
-          obsfile: diags/diag.ghcn_snow_2000010500.nc
+          obsfile: diags/diag.ghcn_snow_2000020200.nc
     obs operator:
       name: Identity
     obs error:
