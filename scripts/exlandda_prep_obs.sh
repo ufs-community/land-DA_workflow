@@ -22,7 +22,8 @@ if [ "${OBS_TYPE}" = "GHCN" ]; then
   # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, 
   # so that obs are within DA window.
   obs_fn="ghcn_snwd_ioda_${YYYP}${MP}${DP}${HP}.nc"
-  obs_fp="${OBSDIR}/GHCN/${YYYY}/${obs_fn}"
+  obs_dp="${OBSDIR}/GHCN/${YYYY}"
+  obs_fp="${obs_dp}/${obs_fn}"
   out_fn="ghcn_snow_${PDY}${cyc}.nc"
 
   # check obs is available
@@ -30,6 +31,9 @@ if [ "${OBS_TYPE}" = "GHCN" ]; then
     echo "GHCN observation file: ${obs_fp}"
     cp -p "${obs_fp}" .
     cp -p "${obs_fp}" "${COMOUTobs}/${out_fn}"
+  elif [ -f "${obs_dp}/${out_fn}" ]; then
+    echo "GHCN observation file: ${obs_dp}/${out_fn}"
+    cp -p "${obs_dp}/${out_fn}" "${COMOUTobs}/${out_fn}"
   else
     input_ghcn_file="${DATA_GHCN_RAW}/${YYYP}.csv"
     if [ ! -f "${input_ghcn_file}" ]; then
