@@ -48,6 +48,7 @@ if [ "${OBS_TYPE}" = "GHCN" ]; then
     if [ $? -ne 0 ]; then
       err_exit "Generation of GHCN obs file failed !!!"
     fi
+    cp -p "${obs_fn}" "${obs_out_fn}"
     cp -p "${obs_fn}" "${COMOUTobs}/${obs_out_fn}"
   fi
 
