@@ -24,16 +24,17 @@ if [ "${OBS_TYPE}" = "GHCN" ]; then
   obs_fn="ghcn_snwd_ioda_${YYYP}${MP}${DP}${HP}.nc"
   obs_dp="${OBSDIR}/GHCN/${YYYY}"
   obs_fp="${obs_dp}/${obs_fn}"
-  out_fn="ghcn_snow_${PDY}${cyc}.nc"
+  obs_out_fn="ghcn_snow_${PDY}${cyc}.nc"
 
   # check obs is available
   if [ -f "${obs_fp}" ]; then
     echo "GHCN observation file: ${obs_fp}"
-    cp -p "${obs_fp}" .
-    cp -p "${obs_fp}" "${COMOUTobs}/${out_fn}"
-  elif [ -f "${obs_dp}/${out_fn}" ]; then
-    echo "GHCN observation file: ${obs_dp}/${out_fn}"
-    cp -p "${obs_dp}/${out_fn}" "${COMOUTobs}/${out_fn}"
+    cp -p "${obs_fp}" "${obs_out_fn}"
+    cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn}"
+  elif [ -f "${obs_dp}/${obs_out_fn}" ]; then
+    echo "GHCN observation file: ${obs_dp}/${obs_out_fn}"
+    cp -p "${obs_dp}/${obs_out_fn}" .
+    cp -p "${obs_dp}/${obs_out_fn}" "${COMOUTobs}/${obs_out_fn}"
   else
     input_ghcn_file="${DATA_GHCN_RAW}/${YYYP}.csv"
     if [ ! -f "${input_ghcn_file}" ]; then
@@ -47,7 +48,8 @@ if [ "${OBS_TYPE}" = "GHCN" ]; then
     if [ $? -ne 0 ]; then
       err_exit "Generation of GHCN obs file failed !!!"
     fi
-    cp -p "${obs_fn}" "${COMOUTobs}/${out_fn}"
+    cp -p "${obs_fn}" "${obs_out_fn}"
+    cp -p "${obs_fn}" "${COMOUTobs}/${obs_out_fn}"
   fi
 
   ############################################################
@@ -59,7 +61,7 @@ if [ "${OBS_TYPE}" = "GHCN" ]; then
 
   cat > plot_obs_ghcn.yaml <<EOF
 work_dir: '${DATA}'
-fn_input: '${obs_fn}'
+fn_input: '${obs_out_fn}'
 out_title_base: '${out_title_base}'
 out_fn_base: '${out_fn_base}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
