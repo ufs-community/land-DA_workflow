@@ -11,7 +11,7 @@ pipeline {
 
     parameters {
         // Allow job runner to filter based on platform
-        choice(name: 'UFS_PLATFORM_FILTER', choices: ['all', 'hera', 'orion', 'hercules', 'jet', 'gaea', 'derecho', 'pclusternoaav2use1', 'azclusternoaav2use1', 'gclusternoaav2usc1'], description: 'Specify the platform(s) to use')
+        choice(name: 'UFS_PLATFORM_FILTER', choices: ['all', 'hera', 'orion', 'hercules', 'gaeac5', 'gaeac6', 'derecho', 'pclusternoaav2use1', 'azclusternoaav2use1', 'gclusternoaav2usc1'], description: 'Specify the platform(s) to use')
         // Allow job runner to filter based on compiler
         choice(name: 'UFS_COMPILER_FILTER', choices: ['all', 'gnu', 'intel'], description: 'Specify the compiler(s) to use to build')
         // Run tests ?
@@ -22,7 +22,7 @@ pipeline {
         stage('Launch SonarQube') {
             steps {
                 script {
-                    echo "SonarQube: Scan land-DA_workflow code"
+                    echo "SonarQube: ${env.STAGE_NAME} Land-DA (${env.UFS_COMPILER}) build environment on ${env.UFS_PLATFORM} (using ${env.WORKSPACE}/${env.UFS_PLATFORM})"
                 /*
                     build job: '/land-DA_workflow/land-da-sonarqube', parameters: [
                         string(name: 'BRANCH_NAME', value: env.CHANGE_BRANCH ?: 'develop'),
@@ -60,8 +60,8 @@ pipeline {
                     //expression { env.UFS_PLATFORM != 'hera' }
                     //expression { env.UFS_PLATFORM != 'orion' }
                     //expression { env.UFS_PLATFORM != 'hercules' }
-                    expression { env.UFS_PLATFORM != 'jet' }
-                    expression { env.UFS_PLATFORM != 'gaea' }
+                    expression { env.UFS_PLATFORM != 'gaeac5' }
+                    expression { env.UFS_PLATFORM != 'gaeac6' }
                     expression { env.UFS_PLATFORM != 'derecho' }
                     expression { env.UFS_PLATFORM != 'pclusternoaav2use1'}
                     expression { env.UFS_PLATFORM != 'azclusternoaav2use1'}
@@ -83,7 +83,7 @@ pipeline {
                 axes {
                     axis {
                         name 'UFS_PLATFORM'
-                        values 'hera', 'orion', 'hercules', 'jet', 'gaea', 'derecho' , 'pclusternoaav2use1', 'azclusternoaav2use1', 'gclusternoaav2usc1'
+                        values 'hera', 'orion', 'hercules', 'gaeac5', 'gaeac6', 'derecho' , 'pclusternoaav2use1', 'azclusternoaav2use1', 'gclusternoaav2usc1'
                     }
 
                     axis {
@@ -97,7 +97,7 @@ pipeline {
                     exclude {
                             axis {
                             name 'UFS_PLATFORM'
-                            values 'hera', 'orion', 'hercules', 'jet', 'gaea', 'derecho', 'pclusternoaav2use1', 'azclusternoaav2use1', 'gclusternoaav2usc1'
+                            values 'hera', 'orion', 'hercules', 'gaeac5', 'gaeac6', 'derecho', 'pclusternoaav2use1', 'azclusternoaav2use1', 'gclusternoaav2usc1'
                         }
 
                         axis {
@@ -215,12 +215,10 @@ pipeline {
                 CI_JOB_NAME=env.JOB_NAME.replace("/${env.BRANCH_NAME}","")
                 CI_BRANCH_NAME=env.BRANCH_NAME.replace("%2F","%252F")
                 echo "#### post: Triggering land-DA_workflow/ufs-land-metrics job for ${CI_JOB_NAME} on branch build ${CI_BRANCH_NAME}/${env.BUILD_NUMBER} ..."
-                /*
                 build job: '/land-DA_workflow/ufs-land-metrics', parameters: [
                         string(name: 'CI_JOB_NAME', value: "${CI_JOB_NAME}"),
                         string(name: 'CI_BUILD_NUMBER', value: "${CI_BRANCH_NAME}/${env.BUILD_NUMBER}")
                 ], wait: false
-                */
                 echo "#### post: land-DA_workflow/ufs-land-metrics COMPLETE."
             }
         }
