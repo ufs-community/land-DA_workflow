@@ -14,7 +14,7 @@ EARTH_attributes::
 
 # MED #
 MED_model:                      cmeps
-MED_petlist_bounds:             0 11
+MED_petlist_bounds:             0 5
 MED_omp_num_threads:            1
 MED_attributes::
   Verbosity = 1
@@ -31,7 +31,7 @@ MED_attributes::
 
 # ATM #
 ATM_model:                      datm
-ATM_petlist_bounds:             0 11
+ATM_petlist_bounds:             0 5
 ATM_omp_num_threads:            1
 ATM_attributes::
   Verbosity = 0
@@ -40,7 +40,7 @@ ATM_attributes::
 
 # LND #
 LND_model:                      noahmp
-LND_petlist_bounds:             12 23
+LND_petlist_bounds:             6 11
 LND_omp_num_threads:            1
 LND_attributes::
   Verbosity = 1
@@ -49,7 +49,7 @@ LND_attributes::
   input_dir = INPUT/
   fixed_dir = INPUT/
   ic_type = custom
-  layout = 1:2 # need to be consistent with number of PEs (6*Lx*Ly)
+  layout = 1:1 # need to be consistent with number of PEs (6*Lx*Ly)
   num_soil_levels = 4
   forcing_height = 10
   soil_level_thickness = 0.10:0.30:0.60:1.00
@@ -104,7 +104,7 @@ ALLCOMP_attributes::
   ScalarFieldIdxGridNTile = 3
   ScalarFieldIdxNextSwCday = 4 # required for data atmosphere configurations
   ScalarFieldName = cpl_scalars
-  start_type = startup
+  start_type = continue
   restart_dir = ./RESTART/
   case_name = ufs.cpld
   restart_n = 1
@@ -114,7 +114,7 @@ ALLCOMP_attributes::
   stop_n = 24
   stop_option = nhours
   stop_ymd = -999
-  read_restart = .false.
+  read_restart = .true.
   orb_eccen = 1.e36
   orb_iyear = 2000
   orb_iyear_align = 2000
