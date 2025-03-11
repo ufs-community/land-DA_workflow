@@ -20,10 +20,11 @@ history_file_on_native_grid: .false.
 write_dopost:            .false.
 write_nsflip:            .true.
 num_files:               2
+fv3atm_output_dir:       ./
 filename_base:           'atm' 'sfc'
 output_grid:             cubed_sphere_grid
 output_file:             'netcdf'
-zstandard_level:         0
+zstandard_level:         5
 ideflate:                0
 quantize_mode:           'quantize_bitround'
 quantize_nsd:            0
