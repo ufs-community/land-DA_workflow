@@ -208,8 +208,10 @@ fi
 # Set ufs.configure
 if [ "${APP}" = "LND" ]; then
   atm_model="datm"
+  samegrid_atmlnd=".false."
 elif [ "${APP}" = "ATML" ]; then
   atm_model="fv3"
+  samegrid_atmlnd=".true."
 fi
 
 if [ "${COLDSTART}" = "YES" ] && [ "${PDY}${cyc}" = "${DATE_FIRST_CYCLE:0:10}" ]; then
@@ -238,6 +240,7 @@ settings="\
   'nprocs_atm_m1': ${nprocs_atm_m1}
   'nprocs_forecast_atm': ${nprocs_forecast_atm}
   'nprocs_atm_lnd_m1': ${nprocs_atm_lnd_m1}
+  'samegrid_atmlnd': ${samegrid_atmlnd}
 " # End of settings variable
 
 fp_template="${PARMlandda}/templates/template.ufs.configure"

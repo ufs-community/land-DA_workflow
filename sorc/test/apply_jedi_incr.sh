@@ -29,12 +29,12 @@ done
 
 cat << EOF > apply_incr_nml
 &noahmp_snow
- date_str=${YY}${MM}${DD}
- hour_str=$HH
- res=$RES
- frac_grid=$GFSv17
- orog_path="$TPATH"
- otype="$fn_orog"
+ date_str = "${YY}${MM}${DD}",
+ hour_str = "$HH",
+ res = $RES,
+ frac_grid = .false.,
+ orog_path = "$TPATH",
+ otype = "$fn_orog"
 /
 EOF
 
@@ -46,7 +46,7 @@ done
 
 for itile in {1..6}
 do
-  ln -nsf ${FILEDATE}.snowinc.sfc_data.tile${itile}.nc ${FILEDATE}.xainc.sfc_data.tile${itile}.nc
+  ln -nsf ${FILEDATE}.snowinc.sfc_data.tile${itile}.nc snowinc.${FILEDATE}.sfc_data.tile${itile}.nc
 done
 
 echo "============================= calling apply snow increment"

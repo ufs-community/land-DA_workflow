@@ -26,6 +26,7 @@ MED_attributes::
   history_option = nhours
   history_ymd = -999
   coupling_mode = {{ MED_COUPLING_MODE }}
+  samegrid_atmlnd = {{ samegrid_atmlnd }}
 ::
 
 # ATM #
@@ -46,6 +47,7 @@ LND_attributes::
   Diagnostic = 0
   mosaic_file = INPUT/C96_mosaic.nc
   input_dir = INPUT/
+  fixed_dir = INPUT/
   ic_type = {{ LND_IC_TYPE }}
   layout = {{ LND_LAYOUT_X }}:{{ LND_LAYOUT_Y }} # need to be consistent with number of PEs (6*Lx*Ly)
   num_soil_levels = 4
@@ -77,13 +79,13 @@ LND_attributes::
 runSeq::
 @{{ DT_RUNSEQ }}
    MED med_phases_prep_atm
+   MED med_phases_prep_lnd
    MED -> ATM :remapMethod=redist
+   MED -> LND :remapMethod=redist
    ATM
+   LND
    ATM -> MED :remapMethod=redist
    MED med_phases_post_atm
-   MED med_phases_prep_lnd
-   MED -> LND :remapMethod=redist
-   LND
    LND -> MED :remapMethod=redist
    MED med_phases_post_lnd
    MED med_phases_restart_write
@@ -113,7 +115,6 @@ ALLCOMP_attributes::
   stop_option = nhours
   stop_ymd = -999
   read_restart = {{ allcomp_read_restart }}
-  mediator_present = true
   orb_eccen = 1.e36
   orb_iyear = 2000
   orb_iyear_align = 2000

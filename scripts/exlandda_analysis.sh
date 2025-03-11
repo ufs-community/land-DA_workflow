@@ -154,7 +154,7 @@ done
 # temporary for apply_incr
 for itile in {1..6}
 do
-  ln -nsf ${FILEDATE}.snowinc.sfc_data.tile${itile}.nc ${FILEDATE}.xainc.sfc_data.tile${itile}.nc
+  ln -nsf ${FILEDATE}.snowinc.sfc_data.tile${itile}.nc snowinc.${FILEDATE}.sfc_data.tile${itile}.nc
 done
 
 if [ "${FRAC_GRID}" = "YES" ]; then
@@ -167,16 +167,14 @@ orog_fn_base="C${RES}_oro_data"
 
 cat << EOF > apply_incr_nml
 &noahmp_snow
- date_str=${YYYY}${MM}${DD}
- hour_str=${HH}
- res=${RES}
- frac_grid="${frac_grid}"
- rst_path="${DATA}"
- inc_path="${DATA}"
- orog_path="${orog_path}"
- otype=${orog_fn_base}
- ntiles=6
- ens_size=1
+ date_str = "${YYYY}${MM}${DD}",
+ hour_str = "${HH}",
+ res = ${RES},
+ frac_grid = ${frac_grid},
+ rst_path = "${DATA}",
+ inc_path = "${DATA}",
+ orog_path = "${orog_path}",
+ otype = "${orog_fn_base}"
 /
 EOF
 
