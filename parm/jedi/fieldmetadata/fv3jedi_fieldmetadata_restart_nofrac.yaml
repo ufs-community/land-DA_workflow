@@ -4,7 +4,9 @@ field metadata:
   interpolation type: nearest
 
 - long name: totalSnowDepth
+  io name: snwdph
   interpolation type: nearest
 
 - long name: vtype
   interpolation type: nearest
+
