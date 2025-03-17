@@ -26,6 +26,7 @@ driver_save_posterior_ensemble="false"
 driver_save_posterior_mean="false"
 driver_save_posterior_mean_increment="true"
 driver_update_obs_config_with_geometry_info="false"
+final_diagnostics_departures="anlmob"
 inflation_mult="1.0"
 inflation_rtpp="0.0"
 inflation_rtps="0.0"
@@ -55,6 +56,7 @@ settings="\
   'driver_save_posterior_mean': ${driver_save_posterior_mean}
   'driver_save_posterior_mean_increment': ${driver_save_posterior_mean_increment}
   'driver_update_obs_config_with_geometry_info': ${driver_update_obs_config_with_geometry_info}
+  'final_diagnostics_departures': ${final_diagnostics_departures}
   'inflation_mult': ${inflation_mult}
   'inflation_rtpp': ${inflation_rtpp}
   'inflation_rtps': ${inflation_rtps}

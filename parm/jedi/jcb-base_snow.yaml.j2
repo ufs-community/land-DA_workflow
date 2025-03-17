@@ -2,16 +2,11 @@
 JEDI_ALGORITHM: "{{ JEDI_ALGORITHM }}"
 snowdepth_vn: "{{ snowdepth_vn }}"
 algorithm: {{ JEDI_ALGORITHM }}
-algorithm_path: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/jcb_epic/jcb-algorithms"
-app_path_algorithm: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/jcb_epic/jcb-gdas/algorithm/snow"
-app_path_model: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/jcb_epic/jcb-gdas/model/snow"
-app_path_observations: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/jcb_epic/jcb-gdas/observations/snow"
-app_path_observation_chronicle: "/scratch2/NAGAPE/epic/Chan-hoo.Jeon/jcb_epic/jcb-gdas/observation_chronicle/snow"
-#algorithm_path: "{{ PARMlandda }}/jedi/jcb-algorithms"
-#app_path_algorithm: "{{ PARMlandda }}/jedi/jcb-gdas/algorithm/snow"
-#app_path_model: "{{ PARMlandda }}/jedi/jcb-gdas/model/snow"
-#app_path_observations: "{{ PARMlandda }}/jedi/jcb-gdas/observations/snow"
-#app_path_observation_chronicle: "{{ PARMlandda }}/jedi/jcb-gdas/observation_chronicle/snow"
+algorithm_path: "{{ PARMlandda }}/jedi/jcb-algorithms"
+app_path_algorithm: "{{ PARMlandda }}/jedi/jcb-gdas/algorithm/snow"
+app_path_model: "{{ PARMlandda }}/jedi/jcb-gdas/model/snow"
+app_path_observations: "{{ PARMlandda }}/jedi/jcb-gdas/observations/snow"
+app_path_observation_chronicle: "{{ PARMlandda }}/jedi/jcb-gdas/observation_chronicle/snow"
 
 # Template file name for each section (if not defined, default files in jcb-algorithms will be used)
 {%- if JEDI_ALGORITHM == "letkf" %}
@@ -44,7 +39,7 @@ snow_orog_prefix: "C{{ RES }}"
 
 # Final/minimization
 analysis_variables: [totalSnowDepth]
-final_diagnostics_departures: oman
+final_diagnostics_departures: {{ final_diagnostics_departures }}
 snow_final_inc_file_path: "{{ snow_final_inc_file_path }}"
 minimizer: DRPCG
 number_of_outer_loops: 1
