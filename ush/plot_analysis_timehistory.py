@@ -55,7 +55,7 @@ def main():
         var_dict_anal = get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm)
         var_dict_fcst = get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_fcst)
         plot_data(var_dict_anal,var_dict_fcst,jedi_exe,obs_type,out_fn_base,work_dir,var_nm)
-        plot_his_oma(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path)
+        plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path)
 
 
 # Get data from files =============================================== CHJ =====
@@ -345,14 +345,14 @@ def plot_his_qc(dfa,min_var,max_var,rms_var,out_title_qc,out_fn_qc,work_dir,qc_t
     out_file(work_dir,out_fn_qc,ndpi)
 
 
-# Plot time-history of H(x) OMA data ================================ CHJ =====
-def plot_his_oma(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
+# Plot time-history of H(x) OMB data ================================ CHJ =====
+def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
 # =================================================================== CHJ =====
 
     dfa = pd.DataFrame(var_dict_anal)
 
-    oma_fp = os.path.join(hofx_data_path,"hofx_oma_timehis.txt")
-    with open(oma_fp, 'r') as f:
+    omb_fp = os.path.join(hofx_data_path,"hofx_omb_timehis.txt")
+    with open(omb_fp, 'r') as f:
         lines = f.readlines()
     column_data = [line.strip().split(' ') for line in lines]
     num_columns = len(column_data[0]) if column_data else 0
@@ -376,21 +376,21 @@ def plot_his_oma(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
         dfa_date_plot = dfa_date[:ncol]
         print("plot date:", dfa_date_plot)
 
-    out_title_oma = f'''Land-DA::OMA (observation-analysis)::{var_nm}'''
-    out_fn_oma = f'''{out_fn_base}_oma_{var_nm}'''
+    out_title_omb = f'''Land-DA::OMB (observation-background)::{var_nm}'''
+    out_fn_omb = f'''{out_fn_base}_omb_{var_nm}'''
 
     # figsize=(width,height) in inches
     fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(6,6))
-    fig.suptitle(out_title_oma,fontsize=txt_fnt+1,y=0.97)
+    fig.suptitle(out_title_omb,fontsize=txt_fnt+1,y=0.97)
 
     axes[0].plot(dfa_date_plot,col_data_1,'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Mean')
-    axes[0].set_ylabel('OMA: Mean', fontsize=txt_fnt-1)
+    axes[0].set_ylabel('OMB: Mean', fontsize=txt_fnt-1)
     axes[0].tick_params(axis="y",labelsize=txt_fnt-2)
 #    axes[0].legend(fontsize=txt_fnt-1, loc='center')
     axes[0].grid(linewidth=0.2)
 
     axes[1].plot(dfa_date_plot,col_data_2,'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='STD')
-    axes[1].set_ylabel('OMA: STDV', fontsize=txt_fnt-1)
+    axes[1].set_ylabel('OMB: STDV', fontsize=txt_fnt-1)
     axes[1].tick_params(axis="y",labelsize=txt_fnt-2)
 #    axes[1].legend(fontsize=txt_fnt-1, loc='center')
     axes[1].grid(linewidth=0.2)
@@ -408,7 +408,7 @@ def plot_his_oma(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
     plt.tight_layout()
     # Output figure
     ndpi = 300
-    out_file(work_dir,out_fn_oma,ndpi)
+    out_file(work_dir,out_fn_omb,ndpi)
 
 
 # Output file ======================================================= CHJ =====
