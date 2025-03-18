@@ -25,7 +25,7 @@ DO_PLOT_COMBINE_TILES="YES"
 ############################################################
 if [ "${DO_PLOT_STATS}" = "YES" ]; then
   # Field variable
-  field_var="OMA"
+  field_var="OMB"
   # Field Range for scatter plot: [Low,High]
   field_range_low=-300
   field_range_high=300
@@ -34,9 +34,9 @@ if [ "${DO_PLOT_STATS}" = "YES" ]; then
   # Plot type (scatter/histogram/both)
   plottype="both"
   # Figure title
-  title_fig="GHCN Snow Depth (mm)::Obs-Ana::${PDY}"
+  title_fig="GHCN Snow Depth (mm)::Obs-Bkg::${PDY}"
   # Prefix of output file name
-  output_prefix="hofx_oma_${PDY}"
+  output_prefix="hofx_omb_${PDY}"
   
   cat > plot_hofx.yaml <<EOF
 hofx_files: '${DATA_HOFX}'
@@ -48,7 +48,7 @@ plottype: '${plottype}'
 title_fig: '${title_fig}'
 output_prefix: '${output_prefix}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
-hofx_data_path: '${DATA_HOFX_OMA}'
+hofx_data_path: '${DATA_HOFX_OMB}'
 cdate: '${YYYY}-${MM}-${DD}-${HH}'
 EOF
   
@@ -59,7 +59,7 @@ EOF
   
   # Copy result files to COMOUT
   cp -p ${output_prefix}* ${COMOUTplot}
-  cp -p "${DATA_HOFX_OMA}/hofx_oma_timehis"* ${COMOUThofx}
+  cp -p "${DATA_HOFX_OMB}/hofx_omb_timehis"* ${COMOUThofx}
 fi
 
 
@@ -85,7 +85,7 @@ nprocs_anal: '${NPROCS_ANALYSIS}'
 nprocs_fcst: '${nprocs_forecast}'
 obs_type: '${OBS_TYPE}'
 out_fn_base: '${out_fn_base}'
-hofx_data_path: '${DATA_HOFX_OMA}'
+hofx_data_path: '${DATA_HOFX_OMB}'
 EOF
 
   ${USHlandda}/plot_analysis_timehistory.py

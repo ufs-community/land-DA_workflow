@@ -9,7 +9,7 @@ import os, sys
 import argparse
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from dateutil.parser import parse
 
 jedi_path = os.environ.get('JEDI_PATH')
@@ -107,10 +107,10 @@ class ghcn(object):
         df30 = pd.concat(df30_list, ignore_index=True)
         df30 = df30[df30["ELEMENT"] == "SNWD"]
         df30["DATETIME"] = df30.apply(lambda row: parse(str(row["DATETIME"])).date(), axis=1)
-
         # select data which matches the Start date
         startdate = self.date
         valid_date = datetime.strptime(startdate, "%Y%m%d%H")
+        valid_date = valid_date.replace(tzinfo=timezone.utc)
         select_date = valid_date.strftime('%Y%m%d')
         new_date = parse(select_date).date()
         df30 = df30[df30["DATETIME"] == new_date]
@@ -175,6 +175,8 @@ class ghcn(object):
 
         # get datetime from input
         my_date = datetime.strptime(startdate, "%Y%m%d%H")
+        my_date = my_date.replace(tzinfo=timezone.utc)
+        epoch_time = np.int64(get_epoch_time(my_date))
 
         ########################################################
         # Adjust time stamp to match with JEDI : CHJ
@@ -182,15 +184,18 @@ class ghcn(object):
         # cyc: HH
         # adjust = ( 18h - HH ) * 3600
         ########################################################
+        print(f"my_date: {my_date}")
+        print(f"epoch_time: {epoch_time}")
+        print(f"my_date.hour: {my_date.hour}")
+
         dt_adj_sec = (18-int(my_date.hour))*3600
         my_date_adj = my_date + timedelta(seconds=dt_adj_sec)
         epoch_time = np.int64(get_epoch_time(my_date_adj))
         my_date_time_string = my_date_adj.isoformat() + "Z"
         AttrData['date_time_string'] = my_date_time_string
-        print(f"my_date: {my_date}")
         print(f"dt_adj_sec: {dt_adj_sec}")
         print(f"my_date_adj: {my_date_adj}")
-        print(f"epoch_time: {epoch_time}")
+        print(f"new epoch_time: {epoch_time}")
         print(f"date_time_string: {my_date_time_string}")
 
         # vals[vals >= 0.0] *= 0.001      # mm to meters

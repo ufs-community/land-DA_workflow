@@ -73,18 +73,21 @@ ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${f
 
 # Copy static data files
 mkdir -p ${DATA}/Data/fv3files
-mkdir -p ${DATA}/Data/fieldmetadata
-cp -p ${PARMlandda}/jedi/fv3files/fmsmpp.nml ${DATA}/Data/fv3files/.
+cp -p ${JEDI_STATICDIR}/fv3files/fmsmpp.nml ${DATA}/Data/fv3files/.
 cp -p ${JEDI_STATICDIR}/fv3files/field_table_ufs ${DATA}/Data/fv3files/field_table
-ln -nsf ${JEDI_STATICDIR}/fv3files/akbk${NPZ}.nc4 ${DATA}/Data/fv3files/akbk.nc4
+cp -p ${JEDI_STATICDIR}/fv3files/akbk${NPZ}.nc4 ${DATA}/Data/fv3files/akbk.nc4
 
 if [ "${FRAC_GRID}" = "YES" ]; then
   snowdepth_vn="snodl"
-  cp -p ${JEDI_STATICDIR}/fieldmetadata/gfs_v17-land.yaml ${DATA}/Data/fieldmetadata/gfs-land.yaml
+  cp -p ${PARMlandda}/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart.yaml ${DATA}/Data/fv3files/.
 else
   snowdepth_vn="snwdph"
-  cp -p ${PARMlandda}/jedi/fieldmetadata/gfs-land.yaml ${DATA}/Data/fieldmetadata/gfs-land.yaml
+  cp -p ${PARMlandda}/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart_nofrac.yaml ${DATA}/Data/fv3files/fv3jedi_fieldmetadata_restart.yaml
 fi
+
+# Link snow shadow level nicas data file
+mkdir -p ${DATA}/berror
+ln -nsf ${FIXlandda}/FV3_fix_global/snow_bump_nicas_250km_shadowlevels_nicas.nc ${DATA}/berror/.
 
 # Intermediate/Output directories
 mkdir -p ${DATA}/diags
@@ -151,10 +154,11 @@ done
 # Apply Increment to UFS sfc_data files
 ################################################
 
-# temporary for apply_incr
+# Link inc file to DATA
+inc_fn_prefix="snowinc.${FILEDATE}.sfc_data"
 for itile in {1..6}
 do
-  ln -nsf ${FILEDATE}.snowinc.sfc_data.tile${itile}.nc snowinc.${FILEDATE}.sfc_data.tile${itile}.nc
+  ln -nsf ${DATA}/anl/${inc_fn_prefix}.tile${itile}.nc ${DATA}/.
 done
 
 if [ "${FRAC_GRID}" = "YES" ]; then
@@ -190,7 +194,7 @@ fi
 
 for itile in {1..6}
 do
-  cp -p ${DATA}/${FILEDATE}.snowinc.sfc_data.tile${itile}.nc ${COMOUT}
+  cp -p ${DATA}/anl/${inc_fn_prefix}.tile${itile}.nc ${COMOUT}
 done 
 
 for itile in {1..6}
@@ -211,7 +215,7 @@ DO_PLOT_SFC_COMP="YES"
 if [ "${DO_PLOT_SFC_COMP}" = "YES" ]; then
 
   fn_sfc_base="${FILEDATE}.sfc_data.tile"
-  fn_inc_base="${FILEDATE}.snowinc.sfc_data.tile"
+  fn_inc_base="${inc_fn_prefix}.tile"
   out_title_base="Land-DA::SFC-DATA::${PDY}::"
   out_fn_base="landda_comp_sfc_${PDY}_"
   # zlevel_number is valid only for 3-D fields such as stc/smc/slc
@@ -247,7 +251,7 @@ fi
 if [ "${WE2E_TEST}" == "YES" ]; then
   path_fbase="${FIXlandda}/test_base/we2e_com/${RUN}.${PDY}"
   fn_sfc="${FILEDATE}.sfc_data.tile"
-  fn_inc="${FILEDATE}.snowinc.sfc_data.tile"
+  fn_inc="${inc_fn_prefix}.tile"
   fn_hofx="diag.ghcn_snow_${PDY}${cyc}.nc"
   we2e_log_fp="${LOGDIR}/${WE2E_LOG_FN}"
   if [ ! -f "${we2e_log_fp}" ]; then

@@ -177,8 +177,8 @@ def get_sfc(path_sfc,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,sfc_opt):
             print(slmsk_data.shape)
 
         if sfc_opt == 'inc':
-            sfc_data2d=np.squeeze(sfc_data,axis=(0,1))
-            slmsk_data2d=np.squeeze(slmsk_data,axis=(0,1))
+            sfc_data2d=np.squeeze(sfc_data,axis=0)
+            slmsk_data2d=np.squeeze(slmsk_data,axis=0)
         else:
             if sfc_var_nm == 'stc' or sfc_var_nm == 'smc' or sfc_var_nm == 'slc':
                 sfc_data3d=np.squeeze(sfc_data,axis=0)

@@ -75,8 +75,8 @@ mkdir -p ${COMOUTplot}
 # Create a teomporary share directory
 export DATA_HOFX="${DATA_HOFX:-${DATAROOT}/DATA_SHARE/hofx}"
 mkdir -p ${DATA_HOFX}
-export DATA_HOFX_OMA="${DATA_HOFX_OMA:-${DATAROOT}/DATA_SHARE/hofx_oma}"
-mkdir -p ${DATA_HOFX_OMA}
+export DATA_HOFX_OMB="${DATA_HOFX_OMB:-${DATAROOT}/DATA_SHARE/hofx_omb}"
+mkdir -p ${DATA_HOFX_OMB}
 #
 #-----------------------------------------------------------------------
 #
