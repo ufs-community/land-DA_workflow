@@ -62,7 +62,7 @@ cp -rp $JEDI_STATICDIR .
 ln -nsf $WORKDIR/Data/fv3files/akbk64.nc4 $WORKDIR/Data/fv3files/akbk.nc4
 
 # copy gfs-land.yaml
-cp $project_source_dir/../parm/jedi/fieldmetadata/gfs-land.yaml .
+cp $project_source_dir/test/parm/gfs-land.yaml .
 
 #
 MPIRUN="${MPIRUN:-srun}"
