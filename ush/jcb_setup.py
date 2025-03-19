@@ -6,7 +6,7 @@ import yaml
 from jcb import render
 
 # =================================================================== CHJ =====
-def jedi_config_yaml(input_yaml_fn, output_yaml_fn, frac_grid):
+def jedi_config_yaml(input_yaml_fn, output_yaml_fn, jedi_algorithm, frac_grid):
 
     try:
         with open(input_yaml_fn, 'r') as f:
@@ -20,8 +20,9 @@ def jedi_config_yaml(input_yaml_fn, output_yaml_fn, frac_grid):
     print(jedi_config_dict)
 
     if frac_grid.upper() == "NO":
-        jedi_config_dict["cost function"]["background"]["state variables"][0] = 'snwdph'
-        jedi_config_dict["final"]["increment"]["output"]["state component"]["state variables"][0] = 'snwdph'
+        if jedi_algorithm == "3dvar":
+            jedi_config_dict["cost function"]["background"]["state variables"][0] = 'snwdph'
+            jedi_config_dict["final"]["increment"]["output"]["state component"]["state variables"][0] = 'snwdph'
 
     with open(output_yaml_fn, 'w') as f:
         yaml.dump(jedi_config_dict, f, default_flow_style=False, sort_keys=False)
@@ -47,12 +48,20 @@ def parse_args(argv):
         help="Output YAML file name.",
     )
     parser.add_argument(
+        "-a",
+        "--jedi_algorithm",
+        dest="jedi_algorithm",
+        required=True,
+        help="JEDI ALGORITHM.",
+    )
+    parser.add_argument(
         "-g",
         "--frac_grid",
         dest="frac_grid",
         required=True,
         help="Flag for fractional grid.",
     )
+
     return parser.parse_args(argv)
 
 
@@ -62,6 +71,7 @@ if __name__ == "__main__":
     jedi_config_yaml(
         input_yaml_fn=args.input_yaml_fn,
         output_yaml_fn=args.output_yaml_fn,
+        jedi_algorithm=args.jedi_algorithm,
         frac_grid=args.frac_grid,
     )
 
