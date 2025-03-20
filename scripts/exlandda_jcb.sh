@@ -16,11 +16,11 @@ DP=${PTIME:6:2}
 HP=${PTIME:8:2}
 
 cycle_freq_hr_half=$(( DATE_CYCLE_FREQ_HR / 2 ))
-HPTIME=$($NDATE -${cycle_freq_hr_half} $PDY$cyc)
-YYYHP=${HPTIME:0:4}
-MHP=${HPTIME:4:2}
-DHP=${HPTIME:6:2}
-HHP=${HPTIME:8:2}
+HTIME=$($NDATE -${cycle_freq_hr_half} $PDY$cyc)
+yyyy_hf=${HTIME:0:4}
+mm_hf=${HTIME:4:2}
+dd_hf=${HTIME:6:2}
+hh_hf=${HTIME:8:2}
 
 # Defalut setting
 driver_do_posterior_observer="false"
@@ -35,16 +35,14 @@ inflation_rtpp="0.0"
 inflation_rtps="0.0"
 jedi_algorithm_mod="${JEDI_ALGORITHM}"
 local_ensemble_da_solver="${JEDI_ALGORITHM^^}"
-snow_bkg_time_fv3="${YYYY}${MM}${DD}.${HH}0000"
-snow_bkg_time_iso="${YYYY}-${MM}-${DD}T${HH}:00:00Z"
+snow_background_time_fv3="${YYYY}${MM}${DD}.${HH}0000"
+snow_background_time_iso="${YYYY}-${MM}-${DD}T${HH}:00:00Z"
 snow_fv3jedi_files_path="Data/fv3files"
-snow_window_begin="${YYYP}-${MP}-${DP}T${HP}:00:00Z"
+snow_window_begin="${yyyy_hf}-${mm_hf}-${dd_hf}T${hh_hf}:00:00Z"
 snow_window_length="PT${DATE_CYCLE_FREQ_HR}H"
 
 # Replace with algorithm-specific values
-if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
-  snow_window_begin="${YYYHP}-${MHP}-${DHP}T${HHP}:00:00Z"
-elif [ "${JEDI_ALGORITHM}" = "letkf" ]; then
+if [ "${JEDI_ALGORITHM}" = "letkf" ]; then
   jedi_algorithm_mod="local_ensemble_da"
 fi
 
@@ -84,9 +82,9 @@ settings="\
   'snow_npx_ges': ${res_p1}
   'snow_npy_ges': ${res_p1}
   'snow_npz_ges': ${NPZ}
-  'snow_bkg_path': bkg
-  'snow_bkg_time_fv3': !!str ${snow_bkg_time_fv3}
-  'snow_bkg_time_iso': !!str ${snow_bkg_time_iso}
+  'snow_background_path': bkg
+  'snow_background_time_fv3': !!str ${snow_background_time_fv3}
+  'snow_background_time_iso': !!str ${snow_background_time_iso}
   'snow_bump_data_dir': berror
   'snow_obsdatain_path': obs
   'snow_obsdatain_prefix': "obs.${cycle}."
