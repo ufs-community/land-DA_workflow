@@ -50,6 +50,7 @@ output_prefix: '${output_prefix}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
 hofx_data_path: '${DATA_HOFX_OMB}'
 cdate: '${YYYY}-${MM}-${DD}-${HH}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
   
   ${USHlandda}/hofx_analysis_stats.py
