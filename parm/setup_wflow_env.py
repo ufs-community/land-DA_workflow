@@ -7,6 +7,7 @@
 ###################################################################### CHJ #####
 
 import argparse
+import logging
 import os
 import sys
 import socket
@@ -27,14 +28,14 @@ def setup_wflow_env(machine):
 # =================================================================== CHJ =====
 
     machine = machine.lower()
-    print(f''' Machine (platform) name: {machine} ''')
+    logging.debug(f''' Machine (platform) name: {machine} ''')
     # Set directory paths
     parm_dir = os.getcwd()
-    print(f''' Current directory (PARMdir): {parm_dir} ''')
+    logging.info(f''' Current directory (PARMdir): {parm_dir} ''')
     home_dir = os.path.dirname(parm_dir)
-    print(f''' Home directory (HOMEdir): {home_dir} ''')
+    logging.info(f''' Home directory (HOMEdir): {home_dir} ''')
     exp_basedir = os.path.dirname(home_dir)
-    print(f''' Experimental base directory (exp_basedir): {exp_basedir} ''')
+    logging.info(f''' Experimental base directory (exp_basedir): {exp_basedir} ''')
 
     # Set default values of input parameters
     config_parm = set_default_parm()
@@ -56,9 +57,9 @@ def setup_wflow_env(machine):
         with open(yaml_file, 'r') as f:
             yaml_data = yaml.safe_load(f)
         f.close()
-#        print(f''' Input YAML file:, {yaml_data} ''')
+        logging.debug(f''' Input YAML file:, {yaml_data} ''')
     except FileNotFoundError:
-        print(f''' FATAL ERROR: Input YAML file {yaml_file} does not exist! ''')
+        logging.error(f''' Input YAML file {yaml_file} does not exist! ''')
 
     for key,value in yaml_data.items():
         if key in config_parm:
@@ -111,7 +112,7 @@ def setup_wflow_env(machine):
         })
    
     config_parm_str = yaml.dump(config_parm, sort_keys=True, default_flow_style=False)
-#    print("FINAL configuration=",config_parm_str)
+    logging.debug(f''' FINAL configuration: {config_parm_str}''')
 
     exp_case_path = os.path.join(exp_basedir, "exp_case", exp_case_name) 
     if os.path.exists(exp_case_path) and os.path.isdir(exp_case_path):
@@ -123,22 +124,22 @@ def setup_wflow_env(machine):
     else:
         os.makedirs(exp_case_path)
 
-    print(f''' Experimental case directory {exp_case_path} has been created. ''')
+    logging.info(f''' Experimental case directory {exp_case_path} has been created.''')
 
     # Create YAML file for Rocoto XML from template
     fn_yaml_rocoto_template = "template.land_analysis.yaml"
     fn_yaml_rocoto = "land_analysis.yaml"
     fp_yaml_rocoto_template = os.path.join(parm_dir, "templates", fn_yaml_rocoto_template)
     fp_yaml_rocoto = os.path.join(exp_case_path, fn_yaml_rocoto)
-    print(f''' Rocoto YAML template: {fp_yaml_rocoto_template} ''')
+    logging.info(f''' Rocoto YAML template: {fp_yaml_rocoto_template}''')
     try:
         fill_jinja_template([
             "-u", config_parm_str,
             "-t", fp_yaml_rocoto_template,
             "-o", fp_yaml_rocoto ])
     except:
-        print(f''' FATAL ERROR: Call to python script fill_jinja_template.py 
-              to create a '{fp_yaml_rocoto}' file from a jinja2 template failed. ''')
+        logging.error(f''' Call to python script fill_jinja_template.py 
+              to create a '{fp_yaml_rocoto}' file from a jinja2 template failed.''')
         return False
 
     # Call uwtools to create Rocoto XML file
@@ -185,7 +186,6 @@ def setup_wflow_env(machine):
     if app == "LND" and coldstart == "YES":
         fn_pass = f"task_skip_coldstart_{date_first_cycle}.txt"
         open(os.path.join(exp_case_path,fn_pass), 'a').close()
-
 
 
 # Default values of configuration =================================== CHJ =====
@@ -237,6 +237,7 @@ def set_default_parm():
         "OBSDIR": "",
         "OBS_TYPE": "GHCN",
         "OUTPUT_FH": "1 -1",
+        "PY_LOG_LEVEL": "INFO",
         "RES": 96,
         "RESTART_INTERVAL": "12 -1",
         "RUN": "landda",
@@ -247,7 +248,6 @@ def set_default_parm():
     }
 
     return default_config
-
 
 
 # Machine-specific values of configuration ========================== CHJ =====
@@ -284,7 +284,6 @@ def set_machine_parm(machine):
     return machine_config
 
 
-
 # Parse arguments =================================================== CHJ =====
 def parse_args(argv):
 # =================================================================== CHJ =====
@@ -292,14 +291,19 @@ def parse_args(argv):
     parser = argparse.ArgumentParser(description="Generate case-specific workflow environment.")
 
     parser.add_argument(
-        "-p", "--platform",
-        dest="MACHINE",
-#        required=True,
-        help="Platform (machine) name.",
-    )
+            "-p", "--platform",
+            dest="MACHINE",
+#            required=True,
+            help="Platform (machine) name.",
+            )
+    parser.add_argument(
+            "-l", "--loglevel",
+            dest="PY_LOG_LEVEL",
+            default="INFO",
+            help="Python logging option only for this script. For other scripts, set it in config.yaml",
+            )
 
     return parser.parse_args(argv)
-
 
 
 # Detect platform (machine) ========================================= CHJ =====
@@ -317,9 +321,9 @@ def detect_platform():
     elif os.path.isdir("/lfs4/HFIP"):
         machine = "jet"
     else:
-        sys.exit(f"Machine (platform) is not detected. Please set it with -p argument")
+        sys.exit(f''' FATAL ERROR: Machine (platform) is not detected. Please set it with -p argument!!!''')
 
-    print(f" Machine (platform) detected: {machine}")
+    logging.info(f''' Machine (platform) detected: {machine}''')
 
     return machine
 
@@ -327,6 +331,15 @@ def detect_platform():
 # Main call ========================================================= CHJ =====
 if __name__=='__main__':
     args = parse_args(sys.argv[1:])
+    log_level_str = args.PY_LOG_LEVEL.upper()
+    try:
+        log_level = getattr(logging, log_level_str)
+    except AttributeError:
+        log_level_str = "INFO"
+        log_level = logging.INFO
+        print(f''' WARNING: Invalid log level "{args.PY_LOG_LEVEL.upper()}", set to INFO.''')
+    print(f''' Python Log Level= str: {log_level_str}, attr: {log_level}''')
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=log_level)
     MACHINE=args.MACHINE
     if MACHINE is None:
         MACHINE = detect_platform()
