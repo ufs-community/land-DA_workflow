@@ -10,6 +10,7 @@
 ###################################################################### CHJ #####
 
 import os, sys
+import logging
 import yaml
 import numpy as np
 import netCDF4 as nc
@@ -35,7 +36,6 @@ def main():
     with open(yaml_file, 'r') as f:
         yaml_data=yaml.load(f, Loader=yaml.FullLoader)
     f.close()
-    print("YAML_DATA:",yaml_data)
 
     path_data=yaml_data['path_data']
     work_dir=yaml_data['work_dir']
@@ -51,6 +51,20 @@ def main():
     nlat_plot=int(nlat_plot)
     griddata_method=yaml_data['griddata_method']
     shading_option=yaml_data['shading_option']
+    PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
+
+    # Set logging config
+    log_level_str = PY_LOG_LEVEL.upper()
+    try:
+        log_level = getattr(logging, log_level_str)
+    except AttributeError:
+        log_level_str = "INFO"
+        log_level = logging.INFO
+        print(f''' WARNING: Invalid log level "{PY_LOG_LEVEL.upper()}", set to INFO.''')
+    print(f''' Python Log Level= str: {log_level_str}, attr: {log_level}''')
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=log_level)
+
+    logging.info(f''' YAML Data: {yaml_data}''')
     
     # Set the path to Natural Earth dataset
     cartopy.config['data_dir']=cartopy_ne_path
@@ -73,7 +87,7 @@ def main():
 def get_geo(path_data,fn_data_base,fn_data_ext):
 # =================================================================== CHJ =====
 
-    print(' ===== geo data files ====================================')
+    logging.info(f''' ===== geo data files ====================================''')
     # open the data file
     for it in range(num_tiles):
         itp=it+1
@@ -85,14 +99,14 @@ def get_geo(path_data,fn_data_base,fn_data_ext):
             print(data_raw)
         # Extract geo data
         glon_data=np.ma.masked_invalid(data_raw.variables['grid_xt'])
-        print('Dimension of glon(grid_xt)=',glon_data.shape)
-        print('Tile',itp,',max:',np.max(glon_data))
-        print('Tile',itp,',min:',np.min(glon_data))
+        logging.info(f''' Dimension of glon(grid_xt)= {glon_data.shape}''')
+        logging.info(f''' Tile{itp}, Max= {np.max(glon_data)}''')
+        logging.info(f''' Tile{itp}, Min= {np.min(glon_data)}''')
 
         glat_data=np.ma.masked_invalid(data_raw.variables['grid_yt'])
-        print('Dimension of glat(grid_yt)=',glat_data.shape)
-        print('Tile',itp,',max:',np.max(glat_data))
-        print('Tile',itp,',min:',np.min(glat_data))
+        logging.info(f''' Dimension of glat(grid_yt)= {glat_data.shape}''')
+        logging.info(f''' Tile{itp}, Max= {np.max(glat_data)}''')
+        logging.info(f''' Tile{itp}, Min= {np.min(glat_data)}''')
 
         if itp == 1:
             glon = glon_data
@@ -101,13 +115,13 @@ def get_geo(path_data,fn_data_base,fn_data_ext):
             glon = np.ma.concatenate((glon,glon_data),axis=1)
             glat = np.ma.concatenate((glat,glat_data),axis=1)
         data_raw.close()
-        print('Dimension of glon=',glon.shape)
-        print('Dimension of glon=',glat.shape)
+        logging.info(f''' Dimension of glon= {glon.shape}''')
+        logging.info(f''' Dimension of glon= {glat.shape}''')
 
     glon_1d = glon.flatten()
     glat_1d = glat.flatten()        
-    print('Dimension of glon_1d=',glon_1d.shape)
-    print('Dimension of glon_1d=',glat_1d.shape)
+    logging.info(f''' Dimension of glon_1d= {glon_1d.shape}''')
+    logging.info(f''' Dimension of glon_1d= {glat_1d.shape}''')
 
     return glon_1d, glat_1d
 
@@ -116,7 +130,7 @@ def get_geo(path_data,fn_data_base,fn_data_ext):
 def get_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num):
 # =================================================================== CHJ =====
 
-    print(' ===== data file: '+var_nm+' ========================')
+    logging.info(f''' ===== data file: '{var_nm}' ========================''')
     # open the data file
     for it in range(num_tiles):
         itp=it+1
@@ -130,27 +144,27 @@ def get_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num):
         var_data=np.ma.masked_invalid(data_raw.variables[var_nm])
 
         if var_nm == 'stc' or var_nm == 'smc' or var_nm == 'slc':
-            print('Dimension of original data=',var_data.shape)
+            logging.info(f''' Dimension of original data= {var_data.shape}''')
             var_data3d=np.squeeze(var_data,axis=0)
             var_data2d_tmp=var_data3d[soil_lvl_num-1,:,:]
             var_data2d=np.squeeze(var_data2d_tmp,axis=0)
         else:
-            print('Dimension of original data=',var_data.shape)
+            logging.info(f''' Dimension of original data= {var_data.shape}''')
             var_data2d=np.squeeze(var_data,axis=0)
 
-        print('Dimension of data=',var_data2d.shape)
-        print('Tile',itp,',max:',np.max(var_data2d))
-        print('Tile',itp,',min:',np.min(var_data2d))
+        logging.info(f''' Dimension of data= {var_data2d.shape}''')
+        logging.info(f''' Tile{itp}, Max= {np.max(var_data2d)}''')
+        logging.info(f''' Tile{itp}, Min= {np.min(var_data2d)}''')
 
         if itp == 1:
             sfc_data = var_data2d
         else:
             sfc_data = np.ma.concatenate((sfc_data,var_data2d),axis=1)
         data_raw.close()
-        print('Dimension of sfc_data=',sfc_data.shape)
+        logging.info(f''' Dimension of sfc_data= {sfc_data.shape}''')
 
     sfc_data_1d = sfc_data.flatten()
-    print('Dimension of sfc_data_1d=',sfc_data_1d.shape)
+    logging.info(f'''Dimension of sfc_data_1d= {sfc_data_1d.shape}''')
 
     return sfc_data_1d
 
@@ -160,11 +174,11 @@ def plot_data(glon,glat,sfc_data,var_nm,out_title_base,out_fn_base,work_dir,
               nlon_plot,nlat_plot,griddata_method,shading_option):
 # =================================================================== CHJ =====
 
-    print(' ===== Plotting data ================================')
+    logging.info(f''' ===== Plotting data ================================''')
 
     # Find fill value
     sfc_fill_value = sfc_data.fill_value
-    print('Fill value:',sfc_fill_value)
+    logging.info(f''' Fill value: {sfc_fill_value}''')
 
     # Define and interpolate the grid/data for mesh plot
     num_glon_mesh=nlon_plot
@@ -173,26 +187,26 @@ def plot_data(glon,glat,sfc_data,var_nm,out_title_base,out_fn_base,work_dir,
     lon_max=np.max(glon)
     lat_min=round(np.min(glat))
     lat_max=round(np.max(glat))
-    print(glon.shape)
-    print(glat.shape)
-    print(sfc_data.shape)
+    logging.debug(f''' glon size= {glon.shape}''')
+    logging.debug(f''' glat size= {glat.shape}''')
+    logging.debug(f''' data size= {sfc_data.shape}''')
     glon_mi=np.linspace(lon_min,lon_max,num_glon_mesh)
     glat_mi=np.linspace(lat_min,lat_max,num_glat_mesh)
     glon_m, glat_m = np.meshgrid(glon_mi,glat_mi)
-    print('Max glon mesh:', np.max(glon_m))
-    print('Min glon mesh:', np.min(glon_m))
-    print('Max glat mesh:', np.max(glat_m))
-    print('Min glat mesh:', np.min(glat_m))
-    print(glon_m.shape)
-    print(glat_m.shape)
+    logging.info(f''' Max glon mesh= {np.max(glon_m)}''')
+    logging.info(f''' Min glon mesh= {np.min(glon_m)}''')
+    logging.info(f''' Max glat mesh= {np.max(glat_m)}''')
+    logging.info(f''' Min glat mesh= {np.min(glat_m)}''')
+    logging.debug(f''' glon_m size= {glon_m.shape}''')
+    logging.debug(f''' glat_m size= {glat_m.shape}''')
     sfc_data_m = griddata((glon,glat),sfc_data,(glon_m,glat_m),method=griddata_method,fill_value=sfc_fill_value)
     sfc_data_m_masked = np.ma.masked_where(sfc_data_m == sfc_fill_value, sfc_data_m)
-    print(sfc_data_m_masked.shape)
+    logging.debug(f''' data_m size= {sfc_data_m_masked.shape}''')
 
     cs_max=np.max(sfc_data_m_masked)
     cs_min=np.min(sfc_data_m_masked)
-    print('data_cs_max=',cs_max)
-    print('data_cs_min=',cs_min)
+    logging.info(f'''data_cs_max= {cs_max}''')
+    logging.info(f'''data_cs_min= {cs_min}''')
 
     # center of map
     c_lon=-77.0369

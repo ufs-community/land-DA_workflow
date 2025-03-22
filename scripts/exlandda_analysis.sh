@@ -232,6 +232,7 @@ out_title_base: '${out_title_base}'
 out_fn_base: '${out_fn_base}'
 fix_dir: '${FIXlandda}'
 zlevel_number: '${zlevel_number}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
 
   ${USHlandda}/plot_comp_sfc_data.py

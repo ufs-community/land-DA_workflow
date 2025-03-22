@@ -13,12 +13,12 @@ def jedi_config_yaml(input_yaml_fn, output_yaml_fn, frac_grid):
         with open(input_yaml_fn, 'r') as f:
             input_yaml_dict = yaml.safe_load(f)
         f.close()
-        logging.info(f'''Input YAML file: {input_yaml_dict}''')
+        logging.info(f''' Input YAML file: {input_yaml_dict}''')
     except FileNotFoundError:
-        logging.error(f'''Input YAML file {input_yaml_file} does not exist!''')
+        logging.error(f''' Input YAML file {input_yaml_file} does not exist!''')
 
     jedi_config_dict = render(input_yaml_dict)
-    logging.debug(f'''JEDI CONFIG: {jedi_config_dict}''')
+    logging.debug(f''' JEDI CONFIG: {jedi_config_dict}''')
 
     if frac_grid.upper() == "NO":
         jedi_config_dict["cost function"]["background"]["state variables"][0] = 'snwdph'
@@ -34,28 +34,29 @@ def parse_args(argv):
     """Parse command line arguments"""
     parser = argparse.ArgumentParser(description="Create JEDI configuration YAML file.")
     parser.add_argument(
-        "-i",
-        "--input_yaml_fn",
-        dest="input_yaml_fn",
-        required=True,
-        help="Input YAML file name.",
-    )
+            "-i",
+            "--input_yaml_fn",
+            dest="input_yaml_fn",
+            required=True,
+            help="Input YAML file name.",
+            )
     parser.add_argument(
-        "-o",
-        "--output_yaml_fn",
-        dest="output_yaml_fn",
-        required=True,
-        help="Output YAML file name.",
-    )
+            "-o",
+            "--output_yaml_fn",
+            dest="output_yaml_fn",
+            required=True,
+            help="Output YAML file name.",
+            )
     parser.add_argument(
-        "-g",
-        "--frac_grid",
-        dest="frac_grid",
-        required=True,
-        help="Flag for fractional grid.",
-    )
+            "-g",
+            "--frac_grid",
+            dest="frac_grid",
+            required=True,
+            help="Flag for fractional grid.",
+            )
     parser.add_argument(
-            "-l", "--loglevel",
+            "-l",
+            "--loglevel",
             dest="PY_LOG_LEVEL",
             default="INFO",
             help="Python logging option only for this script. For other scripts, set it in config.yaml",

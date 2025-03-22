@@ -10,6 +10,7 @@
 ###################################################################### CHJ #####
 
 import os, sys
+import logging
 import yaml
 import numpy as np
 import netCDF4 as nc
@@ -28,33 +29,42 @@ def main():
     with open(yaml_file, 'r') as f:
         yaml_data=yaml.load(f, Loader=yaml.FullLoader)
     f.close()
-    print("YAML_DATA:",yaml_data)
 
     work_dir=yaml_data['work_dir']
     fn_input=yaml_data['fn_input']
     out_title_base=yaml_data['out_title_base']
     out_fn_base=yaml_data['out_fn_base']
     cartopy_ne_path=yaml_data['cartopy_ne_path']
+    PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
     
+    # Set logging config
+    log_level_str = PY_LOG_LEVEL.upper()
+    try:
+        log_level = getattr(logging, log_level_str)
+    except AttributeError:
+        log_level_str = "INFO"
+        log_level = logging.INFO
+        print(f''' WARNING: Invalid log level "{PY_LOG_LEVEL.upper()}", set to INFO.''')
+    print(f''' Python Log Level= str: {log_level_str}, attr: {log_level}''')
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=log_level)
+
+    logging.info(f''' YAML Data: {yaml_data}''')
+
     # Set the path to Natural Earth dataset
     cartopy.config['data_dir']=cartopy_ne_path
 
-    print(' ===== INPUT: '+fn_input+' ================================')
+    logging.info(f''' ===== INPUT: '{fn_input}' ================================''')
     # open the data file
     fpath=os.path.join(work_dir,fn_input)
     try: mdat=nc.Dataset(fpath)
     except: raise Exception('Could NOT find the file',fpath)
-    print(mdat)
-    print(mdat.groups['MetaData'])
-    print(mdat.groups['ObsError'])
-    print(mdat.groups['ObsValue'])
-    print(mdat.groups['PreQC'])
+    print(" MetaData:", mdat.groups['MetaData'])
+    print(" ObsValue:", mdat.groups['ObsValue'])
 
     longitude=mdat.groups['MetaData'].variables['longitude'][:]
     latitude=mdat.groups['MetaData'].variables['latitude'][:]
     datetime=mdat.groups['MetaData'].variables['dateTime'][:]
     stationElevation=mdat.groups['MetaData'].variables['stationElevation'][:]
-#    height=mdat.groups['MetaData'].variables['height'][:]
     stationID=mdat.groups['MetaData'].variables['stationIdentification'][:]
 
     # Longitude 0:360 => -180:180
@@ -75,11 +85,11 @@ def main():
 #    extent=[-125,-66,23,53]
     # for Northern Hemisphere
     extent=[-179,179,0,82.5]
-    print(extent)
+    logging.info(f''' Map extent= {extent}''')
 
 #    c_lon=np.mean(extent[:2])
     c_lon=-77.0369 # D.C.
-    print(' c_lon=',c_lon)
+    logging.info(f''' c_lon= {c_lon}''')
 
     # Variables
 #    vars_out=["ObsValue","ObsError","PreQC"]
@@ -92,7 +102,7 @@ def main():
 def svar_plot(svar,mdat,lon,lat,extent,c_lon,out_title_base,out_fn_base,work_dir):
 # ============================================================= CHJ =====
 
-    print(' ===== '+svar+' === Total Snow Depth =====================')
+    logging.info(' ===== '+svar+' === Total Snow Depth =====================')
     # Extract data array
     sfld=mdat.groups[svar].variables['totalSnowDepth'][:]
 
@@ -109,16 +119,14 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,out_title_base,out_fn_base,work_dir
     n_rnd=2
     cmap_range='fixed'
 
-    print(' svar name=',svar)
-
     # Max and Min of the field
     fmax=np.max(sfld)
     fmin=np.min(sfld)
-    print(' fld_max=',fmax)
-    print(' flx_min=',fmin)
+    logging.info(f''' Max of {svar}= {fmax}''')
+    logging.info(f''' Min of {svar}= {fmin}''')
 
     # Make the colormap range symmetry
-    print(' cmap range=',cmap_range)
+    logging.info(f''' cmap range= {cmap_range}''')
     if cmap_range=='symmetry':
         tmp_cmp=max(abs(fmax),abs(fmin))
         cs_min=round(-tmp_cmp,n_rnd)
@@ -135,9 +143,9 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,out_title_base,out_fn_base,work_dir
     else:
         sys.exit('ERROR: wrong colormap-range flag !!!')
 
-    print(' cs_max=',cs_max)
-    print(' cs_min=',cs_min)
-    print(' extent=',extent)
+    logging.info(f''' cs_max= {cs_max}''')
+    logging.info(f''' cs_min= {cs_min}''')
+    logging.info(f''' extent= {extent}''')
 
     # Plot field
     fig,ax=plt.subplots(1,1,subplot_kw=dict(projection=ccrs.Robinson(c_lon)))

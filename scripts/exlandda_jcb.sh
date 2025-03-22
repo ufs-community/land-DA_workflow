@@ -92,7 +92,7 @@ jcb_base_fp="${DATA}/${jcb_base_fn}"
 jcb_out_fn="jedi_${JEDI_ALGORITHM}_snow.yaml"
 ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${template_fp}" -o "${jcb_base_fp}"
 
-${USHlandda}/jcb_setup.py -i "${jcb_base_fn}" -o "${jcb_out_fn}" -g "${FRAC_GRID}" -l "${LOG_LEVEL}"
+${USHlandda}/jcb_setup.py -i "${jcb_base_fn}" -o "${jcb_out_fn}" -g "${FRAC_GRID}" -l "${PY_LOG_LEVEL}"
 if [ $? -ne 0 ]; then
   err_exit "Generation of JEDI YAML file by JCB failed !!!"
 fi

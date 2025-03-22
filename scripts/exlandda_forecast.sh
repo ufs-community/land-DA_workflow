@@ -92,7 +92,7 @@ if [ "${APP}" = "LND" ]; then
           ls -1 "${rfile2}">rpointer.atm
           
           # Extract info from datm restart file
-          ${USHlandda}/datm_rfile_info.py -i ${rfile2}
+          ${USHlandda}/datm_rfile_info.py -i ${rfile2} -l ${PY_LOG_LEVEL}
           # Read result file
           while IFS= read -r line; do
             year_first=$(echo "$line" | cut -d',' -f1)

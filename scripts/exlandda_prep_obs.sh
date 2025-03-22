@@ -65,6 +65,7 @@ fn_input: '${obs_out_fn}'
 out_title_base: '${out_title_base}'
 out_fn_base: '${out_fn_base}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
 
   ${USHlandda}/plot_obs_ghcn.py
