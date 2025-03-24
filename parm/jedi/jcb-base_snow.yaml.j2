@@ -1,7 +1,7 @@
 # JCB general
 JEDI_ALGORITHM: "{{ JEDI_ALGORITHM }}"
 snowdepth_vn: "{{ snowdepth_vn }}"
-algorithm: {{ JEDI_ALGORITHM }}
+algorithm: {{ jedi_algorithm_mod }}
 algorithm_path: "{{ PARMlandda }}/jedi/jcb-algorithms"
 app_path_algorithm: "{{ PARMlandda }}/jedi/jcb-gdas/algorithm/snow"
 app_path_model: "{{ PARMlandda }}/jedi/jcb-gdas/model/snow"
@@ -10,8 +10,8 @@ app_path_observation_chronicle: "{{ PARMlandda }}/jedi/jcb-gdas/observation_chro
 
 # Template file name for each section (if not defined, default files in jcb-algorithms will be used)
 {%- if JEDI_ALGORITHM == "letkf" %}
-geometry_file: snow_geometry_letkf
-background_ensemble_file: snow_background_ensemble
+geometry_background_file: snow_geometry_background_letkf
+background_ensemble_file: snow_background_ensemble_letkf
 output_increment_file: snow_output_increment_letkf
 {%- elif JEDI_ALGORITHM == "3dvar" %}
 geometry_background_file: snow_geometry_background
@@ -51,17 +51,19 @@ inflation_rtpp: "{{ inflation_rtpp }}"
 inflation_mult: "{{ inflation_mult }}"
 
 # Driver
+driver_do_test_prints: {{ driver_do_test_prints }}
 driver_update_obs_config_with_geometry_info: {{ driver_update_obs_config_with_geometry_info }}
 driver_save_posterior_mean: {{ driver_save_posterior_mean }}
 driver_save_posterior_ensemble: {{ driver_save_posterior_ensemble }}
 driver_save_posterior_mean_increment: {{ driver_save_posterior_mean_increment }}
+driver_do_posterior_observer: {{ driver_do_posterior_observer }}
 
 # Background
-snow_background_path: "{{ snow_bkg_path }}"
-snow_background_time_fv3: "{{ snow_bkg_time_fv3 }}"
-snow_background_time_iso: "{{ snow_bkg_time_iso }}"
-snow_increment_time_fv3: "{{ snow_bkg_time_fv3 }}"
-snow_increment_time_iso: "{{ snow_bkg_time_iso }}"
+snow_background_path: "{{ snow_background_path }}"
+snow_background_time_fv3: "{{ snow_background_time_fv3 }}"
+snow_background_time_iso: "{{ snow_background_time_iso }}"
+snow_increment_time_fv3: "{{ snow_background_time_fv3 }}"
+snow_increment_time_iso: "{{ snow_background_time_iso }}"
 
 # Background error
 snow_bump_data_directory: "{{ snow_bump_data_dir }}"
