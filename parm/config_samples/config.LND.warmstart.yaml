@@ -10,7 +10,7 @@ DT_RUNSEQ: 3600
 envir: test_lnd_warm
 EXP_CASE_NAME: lnd_warmstart_00
 FCSTHR: 24
-JEDI_ALGORITHM: 3dvar
+JEDI_ALGORITHM: letkf
 LND_CALC_SNET: .true.
 LND_IC_TYPE: custom
 LND_INITIAL_ALBEDO: 0.25

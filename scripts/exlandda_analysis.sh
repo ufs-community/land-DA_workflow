@@ -155,10 +155,15 @@ done
 ################################################
 
 # Link inc file to DATA
+if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
+  inc_fp_prefix="${DATA}/anl/snowinc.${FILEDATE}.sfc_data"
+elif [ "${JEDI_ALGORITHM}" = "letkf" ]; then
+  inc_fp_prefix="${DATA}/${FILEDATE}.snowinc.sfc_data"
+fi
 inc_fn_prefix="snowinc.${FILEDATE}.sfc_data"
 for itile in {1..6}
 do
-  ln -nsf ${DATA}/anl/${inc_fn_prefix}.tile${itile}.nc ${DATA}/.
+  cp -p "${inc_fp_prefix}.tile${itile}.nc" "${DATA}/${inc_fn_prefix}.tile${itile}.nc"
 done
 
 if [ "${FRAC_GRID}" = "YES" ]; then
@@ -194,7 +199,7 @@ fi
 
 for itile in {1..6}
 do
-  cp -p ${DATA}/anl/${inc_fn_prefix}.tile${itile}.nc ${COMOUT}
+  cp -p ${DATA}/${inc_fn_prefix}.tile${itile}.nc ${COMOUT}
 done 
 
 for itile in {1..6}
