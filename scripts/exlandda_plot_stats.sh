@@ -50,6 +50,7 @@ output_prefix: '${output_prefix}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
 hofx_data_path: '${DATA_HOFX_OMB}'
 cdate: '${YYYY}-${MM}-${DD}-${HH}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
   
   ${USHlandda}/hofx_analysis_stats.py
@@ -86,6 +87,7 @@ nprocs_fcst: '${nprocs_forecast}'
 obs_type: '${OBS_TYPE}'
 out_fn_base: '${out_fn_base}'
 hofx_data_path: '${DATA_HOFX_OMB}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
 
   ${USHlandda}/plot_analysis_timehistory.py
@@ -119,6 +121,7 @@ out_title_base: '${out_title_base}'
 out_fn_base: '${out_fn_base}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
 plot_cs_cmap: '${plot_cs_cmap}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
 
   ${USHlandda}/plot_forecast_restart.py
@@ -162,6 +165,7 @@ nlon_plot: ${nlon_plot}
 nlat_plot: ${nlat_plot}
 griddata_method: '${griddata_method}'
 shading_option: '${shading_option}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
 
   ${USHlandda}/plot_combine_tiles.py

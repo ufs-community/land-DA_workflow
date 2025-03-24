@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import logging
 import yaml
 import numpy as np
 import netCDF4
@@ -24,9 +25,9 @@ def get_obs_stats(fdir, plottype, jedi_exe):
     lon_=[]
     
     for fname in os.listdir(fdir):
-        print("=== File Name:",fname)
+        logging.info(f''' === File Name: {fname}''')
         f=netCDF4.Dataset(fdir+'/'+fname)
-        print("NETCDF:",f)
+        logging.info(f''' NETCDF: {f}''')
         obs=f.groups['ObsValue'].variables['totalSnowDepth']
         print("ObsValue:",obs)
         ombg=f.groups['ombg'].variables['totalSnowDepth']
@@ -54,8 +55,9 @@ def get_obs_stats(fdir, plottype, jedi_exe):
 
     return total_omb,total_lat,total_lon
 
+
 def plot_scatter(hofx_data_path,cdate):
-    print("===== PLOT: SCATTER =====")
+    logging.info(f''' ========== PLOT: SCATTER ==========''')
     
     # Set the path to Natural Earth dataset
     cartopy.config['data_dir']=yaml_data['cartopy_ne_path']
@@ -64,10 +66,10 @@ def plot_scatter(hofx_data_path,cdate):
     field_std=float("{:.2f}".format(np.std(np.absolute(field))))
     field_max=float("{:.2f}".format(np.max(np.absolute(field))))
     field_min=float("{:.2f}".format(np.min(np.absolute(field))))
-    print("Mean |OMB|=",field_mean)
-    print("STDV |OMB|=",field_std)
-    print("Max |OMB|=",field_max)
-    print("Min |OMB|=",field_min)
+    logging.info(f''' Mean |OMB|= {field_mean}''')
+    logging.info(f''' STDV |OMB|= {field_std}''')
+    logging.info(f''' Max |OMB|= {field_max}''')
+    logging.info(f''' Min |OMB|= {field_min}''')
 
     # Print out OMB values to file
     hofx_data_fp=os.path.join(hofx_data_path,"hofx_omb_timehis_abs.txt")
@@ -104,16 +106,17 @@ def plot_scatter(hofx_data_path,cdate):
     plt.savefig(output_fn,dpi=200,bbox_inches='tight')
     plt.close('all')
 
+
 def plot_histogram(hofx_data_path,cdate):
-    print("===== PLOT: HISTOGRAM =====")    
+    logging.info(f''' ========== PLOT: HISTOGRAM ==========''')    
     field_mean=float("{:.2f}".format(np.mean(field)))
     field_std=float("{:.2f}".format(np.std(field)))
     field_max=float("{:.2f}".format(np.max(field)))
     field_min=float("{:.2f}".format(np.min(field)))
-    print("Mean OMB=",field_mean)
-    print("STDV OMB=",field_std)
-    print("Max OMB=",field_max)
-    print("Min OMB=",field_min)
+    logging.info(f''' Mean OMB= {field_mean}''')
+    logging.info(f''' STDV OMB= {field_std}''')
+    logging.info(f''' Max OMB= {field_max}''')
+    logging.info(f''' Min OMB= {field_min}''')
 
     # Print out OMB values to file
     hofx_data_fp=os.path.join(hofx_data_path,"hofx_omb_timehis.txt")
@@ -136,9 +139,9 @@ def plot_histogram(hofx_data_path,cdate):
         fld_min=int(field_min)
         fld_max=int(field_max)
         xlimit=[fld_min,fld_max]
-        print("xlimit min=",fld_min)
-        print("xlimit max=",fld_max)
-        print("xlimit=",xlimit)
+        logging.info(f''' xlimit min= {fld_min}''')
+        logging.info(f''' xlimit max= {fld_max}''')
+        logging.info(f''' xlimit= {xlimit}''')
     else:
         xlimit=yaml_data['field_range']
         
@@ -156,9 +159,23 @@ if __name__ == '__main__':
     with open(yaml_file, 'r') as f:
         yaml_data=yaml.load(f, Loader=yaml.FullLoader)
     f.close()
-    print("YAML_DATA:",yaml_data)
+
     hofx_data_path=yaml_data['hofx_data_path']
     cdate=yaml_data['cdate']
+    PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
+
+    # Set logging config
+    log_level_str = PY_LOG_LEVEL.upper()
+    try:
+        log_level = getattr(logging, log_level_str)
+    except AttributeError:
+        log_level_str = "INFO"
+        log_level = logging.INFO
+        print(f''' WARNING: Invalid log level "{PY_LOG_LEVEL.upper()}", set to INFO.''')
+    print(f''' Python Log Level= str: {log_level_str}, attr: {log_level}''')
+    logging.basicConfig(format='%(levelname)s::L%(lineno)d::%(message)s', level=log_level)
+
+    logging.info(f''' YAML Data: {yaml_data}''')
 
     omb,lat,lon=get_obs_stats(yaml_data['hofx_files'],yaml_data['plottype'],yaml_data['jedi_exe'])
     if yaml_data['field_var']=='OMB':

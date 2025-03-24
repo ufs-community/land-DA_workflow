@@ -10,6 +10,7 @@
 ###################################################################### CHJ #####
 
 import os, sys
+import logging
 import yaml
 import numpy as np
 import netCDF4 as nc
@@ -40,7 +41,6 @@ def main():
     with open(yaml_file, 'r') as f:
         yaml_data=yaml.load(f, Loader=yaml.FullLoader)
     f.close()
-    print("YAML_DATA:",yaml_data)
 
     work_dir=yaml_data['work_dir']
     fn_sfc_base=yaml_data['fn_sfc_base']
@@ -52,6 +52,20 @@ def main():
     out_fn_base=yaml_data['out_fn_base']
     fix_dir=yaml_data['fix_dir']
     jedi_exe=yaml_data['jedi_exe']
+    PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
+
+    # Set logging config
+    log_level_str = PY_LOG_LEVEL.upper()
+    try:
+        log_level = getattr(logging, log_level_str)
+    except AttributeError:
+        log_level_str = "INFO"
+        log_level = logging.INFO
+        print(f''' WARNING: Invalid log level "{PY_LOG_LEVEL.upper()}", set to INFO.''')
+    print(f''' Python Log Level= str: {log_level_str}, attr: {log_level}''')
+    logging.basicConfig(format='%(levelname)s::L%(lineno)d::%(message)s', level=log_level)
+
+    logging.info(f''' YAML Data: {yaml_data}''')
 
     # Set the path to Natural Earth dataset
     cartopy.config['data_dir']=os.path.join(fix_dir,"NaturalEarth")
@@ -77,14 +91,14 @@ def main():
 # diagnosis of sfc_data ============================================= CHJ =====
 def diag_data(sfc1_data,sfc2_data,sfc_xainc_data,slmsk,sfc1_slmsk,sfc2_slmsk,sfc_xainc_slmsk,sfc_var_nm):
 # =================================================================== CHJ =====
-    print(' ===== Diagnosis of SFC_DATA =======================================')
-    print(f'''slmsk: original: {slmsk.shape} : max={np.max(slmsk)} : min={np.min(slmsk)}''')
-    print(f'''slmsk: before  : {sfc1_slmsk.shape} : max={np.max(sfc1_slmsk)} : min={np.min(sfc1_slmsk)}''')
-    print(f'''slmsk: after   : {sfc2_slmsk.shape} : max={np.max(sfc2_slmsk)} : min={np.min(sfc2_slmsk)}''')
-    print(f'''slmsk: inc     : {sfc_xainc_slmsk.shape} : max={np.max(sfc_xainc_slmsk)} : min={np.min(sfc_xainc_slmsk)}''')
-    print(' orog     :: 0 = non-land, 1 = land ')
-    print(' sfc_data :: 0 = sea     , 1 = land, 2 = sea-ice ')
-    print(' ===== Cross-check of Sea-Land masks =====')
+    logging.info(f' ===== Diagnosis of SFC_DATA =======================================')
+    logging.info(f'''slmsk: original: {slmsk.shape} : max={np.max(slmsk)} : min={np.min(slmsk)}''')
+    logging.info(f'''slmsk: before  : {sfc1_slmsk.shape} : max={np.max(sfc1_slmsk)} : min={np.min(sfc1_slmsk)}''')
+    logging.info(f'''slmsk: after   : {sfc2_slmsk.shape} : max={np.max(sfc2_slmsk)} : min={np.min(sfc2_slmsk)}''')
+    logging.info(f'''slmsk: inc     : {sfc_xainc_slmsk.shape} : max={np.max(sfc_xainc_slmsk)} : min={np.min(sfc_xainc_slmsk)}''')
+    logging.info(f''' orog     :: 0 = non-land, 1 = land ''')
+    logging.info(f''' sfc_data :: 0 = sea     , 1 = land, 2 = sea-ice ''')
+    logging.info(f''' ===== Cross-check of Sea-Land masks =====''')
     comp_slmsk(slmsk,sfc1_slmsk,"orog-before")
     comp_slmsk(sfc1_slmsk,sfc2_slmsk,"before-after")
 
@@ -98,7 +112,7 @@ def comp_slmsk(slmsk1,slmsk2,txt):
     for it in range(num_tiles):
         itp=it+1
         chk_slmsk1 = np.sum(slmsk1[it,:,:] - slmsk2[it,:,:])
-        print(f'''Check S-L mask :: {txt} :: Tile {itp} = {chk_slmsk1}''')
+        logging.info(f'''Check S-L mask :: {txt} :: Tile {itp} = {chk_slmsk1}''')
 
 
 # geo lon/lat from orography ======================================== CHJ =====
@@ -107,7 +121,7 @@ def get_geo(orog_path,orog_fn_base):
 
     global glon,glat
 
-    print(' ===== geo data files ==============================================')
+    logging.info(f''' ===== geo data files ==============================================''')
 
     cres=orog_fn_base.split('_')[0]
 
@@ -137,7 +151,7 @@ def get_geo(orog_path,orog_fn_base):
     glon=np.vstack(glon_all)
     glat=np.vstack(glat_all)
     slmsk=np.vstack(slmsk_all)
-    print(slmsk.shape)
+    logging.debug(f''' slmsk size= {slmsk.shape}''')
 
     return slmsk
 
@@ -146,7 +160,7 @@ def get_geo(orog_path,orog_fn_base):
 def get_sfc(path_sfc,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,sfc_opt):
 # =================================================================== CHJ =====
 
-    print(' ===== sfc files: '+sfc_var_nm+' :: '+sfc_opt+' ===============================')
+    logging.info(f''' ===== sfc files: {sfc_var_nm} :: {sfc_opt} ===============================''')
     sfc_data_all=[]
     sfc_slmsk_all=[]
     if sfc_opt == 'before':
@@ -167,14 +181,14 @@ def get_sfc(path_sfc,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,sfc_opt):
         if jedi_exe == '3dvar' and sfc_opt == 'inc':
             slmsk_data=np.zeros(sfc_data.shape)
             if itp == 1:
-                print(f'''!!! S-L mask is not available in inc files for 3D-VAR: set to zeros !!!''')
+                logging.warning(f'''!!! S-L mask is not available in inc files for 3D-VAR: set to zeros !!!''')
         else:
           slmsk_data=np.ma.masked_invalid(sfc['slmsk'].data)
 
         if itp == 1:
             print(sfc)
-            print(sfc_data.shape)
-            print(slmsk_data.shape)
+            logging.debug(f''' sfc_data size= {sfc_data.shape}''')
+            logging.debug(f''' slmsk size= {slmsk_data.shape}''')
 
         if sfc_opt == 'inc':
             sfc_data2d=np.squeeze(sfc_data,axis=0)
@@ -205,12 +219,12 @@ def get_sfc(path_sfc,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,sfc_opt):
 # Compare two data set and plot ===================================== CHJ =====
 def compare_sfc(sfc_data1,sfc_data2,inc_data,sfc_var_nm):
 # =================================================================== CHJ =====
-    print(' ===== compare files ===============================================')
-    print(' data 1: ',sfc_data1.shape)
-    print(' data 2: ',sfc_data2.shape)
+    logging.info(f''' ===== compare files ===============================================''')
+    logging.info(f''' data 1= {sfc_data1.shape}''')
+    logging.info(f''' data 2= {sfc_data2.shape}''')
 
     diff_data=sfc_data2-sfc_data1
-    print(' diff. data: ',diff_data.shape)
+    logging.info(f''' diff. data= {diff_data.shape}''')
     plot_increment(diff_data,sfc_var_nm,'diff_sfc')
 
 
@@ -219,8 +233,8 @@ def plot_increment(plt_var,plt_var_nm,plt_out_txt):
 # ==================================================================== CHJ =====
     var_max=np.max(plt_var)
     var_min=np.min(plt_var)
-    print(plt_var_nm,': diff : var_max=',var_max)
-    print(plt_var_nm,': diff : var_min=',var_min)
+    logging.info(f''' {plt_var_nm}: diff : var_max= {var_max}''')
+    logging.info(f''' {plt_var_nm}: diff : var_min= {var_min}''')
 
     cs_max=max(abs(var_max),abs(var_min))
     cs_min=cs_max*-1.0
@@ -257,12 +271,12 @@ def plot_data(plt_var,plt_var_nm,plt_out_txt):
 # ==================================================================== CHJ =====
     var_max=np.max(plt_var)
     var_min=np.min(plt_var)
-    print('var_max=',var_max)
-    print('var_min=',var_min)
+    logging.info(f''' var_max= {var_max}''')
+    logging.info(f''' var_min= {var_min}''')
     var_max05=var_max*0.5
     var_min05=var_min*0.5
-    print('var_max05=',var_max05)
-    print('var_min05=',var_min05)
+    logging.info(f''' var_max05= {var_max05}''')
+    logging.info(f''' var_min05= {var_min05}''')
 
     cmap_range_opt='real'
     cs_cmap='gist_ncar_r'
@@ -288,8 +302,8 @@ def plot_data(plt_var,plt_var_nm,plt_out_txt):
     else:
         sys.exit('ERROR: wrong colormap-range flag !!!')
 
-    print('cs_max=',cs_max)
-    print('cs_min=',cs_min)
+    logging.info(f''' cs_max= {cs_max}''')
+    logging.info(f''' cs_min= {cs_min}''')
 
     out_title=f'''{out_title_base}{plt_var_nm}::{plt_out_txt}'''
     out_fn=f'''{out_fn_base}{plt_var_nm}_{plt_out_txt}'''

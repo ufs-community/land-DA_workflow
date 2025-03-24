@@ -13,6 +13,7 @@
 ###################################################################### CHJ #####
 
 import os, sys
+import logging
 import pathlib
 import yaml
 import numpy as np
@@ -31,7 +32,6 @@ def main():
     with open(yaml_file, 'r') as f:
         yaml_data=yaml.load(f, Loader=yaml.FullLoader)
     f.close()
-#    print("YAML_DATA:",yaml_data)
 
     path_data = yaml_data['path_data']
     work_dir = yaml_data['work_dir']
@@ -45,6 +45,20 @@ def main():
     obs_type = yaml_data['obs_type']
     out_fn_base = yaml_data['out_fn_base']
     hofx_data_path = yaml_data['hofx_data_path']
+    PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
+
+    # Set logging config
+    log_level_str = PY_LOG_LEVEL.upper()
+    try:
+        log_level = getattr(logging, log_level_str)
+    except AttributeError:
+        log_level_str = "INFO"
+        log_level = logging.INFO
+        print(f''' WARNING: Invalid log level "{PY_LOG_LEVEL.upper()}", set to INFO.''')
+    print(f''' Python Log Level= str: {log_level_str}, attr: {log_level}''')
+    logging.basicConfig(format='%(levelname)s::L%(lineno)d::%(message)s', level=log_level)
+
+    logging.info(f''' YAML Data: {yaml_data}''')
 
     var_list = ["totalSnowDepth"]
     nprocs_anal = int(nprocs_anal)
@@ -62,7 +76,7 @@ def main():
 def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm):
 # =================================================================== CHJ =====
 
-    print(' ===== var name: '+var_nm+' ========================')
+    logging.info(f''' ===== var name: '{var_nm}' ========================''')
     # Find files with the sampe prefix
     fp_data_anal_prefix = os.path.join(path_data,fn_data_anal_prefix)
     files = []
@@ -73,7 +87,7 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
             files.append(entry.path)
 
     files.sort()
-#    print("Files=",files)
+    logging.debug(f''' Files= {files}''')
 
     nobs_qc_prefix = "QC ghcn_snow totalSnowDepth"
     wtime_oops_prefix = "OOPS_STATS util::Timers::Total"
@@ -93,7 +107,7 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
         file_date_raw = file_date_raw.removesuffix(fn_data_anal_suffix)
         file_date_tmp = f'''{file_date_raw[0:4]}-{file_date_raw[4:6]}-{file_date_raw[6:8]}-{file_date_raw[8:10]}'''
         file_date.append(file_date_tmp)
-        print("File date=",file_date_tmp)
+        logging.debug(f''' File date: {file_date_tmp}''')
 
         min_val_file = []
         max_val_file = []
@@ -104,7 +118,6 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
             for line in file:
                 if line.startswith(var_nm):
                     line_data_raw = line
-                    #print("Line data=",line_data_raw)
                     line_split = line.split('| ')[1].split(' ')
                     #print("Line split=",line_split)
                     min_var = line_split[0].split(':')[0]
@@ -196,7 +209,7 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
         "wtime_oops": wtime_oops,
         "tcpu_oops": tcpu_oops
     }
-    print("DICT=",var_dict_anal)
+    logging.info(f'''DICT= {var_dict_anal}''')
 
     return var_dict_anal
 
@@ -215,7 +228,7 @@ def get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_f
             files.append(entry.path)
 
     files.sort()
-    #print("Files=",files)
+    logging.debug(f'''Files= {files}''')
 
     wtime_uwm_prefix = "The total amount of wall time"
 
@@ -226,7 +239,7 @@ def get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_f
         file_date_raw = file_date_raw.removesuffix(fn_data_fcst_suffix)
         file_date_tmp = f'''{file_date_raw[0:4]}-{file_date_raw[4:6]}-{file_date_raw[6:8]}-{file_date_raw[8:10]}'''
         file_date.append(file_date_tmp)
-        print("File date=",file_date_tmp)
+        logging.debug(f'''File date= {file_date_tmp}''')
 
         with open(file_fp, 'r') as file:
             for line in file:
@@ -249,7 +262,7 @@ def get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_f
         "wtime_uwm": wtime_uwm,
         "tcpu_uwm": tcpu_uwm
     }
-    print("DICT=",var_dict_fcst)
+    logging.info(f'''DICT= {var_dict_fcst}''')
 
     return var_dict_fcst
 
@@ -363,9 +376,9 @@ def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
                 value = float(value)
             columns[i].append(value)
 
-    print("dfa_date:", dfa['Date'])
-    print("column 1 data:", columns[1])
-    print("column 2 data:", columns[2])
+    logging.info(f''' dfa_date: {dfa['Date']}''')
+    logging.info(f''' column 1 data: {columns[1]}''')
+    logging.info(f''' column 2 data: {columns[2]}''')
     dfa_date = dfa['Date']
     col_data_1 = columns[1]
     col_data_2 = columns[2]
@@ -374,7 +387,7 @@ def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
     else:
         ncol = len(col_data_1)
         dfa_date_plot = dfa_date[:ncol]
-        print("plot date:", dfa_date_plot)
+        logging.info(f'''plot date: {dfa_date_plot}''')
 
     out_title_omb = f'''Land-DA::OMB (observation-background)::{var_nm}'''
     out_fn_omb = f'''{out_fn_base}_omb_{var_nm}'''
