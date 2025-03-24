@@ -173,7 +173,7 @@ if __name__ == '__main__':
         log_level = logging.INFO
         print(f''' WARNING: Invalid log level "{PY_LOG_LEVEL.upper()}", set to INFO.''')
     print(f''' Python Log Level= str: {log_level_str}, attr: {log_level}''')
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=log_level)
+    logging.basicConfig(format='%(levelname)s::L%(lineno)d::%(message)s', level=log_level)
 
     logging.info(f''' YAML Data: {yaml_data}''')
 

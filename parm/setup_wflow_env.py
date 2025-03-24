@@ -339,7 +339,7 @@ if __name__=='__main__':
         log_level = logging.INFO
         print(f''' WARNING: Invalid log level "{args.PY_LOG_LEVEL.upper()}", set to INFO.''')
     print(f''' Python Log Level= str: {log_level_str}, attr: {log_level}''')
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=log_level)
+    logging.basicConfig(format='%(levelname)s::L%(lineno)d::%(message)s', level=log_level)
     MACHINE=args.MACHINE
     if MACHINE is None:
         MACHINE = detect_platform()
