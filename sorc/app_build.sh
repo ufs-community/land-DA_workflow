@@ -210,8 +210,8 @@ if [ "${REMOVE}" = true ]; then
   exit 0  
 fi
 
-# Conda is not used on Gaea-c5 F2 filesystem as well as wcoss2
-if [ "${PLATFORM}" = "gaea-c5" ] || [ "${PLATFORM}" = "wcoss2" ]; then
+# Conda is not used on WCOSS2
+if [ "${PLATFORM}" = "wcoss2" ]; then
   BUILD_CONDA="off"
 fi
 # build conda and conda environments, if requested.
@@ -285,7 +285,7 @@ set -eu
 # automatically determine compiler
 if [ -z "${COMPILER}" ] ; then
   case ${PLATFORM} in
-    jet|hera|gaea) COMPILER=intel ;;
+    hera|gaeac6) COMPILER=intel ;;
     orion|hercules) COMPILER=intel ;;
     wcoss2) COMPILER=intel ;;
     macos|singularity) COMPILER=gnu ;;
@@ -338,7 +338,7 @@ if [ ! -f "${HOME_DIR}/modulefiles/${MODULE_FILE}.lua" ]; then
   printf "  COMPILER=${COMPILER}\n\n" >&2
   printf "Please make sure PLATFORM and COMPILER are set correctly\n" >&2
   usage >&2
-  exit 64
+  exit 341
 fi
 
 printf "MODULE_FILE=${MODULE_FILE}\n" >&2
@@ -391,6 +391,11 @@ if [ "${PLATFORM}" = "hera" ]; then
   landda_fix_orig="/scratch2/NAGAPE/epic/UFS_Land-DA${ver_fix_data}/inputs"
 elif [ "${PLATFORM}" = "orion" ] || [ "${PLATFORM}" = "hercules" ]; then
   landda_fix_orig="/work/noaa/epic/UFS_Land-DA${ver_fix_data}/inputs"
+elif [ "${PLATFORM}" = "gaeac6" ]; then
+  landda_fix_orig="/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA${ver_fix_data}/inputs"
+else
+  printf "FATAL ERROR: path to the fix files is not defined !!!"
+  exit 398
 fi
 ln -nsf ${landda_fix_orig}/* ${HOME_DIR}/fix
 
