@@ -256,17 +256,21 @@ def set_machine_parm(machine):
 
     lowercase_machine = machine.lower()
     match lowercase_machine:
+        case "gaeac6":
+            JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/jedi_bundle_sync"
+            MAX_CORES_PER_NODE = 192
+            WARMSTART_DIR = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "hera":
             JEDI_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_sync"
             MAX_CORES_PER_NODE = 40
             WARMSTART_DIR = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
-        case "orion":
-            JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion"
-            MAX_CORES_PER_NODE = 40
-            WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "hercules":
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_hercules"
             MAX_CORES_PER_NODE = 80
+            WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
+        case "orion":
+            JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion"
+            MAX_CORES_PER_NODE = 40
             WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "singularity":
             JEDI_PATH = "SINGULARITY_WORKING_DIR"
@@ -315,7 +319,8 @@ def detect_platform():
     elif os.path.isdir("/work/noaa"):
         machine = socket.gethostname().split('-')[0]  # orion/hercules
     elif os.path.isdir("/ncrc"):
-        machine = "gaea"
+        machine_number = socket.gethostname()[4]
+        machine = f"gaeac{machine_number}"
     elif os.path.isdir("/glade"):
         machine = "derecho"
     elif os.path.isdir("/lfs4/HFIP"):
