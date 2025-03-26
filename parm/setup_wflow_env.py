@@ -105,16 +105,23 @@ def setup_wflow_env(machine):
 
     # Machine-specific parameters
     if machine == "gaeac6":
-        queue_default = "normal"
+        native_default = '-M c6'
+        partition_default = 'batch'
+        queue_default = 'normal'
     else:
-        queue_defalut = "batch"
+        native_default = ''
+        partition_default = machine
+        queue_defalut = 'batch'
 
+    # Update config yaml file
     config_parm.update({
         'nprocs_forecast_lnd': nprocs_forecast_lnd,
         'nprocs_forecast_atm': nprocs_forecast_atm,
         'nprocs_forecast': nprocs_forecast,
         'nnodes_forecast': nnodes_forecast,
         'nprocs_per_node': nprocs_per_node,
+        'native_default': native_default,
+        'partition_default': partition_default,
         'queue_default': queue_default,
         })
    

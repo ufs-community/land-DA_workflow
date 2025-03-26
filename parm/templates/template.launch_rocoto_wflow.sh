@@ -23,8 +23,12 @@ elif [ "${MACHINE}" == "orion" ]; then
 elif [ "${MACHINE}" == "hercules" ]; then
   module load contrib
   module load rocoto
+elif [ "${MACHINE}" == "gaeac6" ]; then
+  module use /ncrc/proj/epic/rocoto/modulefiles/
+  module load rocoto
 else
   echo "FATAL ERROR: modules are not loaded"
+  exit 31
 fi
 
 # Set file names.

@@ -52,6 +52,7 @@ workflow:
     MACHINE: "{{ MACHINE }}"
     MED_COUPLING_MODE: "{{ MED_COUPLING_MODE }}"
     model_ver: "{{ model_ver }}"
+    native_default: "{{ native_default }}"
     NET: "{{ NET }}"
     NPROCS_ANALYSIS: "{{ NPROCS_ANALYSIS }}"
     NPROCS_FCST_IC: "{{ NPROCS_FCST_IC }}"
@@ -64,6 +65,7 @@ workflow:
     OBSDIR: "{{ OBSDIR }}"
     OBS_TYPE: "{{ OBS_TYPE }}"
     OUTPUT_FH: "{{ OUTPUT_FH }}"
+    partition_default: "{{ partition_default }}"
     PY_LOG_LEVEL: "{{ PY_LOG_LEVEL }}"
     queue_default: "{{ queue_default }}"
     RES: "{{ RES }}"
@@ -124,6 +126,8 @@ workflow:
       jobname: jcb
       cores: 1
       walltime: 00:10:00
+      native: "&native_default;"
+      partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/jcb&LOGFN_SUFFIX;"
     task_prep_obs:
@@ -157,6 +161,8 @@ workflow:
       jobname: prep_obs
       cores: 1
       walltime: 00:30:00
+      native: "&native_default;"
+      partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/prep_obs&LOGFN_SUFFIX;"
       memory: 128G
@@ -185,6 +191,8 @@ workflow:
       jobname: fcst_ic
       nodes: "1:ppn=&NPROCS_FCST_IC;"
       walltime: 00:15:00
+      native: "&native_default;"
+      partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/fcst_ic&LOGFN_SUFFIX;"
       memory: 128G
@@ -217,6 +225,8 @@ workflow:
       jobname: pre_anal
       cores: 1
       walltime: 00:05:00
+      native: "&native_default;"
+      partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/pre_anal&LOGFN_SUFFIX;"
       dependency:
@@ -271,7 +281,9 @@ workflow:
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "analysis" "&HOMElandda;" "&MACHINE;"'
       jobname: analysis
       nodes: "1:ppn=&NPROCS_ANALYSIS;"
+      native: "&native_default;"
       walltime: 00:15:00
+      partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/analysis&LOGFN_SUFFIX;"
       dependency:
@@ -330,6 +342,8 @@ workflow:
       jobname: post_anal
       cores: 1
       walltime: 00:05:00
+      native: "&native_default;"
+      partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/post_anal&LOGFN_SUFFIX;"
       dependency:
@@ -400,6 +414,8 @@ workflow:
       jobname: forecast
       nodes: "&nnodes_forecast;:ppn=&nprocs_per_node;"
       walltime: 00:30:00
+      native: "&native_default;"
+      partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/forecast&LOGFN_SUFFIX;"
       dependency:
@@ -446,6 +462,8 @@ workflow:
       jobname: plot_stats
       cores: 1
       walltime: 00:10:00
+      native: "&native_default;"
+      partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/plot_stats&LOGFN_SUFFIX;"
       dependency:
