@@ -65,6 +65,7 @@ workflow:
     OBS_TYPE: "{{ OBS_TYPE }}"
     OUTPUT_FH: "{{ OUTPUT_FH }}"
     PY_LOG_LEVEL: "{{ PY_LOG_LEVEL }}"
+    queue_default: "{{ queue_default }}"
     RES: "{{ RES }}"
     RESTART_INTERVAL: "{{ RESTART_INTERVAL }}"
     RUN: "{{ RUN }}"
@@ -123,7 +124,7 @@ workflow:
       jobname: jcb
       cores: 1
       walltime: 00:10:00
-      queue: batch
+      queue: "&queue_default;"
       join: "&LOGDIR;/jcb&LOGFN_SUFFIX;"
     task_prep_obs:
       attrs:
@@ -156,7 +157,7 @@ workflow:
       jobname: prep_obs
       cores: 1
       walltime: 00:30:00
-      queue: batch
+      queue: "&queue_default;"
       join: "&LOGDIR;/prep_obs&LOGFN_SUFFIX;"
       memory: 128G
 {%- if ( APP == "ATML" and COLDSTART == "YES" ) %}
@@ -184,7 +185,7 @@ workflow:
       jobname: fcst_ic
       nodes: "1:ppn=&NPROCS_FCST_IC;"
       walltime: 00:15:00
-      queue: batch
+      queue: "&queue_default;"
       join: "&LOGDIR;/fcst_ic&LOGFN_SUFFIX;"
       memory: 128G
 {%- endif %}
@@ -216,7 +217,7 @@ workflow:
       jobname: pre_anal
       cores: 1
       walltime: 00:05:00
-      queue: batch
+      queue: "&queue_default;"
       join: "&LOGDIR;/pre_anal&LOGFN_SUFFIX;"
       dependency:
         or:
@@ -271,7 +272,7 @@ workflow:
       jobname: analysis
       nodes: "1:ppn=&NPROCS_ANALYSIS;"
       walltime: 00:15:00
-      queue: batch
+      queue: "&queue_default;"
       join: "&LOGDIR;/analysis&LOGFN_SUFFIX;"
       dependency:
         and:
@@ -329,7 +330,7 @@ workflow:
       jobname: post_anal
       cores: 1
       walltime: 00:05:00
-      queue: batch
+      queue: "&queue_default;"
       join: "&LOGDIR;/post_anal&LOGFN_SUFFIX;"
       dependency:
         taskdep:
@@ -399,7 +400,7 @@ workflow:
       jobname: forecast
       nodes: "&nnodes_forecast;:ppn=&nprocs_per_node;"
       walltime: 00:30:00
-      queue: batch
+      queue: "&queue_default;"
       join: "&LOGDIR;/forecast&LOGFN_SUFFIX;"
       dependency:
         or:
@@ -445,7 +446,7 @@ workflow:
       jobname: plot_stats
       cores: 1
       walltime: 00:10:00
-      queue: batch
+      queue: "&queue_default;"
       join: "&LOGDIR;/plot_stats&LOGFN_SUFFIX;"
       dependency:
         taskdep:

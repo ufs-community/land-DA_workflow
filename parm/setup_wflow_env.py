@@ -103,12 +103,19 @@ def setup_wflow_env(machine):
         nnodes_forecast = math.ceil(nprocs_forecast/max_cores_per_node)
         nprocs_per_node = math.ceil(nprocs_forecast/nnodes_forecast)
 
+    # Machine-specific parameters
+    if machine == "gaeac6":
+        queue_default = "normal"
+    else:
+        queue_defalut = "batch"
+
     config_parm.update({
         'nprocs_forecast_lnd': nprocs_forecast_lnd,
         'nprocs_forecast_atm': nprocs_forecast_atm,
         'nprocs_forecast': nprocs_forecast,
         'nnodes_forecast': nnodes_forecast,
         'nprocs_per_node': nprocs_per_node,
+        'queue_default': queue_default,
         })
    
     config_parm_str = yaml.dump(config_parm, sort_keys=True, default_flow_style=False)
@@ -344,7 +351,7 @@ if __name__=='__main__':
         log_level = logging.INFO
         print(f''' WARNING: Invalid log level "{args.PY_LOG_LEVEL.upper()}", set to INFO.''')
     print(f''' Python Log Level= str: {log_level_str}, attr: {log_level}''')
-    logging.basicConfig(format='%(levelname)s::L%(lineno)d::%(message)s', level=log_level)
+    logging.basicConfig(format='%(levelname)s::%(pathname)s::L%(lineno)d::%(message)s', level=log_level)
     MACHINE=args.MACHINE
     if MACHINE is None:
         MACHINE = detect_platform()
