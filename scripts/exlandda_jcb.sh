@@ -22,7 +22,7 @@ mm_hf=${HTIME:4:2}
 dd_hf=${HTIME:6:2}
 hh_hf=${HTIME:8:2}
 
-# Defalut setting
+# JCB parameters
 driver_do_posterior_observer="false"
 driver_do_test_prints="false"
 driver_save_posterior_ensemble="false"
@@ -33,7 +33,6 @@ final_diagnostics_departures="anlmob"
 inflation_mult="1.0"
 inflation_rtpp="0.0"
 inflation_rtps="0.0"
-jedi_algorithm_mod="${JEDI_ALGORITHM}"
 local_ensemble_da_solver="${JEDI_ALGORITHM^^}"
 snow_background_time_fv3="${YYYY}${MM}${DD}.${HH}0000"
 snow_background_time_iso="${YYYY}-${MM}-${DD}T${HH}:00:00Z"
@@ -41,11 +40,14 @@ snow_fv3jedi_files_path="Data/fv3files"
 snow_window_begin="${yyyy_hf}-${mm_hf}-${dd_hf}T${hh_hf}:00:00Z"
 snow_window_length="PT${DATE_CYCLE_FREQ_HR}H"
 
-# Replace with algorithm-specific values
+# Algorithm-specific values
 if [ "${JEDI_ALGORITHM}" = "letkf" ]; then
   jedi_algorithm_mod="local_ensemble_da"
+else
+  jedi_algorithm_mod="${JEDI_ALGORITHM}"
 fi
 
+# Variable name of snow depth
 if [ "${FRAC_GRID}" = "YES" ]; then
   snowdepth_vn="snodl"
 else
