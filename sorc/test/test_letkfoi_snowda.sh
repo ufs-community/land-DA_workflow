@@ -28,12 +28,12 @@ do
 done
 mkdir -p obs
 # prepare yaml files
-cp $project_source_dir/test/parm/letkf_land.yaml .
+cp $project_source_dir/test/parm/jedi_letkf_snow.yaml .
 settings="\
   'datapath': ${FIXlandda}/FV3_fix_tiled/C${RES}
 " # End of settins variable
-fp_template="letkf_land.yaml"
-fn_namelist="letkf_land.yaml"
+fp_template="jedi_letkf_snow.yaml"
+fn_namelist="jedi_letkf_snow.yaml"
 ${project_source_dir}/../ush/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
 
 for ii in "${!OBS_TYPES[@]}";
@@ -59,13 +59,15 @@ mkdir -p ./diags
 
 # link jedi static files
 cp -rp $JEDI_STATICDIR .
-ln -nsf $WORKDIR/Data/fv3files/akbk64.nc4 $WORKDIR/Data/fv3files/akbk.nc4
+ln -nsf $WORKDIR/Data/fv3files/fmsmpp.nml .
+ln -nsf $WORKDIR/Data/fv3files/field_table_ufs field_table
+ln -nsf $WORKDIR/Data/fv3files/akbk127.nc4 akbk.nc4
 
-# copy gfs-land.yaml
-cp $project_source_dir/test/parm/gfs-land.yaml .
+# copy restart yaml
+cp $project_source_dir/../parm/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart_nofrac.yaml fv3jedi_fieldmetadata_restart.yaml
 
 #
 MPIRUN="${MPIRUN:-srun}"
 echo "============================= calling ${JEDI_EXEC} with ${MPIRUN}"
-${MPIRUN} -n $NPROC ${JEDI_EXEC} letkf_land.yaml
+${MPIRUN} -n $NPROC ${JEDI_EXEC} jedi_letkf_snow.yaml
 
