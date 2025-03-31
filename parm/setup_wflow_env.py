@@ -109,7 +109,7 @@ def setup_wflow_env(machine):
         partition_default = 'batch'
         queue_default = 'normal'
     else:
-        native_default = ''
+        native_default = None
         partition_default = machine
         queue_default = 'batch'
 

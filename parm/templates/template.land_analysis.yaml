@@ -126,7 +126,9 @@ workflow:
       jobname: jcb
       cores: 1
       walltime: 00:10:00
+{%- if native_default is not none %}
       native: "&native_default;"
+{%- endif %}
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/jcb&LOGFN_SUFFIX;"
@@ -161,7 +163,9 @@ workflow:
       jobname: prep_obs
       cores: 1
       walltime: 00:30:00
+{%- if native_default is not none %}
       native: "&native_default;"
+{%- endif %}
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/prep_obs&LOGFN_SUFFIX;"
@@ -193,7 +197,9 @@ workflow:
       jobname: fcst_ic
       nodes: "1:ppn=&NPROCS_FCST_IC;"
       walltime: 00:15:00
+{%- if native_default is not none %}
       native: "&native_default;"
+{%- endif %}
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/fcst_ic&LOGFN_SUFFIX;"
@@ -229,7 +235,9 @@ workflow:
       jobname: pre_anal
       cores: 1
       walltime: 00:05:00
+{%- if native_default is not none %}
       native: "&native_default;"
+{%- endif %}
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/pre_anal&LOGFN_SUFFIX;"
@@ -285,7 +293,9 @@ workflow:
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "analysis" "&HOMElandda;" "&MACHINE;"'
       jobname: analysis
       nodes: "1:ppn=&NPROCS_ANALYSIS;"
+{%- if native_default is not none %}
       native: "&native_default;"
+{%- endif %}
       walltime: 00:15:00
       partition: "&partition_default;"
       queue: "&queue_default;"
@@ -346,7 +356,9 @@ workflow:
       jobname: post_anal
       cores: 1
       walltime: 00:05:00
+{%- if native_default is not none %}
       native: "&native_default;"
+{%- endif %}
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/post_anal&LOGFN_SUFFIX;"
@@ -418,7 +430,9 @@ workflow:
       jobname: forecast
       nodes: "&nnodes_forecast;:ppn=&nprocs_per_node;"
       walltime: 00:30:00
+{%- if native_default is not none %}
       native: "&native_default;"
+{%- endif %}
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/forecast&LOGFN_SUFFIX;"
@@ -466,7 +480,9 @@ workflow:
       jobname: plot_stats
       cores: 1
       walltime: 00:10:00
+{%- if native_default is not none %}
       native: "&native_default;"
+{%- endif %}
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/plot_stats&LOGFN_SUFFIX;"
