@@ -113,14 +113,22 @@ def setup_wflow_env(machine):
         partition_default = machine
         queue_defalut = 'batch'
 
+    # Slurm memory flag: some platforms do not support the memory flag in slurm
+    mem_not_req = [ "gaeac6", "noaacloud" ]
+    if machine in mem_not_req:
+        memory_flag = False
+    else:
+        memory_flag = True
+
     # Update config yaml file
     config_parm.update({
-        'nprocs_forecast_lnd': nprocs_forecast_lnd,
-        'nprocs_forecast_atm': nprocs_forecast_atm,
-        'nprocs_forecast': nprocs_forecast,
-        'nnodes_forecast': nnodes_forecast,
-        'nprocs_per_node': nprocs_per_node,
+        'memory_flag': memory_flag,
         'native_default': native_default,
+        'nnodes_forecast': nnodes_forecast,
+        'nprocs_forecast': nprocs_forecast,
+        'nprocs_forecast_atm': nprocs_forecast_atm,
+        'nprocs_forecast_lnd': nprocs_forecast_lnd,
+        'nprocs_per_node': nprocs_per_node,
         'partition_default': partition_default,
         'queue_default': queue_default,
         })

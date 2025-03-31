@@ -165,7 +165,7 @@ workflow:
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/prep_obs&LOGFN_SUFFIX;"
-{%- if not MACHINE in [ "gaeac6" ] %}
+{%- if memory_flag %}
       memory: 128G
 {%- endif %}
 {%- if ( APP == "ATML" and COLDSTART == "YES" ) %}
@@ -197,7 +197,7 @@ workflow:
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/fcst_ic&LOGFN_SUFFIX;"
-{%- if not MACHINE in [ "gaeac6" ] %}
+{%- if memory_flag %}
       memory: 128G
 {%- endif %}
 {%- endif %}
