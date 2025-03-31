@@ -111,7 +111,7 @@ def setup_wflow_env(machine):
     else:
         native_default = ''
         partition_default = machine
-        queue_defalut = 'batch'
+        queue_default = 'batch'
 
     # Slurm memory flag: some platforms do not support the memory flag in slurm
     mem_not_req = [ "gaeac6", "noaacloud" ]
