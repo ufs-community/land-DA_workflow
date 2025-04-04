@@ -54,15 +54,81 @@ FILEDATE=${YYYY}${MM}${DD}.${HH}0000
 cp -p "${PARMlandda}/templates/template.noahmptable.tbl" noahmptable.tbl
 cp -p "${PARMlandda}/templates/template.fd_ufs.yaml" fd_ufs.yaml
 if [ "${APP}" = "LND" ]; then
-  # CDEPS datm input / restart files
-  cp -p "${PARMlandda}/templates/template.${APP}.datm_in" datm_in
-  cp -p "${PARMlandda}/templates/template.${APP}.data_table" data_table
-  # datm.streams file
-  # Set up data file list and soft-link forcing files
   mkdir -p INPUT_DATM
+
+  # data_table
+  cp -p "${PARMlandda}/templates/template.${APP}.data_table" data_table
+
+  # CDEPS datm input namlist file
+  if [ "${ATMOS_FORC}" = "gswp3" ]; then
+    datm_in_datamode="CLMNCEP"
+    datm_in_mask_fn="fv1.9x2.5_141008_ESMFmesh.nc"
+    datm_in_mesh_fn="fv1.9x2.5_141008_ESMFmesh.nc"
+    datm_in_nx_global="144"
+    datm_in_ny_global="96"
+  elif [ "${ATMOS_FORC}" = "era5" ]; then
+    datm_in_datamode="ERA5"
+    datm_in_mask_fn="ERA5_mesh.nc"
+    datm_in_mesh_fn="ERA5_mesh.nc"
+    datm_in_nx_global="1440"
+    datm_in_ny_global="721"
+  else
+    err_exit "Invalid atmospheric forcing option: ATMOS_FORC: ${ATMOS_FORC} !!!"
+  fi
+  settings="\
+    'datm_in_datamode': '${datm_in_datamode}'
+    'datm_in_mask_fn': '${datm_in_mask_fn}'
+    'datm_in_mesh_fn': '${datm_in_mesh_fn}'
+    'datm_in_nx_global': ${datm_in_nx_global}
+    'datm_in_ny_global': ${datm_in_ny_global}
+  " # End of settings variable
+  fp_template="${PARMlandda}/templates/template.${APP}.datm_in"
+  fn_namelist="datm_in"
+  ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
+
+  # datm.streams file
   data_files01_list=()
   data_files02_list=()
   data_files03_list=()
+  if [ "${COLDSTART}" = "YES" ] && [ "${PDY}${cyc}" = "${DATE_FIRST_CYCLE:0:10}" ]; then
+    year_first="${DATE_FIRST_CYCLE:0:4}"
+    month_first="${DATE_FIRST_CYCLE:4:2}"
+    day_first="${DATE_FIRST_CYCLE:6:2}"
+    year_last="${DATE_LAST_CYCLE:0:4}"
+    month_last="${DATE_LAST_CYCLE:4:2}"
+    day_last="${DATE_LAST_CYCLE:6:2}"
+  else  # warm start
+    # CDEPS restart and pointer files for DATM (LND)
+    rfile2="ufs.cpld.datm.r.${YYYY}-${MM}-${DD}-${HHsec_5d}.nc"
+    if [ -f "${COMINm1}/${rfile2}" ]; then
+      ln -nsf "${COMINm1}/${rfile2}" .
+    elif [ -f "${WARMSTART_DIR}/${rfile2}" ]; then
+      ln -nsf "${WARMSTART_DIR}/${rfile2}" .
+    else
+      ln -nsf ${FIXlandda}/restarts/${ATMOS_FORC}/${rfile2} .
+    fi
+    ls -1 "${rfile2}">rpointer.atm
+ 
+    if [ "${ATMOS_FORC}" = "gswp3" ]; then 
+      # Extract info from datm restart file
+      ${USHlandda}/datm_rfile_info.py -i ${rfile2} -l ${PY_LOG_LEVEL}
+      # Read result file
+      while IFS= read -r line; do
+        year_first=$(echo "$line" | cut -d',' -f1)
+        month_first=$(echo "$line" | cut -d',' -f2)
+        year_last=$(echo "$line" | cut -d',' -f3)
+        month_last=$(echo "$line" | cut -d',' -f4) 
+      done < "first_last_date.txt"
+    else
+      year_first="${DATE_FIRST_CYCLE:0:4}"
+      month_first="${DATE_FIRST_CYCLE:4:2}"
+      day_first="${DATE_FIRST_CYCLE:6:2}"
+      year_last="${DATE_LAST_CYCLE:0:4}"
+      month_last="${DATE_LAST_CYCLE:4:2}"
+      day_last="${DATE_LAST_CYCLE:6:2}"
+    fi  
+  fi
+  
   if [ "${ATMOS_FORC}" = "gswp3" ]; then
     gswp3_path="${FIXlandda}/DATM_input_data/gswp3"
     var_fn_prefix="clmforc.GSWP3.c2011.0.5x0.5"
@@ -76,34 +142,6 @@ if [ "${APP}" = "LND" ]; then
           err_exit "DATM forcing mesh file ${var_fp} does not exist."
         fi
       else
-        if [ "${COLDSTART}" = "YES" ] && [ "${PDY}${cyc}" = "${DATE_FIRST_CYCLE:0:10}" ]; then
-          # Calculate number of months
-          year_first="${DATE_FIRST_CYCLE:0:4}"
-          month_first="${DATE_FIRST_CYCLE:4:2}"
-          year_last="${DATE_LAST_CYCLE:0:4}"
-          month_last="${DATE_LAST_CYCLE:4:2}"
-        else  # warm start
-          # CDEPS restart and pointer files for DATM (LND)
-          rfile2="ufs.cpld.datm.r.${YYYY}-${MM}-${DD}-${HHsec_5d}.nc"
-          if [ -f "${COMINm1}/${rfile2}" ]; then
-            ln -nsf "${COMINm1}/${rfile2}" .
-          elif [ -f "${WARMSTART_DIR}/${rfile2}" ]; then
-            ln -nsf "${WARMSTART_DIR}/${rfile2}" .
-          else
-            ln -nsf ${FIXlandda}/restarts/${ATMOS_FORC}/${rfile2} .
-          fi
-          ls -1 "${rfile2}">rpointer.atm
-          
-          # Extract info from datm restart file
-          ${USHlandda}/datm_rfile_info.py -i ${rfile2} -l ${PY_LOG_LEVEL}
-          # Read result file
-          while IFS= read -r line; do
-            year_first=$(echo "$line" | cut -d',' -f1)
-            month_first=$(echo "$line" | cut -d',' -f2)
-            year_last=$(echo "$line" | cut -d',' -f3)
-            month_last=$(echo "$line" | cut -d',' -f4) 
-          done < "first_last_date.txt"
-        fi
         given_date="${year_first}-${month_first}-08"
         num_months_m1=$(( (year_last - year_first) * 12 + (month_last - month_first) + 1 ))
         for imon in $( seq 1 $num_months_m1 ) ; do
@@ -140,8 +178,32 @@ if [ "${APP}" = "LND" ]; then
         err_exit "DATM topo file ${tfp} does not exist."
       fi
     done
+
   elif [ "${ATMOS_FORC}" = "era5" ]; then
-    err_exit "ERA5 is not available yet !!!"
+    era5_path="${FIXlandda}/DATM_input_data/era5"
+    data_fn_prefix="INPUT_DATM/ERA5_forcing_"
+    data_fn_suffix="_fix.nc"
+    first_date="${year_first}-${month_first}-${day_first}"
+    last_date="${year_last}-${month_last}-${day_last}"
+    second_first=$(date -d "${first_date}" +%s)
+    second_last=$(date -d "${last_date}" +%s)
+    second_diff=$(( second_last - second_first ))
+    num_days_m1=$(( second_diff / (60 * 60 * 24) -1 ))
+    for iday in $( seq 1 $num_days_m1 ) ; do
+      idate=$( date -d "$first_date + $((iday-1)) days" +%Y%m%d )
+      iyyyy="${idate:0:4}"
+      imm="${idate:4:2}"
+      idd="${idate:6:2}"
+      data_fn="${data_fn_prefix}${iyyyy}-${imm}-${idd}${data_fn_suffix}"
+      data_files01_list+=("\"INPUT_DATM/${data_fn}\"")
+      data_fp="${era5_path}/${data_fn}"
+      if [ -f ${data_fp} ]; then
+        ln -nsf "${data_fp}" INPUT_DATM/.
+      else
+        err_exit "DATM forcing data file ${data_fp} does not exist."
+      fi
+    done
+    ln -nsf ${era5_path}/${datm_in_mesh_fn} INPUT_DATM/.
   else
     ln -nsf ${FIXlandda}/DATM_input_data/${ATMOS_FORC}/* INPUT_DATM/.
   fi
@@ -154,6 +216,7 @@ if [ "${APP}" = "LND" ]; then
     'data_files01': '${data_files01_list[@]}'
     'data_files02': '${data_files02_list[@]}'
     'data_files03': '${data_files03_list[@]}'
+    'datm_in_mesh_fn': '${datm_in_mesh_fn}'
   " # End of settings variable
   fp_template="${PARMlandda}/templates/template.${APP}.datm.streams"
   fn_namelist="datm.streams"
