@@ -103,12 +103,34 @@ def setup_wflow_env(machine):
         nnodes_forecast = math.ceil(nprocs_forecast/max_cores_per_node)
         nprocs_per_node = math.ceil(nprocs_forecast/nnodes_forecast)
 
+    # Machine-specific parameters
+    if machine == "gaeac6":
+        native_default = '-M c6'
+        partition_default = 'batch'
+        queue_default = 'normal'
+    else:
+        native_default = None
+        partition_default = machine
+        queue_default = 'batch'
+
+    # Slurm memory flag: some platforms do not support the memory flag in slurm
+    mem_not_req = [ "gaeac6", "noaacloud" ]
+    if machine in mem_not_req:
+        memory_flag = False
+    else:
+        memory_flag = True
+
+    # Update config yaml file
     config_parm.update({
-        'nprocs_forecast_lnd': nprocs_forecast_lnd,
-        'nprocs_forecast_atm': nprocs_forecast_atm,
-        'nprocs_forecast': nprocs_forecast,
+        'memory_flag': memory_flag,
+        'native_default': native_default,
         'nnodes_forecast': nnodes_forecast,
+        'nprocs_forecast': nprocs_forecast,
+        'nprocs_forecast_atm': nprocs_forecast_atm,
+        'nprocs_forecast_lnd': nprocs_forecast_lnd,
         'nprocs_per_node': nprocs_per_node,
+        'partition_default': partition_default,
+        'queue_default': queue_default,
         })
    
     config_parm_str = yaml.dump(config_parm, sort_keys=True, default_flow_style=False)
@@ -256,17 +278,21 @@ def set_machine_parm(machine):
 
     lowercase_machine = machine.lower()
     match lowercase_machine:
+        case "gaeac6":
+            JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/jedi_bundle_sync"
+            MAX_CORES_PER_NODE = 192
+            WARMSTART_DIR = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "hera":
             JEDI_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_sync"
             MAX_CORES_PER_NODE = 40
             WARMSTART_DIR = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
-        case "orion":
-            JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion"
-            MAX_CORES_PER_NODE = 40
-            WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "hercules":
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_hercules"
             MAX_CORES_PER_NODE = 80
+            WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
+        case "orion":
+            JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion"
+            MAX_CORES_PER_NODE = 40
             WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "singularity":
             JEDI_PATH = "SINGULARITY_WORKING_DIR"
@@ -315,7 +341,8 @@ def detect_platform():
     elif os.path.isdir("/work/noaa"):
         machine = socket.gethostname().split('-')[0]  # orion/hercules
     elif os.path.isdir("/ncrc"):
-        machine = "gaea"
+        machine_number = socket.gethostname()[4]
+        machine = f"gaeac{machine_number}"
     elif os.path.isdir("/glade"):
         machine = "derecho"
     elif os.path.isdir("/lfs4/HFIP"):
@@ -339,7 +366,7 @@ if __name__=='__main__':
         log_level = logging.INFO
         print(f''' WARNING: Invalid log level "{args.PY_LOG_LEVEL.upper()}", set to INFO.''')
     print(f''' Python Log Level= str: {log_level_str}, attr: {log_level}''')
-    logging.basicConfig(format='%(levelname)s::L%(lineno)d::%(message)s', level=log_level)
+    logging.basicConfig(format='%(levelname)s::%(pathname)s::L%(lineno)d::%(message)s', level=log_level)
     MACHINE=args.MACHINE
     if MACHINE is None:
         MACHINE = detect_platform()

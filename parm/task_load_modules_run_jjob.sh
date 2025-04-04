@@ -58,6 +58,10 @@ if [ "${task_name}" = "jcb" ]; then
     module load miniconda3/24.3.0
     source activate base
     conda activate /work/noaa/epic/chjeon/PY_VENV/landda_pyenv
+  elif [ "${machine}" = "gaeac6" ]; then
+    module use /ncrc/proj/epic/miniconda3/modulefiles
+    module load miniconda3/4.12.0
+    conda activate /ncrc/home1/Chan-hoo.Jeon/landda_pyenv
   fi
   set -u
   conda list

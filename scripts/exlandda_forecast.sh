@@ -13,6 +13,9 @@ case $MACHINE in
   "hercules")
     run_cmd="srun"
     ;;
+  "gaeac6")
+    run_cmd="srun"
+    ;;
   *)
     run_cmd=`which mpiexec`
     ;;

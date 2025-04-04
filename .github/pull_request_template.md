@@ -28,6 +28,7 @@ EXAMPLE: Closes ufs-community/land-DA/issues/<issue_number>
     - [ ] Hera
     - [ ] Orion
     - [ ] Hercules
+    - [ ] Gaea-c6
 - CI
   - [ ] Completed
 - WE2E

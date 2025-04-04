@@ -12,11 +12,14 @@ elif [[ -d /work/noaa ]]; then
     PLATFORM="orion"
   fi
 elif [[ -d /ncrc ]]; then
-  PLATFORM="gaea"
+  hoststr=$(hostname)
+  if [[ "$hoststr" == "gaea6"* ]]; then
+    PLATFORM="gaeac6"
+  else
+    PLATFORM="gaeac5"
+  fi
 elif [[ -d /glade ]]; then
   PLATFORM="derecho"
-elif [[ -d /lfs4/HFIP ]] ; then
-  PLATFORM="jet"
 else
   PLATFORM="unknown"
 fi
