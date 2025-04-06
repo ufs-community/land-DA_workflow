@@ -314,6 +314,7 @@ settings="\
   'allcomp_start_type': ${allcomp_start_type}
   'atm_model': ${atm_model}
   'DT_RUNSEQ': ${DT_RUNSEQ}
+  'FCSTHR': ${FCSTHR}
   'LND_CALC_SNET': ${LND_CALC_SNET}
   'LND_IC_TYPE': ${LND_IC_TYPE}
   'LND_INITIAL_ALBEDO': ${LND_INITIAL_ALBEDO}
