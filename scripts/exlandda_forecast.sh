@@ -56,10 +56,14 @@ cp -p "${PARMlandda}/templates/template.fd_ufs.yaml" fd_ufs.yaml
 if [ "${APP}" = "LND" ]; then
   mkdir -p INPUT_DATM
 
+  ###############
   # data_table
+  ###############
   cp -p "${PARMlandda}/templates/template.${APP}.data_table" data_table
-
-  # CDEPS datm input namlist file
+  
+  ###########################################
+  # datm_in: CDEPS datm input namlist file
+  ###########################################
   if [ "${ATMOS_FORC}" = "gswp3" ]; then
     datm_in_datamode="CLMNCEP"
     datm_in_mask_fn="fv1.9x2.5_141008_ESMFmesh.nc"
@@ -86,7 +90,9 @@ if [ "${APP}" = "LND" ]; then
   fn_namelist="datm_in"
   ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
 
+  ######################
   # datm.streams file
+  ######################
   data_files01_list=()
   data_files02_list=()
   data_files03_list=()
@@ -181,15 +187,15 @@ if [ "${APP}" = "LND" ]; then
 
   elif [ "${ATMOS_FORC}" = "era5" ]; then
     era5_path="${FIXlandda}/DATM_input_data/era5"
-    data_fn_prefix="INPUT_DATM/ERA5_forcing_"
+    data_fn_prefix="ERA5_forcing_"
     data_fn_suffix="_fix.nc"
     first_date="${year_first}-${month_first}-${day_first}"
     last_date="${year_last}-${month_last}-${day_last}"
     second_first=$(date -d "${first_date}" +%s)
     second_last=$(date -d "${last_date}" +%s)
     second_diff=$(( second_last - second_first ))
-    num_days_m1=$(( second_diff / (60 * 60 * 24) -1 ))
-    for iday in $( seq 1 $num_days_m1 ) ; do
+    num_days_m1=$(( second_diff / (60 * 60 * 24) + 1 ))
+    for iday in $( seq 0 $num_days_m1 ) ; do
       idate=$( date -d "$first_date + $((iday-1)) days" +%Y%m%d )
       iyyyy="${idate:0:4}"
       imm="${idate:4:2}"
@@ -227,7 +233,9 @@ elif [ "${APP}" = "ATML" ]; then
   ln -nsf ${FIXlandda}/FV3_fix_global/* .
 fi
 
+##################
 # Set input.nml
+##################
 if [ "${APP}" = "ATML" ]; then
   if [ "${COLDSTART}" = "YES" ] && [ "${PDY}${cyc}" = "${DATE_FIRST_CYCLE:0:10}" ]; then
     settings="\
@@ -271,13 +279,23 @@ else
   cp -p "${PARMlandda}/templates/template.${APP}.input.nml" input.nml
 fi
 
+######################
 # Set ufs.configure
+######################
 if [ "${APP}" = "LND" ]; then
   atm_model="datm"
   samegrid_atmlnd=".false."
 elif [ "${APP}" = "ATML" ]; then
   atm_model="fv3"
   samegrid_atmlnd=".true."
+fi
+
+if [ "${ATMOS_FORC}" = "era5" ]; then
+  lnd_precip_partition_option="1"
+  lnd_snow_albedo_option="2"
+else
+  lnd_precip_partition_option="4"
+  lnd_snow_albedo_option="1"
 fi
 
 if [ "${COLDSTART}" = "YES" ] && [ "${PDY}${cyc}" = "${DATE_FIRST_CYCLE:0:10}" ]; then
@@ -302,6 +320,8 @@ settings="\
   'LND_LAYOUT_X': ${LND_LAYOUT_X}
   'LND_LAYOUT_Y': ${LND_LAYOUT_Y}
   'LND_OUTPUT_FREQ_SEC': ${LND_OUTPUT_FREQ_SEC}
+  'lnd_precip_partition_option': ${lnd_precip_partition_option}
+  'lnd_snow_albedo_option': ${lnd_snow_albedo_option}
   'MED_COUPLING_MODE': ${MED_COUPLING_MODE}
   'nprocs_atm_m1': ${nprocs_atm_m1}
   'nprocs_forecast_atm': ${nprocs_forecast_atm}
@@ -313,7 +333,9 @@ fp_template="${PARMlandda}/templates/template.ufs.configure"
 fn_namelist="ufs.configure"
 ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
 
+########################
 # Set model_configure
+########################
 settings="\
   'yyyy': !!str ${YYYY}
   'mm': !!str ${MM}
@@ -335,7 +357,9 @@ fp_template="${PARMlandda}/templates/template.model_configure"
 fn_namelist="model_configure"
 ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
 
+###################
 # set diag table
+###################
 settings="\
   'yyyymmdd': !!str ${YYYYMMDD}
   'yyyy': !!str ${YYYY}

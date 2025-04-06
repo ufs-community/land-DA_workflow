@@ -62,8 +62,8 @@ LND_attributes::
   supercooled_soilwater_option = 1
   frozen_soil_adjust_option = 1
   radiative_transfer_option = 3
-  snow_albedo_option = 1
-  precip_partition_option = 4
+  snow_albedo_option = {{ lnd_snow_albedo_option }}
+  precip_partition_option = {{ lnd_precip_partition_option }}
   soil_temp_lower_bdy_option = 2
   soil_temp_time_scheme_option = 3
   surface_evap_resistance_option = 1 # not used, it is fixed to 4 in sfc_noahmp_drv.F90
