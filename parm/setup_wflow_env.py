@@ -223,7 +223,7 @@ def set_default_parm():
         "ATM_LAYOUT_Y": 8,
         "ATMOS_FORC": "gswp3",
         "COMINgdas": "",
-        "CCPP_SUITE": "FV3_GFS_v17_p8",
+        "CCPP_SUITE": "FV3_GFS_v17_p8_ugwpv1",
         "COLDSTART": "NO",
         "COUPLER_CALENDAR": 2,
         "DATE_CYCLE_FREQ_HR": 24,

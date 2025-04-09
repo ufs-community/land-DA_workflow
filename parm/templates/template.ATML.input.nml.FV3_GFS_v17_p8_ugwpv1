@@ -38,9 +38,9 @@
   n_sponge = 42
   nudge_qv = .true.
   nudge_dz = .false.
-  tau = 0.0
+  tau = 8.0
   fast_tau_w_sec = 0.2
-  rf_cutoff = 10.
+  rf_cutoff = 100.0
   d2_bg_k1 = 0.20
   d2_bg_k2 = 0.04
   kord_tm = -9
@@ -55,12 +55,12 @@
   a_imp = 1.
   p_fac = 0.1
   k_split = 2
-  n_split = 5
+  n_split = 4
   nwat = 6
   na_init = {{ na_init }}
   d_ext = 0.
   dnats = 0
-  fv_sg_adj = 450
+  fv_sg_adj = 1800
   d2_bg = 0.
   nord = 2
   dddmp = 0.1
@@ -135,15 +135,15 @@
   do_ugwp      = .false.
   do_tofd      = .false.
   gwd_opt      = 2
-  do_ugwp_v0   = .true.
-  do_ugwp_v1   = .false.
+  do_ugwp_v0   = .false.
+  do_ugwp_v1   = .true.
   do_ugwp_v0_orog_only = .false.
   do_ugwp_v0_nst_only  = .false.
-  do_gsl_drag_ls_bl    = .false.
+  do_gsl_drag_ls_bl    = .true.
   do_gsl_drag_ss       = .true.
   do_gwd_opt_psl       = .false.
   psl_gwd_dx_factor    = 6.0
-  do_gsl_drag_tofd     = .false.
+  do_gsl_drag_tofd     = .true.
   do_ugwp_v1_orog_only = .false.
   min_lakeice  = 0.15
   min_seaice   = 0.15
@@ -174,6 +174,7 @@
   random_clds  = .false.
   trans_trac   = .true.
   cnvcld       = .true.
+  xr_cnvcld    = .false.
   imfshalcnv   = 2
   imfdeepcnv   = 2
   progsigma    = .false.
@@ -229,8 +230,6 @@
   do_skeb      = .false.
   iaufhrs      = -1
   iau_delthrs  = 0
-  iau_inc_files= ''
-  iau_drymassfixer = .false.
   use_med_flux = .false.
   frac_grid    = .true.
   cplchm       = .false.
@@ -254,6 +253,26 @@
   iseed_ca     = 12345
   lndp_type    = 0
   n_var_lndp   = 0
+  lcnorm  = .false.
+  pert_mp = .false.
+  pert_radtend = .false.
+  pert_clds = .false.
+  iau_inc_files= ''
+  iau_drymassfixer = .false.
+  iau_filter_increments = .false.
+/
+
+&land_iau_nml
+  do_land_iau = .false.
+  land_iau_fhrs = 3,6,9
+  land_iau_delthrs = 6
+  land_iau_inc_files = 'sfc_inc',''
+  lsoil_incr = 3
+  land_iau_filter_increments = .false.
+  land_iau_upd_stc = .true.
+  land_iau_upd_slc = .true.
+  land_iau_do_stcsmc_adjustment = .true.
+  land_iau_min_T_increment = 0.0001
 /
 
 &cires_ugwp_nml
@@ -265,21 +284,21 @@
   knob_ugwp_effac    = 1,1,1,1
   knob_ugwp_doaxyz   = 1
   knob_ugwp_doheat   = 1
-  knob_ugwp_dokdis   = 1
-  knob_ugwp_ndx4lh   = 1
-  knob_ugwp_version  = 0
+  knob_ugwp_dokdis   = 2
+  knob_ugwp_ndx4lh   = 4
+  knob_ugwp_version  = 1
   ! This is only for UGWP v0
-  launch_level      = 54
+!  launch_level      = 54
   ! These are only for UGWP v1
-! knob_ugwp_palaunch = 275.0e2
-! knob_ugwp_nslope   = 1
-! knob_ugwp_lzmax    = 15.750e3
-! knob_ugwp_lzmin    = 0.75e3
-! knob_ugwp_lzstar   = 2.0e3
-! knob_ugwp_taumin   = 0.25e-3
-! knob_ugwp_tauamp   = 3.0e-3
-! knob_ugwp_lhmet    = 200.0e3
-! knob_ugwp_orosolv  = 'pss-1986'
+  knob_ugwp_palaunch = 275.0e2
+  knob_ugwp_nslope   = 1
+  knob_ugwp_lzmax    = 15.750e3
+  knob_ugwp_lzmin    = 0.75e3
+  knob_ugwp_lzstar   = 2.0e3
+  knob_ugwp_taumin   = 0.25e-3
+  knob_ugwp_tauamp   = 3.0e-3
+  knob_ugwp_lhmet    = 200.0e3
+  knob_ugwp_orosolv  = 'pss-1986'
 /
 
 &gfdl_cloud_microphysics_nml
@@ -385,10 +404,41 @@
 /
 
 &nam_stochy
+  STOCHINI=.false.,
+  skeb = -999.
+  iseed_skeb = 0
+  skeb_tau = 21600,
+  skeb_lscale = 500000,
+  skebnorm = 1,
+  skeb_npass = 30,
+  skeb_vdof = 5,
+  skebint = 1800
+  shum = -999.
+  iseed_shum = 1,
+  shum_tau = 21600,
+  shum_lscale = 500000,
+  shumint = 3600
+  sppt = -999.
+  iseed_sppt = 20210325000103,20210325000104,20210325000105,20210325000106,20210325000107
+  sppt_tau = 2.16E4,2.592E5,2.592E6,7.776E6,3.1536E7
+  sppt_lscale = 500.E3,1000.E3,2000.E3,2000.E3,2000.E3
+  sppt_logit = .true.,
+  sppt_sfclimit = .true.,
+  use_zmtnblck = .true.
+  spptint = 1800
+  pbl_taper = 0,0,0,0.125,0.25,0.5,0.75
+  OCNSPPT = 0.8,0.4,0.2,0.08,0.04
+  OCNSPPT_LSCALE = 500.E3,1000.E3,2000.E3,2000.E3,2000.E3
+  OCNSPPT_TAU = 2.16E4,2.592E5,2.592E6,7.776E6,3.1536E7
+  ISEED_OCNSPPT =20210325000108,20210325000109,20210325000110,20210325000111,20210325000112
+  EPBL = 0.8,0.4,0.2,0.08,0.04
+  EPBL_LSCALE = 500.E3,1000.E3,2000.E3,2000.E3,2000.E3
+  EPBL_TAU = 2.16E4,2.592E5,2.592E6,7.776E6,3.1536E7
+  ISEED_EPBL = 20210325000113,20210325000114,20210325000115,20210325000116,20210325000117
 /
 
 &nam_sfcperts
-  lndp_type      = 0
+  lndp_type = 0
   lndp_model_type = 0
   LNDP_TAU=21600,
   LNDP_LSCALE=500000,
@@ -402,5 +452,5 @@
   input_filename = 'n'
   restart_input_dir = 'INPUT/',
   restart_output_dir = './RESTART/'
-  parameter_filename = 'INPUT/MOM_input',
-                       'INPUT/MOM_override'/
+  parameter_filename = 'INPUT/MOM_input','INPUT/MOM_override'
+/
