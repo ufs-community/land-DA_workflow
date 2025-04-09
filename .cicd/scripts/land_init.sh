@@ -56,6 +56,7 @@ status=${PIPESTATUS[0]}
 
 git branch
 git log -1 --oneline
+export COMMIT_ID="$(git log -1 --pretty=format:'%H')"
 
 /usr/bin/time -p \
 	-o ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-time-land_init.json \

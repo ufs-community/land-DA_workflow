@@ -61,7 +61,7 @@ pipeline {
                     //expression { env.UFS_PLATFORM != 'orion' }
                     //expression { env.UFS_PLATFORM != 'hercules' }
                     expression { env.UFS_PLATFORM != 'gaeac5' }
-                    expression { env.UFS_PLATFORM != 'gaeac6' }
+                    //expression { env.UFS_PLATFORM != 'gaeac6' }
                     expression { env.UFS_PLATFORM != 'derecho' }
                     expression { env.UFS_PLATFORM != 'pclusternoaav2use1'}
                     expression { env.UFS_PLATFORM != 'azclusternoaav2use1'}
