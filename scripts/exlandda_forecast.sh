@@ -194,8 +194,8 @@ if [ "${APP}" = "LND" ]; then
     second_first=$(date -d "${first_date}" +%s)
     second_last=$(date -d "${last_date}" +%s)
     second_diff=$(( second_last - second_first ))
-    num_days_m1=$(( second_diff / (60 * 60 * 24) + 1 ))
-    for iday in $( seq 0 $num_days_m1 ) ; do
+    num_days=$(( second_diff / (60 * 60 * 24) + 2 ))
+    for iday in $( seq 0 $num_days ) ; do
       idate=$( date -d "$first_date + $((iday-1)) days" +%Y%m%d )
       iyyyy="${idate:0:4}"
       imm="${idate:4:2}"
