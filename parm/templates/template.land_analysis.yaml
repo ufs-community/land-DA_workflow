@@ -132,7 +132,7 @@ workflow:
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/jcb&LOGFN_SUFFIX;"
-    task_prep_obs:
+    task_prep_data:
       attrs:
 {%- if COLDSTART == "YES" %}
         cycledefs: cycled_from_second
@@ -159,8 +159,8 @@ workflow:
         PY_LOG_LEVEL: "&PY_LOG_LEVEL;"
         SCHED: "&SCHED;"
       account: "&ACCOUNT;"
-      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_obs" "&HOMElandda;" "&MACHINE;"'
-      jobname: prep_obs
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_data" "&HOMElandda;" "&MACHINE;"'
+      jobname: prep_data
       cores: 1
       walltime: 00:30:00
 {%- if native_default is not none %}
@@ -168,7 +168,7 @@ workflow:
 {%- endif %}
       partition: "&partition_default;"
       queue: "&queue_default;"
-      join: "&LOGDIR;/prep_obs&LOGFN_SUFFIX;"
+      join: "&LOGDIR;/prep_data&LOGFN_SUFFIX;"
 {%- if memory_flag %}
       memory: 128G
 {%- endif %}
@@ -302,9 +302,9 @@ workflow:
       join: "&LOGDIR;/analysis&LOGFN_SUFFIX;"
       dependency:
         and:
-          taskdep_prep_obs:
+          taskdep_prep_data:
             attrs:
-              task: prep_obs
+              task: prep_data
           taskdep_jcb:
             attrs:
               task: jcb

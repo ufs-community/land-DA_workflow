@@ -81,7 +81,7 @@ mkdir -p ${COMOUTplot}
 export pgmout="${DATA}/OUTPUT.$$"
 env
 
-${SCRIPTSlandda}/exlandda_prep_obs.sh
+${SCRIPTSlandda}/exlandda_prep_data.sh
 export err=$?; err_chk
 
 if [ -e "$pgmout" ]; then
