@@ -184,7 +184,8 @@ if [ "${APP}" = "LND" ]; then
   fn_namelist="datm.streams"
   ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
 
-  ln -nsf ${COMINdatm}/* INPUT_DATM/.
+  # soft-link datm input files from shared directory
+  ln -nsf ${DATA_DATM}/* INPUT_DATM/.
 elif [ "${APP}" = "ATML" ]; then
   ###############
   # field_table

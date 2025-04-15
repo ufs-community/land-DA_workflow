@@ -127,14 +127,13 @@ if [ "${APP}" = "LND" ]; then
   fi
 
   if [ "${ATMOS_FORC}" = "gswp3" ]; then
-    gswp3_path="${FIXlandda}/DATM_input_data/gswp3"
     var_fn_prefix="clmforc.GSWP3.c2011.0.5x0.5"
     gswp3_vars=( "Solr" "Prec" "TPQWL" "ESMFmesh" )
     for var in "${gswp3_vars[@]}" ; do
       if [ "${var}" = "ESMFmesh" ]; then
-        var_fp="${gswp3_path}/${var_fn_prefix}.TPQWL.SCRIP.210520_${var}.nc"
+        var_fp="${DCOMINgswp3}/${var_fn_prefix}.TPQWL.SCRIP.210520_${var}.nc"
         if [ -f ${var_fp} ]; then
-          cp -p "${var_fp}" ${COMOUTdatm}
+          cp -p "${var_fp}" ${DATA_DATM}
         else
           err_exit "DATM forcing mesh file ${var_fp} does not exist."
         fi
@@ -146,31 +145,28 @@ if [ "${APP}" = "LND" ]; then
           iyyyy="${idate:0:4}"
           imm="${idate:4:2}"
           var_fn="${var_fn_prefix}.${var}.${iyyyy}-${imm}.nc"
-          var_fp="${gswp3_path}/${var_fn}"
+          var_fp="${DCOMINgswp3}/${var_fn}"
           if [ -f ${var_fp} ]; then
-            cp -p "${var_fp}" ${COMOUTdatm}
+            cp -p "${var_fp}" ${DATA_DATM}
           else
             err_exit "DATM forcing data file ${var_fp} does not exist."
           fi
         done
       fi
     done
-    topo_fns=(
-      "topodata_0.9x1.SCRIP.210520_ESMFmesh.nc"
-      "topodata_0.9x1.25_USGS_070110_stream_c151201.nc"
-      "fv1.9x2.5_141008_ESMFmesh.nc"
-    )
+    topo_fns=( "topodata_0.9x1.SCRIP.210520_ESMFmesh.nc"
+               "topodata_0.9x1.25_USGS_070110_stream_c151201.nc"
+               "fv1.9x2.5_141008_ESMFmesh.nc" )
     for tfn in "${topo_fns[@]}" ; do
-      tfp="${gswp3_path}/${tfn}"
+      tfp="${DCOMINgswp3}/${tfn}"
       if [ -f ${tfp} ]; then
-        cp -p "${tfp}" ${COMOUTdatm}
+        cp -p "${tfp}" ${DATA_DATM}
       else
         err_exit "DATM topo file ${tfp} does not exist."
       fi
     done
 
   elif [ "${ATMOS_FORC}" = "era5" ]; then
-    era5_path="${FIXlandda}/DATM_input_data/era5"
     datm_in_mesh_fn="ERA5_mesh.nc"
     data_fn_prefix="ERA5_forcing_"
     data_fn_suffix="_fix.nc"
@@ -187,14 +183,14 @@ if [ "${APP}" = "LND" ]; then
       idd="${idate:6:2}"
       data_fn="${data_fn_prefix}${iyyyy}-${imm}-${idd}${data_fn_suffix}"
       data_files01_list+=("\"INPUT_DATM/${data_fn}\"")
-      data_fp="${era5_path}/${data_fn}"
+      data_fp="${DCOMINera5}/${data_fn}"
       if [ -f ${data_fp} ]; then
-        cp -p "${data_fp}" ${COMOUTdatm}
+        ln -nsf "${data_fp}" ${DATA_DATM}
       else
         err_exit "DATM forcing data file ${data_fp} does not exist."
       fi
     done
-    cp -p ${era5_path}/${datm_in_mesh_fn} ${COMOUTdatm}
+    ln -nsf ${DCOMINera5}/${datm_in_mesh_fn} ${DATA_DATM}
   fi
 
 fi
