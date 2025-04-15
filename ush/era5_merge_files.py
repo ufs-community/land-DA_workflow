@@ -4,6 +4,7 @@ import netCDF4
 from netCDF4 import Dataset
 import numpy as np
 import os
+import sys
 import argparse
 import logging
 from datetime import datetime, timedelta
@@ -124,7 +125,7 @@ def parse_args(argv):
             "--input_dir_path",
             dest="input_dir_path",
             required=True,
-            help="Input directory path.",
+            help="Path to input directory.",
             )
     parser.add_argument(
             "-c",
@@ -132,6 +133,13 @@ def parse_args(argv):
             dest="yyyymmdd",
             required=True,
             help="current date (YYYYMMDD).",
+            )
+    parser.add_argument(
+            "-o",
+            "--output_dir_path",
+            dest="output_dir_path",
+            required=True,
+            help="Path to output directory.",
             )
     parser.add_argument(
             "-l",
@@ -164,12 +172,13 @@ if __name__ == '__main__':
     logging.info(f"YYYY:{yyyy}, MM:{mm}, DD:{dd}")
 
     input_dir_path = args.input_dir_path
+    output_dir_path = args.output_dir_path
     fn_nc1 = f"era5_{yyyy}{mm}{dd}_avg.nc"
     fn_nc2 = f"era5_{yyyy}{mm}{dd}_instant.nc"
     fn_output = f"ERA5_forcing_{yyyy}-{mm}-{dd}_fix.nc"
 
     file1_path = os.path.join(input_dir_path, fn_nc1)
     file2_path = os.path.join(input_dir_path, fn_nc2)
-    output_path = os.path.join(input_dir_path, fn_output)
+    output_path = os.path.join(output_dir_path, fn_output)
 
     create_netcdf_from_files(file1_path, file2_path, output_path)

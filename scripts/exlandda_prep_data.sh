@@ -187,7 +187,12 @@ if [ "${APP}" = "LND" ]; then
       if [ -f ${data_fp} ]; then
         ln -nsf "${data_fp}" ${DATA_DATM}
       else
-        err_exit "DATM forcing data file ${data_fp} does not exist."
+        # Create ERA5 forcing file with raw data files
+        path_raw_data="${DCOMINera5}/raw_data"
+        data_cdate="${iyyyy}${imm}${idd}"
+        ${USHlandda}/era5_merge_files.py -i "${path_raw_data}" -c ${data_cdate} -o ${DATA} -l ${PY_LOG_LEVEL}
+        cp -p ${data_fn} ${COMOUTdatm}
+        ln -nsf "${COMOUTdatm}/${data_fn}" ${DATA_DATM}
       fi
     done
     ln -nsf ${DCOMINera5}/${datm_in_mesh_fn} ${DATA_DATM}
