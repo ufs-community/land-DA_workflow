@@ -154,6 +154,8 @@ workflow:
         DCOMINera5: "&DCOMINera5;"
         DCOMINgswp3: "&DCOMINgswp3;"
         HOMElandda: "&HOMElandda;"
+        JEDI_PATH: "&JEDI_PATH;"
+        JEDI_PY_VER: "&JEDI_PY_VER;"      
         KEEPDATA: "&KEEPDATA;"
         MACHINE: "&MACHINE;"
         model_ver: "&model_ver;"

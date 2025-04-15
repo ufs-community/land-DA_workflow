@@ -133,7 +133,7 @@ if [ "${APP}" = "LND" ]; then
       if [ "${var}" = "ESMFmesh" ]; then
         var_fp="${DCOMINgswp3}/${var_fn_prefix}.TPQWL.SCRIP.210520_${var}.nc"
         if [ -f ${var_fp} ]; then
-          cp -p "${var_fp}" ${DATA_DATM}
+          ln -nsf "${var_fp}" ${DATA_DATM}
         else
           err_exit "DATM forcing mesh file ${var_fp} does not exist."
         fi
@@ -147,7 +147,7 @@ if [ "${APP}" = "LND" ]; then
           var_fn="${var_fn_prefix}.${var}.${iyyyy}-${imm}.nc"
           var_fp="${DCOMINgswp3}/${var_fn}"
           if [ -f ${var_fp} ]; then
-            cp -p "${var_fp}" ${DATA_DATM}
+            ln -nsf "${var_fp}" ${DATA_DATM}
           else
             err_exit "DATM forcing data file ${var_fp} does not exist."
           fi
@@ -160,7 +160,7 @@ if [ "${APP}" = "LND" ]; then
     for tfn in "${topo_fns[@]}" ; do
       tfp="${DCOMINgswp3}/${tfn}"
       if [ -f ${tfp} ]; then
-        cp -p "${tfp}" ${DATA_DATM}
+        ln -nsf "${tfp}" ${DATA_DATM}
       else
         err_exit "DATM topo file ${tfp} does not exist."
       fi
@@ -182,7 +182,6 @@ if [ "${APP}" = "LND" ]; then
       imm="${idate:4:2}"
       idd="${idate:6:2}"
       data_fn="${data_fn_prefix}${iyyyy}-${imm}-${idd}${data_fn_suffix}"
-      data_files01_list+=("\"INPUT_DATM/${data_fn}\"")
       data_fp="${DCOMINera5}/${data_fn}"
       if [ -f ${data_fp} ]; then
         ln -nsf "${data_fp}" ${DATA_DATM}
