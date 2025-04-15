@@ -7,7 +7,7 @@ import os
 from netCDF4 import Dataset
 
 # =================================================================== CHJ =====
-def datm_rfile_info(input_fn):
+def datm_rfile_info(input_fn, ATMOS_FORC):
 
     try:
         ncf = Dataset(input_fn, 'r')
@@ -22,23 +22,34 @@ def datm_rfile_info(input_fn):
     num_files, num_dates, num_strs = data.shape
     logging.info(f''' Number of dates: {num_dates}''')
 
-    first_year, first_month = find_date_from_filename(data[0,0,:])
-    if num_dates > 1:
-        last_year, last_month = find_date_from_filename(data[0,-1,:])
-    else:
-        last_year = first_year
-        last_month = first_month
+    if ATMOS_FORC == 'gswp3':
+        first_year, first_month = find_date_from_filename_gswp3(data[0,0,:])
+        if num_dates > 1:
+            last_year, last_month = find_date_from_filename_gswp3(data[0,-1,:])
+        else:
+            last_year = first_year
+            last_month = first_month
+        first_day = '08'
+        last_day = '08' 
+    elif ATMOS_FORC == 'era5':
+        first_year, first_month, first_day = find_date_from_filename_era5(data[0,0,:])
+        if num_dates > 1:
+            last_year, last_month, last_day = find_date_from_filename_era5(data[0,-1,:])
+        else:
+            last_year = first_year
+            last_month = first_month
+            last_day = first_day
 
-    logging.info(f''' First year: {first_year}, first month: {first_month}''')
-    logging.info(f''' Last  year: {last_year}, last  month: {last_month}''')
+    logging.info(f''' First year: {first_year}, first month: {first_month}, first day: {first_day}''')
+    logging.info(f''' Last  year: {last_year}, last month: {last_month}, last day: {last_day}''')
 
     with open("first_last_date.txt", "w") as f:
-        print(first_year,first_month,last_year,last_month, sep=',', file=f)
+        print(first_year,first_month,first_day,last_year,last_month,last_day, sep=',', file=f)
     f.close()
 
 
 # =================================================================== CHJ =====
-def find_date_from_filename(data):
+def find_date_from_filename_gswp3(data):
 
     if data.dtype == 'S1':
         filename = "".join(x.decode('utf-8') for x in data)
@@ -47,14 +58,36 @@ def find_date_from_filename(data):
     filename = filename.strip()
     logging.info(f'''File name: {filename}''')
     date_string = filename.split(".")[-2]
-    logging.debug(f''' YYYY-MM: {date_string}''')
+    logging.info(f''' YYYY-MM: {date_string}''')
     yyyy_mm = date_string.split("-")
     yyyy = yyyy_mm[0]
     mm = yyyy_mm[-1]
-    logging.debug(f''' YYYY: {yyyy}''')
-    logging.debug(f''' MM: {mm}''')
+    logging.info(f''' YYYY: {yyyy}''')
+    logging.info(f''' MM: {mm}''')
 
     return yyyy, mm
+
+
+# =================================================================== CHJ =====
+def find_date_from_filename_era5(data):
+
+    if data.dtype == 'S1':
+        filename = "".join(x.decode('utf-8') for x in data)
+    else:
+        filename = data.decode('utf-8')
+    filename = filename.strip()
+    logging.info(f'''File name: {filename}''')
+    date_string = filename.split("_")[-2]
+    logging.info(f''' YYYY-MM-DD: {date_string}''')
+    yyyy_mm_dd = date_string.split("-")
+    yyyy = yyyy_mm_dd[0]
+    mm = yyyy_mm_dd[1]
+    dd = yyyy_mm_dd[2]
+    logging.info(f''' YYYY: {yyyy}''')
+    logging.info(f''' MM: {mm}''')
+    logging.info(f''' DD: {dd}''')
+
+    return yyyy, mm, dd
 
 
 # =================================================================== CHJ =====
@@ -67,6 +100,13 @@ def parse_args(argv):
             dest="input_fn",
             required=True,
             help="Input DATM restart file name.",
+            )
+    parser.add_argument(
+            "-f",
+            "--atmos_forc",
+            dest="ATMOS_FORC",
+            required=True,
+            help="Atmospheric forcing (gswp3 or era5).",
             )
     parser.add_argument(
             "-l",
@@ -93,5 +133,6 @@ if __name__ == "__main__":
     logging.basicConfig(format='%(levelname)s::%(pathname)s::L%(lineno)d::%(message)s', level=log_level)
     datm_rfile_info(
         input_fn=args.input_fn,
+        ATMOS_FORC=args.ATMOS_FORC,
     )
 

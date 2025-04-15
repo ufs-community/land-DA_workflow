@@ -95,12 +95,14 @@ if [ "${APP}" = "LND" ]; then
   HHsec_5d=$(printf "%05d" "${HHsec}")
 
   if [ "${COLDSTART}" = "YES" ] && [ "${PDY}${cyc}" = "${DATE_FIRST_CYCLE:0:10}" ]; then
-    year_first="${DATE_FIRST_CYCLE:0:4}"
-    month_first="${DATE_FIRST_CYCLE:4:2}"
-    day_first="${DATE_FIRST_CYCLE:6:2}"
-    year_last="${DATE_LAST_CYCLE:0:4}"
-    month_last="${DATE_LAST_CYCLE:4:2}"
-    day_last="${DATE_LAST_CYCLE:6:2}"
+    first_date_m1=$($NDATE -24 $DATE_FIRST_CYCLE)
+    last_date_p1=$($NDATE 24 $DATE_LAST_CYCLE)
+    year_first="${first_date_m1:0:4}"
+    month_first="${first_date_m1:4:2}"
+    day_first="${first_date_m1:6:2}"
+    year_last="${last_date_p1:0:4}"
+    month_last="${last_date_p1:4:2}"
+    day_last="${last_date_p1:6:2}"
   else  # warm start
     # Extract info from datm restart file
     rfile2="ufs.cpld.datm.r.${YYYY}-${MM}-${DD}-${HHsec_5d}.nc"
@@ -111,14 +113,17 @@ if [ "${APP}" = "LND" ]; then
     else
       err_exit "${rfile2} does not exist !!!"
     fi
-    ${USHlandda}/datm_rfile_info.py -i ${rfile2} -l ${PY_LOG_LEVEL}
+    ${USHlandda}/datm_rfile_info.py -i ${rfile2} -f ${ATMOS_FORC} -l ${PY_LOG_LEVEL}
     # Read result file
     while IFS= read -r line; do
       year_first=$(echo "$line" | cut -d',' -f1)
       month_first=$(echo "$line" | cut -d',' -f2)
-      year_last=$(echo "$line" | cut -d',' -f3)
-      month_last=$(echo "$line" | cut -d',' -f4)
+      day_first=$(echo "$line" | cut -d',' -f3)
     done < "first_last_date.txt"
+    last_date_p1=$($NDATE 24 $DATE_LAST_CYCLE)
+    year_last="${last_date_p1:0:4}"
+    month_last="${last_date_p1:4:2}"
+    day_last="${last_date_p1:6:2}"
   fi
 
   if [ "${ATMOS_FORC}" = "gswp3" ]; then
@@ -174,9 +179,9 @@ if [ "${APP}" = "LND" ]; then
     second_first=$(date -d "${first_date}" +%s)
     second_last=$(date -d "${last_date}" +%s)
     second_diff=$(( second_last - second_first ))
-    num_days=$(( second_diff / (60 * 60 * 24) + 2 ))
+    num_days=$(( second_diff / (60 * 60 * 24) ))
     for iday in $( seq 0 $num_days ) ; do
-      idate=$( date -d "$first_date + $((iday-1)) days" +%Y%m%d )
+      idate=$( date -d "$first_date + $iday days" +%Y%m%d )
       iyyyy="${idate:0:4}"
       imm="${idate:4:2}"
       idd="${idate:6:2}"
