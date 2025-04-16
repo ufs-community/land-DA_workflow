@@ -28,6 +28,8 @@ workflow:
     DATE_CYCLE_FREQ_HR: "{{ DATE_CYCLE_FREQ_HR }}"
     DATE_FIRST_CYCLE: "{{ DATE_FIRST_CYCLE }}"
     DATE_LAST_CYCLE: "{{ DATE_LAST_CYCLE }}"
+    DCOMINera5: "{{ DCOMINera5 }}"
+    DCOMINgswp3: "{{ DCOMINgswp3 }}"
     DT_ATMOS: "{{ DT_ATMOS }}"
     DT_RUNSEQ: "{{ DT_RUNSEQ }}"
     envir: "{{ envir }}"
@@ -90,6 +92,8 @@ workflow:
     DATADEP_LRST1: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/ufs_land_restart.@Y-@m-@d_@H-00-00.tile6.nc</cyclestr>"
     DATADEP_LRST2: "<cyclestr>&WARMSTART_DIR;/ufs_land_restart.@Y-@m-@d_@H-00-00.tile6.nc</cyclestr>"
     DATADEP_COLDSTART: "<cyclestr>&exp_basedir;/exp_case/&EXP_CASE_NAME;/task_skip_coldstart_@Y@m@d@H.txt</cyclestr>"
+    DATADEP_DATM1: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/ufs.cpld.datm.r.@Y-@m-@d-00000.nc</cyclestr>"
+    DATADEP_DATM2: "<cyclestr>&WARMSTART_DIR;/ufs.cpld.datm.r.@Y-@m-@d-00000.nc</cyclestr>"
     DATADEP_SFC1: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/@Y@m@d.@H0000.sfc_data.tile6.nc</cyclestr>" 
     DATADEP_SFC2: "<cyclestr>&WARMSTART_DIR;/@Y@m@d.@H0000.sfc_data.tile6.nc</cyclestr>"
   log: "&LOGDIR;/workflow.log"
@@ -132,21 +136,23 @@ workflow:
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/jcb&LOGFN_SUFFIX;"
-    task_prep_obs:
+    task_prep_data:
       attrs:
-{%- if COLDSTART == "YES" %}
-        cycledefs: cycled_from_second
-{%- else %}
         cycledefs: cycled
-{%- endif %}
         maxtries: 2
       envars:
         ACCOUNT: "&ACCOUNT;"
+        APP: "&APP;"
         ATMOS_FORC: "&ATMOS_FORC;"
+        COLDSTART: "&COLDSTART;"
         COMROOT: "&COMROOT;"
         cyc: "&cyc;"
         DATAROOT: "&DATAROOT;"
+        DATE_FIRST_CYCLE: "&DATE_FIRST_CYCLE;"
+        DATE_LAST_CYCLE: "&DATE_LAST_CYCLE;"
         DATE_CYCLE_FREQ_HR: "&DATE_CYCLE_FREQ_HR;"
+        DCOMINera5: "&DCOMINera5;"
+        DCOMINgswp3: "&DCOMINgswp3;"
         HOMElandda: "&HOMElandda;"
         JEDI_PATH: "&JEDI_PATH;"
         JEDI_PY_VER: "&JEDI_PY_VER;"      
@@ -158,9 +164,10 @@ workflow:
         PDY: "&PDY;"
         PY_LOG_LEVEL: "&PY_LOG_LEVEL;"
         SCHED: "&SCHED;"
+        WARMSTART_DIR: "&WARMSTART_DIR;"
       account: "&ACCOUNT;"
-      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_obs" "&HOMElandda;" "&MACHINE;"'
-      jobname: prep_obs
+      command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_data" "&HOMElandda;" "&MACHINE;"'
+      jobname: prep_data
       cores: 1
       walltime: 00:30:00
 {%- if native_default is not none %}
@@ -168,9 +175,27 @@ workflow:
 {%- endif %}
       partition: "&partition_default;"
       queue: "&queue_default;"
-      join: "&LOGDIR;/prep_obs&LOGFN_SUFFIX;"
+      join: "&LOGDIR;/prep_data&LOGFN_SUFFIX;"
 {%- if memory_flag %}
       memory: 128G
+{%- endif %}
+{%- if APP == "LND" %}
+      dependency:
+        or:
+          datadep_coldstart:
+            attrs:
+              age: 5
+            value: "&DATADEP_COLDSTART;"
+          datadep_datm1:
+            attrs:
+              age: 5
+            value: "&DATADEP_DATM1;"
+{%- if COLDSTART == "NO" %}
+          datadep_datm2:
+            attrs:
+              age: 5
+            value: "&DATADEP_DATM2;"
+{%- endif %}
 {%- endif %}
 {%- if ( APP == "ATML" and COLDSTART == "YES" ) %}
     task_fcst_ic:
@@ -302,9 +327,9 @@ workflow:
       join: "&LOGDIR;/analysis&LOGFN_SUFFIX;"
       dependency:
         and:
-          taskdep_prep_obs:
+          taskdep_prep_data:
             attrs:
-              task: prep_obs
+              task: prep_data
           taskdep_jcb:
             attrs:
               task: jcb
@@ -437,17 +462,21 @@ workflow:
       queue: "&queue_default;"
       join: "&LOGDIR;/forecast&LOGFN_SUFFIX;"
       dependency:
-        or:
-          taskdep_post_anal:
+        and:
+          taskdep_prep_data:
             attrs:
-              task: post_anal
-          taskdep_fcst_ic:
-            attrs:
-              task: fcst_ic
-          datadep_coldstart:
-            attrs:
-              age: 5
-            value: "&DATADEP_COLDSTART;"
+              task: prep_data
+          or:
+            taskdep_post_anal:
+              attrs:
+                task: post_anal
+            taskdep_fcst_ic:
+              attrs:
+                task: fcst_ic
+            datadep_coldstart:
+              attrs:
+                age: 5
+              value: "&DATADEP_COLDSTART;"
     task_plot_stats:
       attrs:
 {%- if COLDSTART == "YES" %}

@@ -97,12 +97,14 @@ if [ "${APP}" = "LND" ]; then
   data_files02_list=()
   data_files03_list=()
   if [ "${COLDSTART}" = "YES" ] && [ "${PDY}${cyc}" = "${DATE_FIRST_CYCLE:0:10}" ]; then
-    year_first="${DATE_FIRST_CYCLE:0:4}"
-    month_first="${DATE_FIRST_CYCLE:4:2}"
-    day_first="${DATE_FIRST_CYCLE:6:2}"
-    year_last="${DATE_LAST_CYCLE:0:4}"
-    month_last="${DATE_LAST_CYCLE:4:2}"
-    day_last="${DATE_LAST_CYCLE:6:2}"
+    first_date_m1=$($NDATE -24 $DATE_FIRST_CYCLE)
+    last_date_p1=$($NDATE 24 $DATE_LAST_CYCLE)
+    year_first="${first_date_m1:0:4}"
+    month_first="${first_date_m1:4:2}"
+    day_first="${first_date_m1:6:2}"
+    year_last="${last_date_p1:0:4}"
+    month_last="${last_date_p1:4:2}"
+    day_last="${last_date_p1:6:2}"
   else  # warm start
     # CDEPS restart and pointer files for DATM (LND)
     rfile2="ufs.cpld.datm.r.${YYYY}-${MM}-${DD}-${HHsec_5d}.nc"
@@ -115,78 +117,41 @@ if [ "${APP}" = "LND" ]; then
     fi
     ls -1 "${rfile2}">rpointer.atm
  
-    if [ "${ATMOS_FORC}" = "gswp3" ]; then 
-      # Extract info from datm restart file
-      ${USHlandda}/datm_rfile_info.py -i ${rfile2} -l ${PY_LOG_LEVEL}
-      # Read result file
-      while IFS= read -r line; do
-        year_first=$(echo "$line" | cut -d',' -f1)
-        month_first=$(echo "$line" | cut -d',' -f2)
-        year_last=$(echo "$line" | cut -d',' -f3)
-        month_last=$(echo "$line" | cut -d',' -f4) 
-      done < "first_last_date.txt"
-    else
-      year_first="${DATE_FIRST_CYCLE:0:4}"
-      month_first="${DATE_FIRST_CYCLE:4:2}"
-      day_first="${DATE_FIRST_CYCLE:6:2}"
-      year_last="${DATE_LAST_CYCLE:0:4}"
-      month_last="${DATE_LAST_CYCLE:4:2}"
-      day_last="${DATE_LAST_CYCLE:6:2}"
-    fi  
+    # Extract info from datm restart file
+    ${USHlandda}/datm_rfile_info.py -i ${rfile2} -f ${ATMOS_FORC} -l ${PY_LOG_LEVEL}
+    # Read result file
+    while IFS= read -r line; do
+      year_first=$(echo "$line" | cut -d',' -f1)
+      month_first=$(echo "$line" | cut -d',' -f2)
+      day_first=$(echo "$line" | cut -d',' -f3)
+    done < "first_last_date.txt"
+    last_date_p1=$($NDATE 24 $DATE_LAST_CYCLE)
+    year_last="${last_date_p1:0:4}"
+    month_last="${last_date_p1:4:2}"
+    day_last="${last_date_p1:6:2}"
   fi
-  
+
   if [ "${ATMOS_FORC}" = "gswp3" ]; then
-    gswp3_path="${FIXlandda}/DATM_input_data/gswp3"
     var_fn_prefix="clmforc.GSWP3.c2011.0.5x0.5"
     gswp3_vars=( "Solr" "Prec" "TPQWL" "ESMFmesh" )
     for var in "${gswp3_vars[@]}" ; do
-      if [ "${var}" = "ESMFmesh" ]; then
-        var_fp="${gswp3_path}/${var_fn_prefix}.TPQWL.SCRIP.210520_${var}.nc"
-        if [ -f ${var_fp} ]; then
-          ln -nsf "${var_fp}" INPUT_DATM/.
-        else
-          err_exit "DATM forcing mesh file ${var_fp} does not exist."
+      given_date="${year_first}-${month_first}-08"
+      num_months_m1=$(( (year_last - year_first) * 12 + (month_last - month_first) + 1 ))
+      for imon in $( seq 1 $num_months_m1 ) ; do
+        idate=$( date -d "$given_date + $((imon-1)) months" +%Y%m )
+        iyyyy="${idate:0:4}"
+        imm="${idate:4:2}"
+        var_fn="${var_fn_prefix}.${var}.${iyyyy}-${imm}.nc"
+        if [ "${var}" = "Solr" ]; then
+          data_files01_list+=("\"INPUT_DATM/${var_fn}\"")
+        elif [ "${var}" = "Prec" ]; then
+          data_files02_list+=("\"INPUT_DATM/${var_fn}\"")
+        elif [ "${var}" = "TPQWL" ]; then
+          data_files03_list+=("\"INPUT_DATM/${var_fn}\"")
         fi
-      else
-        given_date="${year_first}-${month_first}-08"
-        num_months_m1=$(( (year_last - year_first) * 12 + (month_last - month_first) + 1 ))
-        for imon in $( seq 1 $num_months_m1 ) ; do
-          idate=$( date -d "$given_date + $((imon-1)) months" +%Y%m )
-          iyyyy="${idate:0:4}"
-          imm="${idate:4:2}"
-          var_fn="${var_fn_prefix}.${var}.${iyyyy}-${imm}.nc"
-          if [ "${var}" = "Solr" ]; then
-            data_files01_list+=("\"INPUT_DATM/${var_fn}\"")
-          elif [ "${var}" = "Prec" ]; then
-            data_files02_list+=("\"INPUT_DATM/${var_fn}\"")
-          elif [ "${var}" = "TPQWL" ]; then
-            data_files03_list+=("\"INPUT_DATM/${var_fn}\"")
-          fi
-          var_fp="${gswp3_path}/${var_fn}"
-          if [ -f ${var_fp} ]; then
-            ln -nsf "${var_fp}" INPUT_DATM/.
-          else
-            err_exit "DATM forcing data file ${var_fp} does not exist."
-          fi
-        done
-      fi
+      done
     done
-    topo_fns=( 
-      "topodata_0.9x1.SCRIP.210520_ESMFmesh.nc" 
-      "topodata_0.9x1.25_USGS_070110_stream_c151201.nc" 
-      "fv1.9x2.5_141008_ESMFmesh.nc"
-    )
-    for tfn in "${topo_fns[@]}" ; do
-      tfp="${gswp3_path}/${tfn}"
-      if [ -f ${tfp} ]; then
-        ln -nsf "${tfp}" INPUT_DATM/.       
-      else
-        err_exit "DATM topo file ${tfp} does not exist."
-      fi
-    done
-
   elif [ "${ATMOS_FORC}" = "era5" ]; then
-    era5_path="${FIXlandda}/DATM_input_data/era5"
     data_fn_prefix="ERA5_forcing_"
     data_fn_suffix="_fix.nc"
     first_date="${year_first}-${month_first}-${day_first}"
@@ -194,24 +159,15 @@ if [ "${APP}" = "LND" ]; then
     second_first=$(date -d "${first_date}" +%s)
     second_last=$(date -d "${last_date}" +%s)
     second_diff=$(( second_last - second_first ))
-    num_days_m1=$(( second_diff / (60 * 60 * 24) + 1 ))
-    for iday in $( seq 0 $num_days_m1 ) ; do
-      idate=$( date -d "$first_date + $((iday-1)) days" +%Y%m%d )
+    num_days=$(( second_diff / (60 * 60 * 24) ))
+    for iday in $( seq 0 $num_days ) ; do
+      idate=$( date -d "$first_date + $iday days" +%Y%m%d )
       iyyyy="${idate:0:4}"
       imm="${idate:4:2}"
       idd="${idate:6:2}"
       data_fn="${data_fn_prefix}${iyyyy}-${imm}-${idd}${data_fn_suffix}"
       data_files01_list+=("\"INPUT_DATM/${data_fn}\"")
-      data_fp="${era5_path}/${data_fn}"
-      if [ -f ${data_fp} ]; then
-        ln -nsf "${data_fp}" INPUT_DATM/.
-      else
-        err_exit "DATM forcing data file ${data_fp} does not exist."
-      fi
     done
-    ln -nsf ${era5_path}/${datm_in_mesh_fn} INPUT_DATM/.
-  else
-    ln -nsf ${FIXlandda}/DATM_input_data/${ATMOS_FORC}/* INPUT_DATM/.
   fi
   year_align="${year_first}"
   settings="\
@@ -228,8 +184,16 @@ if [ "${APP}" = "LND" ]; then
   fn_namelist="datm.streams"
   ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
 
+  # soft-link datm input files from shared directory
+  ln -nsf ${DATA_DATM}/* INPUT_DATM/.
 elif [ "${APP}" = "ATML" ]; then
+  ###############
+  # field_table
+  ###############
   cp -p "${PARMlandda}/templates/template.${APP}.field_table" field_table
+  ####################
+  # global fix files
+  ####################
   ln -nsf ${FIXlandda}/FV3_fix_global/* .
 fi
 
@@ -558,7 +522,8 @@ while [ ${lnd_fcst_hh} -le ${FCSTHR} ]; do
 done
 
 if [ "${APP}" = "LND" ]; then
-  cp -p ${DATA}/ufs.cpld.datm.r.${nYYYY}-${nMM}-${nDD}-${nHHsec_5d}.nc ${COMOUT}/.
+  cp -p "${DATA}/ufs.cpld.datm.r.${nYYYY}-${nMM}-${nDD}-${nHHsec_5d}.nc" ${COMOUT}/.
+  ln -nsf "${COMOUT}/ufs.cpld.datm.r.${nYYYY}-${nMM}-${nDD}-${nHHsec_5d}.nc" ${DATA_RESTART}/.
 elif [ "${APP}" = "ATML" ]; then
   read -ra out_fh <<< "${OUTPUT_FH}"
   out_fh1="${out_fh[0]}"

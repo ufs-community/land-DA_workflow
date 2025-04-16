@@ -64,11 +64,10 @@ setpdy.sh
 [[ "$WORKFLOW_MANAGER" = "rocoto" ]] && export COMROOT=$COMROOT
 
 export COMIN="${COMIN:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
-export COMOUT="${COMOUT:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
 export COMINm1="${COMINm1:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDYm1}}"
 
+export COMOUT="${COMOUT:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
 mkdir -p ${COMOUT}
-
 # RESTART directory in COMOUT
 mkdir -p ${COMOUT}/RESTART
 # plot directory in COMOUT
@@ -76,6 +75,7 @@ export COMOUTplot="${COMOUTplot:-${COMOUT}/plot}"
 mkdir -p ${COMOUTplot}
 
 # Create a teomporary share directory
+export DATA_DATM="${DATA_DATM:-${DATAROOT}/DATA_SHARE/INPUT_DATM/${PDY}${cyc}}"
 export DATA_RESTART="${DATA_RESTART:-${DATAROOT}/DATA_SHARE/RESTART}"
 mkdir -p ${DATA_RESTART}
 #

@@ -229,6 +229,8 @@ def set_default_parm():
         "DATE_CYCLE_FREQ_HR": 24,
         "DATE_FIRST_CYCLE": 200001030000,
         "DATE_LAST_CYCLE": 200001040000,
+        "DCOMINera5": "",
+        "DCOMINgswp3": "",
         "DT_ATMOS": 900,
         "DT_RUNSEQ": 3600,
         "envir": "test",
