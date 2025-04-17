@@ -23,7 +23,7 @@ model_ver: v2.1.0
 net: landda
 NPROCS_ANALYSIS: 6
 NPZ: 127
-OBS_TYPE: GHCN
+OBS_TYPE: ghcn
 RES: 96
 RUN: landda
 WE2E_TEST: 'NO'

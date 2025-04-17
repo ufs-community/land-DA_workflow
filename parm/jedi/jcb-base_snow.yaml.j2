@@ -70,13 +70,13 @@ snow_bump_data_directory: "{{ snow_bump_data_dir }}"
 
 # Observation
 observations:
-{%- if OBS_TYPE == "GHCN" %}
+{%- if OBS_TYPE == "ghcn" %}
 - ghcn_snow
-{%- elif OBS_TYPE == "IMS" %}
+{%- elif OBS_TYPE == "ims" %}
 - ims_snow
 #- adpsfc_snow
-#- sfcsno
-#- snocvr_snow
+- sfcsno
+- snocvr_snow
 {%- endif %}
 
 # GHCN

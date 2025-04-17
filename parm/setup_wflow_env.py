@@ -259,7 +259,7 @@ def set_default_parm():
         "NPROCS_FCST_IC": 36,
         "NPZ": 127,
         "OBSDIR": "",
-        "OBS_TYPE": "GHCN",
+        "OBS_TYPE": "ghcn",
         "OUTPUT_FH": "1 -1",
         "PY_LOG_LEVEL": "INFO",
         "RES": 96,

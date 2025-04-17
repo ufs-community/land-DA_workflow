@@ -25,7 +25,7 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
   DATA_GHCN_RAW="${DATA_GHCN_RAW:-${FIXlandda}/DATA_ghcn}"
   
   # GHCN snow depth data
-  if [ "${OBS_TYPE}" = "GHCN" ]; then
+  if [ "${OBS_TYPE}" = "ghcn" ]; then
     # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, 
     # so that obs are within DA window.
     obs_fn="ghcn_snwd_ioda_${YYYP}${MP}${DP}${HP}.nc"

@@ -54,7 +54,7 @@ export atmos_forc=gswp3
 export TPATH="$FIXlandda/FV3_fix_tiled/C${RES}/"
 export fn_orog="C${RES}_oro_data"
 export GFSv17=NO
-export OBS_TYPES=("GHCN")
+export OBS_TYPES=("ghcn")
 export DAtype=letkfoi_snow
 export B=30  # background error std for LETKFOI
 if [ $GFSv17 == "YES" ]; then
