@@ -58,15 +58,17 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
       cp -p "${obs_fn}" "${obs_out_fn}"
       cp -p "${obs_fn}" "${COMOUTobs}/${obs_out_fn}"
     fi
+  elif [ "${OBS_TYPE}" = "ims" ]; then  
+
+  fi
+  ############################################################
+  # Observation File Plot
+  ############################################################
   
-    ############################################################
-    # Observation File Plot
-    ############################################################
+  out_title_base="Land-DA::Obs::${OBS_TYPE}::${PDY}::"
+  out_fn_base="landda_obs_${obs_type}_${PDY}_"
   
-    out_title_base="Land-DA::Obs::GHCN::${PDY}::"
-    out_fn_base="landda_obs_ghcn_${PDY}_"
-  
-    cat > plot_obs_ghcn.yaml <<EOF
+  cat > plot_obs_file.yaml <<EOF
 work_dir: '${DATA}'
 fn_input: '${obs_out_fn}'
 out_title_base: '${out_title_base}'
@@ -75,14 +77,13 @@ cartopy_ne_path: '${FIXlandda}/NaturalEarth'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
   
-    ${USHlandda}/plot_obs_ghcn.py
-    if [ $? -ne 0 ]; then
-      err_exit "Observation file plot failed"
-    fi
+  ${USHlandda}/plot_obs_file.py
+  if [ $? -ne 0 ]; then
+    err_exit "Observation file plot failed"
+  fi
   
-    # Copy result file to COMOUT
-    cp -p ${out_fn_base}* ${COMOUTplot}
-  fi  
+  # Copy result file to COMOUT
+  cp -p ${out_fn_base}* ${COMOUTplot}
 fi
 
 #

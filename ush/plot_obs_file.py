@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 ###################################################################### CHJ #####
-## Name		  : plot_obs_ghcn.py
-## Usage	  : Plot GHCN observation ioda file of land-DA workflow
-## Input file : ghcn_snwd_ioda.nc
+## Name		  : plot_obs_file.py
+## Usage	  : Plot observation data file of land-DA workflow
 ## NOAA/EPIC
 ## History ===============================
 ## V000: 2024/12/03: Chan-Hoo Jeon : Preliminary version
+## V001: 2025/04/17: Chan-Hoo Jeon : Add IMS option
 ###################################################################### CHJ #####
 
 import os, sys
@@ -25,7 +25,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 def main():
 # =================================================================== CHJ =====
 
-    yaml_file="plot_obs_ghcn.yaml"
+    yaml_file="plot_obs_file.yaml"
     with open(yaml_file, 'r') as f:
         yaml_data=yaml.load(f, Loader=yaml.FullLoader)
     f.close()
