@@ -408,7 +408,7 @@ contains
   integer             :: itile
   integer             :: ncid, varid, status, i
   integer             :: dim_id_xdim, dim_id_ydim, dim_id_soil, dim_id_snow, dim_id_snso, dim_id_time
-  character(len=10)   :: var_snow_depth, var_swe
+  character(len=10)   :: var_snow_depth
 
   do itile = 1, 6
 
@@ -467,13 +467,11 @@ contains
 ! Define variables in the file.
     if (namelist%frac_grid) then
       var_snow_depth = "snodl"
-      var_swe = "weasdl"
     else
       var_snow_depth = "snwdph"
-      var_swe = "sheleg"
     endif
 
-    status = nf90_def_var(ncid, trim(var_swe), NF90_DOUBLE,    & ! note: this is weasd in vector file.
+    status = nf90_def_var(ncid, "sheleg", NF90_DOUBLE,    & ! note: this is weasd in vector file.
       (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
       if (status /= nf90_noerr) call handle_err(status)
 
@@ -560,7 +558,7 @@ contains
 
 ! Start writing restart file
   
-    status = nf90_inq_varid(ncid, trim(var_swe), varid)
+    status = nf90_inq_varid(ncid, "sheleg", varid)
     status = nf90_put_var(ncid, varid , JEDI_tile%swe(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
 
@@ -641,7 +639,7 @@ contains
   integer             :: ncid, dimid, varid, status
   integer             :: itile
   logical             :: file_exists
-  character(len=10)   :: var_snow_depth, var_swe
+  character(len=10)   :: var_snow_depth
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Create tile file name
@@ -674,15 +672,13 @@ contains
 ! Start reading updated file
     if (namelist%frac_grid) then
       var_snow_depth = "snodl"
-      var_swe = "weasdl"
     else
       var_snow_depth = "snwdph"
-      var_swe = "sheleg"
     endif
 
-    status = nf90_inq_varid(ncid, trim(var_swe), varid)
+    status = nf90_inq_varid(ncid, "sheleg", varid)
     if (status /= nf90_noerr) then
-        print *, 'weasdl/sheleg variable missing from tile file'
+        print *, 'sheleg variable missing from tile file'
         call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , JEDI_tile%swe(:,:,itile)   , &

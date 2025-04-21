@@ -24,6 +24,9 @@ def jedi_config_yaml(input_yaml_fn, output_yaml_fn, jedi_algorithm, frac_grid):
         if jedi_algorithm == "3dvar":
             jedi_config_dict["cost function"]["background"]["state variables"][0] = 'snwdph'
             jedi_config_dict["final"]["increment"]["output"]["state component"]["state variables"][0] = 'snwdph'
+#    else:
+#        if jedi_algorithm == "3dvar":
+#            jedi_config_dict["cost function"]["background"]["state variables"][3] = 'weasdl'
 
     with open(output_yaml_fn, 'w') as f:
         yaml.dump(jedi_config_dict, f, default_flow_style=False, sort_keys=False)
