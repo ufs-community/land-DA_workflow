@@ -22,6 +22,12 @@ do
   fi
 done
 
+if [ "${FRAC_GRID}" = "YES" ]; then
+  frac_grid=".true."
+else
+  frac_grid=".false."
+fi
+
 # update tile2tile namelist
 settings="\
   'fix_landda': ${FIXlandda}
@@ -31,6 +37,7 @@ settings="\
   'dd': !!str ${DD}
   'hh': !!str ${HH}
   'fn_orog': C${RES}_oro_data
+  'frac_grid': ${frac_grid}
 " # End of settings variable
 
 fp_template="${PARMlandda}/templates/template.ufs2jedi"
