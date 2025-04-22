@@ -17,6 +17,7 @@ module namelist_mod
     character*256      :: lndp_input_file = ""
     character*256      :: lndp_output_file = ""
     character(len=128) :: lndp_var_list(max_n_var_lndp)
+    logical            :: frac_grid
     integer            :: n_var_lndp
   end type namelist_type
 
@@ -38,12 +39,13 @@ contains
     character*256       :: lndp_input_file
     character*256       :: lndp_output_file
     character(len=128)  :: lndp_var_list(max_n_var_lndp)
+    logical             :: frac_grid
     integer             :: n_var_lndp
     integer             :: k
 
     namelist / run_setup  / direction, tile_path, tile_fstub, tile_size,  restart_date, vector_restart_path, &
                             tile_restart_path, output_path, static_filename, lndp_layout,       &
-                            lndp_input_file, lndp_output_file, lndp_var_list, n_var_lndp
+                            lndp_input_file, lndp_output_file, lndp_var_list, frac_grid, n_var_lndp
 
     lndp_var_list = 'XXX'
 
@@ -53,17 +55,17 @@ contains
 
     namelist%direction           = direction
     namelist%tile_path           = tile_path
-    namelist%tile_fstub           = tile_fstub
+    namelist%tile_fstub          = tile_fstub
     namelist%tile_size           = tile_size
     namelist%restart_date        = restart_date
     namelist%vector_restart_path = vector_restart_path
     namelist%tile_restart_path   = tile_restart_path
     namelist%output_path         = output_path
     namelist%static_filename     = static_filename
-
     namelist%lndp_layout         = lndp_layout
     namelist%lndp_input_file     = lndp_input_file
     namelist%lndp_output_file    = lndp_output_file
+    namelist%frac_grid           = frac_grid
 
     n_var_lndp= 0
     do k =1,size(lndp_var_list)
