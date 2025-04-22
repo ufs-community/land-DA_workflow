@@ -15,7 +15,7 @@ envir: test_atml_cold
 EXP_CASE_NAME: atml_coldstart_00
 FCSTHR: 24
 FHROT: 0
-IC_DATA_MODEL: GFS
+IC_DATA_MODEL: gfs
 IMO: 384
 JEDI_ALGORITHM: 3dvar
 JMO: 190
