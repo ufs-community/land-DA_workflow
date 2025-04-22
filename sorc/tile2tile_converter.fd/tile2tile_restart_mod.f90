@@ -5,43 +5,45 @@ module tile2tile_restart_mod
   implicit none
  
   type JEDI_tile_type
-    double precision, allocatable :: swe                (:,:,:)
-    double precision, allocatable :: snow_depth         (:,:,:)
-    double precision, allocatable :: active_snow_layers (:,:,:)
-    double precision, allocatable :: swe_previous       (:,:,:)
+    double precision, allocatable :: swe(:,:,:)
+    double precision, allocatable :: snow_depth(:,:,:)
+    double precision, allocatable :: active_snow_layers(:,:,:)
+    double precision, allocatable :: swe_previous(:,:,:)
     double precision, allocatable :: snow_soil_interface(:,:,:,:)
-    double precision, allocatable :: temperature_snow   (:,:,:,:)
-    double precision, allocatable :: snow_ice_layer     (:,:,:,:)
-    double precision, allocatable :: snow_liq_layer     (:,:,:,:)
-    double precision, allocatable :: temperature_soil   (:,:,:,:)
-    real,             allocatable :: land_frac          (:,:,:)
+    double precision, allocatable :: temperature_snow(:,:,:,:)
+    double precision, allocatable :: snow_ice_layer(:,:,:,:)
+    double precision, allocatable :: snow_liq_layer(:,:,:,:)
+    double precision, allocatable :: temperature_soil(:,:,:,:)
+    real,             allocatable :: land_frac(:,:,:)
     double precision, allocatable :: soil_moisture_total(:,:,:,:)
     double precision, allocatable :: vegetation_type(:,:,:)
 ! needed by add increments
-    double precision, allocatable :: slmsk              (:, :, :)
+    double precision, allocatable :: slmsk(:, :, :)
 ! needed for JEDI QC of SMAP data
-    double precision, allocatable :: soil_moisture_liquid        (:,:,:,:)
-    double precision, allocatable :: temperature_ground (:,:,:) 
+    double precision, allocatable :: soil_moisture_liquid(:,:,:,:)
+    double precision, allocatable :: temperature_ground(:,:,:) 
+    double precision, allocatable :: fice(:,:,:)
   end type JEDI_tile_type    
 
   type UFS_tile_type
-    double precision, allocatable :: swe                (:,:,:)
-    double precision, allocatable :: snow_depth         (:,:,:)
-    double precision, allocatable :: active_snow_layers (:,:,:)
-    double precision, allocatable :: swe_previous       (:,:,:)
+    double precision, allocatable :: swe(:,:,:)
+    double precision, allocatable :: snow_depth(:,:,:)
+    double precision, allocatable :: active_snow_layers(:,:,:)
+    double precision, allocatable :: swe_previous(:,:,:)
     double precision, allocatable :: snow_soil_interface(:,:,:,:)
-    double precision, allocatable :: temperature_snow   (:,:,:,:)
-    double precision, allocatable :: snow_ice_layer     (:,:,:,:)
-    double precision, allocatable :: snow_liq_layer     (:,:,:,:)
-    double precision, allocatable :: temperature_soil   (:,:,:,:)
-    real,             allocatable :: land_frac          (:,:,:)
+    double precision, allocatable :: temperature_snow(:,:,:,:)
+    double precision, allocatable :: snow_ice_layer(:,:,:,:)
+    double precision, allocatable :: snow_liq_layer(:,:,:,:)
+    double precision, allocatable :: temperature_soil(:,:,:,:)
+    real,             allocatable :: land_frac(:,:,:)
     double precision, allocatable :: soil_moisture_total(:,:,:,:)
     double precision, allocatable :: vegetation_type(:,:,:)
 ! needed by add increments
-    double precision, allocatable :: slmsk              (:, :, :)
+    double precision, allocatable :: slmsk(:, :, :)
 ! needed for JEDI QC of SMAP data
-    double precision, allocatable :: soil_moisture_liquid        (:,:,:,:)
-    double precision, allocatable :: temperature_ground (:,:,:)
+    double precision, allocatable :: soil_moisture_liquid(:,:,:,:)
+    double precision, allocatable :: temperature_ground(:,:,:)
+    double precision, allocatable :: fice(:,:,:)
   end type UFS_tile_type
   
 contains   
@@ -72,37 +74,39 @@ contains
 ! Allocate tile variables
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  allocate(JEDI_tile%swe                (namelist%tile_size,namelist%tile_size,6))
-  allocate(JEDI_tile%snow_depth         (namelist%tile_size,namelist%tile_size,6))
-  allocate(JEDI_tile%active_snow_layers (namelist%tile_size,namelist%tile_size,6))
-  allocate(JEDI_tile%swe_previous       (namelist%tile_size,namelist%tile_size,6))
-  allocate(JEDI_tile%snow_soil_interface(namelist%tile_size,namelist%tile_size,7,6))
-  allocate(JEDI_tile%temperature_snow   (namelist%tile_size,namelist%tile_size,3,6))
-  allocate(JEDI_tile%snow_ice_layer     (namelist%tile_size,namelist%tile_size,3,6))
-  allocate(JEDI_tile%snow_liq_layer     (namelist%tile_size,namelist%tile_size,3,6))
-  allocate(JEDI_tile%temperature_soil   (namelist%tile_size,namelist%tile_size,4,6))
+  allocate(JEDI_tile%swe                  (namelist%tile_size,namelist%tile_size,6))
+  allocate(JEDI_tile%snow_depth           (namelist%tile_size,namelist%tile_size,6))
+  allocate(JEDI_tile%active_snow_layers   (namelist%tile_size,namelist%tile_size,6))
+  allocate(JEDI_tile%swe_previous         (namelist%tile_size,namelist%tile_size,6))
+  allocate(JEDI_tile%snow_soil_interface  (namelist%tile_size,namelist%tile_size,7,6))
+  allocate(JEDI_tile%temperature_snow     (namelist%tile_size,namelist%tile_size,3,6))
+  allocate(JEDI_tile%snow_ice_layer       (namelist%tile_size,namelist%tile_size,3,6))
+  allocate(JEDI_tile%snow_liq_layer       (namelist%tile_size,namelist%tile_size,3,6))
+  allocate(JEDI_tile%temperature_soil     (namelist%tile_size,namelist%tile_size,4,6))
   allocate(JEDI_tile%soil_moisture_total  (namelist%tile_size,namelist%tile_size,4,6)) 
-  allocate(JEDI_tile%land_frac          (namelist%tile_size,namelist%tile_size,6))
-  allocate(JEDI_tile%slmsk              (namelist%tile_size,namelist%tile_size,6))
-  allocate(JEDI_tile%vegetation_type    (namelist%tile_size,namelist%tile_size,6))
+  allocate(JEDI_tile%land_frac            (namelist%tile_size,namelist%tile_size,6))
+  allocate(JEDI_tile%slmsk                (namelist%tile_size,namelist%tile_size,6))
+  allocate(JEDI_tile%vegetation_type      (namelist%tile_size,namelist%tile_size,6))
   allocate(JEDI_tile%soil_moisture_liquid (namelist%tile_size,namelist%tile_size,4,6))
-  allocate(JEDI_tile%temperature_ground (namelist%tile_size,namelist%tile_size,6))
+  allocate(JEDI_tile%temperature_ground   (namelist%tile_size,namelist%tile_size,6))
+  allocate(JEDI_tile%fice                 (namelist%tile_size,namelist%tile_size,6))
 
-  allocate(UFS_tile%swe                (namelist%tile_size,namelist%tile_size,6))
-  allocate(UFS_tile%snow_depth         (namelist%tile_size,namelist%tile_size,6))
-  allocate(UFS_tile%active_snow_layers (namelist%tile_size,namelist%tile_size,6))
-  allocate(UFS_tile%swe_previous       (namelist%tile_size,namelist%tile_size,6))
-  allocate(UFS_tile%snow_soil_interface(namelist%tile_size,namelist%tile_size,7,6))
-  allocate(UFS_tile%temperature_snow   (namelist%tile_size,namelist%tile_size,3,6))
-  allocate(UFS_tile%snow_ice_layer     (namelist%tile_size,namelist%tile_size,3,6))
-  allocate(UFS_tile%snow_liq_layer     (namelist%tile_size,namelist%tile_size,3,6))
-  allocate(UFS_tile%temperature_soil   (namelist%tile_size,namelist%tile_size,4,6))
-  allocate(UFS_tile%soil_moisture_total(namelist%tile_size,namelist%tile_size,4,6))
-  allocate(UFS_tile%land_frac          (namelist%tile_size,namelist%tile_size,6))
-  allocate(UFS_tile%slmsk              (namelist%tile_size,namelist%tile_size,6))
-  allocate(UFS_tile%vegetation_type    (namelist%tile_size,namelist%tile_size,6))
-  allocate(UFS_tile%soil_moisture_liquid(namelist%tile_size,namelist%tile_size,4,6))
-  allocate(UFS_tile%temperature_ground (namelist%tile_size,namelist%tile_size,6))
+  allocate(UFS_tile%swe                  (namelist%tile_size,namelist%tile_size,6))
+  allocate(UFS_tile%snow_depth           (namelist%tile_size,namelist%tile_size,6))
+  allocate(UFS_tile%active_snow_layers   (namelist%tile_size,namelist%tile_size,6))
+  allocate(UFS_tile%swe_previous         (namelist%tile_size,namelist%tile_size,6))
+  allocate(UFS_tile%snow_soil_interface  (namelist%tile_size,namelist%tile_size,7,6))
+  allocate(UFS_tile%temperature_snow     (namelist%tile_size,namelist%tile_size,3,6))
+  allocate(UFS_tile%snow_ice_layer       (namelist%tile_size,namelist%tile_size,3,6))
+  allocate(UFS_tile%snow_liq_layer       (namelist%tile_size,namelist%tile_size,3,6))
+  allocate(UFS_tile%temperature_soil     (namelist%tile_size,namelist%tile_size,4,6))
+  allocate(UFS_tile%soil_moisture_total  (namelist%tile_size,namelist%tile_size,4,6))
+  allocate(UFS_tile%land_frac            (namelist%tile_size,namelist%tile_size,6))
+  allocate(UFS_tile%slmsk                (namelist%tile_size,namelist%tile_size,6))
+  allocate(UFS_tile%vegetation_type      (namelist%tile_size,namelist%tile_size,6))
+  allocate(UFS_tile%soil_moisture_liquid (namelist%tile_size,namelist%tile_size,4,6))
+  allocate(UFS_tile%temperature_ground   (namelist%tile_size,namelist%tile_size,6))
+  allocate(UFS_tile%fice                 (namelist%tile_size,namelist%tile_size,6))
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Read FV3 tile information
@@ -171,6 +175,9 @@ contains
         JEDI_tile%slmsk(ix,iy,itile)                 = 1.
         JEDI_tile%soil_moisture_liquid(ix,iy,:,itile)= UFS_tile%soil_moisture_liquid(ix,iy,:,itile)
         JEDI_tile%temperature_ground(ix,iy,itile)    = UFS_tile%temperature_ground(ix,iy,itile)
+        if (namelist%frac_grid) then
+          JEDI_tile%fice(ix,iy,itile)                = UFS_tile%fice(ix,iy,itile)
+        endif
       end if
 
     end do
@@ -221,6 +228,9 @@ contains
         UFS_tile%slmsk(ix,iy,itile)                 = 1.
         UFS_tile%soil_moisture_liquid(ix,iy,:,itile)= JEDI_tile%soil_moisture_liquid(ix,iy,:,itile)
         UFS_tile%temperature_ground(ix,iy,itile)    = JEDI_tile%temperature_ground(ix,iy,itile)
+        if (namelist%frac_grid) then
+          UFS_tile%fice(ix,iy,itile)                = JEDI_tile%fice(ix,iy,itile)
+        endif
       end if
 
     end do
@@ -242,13 +252,13 @@ contains
   use netcdf
 
   type(namelist_type) :: namelist
-  type(UFS_tile_type)     :: UFS_tile
+  type(UFS_tile_type) :: UFS_tile
   character*19        :: date
   character*256       :: UFS_tile_filename
   integer             :: ncid, dimid, varid, status
   integer             :: itile
   logical             :: file_exists
-  
+ 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Create tile file name
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -278,117 +288,120 @@ contains
       if (status /= nf90_noerr) call handle_err(status)
 
 ! Start reading restart file
-  
+
     status = nf90_inq_varid(ncid, "weasd", varid)
     if (status /= nf90_noerr) then
-        print *, 'weasd variable missing from tile file'
-        call handle_err(status)
+      print *, 'weasd variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%swe(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
 
     status = nf90_inq_varid(ncid, "snwdph", varid)
     if (status /= nf90_noerr) then
-        print *, 'snwdph variable missing from tile file'
-        call handle_err(status)
+      print *, 'snwdph variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%snow_depth(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
 
     status = nf90_inq_varid(ncid, "snowxy", varid)
     if (status /= nf90_noerr) then
-        print *, 'snowxy variable missing from tile file'
-        call handle_err(status)
+      print *, 'snowxy variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%active_snow_layers(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
 
     status = nf90_inq_varid(ncid, "sneqvoxy", varid)
     if (status /= nf90_noerr) then
-        print *, 'sneqvoxy variable missing from tile file'
-        call handle_err(status)
+      print *, 'sneqvoxy variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%swe_previous(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
 
     status = nf90_inq_varid(ncid, "zsnsoxy", varid)
     if (status /= nf90_noerr) then
-        print *, 'zsnoxy variable missing from tile file'
-        call handle_err(status)
+      print *, 'zsnoxy variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%snow_soil_interface(:,:,:,itile) , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 7, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 7, 1/))
 
     status = nf90_inq_varid(ncid, "tsnoxy", varid)
     if (status /= nf90_noerr) then
-        print *, 'tsnoxy variable missing from tile file'
-        call handle_err(status)
+      print *, 'tsnoxy variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%temperature_snow(:,:,:,itile)  , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
 
     status = nf90_inq_varid(ncid, "snicexy", varid)
     if (status /= nf90_noerr) then
-        print *, 'snicexy variable missing from tile file'
-        call handle_err(status)
+      print *, 'snicexy variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%snow_ice_layer(:,:,:,itile) , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
 
     status = nf90_inq_varid(ncid, "snliqxy", varid)
     if (status /= nf90_noerr) then
-        print *, 'snliqxy variable missing from tile file'
-        call handle_err(status)
+      print *, 'snliqxy variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%snow_liq_layer(:,:,:,itile) , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
 
     status = nf90_inq_varid(ncid, "stc", varid)
     if (status /= nf90_noerr) then
-        print *, 'stc variable missing from tile file'
-        call handle_err(status)
+      print *, 'stc variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%temperature_soil(:,:,:,itile)   , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
 
     status = nf90_inq_varid(ncid, "smc", varid)
     if (status /= nf90_noerr) then
-        print *, 'smc variable missing from tile file'
-        call handle_err(status)
+      print *, 'smc variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%soil_moisture_total(:,:,:,itile)   , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
 
     status = nf90_inq_varid(ncid, "slc", varid)
     if (status /= nf90_noerr) then
-        print *, 'slc variable missing from tile file'
-        call handle_err(status)
+      print *, 'slc variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%soil_moisture_liquid(:,:,:,itile)   , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
 
     status = nf90_inq_varid(ncid, "tgxy", varid)
     if (status /= nf90_noerr) then
-        print *, 'tgxy variable missing from tile file'
-        call handle_err(status)
+      print *, 'tgxy variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%temperature_ground(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
 
     status = nf90_inq_varid(ncid, "vegtype", varid)
     if (status /= nf90_noerr) then
-        print *, 'vegtype variable missing from tile file'
-        call handle_err(status)
+      print *, 'vegtype variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , UFS_tile%vegetation_type(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
+
+    if (namelist%frac_grid) then
+      status = nf90_inq_varid(ncid, "fice", varid)
+      if (status /= nf90_noerr) then
+        print *, 'fice variable missing from tile file'
+        call handle_err(status)
+      endif
+      status = nf90_get_var(ncid, varid , UFS_tile%fice(:,:,itile)   , &
+        start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
+    endif
 
     status = nf90_close(ncid)
 
@@ -408,7 +421,7 @@ contains
   integer             :: itile
   integer             :: ncid, varid, status, i
   integer             :: dim_id_xdim, dim_id_ydim, dim_id_soil, dim_id_snow, dim_id_snso, dim_id_time
-  
+
   do itile = 1, 6
 
     write(JEDI_tile_filename,'(a4,a2,a2,a1,a2,a18,i1,a3)')  & 
@@ -423,103 +436,93 @@ contains
 
 ! Define dimensions in the file.
 
-    status = nf90_def_dim(ncid, "xaxis_1"          , namelist%tile_size , dim_id_xdim)
+    status = nf90_def_dim(ncid, "xaxis_1", namelist%tile_size , dim_id_xdim)
       if (status /= nf90_noerr) call handle_err(status)
-    status = nf90_def_dim(ncid, "yaxis_1"          , namelist%tile_size , dim_id_ydim)
+    status = nf90_def_dim(ncid, "yaxis_1", namelist%tile_size , dim_id_ydim)
       if (status /= nf90_noerr) call handle_err(status)
-    status = nf90_def_dim(ncid, "zaxis_2"   , 4                  , dim_id_soil)
+    status = nf90_def_dim(ncid, "zaxis_2", 4                  , dim_id_soil)
       if (status /= nf90_noerr) call handle_err(status)
-    status = nf90_def_dim(ncid, "zaxis_3"   , 3                  , dim_id_snow)
+    status = nf90_def_dim(ncid, "zaxis_3", 3                  , dim_id_snow)
       if (status /= nf90_noerr) call handle_err(status)
-    status = nf90_def_dim(ncid, "zaxis_4"   , 7                  , dim_id_snso)
+    status = nf90_def_dim(ncid, "zaxis_4", 7                  , dim_id_snso)
       if (status /= nf90_noerr) call handle_err(status)
-    status = nf90_def_dim(ncid, "Time"          , NF90_UNLIMITED     , dim_id_time)
+    status = nf90_def_dim(ncid, "Time", NF90_UNLIMITED        , dim_id_time)
       if (status /= nf90_noerr) call handle_err(status)
 
 ! define dimension variables (for JEDI) 
 
-    status = nf90_def_var(ncid, "Time", NF90_DOUBLE,    &
-      (/dim_id_time/), varid)
+    status = nf90_def_var(ncid, "Time",    NF90_DOUBLE, (/dim_id_time/), varid)
     if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "xaxis_1", NF90_DOUBLE,    &
-      (/dim_id_xdim/), varid)
+    status = nf90_def_var(ncid, "xaxis_1", NF90_DOUBLE, (/dim_id_xdim/), varid)
     if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "yaxis_1", NF90_DOUBLE,    &
-      (/dim_id_ydim/), varid)
+    status = nf90_def_var(ncid, "yaxis_1", NF90_DOUBLE, (/dim_id_ydim/), varid)
     if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "zaxis_2", NF90_DOUBLE,    &
-      (/dim_id_soil/), varid)
+    status = nf90_def_var(ncid, "zaxis_2", NF90_DOUBLE, (/dim_id_soil/), varid)
     if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "zaxis_3", NF90_DOUBLE,    &
-      (/dim_id_snow/), varid)
+    status = nf90_def_var(ncid, "zaxis_3", NF90_DOUBLE, (/dim_id_snow/), varid)
     if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "zaxis_4", NF90_DOUBLE,    &
-      (/dim_id_snso/), varid)
+    status = nf90_def_var(ncid, "zaxis_4", NF90_DOUBLE, (/dim_id_snso/), varid)
     if (status /= nf90_noerr) call handle_err(status)
 
-  
 ! Define variables in the file.
 
-    status = nf90_def_var(ncid, "sheleg", NF90_DOUBLE,    & ! note: this is weasd in vector file.
-      (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "sheleg", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "snwdph", NF90_DOUBLE,   &
-      (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "weasdl", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "snowxy", NF90_DOUBLE,   &
-      (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "snodl", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "sneqvoxy", NF90_DOUBLE, &
-      (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "snwdph", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "zsnsoxy", NF90_DOUBLE,  &
-      (/dim_id_xdim,dim_id_ydim,dim_id_snso,dim_id_time/), varid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "snowxy", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "tsnoxy", NF90_DOUBLE,   &
-      (/dim_id_xdim,dim_id_ydim,dim_id_snow,dim_id_time/), varid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "sneqvoxy", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "snicexy", NF90_DOUBLE,  &
-      (/dim_id_xdim,dim_id_ydim,dim_id_snow,dim_id_time/), varid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "zsnsoxy", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_snso,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "snliqxy", NF90_DOUBLE,  &
-      (/dim_id_xdim,dim_id_ydim,dim_id_snow,dim_id_time/), varid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "tsnoxy", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_snow,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "stc", NF90_DOUBLE,      &
-      (/dim_id_xdim,dim_id_ydim,dim_id_soil,dim_id_time/), varid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "snicexy", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_snow,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "smc", NF90_DOUBLE,   &
-      (/dim_id_xdim,dim_id_ydim,dim_id_soil,dim_id_time/), varid) 
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "snliqxy", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_snow,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "slmsk", NF90_DOUBLE,   &
-      (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "stc", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_soil,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
+
+    status = nf90_def_var(ncid, "smc", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_soil,dim_id_time/), varid) 
+    if (status /= nf90_noerr) call handle_err(status)
+
+    status = nf90_def_var(ncid, "slmsk", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
       
-    status = nf90_def_var(ncid, "vtype", NF90_DOUBLE,   &
-      (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "vtype", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "slc", NF90_DOUBLE,   &
-      (/dim_id_xdim,dim_id_ydim,dim_id_soil,dim_id_time/), varid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_def_var(ncid, "slc", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_soil,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
 
-    status = nf90_def_var(ncid, "tgxy", NF90_DOUBLE,   &
-      (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
+    status = nf90_def_var(ncid, "tgxy", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
+    if (status /= nf90_noerr) call handle_err(status)
+
+    if (namelist%frac_grid) then
+      status = nf90_def_var(ncid, "fice", NF90_DOUBLE, (/dim_id_xdim,dim_id_ydim,dim_id_time/), varid)
       if (status /= nf90_noerr) call handle_err(status)
+    endif
 
     status = nf90_enddef(ncid)
 
@@ -552,8 +555,16 @@ contains
 
 ! Start writing restart file
   
+    status = nf90_inq_varid(ncid, "weasdl", varid)
+    status = nf90_put_var(ncid, varid , JEDI_tile%swe(:,:,itile)   , &
+      start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
+
     status = nf90_inq_varid(ncid, "sheleg", varid)
     status = nf90_put_var(ncid, varid , JEDI_tile%swe(:,:,itile)   , &
+      start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
+
+    status = nf90_inq_varid(ncid, "snodl", varid)
+    status = nf90_put_var(ncid, varid , JEDI_tile%snow_depth(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
 
     status = nf90_inq_varid(ncid, "snwdph", varid)
@@ -570,23 +581,19 @@ contains
 
     status = nf90_inq_varid(ncid, "zsnsoxy", varid)
     status = nf90_put_var(ncid, varid , JEDI_tile%snow_soil_interface(:,:,:,itile) , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 7, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 7, 1/))
 
     status = nf90_inq_varid(ncid, "tsnoxy", varid)
     status = nf90_put_var(ncid, varid , JEDI_tile%temperature_snow(:,:,:,itile)  , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
 
     status = nf90_inq_varid(ncid, "snicexy", varid)
     status = nf90_put_var(ncid, varid , JEDI_tile%snow_ice_layer(:,:,:,itile) , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
 
     status = nf90_inq_varid(ncid, "snliqxy", varid)
     status = nf90_put_var(ncid, varid , JEDI_tile%snow_liq_layer(:,:,:,itile) , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
 
     status = nf90_inq_varid(ncid, "stc", varid)
     status = nf90_put_var(ncid, varid , JEDI_tile%temperature_soil(:,:,:,itile)   , &
@@ -595,6 +602,12 @@ contains
     status = nf90_inq_varid(ncid, "smc", varid)
     status = nf90_put_var(ncid, varid , JEDI_tile%soil_moisture_total(:,:,:,itile)   , &
       start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 4, 1/)) 
+
+    if (namelist%frac_grid) then
+      status = nf90_inq_varid(ncid, "fice", varid)
+      status = nf90_put_var(ncid, varid , JEDI_tile%fice(:,:,itile)   , &
+        start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
+    endif
 
 ! include in output, so can be used to id which tile grid cells are being simulated
     status = nf90_inq_varid(ncid, "slmsk", varid)
@@ -608,8 +621,7 @@ contains
 ! include for JEDI QC of SMAP obs
     status = nf90_inq_varid(ncid, "slc", varid)
     status = nf90_put_var(ncid, varid , JEDI_tile%soil_moisture_liquid(:,:,:,itile)   , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
 
     status = nf90_inq_varid(ncid, "tgxy", varid)
     status = nf90_put_var(ncid, varid , JEDI_tile%temperature_ground(:,:,itile)   , &
@@ -633,6 +645,7 @@ contains
   integer             :: ncid, dimid, varid, status
   integer             :: itile
   logical             :: file_exists
+  character(len=10)   :: var_snow_depth, var_swe
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! Create tile file name
@@ -663,19 +676,26 @@ contains
       if (status /= nf90_noerr) call handle_err(status)
 
 ! Start reading updated file
+    if (namelist%frac_grid) then
+      var_snow_depth = "snodl"
+      var_swe = "weasdl"
+    else
+      var_snow_depth = "snwdph"
+      var_swe = "sheleg"
+    endif
 
-    status = nf90_inq_varid(ncid, "sheleg", varid)
+    status = nf90_inq_varid(ncid, trim(var_swe), varid)
     if (status /= nf90_noerr) then
-        print *, 'sheleg variable missing from tile file'
-        call handle_err(status)
+      print *, 'weasdl/sheleg variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , JEDI_tile%swe(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
 
-    status = nf90_inq_varid(ncid, "snwdph", varid)
+    status = nf90_inq_varid(ncid, trim(var_snow_depth), varid)
     if (status /= nf90_noerr) then
-        print *, 'snwdph variable missing from tile file'
-        call handle_err(status)
+      print *, 'snodl/snwdph variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , JEDI_tile%snow_depth(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
@@ -702,8 +722,7 @@ contains
         call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid ,JEDI_tile%snow_soil_interface(:,:,:,itile) , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 7, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 7, 1/))
 
     status = nf90_inq_varid(ncid, "tsnoxy", varid)
     if (status /= nf90_noerr) then
@@ -711,8 +730,7 @@ contains
         call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , JEDI_tile%temperature_snow(:,:,:,itile), &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
 
     status = nf90_inq_varid(ncid, "snicexy", varid)
     if (status /= nf90_noerr) then
@@ -720,8 +738,7 @@ contains
         call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , JEDI_tile%snow_ice_layer(:,:,:,itile) , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
 
     status = nf90_inq_varid(ncid, "snliqxy", varid)
     if (status /= nf90_noerr) then
@@ -729,8 +746,7 @@ contains
         call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , JEDI_tile%snow_liq_layer(:,:,:,itile) , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
 
     status = nf90_inq_varid(ncid, "stc", varid)
     if (status /= nf90_noerr) then
@@ -738,8 +754,7 @@ contains
         call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , JEDI_tile%temperature_soil(:,:,:,itile), &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
 
     status = nf90_inq_varid(ncid, "smc", varid)
     if (status /= nf90_noerr) then
@@ -747,8 +762,7 @@ contains
         call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , JEDI_tile%soil_moisture_total(:,:,:,itile), &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
 
     status = nf90_inq_varid(ncid, "slc", varid)
     if (status /= nf90_noerr) then
@@ -756,8 +770,7 @@ contains
         call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid ,JEDI_tile%soil_moisture_liquid(:,:,:,itile)   , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 4, 1/))
 
     status = nf90_inq_varid(ncid, "tgxy", varid)
     if (status /= nf90_noerr) then
@@ -769,11 +782,21 @@ contains
 
     status = nf90_inq_varid(ncid, "vtype", varid)
     if (status /= nf90_noerr) then
-        print *, 'vegtype variable missing from tile file'
-        call handle_err(status)
+      print *, 'vegtype variable missing from tile file'
+      call handle_err(status)
     endif
     status = nf90_get_var(ncid, varid , JEDI_tile%vegetation_type(:,:,itile)   ,&
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
+
+    if (namelist%frac_grid) then
+      status = nf90_inq_varid(ncid, "fice", varid)
+      if (status /= nf90_noerr) then
+        print *, 'fice variable missing from tile file'
+        call handle_err(status)
+      endif
+      status = nf90_get_var(ncid, varid , JEDI_tile%fice(:,:,itile)   ,&
+        start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
+    endif
 
     status = nf90_close(ncid)
 
@@ -815,39 +838,36 @@ contains
 ! Write the tile fields
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  status = nf90_open(UFS_tile_filename, NF90_WRITE, ncid)
-      if (status /= nf90_noerr) call handle_err(status)
+    status = nf90_open(UFS_tile_filename, NF90_WRITE, ncid)
+    if (status /= nf90_noerr) call handle_err(status)
     
-  status = nf90_inq_varid(ncid, "weasd", varid)
-  status = nf90_put_var(ncid, varid , UFS_tile%swe(:,:,itile)   , &
+    status = nf90_inq_varid(ncid, "weasd", varid)
+    status = nf90_put_var(ncid, varid , UFS_tile%swe(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
   
-  status = nf90_inq_varid(ncid, "snwdph", varid)
-  status = nf90_put_var(ncid, varid , UFS_tile%snow_depth(:,:,itile)   , &
+    status = nf90_inq_varid(ncid, "snwdph", varid)
+    status = nf90_put_var(ncid, varid , UFS_tile%snow_depth(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))  
 
-  status = nf90_inq_varid(ncid, "snowxy", varid)
+    status = nf90_inq_varid(ncid, "snowxy", varid)
     status = nf90_put_var(ncid, varid , UFS_tile%active_snow_layers(:,:,itile), &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
 
-  status = nf90_inq_varid(ncid, "sneqvoxy", varid)
+    status = nf90_inq_varid(ncid, "sneqvoxy", varid)
     status = nf90_put_var(ncid, varid , UFS_tile%swe_previous(:,:,itile)   , &
       start = (/1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 1/))
 
     status = nf90_inq_varid(ncid, "zsnsoxy", varid)
     status = nf90_put_var(ncid, varid ,UFS_tile%snow_soil_interface(:,:,:,itile) , &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 7, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 7, 1/))
 
     status = nf90_inq_varid(ncid, "tsnoxy", varid)
     status = nf90_put_var(ncid, varid , UFS_tile%temperature_snow(:,:,:,itile), &
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
 
     status = nf90_inq_varid(ncid, "snicexy", varid)
     status = nf90_put_var(ncid, varid , UFS_tile%snow_ice_layer(:,:,:,itile) ,&
-      start = (/1                , 1                , 1, 1/), &
-      count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
+      start = (/1,1,1,1/), count = (/namelist%tile_size, namelist%tile_size, 3, 1/))
 
     status = nf90_inq_varid(ncid, "snliqxy", varid)
     status = nf90_put_var(ncid, varid , UFS_tile%snow_liq_layer(:,:,:,itile) ,&

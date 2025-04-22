@@ -49,4 +49,7 @@
 
   lndp_var_list = ''
 
+! Flag for variables based on grid fraction
+  frac_grid = {{ frac_grid }}
+
 /
