@@ -23,8 +23,3 @@
 	url = https://github.com/NOAA-EPIC/jcb-gdas.git
         ignore = dirty
 
-[submodule "sorc/calcfIMS.fd"]
-	path = sorc/calcfIMS.fd
-	url = https://github.com/NOAA-PSL/land-SCF_proc.git
-        ignore = dirty
-
