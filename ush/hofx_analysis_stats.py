@@ -29,13 +29,11 @@ def get_obs_stats(fdir, plottype, jedi_exe):
         f=netCDF4.Dataset(fdir+'/'+fname)
         logging.info(f''' NETCDF: {f}''')
         obs=f.groups['ObsValue'].variables['totalSnowDepth']
-        print("ObsValue:",obs)
+        logging.info("ObsValue:",obs)
         ombg=f.groups['ombg'].variables['totalSnowDepth']
-        print("OMBG:",ombg)
+        logging.info("OMBG:",ombg)
         qc=f.groups['PreQC'].variables['totalSnowDepth']
-        print("PreQC:",qc)
-        obstime=f.groups['MetaData'].variables['dateTime']
-        print("OBS_TIME:",obstime)
+        logging.info("PreQC:",qc)
         if plottype=='histogram':
             ombg_=np.ma.masked_where(qc != 0, ombg)
             ombg_=np.ma.masked_where(ombg == 0, ombg_)

@@ -132,7 +132,12 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base
         cs_max=fmax
     elif cmap_range=='fixed':
         cs_min=0
-        cs_max=300.0
+        if OBS_TYPE == 'ims':
+            cs_max=100.0
+        elif OBS_TYPE == 'ghcn':
+            cs_max=1000.0
+        else:
+            cs_max=300.0
     else:
         sys.exit('ERROR: wrong colormap-range flag !!!')
 
