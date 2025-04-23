@@ -54,8 +54,16 @@ done
 # Copy obserbation file to work directory
 mkdir -p ${DATA}/obs
 obs_type_lower="${OBS_TYPE,,}"
-obs_suffix="${obs_type_lower}_snow.nc"
-ln -nsf "${COMIN}/obs/${obs_type_lower}_snow_${PDY}${cyc}.nc" "${DATA}/obs/obs.${cycle}.${obs_suffix}"
+if [ "${obs_type_lower}" = "ghcn" ]; then
+  obs_prefix="obs.${cycle}"
+  obs_suffix="${obs_type_lower}_snow.nc"
+  obs_orig_fn="${obs_type_lower}_snow_${PDY}${cyc}.nc"
+elif [ "${obs_type_lower}" = "ims" ]; then
+  obs_prefix="obs.${PDY}.${cycle}"
+  obs_suffix="${obs_type_lower}_snow.tm00.nc"
+  obs_orig_fn="${obs_prefix}.${obs_suffix}"
+fi
+ln -nsf "${COMINobs}/${obs_orig_fn}" "${DATA}/obs/${obs_prefix}.${obs_suffix}"
 
 # update coupler.res file
 settings="\

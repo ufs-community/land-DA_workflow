@@ -61,7 +61,7 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
 
   elif [ "${OBS_TYPE}" = "ims" ]; then  
     # Check if pre-generated IMS obs file exists
-    obs_fn="ims_snow_${PDY}${cyc}.nc"
+    obs_fn="obs.${PDY}.${cycle}.ims_snow.tm00.nc"
     obs_dp="${OBSDIR}/IMS/${PDY}"
     obs_fp="${obs_dp}/${obs_fn}"
     obs_out_fn=${obs_fn}
