@@ -14,6 +14,8 @@ from dateutil.parser import parse
 
 jedi_path = os.environ.get('JEDI_PATH')
 jedi_py_ver = os.environ.get('JEDI_PY_VER')
+print(f'''jedi_path: {jedi_path}''')
+print(f'''jedi_py_ver: {jedi_py_ver}''')
 pyioda_conv_path = os.path.join(jedi_path, 'build/lib', jedi_py_ver)
 print(f'''pyioda/pyiodaconv path: {pyioda_conv_path}''')
 sys.path.append(pyioda_conv_path)

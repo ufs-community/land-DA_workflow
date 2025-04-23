@@ -15,8 +15,6 @@ import os, sys
 
 jedi_path = os.environ.get('JEDI_PATH')
 jedi_py_ver = os.environ.get('JEDI_PY_VER')
-#jedi_path = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_sync"
-#jedi_py_ver = "python3.10"
 print(f'''jedi_path: {jedi_path}''')
 print(f'''jedi_py_ver: {jedi_py_ver}''')
 pyioda_conv_path = os.path.join(jedi_path, 'build/lib', jedi_py_ver)
