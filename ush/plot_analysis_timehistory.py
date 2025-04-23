@@ -277,17 +277,18 @@ def plot_data(var_dict_anal,var_dict_fcst,jedi_exe,obs_type,out_fn_base,work_dir
     mk_sz=3
     
     # PLOT max/min/RMS/QC obs
+    obs_type_upper = obs_type.upper()
     if jedi_exe == '3dvar':
         # analysis
-        out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type}::{var_nm}'''
+        out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type_upper}::{var_nm}'''
         out_fn_qc = f'''{out_fn_base}_anal_{var_nm}'''
         plot_his_qc(dfa,'Min_m1','Max_m1','RMS_m1',out_title_qc,out_fn_qc,work_dir,'anal')
         # increment
-        out_title_qc = f'''Land-DA::Increment::{jedi_exe}::{obs_type}::{var_nm}'''
+        out_title_qc = f'''Land-DA::Increment::{jedi_exe}::{obs_type_upper}::{var_nm}'''
         out_fn_qc = f'''{out_fn_base}_inc_{var_nm}'''
         plot_his_qc(dfa,'Min','Max','RMS',out_title_qc,out_fn_qc,work_dir,'inc')
     else:
-        out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type}::{var_nm}'''
+        out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type_upper}::{var_nm}'''
         out_fn_qc = f'''{out_fn_base}_anal_{var_nm}'''
         plot_his_qc(dfa,'Min','Max','RMS',out_title_qc,out_fn_qc,work_dir,'anal')
 

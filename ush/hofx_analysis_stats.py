@@ -27,20 +27,20 @@ def get_obs_stats(fdir, plottype, jedi_exe):
         f=netCDF4.Dataset(fdir+'/'+fname)
         logging.info(f''' NETCDF: {f}''')
         obs=f.groups['ObsValue'].variables['totalSnowDepth'][:]
-        print("ObsValue:",obs)
+        logging.debug("ObsValue:",obs)
         ombg=f.groups['ombg'].variables['totalSnowDepth'][:]
-        print("OMBG:",ombg)
+        logging.debug("OMBG:",ombg)
         lat=f.groups['MetaData'].variables['latitude'][:]
         lon=f.groups['MetaData'].variables['longitude'][:]
 
-        print("TEST:", len(ombg), len(obs))
+        logging.info("Number of points (raw):", len(ombg), len(obs))
         ombg = [x for x, y in zip(ombg, obs) if y != 0]
         lat = [x for x, y in zip(lat, obs) if y != 0]
         lon = [x for x, y in zip(lon, obs) if y != 0]
         obs = [x for x in obs if x != 0]
-        print("TEST:", len(ombg), len(obs))
-        print("TEST:", np.max(ombg), np.min(ombg))
-        print("TEST:", np.max(obs), np.min(obs))
+        logging.info("Number of points (excluding zeros):", len(ombg), len(obs))
+        logging.info("OMB max/min:", np.max(ombg), np.min(ombg))
+        logging.info("OBS max/min:", np.max(obs), np.min(obs))
 
         obs_.append(obs[:])
         omb_.append(ombg[:])
