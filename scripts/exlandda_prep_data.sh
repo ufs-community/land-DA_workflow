@@ -138,7 +138,7 @@ EOF
 
       fims_out_fn="IMSscf.${PDY}.C${RES}_oro_data.nc"
       cp -p ${fims_out_fn} "${COMOUTobs}/${obs_out_fn}"
-
+      ln -nsf ${fims_out_fn} ${obs_out_fn}
     fi
   fi
   ############################################################
@@ -154,6 +154,7 @@ fn_input: '${obs_out_fn}'
 out_title_base: '${out_title_base}'
 out_fn_base: '${out_fn_base}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+OBS_TYPE: '${OBS_TYPE}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
   

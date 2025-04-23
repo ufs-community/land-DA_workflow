@@ -23,7 +23,6 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 # Main part (will be called at the end) ============================= CHJ =====
 def main():
-# =================================================================== CHJ =====
 
     yaml_file="plot_obs_file.yaml"
     with open(yaml_file, 'r') as f:
@@ -35,6 +34,7 @@ def main():
     out_title_base=yaml_data['out_title_base']
     out_fn_base=yaml_data['out_fn_base']
     cartopy_ne_path=yaml_data['cartopy_ne_path']
+    OBS_TYPE=yaml_data['OBS_TYPE']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
     
     # Set logging config
@@ -58,55 +58,61 @@ def main():
     fpath=os.path.join(work_dir,fn_input)
     try: mdat=nc.Dataset(fpath)
     except: raise Exception('Could NOT find the file',fpath)
-    print(" MetaData:", mdat.groups['MetaData'])
-    print(" ObsValue:", mdat.groups['ObsValue'])
 
-    longitude=mdat.groups['MetaData'].variables['longitude'][:]
-    latitude=mdat.groups['MetaData'].variables['latitude'][:]
-    datetime=mdat.groups['MetaData'].variables['dateTime'][:]
-    stationElevation=mdat.groups['MetaData'].variables['stationElevation'][:]
-    stationID=mdat.groups['MetaData'].variables['stationIdentification'][:]
+    if OBS_TYPE == 'ghcn':
+        logging.debug(" MetaData:", mdat.groups['MetaData'])
+        logging.debug(" ObsValue:", mdat.groups['ObsValue'])
 
-    # Longitude 0:360 => -180:180
-#    lon_max=np.max(lon)
-#    if lon_max>180:
-#        lon=(lon+180)%360-180
-
-    lon=longitude
-    lat=latitude
+        lon = mdat.groups['MetaData'].variables['longitude'][:]
+        lat = mdat.groups['MetaData'].variables['latitude'][:]
+        # Variables
+        #vars_out=["ObsValue", "ObsError", "PreQC"]
+        vars_out=["ObsValue"]
+    elif OBS_TYPE == 'ims':
+        print(mdat)    
+        lon = mdat.variables['lon'][:]
+        lat = mdat.variables['lat'][:]
+        # Variables
+        vars_out=["IMSscf", "IMSsnd"]
 
     # Highest and lowest longitudes and latitudes for plot extent
     lon_min=np.min(lon)
     lon_max=np.max(lon)
     lat_min=np.min(lat)
     lat_max=np.max(lat)
-#    extent=[lon_min,lon_max,lat_min,lat_max]
+    #extent=[lon_min,lon_max,lat_min,lat_max]
     # for CONUS
-#    extent=[-125,-66,23,53]
+    #extent=[-125,-66,23,53]
     # for Northern Hemisphere
     extent=[-179,179,0,82.5]
+    # for Globe
+    #extent=[-179,179,-82.5,82.5]
+
     logging.info(f''' Map extent= {extent}''')
 
-#    c_lon=np.mean(extent[:2])
+    #c_lon=np.mean(extent[:2])
     c_lon=-77.0369 # D.C.
     logging.info(f''' c_lon= {c_lon}''')
 
-    # Variables
-#    vars_out=["ObsValue","ObsError","PreQC"]
-    vars_out=["ObsValue"]
     for svar in vars_out:
-        svar_plot(svar,mdat,lon,lat,extent,c_lon,out_title_base,out_fn_base,work_dir)
+        svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base,work_dir)
     
 
 # Variable plot =============================================== CHJ =====
-def svar_plot(svar,mdat,lon,lat,extent,c_lon,out_title_base,out_fn_base,work_dir):
-# ============================================================= CHJ =====
+def svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base,work_dir):
 
-    logging.info(' ===== '+svar+' === Total Snow Depth =====================')
+    logging.info(' ===== '+svar+' ==========================================')
     # Extract data array
-    sfld=mdat.groups[svar].variables['totalSnowDepth'][:]
+    if OBS_TYPE == 'ghcn':
+        sfld=mdat.groups[svar].variables['totalSnowDepth'][:]
+    elif OBS_TYPE == 'ims':
+        sfld=mdat.variables[svar][:]
 
-    svar="SnowDepth"
+    if svar == 'ObsValue' or svar == 'IMSsnd':
+      svar="SnowDepth"
+    elif svar == 'IMSscf':
+      svar="SnowCoveredFraction"
+
     out_title_fld=out_title_base+svar
     out_fn=out_fn_base+svar
 
@@ -138,8 +144,16 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,out_title_base,out_fn_base,work_dir
         cs_min=fmin
         cs_max=fmax
     elif cmap_range=='fixed':
-        cs_min=0
-        cs_max=1000.0
+        if svar == 'SnowDepth':
+            if OBS_TYPE == 'ghcn':
+                cs_min=0
+                cs_max=1000.0
+            elif OBS_TYPE == 'ims':
+                cs_min=0
+                cs_max=100.0
+        elif svar == 'SnowCoveredFraction':
+          cs_min=0
+          cs_max=1
     else:
         sys.exit('ERROR: wrong colormap-range flag !!!')
 
@@ -169,8 +183,6 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,out_title_base,out_fn_base,work_dir
 
 # Background plot ==================================================== CHJ =====
 def back_plot(ax):
-# ==================================================================== CHJ =====
-
     # Resolution of background natural earth data ('50m' or '110m')
     back_res='50m'
 
@@ -203,7 +215,6 @@ def back_plot(ax):
 
 # Output file ======================================================= CHJ =====
 def out_file(work_dir,out_file,ndpi):
-# =================================================================== CHJ =====
     # Output figure
     fp_out=os.path.join(work_dir,out_file)
     plt.savefig(fp_out+'.png',dpi=ndpi,bbox_inches='tight')
