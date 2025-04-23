@@ -98,7 +98,11 @@ if [ "${APP}" = "LND" ]; then
   data_files03_list=()
   if [ "${COLDSTART}" = "YES" ] && [ "${PDY}${cyc}" = "${DATE_FIRST_CYCLE:0:10}" ]; then
     first_date_m1=$($NDATE -24 $DATE_FIRST_CYCLE)
-    last_date_p1=$($NDATE 24 $DATE_LAST_CYCLE)
+    if [ -z "${DATM_STREAM_FN_LAST_DATE}" ]; then
+      last_date_p1=$($NDATE 24 $DATE_LAST_CYCLE)
+    else
+      last_date_p1=$($NDATE 24 $DATM_STREAM_FN_LAST_DATE)
+    fi
     year_first="${first_date_m1:0:4}"
     month_first="${first_date_m1:4:2}"
     day_first="${first_date_m1:6:2}"
@@ -124,11 +128,10 @@ if [ "${APP}" = "LND" ]; then
       year_first=$(echo "$line" | cut -d',' -f1)
       month_first=$(echo "$line" | cut -d',' -f2)
       day_first=$(echo "$line" | cut -d',' -f3)
+      year_last=$(echo "$line" | cut -d',' -f4)
+      month_last=$(echo "$line" | cut -d',' -f5)
+      day_last=$(echo "$line" | cut -d',' -f6)
     done < "first_last_date.txt"
-    last_date_p1=$($NDATE 24 $DATE_LAST_CYCLE)
-    year_last="${last_date_p1:0:4}"
-    month_last="${last_date_p1:4:2}"
-    day_last="${last_date_p1:6:2}"
   fi
 
   if [ "${ATMOS_FORC}" = "gswp3" ]; then

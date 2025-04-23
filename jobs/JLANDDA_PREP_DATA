@@ -78,6 +78,8 @@ mkdir -p ${COMOUTplot}
 
 export DATA_DATM="${DATA_DATM:-${DATAROOT}/DATA_SHARE/INPUT_DATM/${PDY}${cyc}}"
 mkdir -p ${DATA_DATM}
+export DATA_DATM_FORC="${DATA_DATM_FORC:-${DATAROOT}/DATA_SHARE/INPUT_DATM/forc}"
+mkdir -p ${DATA_DATM_FORC}
 
 export DCOMINera5=${DCOMINera5:-${FIXlandda}/DATM_input_data/era5}
 export DCOMINgswp3=${DCOMINgswp3:-${FIXlandda}/DATM_input_data/gswp3}

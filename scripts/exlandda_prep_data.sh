@@ -183,7 +183,11 @@ if [ "${APP}" = "LND" ]; then
 
   if [ "${COLDSTART}" = "YES" ] && [ "${PDY}${cyc}" = "${DATE_FIRST_CYCLE:0:10}" ]; then
     first_date_m1=$($NDATE -24 $DATE_FIRST_CYCLE)
-    last_date_p1=$($NDATE 24 $DATE_LAST_CYCLE)
+    if [ -z "${DATM_STREAM_FN_LAST_DATE}" ]; then
+      last_date_p1=$($NDATE 24 $DATE_LAST_CYCLE)
+    else
+      last_date_p1=$($NDATE 24 $DATM_STREAM_FN_LAST_DATE)
+    fi
     year_first="${first_date_m1:0:4}"
     month_first="${first_date_m1:4:2}"
     day_first="${first_date_m1:6:2}"
@@ -272,6 +276,8 @@ if [ "${APP}" = "LND" ]; then
       data_fp="${DCOMINera5}/${data_fn}"
       if [ -f ${data_fp} ]; then
         ln -nsf "${data_fp}" ${DATA_DATM}
+      elif [ -f "${DATA_DATM_FORC}/${data_fn}" ]; then
+        ln -nsf "${DATA_DATM_FORC}/${data_fn}" ${DATA_DATM}
       else
         # Create ERA5 forcing file with raw data files
         path_raw_data="${DCOMINera5}/raw_data"
@@ -279,6 +285,7 @@ if [ "${APP}" = "LND" ]; then
         ${USHlandda}/era5_merge_files.py -i "${path_raw_data}" -c ${data_cdate} -o ${DATA} -l ${PY_LOG_LEVEL}
         cp -p ${data_fn} ${COMOUTdatm}
         ln -nsf "${COMOUTdatm}/${data_fn}" ${DATA_DATM}
+        ln -nsf "${COMOUTdatm}/${data_fn}" ${DATA_DATM_FORC}
       fi
     done
     ln -nsf ${DCOMINera5}/${datm_in_mesh_fn} ${DATA_DATM}
