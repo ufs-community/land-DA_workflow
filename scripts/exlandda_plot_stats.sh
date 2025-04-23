@@ -27,14 +27,14 @@ if [ "${DO_PLOT_STATS}" = "YES" ]; then
   # Field variable
   field_var="OMB"
   # Field Range for scatter plot: [Low,High]
-  field_range_low=-300
-  field_range_high=300
+  field_range_low=-200
+  field_range_high=200
   # Number of bins in histogram plot
   nbins=100
   # Plot type (scatter/histogram/both)
   plottype="both"
   # Figure title
-  title_fig="GHCN Snow Depth (mm)::Obs-Bkg::${PDY}"
+  title_fig="Snow Depth (mm)::${OBS_TYPE^^}::Obs-Bkg::${PDY}"
   # Prefix of output file name
   output_prefix="hofx_omb_${PDY}"
   

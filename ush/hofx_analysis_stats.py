@@ -19,8 +19,6 @@ def get_obs_stats(fdir, plottype, jedi_exe):
     global lat,lon
     omb_=[]
     obs_=[]
-    qc_ =[]
-    err_=[]
     lat_=[]
     lon_=[]
     
@@ -28,18 +26,21 @@ def get_obs_stats(fdir, plottype, jedi_exe):
         logging.info(f''' === File Name: {fname}''')
         f=netCDF4.Dataset(fdir+'/'+fname)
         logging.info(f''' NETCDF: {f}''')
-        obs=f.groups['ObsValue'].variables['totalSnowDepth']
-        logging.info("ObsValue:",obs)
-        ombg=f.groups['ombg'].variables['totalSnowDepth']
-        logging.info("OMBG:",ombg)
-        qc=f.groups['PreQC'].variables['totalSnowDepth']
-        logging.info("PreQC:",qc)
-        if plottype=='histogram':
-            ombg_=np.ma.masked_where(qc != 0, ombg)
-            ombg_=np.ma.masked_where(ombg == 0, ombg_)
-            ombg=ombg_
-        lat=f.groups['MetaData'].variables['latitude']
-        lon=f.groups['MetaData'].variables['longitude']
+        obs=f.groups['ObsValue'].variables['totalSnowDepth'][:]
+        print("ObsValue:",obs)
+        ombg=f.groups['ombg'].variables['totalSnowDepth'][:]
+        print("OMBG:",ombg)
+        lat=f.groups['MetaData'].variables['latitude'][:]
+        lon=f.groups['MetaData'].variables['longitude'][:]
+
+        print("TEST:", len(ombg), len(obs))
+        ombg = [x for x, y in zip(ombg, obs) if y != 0]
+        lat = [x for x, y in zip(lat, obs) if y != 0]
+        lon = [x for x, y in zip(lon, obs) if y != 0]
+        obs = [x for x in obs if x != 0]
+        print("TEST:", len(ombg), len(obs))
+        print("TEST:", np.max(ombg), np.min(ombg))
+        print("TEST:", np.max(obs), np.min(obs))
 
         obs_.append(obs[:])
         omb_.append(ombg[:])
@@ -50,6 +51,7 @@ def get_obs_stats(fdir, plottype, jedi_exe):
     total_obs=np.concatenate(obs_)
     total_lat=np.concatenate(lat_)
     total_lon=np.concatenate(lon_)
+
 
     return total_omb,total_lat,total_lon
 

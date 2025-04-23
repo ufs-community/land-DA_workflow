@@ -26,7 +26,6 @@ import matplotlib as mpl
 
 # Main part (will be called at the end) ============================= CHJ =====
 def main():
-# =================================================================== CHJ =====
 
     yaml_file="plot_timehistory.yaml"
     with open(yaml_file, 'r') as f:
@@ -74,7 +73,6 @@ def main():
 
 # Get data from files =============================================== CHJ =====
 def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm):
-# =================================================================== CHJ =====
 
     logging.info(f''' ===== var name: '{var_nm}' ========================''')
     # Find files with the sampe prefix
@@ -216,7 +214,6 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
 
 # Get data from files =============================================== CHJ =====
 def get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_fcst):
-# =================================================================== CHJ =====
 
     # Find files with the sampe prefix
     fp_data_fcst_prefix = os.path.join(path_data,fn_data_fcst_prefix)
@@ -269,7 +266,6 @@ def get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_f
 
 # Plot data ========================================================= CHJ =====
 def plot_data(var_dict_anal,var_dict_fcst,jedi_exe,obs_type,out_fn_base,work_dir,var_nm):
-# =================================================================== CHJ =====
 
     global txt_fnt,ln_wdth,mk_sz
 
@@ -324,7 +320,6 @@ def plot_data(var_dict_anal,var_dict_fcst,jedi_exe,obs_type,out_fn_base,work_dir
 
 # Plot time-history of QC data ====================================== CHJ =====
 def plot_his_qc(dfa,min_var,max_var,rms_var,out_title_qc,out_fn_qc,work_dir,qc_type):
-# =================================================================== CHJ =====
 
     # figsize=(width,height) in inches
     fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(6,6))
@@ -360,7 +355,6 @@ def plot_his_qc(dfa,min_var,max_var,rms_var,out_title_qc,out_fn_qc,work_dir,qc_t
 
 # Plot time-history of H(x) OMB data ================================ CHJ =====
 def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
-# =================================================================== CHJ =====
 
     dfa = pd.DataFrame(var_dict_anal)
 
@@ -426,7 +420,7 @@ def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
 
 # Output file ======================================================= CHJ =====
 def out_file(work_dir,out_file,ndpi):
-# =================================================================== CHJ =====
+ 
     # Output figure
     fp_out = os.path.join(work_dir,out_file)
     plt.savefig(fp_out+'.png',dpi=ndpi,bbox_inches='tight')

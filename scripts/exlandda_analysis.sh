@@ -148,7 +148,7 @@ export pgm="${jedi_exe_fn}"
 . prep_step
 ${run_cmd} -n ${NPROCS_ANALYSIS} ${JEDI_EXECDIR}/$pgm ${jedi_nml_fn} >>$pgmout 2>errfile
 export err=$?; err_chk
-cp errfile errfile_jedi_letkf
+cp errfile errfile_fv3jedi_x
 if [[ $err != 0 ]]; then
   err_exit "JEDI DA failed"
 fi
