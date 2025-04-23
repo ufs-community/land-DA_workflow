@@ -59,21 +59,14 @@ def main():
     try: mdat=nc.Dataset(fpath)
     except: raise Exception('Could NOT find the file',fpath)
 
-    if OBS_TYPE == 'ghcn':
-        logging.debug(" MetaData:", mdat.groups['MetaData'])
-        logging.debug(" ObsValue:", mdat.groups['ObsValue'])
+    logging.debug(" MetaData:", mdat.groups['MetaData'])
+    logging.debug(" ObsValue:", mdat.groups['ObsValue'])
 
-        lon = mdat.groups['MetaData'].variables['longitude'][:]
-        lat = mdat.groups['MetaData'].variables['latitude'][:]
-        # Variables
-        #vars_out=["ObsValue", "ObsError", "PreQC"]
-        vars_out=["ObsValue"]
-    elif OBS_TYPE == 'ims':
-        print(mdat)    
-        lon = mdat.variables['lon'][:]
-        lat = mdat.variables['lat'][:]
-        # Variables
-        vars_out=["IMSscf", "IMSsnd"]
+    lon = mdat.groups['MetaData'].variables['longitude'][:]
+    lat = mdat.groups['MetaData'].variables['latitude'][:]
+    # Variables
+    #vars_out=["ObsValue", "ObsError", "PreQC"]
+    vars_out=["ObsValue"]
 
     # Highest and lowest longitudes and latitudes for plot extent
     lon_min=np.min(lon)
@@ -103,15 +96,9 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base
 
     logging.info(' ===== '+svar+' ==========================================')
     # Extract data array
-    if OBS_TYPE == 'ghcn':
-        sfld=mdat.groups[svar].variables['totalSnowDepth'][:]
-    elif OBS_TYPE == 'ims':
-        sfld=mdat.variables[svar][:]
+    sfld=mdat.groups[svar].variables['totalSnowDepth'][:]
 
-    if svar == 'ObsValue' or svar == 'IMSsnd':
-      svar="SnowDepth"
-    elif svar == 'IMSscf':
-      svar="SnowCoveredFraction"
+    svar="SnowDepth"
 
     out_title_fld=out_title_base+svar
     out_fn=out_fn_base+svar
@@ -144,16 +131,8 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base
         cs_min=fmin
         cs_max=fmax
     elif cmap_range=='fixed':
-        if svar == 'SnowDepth':
-            if OBS_TYPE == 'ghcn':
-                cs_min=0
-                cs_max=1000.0
-            elif OBS_TYPE == 'ims':
-                cs_min=0
-                cs_max=100.0
-        elif svar == 'SnowCoveredFraction':
-          cs_min=0
-          cs_max=1
+        cs_min=0
+        cs_max=300.0
     else:
         sys.exit('ERROR: wrong colormap-range flag !!!')
 

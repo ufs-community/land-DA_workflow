@@ -136,9 +136,14 @@ EOF
         err_exit "calcfIMS failed"
       fi
 
+      # Convert to IODA format
       fims_out_fn="IMSscf.${PDY}.C${RES}_oro_data.nc"
-      cp -p ${fims_out_fn} "${COMOUTobs}/${obs_out_fn}"
-      ln -nsf ${fims_out_fn} ${obs_out_fn}
+      ${USHlandda}/imsfv3_scf2ioda.py -i ${fims_out_fn} -o ${obs_out_fn}
+      if [ $? -ne 0 ]; then
+        err_exit "Generation of IMS obs file failed !!!"
+      fi
+      cp -p ${obs_out_fn} "${COMOUTobs}/${obs_out_fn}"
+
     fi
   fi
   ############################################################
