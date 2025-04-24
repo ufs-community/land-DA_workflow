@@ -268,7 +268,7 @@ if [ "${WE2E_TEST}" == "YES" ]; then
   path_fbase="${FIXlandda}/test_base/we2e_com/${RUN}.${PDY}"
   fn_sfc="${FILEDATE}.sfc_data.tile"
   fn_inc="${inc_fn_prefix}.tile"
-  fn_hofx="diag.ghcn_snow_${PDY}${cyc}.nc"
+  fn_hofx="diag.${OBS_TYPE}_snow_${PDY}${cyc}.nc"
   we2e_log_fp="${LOGDIR}/${WE2E_LOG_FN}"
   if [ ! -f "${we2e_log_fp}" ]; then
     touch ${we2e_log_fp}

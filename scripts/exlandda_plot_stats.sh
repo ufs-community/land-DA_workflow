@@ -37,9 +37,11 @@ if [ "${DO_PLOT_STATS}" = "YES" ]; then
   title_fig="Snow Depth (mm)::${OBS_TYPE^^}::Obs-Bkg::${PDY}"
   # Prefix of output file name
   output_prefix="hofx_omb_${PDY}"
+
+  hofx_diag_fp="${COMINhofx}/diag.${OBS_TYPE}_snow_${PDY}${cyc}.nc"
   
   cat > plot_hofx.yaml <<EOF
-hofx_files: '${DATA_HOFX}'
+hofx_file: '${hofx_diag_fp}'
 field_var: '${field_var}'
 field_range: [${field_range_low},${field_range_high}]
 jedi_exe: '${JEDI_ALGORITHM}'
