@@ -44,7 +44,7 @@ do
   # obs are within DA window.
   obs_fn="obs.t${HH}z.ghcn_snow.nc"
   [[ -e obs/${obs_fn} ]] && rm obs/${obs_fn}
-  obs_file_orig=${OBSDIR}/${OBS_TYPES[$ii]}/${YY}/${OBS_TYPES[$ii],,}_snwd_ioda_${YY}${MP}${DP}${HP}.nc
+  obs_file_orig=${OBSDIR}/${OBS_TYPES[$ii]^^}/${YY}/${OBS_TYPES[$ii],,}_snwd_ioda_${YY}${MP}${DP}${HP}.nc
   if [[ -e $obs_file_orig ]]; then
     echo "${OBS_TYPES[$ii]} observations found: $obs_file_orig"
   else
