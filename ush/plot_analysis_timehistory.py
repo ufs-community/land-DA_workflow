@@ -41,7 +41,7 @@ def main():
     jedi_exe = yaml_data['jedi_exe']
     nprocs_anal = yaml_data['nprocs_anal']
     nprocs_fcst = yaml_data['nprocs_fcst']
-    obs_type = yaml_data['obs_type']
+    OBS_TYPE = yaml_data['OBS_TYPE']
     out_fn_base = yaml_data['out_fn_base']
     hofx_data_path = yaml_data['hofx_data_path']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
@@ -65,14 +65,14 @@ def main():
 
     # plot time-history
     for var_nm in var_list:
-        var_dict_anal = get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm)
+        var_dict_anal = get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm,OBS_TYPE)
         var_dict_fcst = get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_fcst)
-        plot_data(var_dict_anal,var_dict_fcst,jedi_exe,obs_type,out_fn_base,work_dir,var_nm)
+        plot_data(var_dict_anal,var_dict_fcst,jedi_exe,OBS_TYPE,out_fn_base,work_dir,var_nm)
         plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path)
 
 
 # Get data from files =============================================== CHJ =====
-def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm):
+def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm,OBS_TYPE):
 
     logging.info(f''' ===== var name: '{var_nm}' ========================''')
     # Find files with the sampe prefix
@@ -87,7 +87,7 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
     files.sort()
     logging.debug(f''' Files= {files}''')
 
-    nobs_qc_prefix = "QC ghcn_snow totalSnowDepth"
+    nobs_qc_prefix = f"QC {OBS_TYPE}_snow totalSnowDepth"
     wtime_oops_prefix = "OOPS_STATS util::Timers::Total"
 
     file_date = []
@@ -265,7 +265,7 @@ def get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_f
 
 
 # Plot data ========================================================= CHJ =====
-def plot_data(var_dict_anal,var_dict_fcst,jedi_exe,obs_type,out_fn_base,work_dir,var_nm):
+def plot_data(var_dict_anal,var_dict_fcst,jedi_exe,OBS_TYPE,out_fn_base,work_dir,var_nm):
 
     global txt_fnt,ln_wdth,mk_sz
 
@@ -277,7 +277,7 @@ def plot_data(var_dict_anal,var_dict_fcst,jedi_exe,obs_type,out_fn_base,work_dir
     mk_sz=3
     
     # PLOT max/min/RMS/QC obs
-    obs_type_upper = obs_type.upper()
+    obs_type_upper = OBS_TYPE.upper()
     if jedi_exe == '3dvar':
         # analysis
         out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type_upper}::{var_nm}'''
