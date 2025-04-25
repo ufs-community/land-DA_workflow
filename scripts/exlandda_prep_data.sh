@@ -2,6 +2,8 @@
 
 set -xue
 
+ulimit -s unlimited; ulimit -a;
+
 # Set other dates
 PTIME=$($NDATE -${DATE_CYCLE_FREQ_HR} $PDY$cyc)
 
@@ -23,7 +25,7 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
 
   OBSDIR="${OBSDIR:-${FIXlandda}/DA_obs}"
   DATA_GHCN_RAW="${DATA_GHCN_RAW:-${FIXlandda}/DATA_ghcn}"
-  
+
   # GHCN snow depth data
   if [ "${OBS_TYPE}" = "ghcn" ]; then
     # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, 
