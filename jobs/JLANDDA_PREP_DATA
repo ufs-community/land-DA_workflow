@@ -65,6 +65,7 @@ setpdy.sh
 
 export COMIN="${COMIN:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
 export COMINm1="${COMINm1:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDYm1}}"
+export COMINgdas="${COMINgdas:-${FIXlandda}/DATA_gdas}"
 
 export COMOUT="${COMOUT:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
 mkdir -p ${COMOUT}
@@ -77,6 +78,8 @@ mkdir -p ${COMOUTplot}
 
 export DATA_DATM="${DATA_DATM:-${DATAROOT}/DATA_SHARE/INPUT_DATM/${PDY}${cyc}}"
 mkdir -p ${DATA_DATM}
+export DATA_DATM_FORC="${DATA_DATM_FORC:-${DATAROOT}/DATA_SHARE/INPUT_DATM/forc}"
+mkdir -p ${DATA_DATM_FORC}
 
 export DCOMINera5=${DCOMINera5:-${FIXlandda}/DATM_input_data/era5}
 export DCOMINgswp3=${DCOMINgswp3:-${FIXlandda}/DATM_input_data/gswp3}

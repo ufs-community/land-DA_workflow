@@ -89,7 +89,7 @@ settings="\
   'snow_background_time_iso': !!str ${snow_background_time_iso}
   'snow_bump_data_dir': berror
   'snow_obsdatain_path': obs
-  'snow_obsdatain_prefix': "obs.${cycle}."
+  'snow_obsdatain_prefix': "obs.${PDY}.${cycle}."
   'snow_obsdataout_path': diags
   'snow_obsdataout_prefix': "diag."
   'snow_obsdataout_suffix': "_${cdate}.nc"

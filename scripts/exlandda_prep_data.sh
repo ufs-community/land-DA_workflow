@@ -2,6 +2,8 @@
 
 set -xue
 
+ulimit -s unlimited; ulimit -a;
+
 # Set other dates
 PTIME=$($NDATE -${DATE_CYCLE_FREQ_HR} $PDY$cyc)
 
@@ -23,9 +25,9 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
 
   OBSDIR="${OBSDIR:-${FIXlandda}/DA_obs}"
   DATA_GHCN_RAW="${DATA_GHCN_RAW:-${FIXlandda}/DATA_ghcn}"
-  
+
   # GHCN snow depth data
-  if [ "${OBS_TYPE}" = "GHCN" ]; then
+  if [ "${OBS_TYPE}" = "ghcn" ]; then
     # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, 
     # so that obs are within DA window.
     obs_fn="ghcn_snwd_ioda_${YYYP}${MP}${DP}${HP}.nc"
@@ -33,7 +35,7 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
     obs_fp="${obs_dp}/${obs_fn}"
     obs_out_fn="ghcn_snow_${PDY}${cyc}.nc"
   
-    # check obs is available
+    # Check if obs is available
     if [ -f "${obs_fp}" ]; then
       echo "GHCN observation file: ${obs_fp}"
       cp -p "${obs_fp}" "${obs_out_fn}"
@@ -58,31 +60,118 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
       cp -p "${obs_fn}" "${obs_out_fn}"
       cp -p "${obs_fn}" "${COMOUTobs}/${obs_out_fn}"
     fi
+
+  elif [ "${OBS_TYPE}" = "ims" ]; then  
+    # Check if pre-generated IMS obs file exists
+    obs_fn="obs.${PDY}.${cycle}.ims_snow.tm00.nc"
+    obs_dp="${OBSDIR}/IMS/${PDY}"
+    obs_fp="${obs_dp}/${obs_fn}"
+    obs_out_fn=${obs_fn}
+
+    # Check if obs is available
+    if [ -f "${obs_fp}" ]; then
+      cp -p "${obs_fp}" .
+      cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn}"
+    else
+      # Set up input namelist for calcfIMS
+      julian_day=$(date -d "${YYYY}-${MM}-${DD}" +%j)
+      jdate="${YYYY}${julian_day}"
+      orog_fn_base="C${RES}_oro_data"
+      if [ "${PDY}${cyc}" -lt "20141203" ]; then
+        imsversion="1.2"
+      else
+        imsversion="1.3"
+      fi
+      imsres="4km"
+
+      if [ "${FRAC_GRID}" = "YES" ]; then
+        frac_grid=".true."
+      else
+        frac_grid=".false."
+      fi
+
+cat > fims.nml << EOF
+&fIMS_nml
+  idim = ${RES}, 
+  jdim = ${RES},
+  jdate = "${jdate}",
+  otype = "${orog_fn_base}",
+  yyyymmddhh = "${YYYY}${MM}${DD}.${HH}",
+  lsm = 2,
+  imsformat = 1,
+  imsres = "${imsres}",
+  imsversion = "${imsversion}",
+  frac_grid = ${frac_grid},
+  fcst_path = "${DATA}/",
+  IMS_obs_path = "${DATA}/",
+  IMS_ind_path = "${DATA}/"
+/
+EOF
+
+      # Copy IMS raw ascii file
+      ims_asc_fn="ims${jdate}_${imsres}_v${imsversion}.asc"
+      cp -p "${COMINgdas}/${PDY}/gdas.t${cyc}z.imssnow${RES}.asc" "${DATA}/${ims_asc_fn}"
+      # Soft-link mapping file
+      ln -nsf "${OBSDIR}/IMS/fix/IMS4km_to_FV3_mapping.C${RES}_oro_data.nc" .
+
+      # Copy sfc_data files into work directory
+      for itile in {1..6}
+      do
+        sfc_m1="${YYYP}${MP}${DP}.${HP}0000.sfc_data.tile${itile}.nc"
+        sfc_m0="${YYYY}${MM}${DD}.${HH}0000.sfc_data.tile${itile}.nc"
+        if [ -f ${COMINm1}/${sfc_m1} ]; then
+          ln -nsf ${COMINm1}/${sfc_m1} ${DATA}/${sfc_m0}
+        elif [ -f ${WARMSTART_DIR}/${sfc_m1} ]; then
+          ln -nsf ${WARMSTART_DIR}/${sfc_m1} ${DATA}/${sfc_m0}
+        else
+          err_exit "sfc_data files do not exist"
+        fi
+      done
   
-    ############################################################
-    # Observation File Plot
-    ############################################################
+      # Run calcfIMS.exe
+      export pgm="calcfIMS.exe"
+      . prep_step
+      ${EXEClandda}/$pgm >>$pgmout 2>errfile
+      export err=$?; err_chk
+      cp errfile errfile_calcfIMS
+      if [[ $err != 0 ]]; then
+        err_exit "calcfIMS failed"
+      fi
+
+      # Convert to IODA format
+      fims_out_fn="IMSscf.${PDY}.C${RES}_oro_data.nc"
+      ${USHlandda}/imsfv3_scf2ioda.py -i ${fims_out_fn} -o ${obs_out_fn}
+      if [ $? -ne 0 ]; then
+        err_exit "Generation of IMS obs file failed !!!"
+      fi
+      cp -p ${obs_out_fn} "${COMOUTobs}/${obs_out_fn}"
+
+    fi
+  fi
+  ############################################################
+  # Observation File Plot
+  ############################################################
   
-    out_title_base="Land-DA::Obs::GHCN::${PDY}::"
-    out_fn_base="landda_obs_ghcn_${PDY}_"
+  out_title_base="Land-DA::Obs::${OBS_TYPE}::${PDY}::"
+  out_fn_base="landda_obs_${OBS_TYPE}_${PDY}_"
   
-    cat > plot_obs_ghcn.yaml <<EOF
+  cat > plot_obs_file.yaml <<EOF
 work_dir: '${DATA}'
 fn_input: '${obs_out_fn}'
 out_title_base: '${out_title_base}'
 out_fn_base: '${out_fn_base}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+OBS_TYPE: '${OBS_TYPE}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
   
-    ${USHlandda}/plot_obs_ghcn.py
-    if [ $? -ne 0 ]; then
-      err_exit "Observation file plot failed"
-    fi
+  ${USHlandda}/plot_obs_file.py
+  if [ $? -ne 0 ]; then
+    err_exit "Observation file plot failed"
+  fi
   
-    # Copy result file to COMOUT
-    cp -p ${out_fn_base}* ${COMOUTplot}
-  fi  
+  # Copy result file to COMOUT
+  cp -p ${out_fn_base}* ${COMOUTplot}
 fi
 
 #
@@ -96,7 +185,11 @@ if [ "${APP}" = "LND" ]; then
 
   if [ "${COLDSTART}" = "YES" ] && [ "${PDY}${cyc}" = "${DATE_FIRST_CYCLE:0:10}" ]; then
     first_date_m1=$($NDATE -24 $DATE_FIRST_CYCLE)
-    last_date_p1=$($NDATE 24 $DATE_LAST_CYCLE)
+    if [ -z "${DATM_STREAM_FN_LAST_DATE}" ]; then
+      last_date_p1=$($NDATE 24 $DATE_LAST_CYCLE)
+    else
+      last_date_p1=$($NDATE 24 $DATM_STREAM_FN_LAST_DATE)
+    fi
     year_first="${first_date_m1:0:4}"
     month_first="${first_date_m1:4:2}"
     day_first="${first_date_m1:6:2}"
@@ -185,6 +278,8 @@ if [ "${APP}" = "LND" ]; then
       data_fp="${DCOMINera5}/${data_fn}"
       if [ -f ${data_fp} ]; then
         ln -nsf "${data_fp}" ${DATA_DATM}
+      elif [ -f "${DATA_DATM_FORC}/${data_fn}" ]; then
+        ln -nsf "${DATA_DATM_FORC}/${data_fn}" ${DATA_DATM}
       else
         # Create ERA5 forcing file with raw data files
         path_raw_data="${DCOMINera5}/raw_data"
@@ -192,6 +287,7 @@ if [ "${APP}" = "LND" ]; then
         ${USHlandda}/era5_merge_files.py -i "${path_raw_data}" -c ${data_cdate} -o ${DATA} -l ${PY_LOG_LEVEL}
         cp -p ${data_fn} ${COMOUTdatm}
         ln -nsf "${COMOUTdatm}/${data_fn}" ${DATA_DATM}
+        ln -nsf "${COMOUTdatm}/${data_fn}" ${DATA_DATM_FORC}
       fi
     done
     ln -nsf ${DCOMINera5}/${datm_in_mesh_fn} ${DATA_DATM}

@@ -54,8 +54,15 @@ done
 # Copy obserbation file to work directory
 mkdir -p ${DATA}/obs
 obs_type_lower="${OBS_TYPE,,}"
-obs_suffix="${obs_type_lower}_snow.nc"
-ln -nsf "${COMIN}/obs/${obs_type_lower}_snow_${PDY}${cyc}.nc" "${DATA}/obs/obs.${cycle}.${obs_suffix}"
+obs_prefix="obs.${PDY}.${cycle}"
+if [ "${obs_type_lower}" = "ghcn" ]; then
+  obs_suffix="${obs_type_lower}_snow.nc"
+  obs_orig_fn="${obs_type_lower}_snow_${PDY}${cyc}.nc"
+elif [ "${obs_type_lower}" = "ims" ]; then
+  obs_suffix="${obs_type_lower}_snow.tm00.nc"
+  obs_orig_fn="${obs_prefix}.${obs_suffix}"
+fi
+ln -nsf "${COMINobs}/${obs_orig_fn}" "${DATA}/obs/${obs_prefix}.${obs_suffix}"
 
 # update coupler.res file
 settings="\
@@ -141,7 +148,7 @@ export pgm="${jedi_exe_fn}"
 . prep_step
 ${run_cmd} -n ${NPROCS_ANALYSIS} ${JEDI_EXECDIR}/$pgm ${jedi_nml_fn} >>$pgmout 2>errfile
 export err=$?; err_chk
-cp errfile errfile_jedi_letkf
+cp errfile errfile_fv3jedi_x
 if [[ $err != 0 ]]; then
   err_exit "JEDI DA failed"
 fi
@@ -261,7 +268,7 @@ if [ "${WE2E_TEST}" == "YES" ]; then
   path_fbase="${FIXlandda}/test_base/we2e_com/${RUN}.${PDY}"
   fn_sfc="${FILEDATE}.sfc_data.tile"
   fn_inc="${inc_fn_prefix}.tile"
-  fn_hofx="diag.ghcn_snow_${PDY}${cyc}.nc"
+  fn_hofx="diag.${OBS_TYPE}_snow_${PDY}${cyc}.nc"
   we2e_log_fp="${LOGDIR}/${WE2E_LOG_FN}"
   if [ ! -f "${we2e_log_fp}" ]; then
     touch ${we2e_log_fp}

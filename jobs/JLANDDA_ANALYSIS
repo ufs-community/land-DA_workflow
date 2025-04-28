@@ -64,6 +64,7 @@ setpdy.sh
 [[ "$WORKFLOW_MANAGER" = "rocoto" ]] && export COMROOT=$COMROOT
 
 export COMIN="${COMIN:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
+export COMINobs=${COMINobs:-${COMIN}/obs}
 
 export COMOUT="${COMOUT:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
 mkdir -p ${COMOUT}

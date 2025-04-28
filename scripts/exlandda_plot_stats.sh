@@ -27,19 +27,21 @@ if [ "${DO_PLOT_STATS}" = "YES" ]; then
   # Field variable
   field_var="OMB"
   # Field Range for scatter plot: [Low,High]
-  field_range_low=-300
-  field_range_high=300
+  field_range_low=-200
+  field_range_high=200
   # Number of bins in histogram plot
   nbins=100
   # Plot type (scatter/histogram/both)
   plottype="both"
   # Figure title
-  title_fig="GHCN Snow Depth (mm)::Obs-Bkg::${PDY}"
+  title_fig="Snow Depth (mm)::${OBS_TYPE^^}::Obs-Bkg::${PDY}"
   # Prefix of output file name
   output_prefix="hofx_omb_${PDY}"
+
+  hofx_diag_fp="${COMINhofx}/diag.${OBS_TYPE}_snow_${PDY}${cyc}.nc"
   
   cat > plot_hofx.yaml <<EOF
-hofx_files: '${DATA_HOFX}'
+hofx_file: '${hofx_diag_fp}'
 field_var: '${field_var}'
 field_range: [${field_range_low},${field_range_high}]
 jedi_exe: '${JEDI_ALGORITHM}'
@@ -84,7 +86,7 @@ fn_data_fcst_suffix: '${fn_data_fcst_suffix}'
 jedi_exe: '${JEDI_ALGORITHM}'
 nprocs_anal: '${NPROCS_ANALYSIS}'
 nprocs_fcst: '${nprocs_forecast}'
-obs_type: '${OBS_TYPE}'
+OBS_TYPE: '${OBS_TYPE}'
 out_fn_base: '${out_fn_base}'
 hofx_data_path: '${DATA_HOFX_OMB}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'

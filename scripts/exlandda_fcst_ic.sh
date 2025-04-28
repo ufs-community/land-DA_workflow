@@ -37,10 +37,10 @@ else
   data_format="nemsio"
 fi
 
-if [ "${IC_DATA_MODEL}" = "GFS" ] || [ "${IC_DATA_MODEL}" = "gfs" ]; then
+if [ "${IC_DATA_MODEL}" = "gfs" ] || [ "${IC_DATA_MODEL}" = "GFS" ]; then
   fn_data_prefix="gfs"
   data_dir_input_grid="${COMINgfs}/${PDY}${cyc}"
-elif [ "${IC_DATA_MODEL}" = "GDAS" ] || [ "${IC_DATA_MODEL}" = "gdas" ]; then
+elif [ "${IC_DATA_MODEL}" = "gdas" ] || [ "${IC_DATA_MODEL}" = "GDAS" ]; then
   fn_data_prefix="gdas"
   data_dir_input_grid="${COMINgdas}/${PDY}${cyc}"
 fi

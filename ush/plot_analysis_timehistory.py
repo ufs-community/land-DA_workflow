@@ -26,7 +26,6 @@ import matplotlib as mpl
 
 # Main part (will be called at the end) ============================= CHJ =====
 def main():
-# =================================================================== CHJ =====
 
     yaml_file="plot_timehistory.yaml"
     with open(yaml_file, 'r') as f:
@@ -42,7 +41,7 @@ def main():
     jedi_exe = yaml_data['jedi_exe']
     nprocs_anal = yaml_data['nprocs_anal']
     nprocs_fcst = yaml_data['nprocs_fcst']
-    obs_type = yaml_data['obs_type']
+    OBS_TYPE = yaml_data['OBS_TYPE']
     out_fn_base = yaml_data['out_fn_base']
     hofx_data_path = yaml_data['hofx_data_path']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
@@ -66,15 +65,14 @@ def main():
 
     # plot time-history
     for var_nm in var_list:
-        var_dict_anal = get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm)
+        var_dict_anal = get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm,OBS_TYPE)
         var_dict_fcst = get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_fcst)
-        plot_data(var_dict_anal,var_dict_fcst,jedi_exe,obs_type,out_fn_base,work_dir,var_nm)
+        plot_data(var_dict_anal,var_dict_fcst,jedi_exe,OBS_TYPE,out_fn_base,work_dir,var_nm)
         plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path)
 
 
 # Get data from files =============================================== CHJ =====
-def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm):
-# =================================================================== CHJ =====
+def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm,OBS_TYPE):
 
     logging.info(f''' ===== var name: '{var_nm}' ========================''')
     # Find files with the sampe prefix
@@ -89,7 +87,7 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
     files.sort()
     logging.debug(f''' Files= {files}''')
 
-    nobs_qc_prefix = "QC ghcn_snow totalSnowDepth"
+    nobs_qc_prefix = f"QC {OBS_TYPE}_snow totalSnowDepth"
     wtime_oops_prefix = "OOPS_STATS util::Timers::Total"
 
     file_date = []
@@ -216,7 +214,6 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
 
 # Get data from files =============================================== CHJ =====
 def get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_fcst):
-# =================================================================== CHJ =====
 
     # Find files with the sampe prefix
     fp_data_fcst_prefix = os.path.join(path_data,fn_data_fcst_prefix)
@@ -268,8 +265,7 @@ def get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_f
 
 
 # Plot data ========================================================= CHJ =====
-def plot_data(var_dict_anal,var_dict_fcst,jedi_exe,obs_type,out_fn_base,work_dir,var_nm):
-# =================================================================== CHJ =====
+def plot_data(var_dict_anal,var_dict_fcst,jedi_exe,OBS_TYPE,out_fn_base,work_dir,var_nm):
 
     global txt_fnt,ln_wdth,mk_sz
 
@@ -281,17 +277,18 @@ def plot_data(var_dict_anal,var_dict_fcst,jedi_exe,obs_type,out_fn_base,work_dir
     mk_sz=3
     
     # PLOT max/min/RMS/QC obs
+    obs_type_upper = OBS_TYPE.upper()
     if jedi_exe == '3dvar':
         # analysis
-        out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type}::{var_nm}'''
+        out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type_upper}::{var_nm}'''
         out_fn_qc = f'''{out_fn_base}_anal_{var_nm}'''
         plot_his_qc(dfa,'Min_m1','Max_m1','RMS_m1',out_title_qc,out_fn_qc,work_dir,'anal')
         # increment
-        out_title_qc = f'''Land-DA::Increment::{jedi_exe}::{obs_type}::{var_nm}'''
+        out_title_qc = f'''Land-DA::Increment::{jedi_exe}::{obs_type_upper}::{var_nm}'''
         out_fn_qc = f'''{out_fn_base}_inc_{var_nm}'''
         plot_his_qc(dfa,'Min','Max','RMS',out_title_qc,out_fn_qc,work_dir,'inc')
     else:
-        out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type}::{var_nm}'''
+        out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type_upper}::{var_nm}'''
         out_fn_qc = f'''{out_fn_base}_anal_{var_nm}'''
         plot_his_qc(dfa,'Min','Max','RMS',out_title_qc,out_fn_qc,work_dir,'anal')
 
@@ -324,7 +321,6 @@ def plot_data(var_dict_anal,var_dict_fcst,jedi_exe,obs_type,out_fn_base,work_dir
 
 # Plot time-history of QC data ====================================== CHJ =====
 def plot_his_qc(dfa,min_var,max_var,rms_var,out_title_qc,out_fn_qc,work_dir,qc_type):
-# =================================================================== CHJ =====
 
     # figsize=(width,height) in inches
     fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(6,6))
@@ -360,7 +356,6 @@ def plot_his_qc(dfa,min_var,max_var,rms_var,out_title_qc,out_fn_qc,work_dir,qc_t
 
 # Plot time-history of H(x) OMB data ================================ CHJ =====
 def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
-# =================================================================== CHJ =====
 
     dfa = pd.DataFrame(var_dict_anal)
 
@@ -426,7 +421,7 @@ def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
 
 # Output file ======================================================= CHJ =====
 def out_file(work_dir,out_file,ndpi):
-# =================================================================== CHJ =====
+ 
     # Output figure
     fp_out = os.path.join(work_dir,out_file)
     plt.savefig(fp_out+'.png',dpi=ndpi,bbox_inches='tight')

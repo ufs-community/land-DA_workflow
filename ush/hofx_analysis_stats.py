@@ -15,45 +15,36 @@ import matplotlib.ticker
 import matplotlib as mpl
 from matplotlib.colors import ListedColormap
 
-def get_obs_stats(fdir, plottype, jedi_exe):
-    global lat,lon
-    omb_=[]
-    obs_=[]
-    qc_ =[]
-    err_=[]
-    lat_=[]
-    lon_=[]
-    
-    for fname in os.listdir(fdir):
-        logging.info(f''' === File Name: {fname}''')
-        f=netCDF4.Dataset(fdir+'/'+fname)
-        logging.info(f''' NETCDF: {f}''')
-        obs=f.groups['ObsValue'].variables['totalSnowDepth']
-        print("ObsValue:",obs)
-        ombg=f.groups['ombg'].variables['totalSnowDepth']
-        print("OMBG:",ombg)
-        qc=f.groups['PreQC'].variables['totalSnowDepth']
-        print("PreQC:",qc)
-        obstime=f.groups['MetaData'].variables['dateTime']
-        print("OBS_TIME:",obstime)
-        if plottype=='histogram':
-            ombg_=np.ma.masked_where(qc != 0, ombg)
-            ombg_=np.ma.masked_where(ombg == 0, ombg_)
-            ombg=ombg_
-        lat=f.groups['MetaData'].variables['latitude']
-        lon=f.groups['MetaData'].variables['longitude']
+def get_obs_stats(fname, plottype, jedi_exe):
 
-        obs_.append(obs[:])
-        omb_.append(ombg[:])
-        lat_.append(lat[:])
-        lon_.append(lon[:])
+    logging.info(f''' === File Name: {fname}''')
+    f=netCDF4.Dataset(fname)
+    logging.info(f''' NETCDF: {f}''')
+    obs=f.groups['ObsValue'].variables['totalSnowDepth'][:]
+    logging.debug("ObsValue:",obs)
+    omb=f.groups['ombg'].variables['totalSnowDepth'][:]
+    logging.debug("OMBG:",omb)
+    lat=f.groups['MetaData'].variables['latitude'][:]
+    lon=f.groups['MetaData'].variables['longitude'][:]
 
-    total_omb=np.concatenate(omb_)
-    total_obs=np.concatenate(obs_)
-    total_lat=np.concatenate(lat_)
-    total_lon=np.concatenate(lon_)
+    numpt_omb=len(omb)
+    numpt_obs=len(obs)
+    logging.info(f'''Number of points (raw): {numpt_omb}, {numpt_obs}''')
+    obs = [x for x, y in zip(obs, omb) if y>-1000 and y<1000]
+    lat = [x for x, y in zip(lat, omb) if y>-1000 and y<1000]
+    lon = [x for x, y in zip(lon, omb) if y>-1000 and y<1000]
+    omb = [x for x in omb if x>-1000 and x<1000]
+    numpt_omb=len(omb)
+    numpt_obs=len(obs)
+    logging.info(f'''Number of points (excluding zeros): {numpt_omb}, {numpt_obs}''')
+    max_omb=np.max(omb)
+    min_omb=np.min(omb)
+    max_obs=np.max(obs)
+    min_obs=np.min(obs)
+    logging.info(f'''OMB max/min: {max_omb}, {min_omb}''')
+    logging.info(f'''OBS max/min: {max_obs}, {min_obs}''')
 
-    return total_omb,total_lat,total_lon
+    return omb,lat,lon
 
 
 def plot_scatter(hofx_data_path,cdate):
@@ -177,7 +168,7 @@ if __name__ == '__main__':
 
     logging.info(f''' YAML Data: {yaml_data}''')
 
-    omb,lat,lon=get_obs_stats(yaml_data['hofx_files'],yaml_data['plottype'],yaml_data['jedi_exe'])
+    omb,lat,lon=get_obs_stats(yaml_data['hofx_file'],yaml_data['plottype'],yaml_data['jedi_exe'])
     if yaml_data['field_var']=='OMB':
         field=omb    
 
