@@ -56,13 +56,16 @@ mkdir -p ${DATA}/obs
 obs_type_lower="${OBS_TYPE,,}"
 obs_prefix="obs.${PDY}.${cycle}"
 if [ "${obs_type_lower}" = "ghcn" ]; then
-  obs_suffix="${obs_type_lower}_snow.nc"
-  obs_orig_fn="${obs_type_lower}_snow_${PDY}${cyc}.nc"
+  obs_suffix="ghcn_snow.nc"
+  obs_orig_fn="ghcn_snow_${PDY}${cyc}.nc"
+  ln -nsf "${COMINobs}/${obs_orig_fn}" "${DATA}/obs/${obs_prefix}.${obs_suffix}"
 elif [ "${obs_type_lower}" = "ims" ]; then
-  obs_suffix="${obs_type_lower}_snow.tm00.nc"
-  obs_orig_fn="${obs_prefix}.${obs_suffix}"
+  obs_ims_suffix="ims_snow.tm00.nc"
+  ln -nsf "${COMINobs}/${obs_prefix}.${obs_ims_suffix}" "${DATA}/obs"
+  obs_sfcsno_suffix="sfcsno.tm00.bufr_d"
+  ln -nsf "${COMINobs}/${obs_prefix}.${obs_sfcsno_suffix}" "${DATA}/obs"
+  ln -nsf "${PARMlandda}/jedi/bufr_sfcsno_mapping.yaml" "${DATA}/obs"
 fi
-ln -nsf "${COMINobs}/${obs_orig_fn}" "${DATA}/obs/${obs_prefix}.${obs_suffix}"
 
 # update coupler.res file
 settings="\

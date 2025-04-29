@@ -146,6 +146,9 @@ EOF
       fi
       cp -p ${obs_out_fn} "${COMOUTobs}/${obs_out_fn}"
 
+      # Set up SFCSNO bufr_d file
+      sfcsno_fn_suffix="sfcsno.tm00.bufr_d"
+      cp -p "${COMINgdas}/${PDY}/gdas.${cycle}.${sfcsno_fn_suffix}" "${COMOUTobs}/obs.${PDY}.${cycle}.${sfcsno_fn_suffix}"
     fi
   fi
   ############################################################
