@@ -26,24 +26,26 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
   OBSDIR="${OBSDIR:-${FIXlandda}/DA_obs}"
   DATA_GHCN_RAW="${DATA_GHCN_RAW:-${FIXlandda}/DATA_ghcn}"
 
+  obs_out_fn_ghcn=""
+  obs_out_fn_ims=""
   # GHCN snow depth data
-  if [ "${OBS_TYPE}" = "ghcn" ]; then
+  if [ "${OBS_GHCN_SNOW}" = "YES" ]; then
     # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, 
     # so that obs are within DA window.
     obs_fn="ghcn_snwd_ioda_${YYYP}${MP}${DP}${HP}.nc"
     obs_dp="${OBSDIR}/GHCN/${YYYY}"
     obs_fp="${obs_dp}/${obs_fn}"
-    obs_out_fn="ghcn_snow_${PDY}${cyc}.nc"
+    obs_out_fn_ghcn="ghcn_snow_${PDY}${cyc}.nc"
   
     # Check if obs is available
     if [ -f "${obs_fp}" ]; then
       echo "GHCN observation file: ${obs_fp}"
-      cp -p "${obs_fp}" "${obs_out_fn}"
-      cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn}"
-    elif [ -f "${obs_dp}/${obs_out_fn}" ]; then
-      echo "GHCN observation file: ${obs_dp}/${obs_out_fn}"
-      cp -p "${obs_dp}/${obs_out_fn}" .
-      cp -p "${obs_dp}/${obs_out_fn}" "${COMOUTobs}/${obs_out_fn}"
+      cp -p "${obs_fp}" "${obs_out_fn_ghcn}"
+      cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_ghcn}"
+    elif [ -f "${obs_dp}/${obs_out_fn_ghcn}" ]; then
+      echo "GHCN observation file: ${obs_dp}/${obs_out_fn_ghcn}"
+      cp -p "${obs_dp}/${obs_out_fn_ghcn}" .
+      cp -p "${obs_dp}/${obs_out_fn_ghcn}" "${COMOUTobs}/${obs_out_fn_ghcn}"
     else
       input_ghcn_file="${DATA_GHCN_RAW}/${YYYP}.csv"
       if [ ! -f "${input_ghcn_file}" ]; then
@@ -57,21 +59,22 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
       if [ $? -ne 0 ]; then
         err_exit "Generation of GHCN obs file failed !!!"
       fi
-      cp -p "${obs_fn}" "${obs_out_fn}"
-      cp -p "${obs_fn}" "${COMOUTobs}/${obs_out_fn}"
+      cp -p "${obs_fn}" "${obs_out_fn_ghcn}"
+      cp -p "${obs_fn}" "${COMOUTobs}/${obs_out_fn_ghcn}"
     fi
-
-  elif [ "${OBS_TYPE}" = "ims" ]; then  
+  fi
+  # IMS snow data
+  if [ "${OBS_IMS_SNOW}" = "YES" ]; then  
     # Check if pre-generated IMS obs file exists
     obs_fn="obs.${PDY}.${cycle}.ims_snow.tm00.nc"
     obs_dp="${OBSDIR}/IMS/${PDY}"
     obs_fp="${obs_dp}/${obs_fn}"
-    obs_out_fn=${obs_fn}
+    obs_out_fn_ims=${obs_fn}
 
     # Check if obs is available
     if [ -f "${obs_fp}" ]; then
       cp -p "${obs_fp}" .
-      cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn}"
+      cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_ims}"
     else
       # Set up input namelist for calcfIMS
       julian_day=$(date -d "${YYYY}-${MM}-${DD}" +%j)
@@ -140,41 +143,40 @@ EOF
 
       # Convert to IODA format
       fims_out_fn="IMSscf.${PDY}.C${RES}_oro_data.nc"
-      ${USHlandda}/imsfv3_scf2ioda.py -i ${fims_out_fn} -o ${obs_out_fn}
+      ${USHlandda}/imsfv3_scf2ioda.py -i ${fims_out_fn} -o ${obs_out_fn_ims}
       if [ $? -ne 0 ]; then
         err_exit "Generation of IMS obs file failed !!!"
       fi
-      cp -p ${obs_out_fn} "${COMOUTobs}/${obs_out_fn}"
-
-      # Set up SFCSNO bufr_d file
-      sfcsno_fn_suffix="sfcsno.tm00.bufr_d"
-      cp -p "${COMINgdas}/${PDY}/gdas.${cycle}.${sfcsno_fn_suffix}" "${COMOUTobs}/obs.${PDY}.${cycle}.${sfcsno_fn_suffix}"
+      cp -p ${obs_out_fn_ims} "${COMOUTobs}/${obs_out_fn_ims}"
     fi
   fi
+  # SFCSNO data
+  if [ "${OBS_SFCSNO}" = "YES" ]; then
+    sfcsno_fn_suffix="sfcsno.tm00.bufr_d"
+    cp -p "${COMINgdas}/${PDY}/gdas.${cycle}.${sfcsno_fn_suffix}" "${COMOUTobs}/obs.${PDY}.${cycle}.${sfcsno_fn_suffix}"
+  fi
+
   ############################################################
   # Observation File Plot
   ############################################################
-  
-  out_title_base="Land-DA::Obs::${OBS_TYPE}::${PDY}::"
-  out_fn_base="landda_obs_${OBS_TYPE}_${PDY}_"
-  
-  cat > plot_obs_file.yaml <<EOF
+  cat > plot_obs_file.yaml << EOF
 work_dir: '${DATA}'
-fn_input: '${obs_out_fn}'
-out_title_base: '${out_title_base}'
-out_fn_base: '${out_fn_base}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
-OBS_TYPE: '${OBS_TYPE}'
+fn_input_ghcn: '${obs_out_fn_ghcn}'
+fn_input_ims: '${obs_out_fn_ims}'
+OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
+OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
+PDY: '${PDY}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
-  
+
   ${USHlandda}/plot_obs_file.py
   if [ $? -ne 0 ]; then
-    err_exit "Observation file plot failed"
+    err_exit "Observation file plot for GHCN_SNOW failed"
   fi
-  
+
   # Copy result file to COMOUT
-  cp -p ${out_fn_base}* ${COMOUTplot}
+  cp -p *.png ${COMOUTplot}
 fi
 
 #

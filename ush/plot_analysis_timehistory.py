@@ -40,7 +40,6 @@ def main():
     fn_data_fcst_suffix = yaml_data['fn_data_fcst_suffix']
     jedi_exe = yaml_data['jedi_exe']
     nprocs_anal = yaml_data['nprocs_anal']
-    nprocs_fcst = yaml_data['nprocs_fcst']
     OBS_TYPE = yaml_data['OBS_TYPE']
     out_fn_base = yaml_data['out_fn_base']
     hofx_data_path = yaml_data['hofx_data_path']
@@ -61,7 +60,6 @@ def main():
 
     var_list = ["totalSnowDepth"]
     nprocs_anal = int(nprocs_anal)
-    nprocs_fcst = int(nprocs_fcst)
 
     # plot time-history
     for var_nm in var_list:

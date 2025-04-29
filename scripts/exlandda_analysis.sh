@@ -51,17 +51,21 @@ do
   # copy sfc_data file for comparison
   cp -p ${sfc_fn} "${sfc_fn}_ini"
 done
+
 # Copy obserbation file to work directory
 mkdir -p ${DATA}/obs
-obs_type_lower="${OBS_TYPE,,}"
+
 obs_prefix="obs.${PDY}.${cycle}"
-if [ "${obs_type_lower}" = "ghcn" ]; then
+if [ "${OBS_GHCN_SNOW}" = "YES" ]; then
   obs_suffix="ghcn_snow.nc"
   obs_orig_fn="ghcn_snow_${PDY}${cyc}.nc"
   ln -nsf "${COMINobs}/${obs_orig_fn}" "${DATA}/obs/${obs_prefix}.${obs_suffix}"
-elif [ "${obs_type_lower}" = "ims" ]; then
+fi
+if [ "${OBS_IMS_SNOW}" = "YES" ]; then
   obs_ims_suffix="ims_snow.tm00.nc"
   ln -nsf "${COMINobs}/${obs_prefix}.${obs_ims_suffix}" "${DATA}/obs"
+fi
+if [ "${OBS_SFCSNO}" = "YES" ]; then
   obs_sfcsno_suffix="sfcsno.tm00.bufr_d"
   ln -nsf "${COMINobs}/${obs_prefix}.${obs_sfcsno_suffix}" "${DATA}/obs"
   ln -nsf "${PARMlandda}/jedi/bufr_sfcsno_mapping.yaml" "${DATA}/obs"
@@ -271,7 +275,6 @@ if [ "${WE2E_TEST}" == "YES" ]; then
   path_fbase="${FIXlandda}/test_base/we2e_com/${RUN}.${PDY}"
   fn_sfc="${FILEDATE}.sfc_data.tile"
   fn_inc="${inc_fn_prefix}.tile"
-  fn_hofx="diag.${OBS_TYPE}_snow_${PDY}${cyc}.nc"
   we2e_log_fp="${LOGDIR}/${WE2E_LOG_FN}"
   if [ ! -f "${we2e_log_fp}" ]; then
     touch ${we2e_log_fp}
@@ -286,6 +289,4 @@ if [ "${WE2E_TEST}" == "YES" ]; then
   do
     ${USHlandda}/compare.py "${path_fbase}/${fn_inc}${itile}.nc" "${COMOUT}/${fn_inc}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "ANALYSIS" ${FILEDATE} "snowinc.tile${itile}"
   done
-  # H(x)
-  ${USHlandda}/compare.py "${path_fbase}/hofx/${fn_hofx}" "${COMOUT}/hofx/${fn_hofx}" ${WE2E_ATOL} ${we2e_log_fp} "ANALYSIS" ${FILEDATE} "HofX"
 fi

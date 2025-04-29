@@ -23,7 +23,9 @@ model_ver: v2.1.0
 net: landda
 NPROCS_ANALYSIS: 6
 NPZ: 127
-OBS_TYPE: ims
+OBS_GHCN_SNOW: 'NO'
+OBS_IMS_SNOW: 'YES'
+OBS_SFCSNO: 'YES'
 RES: 96
 RUN: landda
 WE2E_TEST: 'NO'

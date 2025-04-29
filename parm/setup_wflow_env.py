@@ -65,6 +65,17 @@ def setup_wflow_env(machine):
         if key in config_parm:
             config_parm[key] = value
 
+    # Check for unsupported conditions
+    obs_ghcn_snow = config_parm.get("OBS_GHCN_SNOW")
+    obs_ims_snow = config_parm.get("OBS_IMS_SNOW")
+    obs_sfcsno = config_parm.get("OBS_SFCSNO")
+    if obs_ghcn_snow == "NO" and obs_ims_snow == "NO" and obs_sfcsno == "NO":
+        logging.error("NO obs options are selected !!!", exc_info=True)
+        sys.exit(1)
+    elif obs_ghcn_snow == "YES" and obs_ims_snow == "YES":
+        logging.error("Both OBS_GHCN_SNOW and OBS_IMS_SNOW are selected, but this is not supported by JCB!!!", exc_info=True)
+        sys.exit(1)
+
     # Create an experimental case directory
     if config_parm.get("EXP_CASE_NAME") is None:
         exp_case_name = f'''{config_parm.get("APP")}_{config_parm.get("RUN")}'''
@@ -261,7 +272,9 @@ def set_default_parm():
         "NPROCS_FCST_IC": 36,
         "NPZ": 127,
         "OBSDIR": "",
-        "OBS_TYPE": "ghcn",
+        "OBS_GHCN_SNOW": "NO",
+        "OBS_IMS_SNOW": "NO",
+        "OBS_SFCSNO": "NO",
         "OUTPUT_FH": "1 -1",
         "PY_LOG_LEVEL": "INFO",
         "RES": 96,

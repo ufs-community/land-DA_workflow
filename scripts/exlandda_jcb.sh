@@ -94,7 +94,9 @@ settings="\
   'snow_obsdataout_prefix': "diag."
   'snow_obsdataout_suffix': "_${cdate}.nc"
   'snowdepth_vn': ${snowdepth_vn}
-  'OBS_TYPE': ${OBS_TYPE}
+  'OBS_GHCN_SNOW': '${OBS_GHCN_SNOW}'
+  'OBS_IMS_SNOW': '${OBS_IMS_SNOW}'
+  'OBS_SFCSNO': '${OBS_SFCSNO}'
 " # End of settings variable
 
 template_fp="${PARMlandda}/jedi/jcb-base_snow.yaml.j2"
