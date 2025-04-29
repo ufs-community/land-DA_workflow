@@ -31,18 +31,17 @@ if [ "${DO_PLOT_STATS}" = "YES" ]; then
   nbins=100
   # Plot type (scatter/histogram/both)
   plottype="both"
-  # Figure title
-  title_fig="Snow Depth (mm)::${OBS_TYPE^^}::Obs-Bkg::${PDY}"
 
-  if [ "${OBS_TYPE}" = "ghcn" ]; then
+  if [ "${OBS_GHCN_SNOW}" = "YES" ]; then
     cp -p "${COMINhofx}/diag.ghcn_snow_${PDY}${cyc}.nc" ${DATA}
-  elif [ "${OBS_TYPE}" = "ims" ]; then
+  fi
+  if [ "${OBS_IMS_SNOW}" = "YES" ]; then
     cp -p "${COMINhofx}/diag.ims_snow_${PDY}${cyc}.nc" ${DATA}
+  fi
+  if [ "${OBS_SFCSNO}" = "YES" ]; then
     cp -p "${COMINhofx}/diag.sfcsno_${PDY}${cyc}.nc" ${DATA}
   fi
 
-  hofx_diag_fp="${COMINhofx}/diag.${OBS_TYPE}_snow_${PDY}${cyc}.nc"
-  
   cat > plot_hofx.yaml <<EOF
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
 cdate: '${YYYY}-${MM}-${DD}-${HH}'
@@ -52,7 +51,9 @@ hofx_data_path: '${DATA_HOFX_OMB}'
 nbins: ${nbins}
 plottype: '${plottype}'
 work_dir: '${DATA}'
-OBS_TYPE: '${OBS_TYPE}'
+OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
+OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
+OBS_SFCSNO: '${OBS_SFCSNO}'
 PDY: '${PDY}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF

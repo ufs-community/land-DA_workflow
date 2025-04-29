@@ -157,7 +157,9 @@ if __name__ == '__main__':
     hofx_data_path=yaml_data['hofx_data_path']
     plottype=yaml_data['plottype']
     work_dir=yaml_data['work_dir']
-    OBS_TYPE=yaml_data['OBS_TYPE']
+    OBS_GHCN_SNOW=yaml_data['OBS_GHCN_SNOW']
+    OBS_IMS_SNOW=yaml_data['OBS_IMS_SNOW']
+    OBS_SFCSNO=yaml_data['OBS_SFCSNO']
     PDY=yaml_data['PDY']
     cyc=yaml_data['cyc']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
@@ -175,10 +177,15 @@ if __name__ == '__main__':
 
     logging.info(f''' YAML Data: {yaml_data}''')
 
-    if OBS_TYPE == 'ghcn':
-        svar_list = ['ghcn_snow']
-    elif OBS_TYPE == 'ims':
-        svar_list = ['ims_snow', 'sfcsno']
+    svar_list = []
+    if OBS_GHCN_SNOW == "YES":
+        svar_list.append("ghcn_snow")
+    if OBS_IMS_SNOW == "YES":
+        svar_list.append("ims_snow")
+    if OBS_SFCSNO == "YES":
+        svar_list.append("sfcsno")
+
+    logging.info(f''' svar_list: {svar_list}''')
 
     for svar in svar_list:
         fn_input = f'''diag.{svar}_{PDY}{cyc}.nc'''
