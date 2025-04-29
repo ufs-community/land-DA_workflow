@@ -66,9 +66,7 @@ def main():
     # plot time-history
     for var_nm in var_list:
         var_dict_anal = get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm,OBS_TYPE)
-        var_dict_fcst = get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_fcst)
-        plot_data(var_dict_anal,var_dict_fcst,jedi_exe,OBS_TYPE,out_fn_base,work_dir,var_nm)
-        plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path)
+        plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path,OBS_TYPE)
 
 
 # Get data from files =============================================== CHJ =====
@@ -212,112 +210,6 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
     return var_dict_anal
 
 
-# Get data from files =============================================== CHJ =====
-def get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_fcst):
-
-    # Find files with the sampe prefix
-    fp_data_fcst_prefix = os.path.join(path_data,fn_data_fcst_prefix)
-    files = []
-    for entry in os.scandir(path_data):
-        if entry.is_file() and \
-           entry.name.startswith(fn_data_fcst_prefix) and \
-           entry.name.endswith(fn_data_fcst_suffix):
-            files.append(entry.path)
-
-    files.sort()
-    logging.debug(f'''Files= {files}''')
-
-    wtime_uwm_prefix = "The total amount of wall time"
-
-    file_date = []
-    wtime_uwm = []
-    for file_fp in files:
-        file_date_raw = file_fp.removeprefix(fp_data_fcst_prefix)
-        file_date_raw = file_date_raw.removesuffix(fn_data_fcst_suffix)
-        file_date_tmp = f'''{file_date_raw[0:4]}-{file_date_raw[4:6]}-{file_date_raw[6:8]}-{file_date_raw[8:10]}'''
-        file_date.append(file_date_tmp)
-        logging.debug(f'''File date= {file_date_tmp}''')
-
-        with open(file_fp, 'r') as file:
-            for line in file:
-                if line.startswith(wtime_uwm_prefix):
-                    line_wtime_raw = line
-                    line_split = line.split(' = ')[1]
-                    wtime_uwm_file = float(line_split)
-                    #print("WTIME UFS Weather Model=",wtime_uwm_file)
-
-        if not wtime_uwm_file:
-            wtime_uwm.append(None)
-        else:
-            wtime_uwm.append(wtime_uwm_file)
-
-    tcpu_uwm = [x * nprocs_fcst for x in wtime_uwm]
-
-    # Create dictionary
-    var_dict_fcst = {
-        "Date": file_date,
-        "wtime_uwm": wtime_uwm,
-        "tcpu_uwm": tcpu_uwm
-    }
-    logging.info(f'''DICT= {var_dict_fcst}''')
-
-    return var_dict_fcst
-
-
-# Plot data ========================================================= CHJ =====
-def plot_data(var_dict_anal,var_dict_fcst,jedi_exe,OBS_TYPE,out_fn_base,work_dir,var_nm):
-
-    global txt_fnt,ln_wdth,mk_sz
-
-    dfa = pd.DataFrame(var_dict_anal)
-    dff = pd.DataFrame(var_dict_fcst)
-
-    txt_fnt=7
-    ln_wdth=0.75
-    mk_sz=3
-    
-    # PLOT max/min/RMS/QC obs
-    obs_type_upper = OBS_TYPE.upper()
-    if jedi_exe == '3dvar':
-        # analysis
-        out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type_upper}::{var_nm}'''
-        out_fn_qc = f'''{out_fn_base}_anal_{var_nm}'''
-        plot_his_qc(dfa,'Min_m1','Max_m1','RMS_m1',out_title_qc,out_fn_qc,work_dir,'anal')
-        # increment
-        out_title_qc = f'''Land-DA::Increment::{jedi_exe}::{obs_type_upper}::{var_nm}'''
-        out_fn_qc = f'''{out_fn_base}_inc_{var_nm}'''
-        plot_his_qc(dfa,'Min','Max','RMS',out_title_qc,out_fn_qc,work_dir,'inc')
-    else:
-        out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type_upper}::{var_nm}'''
-        out_fn_qc = f'''{out_fn_base}_anal_{var_nm}'''
-        plot_his_qc(dfa,'Min','Max','RMS',out_title_qc,out_fn_qc,work_dir,'anal')
-
-    # PLOT: wall-clock time of OOPS
-    # figsize=(width,height) in inches
-    out_title_time = "Land-DA::Wall-clock time::OOPS"
-    out_fn_time = f'''{out_fn_base}_wtime'''
-    fig, axes = plt.subplots(nrows=2, ncols=1, sharex=True, figsize=(6,4))
-    fig.suptitle(out_title_time,fontsize=txt_fnt+1,y=0.95)
-
-    axes[0].plot(dfa['Date'],dfa['wtime_oops'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Wall-clock')
-    axes[0].set_ylabel('Wall-clock time: OOPS (s)', fontsize=txt_fnt-1)
-    axes[0].tick_params(axis="y",labelsize=txt_fnt-2)
-    #axes[0].legend(fontsize=txt_fnt-1)
-    axes[0].grid(linewidth=0.2)
-
-    axes[1].plot(dff['Date'],dff['wtime_uwm'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Wall-clock')
-    axes[1].set_xlabel('Date', fontsize=txt_fnt-1)
-    axes[1].set_ylabel('Wall-clock time: ufs_model (s)', fontsize=txt_fnt-1)
-    axes[1].tick_params(axis="x",labelsize=txt_fnt-2)
-    axes[1].tick_params(axis="y",labelsize=txt_fnt-2)
-    axes[1].grid(linewidth=0.2)
-
-    plt.xticks(rotation=30, ha='right')
-    plt.tight_layout()
-    # Output figure
-    ndpi = 300
-    out_file(work_dir,out_fn_time,ndpi)
-
 
 # Plot time-history of QC data ====================================== CHJ =====
 def plot_his_qc(dfa,min_var,max_var,rms_var,out_title_qc,out_fn_qc,work_dir,qc_type):
@@ -355,7 +247,7 @@ def plot_his_qc(dfa,min_var,max_var,rms_var,out_title_qc,out_fn_qc,work_dir,qc_t
 
 
 # Plot time-history of H(x) OMB data ================================ CHJ =====
-def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
+def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path,OBS_TYPE):
 
     dfa = pd.DataFrame(var_dict_anal)
 

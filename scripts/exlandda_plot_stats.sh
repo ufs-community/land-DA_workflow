@@ -24,8 +24,6 @@ DO_PLOT_COMBINE_TILES="YES"
 # Stats Plot
 ############################################################
 if [ "${DO_PLOT_STATS}" = "YES" ]; then
-  # Field variable
-  field_var="OMB"
   # Field Range for scatter plot: [Low,High]
   field_range_low=-200
   field_range_high=200
@@ -35,23 +33,27 @@ if [ "${DO_PLOT_STATS}" = "YES" ]; then
   plottype="both"
   # Figure title
   title_fig="Snow Depth (mm)::${OBS_TYPE^^}::Obs-Bkg::${PDY}"
-  # Prefix of output file name
-  output_prefix="hofx_omb_${PDY}"
+
+  if [ "${OBS_TYPE}" = "ghcn" ]; then
+    cp -p "${COMINhofx}/diag.ghcn_snow_${PDY}${cyc}.nc" ${DATA}
+  elif [ "${OBS_TYPE}" = "ims" ]; then
+    cp -p "${COMINhofx}/diag.ims_snow_${PDY}${cyc}.nc" ${DATA}
+    cp -p "${COMINhofx}/diag.sfcsno_${PDY}${cyc}.nc" ${DATA}
+  fi
 
   hofx_diag_fp="${COMINhofx}/diag.${OBS_TYPE}_snow_${PDY}${cyc}.nc"
   
   cat > plot_hofx.yaml <<EOF
-hofx_file: '${hofx_diag_fp}'
-field_var: '${field_var}'
+cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+cdate: '${YYYY}-${MM}-${DD}-${HH}'
+cyc: '${cyc}'
 field_range: [${field_range_low},${field_range_high}]
-jedi_exe: '${JEDI_ALGORITHM}'
+hofx_data_path: '${DATA_HOFX_OMB}'
 nbins: ${nbins}
 plottype: '${plottype}'
-title_fig: '${title_fig}'
-output_prefix: '${output_prefix}'
-cartopy_ne_path: '${FIXlandda}/NaturalEarth'
-hofx_data_path: '${DATA_HOFX_OMB}'
-cdate: '${YYYY}-${MM}-${DD}-${HH}'
+work_dir: '${DATA}'
+OBS_TYPE: '${OBS_TYPE}'
+PDY: '${PDY}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
   
@@ -61,7 +63,7 @@ EOF
   fi
   
   # Copy result files to COMOUT
-  cp -p ${output_prefix}* ${COMOUTplot}
+  cp -p "${DATA}/hofx_omb"* ${COMOUTplot}
   cp -p "${DATA_HOFX_OMB}/hofx_omb_timehis"* ${COMOUThofx}
 fi
 

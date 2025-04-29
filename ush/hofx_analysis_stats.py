@@ -15,7 +15,7 @@ import matplotlib.ticker
 import matplotlib as mpl
 from matplotlib.colors import ListedColormap
 
-def get_obs_stats(fname, plottype, jedi_exe):
+def get_obs_stats(fname, plottype):
 
     logging.info(f''' === File Name: {fname}''')
     f=netCDF4.Dataset(fname)
@@ -30,10 +30,10 @@ def get_obs_stats(fname, plottype, jedi_exe):
     numpt_omb=len(omb)
     numpt_obs=len(obs)
     logging.info(f'''Number of points (raw): {numpt_omb}, {numpt_obs}''')
-    obs = [x for x, y in zip(obs, omb) if y>-1000 and y<1000]
-    lat = [x for x, y in zip(lat, omb) if y>-1000 and y<1000]
-    lon = [x for x, y in zip(lon, omb) if y>-1000 and y<1000]
-    omb = [x for x in omb if x>-1000 and x<1000]
+    obs = [x for x, y in zip(obs, omb) if y>-5000 and y<5000]
+    lat = [x for x, y in zip(lat, omb) if y>-5000 and y<5000]
+    lon = [x for x, y in zip(lon, omb) if y>-5000 and y<5000]
+    omb = [x for x in omb if x>-5000 and x<5000]
     numpt_omb=len(omb)
     numpt_obs=len(obs)
     logging.info(f'''Number of points (excluding zeros): {numpt_omb}, {numpt_obs}''')
@@ -47,23 +47,24 @@ def get_obs_stats(fname, plottype, jedi_exe):
     return omb,lat,lon
 
 
-def plot_scatter(hofx_data_path,cdate):
+def plot_scatter(omb,svar,hofx_data_path,cdate,title_fig,PDY):
     logging.info(f''' ========== PLOT: SCATTER ==========''')
     
     # Set the path to Natural Earth dataset
     cartopy.config['data_dir']=yaml_data['cartopy_ne_path']
 
-    field_mean=float("{:.2f}".format(np.mean(np.absolute(field))))
-    field_std=float("{:.2f}".format(np.std(np.absolute(field))))
-    field_max=float("{:.2f}".format(np.max(np.absolute(field))))
-    field_min=float("{:.2f}".format(np.min(np.absolute(field))))
+    field_mean=float("{:.2f}".format(np.mean(np.absolute(omb))))
+    field_std=float("{:.2f}".format(np.std(np.absolute(omb))))
+    field_max=float("{:.2f}".format(np.max(np.absolute(omb))))
+    field_min=float("{:.2f}".format(np.min(np.absolute(omb))))
     logging.info(f''' Mean |OMB|= {field_mean}''')
     logging.info(f''' STDV |OMB|= {field_std}''')
     logging.info(f''' Max |OMB|= {field_max}''')
     logging.info(f''' Min |OMB|= {field_min}''')
 
     # Print out OMB values to file
-    hofx_data_fp=os.path.join(hofx_data_path,"hofx_omb_timehis_abs.txt")
+    hofx_data_fn=f'''hofx_omb_timehis_abs_{svar}.txt'''
+    hofx_data_fp=os.path.join(hofx_data_path,hofx_data_fn)
     if os.path.exists(hofx_data_fp):
         # Remove line for same date
         with open(hofx_data_fp, 'r') as f:
@@ -89,28 +90,29 @@ def plot_scatter(hofx_data_path,cdate):
     cmap_pos=mpl.colormaps['Reds'].resampled(num_cmap)
     cmap_color=np.vstack((cmap_neg(np.linspace(0.1,0.7,num_cmap)),cmap_pos(np.linspace(0.2,0.8,num_cmap))))
     cmap_new=ListedColormap(cmap_color, name='BlueRed_rw')
-    sc=ax.scatter(lon, lat, c=field, s=1.5, cmap=cmap_new, transform=crs, norm=norm)
+    sc=ax.scatter(lon, lat, c=omb, s=1.5, cmap=cmap_new, transform=crs, norm=norm)
     cbar=plt.colorbar(sc, orientation="horizontal", shrink=0.5, pad=0.05)
-    stitle=yaml_data['title_fig']+' \n '+'Mean |OMB| ='+str(field_mean)+', STDV |OMB| ='+str(field_std)
+    stitle=title_fig+' \n '+'Mean |OMB| ='+str(field_mean)+', STDV |OMB| ='+str(field_std)
     plt.title(stitle)
-    output_fn=yaml_data['output_prefix']+"_scatter.png"
+    output_fn=f'''hofx_omb_{svar}_{PDY}_scatter.png'''
     plt.savefig(output_fn,dpi=200,bbox_inches='tight')
     plt.close('all')
 
 
-def plot_histogram(hofx_data_path,cdate):
+def plot_histogram(omb,svar,hofx_data_path,cdate,title_fig,PDY):
     logging.info(f''' ========== PLOT: HISTOGRAM ==========''')    
-    field_mean=float("{:.2f}".format(np.mean(field)))
-    field_std=float("{:.2f}".format(np.std(field)))
-    field_max=float("{:.2f}".format(np.max(field)))
-    field_min=float("{:.2f}".format(np.min(field)))
+    field_mean=float("{:.2f}".format(np.mean(omb)))
+    field_std=float("{:.2f}".format(np.std(omb)))
+    field_max=float("{:.2f}".format(np.max(omb)))
+    field_min=float("{:.2f}".format(np.min(omb)))
     logging.info(f''' Mean OMB= {field_mean}''')
     logging.info(f''' STDV OMB= {field_std}''')
     logging.info(f''' Max OMB= {field_max}''')
     logging.info(f''' Min OMB= {field_min}''')
 
     # Print out OMB values to file
-    hofx_data_fp=os.path.join(hofx_data_path,"hofx_omb_timehis.txt")
+    hofx_data_fn=f'''hofx_omb_timehis_{svar}.txt'''
+    hofx_data_fp=os.path.join(hofx_data_path,hofx_data_fn)
     if os.path.exists(hofx_data_fp):
         # Remove line for same date
         with open(hofx_data_fp, 'r') as f:
@@ -136,23 +138,28 @@ def plot_histogram(hofx_data_path,cdate):
     else:
         xlimit=yaml_data['field_range']
         
-    plt.hist(field[:], bins=nbins, range=xlimit, density=True, color ="blue")
-    stitle=yaml_data['title_fig']+' \n '+'Mean(OMB) ='+str(field_mean)+', STDV(OMB) ='+str(field_std)
+    plt.hist(omb[:], bins=nbins, range=xlimit, density=True, color ="blue")
+    stitle=title_fig+' \n '+'Mean(OMB) ='+str(field_mean)+', STDV(OMB) ='+str(field_std)
     plt.title(stitle)
-    output_fn=yaml_data['output_prefix']+"_histogram.png"
+    output_fn=f'''hofx_omb_{svar}_{PDY}_histogram.png'''
     plt.savefig(output_fn,dpi=150,bbox_inches='tight')
     plt.close('all')
 
 if __name__ == '__main__':
-    global field,yaml_data
+    global yaml_data
 
     yaml_file="plot_hofx.yaml"
     with open(yaml_file, 'r') as f:
         yaml_data=yaml.load(f, Loader=yaml.FullLoader)
     f.close()
 
-    hofx_data_path=yaml_data['hofx_data_path']
     cdate=yaml_data['cdate']
+    hofx_data_path=yaml_data['hofx_data_path']
+    plottype=yaml_data['plottype']
+    work_dir=yaml_data['work_dir']
+    OBS_TYPE=yaml_data['OBS_TYPE']
+    PDY=yaml_data['PDY']
+    cyc=yaml_data['cyc']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
 
     # Set logging config
@@ -168,11 +175,21 @@ if __name__ == '__main__':
 
     logging.info(f''' YAML Data: {yaml_data}''')
 
-    omb,lat,lon=get_obs_stats(yaml_data['hofx_file'],yaml_data['plottype'],yaml_data['jedi_exe'])
-    if yaml_data['field_var']=='OMB':
-        field=omb    
+    if OBS_TYPE == 'ghcn':
+        svar_list = ['ghcn_snow']
+    elif OBS_TYPE == 'ims':
+        svar_list = ['ims_snow', 'sfcsno']
 
-    if yaml_data['plottype']=='scatter' or yaml_data['plottype']=='both': 
-        plot_scatter(hofx_data_path,cdate)
-    if yaml_data['plottype']=='histogram' or yaml_data['plottype']=='both':
-        plot_histogram(hofx_data_path,cdate)
+    for svar in svar_list:
+        fn_input = f'''diag.{svar}_{PDY}{cyc}.nc'''
+        logging.info(f''' Input file: {fn_input}''')
+        fp_input = os.path.join(work_dir,fn_input)
+
+        omb,lat,lon=get_obs_stats(fp_input,plottype)
+
+        svar_upper=svar.upper()
+        title_fig=f'''Snow depth (mm)::{svar_upper}::Obs-Bkg::{PDY}'''
+        if plottype=='scatter' or plottype=='both': 
+            plot_scatter(omb,svar,hofx_data_path,cdate,title_fig,PDY)
+        if plottype=='histogram' or plottype=='both':
+            plot_histogram(omb,svar,hofx_data_path,cdate,title_fig,PDY)
