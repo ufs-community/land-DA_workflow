@@ -30,11 +30,12 @@ def main():
     f.close()
 
     work_dir=yaml_data['work_dir']
-    fn_input=yaml_data['fn_input']
-    out_title_base=yaml_data['out_title_base']
-    out_fn_base=yaml_data['out_fn_base']
     cartopy_ne_path=yaml_data['cartopy_ne_path']
-    OBS_TYPE=yaml_data['OBS_TYPE']
+    fn_input_ghcn=yaml_data['fn_input_ghcn']
+    fn_input_ims=yaml_data['fn_input_ims']
+    OBS_GHCN_SNOW=yaml_data['OBS_GHCN_SNOW']
+    OBS_IMS_SNOW=yaml_data['OBS_IMS_SNOW']
+    PDY=yaml_data['PDY']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
     
     # Set logging config
@@ -53,7 +54,19 @@ def main():
     # Set the path to Natural Earth dataset
     cartopy.config['data_dir']=cartopy_ne_path
 
-    logging.info(f''' ===== INPUT: '{fn_input}' ================================''')
+    # Plot GHCN
+    if OBS_GHCN_SNOW == "YES":
+       obs_plot("ghcn",PDY,work_dir,fn_input_ghcn)
+    # Plot IMS
+    if OBS_IMS_SNOW == "YES":
+       obs_plot("ims",PDY,work_dir,fn_input_ims)
+
+
+# obs plot =============================================== CHJ =====
+def obs_plot(obs_type,PDY,work_dir,fn_input):
+
+    logging.info(f''' ===== INPUT:: {obs_type}:: '{fn_input}' ================================''')
+
     # open the data file
     fpath=os.path.join(work_dir,fn_input)
     try: mdat=nc.Dataset(fpath)
@@ -88,11 +101,11 @@ def main():
     logging.info(f''' c_lon= {c_lon}''')
 
     for svar in vars_out:
-        svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base,work_dir)
+        svar_plot(svar,mdat,lon,lat,extent,c_lon,obs_type,PDY,work_dir)
     
 
 # Variable plot =============================================== CHJ =====
-def svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base,work_dir):
+def svar_plot(svar,mdat,lon,lat,extent,c_lon,obs_type,PDY,work_dir):
 
     logging.info(' ===== '+svar+' ==========================================')
     # Extract data array
@@ -100,8 +113,9 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base
 
     svar="SnowDepth"
 
-    out_title_fld=out_title_base+svar
-    out_fn=out_fn_base+svar
+    obs_type_upper=obs_type.upper()
+    out_title_fld=f'''Land-DA::Obs::{obs_type_upper}::{PDY}::{svar}'''
+    out_fn=f'''landda_obs_{obs_type}_{PDY}_{svar}'''
 
     cs_cmap='gist_ncar_r'
     lb_ext='neither'
@@ -132,9 +146,9 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base
         cs_max=fmax
     elif cmap_range=='fixed':
         cs_min=0
-        if OBS_TYPE == 'ims':
+        if obs_type == 'ims':
             cs_max=100.0
-        elif OBS_TYPE == 'ghcn':
+        elif obs_type == 'ghcn':
             cs_max=1000.0
         else:
             cs_max=300.0

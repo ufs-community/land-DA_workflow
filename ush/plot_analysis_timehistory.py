@@ -40,10 +40,11 @@ def main():
     fn_data_fcst_suffix = yaml_data['fn_data_fcst_suffix']
     jedi_exe = yaml_data['jedi_exe']
     nprocs_anal = yaml_data['nprocs_anal']
-    nprocs_fcst = yaml_data['nprocs_fcst']
-    OBS_TYPE = yaml_data['OBS_TYPE']
     out_fn_base = yaml_data['out_fn_base']
     hofx_data_path = yaml_data['hofx_data_path']
+    OBS_GHCN_SNOW = yaml_data['OBS_GHCN_SNOW']
+    OBS_IMS_SNOW = yaml_data['OBS_IMS_SNOW']
+    OBS_SFCSNO = yaml_data['OBS_SFCSNO']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
 
     # Set logging config
@@ -59,22 +60,29 @@ def main():
 
     logging.info(f''' YAML Data: {yaml_data}''')
 
-    var_list = ["totalSnowDepth"]
     nprocs_anal = int(nprocs_anal)
-    nprocs_fcst = int(nprocs_fcst)
+
+    svar_list = []
+    if OBS_GHCN_SNOW == "YES":
+        svar_list.append("ghcn_snow")
+    if OBS_IMS_SNOW == "YES":
+        svar_list.append("ims_snow")
+    if OBS_SFCSNO == "YES":
+        svar_list.append("sfcsno")
+
+    logging.info(f''' svar_list: {svar_list}''')
 
     # plot time-history
-    for var_nm in var_list:
-        var_dict_anal = get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm,OBS_TYPE)
-        var_dict_fcst = get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_fcst)
-        plot_data(var_dict_anal,var_dict_fcst,jedi_exe,OBS_TYPE,out_fn_base,work_dir,var_nm)
-        plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path)
+    for svar in svar_list:
+        var_nm = "totalSnowDepth"
+        var_dict_anal = get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm,svar)
+        plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path,svar)
 
 
 # Get data from files =============================================== CHJ =====
-def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm,OBS_TYPE):
+def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm,obs_type):
 
-    logging.info(f''' ===== var name: '{var_nm}' ========================''')
+    logging.info(f''' ===== var name: '{var_nm}' ===== obs type: '{obs_type}'==========''')
     # Find files with the sampe prefix
     fp_data_anal_prefix = os.path.join(path_data,fn_data_anal_prefix)
     files = []
@@ -87,8 +95,8 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
     files.sort()
     logging.debug(f''' Files= {files}''')
 
-    nobs_qc_prefix = f"QC {OBS_TYPE}_snow totalSnowDepth"
-    wtime_oops_prefix = "OOPS_STATS util::Timers::Total"
+    nobs_qc_prefix = f"QC {obs_type} totalSnowDepth"
+    logging.info(f''' QC prefix for Nobs: {nobs_qc_prefix}''')
 
     file_date = []
     min_val_final = []
@@ -99,13 +107,12 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
     rms_val_lstm1 = []
     nobs_qc_final = []
     nobs_in_final = []
-    wtime_oops = []
     for file_fp in files:
         file_date_raw = file_fp.removeprefix(fp_data_anal_prefix)
         file_date_raw = file_date_raw.removesuffix(fn_data_anal_suffix)
         file_date_tmp = f'''{file_date_raw[0:4]}-{file_date_raw[4:6]}-{file_date_raw[6:8]}-{file_date_raw[8:10]}'''
         file_date.append(file_date_tmp)
-        logging.debug(f''' File date: {file_date_tmp}''')
+        logging.info(f''' File date: {file_date_tmp}''')
 
         min_val_file = []
         max_val_file = []
@@ -138,20 +145,12 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
                     line_data_raw = line
                     line_split = line.split(': ')[1].split(' ')
                     #print("QC split=",line_split)
-                    if len(line_split) == 6 and line_split[4] != "of":
+                    if len(line_split) == 6 and line_split[4] != "of" and line_split[1] == "passed":
                         nobs_qc_val = int(line_split[0])
                         nobs_qc_file.append(nobs_qc_val)
                         nobs_in_val = int(line_split[4])
                         nobs_in_file.append(nobs_in_val)
                         #print("NOBS ini=",nobs_in_file,", QC=",nobs_qc_file)
-
-                if line.startswith(wtime_oops_prefix):
-                    line_wtime_raw = line
-                    line_split = line.split(' : ')[1].split(' ')
-                    line_split = list(filter(None, line_split))
-                    if len(line_split) == 5:
-                        wtime_oops_file = float(line_split[2])
-                        #print("WTIME OOPS AVG=",wtime_oops_file)
 
         if not min_val_file:
             min_val_final.append(None)
@@ -184,15 +183,6 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
         else:
             nobs_in_final.append(nobs_in_file[-1])
 
-        if not wtime_oops_file:
-            wtime_oops.append(None)
-        else:
-            wtime_oops.append(wtime_oops_file)
-
-    # ms to sec 
-    wtime_oops = [x * 0.001 for x in wtime_oops]
-    tcpu_oops = [x * nprocs_anal for x in wtime_oops]
-
     # Create dictionary
     var_dict_anal = {
         "Date": file_date,
@@ -203,163 +193,21 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
         "Max_m1": max_val_lstm1,
         "RMS_m1": rms_val_lstm1,
         "nobs_QC": nobs_qc_final,
-        "nobs_in": nobs_in_final,
-        "wtime_oops": wtime_oops,
-        "tcpu_oops": tcpu_oops
+        "nobs_in": nobs_in_final
     }
     logging.info(f'''DICT= {var_dict_anal}''')
 
     return var_dict_anal
 
 
-# Get data from files =============================================== CHJ =====
-def get_data_forecast(path_data,fn_data_fcst_prefix,fn_data_fcst_suffix,nprocs_fcst):
-
-    # Find files with the sampe prefix
-    fp_data_fcst_prefix = os.path.join(path_data,fn_data_fcst_prefix)
-    files = []
-    for entry in os.scandir(path_data):
-        if entry.is_file() and \
-           entry.name.startswith(fn_data_fcst_prefix) and \
-           entry.name.endswith(fn_data_fcst_suffix):
-            files.append(entry.path)
-
-    files.sort()
-    logging.debug(f'''Files= {files}''')
-
-    wtime_uwm_prefix = "The total amount of wall time"
-
-    file_date = []
-    wtime_uwm = []
-    for file_fp in files:
-        file_date_raw = file_fp.removeprefix(fp_data_fcst_prefix)
-        file_date_raw = file_date_raw.removesuffix(fn_data_fcst_suffix)
-        file_date_tmp = f'''{file_date_raw[0:4]}-{file_date_raw[4:6]}-{file_date_raw[6:8]}-{file_date_raw[8:10]}'''
-        file_date.append(file_date_tmp)
-        logging.debug(f'''File date= {file_date_tmp}''')
-
-        with open(file_fp, 'r') as file:
-            for line in file:
-                if line.startswith(wtime_uwm_prefix):
-                    line_wtime_raw = line
-                    line_split = line.split(' = ')[1]
-                    wtime_uwm_file = float(line_split)
-                    #print("WTIME UFS Weather Model=",wtime_uwm_file)
-
-        if not wtime_uwm_file:
-            wtime_uwm.append(None)
-        else:
-            wtime_uwm.append(wtime_uwm_file)
-
-    tcpu_uwm = [x * nprocs_fcst for x in wtime_uwm]
-
-    # Create dictionary
-    var_dict_fcst = {
-        "Date": file_date,
-        "wtime_uwm": wtime_uwm,
-        "tcpu_uwm": tcpu_uwm
-    }
-    logging.info(f'''DICT= {var_dict_fcst}''')
-
-    return var_dict_fcst
-
-
-# Plot data ========================================================= CHJ =====
-def plot_data(var_dict_anal,var_dict_fcst,jedi_exe,OBS_TYPE,out_fn_base,work_dir,var_nm):
-
-    global txt_fnt,ln_wdth,mk_sz
-
-    dfa = pd.DataFrame(var_dict_anal)
-    dff = pd.DataFrame(var_dict_fcst)
-
-    txt_fnt=7
-    ln_wdth=0.75
-    mk_sz=3
-    
-    # PLOT max/min/RMS/QC obs
-    obs_type_upper = OBS_TYPE.upper()
-    if jedi_exe == '3dvar':
-        # analysis
-        out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type_upper}::{var_nm}'''
-        out_fn_qc = f'''{out_fn_base}_anal_{var_nm}'''
-        plot_his_qc(dfa,'Min_m1','Max_m1','RMS_m1',out_title_qc,out_fn_qc,work_dir,'anal')
-        # increment
-        out_title_qc = f'''Land-DA::Increment::{jedi_exe}::{obs_type_upper}::{var_nm}'''
-        out_fn_qc = f'''{out_fn_base}_inc_{var_nm}'''
-        plot_his_qc(dfa,'Min','Max','RMS',out_title_qc,out_fn_qc,work_dir,'inc')
-    else:
-        out_title_qc = f'''Land-DA::Analysis::{jedi_exe}::{obs_type_upper}::{var_nm}'''
-        out_fn_qc = f'''{out_fn_base}_anal_{var_nm}'''
-        plot_his_qc(dfa,'Min','Max','RMS',out_title_qc,out_fn_qc,work_dir,'anal')
-
-    # PLOT: wall-clock time of OOPS
-    # figsize=(width,height) in inches
-    out_title_time = "Land-DA::Wall-clock time::OOPS"
-    out_fn_time = f'''{out_fn_base}_wtime'''
-    fig, axes = plt.subplots(nrows=2, ncols=1, sharex=True, figsize=(6,4))
-    fig.suptitle(out_title_time,fontsize=txt_fnt+1,y=0.95)
-
-    axes[0].plot(dfa['Date'],dfa['wtime_oops'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Wall-clock')
-    axes[0].set_ylabel('Wall-clock time: OOPS (s)', fontsize=txt_fnt-1)
-    axes[0].tick_params(axis="y",labelsize=txt_fnt-2)
-    #axes[0].legend(fontsize=txt_fnt-1)
-    axes[0].grid(linewidth=0.2)
-
-    axes[1].plot(dff['Date'],dff['wtime_uwm'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Wall-clock')
-    axes[1].set_xlabel('Date', fontsize=txt_fnt-1)
-    axes[1].set_ylabel('Wall-clock time: ufs_model (s)', fontsize=txt_fnt-1)
-    axes[1].tick_params(axis="x",labelsize=txt_fnt-2)
-    axes[1].tick_params(axis="y",labelsize=txt_fnt-2)
-    axes[1].grid(linewidth=0.2)
-
-    plt.xticks(rotation=30, ha='right')
-    plt.tight_layout()
-    # Output figure
-    ndpi = 300
-    out_file(work_dir,out_fn_time,ndpi)
-
-
-# Plot time-history of QC data ====================================== CHJ =====
-def plot_his_qc(dfa,min_var,max_var,rms_var,out_title_qc,out_fn_qc,work_dir,qc_type):
-
-    # figsize=(width,height) in inches
-    fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(6,6))
-    fig.suptitle(out_title_qc,fontsize=txt_fnt+1,y=0.97)
-
-    axes[0].plot(dfa['Date'],dfa[min_var],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='Min')
-    axes[0].plot(dfa['Date'],dfa[max_var],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='Max')
-    axes[0].set_ylabel('Min / Max', fontsize=txt_fnt-1)
-    axes[0].tick_params(axis="y",labelsize=txt_fnt-2)
-    axes[0].legend(fontsize=txt_fnt-1, loc='center')
-    axes[0].grid(linewidth=0.2)
-
-    axes[1].plot(dfa['Date'],dfa[rms_var],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz)
-    axes[1].set_ylabel('RMS', fontsize=txt_fnt-1)
-    axes[1].tick_params(axis="y",labelsize=txt_fnt-2)
-    axes[1].grid(linewidth=0.2)
-
-    axes[2].plot(dfa['Date'],dfa['nobs_in'],'o-',color='blue',linewidth=ln_wdth,markersize=mk_sz,label='N_obs:raw')
-    axes[2].plot(dfa['Date'],dfa['nobs_QC'],'s-.',color='red',mfc='none',linewidth=ln_wdth,markersize=mk_sz,label='N_obs:QC')
-    axes[2].set_xlabel('Date', fontsize=txt_fnt-1)
-    axes[2].set_ylabel('Number of observations', fontsize=txt_fnt-1)
-    axes[2].tick_params(axis="x",labelsize=txt_fnt-2)
-    axes[2].tick_params(axis="y",labelsize=txt_fnt-2)
-    axes[2].legend(fontsize=txt_fnt-1, loc='center right')
-    axes[2].grid(linewidth=0.2)
-
-    plt.xticks(rotation=30, ha='right')
-    plt.tight_layout()
-    # Output figure
-    ndpi = 300
-    out_file(work_dir,out_fn_qc,ndpi)
-
 
 # Plot time-history of H(x) OMB data ================================ CHJ =====
-def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
+def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path,obs_type):
 
     dfa = pd.DataFrame(var_dict_anal)
 
-    omb_fp = os.path.join(hofx_data_path,"hofx_omb_timehis.txt")
+    omb_fn = f'''hofx_omb_timehis_{obs_type}.txt'''
+    omb_fp = os.path.join(hofx_data_path, omb_fn)
     with open(omb_fp, 'r') as f:
         lines = f.readlines()
     column_data = [line.strip().split(' ') for line in lines]
@@ -384,9 +232,13 @@ def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path):
         dfa_date_plot = dfa_date[:ncol]
         logging.info(f'''plot date: {dfa_date_plot}''')
 
-    out_title_omb = f'''Land-DA::OMB (observation-background)::{var_nm}'''
-    out_fn_omb = f'''{out_fn_base}_omb_{var_nm}'''
+    obs_type_upper = obs_type.upper()
+    out_title_omb = f'''Land-DA::OMB (observation-background)::{var_nm}::{obs_type_upper}'''
+    out_fn_omb = f'''{out_fn_base}_omb_{var_nm}_{obs_type}'''
 
+    txt_fnt=7
+    ln_wdth=0.75
+    mk_sz=3
     # figsize=(width,height) in inches
     fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(6,6))
     fig.suptitle(out_title_omb,fontsize=txt_fnt+1,y=0.97)
