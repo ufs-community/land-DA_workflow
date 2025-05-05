@@ -119,13 +119,21 @@ def setup_wflow_env(machine):
         native_default = '-M c6'
         partition_default = 'batch'
         queue_default = 'normal'
+    elif machine == "noaacloud":
+        native_default = None
+        partition_default = ""
+        queue_default = 'batch'
+    elif machine == "singularity":
+        native_default = None
+        partition_default = ""
+        queue_default = 'batch'
     else:
         native_default = None
         partition_default = machine
         queue_default = 'batch'
 
     # Slurm memory flag: some platforms do not support the memory flag in slurm
-    mem_not_req = [ "gaeac6", "noaacloud" ]
+    mem_not_req = [ "gaeac6", "noaacloud", "singularity" ]
     if machine in mem_not_req:
         memory_flag = False
     else:
@@ -314,7 +322,7 @@ def set_machine_parm(machine):
         case "singularity":
             JEDI_PATH = "SINGULARITY_WORKING_DIR"
             MAX_CORES_PER_NODE = 40
-            WARMSTART_DIR = "SINGULARITY_WORKING_DIR"
+            WARMSTART_DIR = "SINGULARITY_WORKING_DIR/inputs/DATA_RESTART"
         case _:
             sys.exit(f"FATAL ERROR: this machine/platform '{lowercase_machine}' is NOT supported yet !!!")
 
