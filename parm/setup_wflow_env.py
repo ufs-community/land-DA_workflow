@@ -322,7 +322,7 @@ def set_machine_parm(machine):
         case "singularity":
             JEDI_PATH = "SINGULARITY_WORKING_DIR"
             MAX_CORES_PER_NODE = 40
-            WARMSTART_DIR = "SINGULARITY_WORKING_DIR/inputs/DATA_RESTART"
+            WARMSTART_DIR = "SINGULARITY_WORKING_DIR/land-DA_workflow/fix/DATA_RESTART"
         case _:
             sys.exit(f"FATAL ERROR: this machine/platform '{lowercase_machine}' is NOT supported yet !!!")
 
