@@ -68,7 +68,7 @@ git status -u
                                     
 build_exit=$status
 echo "STAGE_NAME=${STAGE_NAME:=manual}"
-env | grep = | sort > ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-env.txt
+env | grep = | sort > ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-build-env.txt
 set -e
 cd -
 pwd
