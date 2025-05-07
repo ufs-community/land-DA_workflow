@@ -71,9 +71,11 @@ if [[ -x .cicd/scripts/run_experiment.sh ]] ; then
 		.cicd/scripts/run_experiment.sh ${UFS_PLATFORM} ${UFS_COMPILER} ${LAND_DA_EXPERIMENT} | tee ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-experiment-log.txt
 	status=${PIPESTATUS[0]}
 
-	[[ -f ${workspace}/${UFS_PLATFORM,,}-wflow_experiment-log.txt ]] || (( status+=1 ))
-	rc=$(( status+=$(egrep "FAILURE|DEAD" ${workspace}/${UFS_PLATFORM,,}-wflow_experiment-log.txt 2>/dev/null | wc -l) ))
-	echo "rc=$rc status=$status"
+	if [[ -n ${LAND_DA_EXPERIMENT} ]] ; then
+		[[ -f ${workspace}/${UFS_PLATFORM,,}-wflow_experiment-log.txt ]] || (( status+=1 ))
+		rc=$(( status+=$(egrep "FAILURE|DEAD" ${workspace}/${UFS_PLATFORM,,}-wflow_experiment-log.txt 2>/dev/null | wc -l) ))
+		echo "rc=$rc status=$status"
+	fi
 else
 	echo "Error: can't run_experiment.sh ..."
 	(( status+=1 ))
@@ -83,7 +85,7 @@ git status -u
 
 test_exit=$status
 echo "STAGE_NAME=${STAGE_NAME:=manual}"
-env | grep = | sort > ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-env.txt
+#env | grep = | sort > ${workspace}/${UFS_PLATFORM}-${UFS_COMPILER}-expr-env.txt
 set -e
 cd -
 pwd
