@@ -75,6 +75,8 @@ if [[ -x .cicd/scripts/run_experiment.sh ]] ; then
 		[[ -f ${workspace}/${UFS_PLATFORM,,}-wflow_experiment-log.txt ]] || (( status+=1 ))
 		rc=$(( status+=$(egrep "FAILURE|DEAD" ${workspace}/${UFS_PLATFORM,,}-wflow_experiment-log.txt 2>/dev/null | wc -l) ))
 		echo "rc=$rc status=$status"
+	else
+		echo "No experiment to run."
 	fi
 else
 	echo "Error: can't run_experiment.sh ..."
