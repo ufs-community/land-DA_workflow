@@ -291,8 +291,8 @@ if [ -z "${COMPILER}" ] ; then
   case ${PLATFORM} in
     hera|gaeac6) COMPILER=intel ;;
     orion|hercules) COMPILER=intel ;;
-    wcoss2) COMPILER=intel ;;
-    macos|singularity) COMPILER=gnu ;;
+    wcoss2|singularity) COMPILER=intel ;;
+    macos) COMPILER=gnu ;;
     odin|noaacloud) COMPILER=intel ;;
     *)
       COMPILER=intel
@@ -397,6 +397,8 @@ elif [ "${PLATFORM}" = "orion" ] || [ "${PLATFORM}" = "hercules" ]; then
   landda_fix_orig="/work/noaa/epic/UFS_Land-DA${ver_fix_data}/inputs"
 elif [ "${PLATFORM}" = "gaeac6" ]; then
   landda_fix_orig="/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA${ver_fix_data}/inputs"
+elif [ "${PLATFORM}" = "singularity" ]; then
+  printf "The setup_container.sh from the container moves the fix data."
 else
   printf "FATAL ERROR: path to the fix files is not defined !!!"
   exit 398
