@@ -24,7 +24,6 @@ echo "HOME=${HOME}"
 echo "UFS_PLATFORM=${UFS_PLATFORM}"
 echo "UFS_COMPILER=${UFS_COMPILER}"
 echo "LAND_DA_EXPERIMENT=${LAND_DA_EXPERIMENT}"
-echo "ACCNR=${ACCNR}"
 
 # Test
 cd ${workspace}
@@ -38,13 +37,19 @@ echo "compiler=${compiler}"
 #export exp_basedir=${expbasedir:-$(dirname $(pwd))}
 export exp_basedir=${exp_basedir:-$(pwd)}
 
+[[ ${machine} = gaeac6   ]] && export ACCNR="bil-fire8" || :  # bil-fire8
+[[ ${machine} = hera     ]] && export ACCNR="nems"      || :  # nral0032
+[[ ${machine} = hercules ]] && export ACCNR="epic"      || :
+[[ ${machine} = orion    ]] && export ACCNR="epic"      || :
+echo "ACCNR=${ACCNR}"
+
 # Choice of experiment that is supported on the machine.
 experiment="${LAND_DA_EXPERIMENT:-}"
 if [[ ${LAND_DA_EXPERIMENT} = default ]] ; then
-	[[ ${machine} = gaeac6   ]] && experiment="LND.era5.3dvar.ims.warmstart" && export ACCNR="bil-fire8" || :  # bil-fire8
-	[[ ${machine} = hera     ]] && experiment="LND.era5.letkf.ghcn.coldstart" && export ACCNR="nems"     || :  # nral0032
-	[[ ${machine} = hercules ]] && experiment="LND.gswp3.letkf.ghcn.warmstart" && export ACCNR="epic"    || :
-	[[ ${machine} = orion    ]] && experiment="LND.gswp3.3dvar.ghcn.coldstart" && export ACCNR="epic"    || :
+	[[ ${machine} = gaeac6   ]] && experiment="LND.era5.3dvar.ims.warmstart"   || :
+	[[ ${machine} = hera     ]] && experiment="LND.era5.letkf.ghcn.coldstart"  || :
+	[[ ${machine} = hercules ]] && experiment="LND.gswp3.letkf.ghcn.warmstart" || :
+	[[ ${machine} = orion    ]] && experiment="LND.gswp3.3dvar.ghcn.coldstart" || :
 else
 	:
 fi
