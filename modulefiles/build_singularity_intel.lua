@@ -79,6 +79,11 @@ load(pathJoin("mapl", mapl_ver))
 scotch_ver=os.getenv("scotch_ver") or "7.0.4"
 load(pathJoin("scotch", scotch_ver))
 
+load("nemsio/2.5.4")
+load("sfcio/1.4.1")
+load("sigio/2.3.2")
+load("nccmp/1.9.0.1")
+
 load("py-cftime/1.0.3.4")
 load("py-cython/0.29.36")
 load("py-f90nml/1.4.3")
