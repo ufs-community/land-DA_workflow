@@ -5,32 +5,28 @@ Introduction
 ****************
 
 This User's Guide provides guidance for running the Unified Forecast System 
-(:term:`UFS`) offline Land Data Assimilation (DA) System. Land DA is an offline version of the Noah Multi-Physics (Noah-MP) land surface model (LSM) used in the `UFS Weather Model <https://github.com/ufs-community/ufs-weather-model>`_ (WM). Its data assimilation framework uses 
-the Joint Effort for Data assimilation Integration (:term:`JEDI`) software. Currently, the offline UFS Land DA System only works with snow data. 
+(:term:`UFS`) Land Data Assimilation (DA) System. Land DA uses the Noah Multi-Physics (Noah-MP) land surface model (LSM) from the `UFS Weather Model <https://github.com/ufs-community/ufs-weather-model>`_ (WM), which can be coupled with an active atmospheric component (:term:`FV3`) or the WM data atmosphere component (:term:`DATM`) if desired. Its data assimilation framework uses 
+the Joint Effort for Data assimilation Integration (:term:`JEDI`) software. Currently, the UFS Land DA System only works with snow data. 
 Thus, this User's Guide focuses primarily on the snow DA process.
 
-The following improvements were made to the Land DA System ahead of the |latestr| release:
+The following improvements have been made to the Land DA System since the |latestr| release:
 
-* Added cycled run capability (:land-wflow-repo:`PR #101 <pull/101/>`)
-* Provided automated run option using cron (:land-wflow-repo:`PR #110 <pull/110>`)
-* Incorporated `Unified Workflow Tools <https://github.com/ufs-community/uwtools>`_:
-
-   * Added Rocoto tool to produce the Rocoto workflow XML file from a YAML configuration file (:land-wflow-repo:`PR #47 <pull/47>`)
-   * Added template tool to render a configuration file from a template (:land-wflow-repo:`PR #153 <pull/153>`)
-* Added plotting options: 
-
-   * Analysis plotting task (:land-wflow-repo:`PR #107 <pull/107>`)
-   * Plotting option for forecast task restart files (:land-wflow-repo:`PR #149 <pull/149>`)
-   * Time-history plots (:land-wflow-repo:`PR #151 <pull/151>`)
-* Extended and updated container support (:land-wflow-repo:`PR #85 <pull/85>` and :land-wflow-repo:`PR #147 <pull/147>`)
-* Ported ``land-DA_workflow`` to Hercules (:land-wflow-repo:`PR #133 <pull/133>`)
-* Added prerequisites for workflow end-to-end (WE2E) testing capability (:land-wflow-repo:`PR #131 <pull/131>`)
-* Upgraded to JEDI Skylab v7.0 (:land-wflow-repo:`PR #92 <pull/92/>`)
-* Upgraded to spack-stack v1.6.0 (:land-wflow-repo:`PR #102 <pull/102>`)
-* Updated directory structure for NCO compliance (e.g., :land-wflow-repo:`PR #75 <pull/75>`)
-* Added platform test to CTest & updated version of UFS WM (:land-wflow-repo:`PR #146 <pull/146>`)
-* Removed land driver from CTest (:land-wflow-repo:`PR #123 <pull/123>`)
-* Removed land driver and vector2tile (:land-wflow-repo:`PR #129 <pull/129>`)
+* Support for a new coupling option --- :term:`LND` (Noah-MP) and :term:`ATM` (FV3) --- (:land-wflow-repo:`PR #171 <pull/171/>`)
+* Addition of 3DVar to JEDI algorithm (:land-wflow-repo:`PR #187 <pull/187/>`)
+* Integration of JEDI Configuration Builder (:term:`JCB`) into Land DA System (:land-wflow-repo:`PR #182 <pull/182/>`)
+* Creation of JEDI configuration/input files (:land-wflow-repo:`PR #182 <pull/182/>`) for LETKF (:land-wflow-repo:`PR #190 <pull/190/>`) and 3DVar (:land-wflow-repo:`PR #188 <pull/188/>`) using :term:`JCB`
+* Inclusion of `jcb-algorithms <https://github.com/NOAA-EPIC/jcb-algorithms>`_ and `jcb-gdas <https://github.com/NOAA-EPIC/jcb-gdas>`_ as Land DA submodules to facilitate DA configuration with JCB (:land-wflow-repo:`PR #179 <pull/179/>`)
+* Add capability to use :term:`IMS` snow observation data by converting it to NetCDF form in the ``prep_data`` workflow task (:land-wflow-repo:`PR #222 <pull/222/>`) ; improve IMS data processing capabilities (:land-wflow-repo:`PR #224 <pull/224/>`)
+* Add :term:`ERA5` forcing option for ``APP=LND`` (:land-wflow-repo:`PR #214 <pull/214/>`); improve ERA5 data processing capabilities (:land-wflow-repo:`PR #219 <pull/219/>`)
+* Port Land DA System to Gaea C6 (:land-wflow-repo:`PR #211 <pull/211/>`) and provide container support for Gaea (:land-wflow-repo:`PR #177 <pull/177/>`)
+* Enhancements to post-processing plots (:land-wflow-repo:`PR #192 <pull/192/>`)
+* Replace JEDI Skylab with GDAS-sync'd JEDI-bundle (PRs :land-wflow-repo:`#203 <pull/203/>`, :land-wflow-repo:`#209 <pull/209/>`)
+* Update submodule hashes (:land-wflow-repo:`PR #200 <pull/200/>`)
+* Update CCPP physics suite for ``APP=ATML`` (:land-wflow-repo:`PR #216 <pull/216/>`)
+* Add sample configuration for CADRE DA training (:land-wflow-repo:`PR #227 <pull/227/>`)
+* Update Land DA ``develop`` branch container (:land-wflow-repo:`PR #228 <pull/228/>`)
+* Jenkins CI/CD pipeline and testing improvements (PRs :land-wflow-repo:`#174 <pull/174/>`, :land-wflow-repo:`#199 <pull/199/>`, :land-wflow-repo:`#225 <pull/225/>`, :land-wflow-repo:`#229 <pull/229/>`)
+* Bug fixes, minor updates, and refactoring since the |latestr| release (PRs :land-wflow-repo:`#184 <pull/184/>`, :land-wflow-repo:`#191 <pull/191/>`, :land-wflow-repo:`#195 <pull/195/>`, :land-wflow-repo:`#197 <pull/197/>`, :land-wflow-repo:`#205 <pull/205/>`, :land-wflow-repo:`#207 <pull/207/>`, :land-wflow-repo:`#217 <pull/217/>`, :land-wflow-repo:`#221 <pull/221/>`, :land-wflow-repo:`#230 <pull/230/>`, :land-wflow-repo:`#231 <pull/231/>`)
 
 The Land DA System citation is as follows and should be used when presenting results based on research conducted with the Land DA System:
 
@@ -46,12 +42,16 @@ Background Information
    * This chapter (Introduction) provides user support information and background information on the Unified Forecast System (:term:`UFS`) and the Noah-MP model. 
    * :numref:`Chapter %s <TechOverview>` (Technical Overview) outlines prerequisites, supported systems, and directory structure. 
 
+.. COMMENT: Add Components chapter?
+
 Building, Running, and Testing the Land DA System
 ===================================================
 
-   * :numref:`Chapter %s: Land DA Workflow <BuildRunLandDA>` explains how to build and run the Land DA System on :ref:`Level 1 <LevelsOfSupport>` systems (currently Hera, Orion, and Hercules).
+   * :numref:`Chapter %s: Land DA Workflow <BuildRunLandDA>` explains how to build and run the Land DA System on :ref:`Level 1 <LevelsOfSupport>` systems (currently Hera, Orion, Hercules, and Gaea-C6).
    * :numref:`Chapter %s: Containerized Land DA Workflow <Container>` explains how to build and run the containerized Land DA System on non-Level 1 systems. 
    * :numref:`Chapter %s: Testing the Land DA Workflow <TestingLandDA>` explains how to run Land DA System tests. 
+
+.. COMMENT: Add workflow overview chapter?
 
 Customizing the Workflow
 =========================
@@ -78,7 +78,7 @@ The Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-
 When posting a question, it is recommended that users provide the following information: 
 
 * The platform or system being used (e.g., Hera, Orion, container)
-* The version of the Land DA System being used (e.g., ``develop``, ``release/public-v1.1.0``). (To determine this, users can run ``git branch``, and the name of the branch with an asterisk ``*`` in front of it is the name of the branch or tag they are working with.) Note that the Land DA version being used and the version of the documentation being used should match, or users will run into difficulties.
+* The version of the Land DA System being used (e.g., ``develop``, ``release/public-v2.0.0``). (To determine this, users can run ``git branch``, and the name of the branch with an asterisk ``*`` in front of it is the name of the branch or tag they are working with.) Note that the Land DA version being used and the version of the documentation being used should match, or users will run into difficulties.
 * Stage of the application when the issue appeared (i.e., build/compilation, configuration, or forecast run)
 * Contents of relevant configuration files
 * Full error message (preferably in text form rather than a screenshot)
