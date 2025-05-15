@@ -1,21 +1,23 @@
 .. _BuildRunLandDA:
 
-***************************************
-Land DA Workflow (Hera/Orion/Hercules)
-***************************************
+***********************************************
+Land DA Workflow (Hera/Orion/Hercules/Gaea-C6)
+***********************************************
 
-This chapter provides instructions for building and running the Unified Forecast System (:term:`UFS`) Land DA System using a Jan. 3-4, 2000 00z sample case using :term:`GSWP3` data with the UFS Noah-MP land component and data atmosphere (DATM) component.
+This chapter provides instructions for building and running the Unified Forecast System (:term:`UFS`) Land DA System using a Jan. 19-20, 2025 00z sample :term:`LND` :term:`warmstart` case using :term:`ERA5` and :term:`IMS` data and the 3D-Var algorithm with the UFS Noah-MP land component and data atmosphere (:term:`DATM`) component.
 
 .. attention::
    
    These steps are designed for use on :ref:`Level 1 <LevelsOfSupport>` systems (e.g., Hera, Orion) and may require significant changes on other systems. It is recommended that users on other systems run the containerized version of Land DA. Users may reference :numref:`Chapter %s: Containerized Land DA Workflow <Container>` for instructions.
+
+.. COMMENT: Check that this is still the sampe case! And/or add others!
 
 .. _create-dir:
 
 Create a Working Directory
 *****************************
 
-Users can either create a new directory for their Land DA work or choose an existing directory, depending on preference. Then, users should navigate to this directory. For example, to create a new directory and navigate to it, run: 
+Users can either create a new directory for their Land DA work (e.g., ``landda``) or choose an existing directory, depending on preference. Then, users should navigate to this directory. For example, to create a new directory and navigate to it, run: 
 
 .. code-block:: console
 
@@ -67,17 +69,19 @@ Build the Land DA System
       ./app_build.sh
 
    Users may need to press the ``Enter`` key to advance the build once the list of currently loaded modules appears. 
-   If the code successfully compiles, the console output should end with:
+   If the code successfully compiles, the console output should include:
    
    .. code-block:: console
 
       [100%] Completed 'ufs_model.fd'
       [100%] Built target ufs_model.fd
-      ... Moving pre-compiled executables to designated location ...
+      ...
+      exit 0
    
    Additionally, the ``exec`` directory will contain the following executables: 
 
       * ``apply_incr.exe``
+      * ``calcfIMS.exe``
       * ``tile2tile_converter.exe``
       * ``ufs_model``
 
@@ -85,6 +89,25 @@ Build the Land DA System
 
 Configure an Experiment
 *************************
+
+Several sample experiment configurations come with the Land DA System. Although this chapter outlines how to run the ``config.ATML.3dvar.ghcn.coldstart.yaml`` case, the following cases are available for use in the ``land-DA_workflow/parm/config_samples`` directory:
+
+* ``config.ATML.3dvar.ghcn.coldstart.yaml``
+* ``config.LND.era5.letkf.ghcn.coldstart.yaml``
+* ``config.ATML.3dvar.ghcn.warmstart.yaml``
+* ``config.LND.gswp3.3dvar.ghcn.coldstart.yaml``
+* ``config.LND.era5.3dvar.ims.warmstart.yaml``
+* ``config.LND.gswp3.letkf.ghcn.warmstart.yaml``
+
+The sample configuration files are named based on their features: 
+
+* Configuration (:term:`LND` or :term:`ATML`)
+* Atmospheric forcing data (``gswp3`` or ``era5``) --- if any
+* :term:`DA <DA>` algorithm (``letkf`` or ``3dvar``)
+* Snow depth data (:term:`IMS` or :term:`GHCN`)
+* Type of forecast start (i.e., :term:`warmstart` or :term:`coldstart`)
+
+Users are encouraged to explore and modify the options available! 
 
 .. _load-env:
 
@@ -102,25 +125,25 @@ This activates the ``land_da`` conda environment, and the user typically sees ``
 Modify the Workflow Configuration YAML
 ========================================
 
-Copy the experiment settings into ``land_analysis.yaml``:
+Copy the experiment settings into ``config.yaml``:
 
 .. code-block:: console
 
    cd $LANDDAROOT/land-DA_workflow/parm
-   cp parm_xml_<platform>.yaml parm_xml.yaml
+   cp config_samples/config.LND.era5.3dvar.ims.warmstart.yaml config.yaml
 
-where ``<platform>`` is ``hera``, ``orion``, or ``hercules``.
+where ``<platform>`` is ``hera``, ``orion``, ``hercules``, or ``gaeac6``.
    
-Users will need to configure the ``account`` and ``exp_basedir`` variables in ``parm_xml.yaml``: 
+Users will need to configure the ``account`` variable in ``config.yaml`` and choose an ``EXP_CASE_NAME`` if a different name for the experiment is desired: 
 
-   * ``account:`` A valid account name. Hera, Orion, Hercules, and most NOAA :term:`RDHPCS` systems require a valid account name; other systems may not (in which case, any value will do).
-   * ``exp_basedir:`` The full path to the directory where ``land-DA_workflow`` was cloned (i.e., ``$LANDDAROOT``). For example, if ``land-DA_workflow`` is located at ``/scratch2/NAGAPE/epic/User.Name/landda/land-DA_workflow`` on Hera, set ``exp_basedir`` to its parent directory: ``/scratch2/NAGAPE/epic/User.Name/landda``. 
+   * ``account:`` A valid account name. Most NOAA :term:`RDHPCS` systems require a valid account name; other systems may not (in which case, any value will do).
+   * ``EXP_CASE_NAME:`` This variable can be changed to any name the user wants (but note that whitespace and some punctuation characters are not allowed). However, the best names will indicate useful information about the experiment. This documentation uses ``lnd_era5_warmstart_00`` to indicate that it is an ERA5-LND warmstart case. 
 
 .. note::
 
    To determine an appropriate ``account`` field for Level 1 systems that use the Slurm job scheduler, run ``saccount_params``. On other systems, running ``groups`` will return a list of projects that the user has permissions for. Not all listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
 
-Users may configure other elements of an experiment in ``parm/templates/template.land_analysis.yaml`` if desired. For example, users may wish to alter the ``cycledef.spec`` to indicate a different start cycle, end cycle, and increment. The ``template.land_analysis.yaml`` file contains reasonable default values for running a Land DA experiment. Users who wish to run a more complex experiment may change the values in this file using information from Sections :numref:`%s: Workflow Configuration Parameters <ConfigWorkflow>`, :numref:`%s: I/O for the Noah-MP Model <Model>`, and :numref:`%s: I/O for JEDI DA <DASystem>`. 
+Users may configure other elements of an experiment in ``config.yaml`` if desired. For example, users may wish to alter ``DATE_FIRST_CYCLE``, ``DATE_LAST_CYCLE``, and/or ``DATE_CYCLE_FREQ_HR`` to indicate a different start cycle, end cycle, and increment. Users may also wish to change the DA algorithm from ``3dvar`` to ``letkf`` via the ``JEDI_ALGORITHM`` variable. Users who wish to run a more complex experiment may change the values in ``config.yaml`` using information from Sections :numref:`%s: Workflow Configuration Parameters <ConfigWorkflow>`, :numref:`%s: I/O for the Noah-MP Model <Model>`, and :numref:`%s: I/O for JEDI DA <DASystem>`. 
 
 .. _GetData:
 
@@ -137,32 +160,81 @@ Data
    * - Platform
      - Data Location
    * - Hera
-     - /scratch2/NAGAPE/epic/UFS_Land-DA_Dev/inputs
+     - /scratch2/NAGAPE/epic/UFS_Land-DA_|data|/inputs
    * - Hercules & Orion
-     - /work/noaa/epic/UFS_Land-DA_Dev/inputs
+     - /work/noaa/epic/UFS_Land-DA_|data|/inputs
+   * - Gaea-C6
+     - /gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_|data|/inputs
 
-Users who have difficulty accessing the data on Hera, Orion, or Hercules may download it according to the instructions in :numref:`Section %s <GetDataC>`. Its subdirectories are soft-linked to the ``land-DA_workflow/fix`` directory by the build script (``sorc/app_build.sh``); when downloading new data, it should be placed in or linked to the ``fix`` directory.
+Users who have difficulty accessing the data on Hera, Orion, Hercules, or Gaea-C6 may download it according to the instructions in :numref:`Section %s <GetDataC>`. Its subdirectories are soft-linked to the ``land-DA_workflow/fix`` directory by the build script (``sorc/app_build.sh``); when downloading new data, it should be placed in or linked to the ``fix`` directory.
 
 .. _generate-wflow:
 
-Generate the Rocoto XML File
+Set Up the Workflow
 ==============================
 
-Generate the workflow XML file with ``uwtools`` by running: 
+Generate the experiment directory by running: 
 
 .. code-block:: console
 
-   uw template render --input-file templates/template.land_analysis.yaml --values-file parm_xml.yaml --output-file land_analysis.yaml
-   uw rocoto realize --input-file land_analysis.yaml --output-file land_analysis.xml
+   ./setup_wflow_env.py -p=<platform>
 
-If the commands run without issue, ``uwtools`` will output a "0 errors found" message similar to the following: 
+where ``<platform>`` is ``hera``, ``orion``, ``hercules``, or ``gaeac6``.
+
+If the command runs without issue, override messages, experiment details, and "0 errors found" messages will be printed to the console, similar to the following excerpts: 
 
 .. code-block:: console
 
-   [2024-03-01T20:36:03]     INFO 0 UW schema-validation errors found
-   [2024-03-01T20:36:03]     INFO 0 Rocoto validation errors found
+   Python Log Level= str: INFO, attr: 20
+   INFO::/path/to/setup_wflow_env.py::L34:: Current directory (PARMdir): /work/noaa/epic/username/hercules/landda/land-DA_workflow/parm 
+   INFO::/path/to/setup_wflow_env.py::L36:: Home directory (HOMEdir): /work/noaa/epic/username/hercules/landda/land-DA_workflow 
+   INFO::/path/to/setup_wflow_env.py::L38:: Experimental base directory (exp_basedir): /work/noaa/epic/username/hercules/landda 
+   hercules
+   INFO::/path/to/setup_wflow_env.py::L168:: Experimental case directory /work/noaa/epic/username/hercules/landda/exp_case/lnd_era5_warmstart_00 has been created.
+   INFO::/path/to/setup_wflow_env.py::L175:: Rocoto YAML template: /work/noaa/epic/username/hercules/landda/land-DA_workflow/parm/templates/template.land_analysis.yaml
+   **************************************************
+   Overriding              ACCOUNT = epic
+   Overriding                  APP = LND
+   Overriding           ATMOS_FORC = era5
+   ...
+   Overriding    partition_default = hercules
+   Overriding        queue_default = batch
+   Overriding               res_p1 = 97
+   **************************************************
+               LND_LAYOUT_X: 1
+   DATM_STREAM_FN_LAST_DATE: 
+                JEDI_PY_VER: python3.10
+   ...
+                  model_ver: v2.1.0
+                  OUTPUT_FH: 1 -1
+                  DT_RUNSEQ: 3600
+                   KEEPDATA: YES
+   INFO::/path/to/uwtools/config/validator.py::L76::0 schema-validation errors found in Rocoto config
+   INFO::/path/to/uwtools/rocoto.py::L66::0 Rocoto XML validation errors found
 
-The generated workflow XML file (``land_analysis.xml``) will be used by the Rocoto workflow manager to determine which tasks (or "jobs") to submit to the batch system and when to submit them (e.g., when task dependencies are satisfied). 
+The setup script (``./setup_wflow_env.py``) will create an experiment directory, located by default at ``../../exp_case/${EXP_CASE_NAME}/``. It will populate this directory with the experiment configuration file (``land_analysis.yaml``), the workflow XML file (``land_analysis.xml``), and the workflow launch script (``launch_rocoto_wflow.sh``), as well as several directories described in :numref:`Table %s <expt_dir>` below. 
+
+.. _expt_dir:
+
+.. list-table:: Initial Experiment Directory
+   :header-rows: 1
+
+   * - File/Directory Name
+     - Description
+   * - ``com_dir``
+     - Symlink to the ``ptmp/test_*/com/landda/v2.1.0`` directory, which contains output files for each cycle
+   * - ``land_analysis.yaml``
+     - Combines information from the user's ``config.yaml`` file with machine-specific values and calculated values that will be used in the experiment. 
+   * - ``land_analysis.xml``
+     - Workflow XML file used by the Rocoto workflow manager to determine which tasks (or "jobs") to submit to the batch system and when to submit them (e.g., when task dependencies are satisfied) 
+   * - ``launch_rocoto_wflow.sh``
+     - Workflow launch script
+   * - ``log_dir``
+     - Symlink to the directory containing log files for the Rocoto workflow (``ptmp/test_*/com/output/logs``)
+   * - ``tmp_dir``
+     - Symlink to the ``ptmp/test_*/tmp`` directory, which contains the working directory and temporary/intermediate files
+
+.. COMMENT: Complete! 
 
 Run the Experiment
 ********************
@@ -181,18 +253,31 @@ Each Land DA experiment includes multiple tasks that must be run in order to sat
 
    * - J-job Task
      - Description
-   * - JLANDDA_PREP_OBS
-     - Sets up the observation data files
+     - Application/Configuration
+   * - JLANDDA_PREP_DATA
+     - Prepares the observation / :term:`DATM` forcing data files
+     - LND/ATML
+   * - JLANDDA_FCST_IC 
+     - Generates initial conditions (IC) files for the ATML configuration only
+     - ATML
+   * - JLANDDA_JCB
+     - Generates JEDI configuration YAML file
+     - LND/ATML
    * - JLANDDA_PRE_ANAL
-     - Transfers the snow data from the restart files to the surface data files
+     - Transfers the snow depth data from the restart files to the surface data files
+     - LND
    * - JLANDDA_ANALYSIS
      - Runs :term:`JEDI` and adds the increment to the surface data files
+     - LND/ATML
    * - JLANDDA_POST_ANAL
-     - Transfers the JEDI result from the surface data files to the restart files
+     - Transfers the JEDI snow depth result from the surface data files to the restart files
+     - LND/ATML
    * - JLANDDA_FORECAST
      - Runs the forecast model
+     - LND/ATML
    * - JLANDDA_PLOT_STATS
-     - Plots the JEDI result (scatter/histogram) and the restart files
+     - Plots the results of the ANALYSIS and FORECAST tasks
+     - LND/ATML
 
 Users may run these tasks :ref:`using the Rocoto workflow manager <run-w-rocoto>`. 
 
@@ -208,9 +293,11 @@ Automated Run
 
 To automate task submission, users must be on a system where :term:`cron` is available. On Orion, cron is only available on the orion-login-1 node, and likewise on Hercules, it is only available on hercules-login-1, so users will need to work on those nodes when running cron jobs on Orion/Hercules.
 
+On all platforms, users should navigate to the experiment directory and launch the workflow: 
+
 .. code-block:: console
 
-   cd parm
+   cd ../../exp_case/lnd_era5_warmstart_00/
    ./launch_rocoto_wflow.sh add
 
 To check the status of the experiment, see :numref:`Section %s <VerifySuccess>` on tracking experiment progress.
@@ -245,21 +332,23 @@ If ``rocotorun`` was successful, the ``rocotostat`` command will print a status 
 
 .. code-block:: console
 
-   CYCLE                TASK                       JOBID        STATE   EXIT STATUS   TRIES   DURATION
-   =========================================================================================================
-   200001030000     prep_obs                    61746064       QUEUED             -       1        0.0
-   200001030000     pre_anal   druby://10.184.3.62:41973   SUBMITTING             -       1        0.0
-   200001030000     analysis                           -            -             -       -          -
-   200001030000    post_anal                           -            -             -       -          -
-   200001030000     forecast                           -            -             -       -          -
-   200001030000   plot_stats                           -            -             -       -          -
-   =========================================================================================================
-   200001040000     prep_obs   druby://10.184.3.62:41973   SUBMITTING             -       1        0.0
-   200001040000     pre_anal                           -            -             -       -          -
-   200001040000     analysis                           -            -             -       -          -
-   200001040000    post_anal                           -            -             -       -          -
-   200001040000     forecast                           -            -             -       -          -
-   200001040000   plot_stats                           -            -             -       -          -
+      CYCLE             TASK                        JOBID        STATE  EXIT STATUS   TRIES   DURATION
+   =======================================================================================================
+   202501190000          jcb                      5428846    SUCCEEDED            0       1        3.0
+   202501190000    prep_data                      5428847    SUCCEEDED            0       1       30.0
+   202501190000     pre_anal                      5428848    SUCCEEDED            0       1        8.0
+   202501190000     analysis                      5428985    SUCCEEDED            0       1       72.0
+   202501190000    post_anal                      5429034    SUCCEEDED            0       1        3.0
+   202501190000     forecast                      5429128       QUEUED            -       0        0.0
+   202501190000   plot_stats                            -            -            -       -          -
+   =======================================================================================================
+   202501200000          jcb                      5428849    SUCCEEDED            0       1       11.0
+   202501200000    prep_data                      5428850    SUCCEEDED            0       1       30.0
+   202501200000     pre_anal                      5428851    SUCCEEDED            0       1        3.0
+   202501200000     analysis                      5428986    SUCCEEDED            0       1       71.0
+   202501200000    post_anal                      5429035    SUCCEEDED            0       1        3.0
+   202501200000     forecast  druby://130.18.14.151:46755   SUBMITTING            -       0        0.0
+   202501200000   plot_stats                            -            -            -       -          -
 
 Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command (whether issued manually or via cron automation). For each task, a log file is generated. These files are stored in ``$LANDDAROOT/ptmp/test/com/output/logs``. 
 
@@ -278,8 +367,21 @@ As the experiment progresses, it will generate a number of directories to hold i
 
    $LANDDAROOT (<EXP_BASEDIR>): Base directory
     ├── land-DA_workflow (<HOMElandda> or <CYCLEDIR>): Home directory of the land DA workflow
+    │     ├── jobs 
+    │     ├── modulefiles
+    │     ├── parm
+    │     ├── scripts
+    │     ├── sorc
+    │     └── ush
+    ├── exp_case
+    │     ├── com_dir --> symlinked to ptmp/test_*/com/landda/v2.1.0
+    │     ├── land_analysis.yaml
+    │     ├── land_analysis.xml
+    │     ├── launch_rocoto_wflow.sh
+    │     ├── log_dir --> symlinked to ptmp/test_*/com/output/logs
+    │     └── tmp_dir --> symlinked to ptmp/test_*/com/tmp
     └── ptmp (<PTMP>)
-          └── test (<envir> or <OPSROOT>)
+          └── test_* (<envir> or <OPSROOT>)
                 └── com (<COMROOT>)
                 │     ├── landda (<NET>)
                 │     │     └── vX.Y.Z (<model_ver>)
