@@ -9,6 +9,9 @@ Glossary
    ATM
       The Weather Model configuration that runs only the standalone atmospheric model. 
 
+   ATML
+      The ATML configuration of the Land DA System uses the Noah-MP :term:`land component` from the UFS :term:`Weather Model` with an active :term:`FV3` atmospheric component. 
+
    CCPP
       The `Common Community Physics Package <https://dtcenter.org/community-code/common-community-physics-package-ccpp>`_ is a forecast-model agnostic, vetted collection of code containing atmospheric physical parameterizations and suites of parameterizations for use in Numerical Weather Prediction (NWP) along with a framework that connects the physics to the host forecast model.
 
@@ -21,6 +24,10 @@ Glossary
    CMEPS
       The `Community Mediator for Earth Prediction Systems <https://github.com/NOAA-EMC/CMEPS>`_ (CMEPS) is a :term:`NUOPC`-compliant :term:`mediator` used for coupling Earth system model components. It is currently being used in NCAR's Community Earth System Model (:term:`CESM`) and NOAA's subseasonal-to-seasonal (S2S) coupled system. More information is available in the `CMEPS Documentation <https://escomp.github.io/CMEPS/versions/master/html/index.html>`_.
 
+   coldstart
+   cold start
+      A coldstart forecast initializes a model using data from a different source (e.g., climatology data, forecast data from a different model, analysis files) to "spin up," or start, the forecast. 
+   
    container
       `Docker <https://www.docker.com/resources/what-container>`_ describes a container as "a standard unit of software that packages up code and all its dependencies so the application runs quickly and reliably from one computing environment to another."
 
@@ -34,6 +41,7 @@ Glossary
       An hour of the day on which a forecast is started. In the Land DA System, it usually follows YYYYMMDD-HHmmss format. 
 
    data assimilation
+   DA
       One of the major sources of error in weather and climate forecasts is uncertainty related to the initial conditions that are used to generate future predictions. Even the most precise instruments have a small range of unavoidable measurement error, which means that tiny measurement errors (e.g., related to atmospheric conditions and instrument location) can compound over time. These small differences result in very similar forecasts in the short term (i.e., minutes, hours), but they cause widely divergent forecasts in the long term. Errors in weather and climate forecasts can also arise because models are imperfect representations of reality. Data assimilation systems seek to mitigate these problems by combining the most timely observational data with a "first guess" of the atmospheric state (usually a previous forecast) and other sources of data to provide a "best guess" analysis of the atmospheric state to start a weather or climate simulation. When combined with an "ensemble" of model runs (many forecasts with slightly different conditions), data assimilation helps predict a range of possible atmospheric states, giving an overall measure of uncertainty in a given forecast. 
    
    DATM
@@ -59,14 +67,25 @@ Glossary
    FV3
       The Finite-Volume Cubed-Sphere dynamical core (dycore). Developed at NOAA’s `Geophysical Fluid Dynamics Laboratory <https://www.gfdl.noaa.gov/fv3/>`__ (GFDL), it is a scalable and flexible dycore capable of both hydrostatic and non-hydrostatic atmospheric simulations. It is the dycore used in the UFS Weather Model.
 
+   GHCN 
+      The Global Historical Climatology Network (`GHCN <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_) is "an integrated database of daily climate summaries from land surface stations across the globe."" 
+
    GSWP3
       The Global Soil Wetness Project Phase 3 dataset is a century-long comprehensive set of data documenting several variables for hydro-energy-eco systems. 
 
    HPC
       High-Performance Computing.
 
+   IMS 
+      The `Interactive Multisensor Snow and Ice Mapping System <https://usicecenter.gov/Products/ImsHome>`_ (IMS) is "an operational software package used to demarcate the presence of snow and ice across the entire northern hemisphere."
+
    J-jobs
       Scripts (contained in ``land-DA_workflow/jobs/``) that should be directly called for each workflow component (either on the command line or by the workflow manager) to run a specific task in the workflow. The different scripting layers are described in detail in the :nco:`NCO Implementation Standards document <ImplementationStandards.v11.0.0.pdf>`.
+
+   JCB
+   JEDI Configuration Builder
+      The JEDI Configuration Builder (JCB) is a python package used to assemble information on :term:`JEDI` algorithms and data assimilation types (e.g., snow, marine, atmosphere) into one convenient YAML file for use in data assimilation applications. 
+      .. COMMENT: Add/revise def! 
 
    JEDI
       The Joint Effort for Data assimilation Integration (`JEDI <https://www.jcsda.org/jcsda-project-jedi>`_) is a unified and versatile data assimilation (DA) system for Earth System Prediction. It aims to enable efficient research and accelerated transition from research to operations by providing a framework that takes into account all components of the Earth system in a consistent manner. The JEDI software package can run on a variety of platforms and for a variety of purposes, and it is designed to readily accommodate new atmospheric and oceanic models and new observation systems. The `JEDI User's Guide <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/>`_ contains extensive information on the software. 
@@ -74,11 +93,11 @@ Glossary
       JEDI is developed and distributed by the `Joint Center for Satellite Data Assimilation <https://www.jcsda.org/>`_, a multi-agency research center hosted by the University Corporation for Atmospheric Research (`UCAR <https://www.ucar.edu/>`_). JCSDA is dedicated to improving and accelerating the quantitative use of research and operational satellite data in weather, ocean, climate, and environmental analysis and prediction systems.
 
    jedi-bundle
-   Skylab
-      `JEDI Skylab <https://www.jcsda.org/jediskylab>`_ is the name for roll-up releases of :term:`JCSDA`'s `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`_ repository. 
-      This software provides an integrated Earth System Data Assimilation capability. JCSDA has tested Skylab capabilities internally via the SkyLab testbed for the following components: atmosphere, land/snow, ocean, sea-ice, aerosols, and atmospheric composition. 
+      .. COMMENT: Add def! This used to have Skylab def 
 
    LND
+      The LND experiment configuration uses the :term:`land component` with a :term:`DATM` component. 
+
    land component
       The Noah Multi-Physics (Noah-MP) land surface model (LSM) is an open-source, community-developed LSM that has been incorporated into the UFS Weather Model (WM). It is the UFS WM's land component. 
 
@@ -103,7 +122,7 @@ Glossary
       NetCDF (`Network Common Data Form <https://www.unidata.ucar.edu/software/netcdf/>`_) is a file format and community standard for storing multidimensional scientific data. It includes a set of software libraries and machine-independent data formats that support the creation, access, and sharing of array-oriented scientific data.
 
    NCEP
-      National Centers for Environmental Prediction (NCEP) is an arm of the National Weather Service consisting of nine centers. More information can be found at https://www.ncep.noaa.gov.
+      National Centers for Environmental Prediction (NCEP) is an arm of the National Weather Service consisting of nine centers. More information can be found at https://www.weather.gov/ncep/.
    
    NCO
       :term:`NCEP` Central Operations. Visit the `NCO website <https://www.nco.ncep.noaa.gov/>`_ for more information.
@@ -126,6 +145,10 @@ Glossary
    RDHPCS
       `Research and Development High-Performance Computing Systems <https://docs.rdhpcs.noaa.gov/systems/index.html>`_. 
 
+   Skylab
+      `JEDI Skylab <https://www.jcsda.org/jediskylab>`_ is the name for roll-up releases of :term:`JCSDA`'s `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`_ repository. 
+      This software provides an integrated Earth System Data Assimilation capability. JCSDA has tested Skylab capabilities internally via the SkyLab testbed for the following components: atmosphere, land/snow, ocean, sea-ice, aerosols, and atmospheric composition. However, JCSDA plans to stop releasing ``jedi-bundle`` and instead encourage users and developers to move to the ``develop`` branch, which will contain the latest updates. 
+
    Spack
       `Spack <https://spack.readthedocs.io/en/latest/>`_ is a package management tool designed to support multiple versions and configurations of software on a wide variety of platforms and environments. It was designed for large supercomputing centers where many users and application teams share common installations of software on clusters with exotic architectures. 
 
@@ -138,5 +161,13 @@ Glossary
    Umbrella repository
       A repository that houses external code, or “externals,” from additional repositories.
 
+   warmstart
+   warm start
+      A warmstart forecast uses "saved fields from a recent forecast of the same model" (often provided via RESTART files) to populate certain variables (https://www.oc.nps.edu/nom/modeling/initial.html). This is in contrast to a :term:`coldstart`. 
+
    Weather Enterprise
       Individuals and organizations from public, private, and academic sectors that contribute to the research, development, and production of weather forecast products; primary consumers of these weather forecast products.
+
+   Weather Model
+   WM
+      A prognostic model that can be used for short- and medium-range research and operational forecasts. It can be an atmosphere-only model or an atmospheric model coupled with one or more additional components, such as a wave or ocean model. The SRW App uses the `UFS Weather Model <https://github.com/ufs-community/ufs-weather-model/wiki>`_.
