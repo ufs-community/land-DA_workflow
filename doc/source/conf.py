@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "UFS Offline Land DA User's Guide"
+project = "UFS Land DA User's Guide"
 copyright = '2024, '
 author = ' '
 
@@ -50,8 +50,9 @@ rst_prolog = """
 .. |latestr| replace:: v2.0.0
 .. |tag| replace:: ``ufs-land-da-v2.0.0``
 .. |branch| replace:: ``release/public-v2.0.0``
-.. |skylabv| replace:: Skylab v7.0
+.. |skylabv| replace:: Skylab v8.0
 .. |spack-stack-ver| replace:: v1.6.0
+.. |data| replace:: v2.1
 """
 
 # -- Linkcheck options -------------------------------------------------
@@ -124,7 +125,7 @@ extlinks_detect_hardcoded_links = True
 extlinks = {'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'github-docs': ('https://docs.github.com/en/%s', '%s'),
             'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/%s', '%s'),
-            'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/7.0.0/%s', '%s'),
+            'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/8.0.0/%s', '%s'),
             'nco': ('https://www.nco.ncep.noaa.gov/idsb/implementation_standards/%s', '%s'),
             'rocoto': ('https://christopherwharrop.github.io/rocoto/%s', '%s'),
             'rst': ('https://www.sphinx-doc.org/en/master/usage/restructuredtext/%s', '%s'),
