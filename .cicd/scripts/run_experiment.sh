@@ -46,7 +46,7 @@ echo "ACCNR=${ACCNR}"
 # Choice of experiment that is supported on the machine.
 experiment="${LAND_DA_EXPERIMENT:-}"
 if [[ ${LAND_DA_EXPERIMENT} = default ]] ; then
-	experiment="LND.gswp3.3dvar.ghcn.coldstart" || :
+	experiment="LND.gswp3.3dvar.ghcn.coldstart"
 elif [[ ${LAND_DA_EXPERIMENT} = coverage ]] ; then
 	[[ ${machine} = gaeac6   ]] && experiment="LND.era5.3dvar.ims.warmstart"   || :
 	[[ ${machine} = hera     ]] && experiment="LND.era5.letkf.ghcn.coldstart"  || :
