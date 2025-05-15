@@ -5,7 +5,7 @@
 #
 # Usage:
 #  UFS_PLATFORM=<platform> UFS_COMPILER=<compiler> [ LAND_DA_EXPERIMENT=<exp> ] .cicd/scripts/run_experiment.sh
-#  .cicd/scripts/land_experiment.sh <platform> <compiler> [ <experiment>|default ]
+#  .cicd/scripts/run_experiment.sh <platform> <compiler> [ <experiment>|default ]
 #
 pwd
 export REPO_NAME="land-DA_workflow"
