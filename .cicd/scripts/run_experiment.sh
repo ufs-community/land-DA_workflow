@@ -5,7 +5,7 @@
 #
 # Usage:
 #  UFS_PLATFORM=<platform> UFS_COMPILER=<compiler> [ LAND_DA_EXPERIMENT=<exp> ] .cicd/scripts/run_experiment.sh
-#  .cicd/scripts/land_experiment.sh <platform> <compiler> [ <experiment>|default ]
+#  .cicd/scripts/run_experiment.sh <platform> <compiler> [ <experiment>|default ]
 #
 pwd
 export REPO_NAME="land-DA_workflow"
@@ -46,6 +46,8 @@ echo "ACCNR=${ACCNR}"
 # Choice of experiment that is supported on the machine.
 experiment="${LAND_DA_EXPERIMENT:-}"
 if [[ ${LAND_DA_EXPERIMENT} = default ]] ; then
+	experiment="LND.gswp3.3dvar.ghcn.coldstart"
+elif [[ ${LAND_DA_EXPERIMENT} = coverage ]] ; then
 	[[ ${machine} = gaeac6   ]] && experiment="LND.era5.3dvar.ims.warmstart"   || :
 	[[ ${machine} = hera     ]] && experiment="LND.era5.letkf.ghcn.coldstart"  || :
 	[[ ${machine} = hercules ]] && experiment="LND.gswp3.letkf.ghcn.warmstart" || :
