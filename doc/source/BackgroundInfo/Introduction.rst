@@ -4,6 +4,17 @@
 Introduction
 ****************
 
+Unified Forecast System (UFS)
+===============================
+
+The UFS is a community-based, coupled, comprehensive Earth modeling system. It includes :ufs:`multiple applications <applications>` that support different forecast durations and spatial domains. NOAA's operational model suite for numerical weather prediction (:term:`NWP`) is quickly transitioning to the UFS from many different modeling systems. 
+The UFS is designed to enable research, development, and contribution
+opportunities within the broader :term:`Weather Enterprise` (including
+government, industry, and academia). For more information about the UFS, visit the :ufs:`UFS Portal <>`.
+
+The Land DA System
+====================
+
 This User's Guide provides guidance for running the Unified Forecast System 
 (:term:`UFS`) Land Data Assimilation (DA) System. Land DA uses the Noah Multi-Physics (Noah-MP) land surface model (LSM) from the `UFS Weather Model <https://github.com/ufs-community/ufs-weather-model>`_ (WM), which can be coupled with an active atmospheric component (:term:`FV3`) or the WM data atmosphere component (:term:`DATM`) if desired. Its data assimilation framework uses 
 the Joint Effort for Data assimilation Integration (:term:`JEDI`) software. Currently, the UFS Land DA System only works with snow data. 
@@ -99,51 +110,6 @@ Users who want to request a feature enhancement or the addition of a new feature
    #. File a `GitHub Issue <https://github.com/ufs-community/land-DA_workflow/issues/new>`_ and add (or request that a code manager add) the ``EPIC Support Requested`` label. 
    #. Post a request for a feature or enhancement in the `Enhancements <https://github.com/ufs-community/land-DA_workflow/discussions/categories/enhancements>`_ category of GitHub Discussions. These feature requests will be forwarded to the Earth Prediction Innovation Center (`EPIC <https://epic.noaa.gov/>`_) management team for prioritization and eventual addition to the Land DA System. 
    #. Email the request to support.epic@noaa.gov. 
-
-
-.. _Background:
-
-Background Information
-************************
-
-Unified Forecast System (UFS)
-===============================
-
-The UFS is a community-based, coupled, comprehensive Earth modeling system. It includes :ufs:`multiple applications <applications>` that support different forecast durations and spatial domains. NOAA's operational model suite for numerical weather prediction (:term:`NWP`) is quickly transitioning to the UFS from many different modeling systems. 
-The UFS is designed to enable research, development, and contribution
-opportunities within the broader :term:`Weather Enterprise` (including
-government, industry, and academia). For more information about the UFS, visit the :ufs:`UFS Portal <>`.
-
-
-.. _NoahMP:
-
-Noah-MP
-==========
-
-The offline Noah-MP LSM is a stand-alone, uncoupled model used to execute land surface simulations. In this traditional uncoupled mode, near-surface atmospheric :term:`forcing data` are required as input forcing. This LSM simulates soil moisture (both liquid and frozen), soil temperature, skin temperature, snow depth, snow water equivalent (SWE), snow density, canopy water content, and the energy flux and water flux terms of the surface energy balance and surface water balance.
-
-Noah-MP uses: 
-
-* a big-leaf approach with a separated vegetation canopy accounting for vegetation effects on surface energy and water balances, 
-* a modified two-stream approximation scheme to include the effects of vegetation canopy gaps that vary with solar zenith angle and the canopy 3-D structure on radiation transfer, 
-* a 3-layer physically-based snow model
-* a more permeable frozen soil by separating a grid cell into a permeable fraction and impermeable fraction, 
-* a simple groundwater model with a TOPMODEL-based runoff scheme, and 
-* a short-term leaf phenology model. 
-
-Noah-MP LSM enables a modular framework for diagnosing differences 
-in process representation, facilitating ensemble forecasts and uncertainty 
-quantification, and choosing process presentations appropriate for the application. 
-Noah-MP developers designed multiple parameterization options for leaf dynamics, 
-radiation transfer, stomatal resistance, soil moisture stress factor for stomatal 
-resistance, aerodynamic resistance, runoff, snowfall, snow surface albedo, 
-supercooled liquid water in frozen soil, and frozen soil permeability. 
-
-The Noah-MP LSM has evolved through community efforts to pursue and refine a modern-era LSM suitable for use in the National Centers for Environmental Prediction (:term:`NCEP`) operational weather and climate prediction models. This collaborative effort continues with participation from entities such as NCAR, NCEP, NASA, and university groups. 
-
-Noah-MP has been implemented in the UFS via the :term:`CCPP` physics package and 
-is currently being tested for operational use in GFSv17 and RRFS v2. Additionally, the UFS Weather Model now contains a Noah-MP land component. Noah-MP has 
-also been used operationally in the NOAA National Water Model (NWM) since 2016. Details about the model's physical parameterizations can be found in :cite:t:`NiuEtAl2011` (2011), and a full description of the model is available in the `Community Noah-MP Land Surface Modeling System Technical Description Version 5.0 <https://opensky.ucar.edu/islandora/object/technotes:599>`_. 
 
 Disclaimer 
 *************
