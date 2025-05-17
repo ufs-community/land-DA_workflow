@@ -122,7 +122,8 @@ intersphinx_mapping = {
 # -- Options for extlinks extension ---------------------------------------
 
 extlinks_detect_hardcoded_links = True
-extlinks = {'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
+extlinks = {'ccpp-techdoc': ('https://ccpp-techdoc.readthedocs.io/en/latest/%s', '%s'),
+            'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'github-docs': ('https://docs.github.com/en/%s', '%s'),
             'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/%s', '%s'),
             'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/8.0.0/%s', '%s'),
@@ -133,6 +134,8 @@ extlinks = {'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '
             'land-wflow-repo': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'land-wflow-wiki': ('https://github.com/ufs-community/land-DA_workflow/wiki/%s','%s'),
             'spack-stack': ('https://spack-stack.readthedocs.io/en/1.6.0/%s', '%s'),
+            'stochphys': ('https://stochastic-physics.readthedocs.io/en/release-public-v3/%s', '%s'),
+            'ufs-utils': ('https://noaa-emcufs-utils.readthedocs.io/en/latest/%s', '%s'),
             'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/develop/%s', '%s'),
             'ufs': ('https://ufs.epic.noaa.gov/%s', '%s'),
             'uw': ('https://uwtools.readthedocs.io/en/main/%s', '%s'),
