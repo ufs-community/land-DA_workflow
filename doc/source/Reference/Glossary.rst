@@ -10,7 +10,7 @@ Glossary
       The Weather Model configuration that runs only the standalone atmospheric model. 
 
    ATML
-      The ATML configuration of the Land DA System uses the Noah-MP :term:`land component` from the UFS :term:`Weather Model` with an active :term:`FV3` atmospheric component. 
+      The ATML configuration of the Land DA System uses the Noah-MP :term:`land component` from the UFS :term:`Weather Model` with an active :term:`FV3` atmospheric component (`fv3atm <https://github.com/NOAA-EMC/fv3atm>`_). 
 
    CCPP
       The `Common Community Physics Package <https://dtcenter.org/community-code/common-community-physics-package-ccpp>`_ is a forecast-model agnostic, vetted collection of code containing atmospheric physical parameterizations and suites of parameterizations for use in Numerical Weather Prediction (NWP) along with a framework that connects the physics to the host forecast model.
@@ -79,12 +79,16 @@ Glossary
    IMS 
       The `Interactive Multisensor Snow and Ice Mapping System <https://usicecenter.gov/Products/ImsHome>`_ (IMS) is "an operational software package used to demarcate the presence of snow and ice across the entire northern hemisphere."
 
+   IODA
+      The :term:`JEDI` Interface for Observation Data Access (:jedi:`IODA <inside/jedi-components/ioda/index.html>`) provides observation formatting and processing tools for data assimilation applications.  
+      .. COMMENT: Add! https://github.com/jcsda/ioda
+
    J-jobs
       Scripts (contained in ``land-DA_workflow/jobs/``) that should be directly called for each workflow component (either on the command line or by the workflow manager) to run a specific task in the workflow. The different scripting layers are described in detail in the :nco:`NCO Implementation Standards document <ImplementationStandards.v11.0.0.pdf>`.
 
    JCB
    JEDI Configuration Builder
-      The JEDI Configuration Builder (JCB) is a python package used to assemble information on :term:`JEDI` algorithms and data assimilation types (e.g., snow, marine, atmosphere) into one convenient YAML file for use in data assimilation applications. 
+      The JEDI Configuration Builder (JCB) is a python package used to assemble information on :term:`JEDI` algorithms (e.g., letkf, 3dvar) and data assimilation types (e.g., snow, marine, atmosphere) into one convenient YAML file for use in data assimilation applications. 
       .. COMMENT: Add/revise def! 
 
    JEDI
@@ -93,7 +97,7 @@ Glossary
       JEDI is developed and distributed by the `Joint Center for Satellite Data Assimilation <https://www.jcsda.org/>`_, a multi-agency research center hosted by the University Corporation for Atmospheric Research (`UCAR <https://www.ucar.edu/>`_). JCSDA is dedicated to improving and accelerating the quantitative use of research and operational satellite data in weather, ocean, climate, and environmental analysis and prediction systems.
 
    jedi-bundle
-      .. COMMENT: Add def! This used to have Skylab def 
+      :term:`JCSDA`'s `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`_ repository provides an integrated Earth System data assimilation capability. It combines a variety of :term:`JEDI` components, including :term:`OOPS`, :term:`IODA`, and :term:`UFO`. 
 
    LND
       The LND experiment configuration uses the :term:`land component` with a :term:`DATM` component. 
@@ -131,6 +135,10 @@ Glossary
    National Unified Operational Prediction Capability
       The `National Unified Operational Prediction Capability <https://earthsystemmodeling.org/nuopc/>`_ is a consortium of Navy, NOAA, and Air Force modelers and their research partners. It aims to advance the weather modeling systems used by meteorologists, mission planners, and decision makers. NUOPC partners are working toward a common model architecture --- a standard way of building models --- in order to make it easier to collaboratively build modeling systems.
 
+   Noah-MP
+      
+      .. COMMENT: Add!
+
    NUOPC Layer
       The :term:`NUOPC` Layer "defines conventions and a set of generic components for building coupled models using the Earth System Modeling Framework (:term:`ESMF`)." 
       NUOPC applications are built on four generic components: driver, model, mediator, and connector. For more information, visit the `NUOPC website <https://earthsystemmodeling.org/nuopc/>`_.
@@ -141,6 +149,10 @@ Glossary
 
    NWP
       Numerical Weather Prediction (NWP) takes current observations of weather and processes them with computer models to forecast the future state of the weather. 
+
+   OOPS
+      The :term:`JEDI` Object-Oriented Prediction System (:jedi:`OOPS <inside/jedi-components/oops/index.html>`) includes data assimilation algorithms for use in data assimilation applications.  
+      .. COMMENT: Add! https://github.com/jcsda/oops
 
    RDHPCS
       `Research and Development High-Performance Computing Systems <https://docs.rdhpcs.noaa.gov/systems/index.html>`_. 
@@ -154,6 +166,10 @@ Glossary
 
    spack-stack
       The `spack-stack <https://github.com/JCSDA/spack-stack>`_ is a collaborative effort between the NOAA Environmental Modeling Center (EMC), the UCAR Joint Center for Satellite Data Assimilation (JCSDA), and the Earth Prediction Innovation Center (EPIC). *spack-stack* is a repository that provides a :term:`Spack`-based method for building the software stack required for numerical weather prediction (NWP) tools such as the :ufs:`Unified Forecast System (UFS) <>` and the :jedi:`Joint Effort for Data assimilation Integration (JEDI) <>` framework. *spack-stack* uses the Spack package manager along with custom Spack configuration files and Python scripts to simplify installation of the libraries required to run various applications. The *spack-stack* can be installed on a range of platforms and comes pre-configured for many systems. Users can install the necessary packages for a particular application and later add the missing packages for another application without having to rebuild the entire stack.
+
+   UFO
+      The :term:`JEDI` Unified Forward Operator (:jedi:`UFO <inside/jedi-components/ufo/index.html>`) is used to compare model forecasts and observations in data assimilation applications. 
+      .. COMMENT: Add! https://github.com/jcsda/ufo.git
 
    UFS
       The Unified Forecast System (UFS) is a community-based, coupled, comprehensive Earth modeling system consisting of several applications (apps). These apps span regional to global domains and sub-hourly to seasonal time scales. The UFS is designed to support the :term:`Weather Enterprise` and to be the source system for NOAA's operational numerical weather prediction applications. For more information, visit the :ufs:`UFS Portal <>`.
