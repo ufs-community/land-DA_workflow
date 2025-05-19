@@ -6,6 +6,9 @@ Glossary
 
 .. glossary::
 
+   3D-Var
+      Three-Dimensional Variational data assimilation
+
    ATM
       The Weather Model configuration that runs only the standalone atmospheric model. 
 
@@ -47,6 +50,10 @@ Glossary
    DATM
       DATM is the *Data Atmosphere* component of :term:`CDEPS`. It uses static atmospheric forcing files (derived from observations or previous atmospheric model runs) instead of output from an active atmospheric model. This reduces the complexity and computational cost associated with coupling to an active atmospheric model. The *Data Atmosphere* component is particularly useful when employing computationally intensive Data Assimilation (DA) techniques to update ocean and/or sea ice fields in a coupled model. In general, use of DATM in place of :term:`ATM` can be appropriate when users are running a coupled model and only want certain components of the model to be active. More information about DATM is available in the `CDEPS Documentation <https://escomp.github.io/CDEPS/versions/master/html/datm.html>`_.
 
+   dycore
+   dynamical core
+      Global atmospheric model based on fluid dynamics principles, including Euler’s equations of motion.
+
    ERA5
       The ECMWF Reanalysis v5 (`ERA5 <https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5>`_) dataset "is the fifth generation ECMWF atmospheric reanalysis of the global climate covering the period from January 1940 to present." It "provides hourly estimates of a large number of atmospheric, land and oceanic climate variables."
 
@@ -66,6 +73,12 @@ Glossary
 
    FV3
       The Finite-Volume Cubed-Sphere dynamical core (dycore). Developed at NOAA’s `Geophysical Fluid Dynamics Laboratory <https://www.gfdl.noaa.gov/fv3/>`__ (GFDL), it is a scalable and flexible dycore capable of both hydrostatic and non-hydrostatic atmospheric simulations. It is the dycore used in the UFS Weather Model.
+
+   GDAS
+      The Global Data Assimilation System (`GDAS <https://catalog.data.gov/dataset/global-data-assimilation-system-gdas2>`_) is "the system used by the Global Forecast System (:term:`GFS`) model to place observations into a gridded model space for the purpose of starting, or initializing, weather forecasts with observed data."
+
+   GFS
+      The Global Forecast System (`GFS <https://www.ncei.noaa.gov/products/weather-climate-models/global-forecast>`_) is an :term:`NCEP` model that "generates data for dozens of atmospheric and land-soil variables." It couples atmosphere, ocean, land/soil, and sea ice models to accurately depict weather conditions.
 
    GHCN 
       The Global Historical Climatology Network (`GHCN <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_) is "an integrated database of daily climate summaries from land surface stations across the globe."" 
@@ -104,6 +117,9 @@ Glossary
 
    land component
       The Noah Multi-Physics (Noah-MP) land surface model (LSM) is an open-source, community-developed LSM that has been incorporated into the UFS Weather Model (WM). It is the UFS WM's land component. 
+
+   LETKF
+      Local Ensemble Transform Kalman Filter (LETKF) data assimilation
 
    LETKF-OI
       Local Ensemble Transform Kalman Filter-Optimal Interpolation (see :cite:t:`HuntEtAl2007`, 2007).
@@ -156,6 +172,9 @@ Glossary
 
    RDHPCS
       `Research and Development High-Performance Computing Systems <https://docs.rdhpcs.noaa.gov/systems/index.html>`_. 
+
+   SFCSNO
+      Global Telecommunication System data available from :term:`GDAS`/:term:`GFS`. 
 
    Skylab
       `JEDI Skylab <https://www.jcsda.org/jediskylab>`_ is the name for roll-up releases of :term:`JCSDA`'s `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`_ repository. 
