@@ -145,7 +145,7 @@ This :term:`umbrella repository` uses Git submodules and an ``app_build.sh`` fil
      - https://github.com/NOAA-EPIC/jcb-gdas
    * - ufs_model.fd
      - ufs-weather-model
-     - Repository for the UFS Weather Model (WM). This repository contains a number of subrepositories, which are documented :ufs-wm:`in the WM User's <CodeOverview.html>`.
+     - Repository for the UFS Weather Model (WM). Contains a number of subcomponents, including the :term:`Noah-MP` land surface model, :term:`FV3` dynamical core, and :term:`CDEPS`.
      - https://github.com/ufs-community/ufs-weather-model/
    * - UFS_UTILS.fd
      - UFS_UTILS
@@ -164,7 +164,7 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
 
 .. code-block:: console
 
-   land-offline_workflow
+   land-DA_workflow
     ├── doc
     ├── (exec)
     ├── fix
@@ -172,9 +172,9 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     |     └── JLANDDA_*
     ├── (lib64)
     ├── modulefiles
-    │     │     ├── conda.lua
-    │     │     ├── build_<platform>_<compiler>.lua
-    │     │     └── wflow_<platform>.lua
+    │     ├── conda.lua
+    │     ├── build_<platform>_<compiler>.lua
+    │     └── wflow_<platform>.lua
     ├── parm
     │     ├── config_samples
     │     │     ├── config.*.yaml
