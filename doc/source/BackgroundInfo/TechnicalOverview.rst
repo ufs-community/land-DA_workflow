@@ -169,13 +169,20 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     ├── (exec)
     ├── fix
     ├── jobs
+    |     └── JLANDDA_*
     ├── (lib64)
     ├── modulefiles
+    │     │     ├── conda.lua
+    │     │     ├── build_<platform>_<compiler>.lua
+    │     │     └── wflow_<platform>.lua
     ├── parm
     │     ├── config_samples
     │     │     ├── config.*.yaml
     │     │     └── samples_cadre
     │     ├── jedi
+    │     │     ├── jcb-algorithms
+    │     │     ├── jcb-base_snow.yaml.j2
+    │     │     └── jcb-gdas
     │     ├── templates
     │     │     ├── template.ATML.*
     │     │     ├── template.LND.*
@@ -187,6 +194,7 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     │     ├── setup_wflow_env.py
     │     └── task_load_modules_run_jjob.sh
     ├── scripts
+    |            └── exlandda_*.sh
     ├── sorc
     |     ├── UFS_UTILS.fd
     │     ├── CMakeLists.txt
@@ -197,6 +205,9 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     |     |           └── NoahMPdisag_module.f90
     │     ├── (build)
     |     ├── calfIMS.fd
+    |     |     └── sorc
+    |     |           ├── IMSaggregate_mod.f90
+    |     |           └── driver_fIMS.f90
     │     ├── (conda)
     |     |     └── envs
     |     |           └── land_da 
@@ -207,9 +218,14 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     │     │     └── run_<platform>_ctest.sh
     │     ├── tile2tile_converter.fd
     │     └── ufs_model.fd
+    |           ├── CDEPS-interface
+    |           ├── FV3
+    |           └── NOAHMP-interface
     ├── ush
     |     ├── fill_jinja_template.py
+    |     ├── ghcn_snod2ioda.py 
     |     ├── hofx_analysis_stats.py
+    |     ├── imsfv3_scf2ioda.py
     |     ├── letkf_create_ens.py
     |     └── plot_*.py
     ├── versions
