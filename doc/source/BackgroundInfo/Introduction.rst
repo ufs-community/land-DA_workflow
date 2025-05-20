@@ -52,8 +52,7 @@ Background Information
 ========================
    * This chapter (Introduction) provides user support information and background information on the Unified Forecast System (:term:`UFS`) and the Noah-MP model. 
    * :numref:`Chapter %s <TechOverview>` (Technical Overview) outlines prerequisites, supported systems, and directory structure. 
-
-.. COMMENT: Add Components chapter?
+   * :numref:`Chapter %s <Components>` (Components) describes the components that comprise the Land DA System. 
 
 Building, Running, and Testing the Land DA System
 ===================================================
