@@ -132,8 +132,6 @@ Copy the experiment settings into ``config.yaml``:
    cd $LANDDAROOT/land-DA_workflow/parm
    cp config_samples/config.LND.era5.3dvar.ims.warmstart.yaml config.yaml
 
-where ``<platform>`` is ``hera``, ``orion``, ``hercules``, or ``gaeac6``.
-   
 Users will need to configure the ``account`` variable in ``config.yaml`` and choose an ``EXP_CASE_NAME`` if a different name for the experiment is desired: 
 
    * ``account:`` A valid account name. Most NOAA :term:`RDHPCS` systems require a valid account name; other systems may not (in which case, any value will do).
@@ -181,7 +179,7 @@ Generate the experiment directory by running:
 
 where ``<platform>`` is ``hera``, ``orion``, ``hercules``, or ``gaeac6``.
 
-If the command runs without issue, override messages, experiment details, and "0 errors found" messages will be printed to the console, similar to the following excerpts: 
+If the command runs without issue, this script will print override messages, experiment details, and "0 errors found" messages to the console, similar to the following excerpts: 
 
 .. code-block:: console
 
@@ -280,6 +278,9 @@ Each Land DA experiment includes multiple tasks that must be run in order to sat
      - LND/ATML
 
 Users may run these tasks :ref:`using the Rocoto workflow manager <run-w-rocoto>`. 
+
+
+
 
 .. _run-w-rocoto:
 
