@@ -10,8 +10,6 @@ This chapter provides instructions for building and running the Unified Forecast
    
    These steps are designed for use on :ref:`Level 1 <LevelsOfSupport>` systems (e.g., Hera, Orion) and may require significant changes on other systems. It is recommended that users on other systems run the containerized version of Land DA. Users may reference :numref:`Chapter %s: Containerized Land DA Workflow <Container>` for instructions.
 
-.. COMMENT: Check that this is still the sampe case! And/or add others!
-
 .. _create-dir:
 
 Create a Working Directory
@@ -158,11 +156,11 @@ Data
    * - Platform
      - Data Location
    * - Hera
-     - /scratch2/NAGAPE/epic/UFS_Land-DA_|data|/inputs
+     - /scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs
    * - Hercules & Orion
-     - /work/noaa/epic/UFS_Land-DA_|data|/inputs
+     - /work/noaa/epic/UFS_Land-DA_v2.1/inputs
    * - Gaea-C6
-     - /gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_|data|/inputs
+     - /gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/inputs
 
 Users who have difficulty accessing the data on Hera, Orion, Hercules, or Gaea-C6 may download it according to the instructions in :numref:`Section %s <GetDataC>`. Its subdirectories are soft-linked to the ``land-DA_workflow/fix`` directory by the build script (``sorc/app_build.sh``); when downloading new data, it should be placed in or linked to the ``fix`` directory.
 
@@ -231,8 +229,6 @@ The setup script (``./setup_wflow_env.py``) will create an experiment directory,
      - Symlink to the directory containing log files for the Rocoto workflow (``ptmp/test_*/com/output/logs``)
    * - ``tmp_dir``
      - Symlink to the ``ptmp/test_*/tmp`` directory, which contains the working directory and temporary/intermediate files
-
-.. COMMENT: Complete! 
 
 Run the Experiment
 ********************
