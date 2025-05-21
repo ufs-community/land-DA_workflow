@@ -84,6 +84,8 @@ linkcheck_allowed_redirects = {r"https://github.com/ufs-community/land-DA_workfl
                                  r"https://linkinghub.elsevier.com/retrieve/pii/S0167278906004647",
                                r"https://doi.org/.*/.*": 
                                  r"https://journals.ametsoc.org:443/view/journals/.*/.*/.*/.*",
+                               r"https://www.meted.ucar.edu/bom/mdata_assim/*":
+                                 r"https://www.meted.ucar.edu/sign_in.php*",
                               }
 
 
