@@ -6,27 +6,18 @@ Containerized Land DA Workflow
 
 These instructions will help users build and run a basic case for the Unified Forecast System (:term:`UFS`) Land Data Assimilation (DA) System using a `Singularity/Apptainer <https://apptainer.org/docs/user/latest/>`_ container. The Land DA :term:`container` packages together the Land DA System with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform environment in which to build and run the Land DA System. Normally, the details of building and running Earth system models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, :term:`MPIs <MPI>`, and package versions available. Installation via Singularity/Apptainer container reduces this variability and allows for a smoother experience building and running Land DA. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Hera, Orion). 
 
-The chapter provides instructions for building and running the Unified Forecast System (:term:`UFS`) Land DA System in a container using a Jan. 19-20, 2025 00z sample :term:`LND` :term:`warmstart` configuration. THis case uses: 
+This chapter provides instructions for building and running the Unified Forecast System (:term:`UFS`) Land DA System in a container using a Jan. 19-20, 2025 00z sample. This case is a :term:`LND` :term:`warmstart` configuration that uses :term:`ERA5` and :term:`IMS` data and the 3D-Var algorithm. 
 
-* :term:`ERA5` and :term:`IMS` data 
-* The 3D-Var algorithm 
-* UFS Noah-MP land component and data atmosphere (:term:`DATM`) component
-
-This case corresponds to the January 2025 Gulf Coast Blizzard, which brought unprecedented snowfall to the entire Gulf Coast. Leading up to the event, the polar vortex stretched far south and met with unusually warm Gulf waters. In response, the National Weather Service (NWS) issued a series of winter storm warnings, extreme cold warnings, and even blizzard warnings --- the first ever in some areas. New Orleans, LA received a record 8 inches of snow, and the surrounding coastal areas likewise saw record-breaking snowfall and cold temperatures. 
+.. include:: ../doc-snippets/gcblizzard-desc.rst
 
 .. attention::
 
    This chapter of the User's Guide should **only** be used for container builds. For non-container builds, see :numref:`Chapter %s <BuildRunLandDA>`, which describes the steps for building and running Land DA on a :ref:`Level 1 System <LevelsOfSupport>` **without** a container. 
 
-.. _DownloadCodeC:
-
-Download the Container
-************************
-
 .. _Prereqs:
 
 Prerequisites 
-===============
+**************
 
 The containerized version of Land DA requires: 
 
@@ -42,6 +33,13 @@ The containerized version of Land DA requires:
 
 .. attention:: 
    Docker containers can only be run with root privileges, and users generally do not have root privileges on :term:`HPCs <HPC>`. However, an Apptainer image may be built directly from a Docker image for use on the system.
+
+.. _create-dir-c:
+
+Create a Working Directory
+*****************************
+
+.. include:: ../doc-snippets/create-work-dir.rst
 
 .. _GetDataC:
 
@@ -126,25 +124,6 @@ On NOAA Cloud systems, the ``sudo su`` command may also be required. For example
 
 .. note:: 
    ``/lustre`` is a fast but non-persistent file system used on NOAA Cloud systems. To retain work completed in this directory, `tar the files <https://www.howtogeek.com/248780/how-to-compress-and-extract-files-using-the-tar-command-on-linux/>`_ and move them to the ``/contrib`` directory, which is much slower but persistent.
-
-.. _CreateWorkingDir:
-
-Create Working Directory
-=========================
-
-Set a top-level directory location for Land DA work, and navigate to it. For example:
-
-.. code-block:: console 
-
-   mkdir /path/to/landda
-   cd /path/to/landda
-   export LANDDAROOT=`pwd`
-
-where ``/path/to/landda`` is the path to this top-level directory (e.g., ``/Users/Joe.Schmoe/landda``). 
-
-.. hint::
-   If a ``singularity: command not found`` error message appears in any of the following steps, try running: ``module load singularity`` or (on Derecho) ``module load apptainer``.
-
 
 Download the Container
 ========================
