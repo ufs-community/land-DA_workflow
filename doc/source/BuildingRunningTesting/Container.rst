@@ -56,79 +56,15 @@ Users on any system may download and untar the data from the `Land DA Data Bucke
    wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/CADRE-2025/Land-DA_v2.1_inputs.tar.gz
    tar xvfz Land-DA_v2.1_inputs.tar.gz
 
-If users choose to add data in a location other than ``$LANDDAROOT``, they can set the input data directory by running:
-
-.. code-block:: console
-
-   export LANDDA_INPUTS=/path/to/inputs
-
-where ``/path/to`` is replaced by the absolute path to the location of their Land DA input data. 
-
-.. _work-on-hpc:
-
-Working in the Cloud or on HPC Systems
-*****************************************
-
-Users working on systems with limited disk space in their ``/home`` directory may need to set the ``SINGULARITY_CACHEDIR`` and ``SINGULARITY_TMPDIR`` environment variables to point to a location with adequate disk space. For example:
-
-.. code-block:: 
-
-   export SINGULARITY_CACHEDIR=/absolute/path/to/writable/directory/cache
-   export SINGULARITY_TMPDIR=/absolute/path/to/writable/directory/tmp
-
-where ``/absolute/path/to/writable/directory/`` refers to the absolute path to a writable directory with sufficient disk space. If the ``cache`` and ``tmp`` directories do not exist already, they must be created with a ``mkdir`` command. 
-
-On NOAA Cloud systems, the ``sudo su``/``exit`` commands may also be required; users on other systems may be able to omit these. For example:
-   
-.. code-block:: 
-
-   mkdir /lustre/cache
-   mkdir /lustre/tmp
-   sudo su
-   export SINGULARITY_CACHEDIR=/lustre/cache
-   export SINGULARITY_TMPDIR=/lustre/tmp
-   exit
-
-.. note:: 
-   ``/lustre`` is a fast but non-persistent file system used on NOAA Cloud systems. To retain work completed in this directory, `tar the files <https://www.howtogeek.com/248780/how-to-compress-and-extract-files-using-the-tar-command-on-linux/>`__ and move them to the ``/contrib`` directory, which is much slower but persistent.
-
 .. _DownloadContainer:
 
-Prepare the Container
-**********************
+Download or Build the Container
+*********************************
 
-.. _CloudHPC:
-
-Set Environment Variables
-=============================
-
-For users working on systems with limited disk space in their ``/home`` directory, it is important to set the ``SINGULARITY_CACHEDIR`` and ``SINGULARITY_TMPDIR`` environment variables to point to a location with adequate disk space. For example:
-
-.. code-block:: 
-
-   export SINGULARITY_CACHEDIR=/absolute/path/to/writable/directory/cache
-   export SINGULARITY_TMPDIR=/absolute/path/to/writable/directory/tmp
-
-where ``/absolute/path/to/writable/directory/`` refers to a writable directory (usually a project or user directory within ``/lustre``, ``/work``, ``/scratch``, or ``/glade`` on NOAA :term:`RDHPCS` systems). If the ``cache`` and ``tmp`` directories do not exist already, they must be created with a ``mkdir`` command. 
-
-On NOAA Cloud systems, the ``sudo su`` command may also be required. For example, users would run:
-   
-.. code-block:: 
-
-   mkdir /lustre/cache
-   mkdir /lustre/tmp
-   sudo su
-   export SINGULARITY_CACHEDIR=/lustre/cache
-   export SINGULARITY_TMPDIR=/lustre/tmp
-   exit
-
-.. note:: 
-   ``/lustre`` is a fast but non-persistent file system used on NOAA Cloud systems. To retain work completed in this directory, `tar the files <https://www.howtogeek.com/248780/how-to-compress-and-extract-files-using-the-tar-command-on-linux/>`_ and move them to the ``/contrib`` directory, which is much slower but persistent.
+Users can download the ``ubuntu22.04-intel-landda-release-public-v2.0.0.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ or build the Singularity container from a public Docker :term:`container` image. Downloading may be faster depending on the download speed on the user's system. 
 
 Download the Container
 ========================
-
-Users can download the ``ubuntu22.04-intel-landda-release-public-v2.0.0.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ or build the Singularity container from a public Docker :term:`container` image. Downloading may be faster depending on the download speed on the user's system. 
 
 To download from the data bucket, users can run:
 
@@ -136,9 +72,21 @@ To download from the data bucket, users can run:
 
    wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/CADRE-2025/ubuntu22.04-intel-landda-daconsortium.img
 
-This will download a container image named ``ubuntu22.04-intel-landda-daconsortium.img``.
+This will download a container image named ``ubuntu22.04-intel-landda-daconsortium.img``. Users may continue to :ref:`set up the container <SetUpContainer>`.
 
-To build the container from a Docker image, users can run:
+.. _BuildC:
+
+Build the Container
+=====================
+
+Alternatively, users can build the container from a Docker image. (Users who have already downloaded the container may skip to the :ref:`next section <SetUpContainer>`.) Users working on systems with limited disk space in their ``/home`` directory will need to set the ``SINGULARITY_CACHEDIR`` and ``SINGULARITY_TMPDIR`` environment variables to point to a location with adequate disk space. For example:
+
+.. code-block:: 
+
+   export SINGULARITY_CACHEDIR=/absolute/path/to/writable/directory/cache
+   export SINGULARITY_TMPDIR=/absolute/path/to/writable/directory/tmp
+
+See detailed instructions for this in :numref:`Section %s <CloudHPC>`. Then, run: 
 
 .. code-block:: console
 
@@ -148,19 +96,24 @@ This process may take several hours depending on the system.
 
 .. note:: 
 
-   Some users may need to issue the ``singularity build`` command with ``sudo`` (i.e., ``sudo singularity build...``). Whether ``sudo`` is required is system-dependent. If ``sudo`` is required (or desired) for building the container, users should set the ``SINGULARITY_CACHEDIR`` and ``SINGULARITY_TMPDIR`` environment variables with ``sudo su``, as in the NOAA Cloud example from :numref:`Section %s <CloudHPC>` above.
+   Some users may need to issue the ``singularity build`` command with ``sudo`` (i.e., ``sudo singularity build...``). Whether ``sudo`` is required is system-dependent. If ``sudo`` is required (or desired) for building the container, users should set the ``SINGULARITY_CACHEDIR`` and ``SINGULARITY_TMPDIR`` environment variables with ``sudo su``, as in the NOAA Cloud example from :numref:`Section %s <CloudHPC>` below.
 
 .. _SetUpContainer:
 
 Set Up the Container
 *********************
 
-Create experiment variables that point to the location of the data (``${LANDDA_INPUTS}``) and the container image (``${img}``): 
+Create experiment variables that point to the container image (``${img}``) and, if necessary, the location of the data (``${LANDDA_INPUTS}``). Users only need to set the location of the data if they added it in a location other than ``$LANDDAROOT``: 
 
 .. code-block:: console
 
-   export LANDDA_INPUTS=/home/ubuntu/inputs
-   export img=/home/ubuntu/ubuntu22.04-intel-landda-daconsortium.img
+   # Set path to container
+   export img=/path/to/ubuntu22.04-intel-landda-daconsortium.img
+
+   # Set path to data (if necessary)
+   export LANDDA_INPUTS=/path/to/inputs
+
+where ``/path/to`` is replaced by the absolute path to the location of the container and Land DA input data. 
 
 Within the ``$LANDDAROOT`` directory, copy the ``setup_container.sh`` script out of the container. 
 
@@ -168,21 +121,21 @@ Within the ``$LANDDAROOT`` directory, copy the ``setup_container.sh`` script out
 
    singularity exec -H $PWD $img cp -r /opt/land-DA_workflow/setup_container.sh .
 
-The ``setup_container.sh`` script should now be in the ``$LANDDAROOT`` directory. If for some reason, the previous command was unsuccessful, users may try a version of the following command instead: 
+The ``setup_container.sh`` script should now be in the ``$LANDDAROOT`` directory. Note that if previous steps included a ``sudo`` command, ``sudo`` may be required in front of this command for it to work. If for some reason, the previous command was unsuccessful, users may try a version of the following command instead: 
 
 .. code-block:: console
 
    singularity exec -B /<local_base_dir>:/<container_dir> $img cp -r /opt/land-DA_workflow/setup_container.sh .
 
-where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level directory on the local system and in the container, respectively. Additional directories can be bound by adding another ``-B /<local_base_dir>:/<container_dir>`` argument before the container location (``$img``). Note that if previous steps included a ``sudo`` command, ``sudo`` may be required in front of this command. 
-
-Users may convert a container ``.img`` file to a writable sandbox. This step is optional on most systems but allows users to make changes to the container if desired:
-
-.. code-block:: console
-
-   singularity build --sandbox ubuntu22.04-intel-landda-daconsortium $img
+where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level directory on the local system and in the container, respectively. Additional directories can be bound by adding another ``-B /<local_base_dir>:/<container_dir>`` argument before the container location (``$img``). 
 
 .. note::
+
+   Users may convert a container ``.img`` file to a writable sandbox. This step is optional on most systems but allows users to make changes to the container if desired:
+
+   .. code-block:: console
+
+      singularity build --sandbox ubuntu22.04-intel-landda-daconsortium $img
 
    Sometimes binding directories with different names can cause problems. In general, it is recommended that the local base directory and the container directory have the same name. For example, if the host system's top-level directory is ``/user1234``, the user may want to convert the ``.img`` file to a writable sandbox and create a ``user1234`` directory in the sandbox to bind to. 
 
@@ -194,18 +147,15 @@ Run the ``setup_container.sh`` script with the proper arguments.
 
 where:
 
-   * ``-c`` is the compiler on the user's local machine (e.g., ``intelmpi/2021.13``, ``intel/2022.1.2``)
-
-                  .. COMMENT previously intel/2022.1.2
-
-   * ``-m`` is the :term:`MPI` on the user's local machine (e.g., ``intelmpi/2021.13``, ``intel/2022.1.2``)
+   * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2022.1.2``, ``intelmpi/2021.13``)
+   * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``intel/2022.1.2``, ``intelmpi/2021.13``)
    * ``-i`` is the full path to the container image ( e.g., ``$LANDDAROOT/ubuntu22.04-intel-landda-daconsortium.img``).
 
 Concretely, users would run something like: 
 
 .. code-block:: console
    
-   ./setup_container.sh -c=intelmpi/2021.13 -m=intelmpi/2021.13 -i=$img
+   ./setup_container.sh -c=intel/2022.1.2 -m=intel/2022.1.2 -i=$img
 
 Running this script will print the following messages to the console:
 
@@ -244,7 +194,7 @@ Then navigate to the ``parm`` directory and copy the desired case (e.g., ``confi
 
 .. code-block:: console
 
-   cd $LANDDAROOT/land-DA_workflow/parm
+   cd parm
    cp config_samples/config.<case>.yaml config.yaml
 
 where ``<case>`` is the name of one of the sample case files in the `samples_cadre <https://github.com/ufs-community/land-DA_workflow/tree/develop/parm/config_samples>`_ directory. 
@@ -268,11 +218,11 @@ If the command runs without issue, this script will print override messages, exp
 
    ubuntu@ip-10-29-93-226:~/land-DA_workflow/parm$ ./setup_wflow_env.py -p=singularity
     Python Log Level= str: INFO, attr: 20
-   INFO::/home/ubuntu/land-DA_workflow/parm/./setup_wflow_env.py::L34:: Current directory (PARMdir): /home/ubuntu/land-DA_workflow/parm 
-   INFO::/home/ubuntu/land-DA_workflow/parm/./setup_wflow_env.py::L36:: Home directory (HOMEdir): /home/ubuntu/land-DA_workflow 
-   INFO::/home/ubuntu/land-DA_workflow/parm/./setup_wflow_env.py::L38:: Experimental base directory (exp_basedir): /home/ubuntu 
-   INFO::/home/ubuntu/land-DA_workflow/parm/./setup_wflow_env.py::L168:: Experimental case directory /home/ubuntu/exp_case/cadre1_lnd_era5_ims has been created.
-   INFO::/home/ubuntu/land-DA_workflow/parm/./setup_wflow_env.py::L175:: Rocoto YAML template: /home/ubuntu/land-DA_workflow/parm/templates/template.land_analysis.yaml
+   INFO::/contrib/${USER}/landda/land-DA_workflow/parm/./setup_wflow_env.py::L34:: Current directory (PARMdir): /contrib/Gillian.Petro/landda/land-DA_workflow/parm 
+   INFO::/contrib/${USER}/landda/land-DA_workflow/parm/./setup_wflow_env.py::L36:: Home directory (HOMEdir): /contrib/Gillian.Petro/landda/land-DA_workflow 
+   INFO::/contrib/${USER}/landda/land-DA_workflow/parm/./setup_wflow_env.py::L38:: Experimental base directory (exp_basedir): /contrib/Gillian.Petro/landda 
+   INFO::/contrib/${USER}/landda/land-DA_workflow/parm/./setup_wflow_env.py::L168:: Experimental case directory /contrib/Gillian.Petro/landda/exp_case/lnd_era5_warmstart_00 has been created.
+   INFO::/contrib/${USER}/landda/land-DA_workflow/parm/./setup_wflow_env.py::L175:: Rocoto YAML template: /contrib/Gillian.Petro/landda/land-DA_workflow/parm/templates/template.land_analysis.yaml
    **************************************************
    Overriding              ACCOUNT = epic
    Overriding                  APP = LND
@@ -281,26 +231,29 @@ If the command runs without issue, this script will print override messages, exp
    Overriding        queue_default = batch
    Overriding               res_p1 = 97
    **************************************************
-                   KEEPDATA: YES
-                        RUN: landda
-        nprocs_forecast_lnd: 36
+           DATE_FIRST_CYCLE: 2025011900
+            nprocs_forecast: 26
+         LND_INITIAL_ALBEDO: 0.25
+               WRITE_GROUPS: 1
+                  JEDI_PATH: /contrib/${USER}/landda
           MED_COUPLING_MODE: ufs.nfrac.aoflux
-              EXP_CASE_NAME: cadre1_lnd_era5_ims
-                        NPZ: 127
+           COUPLER_CALENDAR: 2
+                  WE2E_TEST: NO
+            nnodes_forecast: 1
+                 CCPP_SUITE: FV3_GFS_v17_p8_ugwpv1
+                    MACHINE: singularity
+               OBS_IMS_SNOW: YES
    ...
-                exp_basedir: /home/ubuntu
-                        RES: 96
-               ATM_LAYOUT_X: 3
-             native_default: None
-               ATM_LAYOUT_Y: 8
-   DATM_STREAM_FN_LAST_DATE: 
-               LND_LAYOUT_Y: 3
-        LND_OUTPUT_FREQ_SEC: 21600
-   INFO::/home/ubuntu/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/config/validator.py::L76::0 schema-validation errors found in Rocoto config
-   INFO::/home/ubuntu/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/rocoto.py::L66::0 Rocoto XML validation errors found
-   ubuntu@ip-10-29-93-226:~/land-DA_workflow/parm$ 
+            NPROCS_ANALYSIS: 6
+                      FHROT: 0
+                      envir: test_lnd_era5_warm
+      WRITE_TASKS_PER_GROUP: 6
+                  OUTPUT_FH: 1 -1
+                  COMINgdas: 
+                  COLDSTART: NO
+   INFO::/contrib/${USER}/landda/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/config/validator.py::L76::0 schema-validation errors found in Rocoto config
+   INFO::/contrib/${USER}/landda/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/rocoto.py::L66::0 Rocoto XML validation errors found
 
-.. COMMENT: Update code snippets to reflect correct sample case --- LND.era5.3dvar.ims.warmstart --- not cadre case
 
 .. COMMENT: Add section on ATML configs? 
 
@@ -310,7 +263,7 @@ If the command runs without issue, this script will print override messages, exp
 Run the Experiment
 ********************
 
-To run the experiment, users can automate job submission via :term:`crontab` or submit tasks manually via ``rocotorun``. 
+To run the experiment, users must submit tasks manually via ``rocotorun``. :term:`cron` automation is not yet supported for containers. 
 
 .. _WflowOverviewC:
 
@@ -319,22 +272,16 @@ Workflow Overview
 
 .. include:: ../doc-snippets/wflow-task-table.rst
 
-
-.. _automated-run-c:
-
-Automated Run
-==================
-
-To automate task submission, users must be on a system where :term:`cron` is available. 
-
-.. include:: ../doc-snippets/automated-run.rst
-
-To check the status of the experiment, see :numref:`Section %s <TrackProgressC>` on tracking experiment progress.
-
 .. _manual-run-c:
 
 Manual Submission
 ==================
+
+Depending on the user's platform, it may be necessary to load Rocoto:
+
+.. code-block::
+
+   module load rocoto/1.3.7
 
 .. include:: ../doc-snippets/manual-run.rst
 
@@ -363,6 +310,36 @@ Plotting Results
 
 Appendix
 **********
+
+.. _CloudHPC:
+
+Working in the Cloud or on HPC Systems
+=========================================
+
+Users working on systems with limited disk space in their ``/home`` directory may need to set the ``SINGULARITY_CACHEDIR`` and ``SINGULARITY_TMPDIR`` environment variables to point to a location with adequate disk space. For example:
+
+.. code-block:: 
+
+   export SINGULARITY_CACHEDIR=/absolute/path/to/writable/directory/cache
+   export SINGULARITY_TMPDIR=/absolute/path/to/writable/directory/tmp
+
+where ``/absolute/path/to/writable/directory/`` refers to the absolute path to a writable directory with sufficient disk space. If the ``cache`` and ``tmp`` directories do not exist already, they must be created with a ``mkdir`` command. If the ``cache`` and ``tmp`` directories do not exist already, they must be created with a ``mkdir`` command. 
+
+On NOAA Cloud systems, the ``sudo su``/``exit`` commands may also be required; users on other systems may be able to omit these. For example:
+   
+.. code-block:: 
+
+   mkdir /lustre/cache
+   mkdir /lustre/tmp
+   sudo su
+   export SINGULARITY_CACHEDIR=/lustre/cache
+   export SINGULARITY_TMPDIR=/lustre/tmp
+   exit
+
+.. note:: 
+   ``/lustre`` is a fast but non-persistent file system used on NOAA Cloud systems. To retain work completed in this directory, `tar the files <https://www.howtogeek.com/248780/how-to-compress-and-extract-files-using-the-tar-command-on-linux/>`_ and move them to the ``/contrib`` directory, which is much slower but persistent.
+
+After setting the ``SINGULARITY_CACHEDIR`` and ``SINGULARITY_TMPDIR`` environment variables, users may continue to :ref:`build the container <BuildC>`.
 
 .. _build-exe:
 
