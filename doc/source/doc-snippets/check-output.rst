@@ -4,7 +4,7 @@ As the experiment progresses, it will generate a number of directories to hold i
 
 .. code-block:: console
 
-   $LANDDAROOT (<EXP_BASEDIR>): Base directory
+   $LANDDAROOT (<exp_basedir>): Base directory
     ├── land-DA_workflow (<HOMElandda> or <CYCLEDIR>): Home directory of the land DA workflow
     │     ├── jobs 
     │     ├── modulefiles
@@ -13,12 +13,13 @@ As the experiment progresses, it will generate a number of directories to hold i
     │     ├── sorc
     │     └── ush
     ├── exp_case
-    │     ├── com_dir --> symlinked to ptmp/test_*/com/landda/v2.1.0
-    │     ├── land_analysis.yaml
-    │     ├── land_analysis.xml
-    │     ├── launch_rocoto_wflow.sh
-    │     ├── log_dir --> symlinked to ptmp/test_*/com/output/logs
-    │     └── tmp_dir --> symlinked to ptmp/test_*/com/tmp
+    │     └── EXP_CASE_NAME
+    │           ├── com_dir --> symlinked to ptmp/test_*/com/landda/v2.1.0
+    │           ├── land_analysis.yaml
+    │           ├── land_analysis.xml
+    │           ├── launch_rocoto_wflow.sh
+    │           ├── log_dir --> symlinked to ptmp/test_*/com/output/logs
+    │           └── tmp_dir --> symlinked to ptmp/test_*/com/tmp
     └── ptmp (<PTMP>)
           └── test_* (<envir> or <OPSROOT>)
                 └── com (<COMROOT>)
