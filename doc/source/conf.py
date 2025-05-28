@@ -117,8 +117,8 @@ def setup(app):
 # -- Options for intersphinx extension ---------------------------------------
 
 intersphinx_mapping = {
-   'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0', None),
-   'spack-stack': ('https://spack-stack.readthedocs.io/en/1.3.0/', None),
+   'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/8.0.0/', None),
+   'spack-stack': ('https://spack-stack.readthedocs.io/en/1.6.0/', None),
 }
 
 # -- Options for extlinks extension ---------------------------------------

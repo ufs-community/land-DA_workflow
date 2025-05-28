@@ -47,6 +47,11 @@ Glossary
    DA
       One of the major sources of error in weather and climate forecasts is uncertainty related to the initial conditions that are used to generate future predictions. Even the most precise instruments have a small range of unavoidable measurement error, which means that tiny measurement errors (e.g., related to atmospheric conditions and instrument location) can compound over time. These small differences result in very similar forecasts in the short term (i.e., minutes, hours), but they cause widely divergent forecasts in the long term. Errors in weather and climate forecasts can also arise because models are imperfect representations of reality. Data assimilation systems seek to mitigate these problems by combining the most timely observational data with a "first guess" of the atmospheric state (usually a previous forecast) and other sources of data to provide a "best guess" analysis of the atmospheric state to start a weather or climate simulation. When combined with an "ensemble" of model runs (many forecasts with slightly different conditions), data assimilation helps predict a range of possible atmospheric states, giving an overall measure of uncertainty in a given forecast. 
    
+   DA increment
+   Analysis increment
+      A DA increment, or analysis increment, is the difference between a "first guess" of the state of the system (usually a previous model forecast) and the "best guess" of what the actual initial state of the system is (the analysis produced by the DA system). When introducing a new starting state for the model integration, care must be taken to ensure that the initial state is balanced and realistic according to the model equations, otherwise the forecast may be poor or even unstable. The Land DA methods (3D-Var and LETKF) achieve this by minimizing a cost function that accounts for the model state, observations, and the error characteristics present in each.
+      Refer to the linked areticles for more information on `3D-Var <https://www.ecmwf.int/sites/default/files/elibrary/2003/76079-variational-data-assimiltion-theory-and-overview_0.pdf>`_ and `LETKF <https://www2.atmos.umd.edu/~dkuhl/AOSC614/Hunt_et_all_2007.pdf>`_ respectively.
+
    DATM
       DATM is the *Data Atmosphere* component of :term:`CDEPS`. It uses static atmospheric forcing files (derived from observations or previous atmospheric model runs) instead of output from an active atmospheric model. This reduces the complexity and computational cost associated with coupling to an active atmospheric model. The *Data Atmosphere* component is particularly useful when employing computationally intensive Data Assimilation (DA) techniques to update ocean and/or sea ice fields in a coupled model. In general, use of DATM in place of :term:`ATM` can be appropriate when users are running a coupled model and only want certain components of the model to be active. More information about DATM is available in the `CDEPS Documentation <https://escomp.github.io/CDEPS/versions/master/html/datm.html>`_.
 
@@ -115,7 +120,7 @@ Glossary
       :term:`JCSDA`'s `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`_ repository provides an integrated Earth System data assimilation capability. It combines a variety of :term:`JEDI` components, including :term:`OOPS`, :term:`IODA`, and :term:`UFO`. 
 
    LND
-      The LND experiment configuration uses the :term:`land component` with a :term:`DATM` component. 
+      The LND experiment configuration uses the :term:`land component` with the :term:`DATM` component. 
 
    land component
       The Noah Multi-Physics (Noah-MP) land surface model (LSM) is an open-source, community-developed LSM that has been incorporated into the UFS Weather Model (WM). It is the UFS WM's land component. 
@@ -191,7 +196,7 @@ Glossary
 
    UFO
       The :term:`JEDI` Unified Forward Operator (:jedi:`UFO <inside/jedi-components/ufo/index.html>`) is used to compare model forecasts and observations in data assimilation applications. 
-      
+
       .. COMMENT: Add! https://github.com/jcsda/ufo.git
 
    UFS
