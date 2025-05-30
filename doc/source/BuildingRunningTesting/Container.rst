@@ -6,7 +6,7 @@ Containerized Land DA Workflow
 
 These instructions will help users build and run a basic case for the Unified Forecast System (:term:`UFS`) Land Data Assimilation (DA) System using a `Singularity/Apptainer <https://apptainer.org/docs/user/latest/>`_ container. The Land DA :term:`container` packages together the Land DA System with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform environment in which to build and run the Land DA System. Normally, the details of building and running Earth system models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, :term:`MPIs <MPI>`, and package versions available. Installation via Singularity/Apptainer container reduces this variability and allows for a smoother experience building and running Land DA. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Hera, Orion). 
 
-This chapter provides instructions for building and running the Unified Forecast System (:term:`UFS`) Land DA System in a container using a Jan. 19-20, 2025 00z sample. This case is a :term:`LND` :term:`warmstart` configuration that uses :term:`ERA5` and :term:`IMS` data and the 3D-Var algorithm. 
+This chapter provides instructions for building and running the Unified Forecast System (:term:`UFS`) Land DA System in a container using a Jan. 19-20, 2025 00z sample case. This case is a :term:`LND` :term:`warmstart` configuration that uses :term:`ERA5` atmospheric forcing data, :term:`IMS` snow depth observation data, and the 3D-Var DA algorithm. 
 
 .. include:: ../doc-snippets/gcblizzard-desc.rst
 
@@ -29,10 +29,7 @@ The containerized version of Land DA requires:
 
 .. note::
 
-   As of November 2021, the Linux-supported version of Singularity has been `renamed <https://apptainer.org/news/community-announcement-20211130/>`_ to *Apptainer*. Apptainer has maintained compatibility with Singularity, so ``singularity`` commands should work with either Singularity or Apptainer (see `compatibility details here <https://apptainer.org/docs/user/1.2/introduction.html>`_.)
-
-.. attention:: 
-   Docker containers can only be run with root privileges, and users generally do not have root privileges on :term:`HPCs <HPC>`. However, an Apptainer image may be built directly from a Docker image for use on the system.
+   As of November 2021, the Linux-supported version of Singularity has been `renamed <https://apptainer.org/news/community-announcement-20211130/>`_ to *Apptainer*. Apptainer has maintained compatibility with Singularity, so ``singularity`` commands should work with either Singularity or Apptainer (see `compatibility details here <https://apptainer.org/docs/user/latest/singularity_compatibility.html>`_.)
 
 .. _create-dir-c:
 
@@ -46,7 +43,7 @@ Create a Working Directory
 Get Data
 ***********
 
-In order to run the Land DA System, users will need input data in the form of fix files, model forcing files, restart files, and observations for data assimilation. These files are already present on Level 1 systems (see :numref:`Section %s <Level1Data>` for details). 
+In order to run the Land DA System, users will need input data in the form of fix files, model forcing files, restart files, and snow depth observations for data assimilation. These files are already present on Level 1 systems (see :numref:`Section %s <Level1Data>` for details). 
 
 Users on any system may download and untar the data from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ into their ``$LANDDAROOT`` directory. In the working directory, run: 
 
@@ -61,7 +58,7 @@ Users on any system may download and untar the data from the `Land DA Data Bucke
 Download or Build the Container
 *********************************
 
-Users can download the ``ubuntu22.04-intel-landda-release-public-v2.0.0.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ or build the Singularity container from a public Docker :term:`container` image. Downloading may be faster depending on the download speed on the user's system. 
+Users can download the ``ubuntu22.04-intel-landda-cadre25.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ or build the Singularity container from a public Docker :term:`container` image. Downloading may be faster depending on the download speed on the user's system. 
 
 Download the Container
 ========================
@@ -70,9 +67,9 @@ To download from the data bucket, users can run:
 
 .. code-block:: console
 
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/CADRE-2025/ubuntu22.04-intel-landda-daconsortium.img
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/CADRE-2025/ubuntu22.04-intel-landda-cadre25.img
 
-This will download a container image named ``ubuntu22.04-intel-landda-daconsortium.img``. Users may continue to :ref:`set up the container <SetUpContainer>`.
+This will download a container image named ``ubuntu22.04-intel-landda-cadre25.img``. Users may continue to :ref:`set up the container <SetUpContainer>`.
 
 .. _BuildC:
 
@@ -90,7 +87,9 @@ See detailed instructions for this in :numref:`Section %s <CloudHPC>`. Then, run
 
 .. code-block:: console
 
-   singularity build --force ubuntu22.04-intel-landda-daconsortium.img docker://noaaepic/ubuntu22.04-intel21.10-landda:ue160-fms202401-daconsortium
+   singularity build --force ubuntu22.04-intel-landda-cadre25.img docker://noaaepic/ubuntu22.04-intel21.10-landda:ue160-fms202401-cadre25
+
+.. COMMENT: Check build command
 
 This process may take several hours depending on the system. 
 
@@ -108,7 +107,7 @@ Create experiment variables that point to the container image (``${img}``) and, 
 .. code-block:: console
 
    # Set path to container
-   export img=/path/to/ubuntu22.04-intel-landda-daconsortium.img
+   export img=/path/to/ubuntu22.04-intel-landda-cadre25.img
 
    # Set path to data (if necessary)
    export LANDDA_INPUTS=/path/to/inputs
@@ -135,7 +134,7 @@ where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level
 
    .. code-block:: console
 
-      singularity build --sandbox ubuntu22.04-intel-landda-daconsortium $img
+      singularity build --sandbox ubuntu22.04-intel-landda-cadre25 $img
 
    Sometimes binding directories with different names can cause problems. In general, it is recommended that the local base directory and the container directory have the same name. For example, if the host system's top-level directory is ``/user1234``, the user may want to convert the ``.img`` file to a writable sandbox and create a ``user1234`` directory in the sandbox to bind to. 
 
@@ -149,7 +148,7 @@ where:
 
    * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2022.1.2``, ``intelmpi/2021.13``)
    * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``intel/2022.1.2``, ``intelmpi/2021.13``)
-   * ``-i`` is the full path to the container image ( e.g., ``$LANDDAROOT/ubuntu22.04-intel-landda-daconsortium.img``).
+   * ``-i`` is the full path to the container image ( e.g., ``$LANDDAROOT/ubuntu22.04-intel-landda-cadre25.img``).
 
 Concretely, users would run something like: 
 
@@ -371,7 +370,7 @@ The executables come pre-built in the Land DA Container. However, users who are 
    
    .. code-block:: console 
       
-      singularity shell -B /home:/home /home/ubuntu/ubuntu22.04-intel-landda-daconsortium.img
+      singularity shell -B /home:/home /home/ubuntu/ubuntu22.04-intel-landda-cadre25.img
 
 #. Go to the ``land-DA_workflow`` directory in the container.
 
