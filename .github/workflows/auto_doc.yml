@@ -16,6 +16,9 @@ jobs:
 
     - name: Build HTML
       run: |
+        pip install Sphinx==7.4.7
+        pip install sphinx-rtd-theme
+        pip install sphinxcontrib-bibtex
         cd doc
         make clean && make html
       #uses: ammaraskar/sphinx-action@dev
