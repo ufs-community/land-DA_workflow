@@ -15,9 +15,12 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Build HTML
-      uses: ammaraskar/sphinx-action@dev
-      with:
-        docs-folder: "doc/"
+      run: |
+        cd doc
+        make clean && make html
+      #uses: ammaraskar/sphinx-action@dev
+      #with:
+      #  docs-folder: "doc/"
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
