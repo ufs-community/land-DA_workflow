@@ -14,16 +14,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Build HTML
+    - name: Install dependencies
       run: |
         pip install Sphinx==7.4.7
         pip install sphinx-rtd-theme
         pip install sphinxcontrib-bibtex
+
+    - name: Build HTML
+      run: |
         cd doc
         make clean && make html
-      #uses: ammaraskar/sphinx-action@dev
-      #with:
-      #  docs-folder: "doc/"
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
