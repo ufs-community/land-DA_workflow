@@ -102,7 +102,7 @@ This process may take several hours depending on the system.
 Set Up the Container
 *********************
 
-Create experiment variables that point to the container image (``${img}``) and, if necessary, the location of the data (``${LANDDA_INPUTS}``). Users only need to set the location of the data if they added it in a location other than ``$LANDDAROOT``: 
+Create experiment variables that point to the container image (``$img``) and, if necessary, the location of the data (``$LANDDA_INPUTS``). Users only need to set the location of the data if they added it in a location other than ``$LANDDAROOT``: 
 
 .. code-block:: console
 
@@ -138,7 +138,7 @@ where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level
 
    Sometimes binding directories with different names can cause problems. In general, it is recommended that the local base directory and the container directory have the same name. For example, if the host system's top-level directory is ``/user1234``, the user may want to convert the ``.img`` file to a writable sandbox and create a ``user1234`` directory in the sandbox to bind to. 
 
-Run the ``setup_container.sh`` script with the proper arguments.
+Next, run the ``setup_container.sh`` script with the proper arguments.
 
 .. code-block:: console
 
@@ -263,7 +263,7 @@ For :term:`ATML` configurations only (e.g., ``cadre3``), users must modify the `
 
    vim run_container_executable.sh
 
-Uncomment the second-to-last line of the script, which adds the executables to the container by exporting the ``SINGULARITYENV_PREPEND_PATH`` variable:
+Uncomment the second-to-last line of the script, which adds the executables to the container by exporting the ``SINGULARITYENV_PREPEND_PATH`` variable. Additionally, make sure that the ``SINGULARITYENV_PREPEND_PATH`` points to the correct location (i.e., modify ``/home/ubuntu`` to match the path to ``land-DA_workflow`` on the user's system).
 
 .. code-block:: console
 
@@ -341,7 +341,7 @@ Users working on systems with limited disk space in their ``/home`` directory ma
    export SINGULARITY_CACHEDIR=/absolute/path/to/writable/directory/cache
    export SINGULARITY_TMPDIR=/absolute/path/to/writable/directory/tmp
 
-where ``/absolute/path/to/writable/directory/`` refers to the absolute path to a writable directory with sufficient disk space. If the ``cache`` and ``tmp`` directories do not exist already, they must be created with a ``mkdir`` command. If the ``cache`` and ``tmp`` directories do not exist already, they must be created with a ``mkdir`` command. 
+where ``/absolute/path/to/writable/directory/`` refers to the absolute path to a writable directory with sufficient disk space. If the ``cache`` and ``tmp`` directories do not exist already, they must be created with a ``mkdir`` command. 
 
 On NOAA Cloud systems, the ``sudo su``/``exit`` commands may also be required; users on other systems may be able to omit these. For example:
    
@@ -366,17 +366,23 @@ Building the Executables
 
 The executables come pre-built in the Land DA Container. However, users who are curious about building the executables using the ``app_build.sh`` script can follow the instructions here. 
 
-#. Shell into the container.
+#. Shell into the container and bind the local base directory with a matching container directory. Run:
    
    .. code-block:: console 
       
-      singularity shell -B /home:/home /home/ubuntu/ubuntu22.04-intel-landda-cadre25.img
+      singularity shell -B /<local_base_dir>:/<container_dir> $img
 
-#. Go to the ``land-DA_workflow`` directory in the container.
+   where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level directory on the local system and in the container, respectively. For example: 
+
+   .. code-block:: console 
+      
+      singularity shell -B /home:/home $img
+
+#. Go to the ``land-DA_workflow`` directory that was copied out of the container.
 
    .. code-block:: console
 
-      cd /home/ubuntu/land-DA_workflow/sorc
+      cd $LANDDAROOT/land-DA_workflow/sorc
 
 #. Set up the environment by sourcing the container's spack-stack installation and loading the container modulefiles. 
 
