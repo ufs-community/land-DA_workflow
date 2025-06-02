@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "UFS Offline Land DA User's Guide"
+project = "UFS Land DA User's Guide"
 copyright = '2024, '
 author = ' '
 
@@ -50,8 +50,8 @@ rst_prolog = """
 .. |latestr| replace:: v2.0.0
 .. |tag| replace:: ``ufs-land-da-v2.0.0``
 .. |branch| replace:: ``release/public-v2.0.0``
-.. |skylabv| replace:: Skylab v7.0
 .. |spack-stack-ver| replace:: v1.6.0
+.. |data| replace:: v2.1
 """
 
 # -- Linkcheck options -------------------------------------------------
@@ -83,6 +83,12 @@ linkcheck_allowed_redirects = {r"https://github.com/ufs-community/land-DA_workfl
                                  r"https://linkinghub.elsevier.com/retrieve/pii/S0167278906004647",
                                r"https://doi.org/.*/.*": 
                                  r"https://journals.ametsoc.org:443/view/journals/.*/.*/.*/.*",
+                               r"https://www.meted.ucar.edu/bom/mdata_assim/*":
+                                 r"https://www.meted.ucar.edu/*",
+                               r"https://www.meted.ucar.edu/bom/mdata_assim/*":
+                                 r"https://learn.meted.ucar.edu/*",
+                               r"https://opensky.ucar.edu/islandora/object/%3A3912":
+                                 r"https://opensky.ucar.edu/challenge*",
                               }
 
 
@@ -114,17 +120,18 @@ def setup(app):
 # -- Options for intersphinx extension ---------------------------------------
 
 intersphinx_mapping = {
-   'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/1.7.0', None),
-   'spack-stack': ('https://spack-stack.readthedocs.io/en/1.3.0/', None),
+   'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/8.0.0/', None),
+   'spack-stack': ('https://spack-stack.readthedocs.io/en/1.6.0/', None),
 }
 
 # -- Options for extlinks extension ---------------------------------------
 
 extlinks_detect_hardcoded_links = True
-extlinks = {'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
+extlinks = {'ccpp-techdoc': ('https://ccpp-techdoc.readthedocs.io/en/latest/%s', '%s'),
+            'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'github-docs': ('https://docs.github.com/en/%s', '%s'),
             'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/%s', '%s'),
-            'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/7.0.0/%s', '%s'),
+            'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/8.0.0/%s', '%s'),
             'nco': ('https://www.nco.ncep.noaa.gov/idsb/implementation_standards/%s', '%s'),
             'rocoto': ('https://christopherwharrop.github.io/rocoto/%s', '%s'),
             'rst': ('https://www.sphinx-doc.org/en/master/usage/restructuredtext/%s', '%s'),
@@ -132,6 +139,8 @@ extlinks = {'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '
             'land-wflow-repo': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'land-wflow-wiki': ('https://github.com/ufs-community/land-DA_workflow/wiki/%s','%s'),
             'spack-stack': ('https://spack-stack.readthedocs.io/en/1.6.0/%s', '%s'),
+            'stochphys': ('https://stochastic-physics.readthedocs.io/en/release-public-v3/%s', '%s'),
+            'ufs-utils': ('https://noaa-emcufs-utils.readthedocs.io/en/latest/%s', '%s'),
             'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/develop/%s', '%s'),
             'ufs': ('https://ufs.epic.noaa.gov/%s', '%s'),
             'uw': ('https://uwtools.readthedocs.io/en/main/%s', '%s'),
