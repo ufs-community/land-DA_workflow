@@ -100,16 +100,12 @@ Glossary
    IODA
       The :term:`JEDI` Interface for Observation Data Access (:jedi:`IODA <inside/jedi-components/ioda/index.html>`) provides observation formatting and processing tools for data assimilation applications. 
 
-      .. COMMENT: Add! https://github.com/jcsda/ioda
-
    J-jobs
       Scripts (contained in ``land-DA_workflow/jobs/``) that should be directly called for each workflow component (either on the command line or by the workflow manager) to run a specific task in the workflow. The different scripting layers are described in detail in the :nco:`NCO Implementation Standards document <ImplementationStandards.v11.0.0.pdf>`.
 
    JCB
    JEDI Configuration Builder
       The JEDI Configuration Builder (JCB) is a python package used to assemble information on :term:`JEDI` algorithms (e.g., letkf, 3dvar) and data assimilation types (e.g., snow, marine, atmosphere) into one convenient YAML file for use in data assimilation applications. 
-
-      .. COMMENT: Add/revise def! 
 
    JEDI
       The Joint Effort for Data assimilation Integration (`JEDI <https://www.jcsda.org/jcsda-project-jedi>`_) is a unified and versatile data assimilation (DA) system for Earth System Prediction. It aims to enable efficient research and accelerated transition from research to operations by providing a framework that takes into account all components of the Earth system in a consistent manner. The JEDI software package can run on a variety of platforms and for a variety of purposes, and it is designed to readily accommodate new atmospheric and oceanic models and new observation systems. The `JEDI User's Guide <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/>`_ contains extensive information on the software. 
@@ -160,7 +156,7 @@ Glossary
 
    Noah-MP
       
-      .. COMMENT: Add!
+      The land component of the UFS WM used in the Land DA system. See the :ref:`description in the Components chapter <NoahMP>` for more detail on the Noah-MP land surface model. 
 
    NUOPC Layer
       The :term:`NUOPC` Layer "defines conventions and a set of generic components for building coupled models using the Earth System Modeling Framework (:term:`ESMF`)." 
@@ -175,8 +171,6 @@ Glossary
 
    OOPS
       The :term:`JEDI` Object-Oriented Prediction System (:jedi:`OOPS <inside/jedi-components/oops/index.html>`) includes data assimilation algorithms for use in data assimilation applications. 
-
-      .. COMMENT: Add! https://github.com/jcsda/oops
 
    RDHPCS
       `Research and Development High-Performance Computing Systems <https://docs.rdhpcs.noaa.gov/systems/index.html>`_. 
@@ -196,8 +190,6 @@ Glossary
 
    UFO
       The :term:`JEDI` Unified Forward Operator (:jedi:`UFO <inside/jedi-components/ufo/index.html>`) is used to compare model forecasts and observations in data assimilation applications. 
-
-      .. COMMENT: Add! https://github.com/jcsda/ufo.git
 
    UFS
       The Unified Forecast System (UFS) is a community-based, coupled, comprehensive Earth modeling system consisting of several applications (apps). These apps span regional to global domains and sub-hourly to seasonal time scales. The UFS is designed to support the :term:`Weather Enterprise` and to be the source system for NOAA's operational numerical weather prediction applications. For more information, visit the :ufs:`UFS Portal <>`.

@@ -50,7 +50,6 @@ rst_prolog = """
 .. |latestr| replace:: v2.0.0
 .. |tag| replace:: ``ufs-land-da-v2.0.0``
 .. |branch| replace:: ``release/public-v2.0.0``
-.. |skylabv| replace:: Skylab v8.0
 .. |spack-stack-ver| replace:: v1.6.0
 .. |data| replace:: v2.1
 """
@@ -85,7 +84,11 @@ linkcheck_allowed_redirects = {r"https://github.com/ufs-community/land-DA_workfl
                                r"https://doi.org/.*/.*": 
                                  r"https://journals.ametsoc.org:443/view/journals/.*/.*/.*/.*",
                                r"https://www.meted.ucar.edu/bom/mdata_assim/*":
-                                 r"https://www.meted.ucar.edu/sign_in.php*",
+                                 r"https://www.meted.ucar.edu/*",
+                               r"https://www.meted.ucar.edu/bom/mdata_assim/*":
+                                 r"https://learn.meted.ucar.edu/*",
+                               r"https://opensky.ucar.edu/islandora/object/%3A3912":
+                                 r"https://opensky.ucar.edu/challenge*",
                               }
 
 

@@ -89,8 +89,6 @@ See detailed instructions for this in :numref:`Section %s <CloudHPC>`. Then, run
 
    singularity build --force ubuntu22.04-intel-landda-cadre25.img docker://noaaepic/ubuntu22.04-intel21.10-landda:ue160-fms202401-cadre25
 
-.. COMMENT: Check build command
-
 This process may take several hours depending on the system. 
 
 .. note:: 
