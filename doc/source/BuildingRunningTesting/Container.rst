@@ -154,7 +154,7 @@ Concretely, users would run something like:
 
 .. code-block:: console
    
-   ./setup_container.sh -c=intel/2022.1.2 -m=intel/2022.1.2 -i=$img
+   ./setup_container.sh -c=intel/2022.1.2 -m=impi/2022.1.2 -i=$img
 
 Running this script will print the following messages to the console:
 
