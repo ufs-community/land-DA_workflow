@@ -146,8 +146,8 @@ Next, run the ``setup_container.sh`` script with the proper arguments.
 
 where:
 
-   * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2022.1.2``, ``intelmpi/2021.13``)
-   * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``intel/2022.1.2``, ``intelmpi/2021.13``)
+   * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2022.1.2``, ``intelmpi/2021.13``, ``intel-oneapi-compilers/2022.2.1``, ``intel/2023.2.0``)
+   * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``impi/2022.1.2``, ``intelmpi/2021.13``, ``intel-oneapi-mpi/2021.7.1``, ``cray-mpich/8.1.28``)
    * ``-i`` is the full path to the container image ( e.g., ``$LANDDAROOT/ubuntu22.04-intel-landda-cadre25.img``).
 
 Concretely, users would run something like: 

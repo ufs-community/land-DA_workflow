@@ -61,8 +61,6 @@ Building, Running, and Testing the Land DA System
    * :numref:`Chapter %s: Containerized Land DA Workflow <Container>` explains how to build and run the containerized Land DA System on non-Level 1 systems. 
    * :numref:`Chapter %s: Testing the Land DA Workflow <TestingLandDA>` explains how to run Land DA System tests. 
 
-.. COMMENT: Add workflow overview chapter?
-
 Customizing the Workflow
 =========================
 

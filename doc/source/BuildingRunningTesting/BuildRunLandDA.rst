@@ -79,7 +79,7 @@ Build the Land DA System
 Configure an Experiment
 *************************
 
-Several sample experiment configurations come with the Land DA System. Although this chapter outlines how to run the ``config.ATML.3dvar.ghcn.coldstart.yaml`` case, the following cases are available for use in the ``land-DA_workflow/parm/config_samples`` directory:
+Several sample experiment configurations come with the Land DA System. Although this chapter outlines how to run the ``config.LND.era5.3dvar.ims.warmstart.yaml`` case, the following cases are available for use in the ``land-DA_workflow/parm/config_samples`` directory:
 
 * ``config.ATML.3dvar.ghcn.coldstart.yaml``
 * ``config.LND.era5.letkf.ghcn.coldstart.yaml``
