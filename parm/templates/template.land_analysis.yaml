@@ -511,6 +511,8 @@ workflow:
         cyc: "&cyc;"
         DATAROOT: "&DATAROOT;"
         DATE_CYCLE_FREQ_HR: "&DATE_CYCLE_FREQ_HR;"
+        DATE_FIRST_CYCLE: "&DATE_FIRST_CYCLE;"
+        DATE_LAST_CYCLE: "&DATE_LAST_CYCLE;"
         HOMElandda: "&HOMElandda;"
         JEDI_ALGORITHM: "&JEDI_ALGORITHM;"
         KEEPDATA: "&KEEPDATA;"

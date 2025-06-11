@@ -19,6 +19,7 @@ DO_PLOT_STATS="YES"
 DO_PLOT_TIME_HISTORY="YES"
 DO_PLOT_RESTART="YES"
 DO_PLOT_COMBINE_TILES="YES"
+DO_PLOT_BASIN="NO"
 
 ############################################################
 # Stats Plot
@@ -183,3 +184,40 @@ EOF
   cp -p ${out_fn_base}* ${COMOUTplot}
 fi
 
+###########################################################
+# Basin Plot
+###########################################################
+if [ "${DO_PLOT_BASIN}" = "YES" ]; then
+  fn_data_base="ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile"
+  fn_data_ext=".nc"
+
+  out_title_base="Land-DA::restart:: "
+  out_fn_base="landda_basin"
+
+  cat > plot_basin.yaml <<EOF
+path_data: '${COMIN}/RESTART'
+work_dir: '${DATA}'
+fn_data_base: '${fn_data_base}'
+fn_data_ext: '${fn_data_ext}'
+out_title_base: '${out_title_base}'
+out_fn_base: '${out_fn_base}'
+DATE_FIRST_CYCLE: '${DATE_FIRST_CYCLE}'
+DATE_LAST_CYCLE: '${DATE_LAST_CYCLE}'
+OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
+OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
+
+EOF
+
+  # Run script when the experiment reaches its last day
+  if [ "${YYYY}${MM}${DD}${HH}"  ==  "${DATE_LAST_CYCLE}" ]; then 
+    # Change basin code here. Default is 4219 - Mississippi River basin
+    echo "4219" | ${USHlandda}/plot_basin.py
+    if [ $? -ne 0 ]; then
+      err_exit "Basin plot failed"
+    fi
+
+    # Copy result files to COMOUT
+    cp -p ${out_fn_base}* ${COMOUTplot}
+  fi
+fi
