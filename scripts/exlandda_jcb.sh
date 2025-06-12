@@ -41,8 +41,9 @@ snow_window_begin="${yyyy_hf}-${mm_hf}-${dd_hf}T${hh_hf}:00:00Z"
 snow_window_length="PT${DATE_CYCLE_FREQ_HR}H"
 
 # Algorithm-specific values
-if [ "${JEDI_ALGORITHM}" = "letkf" ]; then
+if [ "${JEDI_ALGORITHM}" = "letkfoi" ]; then
   jedi_algorithm_mod="local_ensemble_da"
+  local_ensemble_da_solver="LETKF"
 else
   jedi_algorithm_mod="${JEDI_ALGORITHM}"
 fi

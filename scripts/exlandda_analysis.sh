@@ -126,7 +126,7 @@ if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
   # Set JEDI executable
   jedi_exe_fn="fv3jedi_var.x"
 
-else # letkf
+else # letkfoi
   for ens in {1..2}
   do
     mkdir -p $DATA/mem${ens}
@@ -136,7 +136,7 @@ else # letkf
 
   ${USHlandda}/letkf_create_ens.py $FILEDATE $snowdepth_vn 30
   if [[ $? != 0 ]]; then
-    err_exit "letkf create failed"
+    err_exit "letkf-oi create failed"
   fi
 
   # Set JEDI executable
@@ -174,7 +174,7 @@ done
 # Link inc file to DATA
 if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
   inc_fp_prefix="${DATA}/anl/snowinc.${FILEDATE}.sfc_data"
-elif [ "${JEDI_ALGORITHM}" = "letkf" ]; then
+elif [ "${JEDI_ALGORITHM}" = "letkfoi" ]; then
   inc_fp_prefix="${DATA}/${FILEDATE}.snowinc.sfc_data"
 fi
 inc_fn_prefix="snowinc.${FILEDATE}.sfc_data"
