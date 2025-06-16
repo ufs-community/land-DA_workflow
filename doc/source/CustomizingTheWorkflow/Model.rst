@@ -5,7 +5,7 @@ Input/Output Files for the Noah-MP Model
 *****************************************
 
 This chapter provides practical information on input files and parameters for the Noah-MP Land Surface Model (LSM).
-For background information on the Noah-MP LSM, see :numref:`Section %s <NoahMP>` of the Introduction. 
+For background information on the Noah-MP LSM, see :numref:`Section %s <NoahMP>` of the Components chapter. 
 
 .. _InputFiles:
 
@@ -41,7 +41,7 @@ These files and their parameters are described in the following subsections.
 Viewing netCDF Files
 ======================
 
-Users can view file information, variables, and notes for NetCDF files using the ``ncdump`` module. On Level 1 platforms, users can load the Land DA environment from ``land-DA_workflow`` as described in :numref:`Section %s <config-wflow>`. 
+Users can view file information, variables, and notes for NetCDF files using the ``ncdump`` module. On :ref:`Level 1 platforms <level1>`, users can load the Land DA environment from ``land-DA_workflow`` as described in :numref:`Section %s <config-wflow>`:
 
 .. include:: ../doc-snippets/load-env.rst
 
@@ -64,12 +64,55 @@ Users may need to modify the ``module load`` command to reflect modules that are
 
 .. _datm-lnd-input-files:
 
-Input Files for the ``DATM`` + ``LND`` Configuration with GSWP3 data
-======================================================================
+Input Files for the LND (``DATM`` + ``LND``) Configuration 
+============================================================
 
-With the integration of the UFS Noah-MP land component into the Land DA System, model forcing options have been enhanced so that users can run the UFS land component (:term:`LND`) with the data atmosphere component (:term:`DATM`). Updates provide a new analysis option on the cubed-sphere native grid using :term:`GSWP3` forcing data to run a cycled experiment for 2000-01-03 to 2000-01-04. An artificial GHCN snow depth observation is provided for data assimilation (see :numref:`Section %s <observation-data>` for more on GHCN files). The GHCN observations will be extended in the near future. 
+In the :term:`LND` configuration of the Land DA System, users can choose to use :term:`ERA5` atmospheric forcing data or :term:`GSWP3` atmospheric forcing data. Several :github:`pre-configured <tree/develop/parm/config_samples>` LND cases are available in the Land DA repository: 
+
+.. list-table:: Preconfigured LND Cases
+   :header-rows: 1
+
+   * - File Name
+     - Data Forcing
+     - JEDI Algorithm
+     - Observation Data 
+     - Start Type
+     - DATE_FIRST_CYCLE
+     - Number of 24-hr Cycles
+   * - config.LND.era5.3dvar.ims.warmstart.yaml
+     - ERA5
+     - 3dvar
+     - IMS
+     - warm
+     - 2025-01-19 00z
+     - 2
+   * - config.LND.era5.letkf.ghcn.coldstart.yaml
+     - ERA5
+     - letkf
+     - GHCN
+     - cold
+     - 2025-01-17 00z
+     - 2
+   * - config.LND.gswp3.3dvar.ghcn.coldstart.yaml
+     - GSWP3
+     - 3dvar
+     - GHCN
+     - cold
+     - 2000-01-30 00z
+     - 3
+   * - config.LND.gswp3.letkf.ghcn.warmstart.yaml
+     - GSWP3
+     - letkf
+     - GHCN
+     - warm
+     - 2000-02-02 00z
+     - 2
 
 On Level 1 platforms, the requisite data are pre-staged at the locations listed in :numref:`Section %s <Level1Data>`. The data are also publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. 
+
+.. COMMENT: Remove? 
+   With the integration of the UFS Noah-MP land component into the Land DA System, model forcing options have been enhanced so that users can run the UFS land component (:term:`LND`) with the data atmosphere component (:term:`DATM`). Updates provide a new analysis option on the cubed-sphere native grid using :term:`GSWP3` forcing data to run a cycled experiment for 2000-01-03 to 2000-01-04. An artificial GHCN snow depth observation is provided for data assimilation (see :numref:`Section %s <observation-data>` for more on GHCN files). The GHCN observations will be extended in the near future. 
+
 
 Forcing Files
 ---------------
@@ -164,4 +207,40 @@ The ``C96_grid.tile*.nc`` files contain grid information for tiles 1-6 at C96 gr
 .. note:: 
 
    ``grid_spec.nc`` and ``C96.mosaic.nc`` are the same file under different names and may be used interchangeably. 
+
+
+.. _atml-input-files:
+
+Input Files for the ``FV3`` + ``LND`` Configuration
+======================================================
+
+In the :term:`ATML` configuration of the Land DA System, users run with the active :term:`FV3` atmospheric component. Several :github:`pre-configured <tree/develop/parm/config_samples>` ATML cases are available in the Land DA repository: 
+
+.. list-table:: Preconfigured ATML Cases
+   :header-rows: 1
+
+   * - File Name
+     - JEDI Algorithm
+     - Observation Data 
+     - Start Type
+     - DATE_FIRST_CYCLE
+     - Number of 24-hr Cycles
+   * - config.ATML.3dvar.ghcn.coldstart.yaml
+     - 3dvar
+     - IMS
+     - cold
+     - 2022-12-21 00z
+     - 2
+   * - config.ATML.3dvar.ghcn.warmstart.yaml
+     - letkf
+     - GHCN
+     - warm
+     - 2022-12-23 00z
+     - 2
+
+On Level 1 platforms, the requisite data are pre-staged at the locations listed in :numref:`Section %s <Level1Data>`. The data are also publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. 
+
+
+
+
 
