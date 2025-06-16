@@ -132,6 +132,10 @@ Users will need to configure the ``account`` variable in ``config.yaml`` and cho
 
 Users may configure other elements of an experiment in ``config.yaml`` if desired. For example, users may wish to alter ``DATE_FIRST_CYCLE``, ``DATE_LAST_CYCLE``, and/or ``DATE_CYCLE_FREQ_HR`` to indicate a different start cycle, end cycle, and increment. Users may also wish to change the DA algorithm from ``3dvar`` to ``letkf`` via the ``JEDI_ALGORITHM`` variable. Users who wish to run a more complex experiment may change the values in ``config.yaml`` using information from Sections :numref:`%s: Workflow Configuration Parameters <ConfigWorkflow>`, :numref:`%s: I/O for the Noah-MP Model <Model>`, and :numref:`%s: I/O for JEDI DA <DASystem>`. 
 
+.. attention:: 
+
+   When regenerating an experiment from the same or similar ``config.yaml`` file, if the ``EXP_CASE_NAME`` remains the same, the old experiment directory with that name will be renamed with the ``*_old`` suffix, and the new experiment directory will use ``EXP_CASE_NAME``. However, the ``envir`` directory will **NOT** be regenerated unless the ``envir`` parameter is given a new name. If it keeps the same name, the previous ``ptmp/<envir>`` directory and everything in it will remain (rather than being renamed), and the experiment will continue from where it left off using the files from the previous directory. This can be helpful in certain cases but detrimental in others, so users need to make a conscious choice based on their use case. 
+
 .. _GetData:
 
 Data

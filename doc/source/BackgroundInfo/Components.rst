@@ -11,6 +11,8 @@ The Land DA System assembles a variety of modeling, data assimilation, pre-proce
 Modeling Components
 =====================
 
+.. _wm-component:
+
 The UFS Weather Model (WM)
 ----------------------------
 
