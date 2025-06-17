@@ -261,7 +261,7 @@ def set_default_parm():
         "FRAC_GRID": "NO",
         "IC_DATA_MODEL": "gfs",
         "IMO": 384,
-        "JEDI_ALGORITHM": "letkf",
+        "JEDI_ALGORITHM": "letkf-oi",
         "JEDI_PATH": "/path/to/jedi/install/dir",
         "JEDI_PY_VER": "python3.10",
         "JMO": 190,

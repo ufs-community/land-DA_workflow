@@ -9,10 +9,10 @@ app_path_observations: "{{ PARMlandda }}/jedi/jcb-gdas/observations/snow"
 app_path_observation_chronicle: "{{ PARMlandda }}/jedi/jcb-gdas/observation_chronicle/snow"
 
 # Template file name for each section (if not defined, default files in jcb-algorithms will be used)
-{%- if JEDI_ALGORITHM == "letkf" %}
-geometry_background_file: snow_geometry_background_letkf
-background_ensemble_file: snow_background_ensemble_letkf
-output_increment_file: snow_output_increment_letkf
+{%- if JEDI_ALGORITHM == "letkf-oi" %}
+geometry_background_file: snow_geometry_background_letkfoi
+background_ensemble_file: snow_background_ensemble_letkfoi
+output_increment_file: snow_output_increment_letkfoi
 {%- elif JEDI_ALGORITHM == "3dvar" %}
 geometry_background_file: snow_geometry_background
 background_file: snow_background
