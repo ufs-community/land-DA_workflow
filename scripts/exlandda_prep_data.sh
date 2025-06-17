@@ -25,9 +25,11 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
 
   OBSDIR="${OBSDIR:-${FIXlandda}/DA_obs}"
   DATA_GHCN_RAW="${DATA_GHCN_RAW:-${FIXlandda}/DATA_ghcn}"
+  DATA_SMAP_RAW="${DATA_SMAP_RAW:-${FIXlandda}/DATA_smap}"
 
   obs_out_fn_ghcn=""
   obs_out_fn_ims=""
+  obs_out_fn_smap=""
   # GHCN snow depth data
   if [ "${OBS_GHCN_SNOW}" = "YES" ]; then
     # GHCN are time-stamped at 18. If assimilating at 00, need to use previous day's obs, 
@@ -63,6 +65,7 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
       cp -p "${obs_fn}" "${COMOUTobs}/${obs_out_fn_ghcn}"
     fi
   fi
+
   # IMS snow data
   if [ "${OBS_IMS_SNOW}" = "YES" ]; then  
     # Check if pre-generated IMS obs file exists
@@ -154,6 +157,35 @@ EOF
   if [ "${OBS_SFCSNO}" = "YES" ]; then
     sfcsno_fn_suffix="sfcsno.tm00.bufr_d"
     cp -p "${COMINgdas}/${PDY}/gdas.${cycle}.${sfcsno_fn_suffix}" "${COMOUTobs}/obs.${PDY}.${cycle}.${sfcsno_fn_suffix}"
+  fi
+
+  # SMAP data
+  if [ "${OBS_SMAP}" = "YES" ]; then
+    obs_fn="smap_ioda_${YYYY}${MM}${DD}${HH}.nc"
+    obs_dp="${OBSDIR}/SMAP/${YYYY}${MM}"
+    obs_fp="${obs_dp}/${obs_fn}"
+    obs_out_fn_smap="${obs_fn}"
+
+    # Check if obs is available
+    if [ -f "${obs_fp}" ]; then
+      echo "SMAP observation file: ${obs_fp}"
+      cp -p "${obs_fp}" "${obs_out_fn_ghcn}"
+      cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_ghcn}"
+    else
+      input_raw_fn=".h5"
+      input_raw_fp="${DATA_SMAP_RAW}/${input_raw_fn}"
+      if [ ! -f "${input_raw_fp}" ]; then
+        echo "SMAP raw data path: ${DATA_SMAP_RAW}"
+        echo "SMAP raw data file: ${input_raw_fn}"
+        err_exit "SMAP raw data file does not exist in designated path !!!"
+      fi
+
+      ${USHlandda}/smap_ssm2ioda.py -i ${input_raw_file} -o ${obs_out_fn_smap} -- maskMissing
+      if [ $? -ne 0 ]; then
+        err_exit "Generation of SMAP obs file failed !!!"
+      fi
+      cp -p "${obs_out_fn_smap}" "${COMOUTobs}/${obs_fn}"
+    fi
   fi
 
   ############################################################

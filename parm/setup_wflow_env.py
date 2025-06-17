@@ -283,6 +283,7 @@ def set_default_parm():
         "OBS_GHCN_SNOW": "NO",
         "OBS_IMS_SNOW": "NO",
         "OBS_SFCSNO": "NO",
+        "OBS_SMAP": "NO",
         "OUTPUT_FH": "1 -1",
         "PY_LOG_LEVEL": "INFO",
         "RES": 96,
