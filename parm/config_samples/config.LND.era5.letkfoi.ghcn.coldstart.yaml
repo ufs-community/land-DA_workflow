@@ -12,7 +12,7 @@ DT_RUNSEQ: 3600
 envir: test_lnd_era5_cold
 EXP_CASE_NAME: lnd_era5_coldstart_00
 FCSTHR: 24
-JEDI_ALGORITHM: letkfoi
+JEDI_ALGORITHM: letkf-oi
 LND_CALC_SNET: .true.
 LND_IC_TYPE: custom
 LND_INITIAL_ALBEDO: 0.25
