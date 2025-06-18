@@ -69,7 +69,8 @@ def setup_wflow_env(machine):
     obs_ghcn_snow = config_parm.get("OBS_GHCN_SNOW")
     obs_ims_snow = config_parm.get("OBS_IMS_SNOW")
     obs_sfcsno = config_parm.get("OBS_SFCSNO")
-    if obs_ghcn_snow == "NO" and obs_ims_snow == "NO" and obs_sfcsno == "NO":
+    obs_smap = config_parm.get("OBS_SMAP")
+    if obs_ghcn_snow == "NO" and obs_ims_snow == "NO" and obs_sfcsno == "NO" and obs_smap == "NO":
         logging.error("NO obs options are selected !!!", exc_info=True)
         sys.exit(1)
     elif obs_ghcn_snow == "YES" and obs_ims_snow == "YES":

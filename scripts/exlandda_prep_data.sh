@@ -153,6 +153,7 @@ EOF
       cp -p ${obs_out_fn_ims} "${COMOUTobs}/${obs_out_fn_ims}"
     fi
   fi
+
   # SFCSNO data
   if [ "${OBS_SFCSNO}" = "YES" ]; then
     sfcsno_fn_suffix="sfcsno.tm00.bufr_d"
@@ -161,7 +162,7 @@ EOF
 
   # SMAP data
   if [ "${OBS_SMAP}" = "YES" ]; then
-    obs_fn="smap_ioda_${YYYY}${MM}${DD}${HH}.nc"
+    obs_fn="smap_ioda_${PDY}${cyc}.nc"
     obs_dp="${OBSDIR}/SMAP/${YYYY}${MM}"
     obs_fp="${obs_dp}/${obs_fn}"
     obs_out_fn_smap="${obs_fn}"
@@ -172,7 +173,7 @@ EOF
       cp -p "${obs_fp}" "${obs_out_fn_ghcn}"
       cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_ghcn}"
     else
-      input_raw_fn=".h5"
+      input_raw_fn="SMAP_L2_SM_P_D_${PDY}T${cyc}.h5"
       input_raw_fp="${DATA_SMAP_RAW}/${input_raw_fn}"
       if [ ! -f "${input_raw_fp}" ]; then
         echo "SMAP raw data path: ${DATA_SMAP_RAW}"
@@ -180,7 +181,7 @@ EOF
         err_exit "SMAP raw data file does not exist in designated path !!!"
       fi
 
-      ${USHlandda}/smap_ssm2ioda.py -i ${input_raw_file} -o ${obs_out_fn_smap} -- maskMissing
+      ${USHlandda}/smap_ssm2ioda.py -i ${input_raw_fp} -o ${obs_out_fn_smap} --maskMissing
       if [ $? -ne 0 ]; then
         err_exit "Generation of SMAP obs file failed !!!"
       fi
@@ -196,8 +197,10 @@ work_dir: '${DATA}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
 fn_input_ghcn: '${obs_out_fn_ghcn}'
 fn_input_ims: '${obs_out_fn_ims}'
+fn_input_smap: '${obs_out_fn_smap}'
 OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
 OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
+OBS_SMAP: '${OBS_SMAP}'
 PDY: '${PDY}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
