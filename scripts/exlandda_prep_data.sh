@@ -173,18 +173,30 @@ EOF
       cp -p "${obs_fp}" "${obs_out_fn_ghcn}"
       cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_ghcn}"
     else
-      input_raw_fn="SMAP_L2_SM_P_D_${PDY}T${cyc}.h5"
-      input_raw_fp="${DATA_SMAP_RAW}/${input_raw_fn}"
-      if [ ! -f "${input_raw_fp}" ]; then
-        echo "SMAP raw data path: ${DATA_SMAP_RAW}"
-        echo "SMAP raw data file: ${input_raw_fn}"
-        err_exit "SMAP raw data file does not exist in designated path !!!"
+      # soft-link SMAP raw data file for a specific date into smap_raw_data
+      smap_raw_dir="${DATA}/smap_raw_data"
+      fn_smap_prefix="SMAP_L2_SM_P_E"
+      fn_smap_suffix=".h5"
+      mkdir -p ${smap_raw_dir}
+      ln -nsf "${DATA_SMAP_RAW}/${fn_smap_prefix}"*"${PDY}T"*"${fn_smap_suffix}" ${smap_raw_dir}
+
+  cat > smap_ioda_merge.yaml << EOF
+fn_smap_prefix: '${fn_smap_prefix}'
+fn_smap_suffix: '${fn_smap_suffix}'
+obs_out_fn_smap: '${obs_out_fn_smap}'
+smap_raw_dir: '${smap_raw_dir}'
+work_dir: '${DATA}'
+PDY: '${PDY}'
+cyc: '${cyc}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
+USHlandda: '${USHlandda}'
+EOF
+
+      ${USHlandda}/smap_ioda_merge_files.py
+      if [ $? -ne 0 ]; then
+        err_exit "Generation of SMAP_ioda obs file failed !!!"
       fi
 
-      ${USHlandda}/smap_ssm2ioda.py -i ${input_raw_fp} -o ${obs_out_fn_smap} --maskMissing
-      if [ $? -ne 0 ]; then
-        err_exit "Generation of SMAP obs file failed !!!"
-      fi
       cp -p "${obs_out_fn_smap}" "${COMOUTobs}/${obs_fn}"
     fi
   fi
@@ -207,7 +219,7 @@ EOF
 
   ${USHlandda}/plot_obs_file.py
   if [ $? -ne 0 ]; then
-    err_exit "Observation file plot for GHCN_SNOW failed"
+    err_exit "Observation file plot failed"
   fi
 
   # Copy result file to COMOUT
