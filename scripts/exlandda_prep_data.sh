@@ -173,17 +173,45 @@ EOF
       cp -p "${obs_fp}" "${obs_out_fn_ghcn}"
       cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_ghcn}"
     else
-      # soft-link SMAP raw data file for a specific date into smap_raw_data
+      # Create smap_raw_data directory
       smap_raw_dir="${DATA}/smap_raw_data"
       fn_smap_prefix="SMAP_L2_SM_P_E"
       fn_smap_suffix=".h5"
       mkdir -p ${smap_raw_dir}
-      ln -nsf "${DATA_SMAP_RAW}/${fn_smap_prefix}"*"${PDY}T"*"${fn_smap_suffix}" ${smap_raw_dir}
 
+      # Specify time window the same as JEDI
+      cycle_freq_hr_half=$(( DATE_CYCLE_FREQ_HR / 2 ))
+      HTIME=$($NDATE -${cycle_freq_hr_half} $PDY$cyc)
+      pdy_hf=${HTIME:0:8}
+      cdate_hf=${HTIME:0:10}
+
+      # soft-link SMAP raw data file for a JEDI time window into smap_raw_data
+      for ihr in $(seq 0 $((DATE_CYCLE_FREQ_HR - 1))); do
+        ihr_date=$($NDATE $ihr $cdate_hf)
+        ihr_pdy=${ihr_date:0:8}
+        ihr_cyc=${ihr_date:8:2}
+        ihr_smap_raw_dir="${DATA_SMAP_RAW}/${ihr_pdy}"
+
+        found=false
+        for file in "${ihr_smap_raw_dir}"/*; do
+          filename=$(basename "${file}")
+          if [ -f "${file}" ] && [[ "${filename}" == ${fn_smap_prefix}*"${ihr_pdy}T${ihr_cyc}"*${fn_smap_suffix} ]]; then
+            ln -nsf "${file}" ${smap_raw_dir}
+            echo "SMAP raw data file for ${ihr_date} found in ${ihr_smap_raw_dir}."
+            found=true
+          fi
+        done        
+        if ! $found; then
+          echo "WARNING: No matching file for ${ihr_date} found in ${ihr_smap_raw_dir}!"
+        fi
+      done
+
+      # Create input yaml file
   cat > smap_ioda_merge.yaml << EOF
 fn_smap_prefix: '${fn_smap_prefix}'
 fn_smap_suffix: '${fn_smap_suffix}'
 obs_out_fn_smap: '${obs_out_fn_smap}'
+pdy_hf: '${pdy_hf}'
 smap_raw_dir: '${smap_raw_dir}'
 work_dir: '${DATA}'
 PDY: '${PDY}'
@@ -192,6 +220,7 @@ PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 USHlandda: '${USHlandda}'
 EOF
 
+      # Run the ioda converting script for SMAP and combine the netcdf files
       ${USHlandda}/smap_ioda_merge_files.py
       if [ $? -ne 0 ]; then
         err_exit "Generation of SMAP_ioda obs file failed !!!"

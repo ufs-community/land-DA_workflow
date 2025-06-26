@@ -28,6 +28,7 @@ def main():
     fn_smap_prefix = yaml_data['fn_smap_prefix']
     fn_smap_suffix = yaml_data['fn_smap_suffix']
     obs_out_fn_smap = yaml_data['obs_out_fn_smap']
+    pdy_hf = yaml_data['pdy_hf']
     smap_raw_dir = yaml_data['smap_raw_dir']
     work_dir = yaml_data['work_dir']
     PDY = yaml_data['PDY']
@@ -58,14 +59,16 @@ def main():
     files.sort()
     logging.info(f''' SMAP input raw files: {files}''')
 
-    # Convert raw data file by file 
+    # Convert raw data files one by one
     for ifn in files:
         ifn_tmp = ifn.removeprefix(fn_smap_prefix)
         ifn_tmp = ifn_tmp.removesuffix(fn_smap_suffix)
         ifn_tmp = ifn_tmp.split('_')[-3]
-        ifn_time = ifn_tmp.removeprefix(f'{PDY}T')
-        logging.info(f''' SMAP raw file time: {ifn_time}''')
-        smap_out_ifn = f'smap_ioda_{PDY}_{ifn_time}.nc'
+        ifn_pdy = ifn_tmp[:8]
+        ifn_time = ifn_tmp.removeprefix(f'{ifn_pdy}T')
+        ifn_hhmm = ifn_time[:4]
+        smap_out_ifn = f'''smap_ioda_{ifn_pdy}_{ifn_hhmm}.nc'''
+        logging.info(f''' SMAP raw file time: {ifn_time}, hhmm: {ifn_hhmm}''')
         command = [sys.executable,f'{USHlandda}/smap_ssm2ioda.py','-i',f'{ifn}','-o',f'{smap_out_ifn}','--maskMissing']
         result = subprocess.run(command, capture_output=True, text=True)
         logging.debug(f''' IODA converter stdout: {result.stdout}''')
