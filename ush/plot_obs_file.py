@@ -95,27 +95,24 @@ def obs_plot(obs_type,PDY,work_dir,fn_input):
     logging.info(f''' lat min,max = {lat_min}, {lat_max}''')
 
     #extent=[lon_min,lon_max,lat_min,lat_max]
-    # for CONUS
-    #extent=[-125,-66,23,53]
-    if obs_type == "ims":
+    extent=[]
+    if obs_type != "smap":
         # for Northern Hemisphere
         extent=[-179,179,0,82.5]
-    else:
-        # for Globe
-        extent=[-179,179,-82.5,82.5]
-
-    logging.info(f''' Map extent= {extent}''')
+        # for CONUS
+        #extent=[-125,-66,23,53]
+        logging.info(f''' Map extent= {extent}''')
 
     #c_lon=np.mean(extent[:2])
     c_lon=-77.0369 # D.C.
     logging.info(f''' c_lon= {c_lon}''')
 
     for svar in vars_out:
-        svar_plot(svar,mdat,lon,lat,extent,c_lon,obs_type,PDY,work_dir)
+        svar_plot(svar,mdat,lon,lat,c_lon,extent,obs_type,PDY,work_dir)
     
 
 # Variable plot =============================================== CHJ =====
-def svar_plot(svar,mdat,lon,lat,extent,c_lon,obs_type,PDY,work_dir):
+def svar_plot(svar,mdat,lon,lat,c_lon,extent,obs_type,PDY,work_dir):
 
     logging.info(' ===== '+svar+' ==========================================')
     # Extract data array
@@ -137,9 +134,9 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,obs_type,PDY,work_dir):
     tick_ln=1.5
     tick_wd=0.45
     tlb_sz=3
-    scat_sz=1.0
     n_rnd=2
     cmap_range='fixed'
+    scat_sz=1.0
 
     # Check array size
     lon_len = len(lon)
@@ -184,22 +181,22 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,obs_type,PDY,work_dir):
 
     logging.info(f''' cs_max= {cs_max}''')
     logging.info(f''' cs_min= {cs_min}''')
-    logging.info(f''' extent= {extent}''')
 
     # Plot field
     fig,ax=plt.subplots(1,1,subplot_kw=dict(projection=ccrs.Robinson(c_lon)))
-    ax.set_extent(extent, ccrs.PlateCarree())
+    if obs_type != "smap":
+        ax.set_extent(extent, ccrs.PlateCarree())
     # Call background plot
     back_plot(ax)
-    ax.set_title(out_title_fld,fontsize=9)
+    ax.set_title(out_title_fld,fontsize=8)
     cs=ax.scatter(lon,lat,transform=ccrs.PlateCarree(),c=sfld,cmap=cs_cmap,
                   vmin=cs_min,vmax=cs_max,s=scat_sz)
     divider=make_axes_locatable(ax)
     ax_cb=divider.new_horizontal(size="3%",pad=0.1,axes_class=plt.Axes)
     fig.add_axes(ax_cb)
     cbar=plt.colorbar(cs,cax=ax_cb,extend=lb_ext)
-    cbar.ax.tick_params(labelsize=8)
-    cbar.set_label(pvar,fontsize=8)
+    cbar.ax.tick_params(labelsize=7)
+    cbar.set_label(pvar,fontsize=7)
 
     # Output figure
     ndpi=300
