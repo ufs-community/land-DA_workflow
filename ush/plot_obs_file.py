@@ -97,10 +97,12 @@ def obs_plot(obs_type,PDY,work_dir,fn_input):
     #extent=[lon_min,lon_max,lat_min,lat_max]
     # for CONUS
     #extent=[-125,-66,23,53]
-    # for Northern Hemisphere
-    extent=[-179,179,0,82.5]
-    # for Globe
-    #extent=[-179,179,-82.5,82.5]
+    if obs_type == "ims":
+        # for Northern Hemisphere
+        extent=[-179,179,0,82.5]
+    else:
+        # for Globe
+        extent=[-179,179,-82.5,82.5]
 
     logging.info(f''' Map extent= {extent}''')
 

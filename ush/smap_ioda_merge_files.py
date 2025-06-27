@@ -15,6 +15,9 @@ import pathlib
 import yaml
 import numpy as np
 import subprocess
+import glob
+import shutil
+from netCDF4 import Dataset
 
 
 # Main part (will be called at the end) ============================= CHJ =====
@@ -69,6 +72,7 @@ def main():
         ifn_hhmm = ifn_time[:4]
         smap_out_ifn = f'''smap_ioda_{ifn_pdy}_{ifn_hhmm}.nc'''
         logging.info(f''' SMAP raw file time: {ifn_time}, hhmm: {ifn_hhmm}''')
+        # Run IODA converting script
         command = [sys.executable,f'{USHlandda}/smap_ssm2ioda.py','-i',f'{ifn}','-o',f'{smap_out_ifn}','--maskMissing']
         result = subprocess.run(command, capture_output=True, text=True)
         logging.debug(f''' IODA converter stdout: {result.stdout}''')
@@ -76,6 +80,86 @@ def main():
             logging.error(f''' Error executing script: {ifn_time} : {result.stderr}''')
 
     # Merge smap_ioda files
+    file_list = sorted(glob.glob("smap_ioda_*.nc"))
+    out_ds = Dataset(obs_out_fn_smap, 'w', format="NETCDF4")
+    concat_dim = "Location"    
+    group_names = ["MetaData", "ObsError", "ObsValue", "PreQC"]
+    
+    root_vars = {}         # var_name -> list of arrays
+    root_var_info = {}     # var_name -> dict with dims, dtype, attrs
+    group_vars = {g: {} for g in group_names}  # group -> var_name -> list of arrays
+    group_var_info = {g: {} for g in group_names}
+    dim_sizes = {}         # static dimension sizes
+    
+    # Read and collect data
+    for i, path in enumerate(file_list):
+        print(f"Reading {i+1}/{len(file_list)}: {os.path.basename(path)}")
+        ds = Dataset(path, "r")
+    
+        # Root variables
+        for vname, var in ds.variables.items():
+            if concat_dim not in var.dimensions:
+                continue
+            if vname not in root_vars:
+                root_vars[vname] = []
+                root_var_info[vname] = {
+                    "dims": var.dimensions,
+                    "dtype": var.datatype,
+                    "attrs": {a: var.getncattr(a) for a in var.ncattrs()}
+                }
+            root_vars[vname].append(var[:])
+    
+        # Fixed dimensions (non-unlimited) from first file only
+        if i == 0:
+            for d in ds.dimensions:
+                if d == concat_dim:
+                    dim_sizes[d] = None  # unlimited
+                else:
+                    dim_sizes[d] = len(ds.dimensions[d])
+    
+        # Group variables (shaped along Location)
+        for gname in group_names:
+            if gname not in ds.groups:
+                continue
+            g = ds.groups[gname]
+            for vname, var in g.variables.items():
+                if concat_dim not in var.dimensions:
+                    continue
+                if vname not in group_vars[gname]:
+                    group_vars[gname][vname] = []
+                    group_var_info[gname][vname] = {
+                        "dims": var.dimensions,
+                        "dtype": var.datatype,
+                        "attrs": {a: var.getncattr(a) for a in var.ncattrs()}
+                    }
+                group_vars[gname][vname].append(var[:])
+    
+        ds.close()
+    
+    # Dimensions
+    for d, size in dim_sizes.items():
+        out_ds.createDimension(d, size)
+    
+    # Root variables
+    for vname, arrays in root_vars.items():
+        data = np.concatenate(arrays, axis=0)
+        info = root_var_info[vname]
+        var = out_ds.createVariable(vname, info["dtype"], info["dims"], zlib=True)
+        var.setncatts(info["attrs"])
+        var[:] = data
+    
+    # Group variables
+    for gname in group_names:
+        g = out_ds.createGroup(gname)
+        for vname, arrays in group_vars[gname].items():
+            data = np.concatenate(arrays, axis=0)
+            info = group_var_info[gname][vname]
+            var = g.createVariable(vname, info["dtype"], info["dims"], zlib=True)
+            var.setncatts(info["attrs"])
+            var[:] = data
+    
+    out_ds.close()    
+    logging.info(f''' The combined SMAP data file {obs_out_fn_smap} has been created successfully !!!''')    
 
 
 
