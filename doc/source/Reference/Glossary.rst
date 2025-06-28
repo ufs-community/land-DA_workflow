@@ -59,6 +59,9 @@ Glossary
    dynamical core
       Global atmospheric model based on fluid dynamics principles, including Euler's equations of motion.
 
+   ECMWF
+      The `European Centre for Medium-Range Weather Forecasts <https://www.ecmwf.int/>`_ (ECMWF)
+
    ERA5
       The ECMWF Reanalysis v5 (`ERA5 <https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5>`_) dataset "is the fifth generation ECMWF atmospheric reanalysis of the global climate covering the period from January 1940 to present." It "provides hourly estimates of a large number of atmospheric, land and oceanic climate variables."
 

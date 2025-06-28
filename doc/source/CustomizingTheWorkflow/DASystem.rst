@@ -1,13 +1,13 @@
 .. _DASystem:
 
-******************************************
-Input/Output Files for the JEDI DA System 
-******************************************
+*******************************************************************
+Joint Effort for Data Assimilation Integration (JEDI) DA System 
+*******************************************************************
 
 This chapter describes the :term:`Data Assimilation` (DA) system for Land DA, which utilizes the UFS :ref:`WM <wm-component>` :ref:`Noah-MP <NoahMP>` component together with the ``jedi-bundle`` to enable cycled model forecasts. The data assimilation framework applies either the ``letkf`` algorithm or the ``3dvar`` algorithm. The Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm uses pseudo-ensemble error covariance; it combines the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007). The 3-D Variational (`3D-Var <https://www.ecmwf.int/sites/default/files/elibrary/2003/76079-variational-data-assimiltion-theory-and-overview_0.pdf>`_) DA algorithm attempts to find the analysis that best represents the true state of the atmosphere by minimizing a cost function given a particular background (previous forecast) and observations. 
 
-Joint Effort for Data Assimilation Integration (JEDI)
-********************************************************
+JEDI Overview
+****************
 
 .. attention::
 
@@ -24,7 +24,7 @@ The Joint Effort for Data assimilation Integration (:term:`JEDI`) is a unified a
 .. _jedi-config-and-params:
 
 JEDI Configuration Files & Parameters
-=======================================
+****************************************
 
 The Land DA System uses the JEDI Configuration Builder (:ref:`JCB <jcb-component>`) along with parameters defined in the ``land_analysis.yaml`` file to interface with the JEDI DA system. As described in :numref:`Section %s <ConfigWorkflow>`, the Land DA workflow generates a ``land_analysis.yaml`` file that contains all settings required for an experiment — user-selected settings from ``config.yaml``, default values, and machine-dependent settings. 
 
@@ -559,14 +559,14 @@ The example below shows what the complete ``jedi_<algorithm>_snow.yaml`` file mi
    final j evaluation: false
 
 Variables in the JCB YAML Files: 
----------------------------------
+===================================
 
 The JEDI system expects YAML blocks containing information such as geometry, time window, background, driver, local ensemble DA, output increment, and/or observations. Since these can be implemented differently for different algorithms and observation types, the ``jcb`` output YAML files frequently contain distinct parameters and variable names depending on the use case. This section of the User's Guide focuses on assisting users with understanding and customizing these JEDI configuration items in order to run Land DA experiments. Users may also reference the :jedi:`JEDI Documentation <using/building_and_running/config_content.html>` for additional information. 
 
 Geometry
-^^^^^^^^^^^
+----------
 
-The :jedi:`geometry <using/building_and_running/config_content.html#geometry>` section is used in JEDI configuration files "to define the model grid (both horizontal and vertical) and its parallelization across compute nodes." Most geometry definitions in this section are borrowed from the FV3-JEDI :jedi:`Geometry <inside/jedi-components/fv3-jedi/classes.html#geometry>`, :jedi:`FieldMetadata <inside/jedi-components/fv3-jedi/classes.html#fieldmetadata>`, and :jedi:`State/Increment/Field <inside/jedi-components/fv3-jedi/classes.html#state-increment-fields>` documentation. 
+The :jedi:`geometry <using/building_and_running/config_content.html#geometry>` section is used in JEDI configuration files "to define the model grid (both horizontal and vertical) and its parallelization across compute nodes." Most geometry definitions in this section are borrowed from the FV3-JEDI :jedi:`Geometry <inside/jedi-components/fv3-jedi/classes.html#geometry>`, :jedi:`FieldMetadata <inside/jedi-components/fv3-jedi/classes.html#fieldmetadata>`, and :jedi:`State/Increment/Field <inside/jedi-components/fv3-jedi/classes.html#state-increment-fields>` documentation. Note that for variational (e.g., 3D-Var data assimilation), the ``geometry:`` section appears in :jedi:`multiple places <inside/jedi-components/mpas-jedi/classes.html#nml-file-and-streams-file>` --- under ``cost function:`` and within each of the ``iterations:`` vector members under ``variational:``.
 
    ``fms initialization``
       This section contains two parameters, ``namelist filename`` and ``field table filename``, which are required for :term:`FMS` initialization. 
@@ -617,7 +617,7 @@ The :jedi:`geometry <using/building_and_running/config_content.html#geometry>` s
             Specifies the name of orographic data file.
 
 Window begin, Window length
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------
 
 These two items define the assimilation window for many applications, including Land DA. See :jedi:`FV3-JEDI time window documentation`.
 
@@ -633,91 +633,13 @@ These two items define the assimilation window for many applications, including 
    ``bound to include:``
       Specifies which assimilation window bound is inclusive. Valid values: ``begin`` | ``end``
 
-Background (for ``letkf``)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The ``background:`` section includes information on the forecast members generated by the previous cycle, which form the background for the current cycle. 
-
-   ``datapath:`` (Default: bkg)
-      Specifies the path for state variable data. Valid values: ``mem_pos/`` | ``mem_neg/``. (With default experiment values, the full path will be ``ptmp/test/tmp/analysis.${PDY}${cyc}.${jobid}``.)
-
-   ``filetype:`` (Default: fms restart)
-      Specifies the type of file. Valid values include: ``fms restart``
-
-   ``skip coupler file`` (Default: true)
-         Specifies whether to enable skipping coupler file. Valid values are: ``true`` | ``false``
-
-   ``datetime:`` (Default: XXYYYY-XXMM-XXDDTXXHH:00:00Z)
-      Specifies the date and time. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
-
-      .. COMMENT: Date & time of the background forecast? 
-
-   ``state variables:`` (Default: [snwdph,vtype,slmsk])
-      Specifies a list of state variables. Valid values: ``[snwdph,vtype,slmsk,sheleg,orogfilt]``
-
-   
-   ``filename_sfcd:`` (Default: XXYYYYXXMMXXDD.XXHH0000.sfc_data.nc)
-      Specifies the name of the surface data file. This usually takes the form ``YYYYMMDD.HHmmss.sfc_data.nc``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: ``20000103.000000.sfc_data.nc``
-         
-   ``filename_cplr:`` (Default: XXYYYYXXMMXXDD.XXHH0000.coupler.res)
-      Specifies the name of file that contains metadata for the restart. This usually takes the form ``YYYYMMDD.HHmmss.coupler.res``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: ``20000103.000000.coupler.res``
-
-   ``filename_orog:`` (Default: C96_oro_data.nc)
-      Specifies the name of the orographic data file. 
-
-Driver (for ``letkf``)
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-The ``driver:`` section describes optional modifications to the behavior of the LocalEnsembleDA driver. For details, refer to :jedi:`Local Ensemble Data Assimilation in OOPS <inside/jedi-components/oops/applications/localensembleda.html#top-oops-localensda>` in the JEDI Documentation. Not all options are included here. 
-
-   ``save posterior mean:`` (Default: false)
-      Specifies whether to save the posterior mean. Valid values: ``true`` | ``false``
-      
-   ``save posterior mean increment:`` (Default: true)
-      Specifies whether to save the posterior mean increment. Valid values: ``true`` | ``false``
-
-   ``save posterior ensemble:`` (Default: false)
-      Specifies whether to save the posterior ensemble. Valid values: ``true`` | ``false``
-
-   ``run as observer only:`` (Default: false)
-      Specifies whether to run as observer only. Valid values: ``true`` | ``false``
-
-Local Ensemble DA (for ``letkf``)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The ``local ensemble DA:`` section configures the local ensemble DA solver package. 
-
-   ``solver:`` (Default: LETKF)
-      Specifies the type of solver. Currently, ``LETKF`` is the only available option. See :cite:t:`HuntEtAl2007` (2007).
-
-   ``inflation:``
-      Describes ensemble :jedi:`inflation methods supported in the ensemble solver <inside/jedi-components/oops/applications/localensembleda.html#inflation-supported-in-the-ensemble-solvers>`. 
-
-      ``rtps:`` (Default: ``0.0``)
-         Relaxation to prior spread (:cite:t:`Whitaker&Hamill2012`, 2012). 
-
-      ``rtpp:`` (Default: ``0.0``)
-         Relaxation to prior perturbation (:cite:t:`ZhangEtAl2004`, 2004). 
-
-      ``mult:`` (Default: ``1.0``)
-         Parameter of multiplicative inflation.
-
-Output Increment (for ``letkf``)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-``output increment:`` (Default: fms restart)
-   ``filetype:``
-      Type of file provided for the output increment. Valid values include: ``fms restart``
-
-   ``filename_sfcd:`` (Default: snowinc.sfc_data.nc)
-      Name of the file provided for the output increment. For example: ``snowinc.sfc_data.nc``
-
 Observations
-^^^^^^^^^^^^^^^
+--------------
 
 The ``observations:`` item describes one or more types of observations, each of which is a multi-level YAML/JSON object in and of itself. Each of these observation types is read into JEDI as an ``eckit::Configuration`` object (see :jedi:`JEDI Observations Documentation <using/building_and_running/config_content.html#observations>` for more details).
 
 ``obs space:``
-````````````````
+^^^^^^^^^^^^^^^^
 
 The ``obs space:`` section of the YAML comes under the ``observations.observers:`` section and describes the configuration of the observation data for a single observation type. One experiment can use multiple types of observations. For example, the ``LND.era5.3dvar.ims.warmstart.yaml`` experiment uses both ``ims_snow`` and ``sfcsno`` observation data. 
 
@@ -756,7 +678,7 @@ The ``obs space:`` section of the YAML comes under the ``observations.observers:
             Specifies the relative path to the output file, where ``<obs_type>`` is one of the values in ``obs space.name``. 
 
 ``obs operator:``
-````````````````````
+^^^^^^^^^^^^^^^^^^^
 
 The ``obs operator:`` section describes the observation operator and its options. An observation operator is used for computing H(x).
 
@@ -764,7 +686,7 @@ The ``obs operator:`` section describes the observation operator and its options
       Specifies the name in the ``ObsOperator`` and ``LinearObsOperator`` factory, defined in the C++ code. Valid values include: ``Identity``. See :jedi:`JEDI Documentation for Observation Operators <inside/jedi-components/ufo/obsops.html#top-ufo-obsops>` for more options. 
 
 ``obs error:``
-``````````````````
+^^^^^^^^^^^^^^^^
 
 The ``obs error:`` section explains how to calculate the observation error covariance matrix and gives instructions (required for DA applications). The key covariance model, which describes how observation error covariances are created, is frequently the first item in this section. For diagonal observation error covariances, only the diagonal option is currently supported.
 
@@ -772,7 +694,7 @@ The ``obs error:`` section explains how to calculate the observation error covar
       Specifies the covariance model. Valid values include: ``diagonal``
 
 ``obs localizations:``
-````````````````````````
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``obs localizations:``
    ``localization method:``
@@ -797,39 +719,44 @@ The ``obs error:`` section explains how to calculate the observation error covar
 
    ``max nobs:``
       Maximum number of observations used to update each location. 
+   
+   ``vertical lengthscale:``
+      700
 
-``obs filters:``
-``````````````````
+``obs filters:``/ ``obs [pre|prior|post] filters:``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Observation filters are used to define Quality Control (QC) filters. They have access to observation values and metadata, model values at observation locations, simulated observation value, and their own private data. See :jedi:`Observation Filters <inside/jedi-components/ufo/qcfilters/introduction.html#observation-filters>` in the JEDI Documentation for more detail. The ``obs filters:`` section contains the following fields:
 
    ``filter:``
-      Describes the parameters of a given QC filter. Valid values include: ``Bounds Check`` | ``Background Check`` | ``Domain Check`` | ``RejectList``. See descriptions in the JEDI's :jedi:`Generic QC Filters <inside/jedi-components/ufo/qcfilters/GenericQC.html>` Documentation for more. 
+      Specifies a QC filter and its parameters. Valid values include: ``Bounds Check`` | ``Background Check`` | ``Create Diagnostic Flags`` | ``Domain Check`` | ``RejectList`` | ``Perform Action`` | ``Variable Assignment`` | ``Temporal Thinning`` | ``Difference Check`` | ``BlackList`` | ``Met Office Buddy Check``. The descriptions below are pulled directly from JEDI's documentation on :jedi:`Generic QC Filters <inside/jedi-components/ufo/qcfilters/GenericQC.html>`; users should view JEDI's documentation for detailed descriptions and information on filter parameters. The documentation also includes additional filter options. 
 
-      +--------------------+--------------------------------------------------+
-      | Filter Name        | Description                                      |
-      +====================+==================================================+
-      | Bounds Check       | Rejects observations whose values lie outside    |
-      |                    | specified limits:                                |
-      +--------------------+--------------------------------------------------+
-      | Background Check   | This filter checks for bias-corrected distance   |
-      |                    | between the observation value and model-simulated|
-      |                    | value (*y* - *H(x)*) and rejects observations    |
-      |                    | where the absolute difference is larger than     |
-      |                    | the ``absolute threshold`` or the                |
-      |                    | :math:`threshold * observation error` or the     |
-      |                    | :math:`threshold * background error`.            |
-      +--------------------+--------------------------------------------------+
-      | Domain Check       | This filter retains all observations selected by |
-      |                    | the ``where`` statement and rejects all others.  |
-      +--------------------+--------------------------------------------------+
-      | RejectList         | This is an alternative name for the BlackList    |
-      |                    | filter, which rejects all observations selected  |
-      |                    | by the ``where`` statement. The status of all    |
-      |                    | others remains the same. Opposite of Domain      |
-      |                    | Check filter.                                    |
-      +--------------------+--------------------------------------------------+
-         
+      .. list-table:: Preconfigured LND Cases
+         :header-rows: 1
+
+         * - Filter Name
+           - Description
+         * - :jedi:`Bounds Check <inside/jedi-components/ufo/qcfilters/GenericQC.html#bounds-check-filter>`
+           - Rejects observations whose values lie outside specified limits 
+         * - :jedi:`Background Check <inside/jedi-components/ufo/qcfilters/GenericQC.html#background-check-filter>` 
+           - Checks for bias-corrected distance between the observation value and model-simulated value (*y* - *H(x)*) and rejects observations where the absolute difference is larger than the ``absolute threshold`` or the :math:`threshold * observation error` or the :math:`threshold * background error`. 
+         * - :jedi:`BlackList / RejectList <inside/jedi-components/ufo/qcfilters/GenericQC.html#blacklist-filter>`
+           - Rejects all observations selected by the :jedi:`where <inside/jedi-components/ufo/qcfilters/FilterOptions.html#where-statement>` statement. The status of all others remains the same. Opposite of Domain Check filter.
+         * - :jedi:`Domain Check <inside/jedi-components/ufo/qcfilters/GenericQC.html#domain-check-filter>`
+           - Retains all observations selected by the ``where`` statement and rejects all others. 
+         * - :jedi:`Perform Action <inside/jedi-components/ufo/qcfilters/GenericQC.html#perform-action-filter>`
+           - Performs the action specified in the action parameter on observations selected by the ``where`` statement.
+         * - :jedi:`Temporal Thinning <inside/jedi-components/ufo/qcfilters/GenericQC.html#temporal-thinning-filter>`
+           - Thins observations so that the retained ones are sufficiently separated in time
+         * - :jedi:`Difference Check <inside/jedi-components/ufo/qcfilters/GenericQC.html#difference-check-filter>`
+           - Compares the difference between a reference variable and a second variable and assigns a QC flag if the difference is outside of a prescribed range.
+         * - :jedi:`Met Office Buddy Check <inside/jedi-components/ufo/qcfilters/GenericQC.html#met-office-buddy-check-filter>`
+           - Cross-checks observations taken at nearby locations against each other, updates their gross error probabilities (PGEs), and rejects observations whose PGE exceeds a threshold specified in the filter parameters. 
+         * - :jedi:`Variable Assignment <inside/jedi-components/ufo/qcfilters/GenericQC.html#variable-assignment-filter>`
+           - Assigns specified values to specified variables at locations selected by the ``where`` statement or at all locations if the *where* keyword is not present.
+         * - :jedi:`Create Diagnostic Flags <inside/jedi-components/ufo/qcfilters/GenericQC.html#create-diagnostic-flags-filter>`
+           - A "processing step" that makes it possible to define new diagnostic flags and to reinitialize existing ones.
+
    ``filter variables:``
       Limit the action of a QC filter to a subset of variables or to specific channels. 
 
@@ -882,337 +809,158 @@ Observation filters are used to define Quality Control (QC) filters. They have a
       ``maxvalue:``
          Maximum value for variables in the ``where`` statement.
 
+Main 3D-Var Parameters
+-------------------------
+
+The :jedi:`main components required for running a 3D-Var data assimilation experiment <inside/jedi-components/oops/applications/variational.html#variational-application-yaml-structure>` are ``cost function:``, ``variational:``, and ``final:``. 
+
+``cost function:``
+^^^^^^^^^^^^^^^^^^^^
+
+The ``cost function:`` block includes information on ``cost type:`` and ``jb evaluation:``. The Land DA System only uses the 3D-Var cost type, but :jedi:`other variational options are available in JEDI <inside/jedi-components/oops/applications/variational.html#supported-cost-functions>` and could be added to Land DA if desired. ``jb evaluation:`` determines whether (or not) to evaluate the background cost function (:math:`J_b`). Additional subsections such as geometry, time window, etc. may be included within the cost function block. 
+
+.. code-block:: yaml
+
+   cost function:
+     cost type: 3D-Var
+     jb evaluation: false
+     time window: ...
+     geometry: ...
+     analysis variables: ...
+     background: ...
+     background error: ...
+     observations: ...
+
+``variational:``
+^^^^^^^^^^^^^^^^^^
+
+The ``variational:`` block contains information on :jedi:`minimizers </inside/jedi-components/oops/applications/variational.html#supported-minimizers>` and ``iterations``. Minimizers tell OOPS which algorithm to use to minimize the cost function. The ``iterations`` section defines certain parameters for the outer loop in the algorithm. 
+
+.. code-block:: yaml
+
+   variational:
+     minimizer:
+       algorithm: DRPCG
+     iterations:
+     - ninner: 50
+       gradient norm reduction: 1e-10
+       test: true
 
 
+``final:``
+^^^^^^^^^^^^
 
+The ``final:`` block is optional but used frequently to configure the output diagnostics from the variational analysis. These could be observation space diagnostics or interpolated analysis/increment fields. 
 
+.. code-block:: yaml
 
-.. _IODA:
+   final:
+     diagnostics:
+       departures: anlmob
+     increment:
+       output:
+         state component:
+           datapath: ./anl
+           prefix: snowinc
+           filetype: fms restart
+           filename_sfcd: 20250119.000000.sfc_data.nc
+           filename_cplr: 20250119.000000.coupler.res
+           state variables:
+           - snwdph
+           - vtype
+           - slmsk
+       geometry:
+         ...
+   final j evaluation: false
 
-Interface for Observation Data Access (IODA)   
-===============================================
+``diagnostics.departures:`` (Default: ``anlmob``)
+   Saves the difference between H(analysis) and observations in the output file. 
 
-*This section references Honeyager, R., Herbener, S., Zhang, X., Shlyaeva, A., and Trémolet, Y., 2020: Observations in the Joint Effort for Data assimilation Integration (JEDI) - UFO and IODA. JCSDA Quarterly, 66, Winter 2020.*
+The ``increment.output`` field indicates information about the increment output file(s). In the example below, the Land DA increment file will be located in the temp directory for the analysis task under the ``anl`` directory (e.g., ``tmp_dir/analysis.${cycle_date}.${jobid}``). Each file will be prefixed with the name ``snowinc``, followed by the cycle date/time and type of file (i.e., ``coupler.res`` or ``sfc_data.{tile#}.nc``). For example, ``snowinc.20250119.000000.coupler.res`` or ``snowinc.20250119.000000.sfc_data.tile4.nc`` 
 
-The Interface for Observation Data Access (IODA) is a subsystem of JEDI that can handle data processing for various models, including the Land DA System. Currently, observation data sets come in a variety of formats (e.g., netCDF, BUFR, GRIB) and may differ significantly in structure, quality, and spatiotemporal resolution/density. Such data must be pre-processed and converted into model-specific formats. This process often involves iterative, model-specific data conversion efforts and numerous cumbersome ad-hoc approaches to prepare observations. Requirements for observation files and I/O handling often result in decreased I/O and computational efficiency. IODA addresses this need to modernize observation data management and use in conjunction with the various components of the Unified Forecast System (:term:`UFS`).
+The ``increment`` field also includes a ``geometry`` block similar to other sections of the YAML. 
 
-IODA provides a unified, model-agnostic method of sharing observation data and exchanging modeling and data assimilation results. The IODA effort centers on three core facets: (i) in-memory data access, (ii) definition of the IODA file format, and (iii) data store creation for long-term storage of observation data and diagnostics. The combination of these foci enables optimal isolation of the scientific code from the underlying data structures and data processing software while simultaneously promoting efficient I/O during the forecasting/DA process by providing a common file format and structured data storage.
+After the ``final`` block, there is a one-line ``final j evaluation:`` "block" indicating whether to evaluate J (the cost function). In Land DA, the is set to false by default. 
 
-The IODA file format represents observational field variables (e.g., temperature, salinity, humidity) and locations in two-dimensional tables, where the variables are represented by columns and the locations by rows. Metadata tables are associated with each axis of these data tables, and the location metadata hold the values describing each location (e.g., latitude, longitude). Actual data values are contained in a third dimension of the IODA data table; for instance: observation values, observation error, quality control flags, and simulated observation (H(x)) values.
+Background Error (for ``3dvar``)
+----------------------------------
 
-Since the raw observational data come in various formats, a diverse set of "IODA converters" exists to transform the raw observation data files into IODA format. While many of these Python-based IODA converters have been developed to handle marine-based observations, users can utilize the "IODA converter engine" components to develop and implement their own IODA converters to prepare arbitrary observation types for data assimilation within JEDI. (See https://github.com/NOAA-PSL/land-DA_update/blob/develop/jedi/ioda/imsfv3_scf2iodaTemp.py for the Land DA IMS IODA converter.)
+The ``background error:`` block provides information and specifications for computing the :jedi:`background error covariance matrix <using/building_and_running/config_content.html#background-error>`, or **B** matrix. The first item in this section is usually the covariance model, which identifies the method for computing the B matrix. Typically, the JEDI :jedi:`SABER <inside/jedi-components/saber/index.html#saber>` package is used for this purpose. The JEDI documentation provides an :jedi:`Introduction to SABER Error Covariance Model inside/jedi-components/saber/SABER_intro.html` and :jedi:`additional detailed information on the SABER blocks <inside/jedi-components/saber/BUMP_saber_blocks.html>`. 
 
+Background (for ``letkf``)
+----------------------------
+The ``background:`` section includes information on the forecast members generated by the previous cycle, which form the background for the current cycle. 
 
-Input Files
-****************************** 
+   ``datapath:`` (Default: bkg)
+      Specifies the path for state variable data. Valid values: ``mem_pos/`` | ``mem_neg/``. (With default experiment values, the full path will be ``ptmp/test/tmp/analysis.${PDY}${cyc}.${jobid}``.)
 
-The Land DA System requires grid description files, observation files, and restart files to perform snow DA. 
+   ``filetype:`` (Default: fms restart)
+      Specifies the type of file. Valid values include: ``fms restart``
 
-Grid Description Files
-=========================
+   ``skip coupler file`` (Default: true)
+         Specifies whether to enable skipping coupler file. Valid values are: ``true`` | ``false``
 
-The grid description files appear in :numref:`Table %s <GridInputFiles>` below: 
+   ``datetime:`` (Default: XXYYYY-XXMM-XXDDTXXHH:00:00Z)
+      Specifies the date and time. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
 
-.. _GridInputFiles:
+      .. COMMENT: Date & time of the background forecast? 
 
-.. list-table:: Input Files Containing Grid Information
-   :widths: 30 70
-   :header-rows: 1
+   ``state variables:`` (Default: [snwdph,vtype,slmsk])
+      Specifies a list of state variables. Valid values: ``[snwdph,vtype,slmsk,sheleg,orogfilt]``
 
-   * - Filename
-     - Description
-   * - Cxx_grid.tile[1-6].nc
-     - Cxx grid information for tiles 1-6, where ``xx`` is the grid resolution.
-   * - Cxx_oro_data.tile[1-6].nc 
-       
-       oro_Cxx.mx100.tile[1-6].nc
-
-     - Orography files that contain grid and land mask information. 
-       Cxx refers to the atmospheric resolution, and mx100 refers to the ocean 
-       resolution (100=1º). Both file names refer to the same file; there are symbolic links between them. 
-
-
-.. _observation-data:
-
-Observation Data
-====================
-
-Observation data from 2000 are provided in NetCDF format for the |latestr| release. Instructions for downloading the data are provided in :numref:`Section %s <GetDataC>`, and instructions for accessing the data on :ref:`Level 1 Systems <LevelsOfSupport>` are provided in :numref:`Section %s <GetData>`. Currently, data is taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_ (GHCN), but eventually, data from the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`_) will also be available for use. 
-
-Users can view file header information and notes for NetCDF formatted files using the instructions in :numref:`Section %s <view-netcdf-files>`. For example, on Orion, users can run:
-
-.. code-block:: console
-
-   # Load modules:
-   module load netcdf/4.7.0
-   ncdump -h /work/noaa/epic/UFS_Land-DA_Dev/inputs/DA/snow_depth/GHCN/data_proc/v3/2000/ghcn_snwd_ioda_20000103.nc
-
-to see the header contents of the 2000-01-03 GHCN snow depth file. Users may need to modify the module load command and the file path to reflect module versions/file paths that are available on their system. 
-
-Observation Types
---------------------
-
-GHCN Snow Depth Files
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-Snow depth observations are taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_, which provides daily climate summaries sourced from a global network of 100,000 stations. NOAA's `NCEI <https://www.ncei.noaa.gov/>`_ provides access to these snow depth and snowfall measurements through daily-generated individual station ASCII files or GZipped tar files of full-network observations on the NCEI server or Climate Data Online. Alternatively, users may acquire yearly tarballs via ``wget``:
-
-.. code-block:: console
-
-   wget https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/by_year/{YYYY}.csv.gz 
-
-where ``${YYYY}`` is replaced with the year of interest. Note that these yearly tarballs contain all measurement types from the daily GHCN output, and thus, snow depth must be manually extracted from this broader data set.
-
-These raw snow depth observations need to be converted into IODA-formatted netCDF files for ingestion into the JEDI LETKF system. However, this process was preemptively handled outside of the Land DA workflow, and the 2019 GHCN IODA files were provided by NOAA PSL (Clara Draper).
-
-The IODA-formatted GHCN files are available in the ``inputs/DA/snow_depth/GHCN/data_proc/v3/${YEAR}`` directory and are structured as follows (using 20000103 as an example):
-
-.. code-block:: console
    
+   ``filename_sfcd:`` (Default: XXYYYYXXMMXXDD.XXHH0000.sfc_data.nc)
+      Specifies the name of the surface data file. This usually takes the form ``YYYYMMDD.HHmmss.sfc_data.nc``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: ``20000103.000000.sfc_data.nc``
+         
+   ``filename_cplr:`` (Default: XXYYYYXXMMXXDD.XXHH0000.coupler.res)
+      Specifies the name of file that contains metadata for the restart. This usually takes the form ``YYYYMMDD.HHmmss.coupler.res``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: ``20000103.000000.coupler.res``
 
-   netcdf ghcn_snwd_ioda_20000103 {
-   dimensions:
-      Location = UNLIMITED ; // (10423 currently)
-   variables:
-      int64 Location(Location) ;
-         Location:suggested_chunk_dim = 10000LL ;
+   ``filename_orog:`` (Default: C96_oro_data.nc)
+      Specifies the name of the orographic data file. 
 
-   // global attributes:
-		string :_ioda_layout = "ObsGroup" ;
-		:_ioda_layout_version = 0 ;
-		string :converter = "ghcn_snod2ioda.py" ;
-		string :date_time_string = "2000-01-03T18:00:00Z" ;
-		:nlocs = 10423 ;
+Driver (for ``letkf``)
+------------------------
 
-   group: MetaData {
-      variables:
-         int64 dateTime(Location) ;
-            dateTime:_FillValue = -9223372036854775806LL ;
-            string dateTime:units = "seconds since 1970-01-01T00:00:00Z" ;
-         float latitude(Location) ;
-            latitude:_FillValue = 9.96921e+36f ;
-            string latitude:units = "degrees_north" ;
-         float longitude(Location) ;
-            longitude:_FillValue = 9.96921e+36f ;
-            string longitude:units = "degrees_east" ;
-         float stationElevation(Location) ;
-            stationElevation:_FillValue = 9.96921e+36f ;
-            string stationElevation:units = "m" ;
-         string stationIdentification(Location) ;
-            string stationIdentification:_FillValue = "" ;
-      } // group MetaData
+The ``driver:`` section describes optional modifications to the behavior of the LocalEnsembleDA driver. For details, refer to :jedi:`Local Ensemble Data Assimilation in OOPS <inside/jedi-components/oops/applications/localensembleda.html#top-oops-localensda>` in the JEDI Documentation. Not all options are included here. 
 
-   group: ObsError {
-      variables:
-         float totalSnowDepth(Location) ;
-            totalSnowDepth:_FillValue = 9.96921e+36f ;
-            string totalSnowDepth:coordinates = "longitude latitude" ;
-            string totalSnowDepth:units = "mm" ;
-      } // group ObsError
-   
-   group: ObsValue {
-      variables:
-         float totalSnowDepth(Location) ;
-            totalSnowDepth:_FillValue = 9.96921e+36f ;
-            string totalSnowDepth:coordinates = "longitude latitude" ;
-            string totalSnowDepth:units = "mm" ;
-      } // group ObsValue
+   ``save posterior mean:`` (Default: false)
+      Specifies whether to save the posterior mean. Valid values: ``true`` | ``false``
+      
+   ``save posterior mean increment:`` (Default: true)
+      Specifies whether to save the posterior mean increment. Valid values: ``true`` | ``false``
 
-   group: PreQC {
-      variables:
-         int totalSnowDepth(Location) ;
-            totalSnowDepth:_FillValue = -2147483647 ;
-            string totalSnowDepth:coordinates = "longitude latitude" ;
-      } // group PreQC
-   }
+   ``save posterior ensemble:`` (Default: false)
+      Specifies whether to save the posterior ensemble. Valid values: ``true`` | ``false``
 
-The primary observation variable is ``totalSnowDepth``, which, along with the metadata fields of ``datetime``, ``latitude``, ``longitude``, and ``stationElevation`` is defined along the ``nlocs`` dimension. Also present are ``ObsError`` and ``PreQC`` values corresponding to each ``totalSnowDepth`` measurement on ``nlocs``. These values were attributed during the IODA conversion step (not supported for this release). The magnitude of ``nlocs`` varies between files; this is due to the fact that the number of stations reporting snow depth observations for a given day can vary in the GHCN.
+   ``run as observer only:`` (Default: false)
+      Specifies whether to run as observer only. Valid values: ``true`` | ``false``
 
-Observation Location and Processing
---------------------------------------
+Local Ensemble DA (for ``letkf``)
+-----------------------------------
 
-GHCN
-^^^^^^
+The ``local ensemble DA:`` section configures the local ensemble DA solver package. 
 
-GHCN files for 2000 and 2019 are already provided in IODA format for the |latestr| release. :numref:`Table %s <GetData>` indicates where users can find data on NOAA :term:`RDHPCS` platforms. Tar files containing the 2000 and 2019 data are located in the publicly-available `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. Once untarred, the snow depth files are located in ``/inputs/DA/snow_depth/GHCN/data_proc/v3/${YEAR}``. The 2019 GHCN IODA files were provided by Clara Draper (NOAA PSL). Each file follows the naming convention of ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc``, where ``${YYYY}`` is the four-digit cycle year, ``${MM}`` is the two-digit cycle month, and ``${DD}`` is the two-digit cycle day. 
+   ``solver:`` (Default: LETKF)
+      Specifies the type of solver. Currently, ``LETKF`` is the only available option. See :cite:t:`HuntEtAl2007` (2007).
 
-In each experiment, the ``template.land_analysis.yaml`` file sets the type of observation file (e.g., ``OBS_TYPES: "GHCN"``). Before assimilation, if "GHCN" was specified as the observation type, the ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` file corresponding to the specified cycle date is copied to the run directory (usually ``$LANDDAROOT/ptmp/test/com/landda/$model_ver/landda.$PDY$cyc/obs`` by default --- see :numref:`Section %s <nco-dir-entities>` for more on these variables) with a naming-convention change (i.e., ``GHCN_${YYYY}${MM}${DD}${HH}.nc``). 
+   ``inflation:``
+      Describes ensemble :jedi:`inflation methods supported in the ensemble solver <inside/jedi-components/oops/applications/localensembleda.html#inflation-supported-in-the-ensemble-solvers>`. 
 
-Prior to ingesting the GHCN IODA files via the LETKF at the DA analysis time, the observations are combined into a single ``letkf_land.yaml`` file, which is a concatenation of ``letkfoi_snow.yaml`` and ``GHCN.yaml`` (see :numref:`Section %s <jedi-config-and-params>` for further explanation). The GHCN-specific observation filters, domain checks, and quality control parameters from ``GHCN.yaml`` ensure that only snow depth observations which meet specific criteria are assimilated (the rest are rejected). 
+      ``rtps:`` (Default: ``0.0``)
+         Relaxation to prior spread (:cite:t:`Whitaker&Hamill2012`, 2012). 
 
-Restart Files
-================
+      ``rtpp:`` (Default: ``0.0``)
+         Relaxation to prior perturbation (:cite:t:`ZhangEtAl2004`, 2004). 
 
-To restart the Land DA System successfully after land model execution, all parameters, states, and fluxes used for a subsequent time iteration are stored in a restart file. This restart file is named ``ufs_land_restart.${FILEDATE}.tile#.nc`` where ``FILEDATE`` is in YYYY-MM-DD_HH-mm-SS format and ``#`` is 1-6 (e.g., ``ufs_land_restart.2000-01-05_00-00-00.tile1.nc``). The restart file contains all the model fields and their values at a specific point in time; this information can be used to restart the model immediately to run the next cycle. The Land DA System reads the states from the restart file and replaces them after the DA step with the updated analysis. :numref:`Table %s <RestartFiles>` lists the fields in the Land DA restart file. 
+      ``mult:`` (Default: ``1.0``)
+         Parameter of multiplicative inflation.
 
-.. _RestartFiles:
+Output Increment (for ``letkf``)
+----------------------------------
 
-.. table:: Files Included in ufs_land_restart.{FILEDATE}.nc
+``output increment:`` (Default: fms restart)
+   ``filetype:``
+      Type of file provided for the output increment. Valid values include: ``fms restart``
 
-   +--------------------------+-----------------------------------+-----------------------+
-   | Variable                 | Long name                         | Unit                  | 
-   +==========================+===================================+=======================+
-   | time                     | time                              | "seconds since        |
-   |                          |                                   | 1970-01-01 00:00:00"  |
-   +--------------------------+-----------------------------------+-----------------------+
-   | timestep                 | time step                         | "seconds"             |
-   +--------------------------+-----------------------------------+-----------------------+
-   | vegetation_fraction      | Vegetation fraction               | "-"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | emissivity_total         | surface emissivity                | "-"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | albedo_direct_vis        | surface albedo - direct visible   | "-"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | albedo_direct_nir        | surface albedo - direct NIR       | "-"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | albedo_diffuse_vis       | surface albedo - diffuse visible  | "-"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | albedo_diffuse_nir       | surface albedo - diffuse NIR      | "-"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | temperature_soil_bot     | deep soil temperature             | "K"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | cm_noahmp                | surface exchange coefficient      | "m/s"                 |
-   |                          | for momentum                      |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | ch_noahmp                | surface exchange coefficient      | "m/s"                 |
-   |                          | heat & moisture                   |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | forcing_height           | height of forcing                 | "m"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | max_vegetation_frac      | maximum fractional coverage of    | "fraction"            |
-   |                          | vegetation                        |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | albedo_total             | grid composite albedo             | "fraction"            |
-   +--------------------------+-----------------------------------+-----------------------+
-   | snow_water_equiv         | snow water equivalent             | "mm"                  |
-   +--------------------------+-----------------------------------+-----------------------+
-   | snow_depth               | snow depth                        | "m"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | temperature_radiative    | surface radiative temperature     | "K"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | soil_moisture_vol        | volumetric moisture content in    | "m3/m3"               |
-   |                          | soil level                        |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | temperature_soil         | temperature in soil               | "K"                   |
-   |                          | level                             |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | soil_liquid_vol          | volumetric liquid                 | "m3/m3"               |
-   |                          | content in soil level             |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | canopy_water             | canopy moisture                   | "m"                   |
-   |                          | content                           |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | transpiration_heat       | plant transpiration               |"W/m2"                 |
-   +--------------------------+-----------------------------------+-----------------------+
-   | friction_velocity        | friction velocity                 | "m/s"                 |
-   +--------------------------+-----------------------------------+-----------------------+
-   | z0_total                 | surface roughness                 | "m"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | snow_cover_fraction      | snow cover fraction               | "fraction"            |
-   +--------------------------+-----------------------------------+-----------------------+
-   | spec_humidity_surface    | diagnostic specific humidity at   | "kg/kg"               |
-   |                          | surface                           |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | ground_heat_total        | soil heat flux                    | "W/m2"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | runoff_baseflow          | drainage runoff                   | "mm/s"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | latent_heat_total        | latent heat flux                  | "W/m2"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | sensible_heat_flux       | sensible heat flux                | "W/m2"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | evaporation_potential    | potential evaporation             | "mm/s"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | runoff_surface           | surface runoff                    | "mm/s"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | latent_heat_ground       | direct soil latent heat flux      | "W/m2"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | latent_heat_canopy       | canopy water latent heat flux     | "W/m2"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | snow_sublimation         | sublimation/deposit from snowpack | "mm/s"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | soil_moisture_total      | total soil column moisture        | "mm"                  |
-   |                          | content                           |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | precip_adv_heat_total    | precipitation advected heat -     | "W/m2"                |
-   |                          | total                             |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | cosine_zenith            | cosine of zenith angle            | "-"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | snow_levels              | active snow levels                | "-"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | temperature_leaf         | leaf temperature                  | "K"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | temperature_ground       | ground temperature                | "K"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | canopy_ice               | canopy ice                        | "mm"                  |
-   +--------------------------+-----------------------------------+-----------------------+
-   | canopy_liquid            | canopy liquid                     | "mm"                  |
-   +--------------------------+-----------------------------------+-----------------------+
-   | vapor_pres_canopy_air    | water vapor pressure in canopy    | "Pa"                  |
-   |                          | air space                         |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | temperature_canopy_air   | temperature in canopy air space   | "K"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | canopy_wet_fraction      | fraction of canopy covered by     | "-"                   |
-   |                          | water                             |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | snow_water_equiv_old     | snow water equivalent - before    | "mm"                  |
-   |                          | integration                       |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | snow_albedo_old          | snow albedo - before integration  | "-"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | snowfall                 | snowfall                          | "mm/s"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | lake_water               | depth of water in lake            | "mm"                  |
-   +--------------------------+-----------------------------------+-----------------------+
-   | depth_water_table        | depth to water table              | "m"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | aquifer_water            | aquifer water content             | "mm"                  |
-   +--------------------------+-----------------------------------+-----------------------+
-   | saturated_water          | aquifer + saturated soil water    | "mm"                  |
-   |                          | content                           |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | leaf_carbon              | carbon in leaves                  | "g/m2"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | root_carbon              | carbon in roots                   | "g/m2"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | stem_carbon              | carbon in stems                   | "g/m2"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | wood_carbon              | carbon in wood                    | "g/m2"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | soil_carbon_stable       | stable carbon in soil             | "g/m2"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | soil_carbon_fast         | fast carbon in soil               | "g/m2"                |
-   +--------------------------+-----------------------------------+-----------------------+
-   | leaf_area_index          | leaf area index                   | "m2/m2"               |
-   +--------------------------+-----------------------------------+-----------------------+
-   | stem_area_index          | stem area index                   | "m2/m2"               |
-   +--------------------------+-----------------------------------+-----------------------+
-   | snow_age                 | BATS non-dimensional snow age     | "-"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | soil_moisture_wtd        | soil water content between bottom | "m3/m3"               |
-   |                          | of the soil and water table       |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | deep_recharge            | deep recharge for runoff_option 5 | "m"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | recharge                 | recharge for runoff_option 5      | "m"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | temperature_2m           | grid diagnostic temperature at 2  | "K"                   |
-   |                          | meters                            |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | spec_humidity_2m         | grid diagnostic specific humidity | "kg/kg"               |
-   |                          | at 2 meters                       |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | eq_soil_water_vol        | equilibrium soil water content    | "m3/m3"               |
-   +--------------------------+-----------------------------------+-----------------------+
-   | temperature_snow         | snow level temperature            | "K"                   |
-   +--------------------------+-----------------------------------+-----------------------+
-   | interface_depth          | layer-bottom depth from snow      | "m"                   |
-   |                          | surface                           |                       |
-   +--------------------------+-----------------------------------+-----------------------+
-   | snow_level_ice           | ice content of snow levels        | "mm"                  |
-   +--------------------------+-----------------------------------+-----------------------+
-   | snow_level_liquid        | liquid content of snow levels     | "mm"                  |
-   +--------------------------+-----------------------------------+-----------------------+
-
+   ``filename_sfcd:`` (Default: snowinc.sfc_data.nc)
+      Name of the file provided for the output increment. For example: ``snowinc.sfc_data.nc``
