@@ -179,15 +179,14 @@ EOF
       fn_smap_suffix=".h5"
       mkdir -p ${smap_raw_dir}
 
-      # Specify time window the same as JEDI
-      cycle_freq_hr_half=$(( DATE_CYCLE_FREQ_HR / 2 ))
-      HTIME=$($NDATE -${cycle_freq_hr_half} $PDY$cyc)
-      pdy_hf=${HTIME:0:8}
-      cdate_hf=${HTIME:0:10}
+      # Specify time window for SMAP raw data (default: +-5 hours)
+      SMAP_RAW_WINDOW_SPAN_HALF="${SMAP_RAW_WINDOW_SPAN_HALF:-5}"
+      hftime_smap=$($NDATE -${SMAP_RAW_WINDOW_SPAN_HALF} $PDY$cyc)
+      pdy_hf=${hftime_smap:0:8}
 
-      # soft-link SMAP raw data file for a JEDI time window into smap_raw_data
-      for ihr in $(seq 0 $((DATE_CYCLE_FREQ_HR - 1))); do
-        ihr_date=$($NDATE $ihr $cdate_hf)
+      # soft-link SMAP raw data files into smap_raw_data directory
+      for ihr in $(seq -${SMAP_RAW_WINDOW_SPAN_HALF} ${SMAP_RAW_WINDOW_SPAN_HALF}); do
+        ihr_date=$($NDATE $ihr $PDY$cyc)
         ihr_pdy=${ihr_date:0:8}
         ihr_cyc=${ihr_date:8:2}
         ihr_smap_raw_dir="${DATA_SMAP_RAW}/${ihr_pdy}"
