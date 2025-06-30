@@ -24,8 +24,6 @@ HP=${PTIME:8:2}
 if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}" ]; then
 
   OBSDIR="${OBSDIR:-${FIXlandda}/DA_obs}"
-  DATA_GHCN_RAW="${DATA_GHCN_RAW:-${FIXlandda}/DATA_ghcn}"
-  DATA_SMAP_RAW="${DATA_SMAP_RAW:-${FIXlandda}/DATA_smap}"
 
   obs_out_fn_ghcn=""
   obs_out_fn_ims=""
@@ -49,13 +47,13 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
       cp -p "${obs_dp}/${obs_out_fn_ghcn}" .
       cp -p "${obs_dp}/${obs_out_fn_ghcn}" "${COMOUTobs}/${obs_out_fn_ghcn}"
     else
-      input_ghcn_file="${DATA_GHCN_RAW}/${YYYP}.csv"
+      input_ghcn_file="${DCOMINghcn}/${YYYP}.csv"
       if [ ! -f "${input_ghcn_file}" ]; then
-        echo "GHCN raw data path: ${DATA_GHCN_RAW}"
+        echo "GHCN raw data path: ${DCOMINghcn}"
         echo "GHCN raw data file: ${YYYP}.csv"
         err_exit "GHCN raw data file does not exist in designated path !!!"
       fi
-      ghcn_station_file="${DATA_GHCN_RAW}/ghcnd-stations.txt"
+      ghcn_station_file="${DCOMINghcn}/ghcnd-stations.txt"
   
       ${USHlandda}/ghcn_snod2ioda.py -i ${input_ghcn_file} -o ${obs_fn} -f ${ghcn_station_file} -d ${YYYP}${MP}${DP}${HP} -m maskout
       if [ $? -ne 0 ]; then
@@ -189,7 +187,7 @@ EOF
         ihr_date=$($NDATE $ihr $PDY$cyc)
         ihr_pdy=${ihr_date:0:8}
         ihr_cyc=${ihr_date:8:2}
-        ihr_smap_raw_dir="${DATA_SMAP_RAW}/${ihr_pdy}"
+        ihr_smap_raw_dir="${DCOMINsmap}/${ihr_pdy}"
 
         found=false
         for file in "${ihr_smap_raw_dir}"/*; do
