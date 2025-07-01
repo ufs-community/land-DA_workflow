@@ -83,6 +83,8 @@ mkdir -p ${DATA_DATM_FORC}
 
 export DCOMINera5=${DCOMINera5:-${FIXlandda}/DATM_input_data/era5}
 export DCOMINgswp3=${DCOMINgswp3:-${FIXlandda}/DATM_input_data/gswp3}
+export DCOMINghcn=${DCOMINghcn:-${FIXlandda}/DATA_ghcn}
+export DCOMINsmap=${DCOMINsmap:-${FIXlandda}/DATA_smap}
 #
 #-----------------------------------------------------------------------
 #
