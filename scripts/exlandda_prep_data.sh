@@ -204,7 +204,7 @@ EOF
       done
 
       # Create input yaml file
-  cat > smap_ioda_merge.yaml << EOF
+  cat > smap_ioda_concat.yaml << EOF
 fn_smap_prefix: '${fn_smap_prefix}'
 fn_smap_suffix: '${fn_smap_suffix}'
 obs_out_fn_smap: '${obs_out_fn_smap}'
@@ -217,8 +217,8 @@ PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 USHlandda: '${USHlandda}'
 EOF
 
-      # Run the ioda converting script for SMAP and combine the netcdf files
-      ${USHlandda}/smap_ioda_merge_files.py
+      # Run the ioda converting script for SMAP and concatenate the netcdf files
+      ${USHlandda}/smap_ioda_concat_files.py
       if [ $? -ne 0 ]; then
         err_exit "Generation of SMAP_ioda obs file failed !!!"
       fi

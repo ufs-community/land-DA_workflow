@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 ###################################################################### CHJ #####
-## Name		: smap_ioda_merge_files.py
-## Usage	: Run multiple SMAP_ioda and merge files for a specific date
+## Name		: smap_ioda_concat_files.py
+## Usage	: Run multiple SMAP_ioda and concatenate files for a specific date
 ## Input files  : SMAP raw H5 files
 ## NOAA/EPIC
 ## History ===============================
@@ -23,7 +23,7 @@ from netCDF4 import Dataset
 # Main part (will be called at the end) ============================= CHJ =====
 def main():
 
-    yaml_file="smap_ioda_merge.yaml"
+    yaml_file="smap_ioda_concat.yaml"
     with open(yaml_file, 'r') as f:
         yaml_data=yaml.load(f, Loader=yaml.FullLoader)
     f.close()
@@ -79,7 +79,7 @@ def main():
         if result.returncode != 0:
             logging.error(f''' Error executing script: {ifn_time} : {result.stderr}''')
 
-    # Merge smap_ioda files
+    # Concatenate smap_ioda files
     file_list = sorted(glob.glob("smap_ioda_*.nc"))
     out_ds = Dataset(obs_out_fn_smap, 'w', format="NETCDF4")
     concat_dim = "Location"    
@@ -93,7 +93,7 @@ def main():
     
     # Read and collect data
     for i, path in enumerate(file_list):
-        print(f"Reading {i+1}/{len(file_list)}: {os.path.basename(path)}")
+        logging.info(f''' Reading {i+1}/{len(file_list)}: {os.path.basename(path)}''')
         ds = Dataset(path, "r")
     
         # Root variables
