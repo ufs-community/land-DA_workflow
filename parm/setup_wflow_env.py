@@ -77,6 +77,18 @@ def setup_wflow_env(machine):
         logging.error("Both OBS_GHCN_SNOW and OBS_IMS_SNOW are selected, but this is not supported by JCB!!!", exc_info=True)
         sys.exit(1)
 
+    # Set the types of JEDI analyses by the types of observation
+    if obs_ghcn_snow == "YES" or obs_ims_snow == "YES" or obs_sfcsnw == "YES":
+        do_jedi_snow = "YES"
+    else:
+        do_jedi_snow = "NO"
+    config_parm["do_jedi_snow"] = do_jedi_snow
+    if obs_smap == "YES":
+        do_jedi_soil_moisture = "YES"
+    else:
+        do_jedi_soil_moisture = "NO"
+    config_parm["do_jedi_soil_moisture"] = do_jedi_soil_moisture
+
     # Create an experimental case directory
     if config_parm.get("EXP_CASE_NAME") is None:
         exp_case_name = f'''{config_parm.get("APP")}_{config_parm.get("RUN")}'''
@@ -251,6 +263,9 @@ def set_default_parm():
         "CCPP_SUITE": "FV3_GFS_v17_p8_ugwpv1",
         "COLDSTART": "NO",
         "COUPLER_CALENDAR": 2,
+        "CUSTOM_JEDI_CONFIG_FLAG": "NO",
+        "CUSTOM_JEDI_CONFIG_PATH": "/path/to/custom/JEDI/config/dir",
+        "CUSTOM_JEDI_CONFIG_PREFIX": "/prefix/of/custom/JEDI/config/file/name",
         "DATE_CYCLE_FREQ_HR": 24,
         "DATE_FIRST_CYCLE": 200001030000,
         "DATE_LAST_CYCLE": 200001040000,
@@ -294,7 +309,7 @@ def set_default_parm():
         "RES": 96,
         "RESTART_INTERVAL": "12 -1",
         "RUN": "landda",
-        "WARMSTART_DIR": "/path/to/wart/start/dir",
+        "WARMSTART_DIR": "/path/to/warm/start/dir",
         "WE2E_TEST": "NO",
         "WRITE_GROUPS": 1,
         "WRITE_TASKS_PER_GROUP": 6,
@@ -312,18 +327,22 @@ def set_machine_parm(machine):
         case "gaeac6":
             JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/jedi_bundle_sync"
             MAX_CORES_PER_NODE = 192
+            CUSTOM_JEDI_CONFIG_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
             WARMSTART_DIR = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "hera":
             JEDI_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_sync"
             MAX_CORES_PER_NODE = 40
+            CUSTOM_JEDI_CONFIG_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
             WARMSTART_DIR = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "hercules":
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_hercules"
             MAX_CORES_PER_NODE = 80
+            CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
             WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "orion":
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion"
             MAX_CORES_PER_NODE = 40
+            CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
             WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "singularity":
             JEDI_PATH = "SINGULARITY_WORKING_DIR"
