@@ -86,9 +86,13 @@ def setup_wflow_env(machine):
 
     # Calculate date for the second cycle
     date_first_cycle = config_parm.get("DATE_FIRST_CYCLE")
+    date_last_cycle = config_parm.get("DATE_LAST_CYCLE")
     date_cycle_freq_hr = config_parm.get("DATE_CYCLE_FREQ_HR")
-    next_date = datetime.strptime(str(date_first_cycle), "%Y%m%d%H") + timedelta(hours=date_cycle_freq_hr)
-    date_second_cycle = next_date.strftime("%Y%m%d%H")
+    if date_first_cycle == date_last_cycle:
+        date_second_cycle = date_first_cycle
+    else:
+        next_date = datetime.strptime(str(date_first_cycle), "%Y%m%d%H") + timedelta(hours=date_cycle_freq_hr)
+        date_second_cycle = next_date.strftime("%Y%m%d%H")
     config_parm["date_second_cycle"] = date_second_cycle
 
     # Calculate HPC parameter values
