@@ -354,6 +354,7 @@ def set_machine_parm(machine):
     machine_config = {
         "JEDI_PATH": JEDI_PATH,
         "MAX_CORES_PER_NODE": MAX_CORES_PER_NODE,
+        "CUSTOM_JEDI_CONFIG_PATH": CUSTOM_JEDI_CONFIG_PATH,
         "WARMSTART_DIR": WARMSTART_DIR,
     }
 

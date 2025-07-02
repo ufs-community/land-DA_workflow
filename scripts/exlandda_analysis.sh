@@ -182,7 +182,7 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
   for itile in {1..6}
   do
     sfc_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
-    cp -p ${sfc_fn} "${sfc_fn}_${jedi_type}_ini"
+    cp -p ${sfc_fn} "${sfc_fn}_old"
   done
   
   ################################################
