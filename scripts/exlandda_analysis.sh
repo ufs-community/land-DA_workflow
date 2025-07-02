@@ -155,6 +155,7 @@ fi
 if [ "${do_jedi_soil_moisture}" = "YES" ]; then
   types_jedi_analyses+=("soil_moisture")
 fi
+echo "${types_jedi_analyses[@]}"
 
 ################################################
 # RUN JEDI Analyses
