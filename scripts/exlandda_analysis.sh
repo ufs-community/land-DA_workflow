@@ -70,6 +70,10 @@ if [ "${OBS_SFCSNO}" = "YES" ]; then
   ln -nsf "${COMINobs}/${obs_prefix}.${obs_sfcsno_suffix}" "${DATA}/obs"
   ln -nsf "${PARMlandda}/jedi/bufr_sfcsno_mapping.yaml" "${DATA}/obs"
 fi
+if [ "${OBS_SMAP}" = "YES" ]; then
+  obs_smap_suffix="smap_combined.nc"
+  ln -nsf "${COMINobs}/${obs_prefix}.${obs_smap_suffix}" "${DATA}/obs"
+fi
 
 # update coupler.res file
 settings="\
@@ -143,55 +147,70 @@ else # letkf-oi
   jedi_exe_fn="fv3jedi_letkf.x"
 fi
 
-# Copy JEDI input yaml file
-jedi_nml_fn="jedi_${JEDI_ALGORITHM}_snow.yaml"
-cp -p "${COMIN}/${jedi_nml_fn}" .
-
-################################################
-# RUN JEDI
-################################################
-
-export pgm="${jedi_exe_fn}"
-. prep_step
-${run_cmd} -n ${NPROCS_ANALYSIS} ${JEDI_EXECDIR}/$pgm ${jedi_nml_fn} >>$pgmout 2>errfile
-export err=$?; err_chk
-cp errfile errfile_fv3jedi_x
-if [[ $err != 0 ]]; then
-  err_exit "JEDI DA failed"
+# Set a list of JEDI analyses
+types_jedi_analyses=()
+if [ "${do_jedi_snow}" = "YES" ]; then
+  types_jedi_analyses+=("snow")
 fi
-
-# save intermediate sfc_data files
-for itile in {1..6}
-do
-  sfc_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
-  cp -p ${sfc_fn} "${sfc_fn}_old"
-done
+if [ "${do_jedi_soil_moisture}" = "YES" ]; then
+  types_jedi_analyses+=("soil_moisture")
+fi
+echo "${types_jedi_analyses[@]}"
 
 ################################################
-# Apply Increment to UFS sfc_data files
+# RUN JEDI Analyses
 ################################################
+for jedi_type in "${types_jedi_analyses[@]}"; do
 
-# Link inc file to DATA
-if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
-  inc_fp_prefix="${DATA}/anl/snowinc.${FILEDATE}.sfc_data"
-elif [ "${JEDI_ALGORITHM}" = "letkf-oi" ]; then
-  inc_fp_prefix="${DATA}/${FILEDATE}.snowinc.sfc_data"
-fi
-inc_fn_prefix="snowinc.${FILEDATE}.sfc_data"
-for itile in {1..6}
-do
-  cp -p "${inc_fp_prefix}.tile${itile}.nc" "${DATA}/${inc_fn_prefix}.tile${itile}.nc"
-done
+  # Copy JEDI input yaml file
+  jedi_nml_fn="jedi_${JEDI_ALGORITHM}_${jedi_type}.yaml"
+  if [ "${CUSTOM_JEDI_CONFIG_FLAG}" = "YES" ]; then
+    cp -p "${CUSTOM_JEDI_CONFIG_PATH}/${CUSTOM_JEDI_CONFIG_PREFIX}_${PDY}${cyc}.yaml" ${jedi_nml_fn}
+  else
+    cp -p "${COMIN}/${jedi_nml_fn}" .
+  fi
 
-if [ "${FRAC_GRID}" = "YES" ]; then
-  frac_grid=".true."
-else
-  frac_grid=".false."
-fi
-orog_path="${FIXlandda}/FV3_fix_tiled/C${RES}"
-orog_fn_base="C${RES}_oro_data"
-
-cat << EOF > apply_incr_nml
+  export pgm="${jedi_exe_fn}"
+  . prep_step
+  ${run_cmd} -n ${NPROCS_ANALYSIS} ${JEDI_EXECDIR}/$pgm ${jedi_nml_fn} >>$pgmout 2>errfile
+  export err=$?; err_chk
+  cp errfile errfile_fv3jedi_x
+  if [[ $err != 0 ]]; then
+    err_exit "JEDI DA failed"
+  fi
+  
+  # save intermediate sfc_data files
+  for itile in {1..6}
+  do
+    sfc_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
+    cp -p ${sfc_fn} "${sfc_fn}_old"
+  done
+  
+  ################################################
+  # Apply Increment to UFS sfc_data files
+  ################################################
+  
+  # Link inc file to DATA
+  if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
+    inc_fp_prefix="${DATA}/anl/snowinc.${FILEDATE}.sfc_data"
+  elif [ "${JEDI_ALGORITHM}" = "letkf-oi" ]; then
+    inc_fp_prefix="${DATA}/${FILEDATE}.snowinc.sfc_data"
+  fi
+  inc_fn_prefix="snowinc.${FILEDATE}.sfc_data"
+  for itile in {1..6}
+  do
+    cp -p "${inc_fp_prefix}.tile${itile}.nc" "${DATA}/${inc_fn_prefix}.tile${itile}.nc"
+  done
+  
+  if [ "${FRAC_GRID}" = "YES" ]; then
+    frac_grid=".true."
+  else
+    frac_grid=".false."
+  fi
+  orog_path="${FIXlandda}/FV3_fix_tiled/C${RES}"
+  orog_fn_base="C${RES}_oro_data"
+  
+  cat << EOF > apply_incr_nml
 &noahmp_snow
  date_str = "${YYYY}${MM}${DD}",
  hour_str = "${HH}",
@@ -203,22 +222,24 @@ cat << EOF > apply_incr_nml
  otype = "${orog_fn_base}"
 /
 EOF
+  
+  export pgm="apply_incr.exe"
+  . prep_step
+  # (n=6): this is fixed, at one task per tile (with minor code change). 
+  ${run_cmd} -n 6 ${EXEClandda}/$pgm >>$pgmout 2>errfile
+  export err=$?; err_chk
+  cp errfile errfile_apply_incr
+  if [[ $err != 0 ]]; then
+    err_exit "apply snow increment failed"
+  fi
+  
+  for itile in {1..6}
+  do
+    cp -p ${DATA}/${inc_fn_prefix}.tile${itile}.nc ${COMOUT}
+  done 
 
-export pgm="apply_incr.exe"
-. prep_step
-# (n=6): this is fixed, at one task per tile (with minor code change). 
-${run_cmd} -n 6 ${EXEClandda}/$pgm >>$pgmout 2>errfile
-export err=$?; err_chk
-cp errfile errfile_apply_incr
-if [[ $err != 0 ]]; then
-  err_exit "apply snow increment failed"
-fi
-
-for itile in {1..6}
-do
-  cp -p ${DATA}/${inc_fn_prefix}.tile${itile}.nc ${COMOUT}
-done 
-
+done
+  
 for itile in {1..6}
 do
   cp -p ${DATA}/${FILEDATE}.sfc_data.tile${itile}.nc ${COMOUT}

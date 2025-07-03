@@ -160,7 +160,7 @@ EOF
 
   # SMAP data
   if [ "${OBS_SMAP}" = "YES" ]; then
-    obs_fn="smap_combined_${PDY}${cyc}.nc"
+    obs_fn="obs.${PDY}.${cycle}.smap_combined.nc"
     obs_dp="${OBSDIR}/SMAP/${YYYY}${MM}"
     obs_fp="${obs_dp}/${obs_fn}"
     obs_out_fn_smap="${obs_fn}"
