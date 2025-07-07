@@ -87,13 +87,14 @@ Several sample experiment configurations come with the Land DA System. Although 
 * ``config.LND.gswp3.3dvar.ghcn.coldstart.yaml``
 * ``config.LND.era5.3dvar.ims.warmstart.yaml``
 * ``config.LND.gswp3.letkfoi.ghcn.warmstart.yaml``
+* ``config.LND.era5.letkfoi.smap.warmstart.yaml``
 
 The sample configuration files are named based on their features: 
 
 * Configuration (:term:`LND` or :term:`ATML`)
 * Atmospheric forcing data (``gswp3`` or ``era5``) --- if any
 * :term:`DA <DA>` algorithm (``letkf-oi`` or ``3dvar``)
-* Snow depth data (:term:`IMS` or :term:`GHCN`)
+* Snow depth data (:term:`IMS`, :term:`GHCN`, :term:`SFCSNO`, :term:`SMAP`)
 * Type of forecast start (i.e., :term:`warmstart` or :term:`coldstart`)
 
 Users are encouraged to explore and modify the options available! 

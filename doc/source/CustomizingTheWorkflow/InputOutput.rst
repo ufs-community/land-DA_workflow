@@ -4,7 +4,7 @@
 Input/Output Files for the Land DA System
 *******************************************
 
-This chapter provides practical information on input and output files and parameters for the Land DA System, including the Noah-MP Land Surface Model (LSM) and the JEDI data assimilation (DA) system.
+This chapter provides practical information on input and output files and parameters for the Land DA System, including the UFS Weather Model, its Noah-MP Land Surface Model (LSM) component, and the JEDI data assimilation (DA) system.
 For background information on the Noah-MP LSM and other components, see :numref:`Chapter %s <Components>`. 
 
 .. _view-netcdf-files:
@@ -32,8 +32,6 @@ On other systems, users can load a compiler, MPI, and NetCDF modules before runn
    ncdump -h /path/to/inputs/NOAHMP_IC/ufs-land_C96_init_fields.tile1.nc
 
 Users may need to modify the ``module load`` command to reflect modules that are available on their system. 
-
-
 
 .. _InputFiles:
 
@@ -67,8 +65,6 @@ These files and their parameters are described in the following subsections.
 The UFS Weather Model and Noah-MP Land Component Files
 =========================================================
 
-
-
 Input Files Required by Noah-MP (All Configurations)
 ------------------------------------------------------
 
@@ -85,7 +81,7 @@ By default, on Level 1 systems and in the Land DA data bucket, the initial condi
 
 The files contain the following data:             
 
-.. list-table:: *Variables specified in the initial conditions file ufs-land_C96_init_fields.tile*.nc*
+.. list-table:: Variables specified in the initial conditions files ``ufs-land_C96_init_fields.tile*.nc``
    :header-rows: 1
 
    * - Variables
@@ -151,7 +147,7 @@ The ``C96_grid.tile*.nc`` files contain grid information for tiles 1-6 at C96 gr
 
 .. note:: 
 
-   The former ``grid_spec.nc`` and ``C96_mosaic.nc`` files are the same file under different names and may be used interchangeably. 
+   The ``C96_grid_spec.nc`` and ``C96_mosaic.nc`` files are the same file under different names and may be used interchangeably. 
 
 
 .. _datm-lnd-input-files:
@@ -185,6 +181,13 @@ In the :term:`LND` configuration of the Land DA System, users can choose to use 
      - cold
      - 2025-01-17 00z
      - 2
+   * - config.LND.era5.letkfoi.smap.warmstart.yaml
+     - ERA5
+     - letkf-oi
+     - SMAP
+     - warm
+     - 2025-01-19 00z
+     - 1
    * - config.LND.gswp3.3dvar.ghcn.coldstart.yaml
      - GSWP3
      - 3dvar
@@ -205,7 +208,7 @@ On Level 1 platforms, the requisite data are pre-staged at the locations listed 
 GSWP3 Forcing Files
 ^^^^^^^^^^^^^^^^^^^^^
 
-:term:`Forcing files<forcing data>` for the land component configuration come from the Global Soil Wetness Project Phase 3 dataset. They are located in the ``inputs/DATM_input_data/gswp3`` directory (downloaded :ref:`above <InputFiles>`).
+Global Soil Wetness Project Phase 3 (GSWP3) :term:`forcing files<forcing data>` for the land component configuration are located in the ``inputs/DATM_input_data/gswp3`` directory (downloaded :ref:`above <InputFiles>`).
 
 .. code-block:: console 
 
@@ -228,7 +231,7 @@ These files provide atmospheric forcing data related to precipitation, solar rad
 ERA5 Forcing Files
 ^^^^^^^^^^^^^^^^^^^^^
 
-:term:`Forcing files<forcing data>` for the land component configuration come from the :term:`ECMWF` Reanalysis v5 (ERA5) dataset. They are located in the ``inputs/DATM_input_data/era5`` directory (downloaded :ref:`above <InputFiles>`).
+:term:`ECMWF` Reanalysis v5 (ERA5) :term:`forcing files<forcing data>` for the land component configuration are located in the ``inputs/DATM_input_data/era5`` directory (downloaded :ref:`above <InputFiles>`).
 
 .. code-block:: console
 
@@ -250,7 +253,7 @@ These files provide atmospheric forcing data related to precipitation, solar rad
 Input Files for the ``FV3`` + ``LND`` Configuration
 ------------------------------------------------------
 
-In the :term:`ATML` configuration of the Land DA System, users run with the active :term:`FV3` atmospheric component. Several :github:`pre-configured <tree/develop/parm/config_samples>` ATML cases are available in the Land DA repository: 
+In the :term:`ATML` configuration of the Land DA System, users run with the active :term:`FV3` atmospheric component. :github:`Pre-configured <tree/develop/parm/config_samples>` ATML cases are available in the Land DA repository: 
 
 .. list-table:: Preconfigured ATML Cases
    :header-rows: 1
@@ -274,9 +277,7 @@ In the :term:`ATML` configuration of the Land DA System, users run with the acti
      - 2022-12-23 00z
      - 2
 
-On Level 1 platforms, the requisite data are pre-staged at the locations listed in :numref:`Section %s <Level1Data>`. The data are also publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. 
-
-.. COMMENT: Add what other files are required? FV3_fix_global? RESTART?
+The FV3 component requires global fix files and initial conditions files. On Level 1 platforms, the requisite data are pre-staged at the locations listed in :numref:`Section %s <Level1Data>`. The data are also publicly available via the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. 
 
 Global Fix Files
 ^^^^^^^^^^^^^^^^^^
@@ -308,10 +309,12 @@ Global fix file data for the :term:`FV3` component are required to run the :term
    solarconstant_noaa_an.txt
    ugwp_limb_tau.nc
 
+Note that options in brackets indicate multiple files with similar naming conventions (e.g., ``aeroclim.m[01-12].nc`` means that there are twelve files, numbered from ``aeroclim.m01.nc`` to ``aeroclim.m12.nc``).
+
 ``ATML`` Input Data for Initial Conditions Generation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Input data from GDAS or GFS is required to run the :term:`ATML` configurations. The data are located in the ``inputs/DATA_[gdas|gfs]`` directories (downloaded :ref:`above <InputFiles>`) and are used as initial conditions for the ``fcst_ic`` task. These directories are used as the default path for ``COMINgdas`` and ``COMINgfs`` in the :github:`exlandda_fcst_ic.sh <blob/develop/scripts/exlandda_fcst_ic.sh>` script. The operational :nco:`WCOSS Implementation Standards <>` designate ``COMIN*`` directories as directories containing input data for the model indicated in the directory name (e.g., ``COMINgfs`` contains input data for the GFS model). In addition, these directories (``DATA_[gdas|gfs]``) contain the IMS raw data files. Within each ``COMIN`` directory, data is organized by cycle date. For example, for ``20250119``, the following data is present in the ``DATA_gdas/20250119`` directory: 
+Input data from GDAS or GFS is required to run the :term:`ATML` configurations. The data are located in the ``inputs/DATA_[gdas|gfs]`` directories (downloaded :ref:`above <InputFiles>`) and are used as initial conditions for the ``fcst_ic`` task. The :github:`exlandda_fcst_ic.sh <blob/develop/scripts/exlandda_fcst_ic.sh>` script sets the default path to this data using the ``COMINgdas`` and ``COMINgfs`` variables. The operational :nco:`WCOSS Implementation Standards <>` designate ``COMIN*`` directories as directories containing input data for the model indicated in the directory name (e.g., ``COMINgfs`` contains input data for the GFS model). In addition, these directories (``DATA_[gdas|gfs]``) contain the IMS raw data files. Within each ``COMIN*`` directory, data is organized by cycle date. For example, for ``20250119``, the following data is present in the ``DATA_gdas/20250119`` directory: 
 
 .. code-block:: console
 
@@ -355,21 +358,16 @@ All of these files are also required for the model and are listed in :numref:`Se
 Observation Data
 -------------------
 
-The Land DA System can use observation data in :term:`GHCN`, :term:`IMS`, :term:`SFCSNO`, or Soil Moisture Active Passive (:term:`SMAP`) data format. Instructions for downloading the data are provided in :numref:`Section %s <GetDataC>`, and instructions for accessing the data on :ref:`Level 1 Systems <LevelsOfSupport>` are provided in :numref:`Section %s <GetData>`. Currently, data is primarily drawn from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_ (GHCN) and the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`_), which is available in the ``inputs/DA_obs`` directory. This data is converted to :ref:`IODA <IODA>` format in the ``prep_data`` task. 
+The Land DA System can use observation data in :term:`GHCN`, :term:`IMS`, :term:`SFCSNO`, or Soil Moisture Active Passive (:term:`SMAP`) data format. Instructions for downloading the data are provided in :numref:`Section %s <GetDataC>`, and instructions for accessing the data on :ref:`Level 1 Systems <LevelsOfSupport>` are provided in :numref:`Section %s <GetData>`. Currently, data is primarily drawn from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_ (GHCN) and the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`_). GHCN and IMS data are available in the ``inputs/DA_obs`` directory. These data are converted to :ref:`IODA <IODA>` format in the ``prep_data`` task. 
 
 In each experiment, the ``land_analysis.yaml`` file sets the type(s) of observation files to be used in the experiment via the ``OBS_*_SNOW`` variables (based on selections in ``config.yaml``). Before assimilation, the files for the specified observation type are copied to the run directory (usually ``$LANDDAROOT/ptmp/test/com/landda/$model_ver/landda.$PDY$cyc/obs`` by default --- see :numref:`Section %s <nco-dir-entities>` for more on these variables), sometimes with a naming-convention change (e.g., ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` to ``ghcn_snow_${YYYY}${MM}${DD}${HH}.nc``). 
-
-.. _obs-types:
-
-Observation Types
-^^^^^^^^^^^^^^^^^^^^
 
 .. _ghcn-io:
 
 GHCN Snow Depth Files
-```````````````````````
+^^^^^^^^^^^^^^^^^^^^^^
 
-Snow depth observations can be taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_, which provides daily climate summaries sourced from a global network of 100,000 stations. NOAA's `NCEI <https://www.ncei.noaa.gov/>`_ provides access to these snow depth and snowfall measurements through daily-generated individual station ASCII files or GZipped tar files of full-network observations on the NCEI server or Climate Data Online. Alternatively, users may acquire yearly tarballs via ``wget``:
+Snow depth observations can be taken from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_ (GHCN), which provides daily climate summaries sourced from a global network of 100,000 stations. NOAA's `NCEI <https://www.ncei.noaa.gov/>`_ provides access to these snow depth and snowfall measurements through daily-generated individual station ASCII files or GZipped tar files of full-network observations on the NCEI server or Climate Data Online. Alternatively, users may acquire yearly tarballs via ``wget``:
 
 .. code-block:: console
 
@@ -377,9 +375,9 @@ Snow depth observations can be taken from the `Global Historical Climatology Net
 
 where ``${YYYY}`` is replaced with the year of interest. Note that these yearly tarballs contain all measurement types from the daily GHCN output, and thus, snow depth must be manually extracted from this broader data set.
 
-These raw snow depth observations need to be converted into IODA-formatted netCDF files for ingestion into the JEDI system. This process is handled in the ``prep_data`` task using the ``ush/ghcn_snod2ioda.py`` utility script. 
+These raw snow depth observations need to be converted into IODA-formatted netCDF files for ingestion into the JEDI DA system. This process is handled in the ``prep_data`` task using the ``ush/ghcn_snod2ioda.py`` utility script. 
 
-The IODA-formatted GHCN files are available in the ``inputs/DA_obs/GHCN/${YEAR}`` directories and are structured as follows (using 20250119 as an example):
+A selection of GHCN files is available in the ``inputs/DA_obs/GHCN/${YEAR}`` directories; files are structured as follows (using 20250119 as an example):
 
 .. code-block:: console
    
@@ -439,27 +437,27 @@ The IODA-formatted GHCN files are available in the ``inputs/DA_obs/GHCN/${YEAR}`
    }
    
 
-The primary observation variable is ``totalSnowDepth``, which, along with the metadata fields of ``datetime``, ``latitude``, ``longitude``, ``stationElevation``, and ``stationIdentification`` is defined along the ``nlocs`` dimension. Also present are ``ObsError``, ``ObsValue``, and ``PreQC`` values corresponding to each ``totalSnowDepth`` measurement on ``nlocs``. These values were attributed during the IODA conversion step. The magnitude of ``nlocs`` varies between files; this is due to the fact that the number of stations reporting snow depth observations for a given day can vary in the GHCN.
+The primary observation variable is ``totalSnowDepth``, which, along with the metadata fields of ``datetime``, ``latitude``, ``longitude``, ``stationElevation``, and ``stationIdentification`` is defined along the ``nlocs`` dimension. Also present are ``ObsError``, ``ObsValue``, and ``PreQC`` values corresponding to each ``totalSnowDepth`` measurement on ``nlocs``. The magnitude of ``nlocs`` varies between files; this is due to the fact that the number of stations reporting snow depth observations for a given day can vary in the GHCN.
 
 GHCN files for 2000, 2011, and 2025 are already provided in IODA format for the |latestr| release. :numref:`Table %s <GetData>` indicates where users can find data on NOAA :term:`RDHPCS` platforms. Tar files containing the data are located in the publicly-available `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. Once untarred, the snow depth files are located in ``inputs/DA_obs/GHCN/${YEAR}``. Each file follows the naming convention of ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc``, where ``${YYYY}`` is the four-digit cycle year, ``${MM}`` is the two-digit cycle month, and ``${DD}`` is the two-digit cycle day. 
 
 .. _ims-io:
 
 IMS Snow Depth Files
-```````````````````````
+^^^^^^^^^^^^^^^^^^^^^^
 
-The `Interactive Multisensor Snow and Ice Mapping System (IMS) <https://usicecenter.gov/Resources/ImsInfo>` is an "operational software package used to demarcate the presence of snow and ice across the entire northern hemisphere." It produces daily 4-km resolution maps of snow and ice in the Northern Hemisphere; these maps are distributed by the U.S. National Ice Center. Files are available in compressed ASCII format. Users can download these files from the `U.S. National Ice Center Archive <https://usicecenter.gov/Products/ArchiveSearchMulti?table=ImsAsc&linkChange=ims-two>`_. 
+The `Interactive Multisensor Snow and Ice Mapping System (IMS) <https://usicecenter.gov/Resources/ImsInfo>`_ is an "operational software package used to demarcate the presence of snow and ice across the entire northern hemisphere." It produces daily 4-km resolution maps of snow and ice in the Northern Hemisphere; these maps are distributed by the U.S. National Ice Center. Files are available in compressed ASCII format. Users can download these files from the `U.S. National Ice Center Archive <https://usicecenter.gov/Products/ArchiveSearchMulti?table=ImsAsc&linkChange=ims-two>`_. 
 
 These raw snow depth observations need to be converted into IODA-formatted netCDF files for ingestion into the JEDI system. This process is handled in the ``prep_data`` task. First, the ASCII files are processed for the UFS model grid using the ``sorc/calcfIMS.fd`` executable, and then the output is converted into IODA format using the ``ush/ghcn_snod2ioda.py`` utility script. 
 
 .. note::
 
-   When the IMS option is turned on, SFCSNO files are also added because IMS data alone does not produce satisfactory results compared to GHCN data (see :github:`Issue #223 <issues/223>` and :github:`PR #224 <pull/224>`). 
+   When the IMS option is turned on, SFCSNO files are also added because IMS data alone does not produce satisfactory results compared to GHCN data (see GitHub :github:`Issue #223 <issues/223>` and :github:`PR #224 <pull/224>`). 
 
 .. _sfcsno-io:
 
 SFCSNO Files
-``````````````
+^^^^^^^^^^^^^^
 
 SFCSNO files are Global Telecommunication System (GTS) data from :term:`GDAS`/:term:`GFS`. GTS is "[t]he co-ordinated global system of telecommunication facilities and arrangements for the rapid collection, exchange and distribution of observations and processed information within the framework of the World Weather Watch." SFCSNO files are already provided in BUFR format in the :ref:`usual locations <GetData>` on NOAA :term:`RDHPCS` platforms and in the publicly-available `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_. In both cases, they are located in the ``inputs/DATA_gdas`` directory (downloaded :ref:`above <InputFiles>` from the data bucket). Each file is named ``gdas.t00z.sfcsno.tm00.bufr_d`` and is located under the relevant cycle date (e.g., ``inputs/DATA_gdas/20250119/gdas.t00z.sfcsno.tm00.bufr_d``). IODA can read :jedi-latest:`BUFR files <inside/jedi-components/ioda/format-bufr.html>` when provided with an appropriate mapping file, such as the ``parm/jedi/bufr_sfcsno_mapping.yaml`` in the Land DA repository. The ``jedi_<algorithm>_snow.yaml`` file produced by the ``jcb`` task contains information on observations, including the IODA "engine" used to read the file (``bufr`` for BUFR files) and the path to the "mapping file." For example: 
 
@@ -483,25 +481,26 @@ SFCSNO files are Global Telecommunication System (GTS) data from :term:`GDAS`/:t
        simulated variables:
        - totalSnowDepth
 
-.. COMMENT: Add info on SMAP Snow Depth Files once soil moisture DA is available! 
-   SMAP Snow Depth Files
-   ```````````````````````
+SMAP Snow Depth Files
+^^^^^^^^^^^^^^^^^^^^^^^
 
-   Soil Moisture Active Passive Data (`SMAP <https://nsidc.org/data/smap>`_) "includes data products derived from an L-band radiometer and high-resolution L-band radar instrument that make up the orbiting observatory of the Soil Moisture Active Passive (SMAP) satellite mission."
+Soil Moisture Active Passive Data (`SMAP <https://nsidc.org/data/smap>`_) "includes data products derived from an L-band radiometer and high-resolution L-band radar instrument that make up the orbiting observatory of the Soil Moisture Active Passive (SMAP) satellite mission."
 
-   The ``ush`` directory contains two utility scripts used by the ``prep_data`` task to convert SMAP soil moisture data to IODA format: ``smap_ioda_concat_files.py`` and ``smap_ssm2ioda.py``. 
+The ``ush`` directory contains two utility scripts used by the ``prep_data`` task to convert SMAP soil moisture data to IODA format: ``smap_ioda_concat_files.py`` and ``smap_ssm2ioda.py``. 
 
+.. COMMENT:
    Where can data be obtained? 
 
+.. _restart:
 
 Restart Files
 ---------------
 
-To restart the Land DA System successfully after land model execution, all parameters, states, and fluxes used for a subsequent time iteration are stored in a restart file. This restart file is named ``ufs_land_restart.${FILEDATE}.tile#.nc`` where ``FILEDATE`` is in YYYY-MM-DD_HH-mm-SS format and ``#`` is 1-6 (e.g., ``ufs_land_restart.2000-01-05_00-00-00.tile1.nc``). The restart file contains all the model fields and their values at a specific point in time; this information can be used to restart the model immediately to run the next cycle. The Land DA System reads the states from the restart file and replaces them after the DA step with the updated analysis. :numref:`Table %s <RestartFiles>` lists the fields in the Land DA restart file. 
+To restart the Land DA System successfully after land model execution, all parameters, states, and fluxes used for a subsequent time iteration are stored in a restart file. This restart file is named ``ufs_land_restart.${FILEDATE}.tile#.nc`` where ``FILEDATE`` is in YYYY-MM-DD_HH-mm-SS format and ``#`` is 1-6 (e.g., ``ufs_land_restart.2000-01-05_00-00-00.tile1.nc``). The restart file contains all the model fields and their values at a specific point in time; this information can be used to restart the model immediately to run the next cycle. The Land DA System reads the states from the restart file and replaces them after the DA step with the updated analysis. Then, this updated information is fed into the model. :numref:`Table %s <RestartFiles>` lists the fields in the Land DA restart file. 
 
 .. _RestartFiles:
 
-.. table:: Files Included in ufs_land_restart.{FILEDATE}.nc
+.. table:: Files Included in ``ufs_land_restart.{FILEDATE}.nc``
 
    +--------------------------+-----------------------------------+-----------------------+
    | Variable                 | Long name                         | Unit                  | 
@@ -670,6 +669,15 @@ To restart the Land DA System successfully after land model execution, all param
    | snow_level_liquid        | liquid content of snow levels     | "mm"                  |
    +--------------------------+-----------------------------------+-----------------------+
 
+RESTART files are located in the ``inputs/DATA_RESTART`` directory (downloaded :ref:`above <InputFiles>` from the data bucket). Each forecast cycle also outputs RESTART files that can be used as input for the next cycle date(s). These RESTART files will appear in the ``/ptmp/test_*/com/landda/v<X.Y.Z>/landda.${PDY}/RESTART`` directory. 
 
+Output Files
+*************
 
+Output files for each cycle appear in the ``$LANDDAROOT/ptmp/test_*/com/landda/v<X.Y.Z>/landda.${PDY}`` directory. Users can also reach this directory via a shortcut in the experiment directory: ``$LANDDAROOT/exp_case/lnd_era5_warmstart_00/com_dir/landda.${PDY}``. This directory contains subdirectories with experiment output for each cycle: 
 
+* hofx
+* plot
+* RESTART
+
+The ``hofx`` directory contains information from the data assimilation that is used by the plotting tasks to create plots, which are stored in the ``plot`` directory. The ``RESTART`` directory contains :ref:`RESTART files <restart>` for the next cycle. 

@@ -216,10 +216,10 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    Number of processes in the Y direction per tile for the atmospheric component.
 
 ``ATMOS_FORC:`` (Default: ``"gswp3"`` )
-   Type of atmospheric forcing data used. Valid values: ``era5`` | ``"gswp3"``. 
+   Type of atmospheric forcing data used. Valid values: ``"era5"`` | ``"gswp3"``. 
 
 ``CCPP_SUITE:`` (Default: ``"FV3_GFS_v17_p8_ugwpv1"`` )
-   The physics suite to use in the experiment.  
+   The physics suite to use in the experiment (only relevant for :term:`ATML` configurations).  
 
 ``COLDSTART:`` (Default: ``"NO"`` )
    Flag that indicates whether the experiment is a :term:`coldstart` experiment (``"YES"``) or a :term:`warmstart` experiment (``"NO"``).
