@@ -64,7 +64,8 @@ user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Ge
 linkcheck_ignore = [r'https://www\.intel\.com/content/www/us/en/developer/tools/oneapi/hpc\-toolkit\-download\.html',
                     r'https://doi.org/10.1029/.*',
                     r'https://doi.org/10.1002/.*',
-                    r'https://doi.org/10.5281/zenodo.13909475', # DOI not published until release
+                    r'https://doi.org/*',
+                    #r'https://doi.org/10.5281/zenodo.13909475', # DOI not published until release
                     r'https://sourceforge.net/projects/xming/',
                     ]
 
@@ -132,6 +133,7 @@ extlinks = {'ccpp-techdoc': ('https://ccpp-techdoc.readthedocs.io/en/latest/%s',
             'github-docs': ('https://docs.github.com/en/%s', '%s'),
             'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/%s', '%s'),
             'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/8.0.0/%s', '%s'),
+            'jedi-latest': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/%s', '%s'),
             'nco': ('https://www.nco.ncep.noaa.gov/idsb/implementation_standards/%s', '%s'),
             'rocoto': ('https://christopherwharrop.github.io/rocoto/%s', '%s'),
             'rst': ('https://www.sphinx-doc.org/en/master/usage/restructuredtext/%s', '%s'),

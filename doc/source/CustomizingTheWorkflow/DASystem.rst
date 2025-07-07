@@ -619,7 +619,7 @@ The :jedi:`geometry <using/building_and_running/config_content.html#geometry>` s
 Window begin, Window length
 -----------------------------
 
-These two items define the assimilation window for many applications, including Land DA. See :jedi:`FV3-JEDI time window documentation`.
+These two items define the assimilation window for many applications, including Land DA. See :jedi:`JEDI time window documentation <using/building_and_running/config_content.html#time-window>`.
 
 ``time window:`` 
    Contains information related to the start, end, and length of the experiment. 
@@ -834,7 +834,7 @@ The ``cost function:`` block includes information on ``cost type:`` and ``jb eva
 ``variational:``
 ^^^^^^^^^^^^^^^^^^
 
-The ``variational:`` block contains information on :jedi:`minimizers </inside/jedi-components/oops/applications/variational.html#supported-minimizers>` and ``iterations``. Minimizers tell OOPS which algorithm to use to minimize the cost function. The ``iterations`` section defines certain parameters for the outer loop in the algorithm. 
+The ``variational:`` block contains information on :jedi:`minimizers <inside/jedi-components/oops/applications/variational.html#supported-minimizers>` and ``iterations``. Minimizers tell OOPS which algorithm to use to minimize the cost function. The ``iterations`` section defines certain parameters for the outer loop in the algorithm. 
 
 .. code-block:: yaml
 
@@ -885,7 +885,7 @@ After the ``final`` block, there is a one-line ``final j evaluation:`` "block" i
 Background Error (for ``3dvar``)
 ----------------------------------
 
-The ``background error:`` block provides information and specifications for computing the :jedi:`background error covariance matrix <using/building_and_running/config_content.html#background-error>`, or **B** matrix. The first item in this section is usually the covariance model, which identifies the method for computing the B matrix. Typically, the JEDI :jedi:`SABER <inside/jedi-components/saber/index.html#saber>` package is used for this purpose. The JEDI documentation provides an :jedi:`Introduction to SABER Error Covariance Model inside/jedi-components/saber/SABER_intro.html` and :jedi:`additional detailed information on the SABER blocks <inside/jedi-components/saber/BUMP_saber_blocks.html>`. 
+The ``background error:`` block provides information and specifications for computing the :jedi:`background error covariance matrix <using/building_and_running/config_content.html#background-error>`, or **B** matrix. The first item in this section is usually the covariance model, which identifies the method for computing the B matrix. Typically, the JEDI :jedi:`SABER <inside/jedi-components/saber/index.html#saber>` package is used for this purpose. The JEDI documentation provides an :jedi:`Introduction to SABER Error Covariance Model <inside/jedi-components/saber/SABER_intro.html>` and :jedi:`additional detailed information on the SABER blocks <inside/jedi-components/saber/BUMP_saber_blocks.html>`. 
 
 Background (for ``letkf-oi``)
 ------------------------------
