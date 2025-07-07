@@ -109,6 +109,7 @@ workflow:
     DATADEP_SFC2: "<cyclestr>&WARMSTART_DIR;/@Y@m@d.@H0000.sfc_data.tile6.nc</cyclestr>"
   log: "&LOGDIR;/workflow.log"
   tasks:
+{%- if CUSTOM_JEDI_CONFIG_FLAG == "NO" %}
     task_jcb:
       attrs:
 {%- if COLDSTART == "YES" %}
@@ -149,6 +150,7 @@ workflow:
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/jcb&LOGFN_SUFFIX;"
+{%- endif %}
     task_prep_data:
       attrs:
         cycledefs: cycled
@@ -361,9 +363,11 @@ workflow:
           taskdep_prep_data:
             attrs:
               task: prep_data
+{%- if CUSTOM_JEDI_CONFIG_FLAG == "NO" %}
           taskdep_jcb:
             attrs:
               task: jcb
+{%- endif %}
 {%- if APP == "LND" %}
           taskdep_pre_anal:
             attrs:

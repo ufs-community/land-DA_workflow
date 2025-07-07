@@ -98,14 +98,6 @@ cp -p ${JEDI_STATICDIR}/fv3files/fmsmpp.nml ${DATA}/Data/fv3files/.
 cp -p ${JEDI_STATICDIR}/fv3files/field_table_ufs ${DATA}/Data/fv3files/field_table
 cp -p ${JEDI_STATICDIR}/fv3files/akbk${NPZ}.nc4 ${DATA}/Data/fv3files/akbk.nc4
 
-if [ "${FRAC_GRID}" = "YES" ]; then
-  snowdepth_vn="snodl"
-  cp -p ${PARMlandda}/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart.yaml ${DATA}/Data/fv3files/.
-else
-  snowdepth_vn="snwdph"
-  cp -p ${PARMlandda}/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart_nofrac.yaml ${DATA}/Data/fv3files/fv3jedi_fieldmetadata_restart.yaml
-fi
-
 # Link snow shadow level nicas data file
 mkdir -p ${DATA}/berror
 ln -nsf ${FIXlandda}/FV3_fix_global/snow_bump_nicas_250km_shadowlevels_nicas.nc ${DATA}/berror/.
@@ -162,6 +154,19 @@ echo "${types_jedi_analyses[@]}"
 ################################################
 for jedi_type in "${types_jedi_analyses[@]}"; do
 
+  # JEDI field metadata file
+  if [ "${jedi_type}" = "snow" ]; then
+    if [ "${FRAC_GRID}" = "YES" ]; then
+      snowdepth_vn="snodl"
+      cp -p ${PARMlandda}/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart.yaml ${DATA}/Data/fv3files/.
+    else
+      snowdepth_vn="snwdph"
+      cp -p ${PARMlandda}/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart_nofrac.yaml ${DATA}/Data/fv3files/fv3jedi_fieldmetadata_restart.yaml
+    fi
+  elif [ "${jedi_type}" = "soil_moisture"]; then
+    cp -p ${PARMlandda}/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart_soil_moisture.yaml ${DATA}/Data/fv3files/fv3jedi_fieldmetadata_restart.yaml
+  fi
+  
   # Copy JEDI input yaml file
   jedi_nml_fn="jedi_${JEDI_ALGORITHM}_${jedi_type}.yaml"
   if [ "${CUSTOM_JEDI_CONFIG_FLAG}" = "YES" ]; then
