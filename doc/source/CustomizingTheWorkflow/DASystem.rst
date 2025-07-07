@@ -4,7 +4,7 @@
 Joint Effort for Data Assimilation Integration (JEDI) DA System 
 *******************************************************************
 
-This chapter describes the :term:`Data Assimilation` (DA) system for Land DA, which utilizes the UFS :ref:`WM <wm-component>` :ref:`Noah-MP <NoahMP>` component together with the ``jedi-bundle`` to enable cycled model forecasts. The data assimilation framework applies either the ``letkf`` algorithm or the ``3dvar`` algorithm. The Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm uses pseudo-ensemble error covariance; it combines the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007). The 3-D Variational (`3D-Var <https://www.ecmwf.int/sites/default/files/elibrary/2003/76079-variational-data-assimiltion-theory-and-overview_0.pdf>`_) DA algorithm attempts to find the analysis that best represents the true state of the atmosphere by minimizing a cost function given a particular background (previous forecast) and observations. 
+This chapter describes the :term:`Data Assimilation` (DA) system for Land DA, which utilizes the UFS :ref:`WM <wm-component>` :ref:`Noah-MP <NoahMP>` component together with the ``jedi-bundle`` to enable cycled model forecasts. The data assimilation framework applies either the ``letkf-oi`` algorithm or the ``3dvar`` algorithm. The Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm uses pseudo-ensemble error covariance; it combines the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007). The 3-D Variational (`3D-Var <https://www.ecmwf.int/sites/default/files/elibrary/2003/76079-variational-data-assimiltion-theory-and-overview_0.pdf>`_) DA algorithm attempts to find the analysis that best represents the true state of the atmosphere by minimizing a cost function given a particular background (previous forecast) and observations. 
 
 JEDI Overview
 ****************
@@ -34,7 +34,7 @@ When the experiment is generated, the first :ref:`workflow tasks <wflow-overview
    * ``prep_data``
    * ``pre_anal`` (:term:`LND`) or ``fcst_ic`` (:term:`ATML`) (not required for every experiment)
 
-The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and information provided in the ``land_analysis.xml`` file (e.g., DA algorithm, cycle dates). The template file `jcb-base_snow.yaml.j2 <https://github.com/ufs-community/land-DA_workflow/blob/develop/parm/jedi/jcb-base_snow.yaml.j2>`_ is filled in using information from ``land_analysis.xml`` during the ``jcb`` task. This produces the ``jcb-base_snow.yaml`` file, which points to files containing information on geometry, time window, background, driver, local ensemble DA, and output increment. This information is used as input to create a YAML file (``jedi_<algorithm>_snow.yaml``, where ``<algorithm>`` is ``letkf`` or ``3dvar``) containing detailed algorithm-specific information. These two files (``jcb-base_snow.yaml`` and ``jedi_<algorithm>_snow.yaml``) form the basis of the DA system configuration in the Land DA System. 
+The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and information provided in the ``land_analysis.xml`` file (e.g., DA algorithm, cycle dates). The template file `jcb-base_snow.yaml.j2 <https://github.com/ufs-community/land-DA_workflow/blob/develop/parm/jedi/jcb-base_snow.yaml.j2>`_ is filled in using information from ``land_analysis.xml`` during the ``jcb`` task. This produces the ``jcb-base_snow.yaml`` file, which points to files containing information on geometry, time window, background, driver, local ensemble DA, and output increment. This information is used as input to create a YAML file (``jedi_<algorithm>_snow.yaml``, where ``<algorithm>`` is ``letkf-oi`` or ``3dvar``) containing detailed algorithm-specific information. These two files (``jcb-base_snow.yaml`` and ``jedi_<algorithm>_snow.yaml``) form the basis of the DA system configuration in the Land DA System. 
 
 .. COMMENT: Or from land_analysis.yaml? ^
 
@@ -887,7 +887,7 @@ Background Error (for ``3dvar``)
 
 The ``background error:`` block provides information and specifications for computing the :jedi:`background error covariance matrix <using/building_and_running/config_content.html#background-error>`, or **B** matrix. The first item in this section is usually the covariance model, which identifies the method for computing the B matrix. Typically, the JEDI :jedi:`SABER <inside/jedi-components/saber/index.html#saber>` package is used for this purpose. The JEDI documentation provides an :jedi:`Introduction to SABER Error Covariance Model inside/jedi-components/saber/SABER_intro.html` and :jedi:`additional detailed information on the SABER blocks <inside/jedi-components/saber/BUMP_saber_blocks.html>`. 
 
-Background (for ``letkf``)
+Background (for ``letkf-oi``)
 ----------------------------
 The ``background:`` section includes information on the forecast members generated by the previous cycle, which form the background for the current cycle. 
 
@@ -918,7 +918,7 @@ The ``background:`` section includes information on the forecast members generat
    ``filename_orog:`` (Default: C96_oro_data.nc)
       Specifies the name of the orographic data file. 
 
-Driver (for ``letkf``)
+Driver (for ``letkf-oi``)
 ------------------------
 
 The ``driver:`` section describes optional modifications to the behavior of the LocalEnsembleDA driver. For details, refer to :jedi:`Local Ensemble Data Assimilation in OOPS <inside/jedi-components/oops/applications/localensembleda.html#top-oops-localensda>` in the JEDI Documentation. Not all options are included here. 
@@ -935,7 +935,7 @@ The ``driver:`` section describes optional modifications to the behavior of the 
    ``run as observer only:`` (Default: false)
       Specifies whether to run as observer only. Valid values: ``true`` | ``false``
 
-Local Ensemble DA (for ``letkf``)
+Local Ensemble DA (for ``letkf-oi``)
 -----------------------------------
 
 The ``local ensemble DA:`` section configures the local ensemble DA solver package. 
@@ -955,7 +955,7 @@ The ``local ensemble DA:`` section configures the local ensemble DA solver packa
       ``mult:`` (Default: ``1.0``)
          Parameter of multiplicative inflation.
 
-Output Increment (for ``letkf``)
+Output Increment (for ``letkf-oi``)
 ----------------------------------
 
 ``output increment:`` (Default: fms restart)
@@ -964,3 +964,26 @@ Output Increment (for ``letkf``)
 
    ``filename_sfcd:`` (Default: snowinc.sfc_data.nc)
       Name of the file provided for the output increment. For example: ``snowinc.sfc_data.nc``
+
+.. _IODA:
+
+Interface for Observation Data Access (IODA)   
+***********************************************
+
+*This section references Honeyager, R., Herbener, S., Zhang, X., Shlyaeva, A., and Trémolet, Y., 2020: Observations in the Joint Effort for Data assimilation Integration (JEDI) - UFO and IODA. JCSDA Quarterly, 66, Winter 2020.*
+
+The Interface for Observation Data Access (IODA) is a subsystem of JEDI that can handle data processing for various models, including the Land DA System. Currently, observation data sets come in a variety of formats (e.g., netCDF, BUFR, GRIB) and may differ significantly in structure, quality, and spatiotemporal resolution/density. Such data must be pre-processed and converted into model-specific formats. This process often involves iterative, model-specific data conversion efforts and numerous cumbersome ad-hoc approaches to prepare observations. Requirements for observation files and I/O handling often result in decreased I/O and computational efficiency. IODA addresses this need to modernize observation data management and use in conjunction with the various components of the Unified Forecast System (:term:`UFS`).
+
+IODA provides a unified, model-agnostic method of sharing observation data and exchanging modeling and data assimilation results. The IODA effort centers on three core facets: (i) in-memory data access, (ii) definition of the IODA file format, and (iii) data store creation for long-term storage of observation data and diagnostics. The combination of these foci enables optimal isolation of the scientific code from the underlying data structures and data processing software while simultaneously promoting efficient I/O during the forecasting/DA process by providing a common file format and structured data storage.
+
+The IODA file format represents observational field variables (e.g., temperature, salinity, humidity) and locations in two-dimensional tables, where the variables are represented by columns and the locations by rows. Metadata tables are associated with each axis of these data tables, and the location metadata hold the values describing each location (e.g., latitude, longitude). Actual data values are contained in a third dimension of the IODA data table; for instance: observation values, observation error, quality control flags, and simulated observation (H(x)) values.
+
+Since the raw observational data come in various formats, a diverse set of "IODA converters" exists to transform the raw observation data files into IODA format. While many of these Python-based IODA converters have been developed to handle marine-based observations, users can utilize the "IODA converter engine" components to develop and implement their own IODA converters to prepare arbitrary observation types for data assimilation within JEDI. (See https://github.com/NOAA-PSL/land-DA_update/blob/develop/jedi/ioda/imsfv3_scf2iodaTemp.py for the Land DA IMS IODA converter.)
+
+The Land DA System includes options to use observation data in :term:`GHCN`, :term:`IMS`, :term:`SFCSNO`, and/or Soil Moisture Active Passive (:term:`SMAP`) data format. It also includes a variety of utility scripts to convert observation data to IODA format: 
+
+* :github:`ghcn_snod2ioda.py <blob/develop/ush/ghcn_snod2ioda.py>`
+* :github:`imsfv3_scf2ioda.py <blob/develop/ush/imsfv3_scf2ioda.py>`
+* :github:`smap_ssm2ioda.py <blob/develop/ush/smap_ssm2ioda.py>`
+
+IODA can also read in certain :jedi:`file formats <inside/jedi-components/ioda/file-formats.html>`, such as BUFR, with a mapping file, such as the :github:`bufr_sfcsno_mapping.yaml <blob/develop/parm/jedi/bufr_sfcsno_mapping.yaml>` file available in the Land DA repository. 
