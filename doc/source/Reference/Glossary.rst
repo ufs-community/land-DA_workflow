@@ -49,8 +49,8 @@ Glossary
    
    DA increment
    Analysis increment
-      A DA increment, or analysis increment, is the difference between a "first guess" of the state of the system (usually a previous model forecast) and the "best guess" of what the actual initial state of the system is (the analysis produced by the DA system). When introducing a new starting state for the model integration, care must be taken to ensure that the initial state is balanced and realistic according to the model equations, otherwise the forecast may be poor or even unstable. The Land DA methods (3D-Var and LETKF) achieve this by minimizing a cost function that accounts for the model state, observations, and the error characteristics present in each.
-      Refer to the linked areticles for more information on `3D-Var <https://www.ecmwf.int/sites/default/files/elibrary/2003/76079-variational-data-assimiltion-theory-and-overview_0.pdf>`_ and `LETKF <https://www2.atmos.umd.edu/~dkuhl/AOSC614/Hunt_et_all_2007.pdf>`_ respectively.
+      A DA increment, or analysis increment, is the difference between a "first guess" of the state of the system (usually a previous model forecast) and the "best guess" of what the actual initial state of the system is (the analysis produced by the DA system). When introducing a new starting state for the model integration, care must be taken to ensure that the initial state is balanced and realistic according to the model equations, otherwise the forecast may be poor or even unstable. The Land DA methods (3D-Var and LETKF-OI) achieve this by minimizing a cost function that accounts for the model state, observations, and the error characteristics present in each.
+      Refer to the linked areticles for more information on `3D-Var <https://www.ecmwf.int/sites/default/files/elibrary/2003/76079-variational-data-assimiltion-theory-and-overview_0.pdf>`_ and `LETKF-OI <https://www2.atmos.umd.edu/~dkuhl/AOSC614/Hunt_et_all_2007.pdf>`_ respectively.
 
    DATM
       DATM is the *Data Atmosphere* component of :term:`CDEPS`. It uses static atmospheric forcing files (derived from observations or previous atmospheric model runs) instead of output from an active atmospheric model. This reduces the complexity and computational cost associated with coupling to an active atmospheric model. The *Data Atmosphere* component is particularly useful when employing computationally intensive Data Assimilation (DA) techniques to update ocean and/or sea ice fields in a coupled model. In general, use of DATM in place of :term:`ATM` can be appropriate when users are running a coupled model and only want certain components of the model to be active. More information about DATM is available in the `CDEPS Documentation <https://escomp.github.io/CDEPS/versions/master/html/datm.html>`_.
@@ -108,7 +108,7 @@ Glossary
 
    JCB
    JEDI Configuration Builder
-      The JEDI Configuration Builder (JCB) is a python package used to assemble information on :term:`JEDI` algorithms (e.g., letkf, 3dvar) and data assimilation types (e.g., snow, marine, atmosphere) into one convenient YAML file for use in data assimilation applications. 
+      The JEDI Configuration Builder (JCB) is a python package used to assemble information on :term:`JEDI` algorithms (e.g., letkf-oi, 3dvar) and data assimilation types (e.g., snow, marine, atmosphere) into one convenient YAML file for use in data assimilation applications. 
 
    JEDI
       The Joint Effort for Data assimilation Integration (`JEDI <https://www.jcsda.org/jcsda-project-jedi>`_) is a unified and versatile data assimilation (DA) system for Earth System Prediction. It aims to enable efficient research and accelerated transition from research to operations by providing a framework that takes into account all components of the Earth system in a consistent manner. The JEDI software package can run on a variety of platforms and for a variety of purposes, and it is designed to readily accommodate new atmospheric and oceanic models and new observation systems. The `JEDI User's Guide <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/>`_ contains extensive information on the software. 
@@ -184,6 +184,9 @@ Glossary
    Skylab
       `JEDI Skylab <https://www.jcsda.org/jediskylab>`_ is the name for roll-up releases of :term:`JCSDA`'s `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`_ repository. 
       This software provides an integrated Earth System Data Assimilation capability. JCSDA has tested Skylab capabilities internally via the SkyLab testbed for the following components: atmosphere, land/snow, ocean, sea-ice, aerosols, and atmospheric composition. However, JCSDA plans to stop releasing ``jedi-bundle`` and instead encourage users and developers to move to the ``develop`` branch, which will contain the latest updates. 
+
+   SMAP
+      `Soil Moisture Active Passive Data (SMAP) <https://nsidc.org/data/smap/data>`_
 
    Spack
       `Spack <https://spack.readthedocs.io/en/latest/>`_ is a package management tool designed to support multiple versions and configurations of software on a wide variety of platforms and environments. It was designed for large supercomputing centers where many users and application teams share common installations of software on clusters with exotic architectures. 

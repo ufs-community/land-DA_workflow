@@ -137,7 +137,7 @@ This :term:`umbrella repository` uses Git submodules and an ``app_build.sh`` fil
      - https://github.com/NOAA-EPIC/land-SCF_proc
    * - jcb-algorithms
      - jcb-algorithms
-     - Contains YAML algorithm files (e.g., LETKF, 3DVar) for the JEDI Configuration Builder; these files contain the high-level configuration structure that is prescribed by the JEDI data assimilation system.
+     - Contains YAML algorithm files (e.g., LETKF-OI, 3DVar) for the JEDI Configuration Builder; these files contain the high-level configuration structure that is prescribed by the JEDI data assimilation system.
      - https://github.com/NOAA-EPIC/jcb-algorithms
    * - jcb-gdas
      - jcb-gdas

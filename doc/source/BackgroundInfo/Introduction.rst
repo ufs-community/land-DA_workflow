@@ -25,7 +25,7 @@ The following improvements have been made to the Land DA System since the |lates
 * Support for a new coupling option --- :term:`LND` (Noah-MP) and :term:`ATM` (FV3) --- (:land-wflow-repo:`PR #171 <pull/171/>`)
 * Addition of 3DVar to JEDI algorithm (:land-wflow-repo:`PR #187 <pull/187/>`)
 * Integration of JEDI Configuration Builder (:term:`JCB`) into Land DA System (:land-wflow-repo:`PR #182 <pull/182/>`)
-* Creation of JEDI configuration/input files (:land-wflow-repo:`PR #182 <pull/182/>`) for LETKF (:land-wflow-repo:`PR #190 <pull/190/>`) and 3DVar (:land-wflow-repo:`PR #188 <pull/188/>`) using :term:`JCB`
+* Creation of JEDI configuration/input files (:land-wflow-repo:`PR #182 <pull/182/>`) for LETKF-OI (:land-wflow-repo:`PR #190 <pull/190/>`) and 3DVar (:land-wflow-repo:`PR #188 <pull/188/>`) using :term:`JCB`
 * Inclusion of `jcb-algorithms <https://github.com/NOAA-EPIC/jcb-algorithms>`_ and `jcb-gdas <https://github.com/NOAA-EPIC/jcb-gdas>`_ as Land DA submodules to facilitate DA configuration with JCB (:land-wflow-repo:`PR #179 <pull/179/>`)
 * Add capability to use :term:`IMS` snow observation data by converting it to NetCDF form in the ``prep_data`` workflow task (:land-wflow-repo:`PR #222 <pull/222/>`) ; improve IMS data processing capabilities (:land-wflow-repo:`PR #224 <pull/224/>`)
 * Add :term:`ERA5` forcing option for ``APP=LND`` (:land-wflow-repo:`PR #214 <pull/214/>`); improve ERA5 data processing capabilities (:land-wflow-repo:`PR #219 <pull/219/>`)
