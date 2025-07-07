@@ -78,7 +78,7 @@ def setup_wflow_env(machine):
         sys.exit(1)
 
     # Set the types of JEDI analyses by the types of observation
-    if obs_ghcn_snow == "YES" or obs_ims_snow == "YES" or obs_sfcsnw == "YES":
+    if obs_ghcn_snow == "YES" or obs_ims_snow == "YES" or obs_sfcsno == "YES":
         do_jedi_snow = "YES"
     else:
         do_jedi_snow = "NO"
