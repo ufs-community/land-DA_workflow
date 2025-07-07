@@ -30,11 +30,14 @@ def main():
     f.close()
 
     work_dir=yaml_data['work_dir']
-    fn_input=yaml_data['fn_input']
-    out_title_base=yaml_data['out_title_base']
-    out_fn_base=yaml_data['out_fn_base']
     cartopy_ne_path=yaml_data['cartopy_ne_path']
-    OBS_TYPE=yaml_data['OBS_TYPE']
+    fn_input_ghcn=yaml_data['fn_input_ghcn']
+    fn_input_ims=yaml_data['fn_input_ims']
+    fn_input_smap=yaml_data['fn_input_smap']
+    OBS_GHCN_SNOW=yaml_data['OBS_GHCN_SNOW']
+    OBS_IMS_SNOW=yaml_data['OBS_IMS_SNOW']
+    OBS_SMAP=yaml_data['OBS_SMAP']
+    PDY=yaml_data['PDY']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
     
     # Set logging config
@@ -53,7 +56,22 @@ def main():
     # Set the path to Natural Earth dataset
     cartopy.config['data_dir']=cartopy_ne_path
 
-    logging.info(f''' ===== INPUT: '{fn_input}' ================================''')
+    # Plot GHCN
+    if OBS_GHCN_SNOW == "YES":
+       obs_plot("ghcn",PDY,work_dir,fn_input_ghcn)
+    # Plot IMS
+    if OBS_IMS_SNOW == "YES":
+       obs_plot("ims",PDY,work_dir,fn_input_ims)
+    # Plot SMAP
+    if OBS_SMAP == "YES":
+       obs_plot("smap",PDY,work_dir,fn_input_smap)
+
+
+# obs plot =============================================== CHJ =====
+def obs_plot(obs_type,PDY,work_dir,fn_input):
+
+    logging.info(f''' ===== INPUT:: {obs_type}:: '{fn_input}' ================================''')
+
     # open the data file
     fpath=os.path.join(work_dir,fn_input)
     try: mdat=nc.Dataset(fpath)
@@ -73,50 +91,68 @@ def main():
     lon_max=np.max(lon)
     lat_min=np.min(lat)
     lat_max=np.max(lat)
-    #extent=[lon_min,lon_max,lat_min,lat_max]
-    # for CONUS
-    #extent=[-125,-66,23,53]
-    # for Northern Hemisphere
-    extent=[-179,179,0,82.5]
-    # for Globe
-    #extent=[-179,179,-82.5,82.5]
+    logging.info(f''' lon min,max = {lon_min}, {lon_max}''')
+    logging.info(f''' lat min,max = {lat_min}, {lat_max}''')
 
-    logging.info(f''' Map extent= {extent}''')
+    #extent=[lon_min,lon_max,lat_min,lat_max]
+    extent=[]
+    if obs_type != "smap":
+        # for Northern Hemisphere
+        extent=[-179,179,0,82.5]
+        # for CONUS
+        #extent=[-125,-66,23,53]
+        logging.info(f''' Map extent= {extent}''')
 
     #c_lon=np.mean(extent[:2])
     c_lon=-77.0369 # D.C.
     logging.info(f''' c_lon= {c_lon}''')
 
     for svar in vars_out:
-        svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base,work_dir)
+        svar_plot(svar,mdat,lon,lat,c_lon,extent,obs_type,PDY,work_dir)
     
 
 # Variable plot =============================================== CHJ =====
-def svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base,work_dir):
+def svar_plot(svar,mdat,lon,lat,c_lon,extent,obs_type,PDY,work_dir):
 
     logging.info(' ===== '+svar+' ==========================================')
     # Extract data array
-    sfld=mdat.groups[svar].variables['totalSnowDepth'][:]
+    if obs_type == "smap":
+        gvar="soilMoistureVolumetric"
+        pvar="SoilMoisture"
+    else:
+        gvar="totalSnowDepth"
+        pvar="SnowDepth"
 
-    svar="SnowDepth"
+    sfld=mdat.groups[svar].variables[gvar][:]
 
-    out_title_fld=out_title_base+svar
-    out_fn=out_fn_base+svar
+    obs_type_upper=obs_type.upper()
+    out_title_fld=f'''Land-DA::Obs::{obs_type_upper}::{PDY}::{pvar}'''
+    out_fn=f'''landda_obs_{obs_type}_{PDY}_{pvar}'''
 
     cs_cmap='gist_ncar_r'
     lb_ext='neither'
     tick_ln=1.5
     tick_wd=0.45
     tlb_sz=3
-    scat_sz=1.0
     n_rnd=2
     cmap_range='fixed'
+    scat_sz=1.0
+
+    # Check array size
+    lon_len = len(lon)
+    lat_len = len(lat)
+    sfld_len = len(sfld)
+    logging.info(f''' length of lon = {lon_len}''')
+    logging.info(f''' length of lat = {lat_len}''')
+    logging.info(f''' lenght of sfld = {sfld_len}''')
+    if lon_len != lat_len or lon_len != sfld_len or lat_len != sfld_len:
+        sys.exit('ERROR: array size mismatched !!!')
 
     # Max and Min of the field
     fmax=np.max(sfld)
     fmin=np.min(sfld)
-    logging.info(f''' Max of {svar}= {fmax}''')
-    logging.info(f''' Min of {svar}= {fmin}''')
+    logging.info(f''' Max of {pvar}= {fmax}''')
+    logging.info(f''' Min of {pvar}= {fmin}''')
 
     # Make the colormap range symmetry
     logging.info(f''' cmap range= {cmap_range}''')
@@ -132,10 +168,12 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base
         cs_max=fmax
     elif cmap_range=='fixed':
         cs_min=0
-        if OBS_TYPE == 'ims':
+        if obs_type == 'ims':
             cs_max=100.0
-        elif OBS_TYPE == 'ghcn':
+        elif obs_type == 'ghcn':
             cs_max=1000.0
+        elif obs_type == 'smap':
+            cs_max=0.4
         else:
             cs_max=300.0
     else:
@@ -143,22 +181,24 @@ def svar_plot(svar,mdat,lon,lat,extent,c_lon,OBS_TYPE,out_title_base,out_fn_base
 
     logging.info(f''' cs_max= {cs_max}''')
     logging.info(f''' cs_min= {cs_min}''')
-    logging.info(f''' extent= {extent}''')
 
     # Plot field
     fig,ax=plt.subplots(1,1,subplot_kw=dict(projection=ccrs.Robinson(c_lon)))
-    ax.set_extent(extent, ccrs.PlateCarree())
+    if obs_type == "smap":
+        ax.set_global()
+    else:
+        ax.set_extent(extent, ccrs.PlateCarree())
     # Call background plot
     back_plot(ax)
-    ax.set_title(out_title_fld,fontsize=9)
+    ax.set_title(out_title_fld,fontsize=8)
     cs=ax.scatter(lon,lat,transform=ccrs.PlateCarree(),c=sfld,cmap=cs_cmap,
                   vmin=cs_min,vmax=cs_max,s=scat_sz)
     divider=make_axes_locatable(ax)
     ax_cb=divider.new_horizontal(size="3%",pad=0.1,axes_class=plt.Axes)
     fig.add_axes(ax_cb)
     cbar=plt.colorbar(cs,cax=ax_cb,extend=lb_ext)
-    cbar.ax.tick_params(labelsize=8)
-    cbar.set_label(svar,fontsize=8)
+    cbar.ax.tick_params(labelsize=7)
+    cbar.set_label(pvar,fontsize=7)
 
     # Output figure
     ndpi=300

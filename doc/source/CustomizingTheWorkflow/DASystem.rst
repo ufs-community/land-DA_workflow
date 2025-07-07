@@ -45,6 +45,8 @@ The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and i
 
 The ``jcb`` task stores these files in the ``ptmp/test_*/tmp/jcb.${PDY}${cyc}.${jobid}/`` directory, where ``${PDY}${cyc}`` is in YYYYMMDDHH format (see :numref:`Section %s <nco-dir-entities>`), and the ``${jobid}`` is the job ID assigned by the system. Users can also access this file via the ``tmp_dir/jcb.${PDY}${cyc}.${jobid}`` shortcut in their experiment directory. The example below shows what the complete ``jcb-base_snow.yaml`` file might look like for the 2025-01-19 00Z cycle. 
 
+.. COMMENT: Update info about GHCN.yaml since this file no longer exists as such. 
+
 .. code-block:: yaml
 
    # JCB general

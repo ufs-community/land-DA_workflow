@@ -19,13 +19,12 @@ DO_PLOT_STATS="YES"
 DO_PLOT_TIME_HISTORY="YES"
 DO_PLOT_RESTART="YES"
 DO_PLOT_COMBINE_TILES="YES"
+DO_PLOT_BASIN="NO"
 
 ############################################################
 # Stats Plot
 ############################################################
 if [ "${DO_PLOT_STATS}" = "YES" ]; then
-  # Field variable
-  field_var="OMB"
   # Field Range for scatter plot: [Low,High]
   field_range_low=-200
   field_range_high=200
@@ -33,25 +32,30 @@ if [ "${DO_PLOT_STATS}" = "YES" ]; then
   nbins=100
   # Plot type (scatter/histogram/both)
   plottype="both"
-  # Figure title
-  title_fig="Snow Depth (mm)::${OBS_TYPE^^}::Obs-Bkg::${PDY}"
-  # Prefix of output file name
-  output_prefix="hofx_omb_${PDY}"
 
-  hofx_diag_fp="${COMINhofx}/diag.${OBS_TYPE}_snow_${PDY}${cyc}.nc"
-  
+  if [ "${OBS_GHCN_SNOW}" = "YES" ]; then
+    cp -p "${COMINhofx}/diag.ghcn_snow_${PDY}${cyc}.nc" ${DATA}
+  fi
+  if [ "${OBS_IMS_SNOW}" = "YES" ]; then
+    cp -p "${COMINhofx}/diag.ims_snow_${PDY}${cyc}.nc" ${DATA}
+  fi
+  if [ "${OBS_SFCSNO}" = "YES" ]; then
+    cp -p "${COMINhofx}/diag.sfcsno_${PDY}${cyc}.nc" ${DATA}
+  fi
+
   cat > plot_hofx.yaml <<EOF
-hofx_file: '${hofx_diag_fp}'
-field_var: '${field_var}'
+cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+cdate: '${YYYY}-${MM}-${DD}-${HH}'
+cyc: '${cyc}'
 field_range: [${field_range_low},${field_range_high}]
-jedi_exe: '${JEDI_ALGORITHM}'
+hofx_data_path: '${DATA_HOFX_OMB}'
 nbins: ${nbins}
 plottype: '${plottype}'
-title_fig: '${title_fig}'
-output_prefix: '${output_prefix}'
-cartopy_ne_path: '${FIXlandda}/NaturalEarth'
-hofx_data_path: '${DATA_HOFX_OMB}'
-cdate: '${YYYY}-${MM}-${DD}-${HH}'
+work_dir: '${DATA}'
+OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
+OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
+OBS_SFCSNO: '${OBS_SFCSNO}'
+PDY: '${PDY}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
   
@@ -61,7 +65,7 @@ EOF
   fi
   
   # Copy result files to COMOUT
-  cp -p ${output_prefix}* ${COMOUTplot}
+  cp -p "${DATA}/hofx_omb"* ${COMOUTplot}
   cp -p "${DATA_HOFX_OMB}/hofx_omb_timehis"* ${COMOUThofx}
 fi
 
@@ -83,12 +87,13 @@ fn_data_anal_prefix: '${fn_data_anal_prefix}'
 fn_data_anal_suffix: '${fn_data_anal_suffix}'
 fn_data_fcst_prefix: '${fn_data_fcst_prefix}'
 fn_data_fcst_suffix: '${fn_data_fcst_suffix}'
+hofx_data_path: '${DATA_HOFX_OMB}'
 jedi_exe: '${JEDI_ALGORITHM}'
 nprocs_anal: '${NPROCS_ANALYSIS}'
-nprocs_fcst: '${nprocs_forecast}'
-OBS_TYPE: '${OBS_TYPE}'
 out_fn_base: '${out_fn_base}'
-hofx_data_path: '${DATA_HOFX_OMB}'
+OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
+OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
+OBS_SFCSNO: '${OBS_SFCSNO}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
 
@@ -179,3 +184,40 @@ EOF
   cp -p ${out_fn_base}* ${COMOUTplot}
 fi
 
+###########################################################
+# Basin Plot
+###########################################################
+if [ "${DO_PLOT_BASIN}" = "YES" ]; then
+  fn_data_base="ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile"
+  fn_data_ext=".nc"
+
+  out_title_base="Land-DA::restart:: "
+  out_fn_base="landda_basin"
+
+  cat > plot_basin.yaml <<EOF
+path_data: '${COMIN}/RESTART'
+work_dir: '${DATA}'
+fn_data_base: '${fn_data_base}'
+fn_data_ext: '${fn_data_ext}'
+out_title_base: '${out_title_base}'
+out_fn_base: '${out_fn_base}'
+DATE_FIRST_CYCLE: '${DATE_FIRST_CYCLE}'
+DATE_LAST_CYCLE: '${DATE_LAST_CYCLE}'
+OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
+OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
+
+EOF
+
+  # Run script when the experiment reaches its last day
+  if [ "${YYYY}${MM}${DD}${HH}"  ==  "${DATE_LAST_CYCLE}" ]; then 
+    # Change basin code here. Default is 4219 - Mississippi River basin
+    echo "4219" | ${USHlandda}/plot_basin.py
+    if [ $? -ne 0 ]; then
+      err_exit "Basin plot failed"
+    fi
+
+    # Copy result files to COMOUT
+    cp -p ${out_fn_base}* ${COMOUTplot}
+  fi
+fi

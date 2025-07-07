@@ -104,7 +104,6 @@ Set Up the Container
 
    It is recommended that users establish different working directories for :term:`LND` and :term:`ATML` experiments because these experiments use different executables. This makes it impossible to run LND and ATML experiment configurations simultaneously from the same working directory. Users can circumvent this issue by creating an ``lnd`` directory for LND experiments and an ``atml`` directory for ATML experiments. Then, perform the container setup instructions in each directory. 
 
-
 Create experiment variables that point to the container image (``$img``) and, if necessary, the location of the data (``$LANDDA_INPUTS``). Users only need to set the location of the data if they added it in a location other than ``$LANDDAROOT``: 
 
 .. code-block:: console
@@ -208,7 +207,7 @@ For example, when running the ``LND.era5.3dvar.ims.warmstart`` case, run:
    cd parm
    cp config_samples/config.LND.era5.3dvar.ims.warmstart.yaml config.yaml
 
-Users may configure elements of the experiment in ``config.yaml`` if desired. For example, users may wish to alter ``DATE_FIRST_CYCLE``, ``DATE_LAST_CYCLE``, and/or ``DATE_CYCLE_FREQ_HR`` to indicate a different start cycle, end cycle, and increment. Users may also wish to change the DA algorithm from ``3dvar`` to ``letkf`` via the ``JEDI_ALGORITHM`` variable. Users who wish to run a more complex experiment may change the values in ``config.yaml`` using information from Sections :numref:`%s: Workflow Configuration Parameters <ConfigWorkflow>`, :numref:`%s: I/O for the Noah-MP Model <Model>`, and :numref:`%s: I/O for JEDI DA <DASystem>`. 
+Users may configure elements of the experiment in ``config.yaml`` if desired. For example, users may wish to alter ``DATE_FIRST_CYCLE``, ``DATE_LAST_CYCLE``, and/or ``DATE_CYCLE_FREQ_HR`` to indicate a different start cycle, end cycle, and increment. Users may also wish to change the DA algorithm from ``3dvar`` to ``letkf`` via the ``JEDI_ALGORITHM`` variable. Users who wish to run a more complex experiment may change the values in ``config.yaml`` using information from Sections :numref:`%s: Workflow Configuration Parameters <ConfigWorkflow>`, :numref:`%s: I/O for the Land DA System <IO>`, and :numref:`%s: JEDI DA System <DASystem>`. 
 
 .. attention:: 
 

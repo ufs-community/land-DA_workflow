@@ -41,8 +41,9 @@ snow_window_begin="${yyyy_hf}-${mm_hf}-${dd_hf}T${hh_hf}:00:00Z"
 snow_window_length="PT${DATE_CYCLE_FREQ_HR}H"
 
 # Algorithm-specific values
-if [ "${JEDI_ALGORITHM}" = "letkf" ]; then
+if [ "${JEDI_ALGORITHM}" = "letkf-oi" ]; then
   jedi_algorithm_mod="local_ensemble_da"
+  local_ensemble_da_solver="LETKF"
 else
   jedi_algorithm_mod="${JEDI_ALGORITHM}"
 fi
@@ -94,7 +95,9 @@ settings="\
   'snow_obsdataout_prefix': "diag."
   'snow_obsdataout_suffix': "_${cdate}.nc"
   'snowdepth_vn': ${snowdepth_vn}
-  'OBS_TYPE': ${OBS_TYPE}
+  'OBS_GHCN_SNOW': '${OBS_GHCN_SNOW}'
+  'OBS_IMS_SNOW': '${OBS_IMS_SNOW}'
+  'OBS_SFCSNO': '${OBS_SFCSNO}'
 " # End of settings variable
 
 template_fp="${PARMlandda}/jedi/jcb-base_snow.yaml.j2"

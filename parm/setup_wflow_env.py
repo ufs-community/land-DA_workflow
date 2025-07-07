@@ -65,6 +65,30 @@ def setup_wflow_env(machine):
         if key in config_parm:
             config_parm[key] = value
 
+    # Check for unsupported conditions
+    obs_ghcn_snow = config_parm.get("OBS_GHCN_SNOW")
+    obs_ims_snow = config_parm.get("OBS_IMS_SNOW")
+    obs_sfcsno = config_parm.get("OBS_SFCSNO")
+    obs_smap = config_parm.get("OBS_SMAP")
+    if obs_ghcn_snow == "NO" and obs_ims_snow == "NO" and obs_sfcsno == "NO" and obs_smap == "NO":
+        logging.error("NO obs options are selected !!!", exc_info=True)
+        sys.exit(1)
+    elif obs_ghcn_snow == "YES" and obs_ims_snow == "YES":
+        logging.error("Both OBS_GHCN_SNOW and OBS_IMS_SNOW are selected, but this is not supported by JCB!!!", exc_info=True)
+        sys.exit(1)
+
+    # Set the types of JEDI analyses by the types of observation
+    if obs_ghcn_snow == "YES" or obs_ims_snow == "YES" or obs_sfcsnw == "YES":
+        do_jedi_snow = "YES"
+    else:
+        do_jedi_snow = "NO"
+    config_parm["do_jedi_snow"] = do_jedi_snow
+    if obs_smap == "YES":
+        do_jedi_soil_moisture = "YES"
+    else:
+        do_jedi_soil_moisture = "NO"
+    config_parm["do_jedi_soil_moisture"] = do_jedi_soil_moisture
+
     # Create an experimental case directory
     if config_parm.get("EXP_CASE_NAME") is None:
         exp_case_name = f'''{config_parm.get("APP")}_{config_parm.get("RUN")}'''
@@ -74,9 +98,13 @@ def setup_wflow_env(machine):
 
     # Calculate date for the second cycle
     date_first_cycle = config_parm.get("DATE_FIRST_CYCLE")
+    date_last_cycle = config_parm.get("DATE_LAST_CYCLE")
     date_cycle_freq_hr = config_parm.get("DATE_CYCLE_FREQ_HR")
-    next_date = datetime.strptime(str(date_first_cycle), "%Y%m%d%H") + timedelta(hours=date_cycle_freq_hr)
-    date_second_cycle = next_date.strftime("%Y%m%d%H")
+    if date_first_cycle == date_last_cycle:
+        date_second_cycle = date_first_cycle
+    else:
+        next_date = datetime.strptime(str(date_first_cycle), "%Y%m%d%H") + timedelta(hours=date_cycle_freq_hr)
+        date_second_cycle = next_date.strftime("%Y%m%d%H")
     config_parm["date_second_cycle"] = date_second_cycle
 
     # Calculate HPC parameter values
@@ -108,13 +136,21 @@ def setup_wflow_env(machine):
         native_default = '-M c6'
         partition_default = 'batch'
         queue_default = 'normal'
+    elif machine == "noaacloud":
+        native_default = None
+        partition_default = ""
+        queue_default = 'batch'
+    elif machine == "singularity":
+        native_default = None
+        partition_default = ""
+        queue_default = 'batch'
     else:
         native_default = None
         partition_default = machine
         queue_default = 'batch'
 
     # Slurm memory flag: some platforms do not support the memory flag in slurm
-    mem_not_req = [ "gaeac6", "noaacloud" ]
+    mem_not_req = [ "gaeac6", "noaacloud", "singularity" ]
     if machine in mem_not_req:
         memory_flag = False
     else:
@@ -227,6 +263,9 @@ def set_default_parm():
         "CCPP_SUITE": "FV3_GFS_v17_p8_ugwpv1",
         "COLDSTART": "NO",
         "COUPLER_CALENDAR": 2,
+        "CUSTOM_JEDI_CONFIG_FLAG": "NO",
+        "CUSTOM_JEDI_CONFIG_PATH": "/path/to/custom/JEDI/config/dir",
+        "CUSTOM_JEDI_CONFIG_PREFIX": "/prefix/of/custom/JEDI/config/file/name",
         "DATE_CYCLE_FREQ_HR": 24,
         "DATE_FIRST_CYCLE": 200001030000,
         "DATE_LAST_CYCLE": 200001040000,
@@ -242,7 +281,7 @@ def set_default_parm():
         "FRAC_GRID": "NO",
         "IC_DATA_MODEL": "gfs",
         "IMO": 384,
-        "JEDI_ALGORITHM": "letkf",
+        "JEDI_ALGORITHM": "letkf-oi",
         "JEDI_PATH": "/path/to/jedi/install/dir",
         "JEDI_PY_VER": "python3.10",
         "JMO": 190,
@@ -261,13 +300,16 @@ def set_default_parm():
         "NPROCS_FCST_IC": 36,
         "NPZ": 127,
         "OBSDIR": "",
-        "OBS_TYPE": "ghcn",
+        "OBS_GHCN_SNOW": "NO",
+        "OBS_IMS_SNOW": "NO",
+        "OBS_SFCSNO": "NO",
+        "OBS_SMAP": "NO",
         "OUTPUT_FH": "1 -1",
         "PY_LOG_LEVEL": "INFO",
         "RES": 96,
         "RESTART_INTERVAL": "12 -1",
         "RUN": "landda",
-        "WARMSTART_DIR": "/path/to/wart/start/dir",
+        "WARMSTART_DIR": "/path/to/warm/start/dir",
         "WE2E_TEST": "NO",
         "WRITE_GROUPS": 1,
         "WRITE_TASKS_PER_GROUP": 6,
@@ -285,29 +327,34 @@ def set_machine_parm(machine):
         case "gaeac6":
             JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/jedi_bundle_sync"
             MAX_CORES_PER_NODE = 192
+            CUSTOM_JEDI_CONFIG_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
             WARMSTART_DIR = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "hera":
             JEDI_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_sync"
             MAX_CORES_PER_NODE = 40
+            CUSTOM_JEDI_CONFIG_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
             WARMSTART_DIR = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "hercules":
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_hercules"
             MAX_CORES_PER_NODE = 80
+            CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
             WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "orion":
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion"
             MAX_CORES_PER_NODE = 40
+            CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
             WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "singularity":
             JEDI_PATH = "SINGULARITY_WORKING_DIR"
             MAX_CORES_PER_NODE = 40
-            WARMSTART_DIR = "SINGULARITY_WORKING_DIR"
+            WARMSTART_DIR = "SINGULARITY_WORKING_DIR/land-DA_workflow/fix/DATA_RESTART"
         case _:
             sys.exit(f"FATAL ERROR: this machine/platform '{lowercase_machine}' is NOT supported yet !!!")
 
     machine_config = {
         "JEDI_PATH": JEDI_PATH,
         "MAX_CORES_PER_NODE": MAX_CORES_PER_NODE,
+        "CUSTOM_JEDI_CONFIG_PATH": CUSTOM_JEDI_CONFIG_PATH,
         "WARMSTART_DIR": WARMSTART_DIR,
     }
 
