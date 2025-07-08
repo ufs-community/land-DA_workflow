@@ -307,12 +307,12 @@ To submit jobs automatically, users should navigate to the experiment directory,
 
 .. code-block:: console
 
-   cd /home/ubuntu/exp_case/<EXP_CASE_NAME>
+   cd /path/to/exp_case/<EXP_CASE_NAME>
    wget https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/run_expt.sh .
    chmod 755 run_expt.sh
    ./run_expt.sh
 
-where ``<EXP_CASE_NAME>`` is replaced with the actual name of the experiment directory (e.g., ``cadre1_lnd_era5_ims``).
+where ``<EXP_CASE_NAME>`` is replaced with the actual name of the experiment directory (e.g., ``lnd_era5_warmstart_00``).
 
 To check the status of the experiment, see :numref:`Section %s <VerifySuccess>` on tracking experiment progress.
 

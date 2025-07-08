@@ -26,9 +26,9 @@ The Joint Effort for Data assimilation Integration (:term:`JEDI`) is a unified a
 JEDI Configuration Files & Parameters
 ****************************************
 
-The Land DA System uses the JEDI Configuration Builder (:ref:`JCB <jcb-component>`) along with parameters defined in the ``land_analysis.yaml`` file to interface with the JEDI DA system. As described in :numref:`Section %s <ConfigWorkflow>`, the Land DA workflow generates a ``land_analysis.yaml`` file that contains all settings required for an experiment — user-selected settings from ``config.yaml``, default values, and machine-dependent settings. 
+The Land DA System uses the JEDI Configuration Builder (:ref:`JCB <jcb-component>`) along with parameters defined in the ``land_analysis.xml`` file to interface with the JEDI DA system. As described in :numref:`Section %s <ConfigWorkflow>`, the Land DA workflow generates a ``land_analysis.yaml`` file that contains all settings required for an experiment — user-selected settings from ``config.yaml``, default values, and machine-dependent settings. From this YAML file, the ``land_analysis.xml`` Rocoto workflow file is generated.
 
-When the experiment is generated, the first :ref:`workflow tasks <wflow-overview>` to run are: 
+In the workflow, the first :ref:`workflow tasks <wflow-overview>` to run are: 
 
    * ``jcb`` 
    * ``prep_data``
@@ -36,16 +36,12 @@ When the experiment is generated, the first :ref:`workflow tasks <wflow-overview
 
 The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and information provided in the ``land_analysis.xml`` file (e.g., DA algorithm, cycle dates). The template file `jcb-base_snow.yaml.j2 <https://github.com/ufs-community/land-DA_workflow/blob/develop/parm/jedi/jcb-base_snow.yaml.j2>`_ is filled in using information from ``land_analysis.xml`` during the ``jcb`` task. This produces the ``jcb-base_snow.yaml`` file, which points to files containing information on geometry, time window, background, driver, local ensemble DA, and/or output increment. This information is used as input to create a YAML file (``jedi_<algorithm>_snow.yaml``, where ``<algorithm>`` is ``letkf-oi`` or ``3dvar``) containing detailed algorithm-specific information. These two files (``jcb-base_snow.yaml`` and ``jedi_<algorithm>_snow.yaml``) form the basis of the DA system configuration in the Land DA System. 
 
-.. COMMENT: Or from land_analysis.yaml? ^
-
 .. figure:: https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/images/jcb.png
    :width: 50%
 
    Outline of the JCB Task
 
 The ``jcb`` task stores these files in the ``ptmp/test_*/tmp/jcb.${PDY}${cyc}.${jobid}/`` directory, where ``${PDY}${cyc}`` is in YYYYMMDDHH format (see :numref:`Section %s <nco-dir-entities>`), and the ``${jobid}`` is the job ID assigned by the system. Users can also access this file via the ``tmp_dir/jcb.${PDY}${cyc}.${jobid}`` shortcut in their experiment directory. The example below shows what the complete ``jcb-base_snow.yaml`` file might look like for the 2025-01-19 00Z cycle. 
-
-.. COMMENT: Update info about GHCN.yaml since this file no longer exists as such. 
 
 .. code-block:: yaml
 

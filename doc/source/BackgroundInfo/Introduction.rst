@@ -65,8 +65,8 @@ Customizing the Workflow
 =========================
 
    * :numref:`Chapter %s: Available Workflow Configuration Parameters <ConfigWorkflow>` explains all of the user-configurable options currently available in the workflow configuration file (``land_analysis*.yaml``).
-   * :numref:`Chapter %s: Input/Output Files for the Land DA System <IO>` provides information on input data and configuration parameters in the Land DA System.
-   * :numref:`Chapter %s: Joint Effort for Data Assimilation Integration (JEDI) DA System <DASystem>` provides information on the DA system and configuration parameters. 
+   * :numref:`Chapter %s: Input/Output Files for the Land DA System <IO>` provides information on input/output data for the Land DA System.
+   * :numref:`Chapter %s: Joint Effort for Data Assimilation Integration (JEDI) DA System <DASystem>` provides information on the JEDI DA system and configuration parameters. 
 
 Reference
 ===========

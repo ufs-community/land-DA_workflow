@@ -94,7 +94,7 @@ The sample configuration files are named based on their features:
 * Configuration (:term:`LND` or :term:`ATML`)
 * Atmospheric forcing data (``gswp3`` or ``era5``) --- if any
 * :term:`DA <DA>` algorithm (``letkf-oi`` or ``3dvar``)
-* Snow depth data (:term:`IMS`, :term:`GHCN`, :term:`SFCSNO`, :term:`SMAP`)
+* Snow depth data (:term:`IMS`, :term:`GHCN`, :term:`SFCSNO`) or soil moisture data (:term:`SMAP`)
 * Type of forecast start (i.e., :term:`warmstart` or :term:`coldstart`)
 
 Users are encouraged to explore and modify the options available! 
