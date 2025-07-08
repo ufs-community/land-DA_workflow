@@ -97,47 +97,11 @@ mkdir -p ${DATA}/Data/fv3files
 cp -p ${JEDI_STATICDIR}/fv3files/fmsmpp.nml ${DATA}/Data/fv3files/.
 cp -p ${JEDI_STATICDIR}/fv3files/field_table_ufs ${DATA}/Data/fv3files/field_table
 cp -p ${JEDI_STATICDIR}/fv3files/akbk${NPZ}.nc4 ${DATA}/Data/fv3files/akbk.nc4
+ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}_oro_data.tile* ${DATA}/Data/fv3files/
 
 # Link snow shadow level nicas data file
 mkdir -p ${DATA}/berror
 ln -nsf ${FIXlandda}/FV3_fix_global/snow_bump_nicas_250km_shadowlevels_nicas.nc ${DATA}/berror/.
-
-# Intermediate/Output directories
-mkdir -p ${DATA}/diags
-mkdir -p ${DATA}/anl
-mkdir -p ${DATA}/bkg
-mkdir -p ${DATA}/test
-
-# Set up background
-if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
-  for itile in {1..6}
-  do
-    sfc_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
-    sfc_bkg_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
-    cp -p ${sfc_fn} "${DATA}/bkg/${sfc_bkg_fn}"
-    ln -nsf "${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}_oro_data.tile${itile}.nc" "${DATA}/bkg/."
-  done
-  cp -p ${FILEDATE}.coupler.res ${DATA}/bkg
-
-  # Set JEDI executable
-  jedi_exe_fn="fv3jedi_var.x"
-
-else # letkf-oi
-  for ens in {1..2}
-  do
-    mkdir -p $DATA/mem${ens}
-    cp -p ${FILEDATE}.sfc_data.tile*.nc ${DATA}/mem${ens}
-    cp -p ${FILEDATE}.coupler.res ${DATA}/mem${ens}
-  done
-
-  ${USHlandda}/letkf_create_ens.py $FILEDATE $snowdepth_vn 30
-  if [[ $? != 0 ]]; then
-    err_exit "letkf-oi create failed"
-  fi
-
-  # Set JEDI executable
-  jedi_exe_fn="fv3jedi_letkf.x"
-fi
 
 # Set a list of JEDI analyses
 types_jedi_analyses=()
@@ -154,6 +118,52 @@ echo "${types_jedi_analyses[@]}"
 ################################################
 for jedi_type in "${types_jedi_analyses[@]}"; do
 
+  # Intermediate/Output directories
+  dir_list=("${DATA}/diags" "${DATA}/anl" "${DATA}/bkg" "${DATA}/test")
+  for dir in "${dir_list[@]}"; do
+    if [ -d "${dir}" ]; then
+      echo "Removing existing directory: $dir"
+      rm -rf $dir
+    fi
+    echo "Creating directory: $dir"
+    mkdir -p $dir
+  done
+
+  # Set up background
+  if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
+    for itile in {1..6}
+    do
+      sfc_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
+      sfc_bkg_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
+      cp -p ${sfc_fn} "${DATA}/bkg/${sfc_bkg_fn}"
+      ln -nsf "${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}_oro_data.tile${itile}.nc" "${DATA}/bkg/."
+    done
+    cp -p ${FILEDATE}.coupler.res ${DATA}/bkg
+  
+    # Set JEDI executable
+    jedi_exe_fn="fv3jedi_var.x"
+  
+  else # letkf-oi
+
+    if [ "${jedi_type}" = "snow" ]; then
+      for ens in {1..2}
+      do
+        mkdir -p $DATA/mem${ens}
+        cp -p ${FILEDATE}.sfc_data.tile*.nc ${DATA}/mem${ens}
+        cp -p ${FILEDATE}.coupler.res ${DATA}/mem${ens}
+      done
+    
+      ${USHlandda}/letkf_create_ens.py $FILEDATE $snowdepth_vn 30
+      if [[ $? != 0 ]]; then
+        err_exit "letkf-oi create failed"
+      fi  
+    fi
+
+    # Set JEDI executable
+    jedi_exe_fn="fv3jedi_letkf.x"
+
+  fi
+  
   # JEDI field metadata file
   if [ "${jedi_type}" = "snow" ]; then
     if [ "${FRAC_GRID}" = "YES" ]; then
@@ -163,7 +173,7 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
       snowdepth_vn="snwdph"
       cp -p ${PARMlandda}/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart_nofrac.yaml ${DATA}/Data/fv3files/fv3jedi_fieldmetadata_restart.yaml
     fi
-  elif [ "${jedi_type}" = "soil_moisture"]; then
+  elif [ "${jedi_type}" = "soil_moisture" ]; then
     cp -p ${PARMlandda}/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart_soil_moisture.yaml ${DATA}/Data/fv3files/fv3jedi_fieldmetadata_restart.yaml
   fi
   

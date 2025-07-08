@@ -337,7 +337,7 @@ workflow:
         OBS_GHCN_SNOW: "&OBS_GHCN_SNOW;"
         OBS_IMS_SNOW: "&OBS_IMS_SNOW;"
         OBS_SFCSNO: "&OBS_SFCSNO;"
-        OBS_SMAP: "&OBS_SMAP"
+        OBS_SMAP: "&OBS_SMAP;"
         PDY: "&PDY;"
         PY_LOG_LEVEL: "&PY_LOG_LEVEL;"
         RES: "&RES;"
