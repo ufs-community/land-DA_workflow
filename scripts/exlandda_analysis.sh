@@ -282,6 +282,43 @@ EOF
     cp -p "${DATA}/${inc_fn_prefix}.tile${itile}.nc" ${COMOUT}
   done
 
+  ############################################################
+  # Comparison plot of sfc_data by JEDI increment
+  ############################################################
+  DO_PLOT_SFC_COMP="${DO_PLOT_SFC_COMP:-YES}"
+  if [ "${DO_PLOT_SFC_COMP}" = "YES" ]; then
+  
+    fn_sfc_base="${FILEDATE}.sfc_data.tile"
+    fn_inc_base="${inc_fn_prefix}.tile"
+    out_title_base="Land-DA::SFC-DATA::${jedi_type}::${PDY}::"
+    out_fn_base="landda_comp_sfc_${jedi_type}_${PDY}_"
+    # zlevel_number is valid only for 3-D fields such as stc/smc/slc
+    zlevel_number="1"
+  
+    cat > plot_comp_sfc.yaml <<EOF
+work_dir: '${DATA}'
+fix_dir: '${FIXlandda}'
+fn_sfc_base: '${fn_sfc_base}'
+fn_inc_base: '${fn_inc_base}'
+jedi_exe: '${JEDI_ALGORITHM}'
+jedi_type: '${jedi_type}'
+orog_path: '${orog_path}'
+orog_fn_base: '${orog_fn_base}'
+out_title_base: '${out_title_base}'
+out_fn_base: '${out_fn_base}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
+zlevel_number: '${zlevel_number}'
+EOF
+
+    ${USHlandda}/plot_comp_sfc_data.py
+    if [ $? -ne 0 ]; then
+      err_exit "sfc_data comparison plot failed"
+    fi
+  
+    # Copy result file to COMOUT
+    cp -p ${out_fn_base}* ${COMOUTplot}  
+  fi
+
 done
 
 # Copy the final sfc_data files to COMOUT
@@ -293,44 +330,6 @@ done
 if [ -d diags ]; then
   cp -p diags/* ${COMOUThofx}
   ln -nsf ${COMOUThofx}/*.nc ${DATA_HOFX}
-fi
-
-
-############################################################
-# Comparison plot of sfc_data by JEDI increment
-############################################################
-DO_PLOT_SFC_COMP="YES"
-if [ "${DO_PLOT_SFC_COMP}" = "YES" ]; then
-
-  fn_sfc_base="${FILEDATE}.sfc_data.tile"
-  fn_inc_base="${inc_fn_prefix}.tile"
-  out_title_base="Land-DA::SFC-DATA::${PDY}::"
-  out_fn_base="landda_comp_sfc_${PDY}_"
-  # zlevel_number is valid only for 3-D fields such as stc/smc/slc
-  zlevel_number="1"
-
-  cat > plot_comp_sfc.yaml <<EOF
-work_dir: '${DATA}'
-fn_sfc_base: '${fn_sfc_base}'
-fn_inc_base: '${fn_inc_base}'
-jedi_exe: '${JEDI_ALGORITHM}'
-orog_path: '${orog_path}'
-orog_fn_base: '${orog_fn_base}'
-out_title_base: '${out_title_base}'
-out_fn_base: '${out_fn_base}'
-fix_dir: '${FIXlandda}'
-zlevel_number: '${zlevel_number}'
-PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
-EOF
-
-  ${USHlandda}/plot_comp_sfc_data.py
-  if [ $? -ne 0 ]; then
-    err_exit "sfc_data comparison plot failed"
-  fi
-
-  # Copy result file to COMOUT
-  cp -p ${out_fn_base}* ${COMOUTplot}
-
 fi
 
 

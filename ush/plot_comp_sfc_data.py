@@ -3,7 +3,7 @@
 ###################################################################### CHJ #####
 ## Name		: plot_comp_sfc_data.py
 ## Usage	: Plot comparison of sfc_data files by analysis task
-## Input files  : sfc_data.tile#.nc / sfc_data.tile#.nc_old
+## Input files  : sfc_data.tile#.nc
 ## NOAA/EPIC
 ## History ===============================
 ## V000: 2024/12/10: Chan-Hoo Jeon : Preliminary version
@@ -43,16 +43,17 @@ def main():
     f.close()
 
     work_dir=yaml_data['work_dir']
+    fix_dir=yaml_data['fix_dir']
     fn_sfc_base=yaml_data['fn_sfc_base']
     fn_inc_base=yaml_data['fn_inc_base']
+    jedi_exe=yaml_data['jedi_exe']
+    jedi_type=yaml_data['jedi_type']
     orog_path=yaml_data['orog_path']
     orog_fn_base=yaml_data['orog_fn_base']
-    zlvl=yaml_data['zlevel_number']
     out_title_base=yaml_data['out_title_base']
     out_fn_base=yaml_data['out_fn_base']
-    fix_dir=yaml_data['fix_dir']
-    jedi_exe=yaml_data['jedi_exe']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
+    zlvl=yaml_data['zlevel_number']
 
     # Set logging config
     log_level_str = PY_LOG_LEVEL.upper()
@@ -70,16 +71,19 @@ def main():
     # Set the path to Natural Earth dataset
     cartopy.config['data_dir']=os.path.join(fix_dir,"NaturalEarth")
 
-    sfc_var_nm="snwdph"
+    if jedi_type == "snow":
+        sfc_var_nm="snwdph"
+    elif jedi_type == "soil_moisture":
+        sfc_var_nm="smc"
 
     # get lon, lat from orography
     slmsk=get_geo(orog_path,orog_fn_base)
     # get sfc data before analysis
-    sfc1_data, sfc1_slmsk = get_sfc(work_dir,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,'before')
+    sfc1_data, sfc1_slmsk = get_sfc(work_dir,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,'before')
     # get sfc data after analysis
-    sfc2_data, sfc2_slmsk = get_sfc(work_dir,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,'after')
+    sfc2_data, sfc2_slmsk = get_sfc(work_dir,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,'after')
     # get sfc increment data of analysis
-    sfc_xainc_data, sfc_xainc_slmsk = get_sfc(work_dir,fn_inc_base,sfc_var_nm,zlvl,jedi_exe,'inc')
+    sfc_xainc_data, sfc_xainc_slmsk = get_sfc(work_dir,fn_inc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,'inc')
     # compare sfc1 and sfc2
     compare_sfc(sfc1_data,sfc2_data,sfc_xainc_data,sfc_var_nm)
     # diagnosis
@@ -157,14 +161,14 @@ def get_geo(orog_path,orog_fn_base):
 
 
 # Get sfc_data from files and plot ================================== CHJ =====
-def get_sfc(path_sfc,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,sfc_opt):
+def get_sfc(path_sfc,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,sfc_opt):
 # =================================================================== CHJ =====
 
     logging.info(f''' ===== sfc files: {sfc_var_nm} :: {sfc_opt} ===============================''')
     sfc_data_all=[]
     sfc_slmsk_all=[]
     if sfc_opt == 'before':
-        fn_sfc_ext=".nc_old"
+        fn_sfc_ext=f'''.nc_{jedi_type}_before_inc'''
     else:
         fn_sfc_ext=".nc"
 
