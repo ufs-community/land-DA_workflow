@@ -18,7 +18,7 @@ The Joint Effort for Data assimilation Integration (:term:`JEDI`) is a unified a
    * The Object-Oriented Prediction System (:jedi:`OOPS <inside/jedi-components/oops/index.html>`) for the data assimilation algorithm 
    * The Interface for Observation Data Access (:jedi:`IODA <inside/jedi-components/ioda/index.html>`) for the observation formatting and processing
    * The Unified Forward Operator (:jedi:`UFO <inside/jedi-components/ufo/index.html>`) for comparing model forecasts and observations 
-   * The System Agnostic Background Error Representation (:jedi:`SABER <inside/jedi-components/saber/index.html>`) for computing and manipulating with the background error covariance matrix
+   * The System Agnostic Background Error Representation (:jedi:`SABER <inside/jedi-components/saber/index.html>`) for computing and manipulating the background error covariance matrix
    * The VAriable DErivation Repository (:jedi:`VADER <inside/jedi-components/vader/index.html>`) for producing new variables from known variables
 
 .. _jedi-config-and-params:
@@ -34,7 +34,7 @@ When the experiment is generated, the first :ref:`workflow tasks <wflow-overview
    * ``prep_data``
    * ``pre_anal`` (:term:`LND`) or ``fcst_ic`` (:term:`ATML`) (not required for every experiment)
 
-The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and information provided in the ``land_analysis.xml`` file (e.g., DA algorithm, cycle dates). The template file `jcb-base_snow.yaml.j2 <https://github.com/ufs-community/land-DA_workflow/blob/develop/parm/jedi/jcb-base_snow.yaml.j2>`_ is filled in using information from ``land_analysis.xml`` during the ``jcb`` task. This produces the ``jcb-base_snow.yaml`` file, which points to files containing information on geometry, time window, background, driver, local ensemble DA, and output increment. This information is used as input to create a YAML file (``jedi_<algorithm>_snow.yaml``, where ``<algorithm>`` is ``letkf-oi`` or ``3dvar``) containing detailed algorithm-specific information. These two files (``jcb-base_snow.yaml`` and ``jedi_<algorithm>_snow.yaml``) form the basis of the DA system configuration in the Land DA System. 
+The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and information provided in the ``land_analysis.xml`` file (e.g., DA algorithm, cycle dates). The template file `jcb-base_snow.yaml.j2 <https://github.com/ufs-community/land-DA_workflow/blob/develop/parm/jedi/jcb-base_snow.yaml.j2>`_ is filled in using information from ``land_analysis.xml`` during the ``jcb`` task. This produces the ``jcb-base_snow.yaml`` file, which points to files containing information on geometry, time window, background, driver, local ensemble DA, and/or output increment. This information is used as input to create a YAML file (``jedi_<algorithm>_snow.yaml``, where ``<algorithm>`` is ``letkf-oi`` or ``3dvar``) containing detailed algorithm-specific information. These two files (``jcb-base_snow.yaml`` and ``jedi_<algorithm>_snow.yaml``) form the basis of the DA system configuration in the Land DA System. 
 
 .. COMMENT: Or from land_analysis.yaml? ^
 
@@ -570,7 +570,7 @@ Geometry
 
 The :jedi:`geometry <using/building_and_running/config_content.html#geometry>` section is used in JEDI configuration files "to define the model grid (both horizontal and vertical) and its parallelization across compute nodes." Most geometry definitions in this section are borrowed from the FV3-JEDI :jedi:`Geometry <inside/jedi-components/fv3-jedi/classes.html#geometry>`, :jedi:`FieldMetadata <inside/jedi-components/fv3-jedi/classes.html#fieldmetadata>`, and :jedi:`State/Increment/Field <inside/jedi-components/fv3-jedi/classes.html#state-increment-fields>` documentation. Note that for variational (e.g., 3D-Var data assimilation), the ``geometry:`` section appears in :jedi:`multiple places <inside/jedi-components/mpas-jedi/classes.html#nml-file-and-streams-file>` --- under ``cost function:`` and within each of the ``iterations:`` vector members under ``variational:``.
 
-   ``fms initialization``
+   ``fms initialization:``
       This section contains two parameters, ``namelist filename`` and ``field table filename``, which are required for :term:`FMS` initialization. 
 
       ``namelist filename`` (Default: Data/fv3files/fmsmpp.nml)
@@ -591,10 +591,10 @@ The :jedi:`geometry <using/building_and_running/config_content.html#geometry>` s
    ``npz`` (Default: 64)
       Specifies the number of vertical layers.
 
-   ``field metadata override`` (Default: Data/fv3files/fv3jedi_fieldmetadata_restart.yaml)
+   ``field metadata override:`` (Default: Data/fv3files/fv3jedi_fieldmetadata_restart.yaml)
       Specifies the path to field metadata file, which is a YAML file overwriting some default fields that the system will be able to allocate. See :jedi:`FieldMetadata documentation <inside/jedi-components/fv3-jedi/classes.html#fieldmetadata>`.
 
-   ``time invariant fields``
+   ``time invariant fields:``
       This YAML section contains state fields and derived fields. See :jedi:`State/Increment/Field documentation <inside/jedi-components/fv3-jedi/classes.html#state-increment-fields>`.
 
       ``state fields:``
@@ -610,8 +610,8 @@ The :jedi:`geometry <using/building_and_running/config_content.html#geometry>` s
             Specifies whether to enable skipping coupler file. Valid values are: ``true`` | ``false``
 
          ``state variables``
-            Specifies the list of state variables. Valid values include: ``[orog_filt]``
-
+            Specifies the list of state variables. Valid values may include: ``[orog_filt, snwdph, vtype, slmsk, sheleg]``
+           
          ``datapath`` (Default: $LANDDAROOT/land-DA_workflow/fix/FV3_fix_tiled/C96)
             Specifies the path for state variables data.
 
@@ -630,7 +630,7 @@ These two items define the assimilation window for many applications, including 
       Specifies the beginning time window in ISO-8601 format. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour.
 
    ``length:`` (Default: PT24H)
-      Specifies the time window length ISO-8601 format. The form is PTXXH, where XX is a 1- or 2-digit hour. For example: ``PT6H``
+      Specifies the time window length in ISO-8601 format. The form is PTXXH, where XX is a 1- or 2-digit hour. For example: ``PT6H``
    
    ``bound to include:``
       Specifies which assimilation window bound is inclusive. Valid values: ``begin`` | ``end``
@@ -638,7 +638,7 @@ These two items define the assimilation window for many applications, including 
 Observations
 --------------
 
-The ``observations:`` item describes one or more types of observations, each of which is a multi-level YAML/JSON object in and of itself. Each of these observation types is read into JEDI as an ``eckit::Configuration`` object (see :jedi:`JEDI Observations Documentation <using/building_and_running/config_content.html#observations>` for more details).
+The ``observations:`` field describes one or more types of observations, each of which is a multi-level YAML/JSON object in and of itself. Each of these observation types is read into JEDI as an ``eckit::Configuration`` object (see :jedi:`JEDI Observations Documentation <using/building_and_running/config_content.html#observations>` for more details).
 
 ``obs space:``
 ^^^^^^^^^^^^^^^^
@@ -982,10 +982,11 @@ The IODA file format represents observational field variables (e.g., temperature
 
 Since the raw observational data come in various formats, a diverse set of "IODA converters" exists to transform the raw observation data files into IODA format. While many of these Python-based IODA converters have been developed to handle marine-based observations, users can utilize the "IODA converter engine" components to develop and implement their own IODA converters to prepare arbitrary observation types for data assimilation within JEDI. (See https://github.com/NOAA-PSL/land-DA_update/blob/develop/jedi/ioda/imsfv3_scf2iodaTemp.py for the Land DA IMS IODA converter.)
 
-The Land DA System includes options to use observation data in :term:`GHCN`, :term:`IMS`, :term:`SFCSNO`, and/or Soil Moisture Active Passive (:term:`SMAP`) data format. It also includes a variety of utility scripts to convert observation data to IODA format: 
+The Land DA System includes options to use observation data in :term:`GHCN`, :term:`IMS`, and :term:`SFCSNO` format. It also includes a variety of utility scripts to convert observation data to IODA format: 
 
 * :github:`ghcn_snod2ioda.py <blob/develop/ush/ghcn_snod2ioda.py>`
 * :github:`imsfv3_scf2ioda.py <blob/develop/ush/imsfv3_scf2ioda.py>`
-* :github:`smap_ssm2ioda.py <blob/develop/ush/smap_ssm2ioda.py>`
 
 IODA can also read in certain :jedi:`file formats <inside/jedi-components/ioda/file-formats.html>`, such as BUFR, with a mapping file, such as the :github:`bufr_sfcsno_mapping.yaml <blob/develop/parm/jedi/bufr_sfcsno_mapping.yaml>` file available in the Land DA repository. 
+
+Developers are in the process of adding soil moisture DA to the Land DA system. This functionality will use Soil Moisture Active Passive (:term:`SMAP`) observations and the :github:`smap_ssm2ioda.py <blob/develop/ush/smap_ssm2ioda.py>` utility script to convert observation data to IODA format. 

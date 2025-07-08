@@ -181,7 +181,7 @@ In the :term:`LND` configuration of the Land DA System, users can choose to use 
      - cold
      - 2025-01-17 00z
      - 2
-   * - config.LND.era5.letkfoi.smap.warmstart.yaml
+   * - config.LND.era5.letkfoi.smap.warmstart.yaml (in testing; not yet fully functional)
      - ERA5
      - letkf-oi
      - SMAP
@@ -481,15 +481,10 @@ SFCSNO files are Global Telecommunication System (GTS) data from :term:`GDAS`/:t
        simulated variables:
        - totalSnowDepth
 
-SMAP Snow Depth Files
-^^^^^^^^^^^^^^^^^^^^^^^
+SMAP Soil Moisture Files
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Soil Moisture Active Passive Data (`SMAP <https://nsidc.org/data/smap>`_) "includes data products derived from an L-band radiometer and high-resolution L-band radar instrument that make up the orbiting observatory of the Soil Moisture Active Passive (SMAP) satellite mission."
-
-The ``ush`` directory contains two utility scripts used by the ``prep_data`` task to convert SMAP soil moisture data to IODA format: ``smap_ioda_concat_files.py`` and ``smap_ssm2ioda.py``. 
-
-.. COMMENT:
-   Where can data be obtained? 
+Soil Moisture Active Passive Data (`SMAP <https://nsidc.org/data/smap>`_) "includes data products derived from an L-band radiometer and high-resolution L-band radar instrument that make up the orbiting observatory of the Soil Moisture Active Passive (SMAP) satellite mission." Currently, the Land DA System only performs snow DA, but developers are in the process of adding soil moisture DA functionality to the repository. This functionality will use SMAP observations, which can be obtained from the `National Snow and Ice Data Center <https://nsidc.org/data/smap/data?field_data_set_keyword_value=3>`_. The ``ush`` directory contains two utility scripts that will be used by the ``prep_data`` task to convert SMAP soil moisture data to IODA format: ``smap_ioda_concat_files.py`` and ``smap_ssm2ioda.py``. 
 
 .. _restart:
 

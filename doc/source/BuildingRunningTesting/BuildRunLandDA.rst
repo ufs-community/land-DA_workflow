@@ -87,7 +87,7 @@ Several sample experiment configurations come with the Land DA System. Although 
 * ``config.LND.gswp3.3dvar.ghcn.coldstart.yaml``
 * ``config.LND.era5.3dvar.ims.warmstart.yaml``
 * ``config.LND.gswp3.letkfoi.ghcn.warmstart.yaml``
-* ``config.LND.era5.letkfoi.smap.warmstart.yaml``
+* ``config.LND.era5.letkfoi.smap.warmstart.yaml`` (in testing; not yet fully functional)
 
 The sample configuration files are named based on their features: 
 
