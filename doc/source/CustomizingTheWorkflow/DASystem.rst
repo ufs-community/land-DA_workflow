@@ -656,10 +656,10 @@ The ``obs space:`` section of the YAML comes under the ``observations.observers:
       Specifies the list of variables that need to be simulated by the observation operator. Valid values: ``[totalSnowDepth]``
 
    ``obsdatain:``
-      This section specifies information about the observation input data.
+      This section specifies information about the observation input data. See :jedi:`JEDI File documentation <inside/conventions/files_and_components.html#files>`.
 
       ``engine:``
-         This section specifies parameters required for the file matching engine.  
+         A type of file provider (e.g., HDF5, BUFR, NetCDF). Attributes in this section provide information required for the file matching engine.  
 
          ``type:`` 
             Specifies the type of input observation data. Valid values: ``H5File`` | ``OBS`` | ``bufr``
@@ -668,10 +668,10 @@ The ``obs space:`` section of the YAML comes under the ``observations.observers:
             Specifies the relative path to the input file, where ``<obs_type>`` is one of the values in ``obs space.name``. 
 
    ``obsdataout:``
-      This section contains information about the observation output data.
+      This section contains information about the observation output data. See :jedi:`JEDI File documentation <inside/conventions/files_and_components.html#files>`.
 
       ``engine:``
-         This section specifies parameters required for the file matching engine. 
+         A type of file provider (e.g., HDF5, BUFR, NetCDF). Attributes in this section provide information required for the file matching engine. 
 
          ``type:`` (Default: H5File)
             Specifies the type of output observation data. Valid values: ``H5File``
@@ -690,7 +690,7 @@ The ``obs operator:`` section describes the observation operator and its options
 ``obs error:``
 ^^^^^^^^^^^^^^^^
 
-The ``obs error:`` section explains how to calculate the observation error covariance matrix and gives instructions (required for DA applications). The key covariance model, which describes how observation error covariances are created, is frequently the first item in this section. For diagonal observation error covariances, only the diagonal option is currently supported.
+The ``obs error:`` section explains how to calculate the observation error covariance matrix and gives instructions (required for DA applications). The key covariance model, which describes how observation error covariances are created, is frequently the first item in this section. For diagonal observation error covariances, only the diagonal option is currently supported. See more on obs error in the :jedi:`JEDI Observations documentation <using/building_and_running/config_content.html#observations>`.
 
    ``covariance model:``
       Specifies the covariance model. Valid values include: ``diagonal``
@@ -722,18 +722,18 @@ The ``obs error:`` section explains how to calculate the observation error covar
    ``max nobs:``
       Maximum number of observations used to update each location. 
    
-   ``vertical lengthscale:``
-      700
+   ``vertical lengthscale:`` (Default: 700)
+      Maximum vertical localization distance in meters from given coordinate.
 
 ``obs filters:``/ ``obs [pre|prior|post] filters:``
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Observation filters are used to define Quality Control (QC) filters. They have access to observation values and metadata, model values at observation locations, simulated observation value, and their own private data. See :jedi:`Observation Filters <inside/jedi-components/ufo/qcfilters/introduction.html#observation-filters>` in the JEDI Documentation for more detail. The ``obs filters:`` section contains the following fields:
+Observation filters define which Quality Control (QC) filters to use. They have access to observation values and metadata, model values at observation locations, simulated observation value, and their own private data. See :jedi:`Observation Filters <inside/jedi-components/ufo/qcfilters/introduction.html#observation-filters>` in the JEDI Documentation for more detail. The ``obs filters:`` section contains the following fields:
 
    ``filter:``
       Specifies a QC filter and its parameters. Valid values include: ``Bounds Check`` | ``Background Check`` | ``Create Diagnostic Flags`` | ``Domain Check`` | ``RejectList`` | ``Perform Action`` | ``Variable Assignment`` | ``Temporal Thinning`` | ``Difference Check`` | ``BlackList`` | ``Met Office Buddy Check``. The descriptions below are pulled directly from JEDI's documentation on :jedi:`Generic QC Filters <inside/jedi-components/ufo/qcfilters/GenericQC.html>`; users should view JEDI's documentation for detailed descriptions and information on filter parameters. The documentation also includes additional filter options. 
 
-      .. list-table:: Preconfigured LND Cases
+      .. list-table:: JEDI QC Filters
          :header-rows: 1
 
          * - Filter Name
@@ -742,10 +742,10 @@ Observation filters are used to define Quality Control (QC) filters. They have a
            - Rejects observations whose values lie outside specified limits 
          * - :jedi:`Background Check <inside/jedi-components/ufo/qcfilters/GenericQC.html#background-check-filter>` 
            - Checks for bias-corrected distance between the observation value and model-simulated value (*y* - *H(x)*) and rejects observations where the absolute difference is larger than the ``absolute threshold`` or the :math:`threshold * observation error` or the :math:`threshold * background error`. 
-         * - :jedi:`BlackList / RejectList <inside/jedi-components/ufo/qcfilters/GenericQC.html#blacklist-filter>`
-           - Rejects all observations selected by the :jedi:`where <inside/jedi-components/ufo/qcfilters/FilterOptions.html#where-statement>` statement. The status of all others remains the same. Opposite of Domain Check filter.
          * - :jedi:`Domain Check <inside/jedi-components/ufo/qcfilters/GenericQC.html#domain-check-filter>`
            - Retains all observations selected by the ``where`` statement and rejects all others. 
+         * - :jedi:`BlackList / RejectList <inside/jedi-components/ufo/qcfilters/GenericQC.html#blacklist-filter>`
+           - Rejects all observations selected by the :jedi:`where <inside/jedi-components/ufo/qcfilters/FilterOptions.html#where-statement>` statement. The status of all others remains the same. Opposite of Domain Check filter.
          * - :jedi:`Perform Action <inside/jedi-components/ufo/qcfilters/GenericQC.html#perform-action-filter>`
            - Performs the action specified in the action parameter on observations selected by the ``where`` statement.
          * - :jedi:`Temporal Thinning <inside/jedi-components/ufo/qcfilters/GenericQC.html#temporal-thinning-filter>`
@@ -778,7 +778,7 @@ Observation filters are used to define Quality Control (QC) filters. They have a
       Maximum value for variables in the filter. 
 
    ``threshold:``
-      This variable may function differently depending on the filter it is used in. In the :jedi:`Background Check Filter <inside/jedi-components/ufo/qcfilters/GenericQC.html#background-check-filter>`, an observation is rejected when the difference between the observation value (*y*) and model simulated value (*H(x)*) is larger than the ``threshold`` * *observation error*. 
+      This variable may function differently depending on the filter it is used in. In the :jedi:`Background Check Filter <inside/jedi-components/ufo/qcfilters/GenericQC.html#background-check-filter>`, an observation is rejected when the difference between the observation value (*y*) and model simulated value (*H(x)*) is larger than the :math:`threshold * observation error`. 
 
    ``action:``
       Indicates which action to take once an observation has been flagged by a filter. See :jedi:`Filter Actions <inside/jedi-components/ufo/qcfilters/FilterOptions.html#filter-actions>` in the JEDI documentation for a full explanation and list of valid values. 
@@ -814,7 +814,7 @@ Observation filters are used to define Quality Control (QC) filters. They have a
 Main 3D-Var Parameters
 -------------------------
 
-The :jedi:`main components required for running a 3D-Var data assimilation experiment <inside/jedi-components/oops/applications/variational.html#variational-application-yaml-structure>` are ``cost function:``, ``variational:``, and ``final:``. 
+The :jedi:`main components for running a 3D-Var data assimilation experiment <inside/jedi-components/oops/applications/variational.html#variational-application-yaml-structure>` are ``cost function:``, ``variational:``, and ``final:``. 
 
 ``cost function:``
 ^^^^^^^^^^^^^^^^^^^^
@@ -878,11 +878,12 @@ The ``final:`` block is optional but used frequently to configure the output dia
 ``diagnostics.departures:`` (Default: ``anlmob``)
    Saves the difference between H(analysis) and observations in the output file. 
 
-The ``increment.output`` field indicates information about the increment output file(s). In the example below, the Land DA increment file will be located in the temp directory for the analysis task under the ``anl`` directory (e.g., ``tmp_dir/analysis.${cycle_date}.${jobid}``). Each file will be prefixed with the name ``snowinc``, followed by the cycle date/time and type of file (i.e., ``coupler.res`` or ``sfc_data.{tile#}.nc``). For example, ``snowinc.20250119.000000.coupler.res`` or ``snowinc.20250119.000000.sfc_data.tile4.nc`` 
+``increment.output:`` 
+   This field indicates information about the increment output file(s). In the example above, the Land DA increment file will be located in the temp directory for the analysis task under the ``anl`` subdirectory (e.g., ``tmp_dir/analysis.${cycle_date}.${jobid}``). Each file will be prefixed with the name ``snowinc``, followed by the cycle date/time and type of file (i.e., ``coupler.res`` or ``sfc_data.{tile#}.nc``). For example, ``snowinc.20250119.000000.coupler.res`` or ``snowinc.20250119.000000.sfc_data.tile4.nc`` 
 
 The ``increment`` field also includes a ``geometry`` block similar to other sections of the YAML. 
 
-After the ``final`` block, there is a one-line ``final j evaluation:`` "block" indicating whether to evaluate J (the cost function). In Land DA, the is set to false by default. 
+After the ``final`` block, there is a one-line ``final j evaluation:`` "block" indicating whether to evaluate J (the cost function). In Land DA, this field is set to false by default. 
 
 Background Error (for ``3dvar``)
 ----------------------------------
@@ -894,7 +895,7 @@ Background (for ``letkf-oi``)
 The ``background:`` section includes information on the forecast members generated by the previous cycle, which form the background for the current cycle. 
 
    ``datapath:`` (Default: bkg)
-      Specifies the path for state variable data. Valid values: ``mem_pos/`` | ``mem_neg/``. (With default experiment values, the full path will be ``ptmp/test/tmp/analysis.${PDY}${cyc}.${jobid}``.)
+      Specifies the path for state variable data. Valid values: ``mem_pos/`` | ``mem_neg/``. (With default experiment values, the full path will be ``ptmp/test_*/tmp/analysis.${PDY}${cyc}.${jobid}``.)
 
    ``filetype:`` (Default: fms restart)
       Specifies the type of file. Valid values include: ``fms restart``
@@ -907,7 +908,7 @@ The ``background:`` section includes information on the forecast members generat
 
       .. COMMENT: Date & time of the background forecast? 
 
-   ``state variables:`` (Default: [snwdph,vtype,slmsk])
+   ``state variables:``
       Specifies a list of state variables. Valid values: ``[snwdph,vtype,slmsk,sheleg,orogfilt]``
 
    
@@ -980,7 +981,7 @@ IODA provides a unified, model-agnostic method of sharing observation data and e
 
 The IODA file format represents observational field variables (e.g., temperature, salinity, humidity) and locations in two-dimensional tables, where the variables are represented by columns and the locations by rows. Metadata tables are associated with each axis of these data tables, and the location metadata hold the values describing each location (e.g., latitude, longitude). Actual data values are contained in a third dimension of the IODA data table; for instance: observation values, observation error, quality control flags, and simulated observation (H(x)) values.
 
-Since the raw observational data come in various formats, a diverse set of "IODA converters" exists to transform the raw observation data files into IODA format. While many of these Python-based IODA converters have been developed to handle marine-based observations, users can utilize the "IODA converter engine" components to develop and implement their own IODA converters to prepare arbitrary observation types for data assimilation within JEDI. (See https://github.com/NOAA-PSL/land-DA_update/blob/develop/jedi/ioda/imsfv3_scf2iodaTemp.py for the Land DA IMS IODA converter.)
+Since the raw observational data come in various formats, a diverse set of "IODA converters" exists to transform the raw observation data files into IODA format. While many of these Python-based IODA converters have been developed to handle marine-based observations, users can utilize the "IODA converter engine" components to develop and implement their own IODA converters to prepare arbitrary observation types for data assimilation within JEDI. 
 
 The Land DA System includes options to use observation data in :term:`GHCN`, :term:`IMS`, and :term:`SFCSNO` format. It also includes a variety of utility scripts to convert observation data to IODA format: 
 
