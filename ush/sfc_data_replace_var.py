@@ -10,6 +10,8 @@
 
 import os
 import sys
+import logging
+import yaml
 import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,16 +20,34 @@ import matplotlib.pyplot as plt
 # Main part (will be called at the end) ============================= CHJ =====
 def main():
 
-    work_dir = "./"
-    fn_data_base = '20250119.000000.sfc_data.tile'
-    sfc_data_fn_suffix = '.nc_soil_moisture_before_inc'
-    jedi_out_fn_prefix = 'jedi_smc.'
-    jedi_out_fn_suffix = '.nc'
-    new_sfc_data_fn_suffix = '.nc_soil_moisture_test'
-    
+    yaml_file = "sfc_replace_var.yaml"
+    with open(yaml_file, 'r') as f:
+        yaml_data = yaml.load(f, Loader=yaml.FullLoader)
+    f.close()
+
+    work_dir = yaml_data['work_dir']
+    fn_data_base = yaml_data['fn_data_base']
+    sfc_data_fn_suffix = yaml_data['sfc_data_fn_suffix']
+    jedi_out_fn_prefix = yaml_data['jedi_out_fn_prefix']
+    jedi_out_fn_suffix = yaml_data['jedi_out_fn_suffix']
+    new_sfc_data_fn_suffix = yaml_data['new_sfc_data_fn_suffix']
+    PY_LOG_LEVEL = yaml_data['PY_LOG_LEVEL']
+
+    # Set logging config
+    log_level_str = PY_LOG_LEVEL.upper()
+    try:
+        log_level = getattr(logging, log_level_str)
+    except AttributeError:
+        log_level_str = "INFO"
+        log_level = logging.INFO
+        print(f''' WARNING: Invalid log level "{PY_LOG_LEVEL.upper()}", set to INFO.''')
+    print(f''' Python Log Level= str: {log_level_str}, attr: {log_level}''')
+    logging.basicConfig(format='%(levelname)s::%(pathname)s::L%(lineno)d::%(message)s', level=log_level)
+    logging.info(f''' YAML Data: {yaml_data}''')
+   
     var_list = ["smc"]
 
-    num_tiles = 1
+    num_tiles = 6
     for it in range(num_tiles):
         itp = it+1
         # Input and output file name
@@ -37,56 +57,53 @@ def main():
         # Path to input files
         sfc_data_fp = os.path.join(work_dir, sfc_data_fn)
         jedi_out_fp = os.path.join(work_dir, jedi_out_fn)
+        logging.info(f''' File 1: {sfc_data_fp}''')
+        logging.info(f''' File 2: {jedi_out_fp}''')
         # Open the NetCDF datasets
         try:
             ds1 = xr.open_dataset(sfc_data_fp)
-            print(ds1)
+          #  print(ds1)
             ds2 = xr.open_dataset(jedi_out_fp)
-            print(ds2)
+          #  print(ds2)
         except FileNotFoundError:
-            print(f'''Error: One of both files not found at {work_dir}''')
+            logging.error(f'''Error: One of both files not found at {work_dir}''')
         except Exception as e:
-            print(f'''An error occurred: {e}''')
+            logging.error(f'''An error occurred: {e}''')
 
         # Check if the values of slmsk are identical in two netcdf files
         slmsk1 = ds1['slmsk'].squeeze('Time')
         slmsk2 = ds2['slmsk'].squeeze('Time')
-        print(slmsk1.shape)
-        print(slmsk2.shape)
         slmsk1_val = slmsk1.values
         slmsk2_val = slmsk2.values
-        print(f''' slmsk, file1, max: {np.max(slmsk1_val)}, min: {np.min(slmsk1_val)}''')
-        print(f''' slmsk, file2, max: {np.max(slmsk2_val)}, min: {np.min(slmsk2_val)}''')
         nan_count = np.sum(np.isnan(slmsk2_val))
-        print(f''' Number of NaN elements: {nan_count}''')
+        logging.info(f''' slmsk2: {slmsk2_val.shape}: number of NaN elements: {nan_count}''')
 
         chk_slmsk = np.array_equal(slmsk1_val, slmsk2_val, equal_nan=True)
         if chk_slmsk:
-            print(f''' The values of the Sea-Land Mask (slmsk) are identical in two files.''')
+            logging.info(f''' The values of the Sea-Land Mask (slmsk) are identical in two files.''')
         else:
-            print(f''' WARNING: The values of the Sea-Land Mask (slmsk) are NOT identical in two files !!!''')
+            logging.warning(f''' WARNING: The values of the Sea-Land Mask (slmsk) are NOT identical in two files !!!''')
             slmsk_diff = slmsk1_val - slmsk2_val
             non_zero_count = np.count_nonzero(slmsk_diff)
-            print(f''' Number of non-identical elements: {non_zero_count}''')
+            logging.info(f''' Number of non-identical elements: {non_zero_count}''')
             plot_comp_var_tile('slmsk', slmsk1_val, slmsk2_val, itp, 0, work_dir)
 
         # Check the target variables and replace them with JEDI output
         for var in var_list:
-            print(f''' Tile #: {itp}, Variable: {var}''')
+            logging.info(f''' ===== Tile #: {itp}, Variable: {var} =====''')
             # Check if the variable exists in both datasets
             if var in ds1.variables and var in ds2.variables:
                 # Exclude 1st dimension (Time)
                 var1_3d = ds1[var].squeeze('Time')
                 var2_3d = ds2[var].squeeze('Time')
-               
+              
                 num_zaxis = var1_3d.shape[0]
                 for iz in range(num_zaxis):
                     izp = iz+1
-                    print(f''' Layer (z-axis) #: {izp}''')
                     plot_comp_var_tile(var, var1_3d[iz,:,:], var2_3d[iz,:,:], itp, izp, work_dir)
 
             else:
-                print(f''' Variable "{var}" not found in one or both datasets.''')
+                logging.error(f''' Variable "{var}" not found in one or both datasets.''')
     
             # Replace the variable in ds1 with the variable from ds2 (only 3rd/4th dimensions)
             ds1[var].values[..., :, :] = ds2[var].values[..., :, :]
@@ -94,7 +111,7 @@ def main():
         # Save the modified dataset to a new NetCDF file
         ds1.to_netcdf(new_sfc_data_fn)
 
-        print(f''' Variable "{var}" replaced and saved to "{new_sfc_data_fn}" successfully.''')
+        logging.info(f''' Variable "{var}" replaced and saved to "{new_sfc_data_fn}" successfully.''')
         ds1.close()
         ds2.close()
     
@@ -107,17 +124,18 @@ def plot_comp_var_tile(var_nm, var1, var2, tile_num, lyr_num, work_dir):
         fig1_title = f'''SFC_DATA :: {var_nm} :: Tile {tile_num}'''
         fig2_title = f'''JEDI_Output :: {var_nm} :: Tile {tile_num}'''
     else:
-        out_fn = f'''plot_comp_sfc_{var_nm}_tile{tile_num}_layer{lyr_num}'''        
+        out_fn = f'''plot_comp_sfc_{var_nm}_layer{lyr_num}_tile{tile_num}'''        
         fig1_title = f'''SFC_DATA :: {var_nm} :: Layer {lyr_num} :: Tile {tile_num}'''
         fig2_title = f'''JEDI_Output :: {var_nm} :: Layer {lyr_num} :: Tile {tile_num}'''
 
-    comb_array = np.concatenate((var1, var2))
-    comb_max = np.nanmax(comb_array)
-    comb_min = np.nanmin(comb_array)
-
+    var_all = np.concatenate((var1, var2))
+    var_max = np.nanmax(var_all)
+    var_min = np.nanmin(var_all)
+    logging.info(f''' {var_nm}, Layer: {lyr_num}, Max: {var_max}, Min: {var_min}''')
+ 
     cs_map = 'plasma'
-    cs_max = comb_max
-    cs_min = comb_min
+    cs_max = var_max
+    cs_min = var_min
     tick_ln=1.5
     tick_wd=0.45
     tlb_sz=4
