@@ -11,6 +11,8 @@ The Land DA System assembles a variety of modeling, data assimilation, pre-proce
 Modeling Components
 =====================
 
+.. _wm-component:
+
 The UFS Weather Model (WM)
 ----------------------------
 
@@ -64,7 +66,7 @@ The UFS Weather Model now contains a Noah-MP land component, which is used as th
 Data Assimilation
 ===================
 
-The Joint Effort for Data assimilation Integration (:term:`JEDI`) is a unified and versatile :term:`data assimilation` (DA) system for Earth system prediction that can be run on a variety of platforms. In the Land DA System, JEDI software can be used to perform snow data assimilation using :term:`GHCN`, :term:`IMS`, or :term:`SFCSNO` data with :term:`LETKF` or :term:`3D-Var` algorithms. JEDI is developed by the Joint Center for Satellite Data Assimilation (`JCSDA <https://www.jcsda.org/>`_) and partner agencies, including NOAA. 
+The Joint Effort for Data assimilation Integration (:term:`JEDI`) is a unified and versatile :term:`data assimilation` (DA) system for Earth system prediction that can be run on a variety of platforms. In the Land DA System, JEDI software can be used to perform snow data assimilation using :term:`GHCN`, :term:`IMS`, or :term:`SFCSNO` data with :term:`LETKF-OI` or :term:`3D-Var` algorithms. JEDI is developed by the Joint Center for Satellite Data Assimilation (`JCSDA <https://www.jcsda.org/>`_) and partner agencies, including NOAA. 
 
 The Land DA System uses three main JEDI components: 
    
@@ -161,7 +163,7 @@ The Land DA System allows users to configure various elements of the workflow. F
 JEDI Configuration Builder
 ----------------------------
 
-The JEDI Configuration Builder (JCB) is a python package used to assemble information on :term:`JEDI` algorithms (e.g., letkf, 3dvar) and data assimilation types (e.g., snow, marine, atmosphere) into one convenient YAML file for use in data assimilation applications. The `jcb-algorithms <https://github.com/NOAA-EPIC/jcb-algorithms>`_ repository contains YAML algorithm files (e.g., LETKF, 3DVar) for JCB; these files contain the high-level configuration structure that is prescribed by the JEDI data assimilation system. The `jcb-gdas <https://github.com/NOAA-EPIC/jcb-gdas>`_ repository contains information for different types of analysis (e.g., snow, marine, atmosphere).  
+The JEDI Configuration Builder (JCB) is a python package used to assemble information on :term:`JEDI` algorithms (e.g., letkf-oi, 3dvar) and data assimilation types (e.g., snow, marine, atmosphere) into one convenient YAML file for use in data assimilation applications. The `jcb-algorithms <https://github.com/NOAA-EPIC/jcb-algorithms>`_ repository contains YAML algorithm files (e.g., LETKF-OI, 3DVar) for JCB; these files contain the high-level configuration structure that is prescribed by the JEDI data assimilation system. The `jcb-gdas <https://github.com/NOAA-EPIC/jcb-gdas>`_ repository contains information for different types of analysis (e.g., snow, marine, atmosphere).  
 
 
 Unified Workflow (UW) Tools (``uwtools``)
