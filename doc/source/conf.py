@@ -62,10 +62,7 @@ user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Ge
 
 # Ignore working links that cause a linkcheck 403 error.
 linkcheck_ignore = [r'https://www\.intel\.com/content/www/us/en/developer/tools/oneapi/hpc\-toolkit\-download\.html',
-                    r'https://doi.org/10.1029/.*',
-                    r'https://doi.org/10.1002/.*',
                     r'https://doi.org/*',
-                    #r'https://doi.org/10.5281/zenodo.13909475', # DOI not published until release
                     r'https://sourceforge.net/projects/xming/',
                     ]
 

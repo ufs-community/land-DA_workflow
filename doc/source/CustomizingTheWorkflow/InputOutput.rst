@@ -208,7 +208,7 @@ On Level 1 platforms, the requisite data are pre-staged at the locations listed 
 GSWP3 Forcing Files
 ^^^^^^^^^^^^^^^^^^^^^
 
-Global Soil Wetness Project Phase 3 (GSWP3) :term:`forcing files<forcing data>` for the land component configuration are located in the ``inputs/DATM_input_data/gswp3`` directory (downloaded :ref:`above <InputFiles>`).
+Global Soil Wetness Project Phase 3 (GSWP3) :term:`forcing files<forcing data>` for the :term:`LND` configuration are located in the ``inputs/DATM_input_data/gswp3`` directory (downloaded :ref:`above <InputFiles>`).
 
 .. code-block:: console 
 
@@ -231,7 +231,7 @@ These files provide atmospheric forcing data related to precipitation, solar rad
 ERA5 Forcing Files
 ^^^^^^^^^^^^^^^^^^^^^
 
-:term:`ECMWF` Reanalysis v5 (ERA5) :term:`forcing files<forcing data>` for the land component configuration are located in the ``inputs/DATM_input_data/era5`` directory (downloaded :ref:`above <InputFiles>`).
+:term:`ECMWF` Reanalysis v5 (ERA5) :term:`forcing files<forcing data>` for the :term:`LND` configuration are located in the ``inputs/DATM_input_data/era5`` directory (downloaded :ref:`above <InputFiles>`).
 
 .. code-block:: console
 
@@ -358,9 +358,9 @@ All of these files are also required for the model and are listed in :numref:`Se
 Observation Data
 -------------------
 
-The Land DA System can use observation data in :term:`GHCN`, :term:`IMS`, :term:`SFCSNO`, or Soil Moisture Active Passive (:term:`SMAP`) data format. Instructions for downloading the data are provided in :numref:`Section %s <GetDataC>`, and instructions for accessing the data on :ref:`Level 1 Systems <LevelsOfSupport>` are provided in :numref:`Section %s <GetData>`. Currently, data is primarily drawn from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_ (GHCN) and the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`_). GHCN and IMS data are available in the ``inputs/DA_obs`` directory. These data are converted to :ref:`IODA <IODA>` format in the ``prep_data`` task. 
+The Land DA System can use observation data in :term:`GHCN`, :term:`IMS`, and :term:`SFCSNO` format. Soil Moisture Active Passive (:term:`SMAP`) data will soon be available for soil moisture DA, but this is currently a work in progress. Instructions for downloading the data are provided in :numref:`Section %s <GetDataC>`, and instructions for accessing the data on :ref:`Level 1 Systems <LevelsOfSupport>` are provided in :numref:`Section %s <GetData>`. Currently, data is primarily drawn from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_ (GHCN) and the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`_). GHCN and IMS data are available in the ``inputs/DA_obs`` directory. These data are converted to :ref:`IODA <IODA>` format in the ``prep_data`` task. 
 
-In each experiment, the ``land_analysis.yaml`` file sets the type(s) of observation files to be used in the experiment via the ``OBS_*_SNOW`` variables (based on selections in ``config.yaml``). Before assimilation, the files for the specified observation type are copied to the run directory (usually ``$LANDDAROOT/ptmp/test/com/landda/$model_ver/landda.$PDY$cyc/obs`` by default --- see :numref:`Section %s <nco-dir-entities>` for more on these variables), sometimes with a naming-convention change (e.g., ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` to ``ghcn_snow_${YYYY}${MM}${DD}${HH}.nc``). 
+In each experiment, the ``land_analysis.yaml`` file sets the type(s) of observation files to be used in the experiment via the ``OBS_*_SNOW`` variables (based on selections in ``config.yaml``). Before assimilation, the files for the specified observation type are copied to the run directory (usually ``$LANDDAROOT/ptmp/test_*/com/landda/$model_ver/landda.$PDY$cyc/obs`` by default --- see :numref:`Section %s <nco-dir-entities>` for more on these variables), sometimes with a naming-convention change (e.g., ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` to ``ghcn_snow_${YYYY}${MM}${DD}${HH}.nc``). 
 
 .. _ghcn-io:
 
@@ -664,7 +664,7 @@ To restart the Land DA System successfully after land model execution, all param
    | snow_level_liquid        | liquid content of snow levels     | "mm"                  |
    +--------------------------+-----------------------------------+-----------------------+
 
-RESTART files are located in the ``inputs/DATA_RESTART`` directory (downloaded :ref:`above <InputFiles>` from the data bucket). Each forecast cycle also outputs RESTART files that can be used as input for the next cycle date(s). These RESTART files will appear in the ``/ptmp/test_*/com/landda/v<X.Y.Z>/landda.${PDY}/RESTART`` directory. 
+Restart files are located in the ``inputs/DATA_RESTART`` directory (downloaded :ref:`above <InputFiles>` from the data bucket). Each forecast cycle also outputs restart files that can be used as input for the next cycle date(s). These restart files will appear in the ``/ptmp/test_*/com/landda/v<X.Y.Z>/landda.${PDY}/RESTART`` directory. 
 
 Output Files
 *************
