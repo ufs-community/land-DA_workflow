@@ -42,18 +42,19 @@ def main():
         yaml_data=yaml.load(f, Loader=yaml.FullLoader)
     f.close()
 
-    work_dir=yaml_data['work_dir']
-    fix_dir=yaml_data['fix_dir']
-    fn_sfc_base=yaml_data['fn_sfc_base']
-    fn_inc_base=yaml_data['fn_inc_base']
-    jedi_exe=yaml_data['jedi_exe']
-    jedi_type=yaml_data['jedi_type']
-    orog_path=yaml_data['orog_path']
-    orog_fn_base=yaml_data['orog_fn_base']
-    out_title_base=yaml_data['out_title_base']
-    out_fn_base=yaml_data['out_fn_base']
-    PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
-    zlvl=yaml_data['zlevel_number']
+    work_dir = yaml_data['work_dir']
+    fix_dir = yaml_data['fix_dir']
+    fn_sfc_base = yaml_data['fn_sfc_base']
+    fn_inc_base = yaml_data['fn_inc_base']
+    jedi_exe = yaml_data['jedi_exe']
+    jedi_type = yaml_data['jedi_type']
+    orog_path = yaml_data['orog_path']
+    orog_fn_base = yaml_data['orog_fn_base']
+    out_title_base = yaml_data['out_title_base']
+    out_fn_base = yaml_data['out_fn_base']
+    PY_LOG_LEVEL = yaml_data['PY_LOG_LEVEL']
+    zlvl = yaml_data['zlevel_number']
+    zlvlm1 = int(zlvl)-1
 
     # Set logging config
     log_level_str = PY_LOG_LEVEL.upper()
@@ -79,17 +80,18 @@ def main():
     # get lon, lat from orography
     slmsk=get_geo(orog_path,orog_fn_base)
     # get sfc data before analysis
-    sfc1_data, sfc1_slmsk = get_sfc(work_dir,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,'before')
+    sfc1_data, sfc1_slmsk = get_sfc(work_dir,fn_sfc_base,sfc_var_nm,zlvlm1,jedi_exe,jedi_type,'before')
     # get sfc data after analysis
-    sfc2_data, sfc2_slmsk = get_sfc(work_dir,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,'after')
-    # get sfc increment data of analysis
-    sfc_xainc_data, sfc_xainc_slmsk = get_sfc(work_dir,fn_inc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,'inc')
-    # compare sfc1 and sfc2
-    compare_sfc(sfc1_data,sfc2_data,sfc_xainc_data,sfc_var_nm)
-    # diagnosis
-    diag_tool=True
-    if diag_tool:
-        diag_data(sfc1_data,sfc2_data,sfc_xainc_data,slmsk,sfc1_slmsk,sfc2_slmsk,sfc_xainc_slmsk,sfc_var_nm)
+    sfc2_data, sfc2_slmsk = get_sfc(work_dir,fn_sfc_base,sfc_var_nm,zlvlm1,jedi_exe,jedi_type,'after')
+    if jedi_type != "soil_moisture":
+        # get sfc increment data of analysis
+        sfc_xainc_data, sfc_xainc_slmsk = get_sfc(work_dir,fn_inc_base,sfc_var_nm,zlvlm1,jedi_exe,jedi_type,'inc')
+        # compare sfc1 and sfc2
+        compare_sfc(sfc1_data,sfc2_data,sfc_xainc_data,sfc_var_nm)
+        # diagnosis
+        diag_tool=True
+        if diag_tool:
+            diag_data(sfc1_data,sfc2_data,sfc_xainc_data,slmsk,sfc1_slmsk,sfc2_slmsk,sfc_xainc_slmsk,sfc_var_nm)
 
 
 # diagnosis of sfc_data ============================================= CHJ =====
@@ -169,6 +171,8 @@ def get_sfc(path_sfc,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,sfc_opt):
     sfc_slmsk_all=[]
     if sfc_opt == 'before':
         fn_sfc_ext=f'''.nc_{jedi_type}_before_inc'''
+    elif sfc_opt == 'after':
+        fn_sfc_ext=f'''.nc_{jedi_type}_after_inc'''
     else:
         fn_sfc_ext=".nc"
 
@@ -235,8 +239,8 @@ def compare_sfc(sfc_data1,sfc_data2,inc_data,sfc_var_nm):
 # increment/difference plot ========================================== CHJ =====
 def plot_increment(plt_var,plt_var_nm,plt_out_txt):
 # ==================================================================== CHJ =====
-    var_max=np.max(plt_var)
-    var_min=np.min(plt_var)
+    var_max=np.nanmax(plt_var)
+    var_min=np.nanmin(plt_var)
     logging.info(f''' {plt_var_nm}: diff : var_max= {var_max}''')
     logging.info(f''' {plt_var_nm}: diff : var_min= {var_min}''')
 

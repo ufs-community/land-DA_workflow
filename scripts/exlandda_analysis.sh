@@ -247,6 +247,13 @@ EOF
       err_exit "apply snow increment failed"
     fi
 
+    # Save intermediate sfc_data files after applying increment
+    for itile in {1..6}
+    do
+      sfc_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
+      cp -p ${sfc_fn} "${sfc_fn}_${jedi_type}_after_inc"
+    done
+
   elif [ "${jedi_type}" = "soil_moisture" ]; then
 
     # Link inc file to DATA
@@ -262,19 +269,35 @@ EOF
     done
     
     # Replace smc of sfc_data with that of JEDI output files (temporary solution)
+    fn_data_base="${FILEDATE}.sfc_data.tile"
+    sfc_data_fn_suffix=".nc_${jedi_type}_before_inc"
+    jedi_out_fn_prefix="jedi_smc."
+    jedi_out_fn_suffix=".nc"
+    new_sfc_data_fn_suffix=".nc_${jedi_type}_replaced"
+    cat > sfc_replace_var.yaml << EOF
+work_dir: '${DATA}'
+fn_data_base: '${fn_data_base}'
+sfc_data_fn_suffix: '${sfc_data_fn_suffix}'
+jedi_out_fn_prefix: '${jedi_out_fn_prefix}'
+jedi_out_fn_suffix: '${jedi_out_fn_suffix}'
+new_sfc_data_fn_suffix: '${new_sfc_data_fn_suffix}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
+EOF
+
+    ${USHlandda}/sfc_data_replace_var.py
+    if [ $? -ne 0 ]; then
+      err_exit "sfc_data var replacement failed"
+    fi
+
+    # Save intermediate sfc_data files after applying increment
     for itile in {1..6}
     do
-      cp -p "${DATA}/jedi_smc.${FILEDATE}.sfc_data.tile${itile}.nc" ${FILEDATE}.sfc_data.tile${itile}.nc
+      sfc_fn="${fn_data_base}${itile}.nc"
+      cp -p "${fn_data_base}${itile}${new_sfc_data_fn_suffix}" ${sfc_fn}
+      cp -p ${sfc_fn} "${fn_data_base}${itile}.nc_${jedi_type}_after_inc"
     done
 
   fi
-
-  # save intermediate sfc_data files after applying increment
-  for itile in {1..6}
-  do
-    sfc_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
-    cp -p ${sfc_fn} "${sfc_fn}_${jedi_type}_after_inc"
-  done
 
   # Copy the increment files to COMOUT
   for itile in {1..6}
