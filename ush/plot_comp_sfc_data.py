@@ -219,7 +219,7 @@ def get_sfc(path_sfc,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,sfc_opt):
     if sfc_opt == 'inc':
         plot_increment(sfc_var,sfc_var_nm,sfc_opt)
     else:
-        plot_data(sfc_var,sfc_var_nm,sfc_opt)
+        plot_data(sfc_var,sfc_var_nm,sfc_opt,zlvl,jedi_type)
    
     return sfc_var, sfc_slmsk
 
@@ -275,10 +275,10 @@ def plot_increment(plt_var,plt_var_nm,plt_out_txt):
 
 
 # data plot ========================================================== CHJ =====
-def plot_data(plt_var,plt_var_nm,plt_out_txt):
+def plot_data(plt_var,plt_var_nm,plt_out_txt,zlvl,jedi_type):
 # ==================================================================== CHJ =====
-    var_max=np.max(plt_var)
-    var_min=np.min(plt_var)
+    var_max=np.nanmax(plt_var)
+    var_min=np.nanmin(plt_var)
     logging.info(f''' var_max= {var_max}''')
     logging.info(f''' var_min= {var_min}''')
     var_max05=var_max*0.5
@@ -313,8 +313,12 @@ def plot_data(plt_var,plt_var_nm,plt_out_txt):
     logging.info(f''' cs_max= {cs_max}''')
     logging.info(f''' cs_min= {cs_min}''')
 
-    out_title=f'''{out_title_base}{plt_var_nm}::{plt_out_txt}'''
-    out_fn=f'''{out_fn_base}{plt_var_nm}_{plt_out_txt}'''
+    if jedi_type == 'soil_moisture':
+        out_title=f'''{out_title_base}{plt_var_nm}::L{zlvl+1}::{plt_out_txt}'''
+        out_fn=f'''{out_fn_base}{plt_var_nm}_z{zlvl+1}_{plt_out_txt}'''
+    else:
+        out_title=f'''{out_title_base}{plt_var_nm}::{plt_out_txt}'''
+        out_fn=f'''{out_fn_base}{plt_var_nm}_{plt_out_txt}'''
 
     fig,ax=plt.subplots(1,1,subplot_kw=dict(projection=ccrs.Robinson(c_lon)))
     ax.set_title(out_title, fontsize=6)

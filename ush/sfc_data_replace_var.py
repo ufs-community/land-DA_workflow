@@ -86,7 +86,7 @@ def main():
             slmsk_diff = slmsk1_val - slmsk2_val
             non_zero_count = np.count_nonzero(slmsk_diff)
             logging.info(f''' Number of non-identical elements: {non_zero_count}''')
-            plot_comp_var_tile('slmsk', slmsk1_val, slmsk2_val, itp, 0, work_dir)
+            plot_comp_var_tile('slmsk', slmsk1_val, slmsk2_val, itp, 0, work_dir, 'msk')
 
         # Check the target variables and replace them with JEDI output
         for var in var_list:
@@ -100,13 +100,18 @@ def main():
                 num_zaxis = var1_3d.shape[0]
                 for iz in range(num_zaxis):
                     izp = iz+1
-                    plot_comp_var_tile(var, var1_3d[iz,:,:], var2_3d[iz,:,:], itp, izp, work_dir)
+                    plot_comp_var_tile(var, var1_3d[iz,:,:], var2_3d[iz,:,:], itp, izp, work_dir, 'var')
 
             else:
                 logging.error(f''' Variable "{var}" not found in one or both datasets.''')
     
-            # Replace the variable in ds1 with the variable from ds2 (only 3rd/4th dimensions)
-            ds1[var].values[..., :, :] = ds2[var].values[..., :, :]
+            # Replace the variable values in ds1 with those from ds2 (excluding 1st dimension)
+            ds1[var].values[..., :, :, :] = var2_3d
+
+            # Plot the replaced variable
+            for iz in range(num_zaxis):
+                izp = iz+1
+                plot_comp_var_tile(var, var2_3d[iz,:,:], ds1[var].values[0,iz,:,:], itp, izp, work_dir, 'chk')
 
         # Save the modified dataset to a new NetCDF file
         ds1.to_netcdf(new_sfc_data_fn)
@@ -117,12 +122,16 @@ def main():
     
 
 # Plot var values in two files for comparison ======================== CHJ =====
-def plot_comp_var_tile(var_nm, var1, var2, tile_num, lyr_num, work_dir):
+def plot_comp_var_tile(var_nm, var1, var2, tile_num, lyr_num, work_dir, opt):
 
-    if lyr_num == 0:
+    if opt == 'msk':
         out_fn = f'''plot_comp_sfc_{var_nm}_tile{tile_num}'''
         fig1_title = f'''SFC_DATA :: {var_nm} :: Tile {tile_num}'''
         fig2_title = f'''JEDI_Output :: {var_nm} :: Tile {tile_num}'''
+    elif opt == 'chk':
+        out_fn = f'''plot_comp_chk_{var_nm}_layer{lyr_num}_tile{tile_num}'''        
+        fig1_title = f'''JEDI_Output :: {var_nm} :: Layer {lyr_num} :: Tile {tile_num}'''
+        fig2_title = f'''Replaced SFC :: {var_nm} :: Layer {lyr_num} :: Tile {tile_num}'''
     else:
         out_fn = f'''plot_comp_sfc_{var_nm}_layer{lyr_num}_tile{tile_num}'''        
         fig1_title = f'''SFC_DATA :: {var_nm} :: Layer {lyr_num} :: Tile {tile_num}'''
@@ -131,7 +140,7 @@ def plot_comp_var_tile(var_nm, var1, var2, tile_num, lyr_num, work_dir):
     var_all = np.concatenate((var1, var2))
     var_max = np.nanmax(var_all)
     var_min = np.nanmin(var_all)
-    logging.info(f''' {var_nm}, Layer: {lyr_num}, Max: {var_max}, Min: {var_min}''')
+    logging.info(f''' {opt}:: {var_nm}, Layer: {lyr_num}, Max: {var_max}, Min: {var_min}''')
  
     cs_map = 'plasma'
     cs_max = var_max
