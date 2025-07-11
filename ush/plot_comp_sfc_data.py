@@ -29,7 +29,6 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 # Main part (will be called at the end) ============================= CHJ =====
 def main():
-# =================================================================== CHJ =====
 
     global num_tiles,c_lon,work_dir,out_title_base,out_fn_base
 
@@ -83,25 +82,24 @@ def main():
     sfc1_data, sfc1_slmsk = get_sfc(work_dir,fn_sfc_base,sfc_var_nm,zlvlm1,jedi_exe,jedi_type,'before')
     # get sfc data after analysis
     sfc2_data, sfc2_slmsk = get_sfc(work_dir,fn_sfc_base,sfc_var_nm,zlvlm1,jedi_exe,jedi_type,'after')
-    if jedi_type != "soil_moisture":
-        # get sfc increment data of analysis
-        sfc_xainc_data, sfc_xainc_slmsk = get_sfc(work_dir,fn_inc_base,sfc_var_nm,zlvlm1,jedi_exe,jedi_type,'inc')
-        # compare sfc1 and sfc2
-        compare_sfc(sfc1_data,sfc2_data,sfc_xainc_data,sfc_var_nm)
-        # diagnosis
-        diag_tool=True
-        if diag_tool:
-            diag_data(sfc1_data,sfc2_data,sfc_xainc_data,slmsk,sfc1_slmsk,sfc2_slmsk,sfc_xainc_slmsk,sfc_var_nm)
+    # get sfc increment data of analysis
+    sfc_xainc_data, sfc_xainc_slmsk = get_sfc(work_dir,fn_inc_base,sfc_var_nm,zlvlm1,jedi_exe,jedi_type,'inc')
+    # compare sfc1 and sfc2
+    compare_sfc(sfc1_data,sfc2_data,sfc_xainc_data,sfc_var_nm,zlvlm1,jedi_type)
+    # diagnosis
+    diag_tool=True
+    if diag_tool:
+        diag_data(sfc1_data,sfc2_data,sfc_xainc_data,slmsk,sfc1_slmsk,sfc2_slmsk,sfc_xainc_slmsk,sfc_var_nm)
 
 
 # diagnosis of sfc_data ============================================= CHJ =====
 def diag_data(sfc1_data,sfc2_data,sfc_xainc_data,slmsk,sfc1_slmsk,sfc2_slmsk,sfc_xainc_slmsk,sfc_var_nm):
-# =================================================================== CHJ =====
+
     logging.info(f' ===== Diagnosis of SFC_DATA =======================================')
-    logging.info(f'''slmsk: original: {slmsk.shape} : max={np.max(slmsk)} : min={np.min(slmsk)}''')
-    logging.info(f'''slmsk: before  : {sfc1_slmsk.shape} : max={np.max(sfc1_slmsk)} : min={np.min(sfc1_slmsk)}''')
-    logging.info(f'''slmsk: after   : {sfc2_slmsk.shape} : max={np.max(sfc2_slmsk)} : min={np.min(sfc2_slmsk)}''')
-    logging.info(f'''slmsk: inc     : {sfc_xainc_slmsk.shape} : max={np.max(sfc_xainc_slmsk)} : min={np.min(sfc_xainc_slmsk)}''')
+    logging.info(f'''slmsk: original: {slmsk.shape} : max={np.nanmax(slmsk)} : min={np.nanmin(slmsk)}''')
+    logging.info(f'''slmsk: before  : {sfc1_slmsk.shape} : max={np.nanmax(sfc1_slmsk)} : min={np.nanmin(sfc1_slmsk)}''')
+    logging.info(f'''slmsk: after   : {sfc2_slmsk.shape} : max={np.nanmax(sfc2_slmsk)} : min={np.nanmin(sfc2_slmsk)}''')
+    logging.info(f'''slmsk: inc     : {sfc_xainc_slmsk.shape} : max={np.nanmax(sfc_xainc_slmsk)} : min={np.nanmin(sfc_xainc_slmsk)}''')
     logging.info(f''' orog     :: 0 = non-land, 1 = land ''')
     logging.info(f''' sfc_data :: 0 = sea     , 1 = land, 2 = sea-ice ''')
     logging.info(f''' ===== Cross-check of Sea-Land masks =====''')
@@ -111,7 +109,7 @@ def diag_data(sfc1_data,sfc2_data,sfc_xainc_data,slmsk,sfc1_slmsk,sfc2_slmsk,sfc
 
 # compare sea-land masks ============================================ CHJ =====
 def comp_slmsk(slmsk1,slmsk2,txt):
-# =================================================================== CHJ =====
+
     # change sea-ice to sea
     slmsk1[slmsk1 == 2] = 0
     slmsk2[slmsk2 == 2] = 0
@@ -123,7 +121,6 @@ def comp_slmsk(slmsk1,slmsk2,txt):
 
 # geo lon/lat from orography ======================================== CHJ =====
 def get_geo(orog_path,orog_fn_base):
-# =================================================================== CHJ =====
 
     global glon,glat
 
@@ -164,7 +161,6 @@ def get_geo(orog_path,orog_fn_base):
 
 # Get sfc_data from files and plot ================================== CHJ =====
 def get_sfc(path_sfc,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,sfc_opt):
-# =================================================================== CHJ =====
 
     logging.info(f''' ===== sfc files: {sfc_var_nm} :: {sfc_opt} ===============================''')
     sfc_data_all=[]
@@ -198,17 +194,12 @@ def get_sfc(path_sfc,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,sfc_opt):
             logging.debug(f''' sfc_data size= {sfc_data.shape}''')
             logging.debug(f''' slmsk size= {slmsk_data.shape}''')
 
-        if sfc_opt == 'inc':
-            sfc_data2d=np.squeeze(sfc_data,axis=0)
-            slmsk_data2d=np.squeeze(slmsk_data,axis=0)
+        slmsk_data2d=np.squeeze(slmsk_data,axis=0)
+        if sfc_var_nm == 'stc' or sfc_var_nm == 'smc' or sfc_var_nm == 'slc':
+            sfc_data3d=np.squeeze(sfc_data,axis=0)
+            sfc_data2d=sfc_data3d[zlvl,:,:]
         else:
-            if sfc_var_nm == 'stc' or sfc_var_nm == 'smc' or sfc_var_nm == 'slc':
-                sfc_data3d=np.squeeze(sfc_data,axis=0)
-                sfc_data2d=sfc_data3d[zlvl,:,:]
-            else:
-                sfc_data2d=np.squeeze(sfc_data,axis=0)
-
-            slmsk_data2d=np.squeeze(slmsk_data,axis=0)
+            sfc_data2d=np.squeeze(sfc_data,axis=0)
 
         sfc_data_all.append(sfc_data2d[None,:])
         sfc_slmsk_all.append(slmsk_data2d[None,:])
@@ -217,7 +208,7 @@ def get_sfc(path_sfc,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,sfc_opt):
     sfc_slmsk=np.vstack(sfc_slmsk_all)
 
     if sfc_opt == 'inc':
-        plot_increment(sfc_var,sfc_var_nm,sfc_opt)
+        plot_increment(sfc_var,sfc_var_nm,sfc_opt,zlvl,jedi_type)
     else:
         plot_data(sfc_var,sfc_var_nm,sfc_opt,zlvl,jedi_type)
    
@@ -225,34 +216,43 @@ def get_sfc(path_sfc,fn_sfc_base,sfc_var_nm,zlvl,jedi_exe,jedi_type,sfc_opt):
 
 
 # Compare two data set and plot ===================================== CHJ =====
-def compare_sfc(sfc_data1,sfc_data2,inc_data,sfc_var_nm):
-# =================================================================== CHJ =====
+def compare_sfc(sfc_data1,sfc_data2,inc_data,sfc_var_nm,zlvl,jedi_type):
+
     logging.info(f''' ===== compare files ===============================================''')
     logging.info(f''' data 1= {sfc_data1.shape}''')
     logging.info(f''' data 2= {sfc_data2.shape}''')
 
     diff_data=sfc_data2-sfc_data1
     logging.info(f''' diff. data= {diff_data.shape}''')
-    plot_increment(diff_data,sfc_var_nm,'diff_sfc')
+    plot_increment(diff_data,sfc_var_nm,'diff_sfc',zlvl,jedi_type)
 
 
 # increment/difference plot ========================================== CHJ =====
-def plot_increment(plt_var,plt_var_nm,plt_out_txt):
-# ==================================================================== CHJ =====
+def plot_increment(plt_var,plt_var_nm,plt_out_txt,zlvl,jedi_type):
+
     var_max=np.nanmax(plt_var)
     var_min=np.nanmin(plt_var)
     logging.info(f''' {plt_var_nm}: diff : var_max= {var_max}''')
     logging.info(f''' {plt_var_nm}: diff : var_min= {var_min}''')
 
-    cs_max=max(abs(var_max),abs(var_min))
-    cs_min=cs_max*-1.0
+    if var_max == var_min:
+        cs_max = max(abs(var_max),abs(var_min))+0.1
+        cs_min = cs_max*-1.0
+    else:
+        cs_max = max(abs(var_max),abs(var_min))
+        cs_min = cs_max*-1.0
+
     cs_cmap='seismic'
     nm_svar='\u0394'+plt_var_nm
     n_rnd=0
     cbar_extend='neither'
 
-    out_title=f'''{out_title_base}{plt_var_nm}::{plt_out_txt}'''
-    out_fn=f'''{out_fn_base}{plt_var_nm}_{plt_out_txt}'''
+    if jedi_type == 'soil_moisture':
+        out_title=f'''{out_title_base}{plt_var_nm}::L{zlvl+1}::{plt_out_txt}'''
+        out_fn=f'''{out_fn_base}{plt_var_nm}_z{zlvl+1}_{plt_out_txt}'''
+    else:
+        out_title=f'''{out_title_base}{plt_var_nm}::{plt_out_txt}'''
+        out_fn=f'''{out_fn_base}{plt_var_nm}_{plt_out_txt}'''
 
     fig,ax=plt.subplots(1,1,subplot_kw=dict(projection=ccrs.Robinson(c_lon)))
     ax.set_title(out_title, fontsize=6)
@@ -276,7 +276,7 @@ def plot_increment(plt_var,plt_var_nm,plt_out_txt):
 
 # data plot ========================================================== CHJ =====
 def plot_data(plt_var,plt_var_nm,plt_out_txt,zlvl,jedi_type):
-# ==================================================================== CHJ =====
+
     var_max=np.nanmax(plt_var)
     var_min=np.nanmin(plt_var)
     logging.info(f''' var_max= {var_max}''')
@@ -342,7 +342,6 @@ def plot_data(plt_var,plt_var_nm,plt_out_txt,zlvl,jedi_type):
 
 # Background plot ==================================================== CHJ =====
 def back_plot(ax):
-# ==================================================================== CHJ =====
 
     # Resolution of background natural earth data ('50m' or '110m')
     back_res='50m'
@@ -376,7 +375,7 @@ def back_plot(ax):
 
 # Output file ======================================================= CHJ =====
 def out_file(work_dir,out_file,ndpi):
-# =================================================================== CHJ =====
+
     # Output figure
     fp_out=os.path.join(work_dir,out_file)
     plt.savefig(fp_out+'.png',dpi=ndpi,bbox_inches='tight')
