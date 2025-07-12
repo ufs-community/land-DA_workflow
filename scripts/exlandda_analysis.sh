@@ -148,6 +148,12 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
   
   else # letkf-oi
     if [ "${jedi_type}" = "snow" ]; then
+      if [ "${FRAC_GRID}" = "YES" ]; then
+        snowdepth_vn="snodl"
+      else
+        snowdepth_vn="snwdph"
+      fi
+	 
       for ens in {1..2}
       do
         mkdir -p $DATA/mem${ens}
@@ -167,10 +173,8 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
   # JEDI field metadata file
   if [ "${jedi_type}" = "snow" ]; then
     if [ "${FRAC_GRID}" = "YES" ]; then
-      snowdepth_vn="snodl"
       cp -p ${PARMlandda}/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart.yaml ${DATA}/Data/fv3files/.
     else
-      snowdepth_vn="snwdph"
       cp -p ${PARMlandda}/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart_nofrac.yaml ${DATA}/Data/fv3files/fv3jedi_fieldmetadata_restart.yaml
     fi
   elif [ "${jedi_type}" = "soil_moisture" ]; then
