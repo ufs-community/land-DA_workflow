@@ -14,7 +14,6 @@ load(pathJoin("cmake", cmake_ver))
 load(pathJoin("ecbuild", ecbuild_ver))
 
 load(pathJoin("jasper", jasper_ver))
-load(pathJoin("zlib", zlib_ver))
 load(pathJoin("libpng", libpng_ver))
 load(pathJoin("hdf5", hdf5_ver))
 load(pathJoin("netcdf-c", netcdf_c_ver))
@@ -34,18 +33,12 @@ load(pathJoin("mapl", mapl_ver))
 load(pathJoin("scotch", scotch_ver))
 
 load(pathJoin("nemsio", nemsio_ver))
-load(pathJoin("sfcio", sfcio_ver))
 load(pathJoin("sigio", sigio_ver))
+load(pathJoin("zlib", zlib_ver))
 load(pathJoin("nccmp", nccmp_ver))
-
-load(pathJoin("prod_util", prod_util_ver))
-load(pathJoin("ufs-pyenv", ufs_pyenv_ver))
 
 unload("darshan-runtime")
 unload("cray-libsci")
-
-setenv("CFLAGS","-diag-disable=10441")
-setenv("FFLAGS","-diag-disable=10441")
 
 setenv("CC","cc")
 setenv("FC","ftn")
@@ -53,4 +46,4 @@ setenv("CXX","CC")
 setenv("CMAKE_C_COMPILER","cc")
 setenv("CMAKE_Fortran_COMPILER","ftn")
 setenv("CMAKE_CXX_COMPILER","CC")
-setenv("CMAKE_Platform","gaea-c6.intel")
+setenv("CMAKE_Platform","gaeac6.intel")
