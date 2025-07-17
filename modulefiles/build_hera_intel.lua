@@ -39,7 +39,6 @@ load(pathJoin("sigio", sigio_ver))
 load(pathJoin("nccmp", nccmp_ver))
 
 load(pathJoin("prod_util", prod_util_ver))
-load(pathJoin("ufs-pyenv", ufs_pyenv_ver))
 
 setenv("CC", "mpiicc")
 setenv("CXX", "mpiicpc")
