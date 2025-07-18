@@ -4,17 +4,16 @@ loads modules necessary for building the land-DA workflow on Orion using Intel
 
 whatis([===[Loads modules necessary for building the land-DA workflow on Orion]===])
 
+prepend_path("MODULEPATH", os.getenv("modulepath_modulefiles"))
 prepend_path("MODULEPATH", os.getenv("modulepath_spack_stack"))
 
-load(pathJoin("stack-intel", stack_intel_ver))
+load(pathJoin("stack-oneapi", stack_oneapi_ver))
 load(pathJoin("stack-intel-oneapi-mpi", stack_intel_oneapi_mpi_ver))
-load(pathJoin("stack-python", stack_python_ver))
 
 load(pathJoin("cmake", cmake_ver))
 load(pathJoin("ecbuild", ecbuild_ver))
 
 load(pathJoin("jasper", jasper_ver))
-load(pathJoin("zlib", zlib_ver))
 load(pathJoin("libpng", libpng_ver))
 load(pathJoin("hdf5", hdf5_ver))
 load(pathJoin("netcdf-c", netcdf_c_ver))
@@ -36,6 +35,7 @@ load(pathJoin("scotch", scotch_ver))
 load(pathJoin("nemsio", nemsio_ver))
 load(pathJoin("sfcio", sfcio_ver))
 load(pathJoin("sigio", sigio_ver))
+load(pathJoin("zlib", zlib_ver))
 load(pathJoin("nccmp", nccmp_ver))
 
 load(pathJoin("prod_util", prod_util_ver))
