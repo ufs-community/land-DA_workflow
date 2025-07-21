@@ -22,7 +22,6 @@ load(pathJoin("parallelio", parallelio_ver))
 load(pathJoin("esmf", esmf_ver))
 load(pathJoin("fms",fms_ver))
 load(pathJoin("bacio", bacio_ver))
-load(pathJoin("crtm", crtm_ver))
 load(pathJoin("g2", g2_ver))
 load(pathJoin("g2tmpl", g2tmpl_ver))
 load(pathJoin("ip", ip_ver))
@@ -39,6 +38,8 @@ load(pathJoin("zlib", zlib_ver))
 load(pathJoin("nccmp", nccmp_ver))
 
 load(pathJoin("prod_util", prod_util_ver))
+
+load("crtm/2.4.0.1")
 
 setenv("CC", "mpiicc")
 setenv("CXX", "mpiicpc")
