@@ -12,7 +12,7 @@ OPTIONS
       show this help guide
   -p, --platform=PLATFORM
       name of machine you are building on
-      (e.g. hera | jet | orion | hercules )
+      (e.g. ursa | gaeac6 | orion | hercules )
   -c, --compiler=COMPILER
       compiler to use; default depends on platform
       (e.g. intel | gnu | cray | gccgfortran)
@@ -289,7 +289,7 @@ set -eu
 # automatically determine compiler
 if [ -z "${COMPILER}" ] ; then
   case ${PLATFORM} in
-    hera|gaeac6) COMPILER=intel ;;
+    ursa|gaeac6) COMPILER=intel ;;
     orion|hercules) COMPILER=intel ;;
     wcoss2|singularity) COMPILER=intel ;;
     macos) COMPILER=gnu ;;
@@ -391,8 +391,8 @@ fi
 
 # Link land-DA input files to FIXlandda directory
 ver_fix_data="_v2.1"
-if [ "${PLATFORM}" = "hera" ]; then
-  landda_fix_orig="/scratch2/NAGAPE/epic/UFS_Land-DA${ver_fix_data}/inputs"
+if [ "${PLATFORM}" = "ursa" ]; then
+  landda_fix_orig="/scratch3/NAGAPE/epic/UFS_Land-DA${ver_fix_data}/inputs"
 elif [ "${PLATFORM}" = "orion" ] || [ "${PLATFORM}" = "hercules" ]; then
   landda_fix_orig="/work/noaa/epic/UFS_Land-DA${ver_fix_data}/inputs"
 elif [ "${PLATFORM}" = "gaeac6" ]; then

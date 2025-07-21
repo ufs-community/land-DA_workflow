@@ -387,8 +387,12 @@ def parse_args(argv):
 def detect_platform():
 # =================================================================== CHJ =====
 
-    if os.path.isdir("/scratch2/NAGAPE"):
-        machine = "hera"
+    if os.path.isdir("/scratch3/NAGAPE"):
+        host_str = socket.gethostname()[0:3]
+        if host_str == "ufe":
+            machine = "ursa"
+        elif host_str == "hfe":
+            machine = "hera"
     elif os.path.isdir("/work/noaa"):
         machine = socket.gethostname().split('-')[0]  # orion/hercules
     elif os.path.isdir("/ncrc"):
@@ -396,8 +400,6 @@ def detect_platform():
         machine = f"gaeac{machine_number}"
     elif os.path.isdir("/glade"):
         machine = "derecho"
-    elif os.path.isdir("/lfs4/HFIP"):
-        machine = "jet"
     else:
         sys.exit(f''' FATAL ERROR: Machine (platform) is not detected. Please set it with -p argument!!!''')
 

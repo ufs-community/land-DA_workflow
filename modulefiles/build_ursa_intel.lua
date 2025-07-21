@@ -1,8 +1,8 @@
 help([[
-loads modules necessary for building the land-DA workflow on Hera using Intel
+loads modules necessary for building the land-DA workflow on Ursa using Intel
 ]])
 
-whatis([===[Loads modules necessary for building the land-DA workflow on Hera]===])
+whatis([===[Loads modules necessary for building the land-DA workflow on Ursa]===])
 
 prepend_path("MODULEPATH", os.getenv("modulepath_modulefiles"))
 prepend_path("MODULEPATH", os.getenv("modulepath_spack_stack"))
@@ -48,5 +48,5 @@ setenv("I_MPI_CC", "icx")
 setenv("I_MPI_CXX", "icpx")
 setenv("I_MPI_F90", "ifort")
 
-setenv("CMAKE_Platform", "hera.intel")
+setenv("CMAKE_Platform", "ursa.intel")
 
