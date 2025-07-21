@@ -12,7 +12,7 @@ OPTIONS
       show this help guide
   -p, --platform=PLATFORM
       name of machine you are building on
-      (e.g. ursa | gaeac6 | orion | hercules )
+      (e.g. ursa | hera | gaeac6 | orion | hercules)
   -c, --compiler=COMPILER
       compiler to use; default depends on platform
       (e.g. intel | gnu | cray | gccgfortran)
@@ -289,7 +289,7 @@ set -eu
 # automatically determine compiler
 if [ -z "${COMPILER}" ] ; then
   case ${PLATFORM} in
-    ursa|gaeac6) COMPILER=intel ;;
+    ursa|hera|gaeac6) COMPILER=intel ;;
     orion|hercules) COMPILER=intel ;;
     wcoss2|singularity) COMPILER=intel ;;
     macos) COMPILER=gnu ;;
