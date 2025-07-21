@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export modulepath_modulefiles="/contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.2.1/install/modulefiles/Core"
-export modulepath_spack_stack="/contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.2.1/install/modulefiles/intel-oneapi-mpi/2021.13-haww6b3/gcc/12.4.0"
+export modulepath_spack_stack="/contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.2.1/install/modulefiles/intel-oneapi-mpi/2021.13-sbi3u54/gcc/13.3.0"
 
 export bacio_ver="2.4.1"
 export cmake_ver="3.27.9"
