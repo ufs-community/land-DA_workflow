@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export modulepath_modulefiles="/ncrc/proj/epic/spack-stack/c6/modulefiles"
 export modulepath_spack_stack="/ncrc/proj/epic/spack-stack/c6/spack-stack-1.9.2/envs/ue-intel-2023.2.0/install/modulefiles/Core"
 
 export bacio_ver="2.4.1"

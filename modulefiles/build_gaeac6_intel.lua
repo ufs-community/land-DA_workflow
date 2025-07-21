@@ -4,6 +4,7 @@ loads modules necessary for building the land-DA workflow on Gaea-C6 using Intel
 
 whatis([===[Loads modules necessary for building the land-DA workflow on Gaea-C6]===])
 
+prepend_path("MODULEPATH", os.getenv("modulepath_modulefiles"))
 prepend_path("MODULEPATH", os.getenv("modulepath_spack_stack"))
 
 load(pathJoin("stack-intel", stack_intel_ver))
