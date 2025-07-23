@@ -9,6 +9,7 @@ load(pathJoin("netcdf-c", netcdf_c_ver))
 load(pathJoin("netcdf-fortran", netcdf_fortran_ver))
 load(pathJoin("prod_util", prod_util_ver))
 
-load(pathJoin("py-jinja2", py_jinja2_ver))
-load(pathJoin("py-pyyaml", py_pyyaml_ver))
+prepend_path("MODULEPATH", os.getenv("modulepath_pymodule"))
+
+load("python-ufs-land-da-wflow")
 

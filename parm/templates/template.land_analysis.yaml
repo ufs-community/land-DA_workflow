@@ -107,7 +107,8 @@ workflow:
     DATADEP_DATM2: "<cyclestr>&WARMSTART_DIR;/ufs.cpld.datm.r.@Y-@m-@d-00000.nc</cyclestr>"
     DATADEP_SFC1: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/@Y@m@d.@H0000.sfc_data.tile6.nc</cyclestr>" 
     DATADEP_SFC2: "<cyclestr>&WARMSTART_DIR;/@Y@m@d.@H0000.sfc_data.tile6.nc</cyclestr>"
-  log: "&LOGDIR;/workflow.log"
+  log:
+    value: "&LOGDIR;/workflow.log"
   tasks:
 {%- if CUSTOM_JEDI_CONFIG_FLAG == "NO" %}
     task_jcb:
