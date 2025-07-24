@@ -46,9 +46,9 @@ if [ "${DO_PLOT_OBS}" = "YES" ]; then
   cat > plot_obs_file.yaml << EOF
 work_dir: '${DATA}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
-fn_input_ghcn: '${obs_input_ghcn}'
-fn_input_ims: '${obs_input_ims}'
-fn_input_smap: '${obs_input_smap}'
+fn_input_ghcn: '${fn_input_ghcn}'
+fn_input_ims: '${fn_input_ims}'
+fn_input_smap: '${fn_input_smap}'
 OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
 OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
 OBS_SMAP: '${OBS_SMAP}'
