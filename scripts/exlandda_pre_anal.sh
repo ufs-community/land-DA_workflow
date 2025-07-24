@@ -7,7 +7,7 @@ MM=${PDY:4:2}
 DD=${PDY:6:2}
 HH=${cyc}
 
-FILEDATE=${YYYY}${MM}${DD}.${HH}0000
+filedate=${YYYY}${MM}${DD}.${HH}0000
 
 # copy restarts into work directory
 for itile in {1..6}
@@ -57,6 +57,6 @@ fi
 #stage restarts for applying JEDI update to intermediate directory
 for itile in {1..6}
 do
-  cp -p ${DATA}/${FILEDATE}.sfc_data.tile${itile}.nc ${DATA_RESTART}/${FILEDATE}.sfc_data.tile${itile}.nc
+  cp -p ${DATA}/${filedate}.sfc_data.tile${itile}.nc ${DATA_RESTART}/${filedate}.sfc_data.tile${itile}.nc
 done
 

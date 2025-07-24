@@ -5,8 +5,6 @@ load(pathJoin("stack-cray-mpich", stack_cray_mpich_ver))
 load(pathJoin("stack-python", stack_python_ver))
 
 load(pathJoin("prod_util", prod_util_ver))
---load(pathJoin("py-cartopy", py_cartopy_ver))
---load(pathJoin("py-matplotlib", py_matplotlib_ver))
 load(pathJoin("py-netcdf4", py_netcdf4_ver))
 load(pathJoin("py-numpy", py_numpy_ver))
 load(pathJoin("py-pandas", py_pandas_ver))
