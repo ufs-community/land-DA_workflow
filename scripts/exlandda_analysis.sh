@@ -57,22 +57,17 @@ mkdir -p ${DATA}/obs
 
 obs_prefix="obs.${PDY}.${cycle}"
 if [ "${OBS_GHCN_SNOW}" = "YES" ]; then
-  obs_suffix="ghcn_snow.nc"
-  obs_orig_fn="ghcn_snow_${PDY}${cyc}.nc"
-  ln -nsf "${COMINobs}/${obs_orig_fn}" "${DATA}/obs/${obs_prefix}.${obs_suffix}"
+  ln -nsf "${COMINobs}/${obs_prefix}.ghcn_snow.nc" "${DATA}/obs"
 fi
 if [ "${OBS_IMS_SNOW}" = "YES" ]; then
-  obs_ims_suffix="ims_snow.tm00.nc"
-  ln -nsf "${COMINobs}/${obs_prefix}.${obs_ims_suffix}" "${DATA}/obs"
+  ln -nsf "${COMINobs}/${obs_prefix}.ims_snow.tm00.nc" "${DATA}/obs"
 fi
 if [ "${OBS_SFCSNO}" = "YES" ]; then
-  obs_sfcsno_suffix="sfcsno.tm00.bufr_d"
-  ln -nsf "${COMINobs}/${obs_prefix}.${obs_sfcsno_suffix}" "${DATA}/obs"
+  ln -nsf "${COMINobs}/${obs_prefix}.sfcsno.tm00.bufr_d" "${DATA}/obs"
   ln -nsf "${PARMlandda}/jedi/bufr_sfcsno_mapping.yaml" "${DATA}/obs"
 fi
 if [ "${OBS_SMAP}" = "YES" ]; then
-  obs_smap_suffix="smap_combined.nc"
-  ln -nsf "${COMINobs}/${obs_prefix}.${obs_smap_suffix}" "${DATA}/obs"
+  ln -nsf "${COMINobs}/${obs_prefix}.smap_combined.nc" "${DATA}/obs"
 fi
 
 # update coupler.res file

@@ -294,7 +294,7 @@ def set_default_parm():
         "LND_OUTPUT_FREQ_SEC": 21600,
         "MACHINE": "/machine/platform/name",
         "MED_COUPLING_MODE": "ufs.nfrac.aoflux",
-        "model_ver": "v3.0.0",
+        "model_ver": "v2.1.0",
         "NET": "landda",
         "NPROCS_ANALYSIS": 6,
         "NPROCS_FCST_IC": 36,
@@ -325,9 +325,9 @@ def set_machine_parm(machine):
     lowercase_machine = machine.lower()
     match lowercase_machine:
         case "gaeac6":
-            JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/jedi_bundle_sync"
+            JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/jedi_bundle_sync"
             MAX_CORES_PER_NODE = 192
-            CUSTOM_JEDI_CONFIG_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
+            CUSTOM_JEDI_CONFIG_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
             WARMSTART_DIR = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "hera":
             JEDI_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_sync"

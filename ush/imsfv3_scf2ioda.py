@@ -20,6 +20,7 @@ print(f'''jedi_py_ver: {jedi_py_ver}''')
 pyioda_conv_path = os.path.join(jedi_path, 'build/lib', jedi_py_ver)
 print(f'''pyioda/pyiodaconv path: {pyioda_conv_path}''')
 sys.path.append(pyioda_conv_path)
+print(f'''system path: {sys.path}''')
 
 import pyiodaconv.ioda_conv_engines as iconv
 from collections import defaultdict, OrderedDict

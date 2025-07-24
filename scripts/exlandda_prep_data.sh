@@ -35,7 +35,7 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
     obs_fn="ghcn_snwd_ioda_${YYYP}${MP}${DP}${HP}.nc"
     obs_dp="${OBSDIR}/GHCN/${YYYY}"
     obs_fp="${obs_dp}/${obs_fn}"
-    obs_out_fn_ghcn="ghcn_snow_${PDY}${cyc}.nc"
+    obs_out_fn_ghcn="obs.${PDY}.${cycle}.ghcn_snow.nc"
   
     # Check if obs is available
     if [ -f "${obs_fp}" ]; then
@@ -59,7 +59,6 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
       if [ $? -ne 0 ]; then
         err_exit "Generation of GHCN obs file failed !!!"
       fi
-      cp -p "${obs_fn}" "${obs_out_fn_ghcn}"
       cp -p "${obs_fn}" "${COMOUTobs}/${obs_out_fn_ghcn}"
     fi
   fi
@@ -223,33 +222,9 @@ EOF
         err_exit "Generation of SMAP_ioda obs file failed !!!"
       fi
 
-      cp -p "${obs_out_fn_smap}" "${COMOUTobs}/${obs_fn}"
+      cp -p "${obs_out_fn_smap}" "${COMOUTobs}/${obs_out_fn_smap}"
     fi
   fi
-
-  ############################################################
-  # Observation File Plot
-  ############################################################
-  cat > plot_obs_file.yaml << EOF
-work_dir: '${DATA}'
-cartopy_ne_path: '${FIXlandda}/NaturalEarth'
-fn_input_ghcn: '${obs_out_fn_ghcn}'
-fn_input_ims: '${obs_out_fn_ims}'
-fn_input_smap: '${obs_out_fn_smap}'
-OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
-OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
-OBS_SMAP: '${OBS_SMAP}'
-PDY: '${PDY}'
-PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
-EOF
-
-  ${USHlandda}/plot_obs_file.py
-  if [ $? -ne 0 ]; then
-    err_exit "Observation file plot failed"
-  fi
-
-  # Copy result file to COMOUT
-  cp -p *.png ${COMOUTplot}
 fi
 
 #
