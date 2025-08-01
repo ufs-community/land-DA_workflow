@@ -12,13 +12,10 @@ import pandas as pd
 from datetime import datetime, timezone, timedelta
 from dateutil.parser import parse
 
-jedi_path = os.environ.get('JEDI_PATH')
-jedi_py_ver = os.environ.get('JEDI_PY_VER')
-print(f'''jedi_path: {jedi_path}''')
-print(f'''jedi_py_ver: {jedi_py_ver}''')
-pyioda_conv_path = os.path.join(jedi_path, 'build/lib', jedi_py_ver)
-print(f'''pyioda/pyiodaconv path: {pyioda_conv_path}''')
-sys.path.append(pyioda_conv_path)
+jedi_iodaconv_path = os.environ.get('JEDI_IODACONV_PATH')
+print(f'''jedi_iodaconv_path: {jedi_iodaconv_path}''')
+sys.path.append(jedi_iodaconv_path)
+print(f'''sys.path: {sys.path}''')
 
 import pyiodaconv.ioda_conv_engines as iconv
 from collections import defaultdict, OrderedDict

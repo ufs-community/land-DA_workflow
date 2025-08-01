@@ -90,7 +90,7 @@ BUILD_TYPE="Release"
 BUILD_JOBS=4
 REMOVE=false
 VERBOSE=false
-BUILD_CONDA="on"
+BUILD_CONDA="off"
 
 # Make options
 CLEAN=false
@@ -390,7 +390,7 @@ else
 fi
 
 # Link land-DA input files to FIXlandda directory
-ver_fix_data="_v2.1"
+ver_fix_data="_v3.0"
 if [ "${PLATFORM}" = "ursa" ] || [ "${PLATFORM}" = "hera" ]; then
   landda_fix_orig="/scratch3/NAGAPE/epic/UFS_Land-DA${ver_fix_data}/inputs"
 elif [ "${PLATFORM}" = "orion" ] || [ "${PLATFORM}" = "hercules" ]; then

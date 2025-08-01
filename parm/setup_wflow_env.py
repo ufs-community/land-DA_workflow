@@ -282,8 +282,8 @@ def set_default_parm():
         "IC_DATA_MODEL": "gfs",
         "IMO": 384,
         "JEDI_ALGORITHM": "letkf-oi",
+        "JEDI_IODACONV_PATH": "/path/to/jedi/ioda/converter/python/library",
         "JEDI_PATH": "/path/to/jedi/install/dir",
-        "JEDI_PY_VER": "python3.10",
         "JMO": 190,
         "KEEPDATA": "YES",
         "LND_CALC_SNET": ".true.",
@@ -325,26 +325,32 @@ def set_machine_parm(machine):
     lowercase_machine = machine.lower()
     match lowercase_machine:
         case "gaeac6":
-            JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/jedi_bundle_sync"
-            MAX_CORES_PER_NODE = 192
             CUSTOM_JEDI_CONFIG_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
+            JEDI_IODACONV_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/jedi_bundle_sync/build/lib/python3.11"
+            JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/jedi_bundle_sync"
+            MAX_CORES_PER_NODE = 192
             WARMSTART_DIR = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "hera":
+            CUSTOM_JEDI_CONFIG_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
+            JEDI_IODACONV_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_sync/build/lib/python3.11"
             JEDI_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_sync"
             MAX_CORES_PER_NODE = 40
-            CUSTOM_JEDI_CONFIG_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
             WARMSTART_DIR = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "hercules":
+            CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
+            JEDI_IODACONV_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_hercules/build/lib/python3.11"
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_hercules"
             MAX_CORES_PER_NODE = 80
-            CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
             WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "orion":
+            CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
+            JEDI_IODACONV_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion/build/lib/python3.11"
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion"
             MAX_CORES_PER_NODE = 40
-            CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
             WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
         case "singularity":
+            CUSTOM_JEDI_CONFIG_PATH = "SINGULARITY_WORKING_DIR"
+            JEDI_IODACONV_PATH = "SINGULARITY_WORKING_DIR"
             JEDI_PATH = "SINGULARITY_WORKING_DIR"
             MAX_CORES_PER_NODE = 40
             WARMSTART_DIR = "SINGULARITY_WORKING_DIR/land-DA_workflow/fix/DATA_RESTART"
@@ -352,9 +358,10 @@ def set_machine_parm(machine):
             sys.exit(f"FATAL ERROR: this machine/platform '{lowercase_machine}' is NOT supported yet !!!")
 
     machine_config = {
+        "CUSTOM_JEDI_CONFIG_PATH": CUSTOM_JEDI_CONFIG_PATH,
+        "JEDI_IODACONV_PATH": JEDI_IODACONV_PATH,
         "JEDI_PATH": JEDI_PATH,
         "MAX_CORES_PER_NODE": MAX_CORES_PER_NODE,
-        "CUSTOM_JEDI_CONFIG_PATH": CUSTOM_JEDI_CONFIG_PATH,
         "WARMSTART_DIR": WARMSTART_DIR,
     }
 
