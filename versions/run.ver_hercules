@@ -2,6 +2,7 @@
 
 export modulepath_modulefiles="/apps/contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.1.0/install/modulefiles/Core"
 export modulepath_spack_stack="/apps/contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.1.0/install/modulefiles/intel-oneapi-mpi/2021.13-sqiixt7/gcc/13.3.0"
+export modulepath_pymodule=""
 
 export bacio_ver="2.4.1"
 export cmake_ver="3.27.9"
