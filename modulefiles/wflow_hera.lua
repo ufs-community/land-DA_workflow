@@ -7,10 +7,6 @@ whatis([===[Loads libraries needed for running the land-DA workflow on Hera ]===
 
 load("rocoto")
 
-load("conda")
+prepend_path("MODULEPATH","/scratch3/NAGAPE/epic/ufs-conda/modulefiles")
+load("python-ufs-land-da-wflow")
 
-if mode() == "load" then
-   LmodMsgRaw([===[Please do the following to activate conda:
-       > conda activate land_da
-]===])
-end
