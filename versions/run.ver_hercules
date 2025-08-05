@@ -2,7 +2,7 @@
 
 export modulepath_modulefiles="/apps/contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.1.0/install/modulefiles/Core"
 export modulepath_spack_stack="/apps/contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.1.0/install/modulefiles/intel-oneapi-mpi/2021.13-sqiixt7/gcc/13.3.0"
-export modulepath_pymodule=""
+export modulepath_pymodule="/work/noaa/epic/UFS-conda/modulefiles"
 
 export bacio_ver="2.4.1"
 export cmake_ver="3.27.9"
@@ -16,6 +16,7 @@ export gftl_shared_ver="1.9.0"
 export g2_ver="3.5.1"
 export g2tmpl_ver="1.13.0"
 export hdf5_ver="1.14.3"
+export intel_oneapi_mkl_ver="2024.2.1"
 export ip_ver="5.1.0"
 export jasper_ver="2.0.32"
 export libpng_ver="1.6.37"

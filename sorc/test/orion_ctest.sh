@@ -3,6 +3,8 @@
 
 set -eux
 
+module purge
+
 source ../../versions/build.ver_orion
 module use ../../modulefiles
 module load build_orion_intel

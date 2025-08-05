@@ -3,9 +3,14 @@
 
 set -eux
 
+module purge
+
 source ../../versions/build.ver_hercules
 module use ../../modulefiles
 module load build_hercules_intel
+
+module use /work/noaa/epic/UFS-conda/modulefiles
+module load python-ufs-land-da-wflow
 
 export MPIRUN="srun"
 export JEDI_PATH="/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_hercules"
