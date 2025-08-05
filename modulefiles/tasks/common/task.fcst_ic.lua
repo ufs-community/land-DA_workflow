@@ -1,4 +1,4 @@
-prepend_path("MODULEPATH", os.getenv("modulepath_spack_stack"))
+prepend_path("MODULEPATH", os.getenv("modulepath_modulefiles"))
 
 load(pathJoin("stack-oneapi", stack_oneapi_ver))
 load(pathJoin("stack-intel-oneapi-mpi", stack_intel_oneapi_mpi_ver))

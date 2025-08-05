@@ -26,7 +26,11 @@ machine_name="$3"
 machine="${machine_name,,}"
 task_name_upper="${task_name^^}"
 
-module purge
+if [ "${machine}" = "gaeac6"]; then
+  module reset
+else
+  module purge
+fi
 
 # Source version file for run
 ver_fp="${home_dir}/versions/run.ver_${machine}"
@@ -35,17 +39,19 @@ if [ -f ${ver_fp} ]; then
 else
   echo "FATAL ERROR: version file does not exist !!!"
 fi
-module_dp="${home_dir}/modulefiles/tasks/${machine}"
-module use "${module_dp}"
 
 # Load module file for a specific task
+module_dp="${home_dir}/modulefiles/tasks/${machine}"
 task_module_fn="task.${task_name}"
 if [ -f "${module_dp}/${task_module_fn}.lua" ]; then
+  module use "${module_dp}"
   module load "${task_module_fn}"
-  module list
+elif [ -f "${module_dp}/${task_module_fn}" ]; then
+  . "${module_dp}/${task_module_fn}"
 else
   echo "FATAL ERROR: task module file does not exist !!!"
 fi
+module list
 
 # Run J-job script
 ${home_dir}/jobs/JLANDDA_${task_name_upper}

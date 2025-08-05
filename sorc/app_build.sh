@@ -325,7 +325,11 @@ if [ "${VERBOSE}" = true ]; then
   MAKE_SETTINGS="${MAKE_SETTINGS} VERBOSE=1"
 fi
 
-module purge
+if [ "${PLATFORM}" = "gaeac6"]; then
+  module reset
+else
+  module purge
+fi
 
 # source version file for build
 BUILD_VERSION_FILE="${HOME_DIR}/versions/build.ver_${PLATFORM}"
