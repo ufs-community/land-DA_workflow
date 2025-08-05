@@ -14,10 +14,7 @@ MP=${PTIME:4:2}
 DP=${PTIME:6:2}
 HP=${PTIME:8:2}
 
-FILEDATE=${YYYY}${MM}${DD}.${HH}0000
-
-JEDI_STATICDIR=${JEDI_PATH}/jedi-bundle/fv3-jedi/test/Data
-JEDI_EXECDIR=${JEDI_PATH}/build/bin
+filedate=${YYYY}${MM}${DD}.${HH}0000
 
 case $MACHINE in
   "hera")
@@ -40,7 +37,7 @@ esac
 # copy sfc_data files into work directory
 for itile in {1..6}
 do
-  sfc_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
+  sfc_fn="${filedate}.sfc_data.tile${itile}.nc"
   if [ -f ${DATA_RESTART}/${sfc_fn} ]; then
     cp -p ${DATA_RESTART}/${sfc_fn} .
   elif [ -f ${WARMSTART_DIR}/${sfc_fn} ]; then
@@ -57,22 +54,17 @@ mkdir -p ${DATA}/obs
 
 obs_prefix="obs.${PDY}.${cycle}"
 if [ "${OBS_GHCN_SNOW}" = "YES" ]; then
-  obs_suffix="ghcn_snow.nc"
-  obs_orig_fn="ghcn_snow_${PDY}${cyc}.nc"
-  ln -nsf "${COMINobs}/${obs_orig_fn}" "${DATA}/obs/${obs_prefix}.${obs_suffix}"
+  ln -nsf "${COMINobs}/${obs_prefix}.ghcn_snow.nc" "${DATA}/obs"
 fi
 if [ "${OBS_IMS_SNOW}" = "YES" ]; then
-  obs_ims_suffix="ims_snow.tm00.nc"
-  ln -nsf "${COMINobs}/${obs_prefix}.${obs_ims_suffix}" "${DATA}/obs"
+  ln -nsf "${COMINobs}/${obs_prefix}.ims_snow.tm00.nc" "${DATA}/obs"
 fi
 if [ "${OBS_SFCSNO}" = "YES" ]; then
-  obs_sfcsno_suffix="sfcsno.tm00.bufr_d"
-  ln -nsf "${COMINobs}/${obs_prefix}.${obs_sfcsno_suffix}" "${DATA}/obs"
+  ln -nsf "${COMINobs}/${obs_prefix}.sfcsno.tm00.bufr_d" "${DATA}/obs"
   ln -nsf "${PARMlandda}/jedi/bufr_sfcsno_mapping.yaml" "${DATA}/obs"
 fi
 if [ "${OBS_SMAP}" = "YES" ]; then
-  obs_smap_suffix="smap_combined.nc"
-  ln -nsf "${COMINobs}/${obs_prefix}.${obs_smap_suffix}" "${DATA}/obs"
+  ln -nsf "${COMINobs}/${obs_prefix}.smap_combined.nc" "${DATA}/obs"
 fi
 
 # update coupler.res file
@@ -89,7 +81,7 @@ settings="\
 " # End of settings variable
 
 fp_template="${PARMlandda}/templates/template.coupler.res"
-fn_namelist="${DATA}/${FILEDATE}.coupler.res"
+fn_namelist="${DATA}/${filedate}.coupler.res"
 ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
 
 orog_path="${FIXlandda}/FV3_fix_tiled/C${RES}"
@@ -97,9 +89,9 @@ orog_fn_base="C${RES}_oro_data"
 
 # Copy static data files
 mkdir -p ${DATA}/Data/fv3files
-cp -p ${JEDI_STATICDIR}/fv3files/fmsmpp.nml ${DATA}/Data/fv3files/.
-cp -p ${JEDI_STATICDIR}/fv3files/field_table_ufs ${DATA}/Data/fv3files/field_table
-cp -p ${JEDI_STATICDIR}/fv3files/akbk${NPZ}.nc4 ${DATA}/Data/fv3files/akbk.nc4
+cp -p ${FIXlandda}/DATA_jedi_input/fv3files/fmsmpp.nml ${DATA}/Data/fv3files/.
+cp -p ${FIXlandda}/DATA_jedi_input/fv3files/field_table_ufs ${DATA}/Data/fv3files/field_table
+cp -p ${FIXlandda}/DATA_jedi_input/fv3files/akbk${NPZ}.nc4 ${DATA}/Data/fv3files/akbk.nc4
 ln -nsf ${orog_path}/${orog_fn_base}.tile* ${DATA}/Data/fv3files/
 
 # Link snow shadow level nicas data file
@@ -136,12 +128,12 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
   if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
     for itile in {1..6}
     do
-      sfc_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
-      sfc_bkg_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
+      sfc_fn="${filedate}.sfc_data.tile${itile}.nc"
+      sfc_bkg_fn="${filedate}.sfc_data.tile${itile}.nc"
       cp -p ${sfc_fn} "${DATA}/bkg/${sfc_bkg_fn}"
       ln -nsf "${orog_path}/${orog_fn_base}.tile${itile}.nc" "${DATA}/bkg/."
     done
-    cp -p ${FILEDATE}.coupler.res ${DATA}/bkg
+    cp -p ${filedate}.coupler.res ${DATA}/bkg
   
     # Set JEDI executable
     jedi_exe_fn="fv3jedi_var.x"
@@ -157,11 +149,11 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
       for ens in {1..2}
       do
         mkdir -p $DATA/mem${ens}
-        cp -p ${FILEDATE}.sfc_data.tile*.nc ${DATA}/mem${ens}
-        cp -p ${FILEDATE}.coupler.res ${DATA}/mem${ens}
+        cp -p ${filedate}.sfc_data.tile*.nc ${DATA}/mem${ens}
+        cp -p ${filedate}.coupler.res ${DATA}/mem${ens}
       done
     
-      ${USHlandda}/letkf_create_ens.py $FILEDATE $snowdepth_vn 30
+      ${USHlandda}/letkf_create_ens.py $filedate $snowdepth_vn 30
       if [[ $? != 0 ]]; then
         err_exit "letkf-oi create failed"
       fi  
@@ -189,9 +181,10 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
     cp -p "${COMIN}/${jedi_nml_fn}" .
   fi
 
+  jedi_exe_dir=${JEDI_PATH}/build/bin
   export pgm="${jedi_exe_fn}"
   . prep_step
-  ${run_cmd} -n ${NPROCS_ANALYSIS} ${JEDI_EXECDIR}/$pgm ${jedi_nml_fn} >>$pgmout 2>errfile
+  ${run_cmd} -n ${NPROCS_ANALYSIS} ${jedi_exe_dir}/$pgm ${jedi_nml_fn} >>$pgmout 2>errfile
   export err=$?; err_chk
   cp errfile errfile_fv3jedi_x
   if [[ $err != 0 ]]; then
@@ -201,7 +194,7 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
   # save intermediate sfc_data files before applying increment
   for itile in {1..6}
   do
-    sfc_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
+    sfc_fn="${filedate}.sfc_data.tile${itile}.nc"
     cp -p ${sfc_fn} "${sfc_fn}_${jedi_type}_before_inc"
   done
   
@@ -212,11 +205,11 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
   
     # Link inc file to DATA
     if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
-      inc_fp_prefix="${DATA}/anl/snowinc.${FILEDATE}.sfc_data"
+      inc_fp_prefix="${DATA}/anl/snowinc.${filedate}.sfc_data"
     elif [ "${JEDI_ALGORITHM}" = "letkf-oi" ]; then
-      inc_fp_prefix="${DATA}/${FILEDATE}.snowinc.sfc_data"
+      inc_fp_prefix="${DATA}/${filedate}.snowinc.sfc_data"
     fi
-    inc_fn_prefix="snowinc.${FILEDATE}.sfc_data"
+    inc_fn_prefix="snowinc.${filedate}.sfc_data"
     for itile in {1..6}
     do
       cp -p "${inc_fp_prefix}.tile${itile}.nc" "${DATA}/${inc_fn_prefix}.tile${itile}.nc"
@@ -240,7 +233,7 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
  otype = "${orog_fn_base}"
 /
 EOF
-  
+
     export pgm="apply_incr.exe"
     . prep_step
     # (n=6): this is fixed, at one task per tile (with minor code change). 
@@ -254,7 +247,7 @@ EOF
     # Save intermediate sfc_data files after applying increment
     for itile in {1..6}
     do
-      sfc_fn="${FILEDATE}.sfc_data.tile${itile}.nc"
+      sfc_fn="${filedate}.sfc_data.tile${itile}.nc"
       cp -p ${sfc_fn} "${sfc_fn}_${jedi_type}_after_inc"
     done
 
@@ -262,18 +255,18 @@ EOF
 
     # Link inc file to DATA
     if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
-      inc_fp_prefix="${DATA}/anl/smcinc.${FILEDATE}.sfc_data"
+      inc_fp_prefix="${DATA}/anl/smcinc.${filedate}.sfc_data"
     elif [ "${JEDI_ALGORITHM}" = "letkf-oi" ]; then
-      inc_fp_prefix="${DATA}/${FILEDATE}.smcinc.sfc_data"
+      inc_fp_prefix="${DATA}/${filedate}.smcinc.sfc_data"
     fi
-    inc_fn_prefix="smcinc.${FILEDATE}.sfc_data"
+    inc_fn_prefix="smcinc.${filedate}.sfc_data"
     for itile in {1..6}
     do
       cp -p "${inc_fp_prefix}.tile${itile}.nc" "${DATA}/${inc_fn_prefix}.tile${itile}.nc"
     done
     
     # Replace smc of sfc_data with that of JEDI output files (temporary solution)
-    fn_data_base="${FILEDATE}.sfc_data.tile"
+    fn_data_base="${filedate}.sfc_data.tile"
     sfc_data_fn_suffix=".nc_${jedi_type}_before_inc"
     jedi_out_fn_prefix="jedi_smc."
     jedi_out_fn_suffix=".nc"
@@ -315,7 +308,7 @@ EOF
   DO_PLOT_SFC_COMP="${DO_PLOT_SFC_COMP:-YES}"
   if [ "${DO_PLOT_SFC_COMP}" = "YES" ]; then
   
-    fn_sfc_base="${FILEDATE}.sfc_data.tile"
+    fn_sfc_base="${filedate}.sfc_data.tile"
     fn_inc_base="${inc_fn_prefix}.tile"
     out_title_base="Land-DA::SFC-DATA::${jedi_type}::${PDY}::"
     out_fn_base="landda_comp_sfc_${jedi_type}_${PDY}_"
@@ -351,7 +344,7 @@ done
 # Copy the final sfc_data files to COMOUT
 for itile in {1..6}
 do
-  cp -p "${DATA}/${FILEDATE}.sfc_data.tile${itile}.nc" ${COMOUT}
+  cp -p "${DATA}/${filedate}.sfc_data.tile${itile}.nc" ${COMOUT}
 done
 
 if [ -d diags ]; then
@@ -365,7 +358,7 @@ fi
 ###########################################################
 if [ "${WE2E_TEST}" == "YES" ]; then
   path_fbase="${FIXlandda}/test_base/we2e_com/${RUN}.${PDY}"
-  fn_sfc="${FILEDATE}.sfc_data.tile"
+  fn_sfc="${filedate}.sfc_data.tile"
   fn_inc="${inc_fn_prefix}.tile"
   we2e_log_fp="${LOGDIR}/${WE2E_LOG_FN}"
   if [ ! -f "${we2e_log_fp}" ]; then
@@ -374,11 +367,11 @@ if [ "${WE2E_TEST}" == "YES" ]; then
   # surface data tiles
   for itile in {1..6}
   do
-    ${USHlandda}/compare.py "${path_fbase}/${fn_sfc}${itile}.nc" "${COMOUT}/${fn_sfc}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "ANALYSIS" ${FILEDATE} "sfc_data.tile${itile}"
+    ${USHlandda}/compare.py "${path_fbase}/${fn_sfc}${itile}.nc" "${COMOUT}/${fn_sfc}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "ANALYSIS" ${filedate} "sfc_data.tile${itile}"
   done
   # increment tiles
   for itile in {1..6}
   do
-    ${USHlandda}/compare.py "${path_fbase}/${fn_inc}${itile}.nc" "${COMOUT}/${fn_inc}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "ANALYSIS" ${FILEDATE} "snowinc.tile${itile}"
+    ${USHlandda}/compare.py "${path_fbase}/${fn_inc}${itile}.nc" "${COMOUT}/${fn_inc}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "ANALYSIS" ${filedate} "snowinc.tile${itile}"
   done
 fi

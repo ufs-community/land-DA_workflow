@@ -27,6 +27,11 @@ MED_attributes::
   history_ymd = -999
   coupling_mode = {{ MED_COUPLING_MODE }}
   samegrid_atmlnd = {{ samegrid_atmlnd }}
+  pio_typename = pnetcdf
+  pio_numiotasks = -99
+  pio_stride = 4
+  pio_rearranger = box
+  pio_root = -99
 ::
 
 # ATM #

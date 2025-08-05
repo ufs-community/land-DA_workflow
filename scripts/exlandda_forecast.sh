@@ -48,7 +48,7 @@ HHsec_5d=$(printf "%05d" "${HHsec}")
 nHHsec=$(( nHH * 3600 ))
 nHHsec_5d=$(printf "%05d" "${nHHsec}")
 
-FILEDATE=${YYYY}${MM}${DD}.${HH}0000
+filedate=${YYYY}${MM}${DD}.${HH}0000
 
 # Copy input namelist data / restart files
 cp -p "${PARMlandda}/templates/template.noahmptable.tbl" noahmptable.tbl
@@ -578,7 +578,7 @@ if [ "${WE2E_TEST}" == "YES" ]; then
   # restart files
   for itile in {1..6}
   do
-    ${USHlandda}/compare.py "${path_fbase}/${fn_res}${itile}.nc" "${COMOUT}/RESTART/${fn_res}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "FORECAST" ${FILEDATE} "ufs_land_restart.tile${itile}"
+    ${USHlandda}/compare.py "${path_fbase}/${fn_res}${itile}.nc" "${COMOUT}/RESTART/${fn_res}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "FORECAST" ${filedate} "ufs_land_restart.tile${itile}"
   done
 fi
 

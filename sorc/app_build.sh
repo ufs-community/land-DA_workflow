@@ -12,7 +12,7 @@ OPTIONS
       show this help guide
   -p, --platform=PLATFORM
       name of machine you are building on
-      (e.g. hera | jet | orion | hercules )
+      (e.g. ursa | hera | gaeac6 | orion | hercules)
   -c, --compiler=COMPILER
       compiler to use; default depends on platform
       (e.g. intel | gnu | cray | gccgfortran)
@@ -90,7 +90,7 @@ BUILD_TYPE="Release"
 BUILD_JOBS=4
 REMOVE=false
 VERBOSE=false
-BUILD_CONDA="on"
+BUILD_CONDA="off"
 
 # Make options
 CLEAN=false
@@ -289,7 +289,7 @@ set -eu
 # automatically determine compiler
 if [ -z "${COMPILER}" ] ; then
   case ${PLATFORM} in
-    hera|gaeac6) COMPILER=intel ;;
+    ursa|hera|gaeac6) COMPILER=intel ;;
     orion|hercules) COMPILER=intel ;;
     wcoss2|singularity) COMPILER=intel ;;
     macos) COMPILER=gnu ;;
@@ -325,7 +325,11 @@ if [ "${VERBOSE}" = true ]; then
   MAKE_SETTINGS="${MAKE_SETTINGS} VERBOSE=1"
 fi
 
-module purge
+if [ "${PLATFORM}" = "gaeac6"]; then
+  module reset
+else
+  module purge
+fi
 
 # source version file for build
 BUILD_VERSION_FILE="${HOME_DIR}/versions/build.ver_${PLATFORM}"
@@ -390,9 +394,9 @@ else
 fi
 
 # Link land-DA input files to FIXlandda directory
-ver_fix_data="_v2.1"
-if [ "${PLATFORM}" = "hera" ]; then
-  landda_fix_orig="/scratch2/NAGAPE/epic/UFS_Land-DA${ver_fix_data}/inputs"
+ver_fix_data="_v3.0"
+if [ "${PLATFORM}" = "ursa" ] || [ "${PLATFORM}" = "hera" ]; then
+  landda_fix_orig="/scratch3/NAGAPE/epic/UFS_Land-DA${ver_fix_data}/inputs"
 elif [ "${PLATFORM}" = "orion" ] || [ "${PLATFORM}" = "hercules" ]; then
   landda_fix_orig="/work/noaa/epic/UFS_Land-DA${ver_fix_data}/inputs"
 elif [ "${PLATFORM}" = "gaeac6" ]; then

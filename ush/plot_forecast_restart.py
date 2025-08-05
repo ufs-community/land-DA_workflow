@@ -202,7 +202,13 @@ def plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num,
     # Call background plot
     back_plot(ax)
     for it in range(num_tiles):
-        cs=ax.pcolormesh(glon[it,:,:],glat[it,:,:],plt_var[it,:,:],cmap=cs_cmap,rasterized=True,
+        itp=it+1
+        glon_tile=np.squeeze(glon[it,:,:])
+        if itp == 1:
+            glon_tile=(glon_tile+180)%360-180
+        glat_tile=np.squeeze(glat[it,:,:])
+        var_tile=np.squeeze(plt_var[it,:,:])
+        cs=ax.pcolormesh(glon_tile,glat_tile,var_tile,cmap=cs_cmap,rasterized=True,
            vmin=cs_min,vmax=cs_max,transform=ccrs.PlateCarree())
     divider=make_axes_locatable(ax)
     ax_cb=divider.new_horizontal(size="3%",pad=0.1,axes_class=plt.Axes)

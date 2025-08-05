@@ -282,8 +282,8 @@ def set_default_parm():
         "IC_DATA_MODEL": "gfs",
         "IMO": 384,
         "JEDI_ALGORITHM": "letkf-oi",
+        "JEDI_IODACONV_PATH": "/path/to/jedi/ioda/converter/python/library",
         "JEDI_PATH": "/path/to/jedi/install/dir",
-        "JEDI_PY_VER": "python3.10",
         "JMO": 190,
         "KEEPDATA": "YES",
         "LND_CALC_SNET": ".true.",
@@ -294,7 +294,7 @@ def set_default_parm():
         "LND_OUTPUT_FREQ_SEC": 21600,
         "MACHINE": "/machine/platform/name",
         "MED_COUPLING_MODE": "ufs.nfrac.aoflux",
-        "model_ver": "v2.1.0",
+        "model_ver": "v3.0.0",
         "NET": "landda",
         "NPROCS_ANALYSIS": 6,
         "NPROCS_FCST_IC": 36,
@@ -325,26 +325,32 @@ def set_machine_parm(machine):
     lowercase_machine = machine.lower()
     match lowercase_machine:
         case "gaeac6":
+            CUSTOM_JEDI_CONFIG_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
+            JEDI_IODACONV_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/jedi_bundle_sync/build/lib/python3.11"
             JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/jedi_bundle_sync"
             MAX_CORES_PER_NODE = 192
-            CUSTOM_JEDI_CONFIG_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
-            WARMSTART_DIR = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
+            WARMSTART_DIR = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "hera":
-            JEDI_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_sync"
+            CUSTOM_JEDI_CONFIG_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
+            JEDI_IODACONV_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_hera/build/lib/python3.11"
+            JEDI_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_hera"
             MAX_CORES_PER_NODE = 40
-            CUSTOM_JEDI_CONFIG_PATH = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
-            WARMSTART_DIR = "/scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
+            WARMSTART_DIR = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "hercules":
+            CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
+            JEDI_IODACONV_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_hercules/build/lib/python3.11"
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_hercules"
             MAX_CORES_PER_NODE = 80
-            CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
-            WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
+            WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "orion":
+            CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
+            JEDI_IODACONV_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_orion/build/lib/python3.11"
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion"
             MAX_CORES_PER_NODE = 40
-            CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/test_base/jedi_yaml"
-            WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v2.1/inputs/DATA_RESTART"
+            WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "singularity":
+            CUSTOM_JEDI_CONFIG_PATH = "SINGULARITY_WORKING_DIR"
+            JEDI_IODACONV_PATH = "SINGULARITY_WORKING_DIR"
             JEDI_PATH = "SINGULARITY_WORKING_DIR"
             MAX_CORES_PER_NODE = 40
             WARMSTART_DIR = "SINGULARITY_WORKING_DIR/land-DA_workflow/fix/DATA_RESTART"
@@ -352,9 +358,10 @@ def set_machine_parm(machine):
             sys.exit(f"FATAL ERROR: this machine/platform '{lowercase_machine}' is NOT supported yet !!!")
 
     machine_config = {
+        "CUSTOM_JEDI_CONFIG_PATH": CUSTOM_JEDI_CONFIG_PATH,
+        "JEDI_IODACONV_PATH": JEDI_IODACONV_PATH,
         "JEDI_PATH": JEDI_PATH,
         "MAX_CORES_PER_NODE": MAX_CORES_PER_NODE,
-        "CUSTOM_JEDI_CONFIG_PATH": CUSTOM_JEDI_CONFIG_PATH,
         "WARMSTART_DIR": WARMSTART_DIR,
     }
 
@@ -387,8 +394,12 @@ def parse_args(argv):
 def detect_platform():
 # =================================================================== CHJ =====
 
-    if os.path.isdir("/scratch2/NAGAPE"):
-        machine = "hera"
+    if os.path.isdir("/scratch3/NAGAPE"):
+        host_str = socket.gethostname()[0:3]
+        if host_str == "ufe":
+            machine = "ursa"
+        elif host_str == "hfe":
+            machine = "hera"
     elif os.path.isdir("/work/noaa"):
         machine = socket.gethostname().split('-')[0]  # orion/hercules
     elif os.path.isdir("/ncrc"):
@@ -396,8 +407,6 @@ def detect_platform():
         machine = f"gaeac{machine_number}"
     elif os.path.isdir("/glade"):
         machine = "derecho"
-    elif os.path.isdir("/lfs4/HFIP"):
-        machine = "jet"
     else:
         sys.exit(f''' FATAL ERROR: Machine (platform) is not detected. Please set it with -p argument!!!''')
 

@@ -15,11 +15,55 @@ nMM=${NTIME:4:2}
 nDD=${NTIME:6:2}
 nHH=${NTIME:8:2}
 
+DO_PLOT_OBS="YES"
 DO_PLOT_STATS="YES"
 DO_PLOT_TIME_HISTORY="YES"
 DO_PLOT_RESTART="YES"
 DO_PLOT_COMBINE_TILES="YES"
 DO_PLOT_BASIN="NO"
+
+############################################################
+# Observation File Plot
+############################################################
+if [ "${DO_PLOT_OBS}" = "YES" ]; then
+
+  obs_prefix="obs.${PDY}.${cycle}"
+  fn_input_ghcn="${obs_prefix}.ghcn_snow.nc"
+  fn_input_ims="${obs_prefix}.ims_snow.tm00.nc"
+  fn_input_smap="${obs_prefix}.smap_combined.nc"
+
+  # Soft-link the input file to DATA
+  if [ "${OBS_GHCN_SNOW}" = "YES" ]; then
+    ln -nsf "${COMINobs}/${fn_input_ghcn}" .
+  fi
+  if [ "${OBS_IMS_SNOW}" = "YES" ]; then
+    ln -nsf "${COMINobs}/${fn_input_ims}" .
+  fi
+  if [ "${OBS_SMAP}" = "YES" ]; then
+    ln -nsf "${COMINobs}/${fn_input_smap}" .
+  fi
+
+  cat > plot_obs_file.yaml << EOF
+work_dir: '${DATA}'
+cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+fn_input_ghcn: '${fn_input_ghcn}'
+fn_input_ims: '${fn_input_ims}'
+fn_input_smap: '${fn_input_smap}'
+OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
+OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
+OBS_SMAP: '${OBS_SMAP}'
+PDY: '${PDY}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
+EOF
+
+  ${USHlandda}/plot_obs_file.py
+  if [ $? -ne 0 ]; then
+    err_exit "Observation file plot failed"
+  fi
+
+  # Copy result file to COMOUT
+  cp -p *.png ${COMOUTplot}
+fi
 
 ############################################################
 # Stats Plot

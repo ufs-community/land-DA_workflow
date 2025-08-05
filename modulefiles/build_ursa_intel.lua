@@ -1,20 +1,20 @@
 help([[
-loads modules necessary for building the land-DA workflow on Gaea-C6 using Intel
+loads modules necessary for building the land-DA workflow on Ursa using Intel
 ]])
 
-whatis([===[Loads modules necessary for building the land-DA workflow on Gaea-C6]===])
+whatis([===[Loads modules necessary for building the land-DA workflow on Ursa]===])
 
 prepend_path("MODULEPATH", os.getenv("modulepath_modulefiles"))
 prepend_path("MODULEPATH", os.getenv("modulepath_spack_stack"))
 
-load(pathJoin("stack-intel", stack_intel_ver))
-load(pathJoin("stack-cray-mpich", stack_cray_mpich_ver))
-load(pathJoin("stack-python", stack_python_ver))
+load(pathJoin("stack-oneapi", stack_intel_ver))
+load(pathJoin("stack-intel-oneapi-mpi", stack_intel_oneapi_mpi_ver))
 
 load(pathJoin("cmake", cmake_ver))
 load(pathJoin("ecbuild", ecbuild_ver))
 
 load(pathJoin("jasper", jasper_ver))
+load(pathJoin("zlib", zlib_ver))
 load(pathJoin("libpng", libpng_ver))
 load(pathJoin("hdf5", hdf5_ver))
 load(pathJoin("netcdf-c", netcdf_c_ver))
@@ -35,18 +35,18 @@ load(pathJoin("scotch", scotch_ver))
 load(pathJoin("nemsio", nemsio_ver))
 load(pathJoin("sfcio", sfcio_ver))
 load(pathJoin("sigio", sigio_ver))
-load(pathJoin("zlib", zlib_ver))
 load(pathJoin("nccmp", nccmp_ver))
+
+load(pathJoin("prod_util", prod_util_ver))
 
 load("crtm/2.4.0.1")
 
-unload("darshan-runtime")
-unload("cray-libsci")
+setenv("CC", "mpiicx")
+setenv("CXX", "mpiicpx")
+setenv("FC", "mpiifort")
+setenv("I_MPI_CC", "icx")
+setenv("I_MPI_CXX", "icpx")
+setenv("I_MPI_F90", "ifort")
 
-setenv("CC","cc")
-setenv("FC","ftn")
-setenv("CXX","CC")
-setenv("CMAKE_C_COMPILER","cc")
-setenv("CMAKE_Fortran_COMPILER","ftn")
-setenv("CMAKE_CXX_COMPILER","CC")
-setenv("CMAKE_Platform","gaeac6.intel")
+setenv("CMAKE_Platform", "ursa.intel")
+

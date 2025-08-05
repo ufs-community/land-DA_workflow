@@ -20,10 +20,10 @@ FREQ=$((${FCSTHR}*3600))
 RDD=$((${FCSTHR}/24))
 RHH=$((${FCSTHR}%24))
 
-FILEDATE=${YYYY}${MM}${DD}.${HH}0000
+filedate=${YYYY}${MM}${DD}.${HH}0000
 for itile in {1..6}
 do
-  cp -p ${COMIN}/${FILEDATE}.sfc_data.tile${itile}.nc .
+  cp -p ${COMIN}/${filedate}.sfc_data.tile${itile}.nc .
 done
 
 #  convert back to UFS tile 
@@ -91,7 +91,7 @@ if [ "${WE2E_TEST}" == "YES" ]; then
   # restart files
   for itile in {1..6}
   do
-    ${USHlandda}/compare.py "${path_fbase}/${fn_res}${itile}.nc" "${COMOUT}/${fn_res}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "POST_ANAL" ${FILEDATE} "ufs_land_restart.anal.tile${itile}"
+    ${USHlandda}/compare.py "${path_fbase}/${fn_res}${itile}.nc" "${COMOUT}/${fn_res}${itile}.nc" ${WE2E_ATOL} ${we2e_log_fp} "POST_ANAL" ${filedate} "ufs_land_restart.anal.tile${itile}"
   done
 fi
 

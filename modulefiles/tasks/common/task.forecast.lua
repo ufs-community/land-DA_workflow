@@ -1,8 +1,9 @@
-prepend_path("MODULEPATH", os.getenv("modulepath_spack_stack"))
+prepend_path("MODULEPATH", os.getenv("modulepath_modulefiles"))
 
-load(pathJoin("stack-intel", stack_intel_ver))
-load(pathJoin("stack-cray-mpich", stack_cray_mpich_ver))
+load(pathJoin("stack-oneapi", stack_oneapi_ver))
+load(pathJoin("stack-intel-oneapi-mpi", stack_intel_oneapi_mpi_ver))
 load(pathJoin("stack-python", stack_python_ver))
+
 load(pathJoin("jasper", jasper_ver))
 load(pathJoin("zlib", zlib_ver))
 load(pathJoin("libpng", libpng_ver))
