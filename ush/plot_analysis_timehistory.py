@@ -36,15 +36,14 @@ def main():
     work_dir = yaml_data['work_dir']
     fn_data_anal_prefix = yaml_data['fn_data_anal_prefix']
     fn_data_anal_suffix = yaml_data['fn_data_anal_suffix']
-    fn_data_fcst_prefix = yaml_data['fn_data_fcst_prefix']
-    fn_data_fcst_suffix = yaml_data['fn_data_fcst_suffix']
+    hofx_data_path = yaml_data['hofx_data_path']
     jedi_exe = yaml_data['jedi_exe']
     nprocs_anal = yaml_data['nprocs_anal']
     out_fn_base = yaml_data['out_fn_base']
-    hofx_data_path = yaml_data['hofx_data_path']
     OBS_GHCN_SNOW = yaml_data['OBS_GHCN_SNOW']
     OBS_IMS_SNOW = yaml_data['OBS_IMS_SNOW']
     OBS_SFCSNO = yaml_data['OBS_SFCSNO']
+    OBS_SMAP = yaml_data['OBS_SMAP']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
 
     # Set logging config
@@ -69,12 +68,18 @@ def main():
         svar_list.append("ims_snow")
     if OBS_SFCSNO == "YES":
         svar_list.append("sfcsno")
+    if OBS_SMAP == "YES":
+        svar_list.append("smap_soil_moisture")
 
     logging.info(f''' svar_list: {svar_list}''')
 
     # plot time-history
     for svar in svar_list:
-        var_nm = "totalSnowDepth"
+        if svar == "ghcn_snow" or svar == "ims_snow" or svar == "sfcsno":
+            var_nm = "totalSnowDepth"
+        elif svar == "smap_soil_moisture":
+            var_nm = "soilMoistureVolumetric" 
+
         var_dict_anal = get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm,svar)
         plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path,svar)
 
@@ -95,7 +100,12 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
     files.sort()
     logging.debug(f''' Files= {files}''')
 
-    nobs_qc_prefix = f"QC {obs_type} totalSnowDepth"
+    if obs_type == "smap_soil_moisture":
+        obs_type_nm = "SoilMoistureSMAP"
+    else:
+        obs_type_nm = obs_type
+
+    nobs_qc_prefix = f"QC {obs_type_nm} {var_nm}"
     logging.info(f''' QC prefix for Nobs: {nobs_qc_prefix}''')
 
     file_date = []
@@ -233,8 +243,8 @@ def plot_his_omb(var_dict_anal,out_fn_base,work_dir,var_nm,hofx_data_path,obs_ty
         logging.info(f'''plot date: {dfa_date_plot}''')
 
     obs_type_upper = obs_type.upper()
-    out_title_omb = f'''Land-DA::OMB (observation-background)::{var_nm}::{obs_type_upper}'''
-    out_fn_omb = f'''{out_fn_base}_omb_{var_nm}_{obs_type}'''
+    out_title_omb = f'''Land-DA::OMB (observation-background)::{obs_type_upper}'''
+    out_fn_omb = f'''{out_fn_base}_omb_{obs_type}'''
 
     txt_fnt=7
     ln_wdth=0.75
