@@ -36,6 +36,7 @@ workflow:
     DATM_STREAM_FN_LAST_DATE: "{{ DATM_STREAM_FN_LAST_DATE }}"
     DCOMINera5: "{{ DCOMINera5 }}"
     DCOMINgswp3: "{{ DCOMINgswp3 }}"
+    DO_FREE_FORECAST: "{{ DO_FREE_FORECAST }}"
     do_jedi_snow: "{{ do_jedi_snow }}"
     do_jedi_soil_moisture: "{{ do_jedi_soil_moisture }}"
     DT_ATMOS: "{{ DT_ATMOS }}"
@@ -105,6 +106,7 @@ workflow:
     DATADEP_COLDSTART: "<cyclestr>&exp_basedir;/exp_case/&EXP_CASE_NAME;/task_skip_coldstart_@Y@m@d@H.txt</cyclestr>"
     DATADEP_DATM1: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/ufs.cpld.datm.r.@Y-@m-@d-00000.nc</cyclestr>"
     DATADEP_DATM2: "<cyclestr>&WARMSTART_DIR;/ufs.cpld.datm.r.@Y-@m-@d-00000.nc</cyclestr>"
+    DATADEP_FREEFCST: "<cyclestr>&exp_basedir;/exp_case/&EXP_CASE_NAME;/task_analysis_done_@Y@m@d.@H.txt</cyclestr>"
     DATADEP_SFC1: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/@Y@m@d.@H0000.sfc_data.tile6.nc</cyclestr>" 
     DATADEP_SFC2: "<cyclestr>&WARMSTART_DIR;/@Y@m@d.@H0000.sfc_data.tile6.nc</cyclestr>"
   log:
@@ -322,8 +324,11 @@ workflow:
         cyc: "&cyc;"
         DATAROOT: "&DATAROOT;"
         DATE_CYCLE_FREQ_HR: "&DATE_CYCLE_FREQ_HR;"
+        DO_FREE_FORECAST: "&DO_FREE_FORECAST"
         do_jedi_snow: "&do_jedi_snow;"
         do_jedi_soil_moisture: "&do_jedi_soil_moisture;"
+        exp_basedir: "&exp_basedir;"
+        EXP_CASE_NAME: "&EXP_CASE_NAME;"
         FRAC_GRID: "&FRAC_GRID;"
         HOMElandda: "&HOMElandda;"
         JEDI_ALGORITHM: "&JEDI_ALGORITHM;"
@@ -383,6 +388,7 @@ workflow:
                 age: 5
               value: "&DATADEP_SFC2;"
 {%- endif %}
+{%- if DO_FREE_FORECAST == "NO" %}
     task_post_anal:
       attrs:
 {%- if COLDSTART == "YES" %}
@@ -427,9 +433,14 @@ workflow:
         taskdep:
           attrs:
             task: analysis
+{%- endif %}
     task_forecast:
       attrs:
+{%- if DO_FREE_FORECAST == "YES" %}
+        cycledefs: first_cycle
+{%- else %}
         cycledefs: cycled
+{%- endif %}
         maxtries: 2
       envars:
         ACCOUNT: "&ACCOUNT;"
@@ -449,6 +460,7 @@ workflow:
         DATE_LAST_CYCLE: "&DATE_LAST_CYCLE;"
         DATE_CYCLE_FREQ_HR: "&DATE_CYCLE_FREQ_HR;"
         DATM_STREAM_FN_LAST_DATE: "&DATM_STREAM_FN_LAST_DATE;"
+        DO_FREE_FORECAST: "&DO_FREE_FORECAST;"
         DT_ATMOS: "&DT_ATMOS;"
         DT_RUNSEQ: "&DT_RUNSEQ;"
         FCSTHR: "&FCSTHR;"
@@ -503,6 +515,7 @@ workflow:
           taskdep_prep_data:
             attrs:
               task: prep_data
+{%- if DO_FREE_FORECAST == "NO" %}
           or:
             taskdep_post_anal:
               attrs:
@@ -514,6 +527,7 @@ workflow:
               attrs:
                 age: 5
               value: "&DATADEP_COLDSTART;"
+{%- endif %}
     task_plot_stats:
       attrs:
 {%- if COLDSTART == "YES" %}
@@ -530,6 +544,7 @@ workflow:
         DATE_CYCLE_FREQ_HR: "&DATE_CYCLE_FREQ_HR;"
         DATE_FIRST_CYCLE: "&DATE_FIRST_CYCLE;"
         DATE_LAST_CYCLE: "&DATE_LAST_CYCLE;"
+        DO_FREE_FORECAST: "&DO_FREE_FORECAST;"
         HOMElandda: "&HOMElandda;"
         JEDI_ALGORITHM: "&JEDI_ALGORITHM;"
         KEEPDATA: "&KEEPDATA;"
@@ -557,7 +572,16 @@ workflow:
       queue: "&queue_default;"
       join: "&LOGDIR;/plot_stats&LOGFN_SUFFIX;"
       dependency:
-        taskdep:
-          attrs:
-            task: forecast
+        or:
+          taskdep_forecast:
+            attrs:
+              task: forecast
+          and:
+            taskdep_analysis:
+              attrs:
+                task: analysis
+            datadep_freefcst:
+              attrs:
+                age: 5
+              value: "&DATADEP_FREEFCST;"
 

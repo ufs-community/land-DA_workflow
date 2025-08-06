@@ -272,6 +272,7 @@ def set_default_parm():
         "DATM_STREAM_FN_LAST_DATE": "",
         "DCOMINera5": "",
         "DCOMINgswp3": "",
+        "DO_FREE_FORECAST": "NO",
         "DT_ATMOS": 900,
         "DT_RUNSEQ": 3600,
         "envir": "test",

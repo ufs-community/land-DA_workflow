@@ -352,13 +352,6 @@ if [ "${COLDSTART}" = "NO" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}" ]
   else
     data_dir="${COMINm1}/RESTART"
   fi      
-
-  # NoahMP restart files
-  for itile in {1..6}
-  do
-    ln -nsf "${COMIN}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc" RESTART/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-${HHsec_5d}.tile${itile}.nc
-  done
-
   # CMEPS restart and pointer files
   r_fn="ufs.cpld.cpl.r.${YYYY}-${MM}-${DD}-${HHsec_5d}.nc"
   if [ -f "${data_dir}/${r_fn}" ]; then
@@ -367,6 +360,19 @@ if [ "${COLDSTART}" = "NO" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}" ]
     err_exit "${data_dir}/${r_fn} file does not exist."
   fi
   ls -1 "./RESTART/${r_fn}">rpointer.cpl
+
+  # NoahMP restart files
+  if [ "${DO_FREE_FORECAST}" = "YES" ]; then
+    for itile in {1..6}
+    do
+      ln -nsf "${WARMSTART_DIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc" RESTART/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-${HHsec_5d}.tile${itile}.nc
+    done
+  else
+    for itile in {1..6}
+    do
+      ln -nsf "${COMIN}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc" RESTART/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-${HHsec_5d}.tile${itile}.nc
+    done
+  fi
 fi
 
 #############################
