@@ -177,33 +177,58 @@ EOF
       mkdir -p ${smap_raw_dir}
 
       # Specify time window for SMAP raw data (default: +-5 hours -> total 11 hours)
-      SMAP_RAW_WINDOW_SPAN_HALF="${SMAP_RAW_WINDOW_SPAN_HALF:-5}"
-      hftime_smap=$($NDATE -${SMAP_RAW_WINDOW_SPAN_HALF} $PDY$cyc)
-      pdy_hf=${hftime_smap:0:8}
+      SMAP_RAW_WINDOW_SPAN_HALF="${SMAP_RAW_WINDOW_SPAN_HALF:-0}"
 
-      # soft-link SMAP raw data files into smap_raw_data directory
-      for ihr in $(seq -${SMAP_RAW_WINDOW_SPAN_HALF} ${SMAP_RAW_WINDOW_SPAN_HALF}); do
-        ihr_date=$($NDATE $ihr $PDY$cyc)
-        ihr_pdy=${ihr_date:0:8}
-        ihr_cyc=${ihr_date:8:2}
-        ihr_smap_raw_dir="${DCOMINsmap}/${ihr_pdy}"
+      # IODA-converting
+      if [ "${SMAP_RAW_WINDOW_SPAN_HALF}" -eq 0 ]; then
+        ihr_smap_raw_dir="${DCOMINsmap}/${PDY}"
 
         found=false
         for file in "${ihr_smap_raw_dir}"/*; do
           filename=$(basename "${file}")
-          if [ -f "${file}" ] && [[ "${filename}" == ${fn_smap_prefix}*"${ihr_pdy}T${ihr_cyc}"*${fn_smap_suffix} ]]; then
+          if [ -f "${file}" ] && [[ "${filename}" == ${fn_smap_prefix}*"${PDY}T${cyc}"*${fn_smap_suffix} ]]; then
             ln -nsf "${file}" ${smap_raw_dir}
-            echo "SMAP raw data file for ${ihr_date} found in ${ihr_smap_raw_dir}."
+            echo "SMAP raw data file for ${PDY}${cyc} found in ${ihr_smap_raw_dir}."
+	    smap_ioda_in_fn=${filename}
             found=true
+	    break
           fi
-        done        
+        done  
         if ! $found; then
-          err_exit "No matching file for ${ihr_date} found in ${ihr_smap_raw_dir}!"
+          err_exit "No matching file for ${PDY}${cyc} found in ${ihr_smap_raw_dir}!"
         fi
-      done
-
-      # Create input yaml file
-  cat > smap_ioda_concat.yaml << EOF
+	# Run ioda converting script
+        ${USHlandda}/smap_ssm2ioda.py -i "${smap_raw_dir}/${smap_ioda_in_fn}" -o ${obs_out_fn_smap} --maskMissing
+        if [ $? -ne 0 ]; then
+          err_exit "Generation of SMAP obs file failed !!!"
+        fi
+      else
+        hftime_smap=$($NDATE -${SMAP_RAW_WINDOW_SPAN_HALF} $PDY$cyc)
+        pdy_hf=${hftime_smap:0:8}
+  
+        # soft-link SMAP raw data files into smap_raw_data directory
+        for ihr in $(seq -${SMAP_RAW_WINDOW_SPAN_HALF} ${SMAP_RAW_WINDOW_SPAN_HALF}); do
+          ihr_date=$($NDATE $ihr $PDY$cyc)
+          ihr_pdy=${ihr_date:0:8}
+          ihr_cyc=${ihr_date:8:2}
+          ihr_smap_raw_dir="${DCOMINsmap}/${ihr_pdy}"
+  
+          found=false
+          for file in "${ihr_smap_raw_dir}"/*; do
+            filename=$(basename "${file}")
+            if [ -f "${file}" ] && [[ "${filename}" == ${fn_smap_prefix}*"${ihr_pdy}T${ihr_cyc}"*${fn_smap_suffix} ]]; then
+              ln -nsf "${file}" ${smap_raw_dir}
+              echo "SMAP raw data file for ${ihr_date} found in ${ihr_smap_raw_dir}."
+              found=true
+            fi
+          done        
+          if ! $found; then
+            err_exit "No matching file for ${ihr_date} found in ${ihr_smap_raw_dir}!"
+          fi
+        done
+  
+        # Create input yaml file
+        cat > smap_ioda_concat.yaml << EOF
 fn_smap_prefix: '${fn_smap_prefix}'
 fn_smap_suffix: '${fn_smap_suffix}'
 obs_out_fn_smap: '${obs_out_fn_smap}'
@@ -216,10 +241,11 @@ PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 USHlandda: '${USHlandda}'
 EOF
 
-      # Run the ioda converting script for SMAP and concatenate the netcdf files
-      ${USHlandda}/smap_ioda_concat_files.py
-      if [ $? -ne 0 ]; then
-        err_exit "Generation of SMAP_ioda obs file failed !!!"
+        # Run the ioda converting script for SMAP and concatenate the netcdf files
+        ${USHlandda}/smap_ioda_concat_files.py
+        if [ $? -ne 0 ]; then
+          err_exit "Generation of SMAP_ioda obs file failed !!!"
+        fi
       fi
 
       cp -p "${obs_out_fn_smap}" "${COMOUTobs}/${obs_out_fn_smap}"

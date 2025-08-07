@@ -310,6 +310,7 @@ def set_default_parm():
         "RES": 96,
         "RESTART_INTERVAL": "12 -1",
         "RUN": "landda",
+        "SMAP_RAW_WINDOW_SPAN_HALF": 5,
         "WARMSTART_DIR": "/path/to/warm/start/dir",
         "WE2E_TEST": "NO",
         "WRITE_GROUPS": 1,

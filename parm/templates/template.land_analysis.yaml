@@ -87,6 +87,7 @@ workflow:
     RUN: "{{ RUN }}"
     res_p1: "{{ res_p1 }}"
     SCHED: "slurm"
+    SMAP_RAW_WINDOW_SPAN_HALF: "{{ SMAP_RAW_WINDOW_SPAN_HALF }}"
     WARMSTART_DIR: "{{ WARMSTART_DIR }}"
     WE2E_TEST: "{{ WE2E_TEST }}"
     WE2E_ATOL: "1e-7"
@@ -188,6 +189,7 @@ workflow:
         PY_LOG_LEVEL: "&PY_LOG_LEVEL;"
         RES: "&RES;"
         SCHED: "&SCHED;"
+        SMAP_RAW_WINDOW_SPAN_HALF: "&SMAP_RAW_WINDOW_SPAN_HALF;"
         WARMSTART_DIR: "&WARMSTART_DIR;"
       account: "&ACCOUNT;"
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "prep_data" "&HOMElandda;" "&MACHINE;"'
