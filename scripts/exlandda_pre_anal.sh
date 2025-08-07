@@ -14,9 +14,9 @@ for itile in {1..6}
 do
   rst_fn="ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc"
   if [ -f ${DATA_RESTART}/${rst_fn} ]; then
-    cp ${DATA_RESTART}/${rst_fn} .
+    cp -p ${DATA_RESTART}/${rst_fn} .
   elif [ -f ${WARMSTART_DIR}/${rst_fn} ]; then
-    cp ${WARMSTART_DIR}/${rst_fn} .
+    cp -p ${WARMSTART_DIR}/${rst_fn} .
   else
     err_exit "Initial restart files do not exist"
   fi

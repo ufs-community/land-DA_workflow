@@ -352,6 +352,10 @@ if [ -d diags ]; then
   ln -nsf ${COMOUThofx}/*.nc ${DATA_HOFX}
 fi
 
+# Create rocoto task-dependency txt file only for free-forecast run
+if [ "${DO_FREE_FORECAST}" = "YES" ] && [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}" ]; then
+  touch "${exp_basedir}/exp_case/${EXP_CASE_NAME}/task_analysis_done_${PDY}${cyc}.txt"
+fi
 
 ###########################################################
 # WE2E test

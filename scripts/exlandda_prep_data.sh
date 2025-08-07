@@ -198,7 +198,7 @@ EOF
           fi
         done        
         if ! $found; then
-          echo "WARNING: No matching file for ${ihr_date} found in ${ihr_smap_raw_dir}!"
+          err_exit "No matching file for ${ihr_date} found in ${ihr_smap_raw_dir}!"
         fi
       done
 
@@ -254,6 +254,8 @@ if [ "${APP}" = "LND" ]; then
     rfile2="ufs.cpld.datm.r.${YYYY}-${MM}-${DD}-${HHsec_5d}.nc"
     if [ -f "${COMINm1}/${rfile2}" ]; then
       ln -nsf "${COMINm1}/${rfile2}" .
+    elif [ -f "${DATA_RESTART}/${rfile2}" ]; then
+      ln -nsf "${DATA_RESTART}/${rfile2}" .
     elif [ -f "${WARMSTART_DIR}/${rfile2}" ]; then
       ln -nsf "${WARMSTART_DIR}/${rfile2}" .
     else
