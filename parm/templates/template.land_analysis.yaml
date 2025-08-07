@@ -106,7 +106,7 @@ workflow:
     DATADEP_COLDSTART: "<cyclestr>&exp_basedir;/exp_case/&EXP_CASE_NAME;/task_skip_coldstart_@Y@m@d@H.txt</cyclestr>"
     DATADEP_DATM1: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/ufs.cpld.datm.r.@Y-@m-@d-00000.nc</cyclestr>"
     DATADEP_DATM2: "<cyclestr>&WARMSTART_DIR;/ufs.cpld.datm.r.@Y-@m-@d-00000.nc</cyclestr>"
-    DATADEP_FREEFCST: "<cyclestr>&exp_basedir;/exp_case/&EXP_CASE_NAME;/task_analysis_done_@Y@m@d.@H.txt</cyclestr>"
+    DATADEP_FREEFCST: "<cyclestr>&exp_basedir;/exp_case/&EXP_CASE_NAME;/task_analysis_done_@Y@m@d@H.txt</cyclestr>"
     DATADEP_SFC1: "<cyclestr>&DATAROOT;/DATA_SHARE/RESTART/@Y@m@d.@H0000.sfc_data.tile6.nc</cyclestr>" 
     DATADEP_SFC2: "<cyclestr>&WARMSTART_DIR;/@Y@m@d.@H0000.sfc_data.tile6.nc</cyclestr>"
   log:
