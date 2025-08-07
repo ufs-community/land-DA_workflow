@@ -176,7 +176,7 @@ EOF
       fn_smap_suffix=".h5"
       mkdir -p ${smap_raw_dir}
 
-      # Specify time window for SMAP raw data (default: +-5 hours)
+      # Specify time window for SMAP raw data (default: +-5 hours -> total 11 hours)
       SMAP_RAW_WINDOW_SPAN_HALF="${SMAP_RAW_WINDOW_SPAN_HALF:-5}"
       hftime_smap=$($NDATE -${SMAP_RAW_WINDOW_SPAN_HALF} $PDY$cyc)
       pdy_hf=${hftime_smap:0:8}
