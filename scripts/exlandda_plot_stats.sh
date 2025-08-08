@@ -18,9 +18,15 @@ nHH=${NTIME:8:2}
 DO_PLOT_OBS="YES"
 DO_PLOT_STATS="YES"
 DO_PLOT_TIME_HISTORY="YES"
-DO_PLOT_RESTART="YES"
-DO_PLOT_COMBINE_TILES="YES"
 DO_PLOT_BASIN="NO"
+
+if [ "${DO_FREE_FORECAST}" = "YES" ] && [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}" ]; then
+  DO_PLOT_RESTART="NO"
+  DO_PLOT_COMBINE_TILES="NO"
+else
+  DO_PLOT_RESTART="YES"
+  DO_PLOT_COMBINE_TILES="YES"
+fi
 
 ############################################################
 # Observation File Plot
@@ -86,6 +92,9 @@ if [ "${DO_PLOT_STATS}" = "YES" ]; then
   if [ "${OBS_SFCSNO}" = "YES" ]; then
     cp -p "${COMINhofx}/diag.sfcsno_${PDY}${cyc}.nc" ${DATA}
   fi
+  if [ "${OBS_SMAP}" = "YES" ]; then
+    cp -p "${COMINhofx}/diag.smap_soil_moisture_${PDY}${cyc}.nc" ${DATA}
+  fi
 
   cat > plot_hofx.yaml <<EOF
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
@@ -99,6 +108,7 @@ work_dir: '${DATA}'
 OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
 OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
 OBS_SFCSNO: '${OBS_SFCSNO}'
+OBS_SMAP: '${OBS_SMAP}'
 PDY: '${PDY}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
@@ -120,8 +130,6 @@ fi
 if [ "${DO_PLOT_TIME_HISTORY}" = "YES" ]; then
   fn_data_anal_prefix="analysis_"
   fn_data_anal_suffix=".log"
-  fn_data_fcst_prefix="forecast_"
-  fn_data_fcst_suffix=".log"
   out_fn_base="landda_timehistory"
 
   cat > plot_timehistory.yaml <<EOF
@@ -129,8 +137,6 @@ path_data: '${LOGDIR}'
 work_dir: '${DATA}'
 fn_data_anal_prefix: '${fn_data_anal_prefix}'
 fn_data_anal_suffix: '${fn_data_anal_suffix}'
-fn_data_fcst_prefix: '${fn_data_fcst_prefix}'
-fn_data_fcst_suffix: '${fn_data_fcst_suffix}'
 hofx_data_path: '${DATA_HOFX_OMB}'
 jedi_exe: '${JEDI_ALGORITHM}'
 nprocs_anal: '${NPROCS_ANALYSIS}'
@@ -138,6 +144,7 @@ out_fn_base: '${out_fn_base}'
 OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
 OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
 OBS_SFCSNO: '${OBS_SFCSNO}'
+OBS_SMAP: '${OBS_SMAP}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
 
@@ -168,6 +175,7 @@ work_dir: '${DATA}'
 fn_data_base: '${fn_data_base}'
 fn_data_ext: '${fn_data_ext}'
 soil_lvl_number: '${soil_level_number}'
+OBS_SMAP: '${OBS_SMAP}'
 out_title_base: '${out_title_base}'
 out_fn_base: '${out_fn_base}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'

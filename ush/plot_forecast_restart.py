@@ -42,6 +42,7 @@ def main():
     fn_data_base=yaml_data['fn_data_base']
     fn_data_ext=yaml_data['fn_data_ext']
     soil_lvl_num=yaml_data['soil_lvl_number']
+    OBS_SMAP=yaml_data['OBS_SMAP']
     out_title_base=yaml_data['out_title_base']
     out_fn_base=yaml_data['out_fn_base']
     cartopy_ne_path=yaml_data['cartopy_ne_path']
@@ -65,7 +66,10 @@ def main():
     cartopy.config['data_dir']=cartopy_ne_path
 
     #var_list=["snwdph","smc"]
-    var_list=["snwdph"]
+    if OBS_SMAP == "YES":
+        var_list=["smc"]
+    else:
+        var_list=["snwdph"]
     # Number of tiles
     num_tiles=6
 
@@ -127,6 +131,7 @@ def plot_data(path_data,fn_data_base,fn_data_ext,var_nm,soil_lvl_num,
     c_lon=-77.0369
 
     logging.info(f''' ===== data file: '{var_nm}' ========================''')
+    soil_lvl_num = int(soil_lvl_num)
     # open the data file
     for it in range(num_tiles):
         itp=it+1

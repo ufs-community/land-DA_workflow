@@ -352,13 +352,6 @@ if [ "${COLDSTART}" = "NO" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}" ]
   else
     data_dir="${COMINm1}/RESTART"
   fi      
-
-  # NoahMP restart files
-  for itile in {1..6}
-  do
-    ln -nsf "${COMIN}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc" RESTART/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-${HHsec_5d}.tile${itile}.nc
-  done
-
   # CMEPS restart and pointer files
   r_fn="ufs.cpld.cpl.r.${YYYY}-${MM}-${DD}-${HHsec_5d}.nc"
   if [ -f "${data_dir}/${r_fn}" ]; then
@@ -367,6 +360,19 @@ if [ "${COLDSTART}" = "NO" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}" ]
     err_exit "${data_dir}/${r_fn} file does not exist."
   fi
   ls -1 "./RESTART/${r_fn}">rpointer.cpl
+
+  # NoahMP restart files
+  if [ "${DO_FREE_FORECAST}" = "YES" ]; then
+    for itile in {1..6}
+    do
+      ln -nsf "${WARMSTART_DIR}/ufs_land_restart.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc" RESTART/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-${HHsec_5d}.tile${itile}.nc
+    done
+  else
+    for itile in {1..6}
+    do
+      ln -nsf "${COMIN}/ufs_land_restart.anal.${YYYY}-${MM}-${DD}_${HH}-00-00.tile${itile}.nc" RESTART/ufs.cpld.lnd.out.${YYYY}-${MM}-${DD}-${HHsec_5d}.tile${itile}.nc
+    done
+  fi
 fi
 
 #############################
@@ -495,11 +501,39 @@ fi
 ###########################
 
 # Copy and link output file to restart for next cycle
-for itile in {1..6}
-do
-  cp -p "${DATA}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-${nHHsec_5d}.tile${itile}.nc" "${COMOUT}/RESTART/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc"
-  ln -nsf "${COMOUT}/RESTART/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc" ${DATA_RESTART}/.
-done
+if [ "${FCSTHR}" -gt "${DATE_CYCLE_FREQ_HR}" ]; then
+  num_set=$(( FCSTHR / DATE_CYCLE_FREQ_HR ))
+  for iset in $( seq 1 $num_set )
+  do
+    iset_hr=$(( DATE_CYCLE_FREQ_HR * iset ))
+    iset_cdate=$($NDATE ${iset_hr} $PDY$cyc)
+    iYYYY=${iset_cdate:0:4}
+    iMM=${iset_cdate:4:2}
+    iDD=${iset_cdate:6:2}
+    iHH=${iset_cdate:8:2}
+    iHHsec=$(( iHH * 3600 )) 
+    iHHsec_5d=$(printf "%05d" "${iHHsec}")
+    for itile in {1..6}
+    do
+      cp -p "${DATA}/ufs.cpld.lnd.out.${iYYYY}-${iMM}-${iDD}-${iHHsec_5d}.tile${itile}.nc" "${COMOUT}/RESTART/ufs_land_restart.${iYYYY}-${iMM}-${iDD}_${iHH}-00-00.tile${itile}.nc"
+      ln -nsf "${COMOUT}/RESTART/ufs_land_restart.${iYYYY}-${iMM}-${iDD}_${iHH}-00-00.tile${itile}.nc" ${DATA_RESTART}/.
+    done
+    if [ "${APP}" = "LND" ]; then
+      cp -p "${DATA}/ufs.cpld.datm.r.${iYYYY}-${iMM}-${iDD}-${iHHsec_5d}.nc" ${COMOUT}/.
+      ln -nsf "${COMOUT}/ufs.cpld.datm.r.${iYYYY}-${iMM}-${iDD}-${iHHsec_5d}.nc" ${DATA_RESTART}/.
+    fi
+  done
+else
+  for itile in {1..6}
+  do
+    cp -p "${DATA}/ufs.cpld.lnd.out.${nYYYY}-${nMM}-${nDD}-${nHHsec_5d}.tile${itile}.nc" "${COMOUT}/RESTART/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc"
+    ln -nsf "${COMOUT}/RESTART/ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile${itile}.nc" ${DATA_RESTART}/.
+  done
+  if [ "${APP}" = "LND" ]; then
+    cp -p "${DATA}/ufs.cpld.datm.r.${nYYYY}-${nMM}-${nDD}-${nHHsec_5d}.nc" ${COMOUT}/.
+    ln -nsf "${COMOUT}/ufs.cpld.datm.r.${nYYYY}-${nMM}-${nDD}-${nHHsec_5d}.nc" ${DATA_RESTART}/.
+  fi
+fi
 
 # Move land output to COMOUT
 lnd_out_freq_hr=$(( LND_OUTPUT_FREQ_SEC / 3600 ))
@@ -524,10 +558,7 @@ while [ ${lnd_fcst_hh} -le ${FCSTHR} ]; do
   lnd_fcst_hh=$(( lnd_fcst_hh + lnd_out_freq_hr ))
 done
 
-if [ "${APP}" = "LND" ]; then
-  cp -p "${DATA}/ufs.cpld.datm.r.${nYYYY}-${nMM}-${nDD}-${nHHsec_5d}.nc" ${COMOUT}/.
-  ln -nsf "${COMOUT}/ufs.cpld.datm.r.${nYYYY}-${nMM}-${nDD}-${nHHsec_5d}.nc" ${DATA_RESTART}/.
-elif [ "${APP}" = "ATML" ]; then
+if [ "${APP}" = "ATML" ]; then
   read -ra out_fh <<< "${OUTPUT_FH}"
   out_fh1="${out_fh[0]}"
   out_fh2="${out_fh[1]}"

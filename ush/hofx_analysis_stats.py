@@ -15,14 +15,14 @@ import matplotlib.ticker
 import matplotlib as mpl
 from matplotlib.colors import ListedColormap
 
-def get_obs_stats(fname, plottype):
+def get_obs_stats(fname, plottype, svar_long):
 
     logging.info(f''' === File Name: {fname}''')
     f=netCDF4.Dataset(fname)
     logging.info(f''' NETCDF: {f}''')
-    obs=f.groups['ObsValue'].variables['totalSnowDepth'][:]
+    obs=f.groups['ObsValue'].variables[svar_long][:]
     logging.debug("ObsValue:",obs)
-    omb=f.groups['ombg'].variables['totalSnowDepth'][:]
+    omb=f.groups['ombg'].variables[svar_long][:]
     logging.debug("OMBG:",omb)
     lat=f.groups['MetaData'].variables['latitude'][:]
     lon=f.groups['MetaData'].variables['longitude'][:]
@@ -160,6 +160,7 @@ if __name__ == '__main__':
     OBS_GHCN_SNOW=yaml_data['OBS_GHCN_SNOW']
     OBS_IMS_SNOW=yaml_data['OBS_IMS_SNOW']
     OBS_SFCSNO=yaml_data['OBS_SFCSNO']
+    OBS_SMAP=yaml_data['OBS_SMAP']
     PDY=yaml_data['PDY']
     cyc=yaml_data['cyc']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
@@ -184,6 +185,8 @@ if __name__ == '__main__':
         svar_list.append("ims_snow")
     if OBS_SFCSNO == "YES":
         svar_list.append("sfcsno")
+    if OBS_SMAP == "YES":
+        svar_list.append("smap_soil_moisture")
 
     logging.info(f''' svar_list: {svar_list}''')
 
@@ -192,10 +195,15 @@ if __name__ == '__main__':
         logging.info(f''' Input file: {fn_input}''')
         fp_input = os.path.join(work_dir,fn_input)
 
-        omb,lat,lon=get_obs_stats(fp_input,plottype)
+        if svar == "ghcn_snow" or svar == "ims_snow" or svar == "sfcsno":
+            svar_long = "totalSnowDepth"
+        elif svar == "smap_soil_moisture":
+            svar_long = "soilMoistureVolumetric"
+
+        omb,lat,lon=get_obs_stats(fp_input,plottype,svar_long)
 
         svar_upper=svar.upper()
-        title_fig=f'''Snow depth (mm)::{svar_upper}::Obs-Bkg::{PDY}'''
+        title_fig=f'''{svar_upper}::Obs-Bkg::{PDY}'''
         if plottype=='scatter' or plottype=='both': 
             plot_scatter(omb,svar,hofx_data_path,cdate,title_fig,PDY)
         if plottype=='histogram' or plottype=='both':
