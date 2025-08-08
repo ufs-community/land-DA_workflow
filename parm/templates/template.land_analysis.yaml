@@ -575,14 +575,14 @@ workflow:
       queue: "&queue_default;"
       join: "&LOGDIR;/plot_stats&LOGFN_SUFFIX;"
       dependency:
-        or:
-          taskdep_forecast:
+        and:
+          taskdep_analysis:
             attrs:
-              task: forecast
-          and:
-            taskdep_analysis:
+              task: analysis
+          or:
+            taskdep_forecast:
               attrs:
-                task: analysis
+                task: forecast
             datadep_freefcst:
               attrs:
                 age: 5
