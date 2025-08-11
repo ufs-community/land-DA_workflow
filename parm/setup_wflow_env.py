@@ -136,6 +136,10 @@ def setup_wflow_env(machine):
         native_default = '-M c6'
         partition_default = 'batch'
         queue_default = 'normal'
+    elif machine == "ursa":
+        native_default = None
+        partition_default = 'u1-compute'
+        queue_default = 'batch'
     elif machine == "noaacloud":
         native_default = None
         partition_default = ""
@@ -350,6 +354,12 @@ def set_machine_parm(machine):
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion"
             MAX_CORES_PER_NODE = 40
             WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
+        case "ursa":
+            CUSTOM_JEDI_CONFIG_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
+            JEDI_IODACONV_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_ursa/build/lib/python3.11"
+            JEDI_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_ursa"
+            MAX_CORES_PER_NODE = 192
+            WARMSTART_DIR = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "singularity":
             CUSTOM_JEDI_CONFIG_PATH = "SINGULARITY_WORKING_DIR"
             JEDI_IODACONV_PATH = "SINGULARITY_WORKING_DIR"

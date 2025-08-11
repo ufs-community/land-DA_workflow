@@ -9,8 +9,13 @@ source ${PARMdir}/detect_platform.sh
 workdir="{{ exp_case_path }}"
 
 # Load rocoto
-module purge
-if [ "${MACHINE}" == "hera" ]; then
+if [ "${MACHINE}" == "gaeac6" ]; then
+  module reset
+else
+  module purge
+fi
+
+if [ "${MACHINE}" == "hera" ] || [ "${MACHINE}" == "ursa" ]; then
   module load rocoto
 elif [ "${MACHINE}" == "orion" ]; then
   module load contrib
