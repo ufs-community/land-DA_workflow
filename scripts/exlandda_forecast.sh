@@ -4,16 +4,19 @@ set -xue
 
 
 case $MACHINE in
-  "hera")
+  "gaeac6")
     run_cmd="srun"
     ;;
-  "orion")
+  "hera")
     run_cmd="srun"
     ;;
   "hercules")
     run_cmd="srun"
     ;;
-  "gaeac6")
+  "orion")
+    run_cmd="srun"
+    ;;
+  "ursa")
     run_cmd="srun"
     ;;
   *)
