@@ -9,8 +9,13 @@ source ${PARMdir}/detect_platform.sh
 workdir="{{ exp_case_path }}"
 
 # Load rocoto
-module purge
-if [ "${MACHINE}" == "hera" ]; then
+if [ "${MACHINE}" == "gaeac6" ]; then
+  module reset
+else
+  module purge
+fi
+
+if [ "${MACHINE}" == "hera" ] || [ "${MACHINE}" == "ursa" ]; then
   module load rocoto
 elif [ "${MACHINE}" == "orion" ]; then
   module load contrib
@@ -51,7 +56,7 @@ fi
 
 cd "${workdir}"
 rocotorun_cmd="rocotorun -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\" -v 10"
-eval ${rocotorun_cmd} > ${LOG_FN_ROCOTO_RUN} 2>&1
+eval ${rocotorun_cmd} >> ${LOG_FN_ROCOTO_RUN} 2>&1
 
 rocotostat_output=$( rocotostat -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} )
 

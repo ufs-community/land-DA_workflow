@@ -26,7 +26,7 @@ machine_name="$3"
 machine="${machine_name,,}"
 task_name_upper="${task_name^^}"
 
-if [ "${machine}" = "gaeac6"]; then
+if [ "${machine}" == "gaeac6" ]; then
   module reset
 else
   module purge

@@ -366,6 +366,9 @@ workflow:
       partition: "&partition_default;"
       queue: "&queue_default;"
       join: "&LOGDIR;/analysis&LOGFN_SUFFIX;"
+{%- if MACHINE == "ursa" %}
+      memory: 32G
+{%- endif %}
       dependency:
         and:
           taskdep_prep_data:

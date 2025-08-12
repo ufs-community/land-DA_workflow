@@ -28,10 +28,11 @@ EXAMPLE: Closes ufs-community/land-DA/issues/<issue_number>
 
 ### Testing (for CM's):
 - RDHPCS
-    - [ ] Hera
-    - [ ] Orion
-    - [ ] Hercules
     - [ ] Gaea-c6
+    - [ ] Hera
+    - [ ] Hercules
+    - [ ] Orion
+    - [ ] Ursa
 - CI
   - [ ] Completed
 - WE2E

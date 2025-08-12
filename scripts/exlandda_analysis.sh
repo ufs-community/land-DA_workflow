@@ -2,6 +2,8 @@
 
 set -xue
 
+ulimit -s unlimited; ulimit -a;
+
 # Set other dates
 PTIME=$($NDATE -${DATE_CYCLE_FREQ_HR} $PDY$cyc)
 
@@ -17,16 +19,19 @@ HP=${PTIME:8:2}
 filedate=${YYYY}${MM}${DD}.${HH}0000
 
 case $MACHINE in
-  "hera")
+  "gaeac6")
     run_cmd="srun"
     ;;
-  "orion")
+  "hera")
     run_cmd="srun"
     ;;
   "hercules")
     run_cmd="srun"
     ;;
-  "gaeac6")
+  "orion")
+    run_cmd="srun"
+    ;;
+  "ursa")
     run_cmd="srun"
     ;;
   *)
