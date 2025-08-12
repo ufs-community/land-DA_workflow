@@ -56,7 +56,7 @@ fi
 
 cd "${workdir}"
 rocotorun_cmd="rocotorun -w \"${WFLOW_XML_FN}\" -d \"${rocoto_database_fn}\" -v 10"
-eval ${rocotorun_cmd} > ${LOG_FN_ROCOTO_RUN} 2>&1
+eval ${rocotorun_cmd} >> ${LOG_FN_ROCOTO_RUN} 2>&1
 
 rocotostat_output=$( rocotostat -w ${WFLOW_XML_FN} -d ${rocoto_database_fn} )
 
