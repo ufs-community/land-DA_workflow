@@ -339,7 +339,7 @@ def set_machine_parm(machine):
         case "hera":
             CUSTOM_JEDI_CONFIG_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
             JEDI_IODACONV_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_hera/build/lib/python3.11"
-            JEDI_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_hera"
+            JEDI_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_hera"
             MAX_CORES_PER_NODE = 40
             WARMSTART_DIR = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "hercules":
