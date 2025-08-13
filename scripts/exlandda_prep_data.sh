@@ -167,8 +167,8 @@ EOF
     # Check if obs is available
     if [ -f "${obs_fp}" ]; then
       echo "SMAP observation file: ${obs_fp}"
-      cp -p "${obs_fp}" "${obs_out_fn_ghcn}"
-      cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_ghcn}"
+      cp -p "${obs_fp}" "${obs_out_fn_smap}"
+      cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_smap}"
     else
       # Create smap_raw_data directory
       smap_raw_dir="${DATA}/smap_raw_data"
@@ -251,6 +251,24 @@ EOF
       cp -p "${obs_out_fn_smap}" "${COMOUTobs}/${obs_out_fn_smap}"
     fi
   fi
+
+  # SMOPS data
+  if [ "${OBS_SMOPS}" = "YES" ]; then
+    obs_fn="obs.${PDY}.${cycle}.smops.nc"
+    obs_dp="${OBSDIR}/SMOPS/${YYYY}${MM}"
+    obs_fp="${obs_dp}/${obs_fn}"
+    obs_out_fn_smops="${obs_fn}"
+
+    # Check if obs is available
+    if [ -f "${obs_fp}" ]; then
+      echo "SMOPS observation file: ${obs_fp}"
+      cp -p "${obs_fp}" "${obs_out_fn_smops}"
+      cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_smops}"
+    else
+
+    fi
+  fi
+
 fi
 
 #

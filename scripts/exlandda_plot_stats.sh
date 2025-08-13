@@ -32,11 +32,11 @@ fi
 # Observation File Plot
 ############################################################
 if [ "${DO_PLOT_OBS}" = "YES" ]; then
-
   obs_prefix="obs.${PDY}.${cycle}"
   fn_input_ghcn="${obs_prefix}.ghcn_snow.nc"
   fn_input_ims="${obs_prefix}.ims_snow.tm00.nc"
   fn_input_smap="${obs_prefix}.smap_combined.nc"
+  fn_input_smops="${obs_prefix}.smops.nc"
 
   # Soft-link the input file to DATA
   if [ "${OBS_GHCN_SNOW}" = "YES" ]; then
@@ -48,6 +48,9 @@ if [ "${DO_PLOT_OBS}" = "YES" ]; then
   if [ "${OBS_SMAP}" = "YES" ]; then
     ln -nsf "${COMINobs}/${fn_input_smap}" .
   fi
+  if [ "${OBS_SMOPS}" = "YES" ]; then
+    ln -nsf "${COMINobs}/${fn_input_smops}" .
+  fi
 
   cat > plot_obs_file.yaml << EOF
 work_dir: '${DATA}'
@@ -55,9 +58,11 @@ cartopy_ne_path: '${FIXlandda}/NaturalEarth'
 fn_input_ghcn: '${fn_input_ghcn}'
 fn_input_ims: '${fn_input_ims}'
 fn_input_smap: '${fn_input_smap}'
+fn_input_smops: '${fn_input_smops}'
 OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
 OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
 OBS_SMAP: '${OBS_SMAP}'
+OBS_SMOPS: '${OBS_SMOPS}'
 PDY: '${PDY}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
@@ -95,6 +100,9 @@ if [ "${DO_PLOT_STATS}" = "YES" ]; then
   if [ "${OBS_SMAP}" = "YES" ]; then
     cp -p "${COMINhofx}/diag.smap_soil_moisture_${PDY}${cyc}.nc" ${DATA}
   fi
+  if [ "${OBS_SMOPS}" = "YES" ]; then
+    cp -p "${COMINhofx}/diag.smops_soil_moisture_${PDY}${cyc}.nc" ${DATA}
+  fi
 
   cat > plot_hofx.yaml <<EOF
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'
@@ -109,6 +117,7 @@ OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
 OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
 OBS_SFCSNO: '${OBS_SFCSNO}'
 OBS_SMAP: '${OBS_SMAP}'
+OBS_SMOPS: '${OBS_SMOPS}'
 PDY: '${PDY}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
@@ -145,6 +154,7 @@ OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
 OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
 OBS_SFCSNO: '${OBS_SFCSNO}'
 OBS_SMAP: '${OBS_SMAP}'
+OBS_SMOPS: '${OBS_SMOPS}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
 
@@ -176,6 +186,7 @@ fn_data_base: '${fn_data_base}'
 fn_data_ext: '${fn_data_ext}'
 soil_lvl_number: '${soil_level_number}'
 OBS_SMAP: '${OBS_SMAP}'
+OBS_SMOPS: '${OBS_SMOPS}'
 out_title_base: '${out_title_base}'
 out_fn_base: '${out_fn_base}'
 cartopy_ne_path: '${FIXlandda}/NaturalEarth'

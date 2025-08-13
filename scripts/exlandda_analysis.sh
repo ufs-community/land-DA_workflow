@@ -71,6 +71,9 @@ fi
 if [ "${OBS_SMAP}" = "YES" ]; then
   ln -nsf "${COMINobs}/${obs_prefix}.smap_combined.nc" "${DATA}/obs"
 fi
+if [ "${OBS_SMOPS}" = "YES" ]; then
+  ln -nsf "${COMINobs}/${obs_prefix}.smops.nc" "${DATA}/obs"
+fi
 
 # update coupler.res file
 settings="\
@@ -206,8 +209,7 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
   ################################################
   # Apply snow increment to UFS sfc_data files
   ################################################
-  if [ "${jedi_type}" = "snow" ]; then
-  
+  if [ "${jedi_type}" = "snow" ]; then 
     # Link inc file to DATA
     if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
       inc_fp_prefix="${DATA}/anl/snowinc.${filedate}.sfc_data"
@@ -257,7 +259,6 @@ EOF
     done
 
   elif [ "${jedi_type}" = "soil_moisture" ]; then
-
     # Link inc file to DATA
     if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
       inc_fp_prefix="${DATA}/anl/smcinc.${filedate}.sfc_data"
@@ -311,8 +312,7 @@ EOF
   # Comparison plot of sfc_data by JEDI increment
   ############################################################
   DO_PLOT_SFC_COMP="${DO_PLOT_SFC_COMP:-YES}"
-  if [ "${DO_PLOT_SFC_COMP}" = "YES" ]; then
-  
+  if [ "${DO_PLOT_SFC_COMP}" = "YES" ]; then 
     fn_sfc_base="${filedate}.sfc_data.tile"
     fn_inc_base="${inc_fn_prefix}.tile"
     out_title_base="Land-DA::SFC-DATA::${jedi_type}::${PDY}::"

@@ -44,6 +44,7 @@ def main():
     OBS_IMS_SNOW = yaml_data['OBS_IMS_SNOW']
     OBS_SFCSNO = yaml_data['OBS_SFCSNO']
     OBS_SMAP = yaml_data['OBS_SMAP']
+    OBS_SMOPS = yaml_data['OBS_SMOPS']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
 
     # Set logging config
@@ -70,6 +71,8 @@ def main():
         svar_list.append("sfcsno")
     if OBS_SMAP == "YES":
         svar_list.append("smap_soil_moisture")
+    if OBS_SMOPS == "YES":
+        svar_list.append("smops_soil_moisture")
 
     logging.info(f''' svar_list: {svar_list}''')
 
@@ -77,7 +80,7 @@ def main():
     for svar in svar_list:
         if svar == "ghcn_snow" or svar == "ims_snow" or svar == "sfcsno":
             var_nm = "totalSnowDepth"
-        elif svar == "smap_soil_moisture":
+        elif svar == "smap_soil_moisture" or svar == "smops_soil_moisture":
             var_nm = "soilMoistureVolumetric" 
 
         var_dict_anal = get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe,nprocs_anal,var_nm,svar)
@@ -102,6 +105,8 @@ def get_data_analysis(path_data,fn_data_anal_prefix,fn_data_anal_suffix,jedi_exe
 
     if obs_type == "smap_soil_moisture":
         obs_type_nm = "SoilMoistureSMAP"
+    elif obs_type == "smops_soil_moisture":
+        obs_type_nm = "SoilMoistureSMOPS"
     else:
         obs_type_nm = obs_type
 

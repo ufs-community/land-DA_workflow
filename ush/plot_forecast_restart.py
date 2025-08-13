@@ -37,17 +37,18 @@ def main():
         yaml_data=yaml.load(f, Loader=yaml.FullLoader)
     f.close()
 
-    path_data=yaml_data['path_data']
-    work_dir=yaml_data['work_dir']
-    fn_data_base=yaml_data['fn_data_base']
-    fn_data_ext=yaml_data['fn_data_ext']
-    soil_lvl_num=yaml_data['soil_lvl_number']
-    OBS_SMAP=yaml_data['OBS_SMAP']
-    out_title_base=yaml_data['out_title_base']
-    out_fn_base=yaml_data['out_fn_base']
-    cartopy_ne_path=yaml_data['cartopy_ne_path']
-    plot_cs_cmap=yaml_data['plot_cs_cmap']   
-    PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
+    path_data = yaml_data['path_data']
+    work_dir = yaml_data['work_dir']
+    fn_data_base = yaml_data['fn_data_base']
+    fn_data_ext = yaml_data['fn_data_ext']
+    soil_lvl_num = yaml_data['soil_lvl_number']
+    OBS_SMAP = yaml_data['OBS_SMAP']
+    OBS_SMOPS = yaml_data['OBS_SMOPS']
+    out_title_base = yaml_data['out_title_base']
+    out_fn_base = yaml_data['out_fn_base']
+    cartopy_ne_path = yaml_data['cartopy_ne_path']
+    plot_cs_cmap = yaml_data['plot_cs_cmap']   
+    PY_LOG_LEVEL = yaml_data['PY_LOG_LEVEL']
 
     # Set logging config
     log_level_str = PY_LOG_LEVEL.upper()
@@ -66,7 +67,7 @@ def main():
     cartopy.config['data_dir']=cartopy_ne_path
 
     #var_list=["snwdph","smc"]
-    if OBS_SMAP == "YES":
+    if OBS_SMAP == "YES" or OBS_SMOPS == "YES":
         var_list=["smc"]
     else:
         var_list=["snwdph"]
