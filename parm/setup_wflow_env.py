@@ -70,11 +70,15 @@ def setup_wflow_env(machine):
     obs_ims_snow = config_parm.get("OBS_IMS_SNOW")
     obs_sfcsno = config_parm.get("OBS_SFCSNO")
     obs_smap = config_parm.get("OBS_SMAP")
-    if obs_ghcn_snow == "NO" and obs_ims_snow == "NO" and obs_sfcsno == "NO" and obs_smap == "NO":
+    obs_smops = config_parm.get("OBS_SMOPS")
+    if obs_ghcn_snow == "NO" and obs_ims_snow == "NO" and obs_sfcsno == "NO" and obs_smap == "NO" and obs_smops == "NO":
         logging.error("NO obs options are selected !!!", exc_info=True)
         sys.exit(1)
     elif obs_ghcn_snow == "YES" and obs_ims_snow == "YES":
         logging.error("Both OBS_GHCN_SNOW and OBS_IMS_SNOW are selected, but this is not supported by JCB!!!", exc_info=True)
+        sys.exit(1)
+    elif obs_smap == "YES" and obs_smops == "YES":
+        logging.error("Both OBS_SMAP and OBS_SMOPS are selected, but this is not supported!!!", exc_info=True)
         sys.exit(1)
 
     # Set the types of JEDI analyses by the types of observation
@@ -83,7 +87,7 @@ def setup_wflow_env(machine):
     else:
         do_jedi_snow = "NO"
     config_parm["do_jedi_snow"] = do_jedi_snow
-    if obs_smap == "YES":
+    if obs_smap == "YES" or obs_smops == "YES":
         do_jedi_soil_moisture = "YES"
     else:
         do_jedi_soil_moisture = "NO"
@@ -309,6 +313,7 @@ def set_default_parm():
         "OBS_IMS_SNOW": "NO",
         "OBS_SFCSNO": "NO",
         "OBS_SMAP": "NO",
+        "OBS_SMOPS": "NO",
         "OUTPUT_FH": "1 -1",
         "PY_LOG_LEVEL": "INFO",
         "RES": 96,
