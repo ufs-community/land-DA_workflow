@@ -2,7 +2,6 @@
 
 set -xue
 
-
 case $MACHINE in
   "gaeac6")
     run_cmd="srun"
@@ -601,7 +600,7 @@ fi
 ###########################################################
 # WE2E test
 ###########################################################
-if [ "${WE2E_TEST}" == "YES" ]; then
+if [ "${WE2E_TEST}" = "YES" ]; then
   path_fbase="${FIXlandda}/test_base/we2e_com/${RUN}.${PDY}/RESTART"
   fn_res="ufs_land_restart.${nYYYY}-${nMM}-${nDD}_${nHH}-00-00.tile"
   we2e_log_fp="${LOGDIR}/${WE2E_LOG_FN}"

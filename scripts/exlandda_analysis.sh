@@ -344,6 +344,54 @@ EOF
     cp -p ${out_fn_base}* ${COMOUTplot}  
   fi
 
+  ############################################################
+  # Observation File Plot
+  ############################################################
+  DO_PLOT_OBS="${DO_PLOT_OBS:-YES}"
+  if [ "${DO_PLOT_OBS}" = "YES" ]; then
+    obs_prefix="obs.${PDY}.${cycle}"
+    fn_input_ghcn="${obs_prefix}.ghcn_snow.nc"
+    fn_input_ims="${obs_prefix}.ims_snow.tm00.nc"
+    fn_input_smap="${obs_prefix}.smap_combined.nc"
+    fn_input_smops="${obs_prefix}.smops.nc"
+  
+    # Soft-link the input file to DATA
+    if [ "${OBS_GHCN_SNOW}" = "YES" ]; then
+      ln -nsf "${COMINobs}/${fn_input_ghcn}" .
+    fi
+    if [ "${OBS_IMS_SNOW}" = "YES" ]; then
+      ln -nsf "${COMINobs}/${fn_input_ims}" .
+    fi
+    if [ "${OBS_SMAP}" = "YES" ]; then
+      ln -nsf "${COMINobs}/${fn_input_smap}" .
+    fi
+    if [ "${OBS_SMOPS}" = "YES" ]; then
+      ln -nsf "${COMINobs}/${fn_input_smops}" .
+    fi
+  
+    cat > plot_obs_file.yaml << EOF
+work_dir: '${DATA}'
+cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+fn_input_ghcn: '${fn_input_ghcn}'
+fn_input_ims: '${fn_input_ims}'
+fn_input_smap: '${fn_input_smap}'
+fn_input_smops: '${fn_input_smops}'
+OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
+OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
+OBS_SMAP: '${OBS_SMAP}'
+OBS_SMOPS: '${OBS_SMOPS}'
+PDY: '${PDY}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
+EOF
+
+    ${USHlandda}/plot_obs_file.py
+    if [ $? -ne 0 ]; then
+      err_exit "Observation file plot failed"
+    fi
+    # Copy result file to COMOUT
+    cp -p *.png ${COMOUTplot}
+  fi
+
 done
 
 # Copy the final sfc_data files to COMOUT
@@ -365,7 +413,7 @@ fi
 ###########################################################
 # WE2E test
 ###########################################################
-if [ "${WE2E_TEST}" == "YES" ]; then
+if [ "${WE2E_TEST}" = "YES" ]; then
   path_fbase="${FIXlandda}/test_base/we2e_com/${RUN}.${PDY}"
   fn_sfc="${filedate}.sfc_data.tile"
   fn_inc="${inc_fn_prefix}.tile"

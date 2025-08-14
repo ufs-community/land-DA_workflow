@@ -247,7 +247,6 @@ EOF
           err_exit "Generation of SMAP_ioda obs file failed !!!"
         fi
       fi
-
       cp -p "${obs_out_fn_smap}" "${COMOUTobs}/${obs_out_fn_smap}"
     fi
   fi
@@ -277,10 +276,10 @@ EOF
 
       # Run ioda converting script
       ${USHlandda}/smops_ssm2ioda.py -i ${smops_ioda_in_fn} -o ${obs_out_fn_smops}
-
       if [ $? -ne 0 ]; then
         err_exit "Generation of SMOPS obs file failed !!!"
       fi
+      cp -p "${obs_out_fn_smops}" "${COMOUTobs}/${obs_out_fn_smops}"
     fi
   fi
 fi

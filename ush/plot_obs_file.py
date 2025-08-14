@@ -189,7 +189,7 @@ def svar_plot(svar,mdat,lon,lat,c_lon,extent,obs_type,PDY,work_dir):
 
     # Plot field
     fig,ax=plt.subplots(1,1,subplot_kw=dict(projection=ccrs.Robinson(c_lon)))
-    if obs_type == "smap":
+    if obs_type == "smap" or obs_type == "smops":
         ax.set_global()
     else:
         ax.set_extent(extent, ccrs.PlateCarree())
