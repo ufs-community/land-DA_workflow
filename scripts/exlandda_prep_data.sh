@@ -266,7 +266,7 @@ EOF
       cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_smops}"
     else
       # Soft-link SMOPS raw data file to DATA directory
-      fn_smops_prefix="SMOPS-CDR_v1r0_s${PDY}"
+      fn_smops_prefix="SMOPS-CDR_v2r0_s${PDY}"
       fn_smops_raw=$(ls "${DCOMINsmops}/${fn_smops_prefix}"*)
       smops_ioda_in_fn="${fn_smops_prefix}.nc"
       if [ -n "${fn_smops_raw}" ]; then
@@ -276,7 +276,8 @@ EOF
       fi
 
       # Run ioda converting script
-      ${USHlandda}/smops_ssm2ioda.py -i ${smops_ioda_in_fn} -o ${obs_out_fn_smops} --maskMissing
+      ${USHlandda}/smops_ssm2ioda.py -i ${smops_ioda_in_fn} -o ${obs_out_fn_smops}
+
       if [ $? -ne 0 ]; then
         err_exit "Generation of SMOPS obs file failed !!!"
       fi
