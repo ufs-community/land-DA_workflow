@@ -71,6 +71,9 @@ fi
 if [ "${OBS_SMAP}" = "YES" ]; then
   ln -nsf "${COMINobs}/${obs_prefix}.smap_combined.nc" "${DATA}/obs"
 fi
+if [ "${OBS_SMOPS}" = "YES" ]; then
+  ln -nsf "${COMINobs}/${obs_prefix}.smops.nc" "${DATA}/obs"
+fi
 
 # update coupler.res file
 settings="\
@@ -206,8 +209,7 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
   ################################################
   # Apply snow increment to UFS sfc_data files
   ################################################
-  if [ "${jedi_type}" = "snow" ]; then
-  
+  if [ "${jedi_type}" = "snow" ]; then 
     # Link inc file to DATA
     if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
       inc_fp_prefix="${DATA}/anl/snowinc.${filedate}.sfc_data"
@@ -257,7 +259,6 @@ EOF
     done
 
   elif [ "${jedi_type}" = "soil_moisture" ]; then
-
     # Link inc file to DATA
     if [ "${JEDI_ALGORITHM}" = "3dvar" ]; then
       inc_fp_prefix="${DATA}/anl/smcinc.${filedate}.sfc_data"
@@ -311,8 +312,7 @@ EOF
   # Comparison plot of sfc_data by JEDI increment
   ############################################################
   DO_PLOT_SFC_COMP="${DO_PLOT_SFC_COMP:-YES}"
-  if [ "${DO_PLOT_SFC_COMP}" = "YES" ]; then
-  
+  if [ "${DO_PLOT_SFC_COMP}" = "YES" ]; then 
     fn_sfc_base="${filedate}.sfc_data.tile"
     fn_inc_base="${inc_fn_prefix}.tile"
     out_title_base="Land-DA::SFC-DATA::${jedi_type}::${PDY}::"
@@ -344,6 +344,54 @@ EOF
     cp -p ${out_fn_base}* ${COMOUTplot}  
   fi
 
+  ############################################################
+  # Observation File Plot
+  ############################################################
+  DO_PLOT_OBS="${DO_PLOT_OBS:-YES}"
+  if [ "${DO_PLOT_OBS}" = "YES" ]; then
+    obs_prefix="obs.${PDY}.${cycle}"
+    fn_input_ghcn="${obs_prefix}.ghcn_snow.nc"
+    fn_input_ims="${obs_prefix}.ims_snow.tm00.nc"
+    fn_input_smap="${obs_prefix}.smap_combined.nc"
+    fn_input_smops="${obs_prefix}.smops.nc"
+  
+    # Soft-link the input file to DATA
+    if [ "${OBS_GHCN_SNOW}" = "YES" ]; then
+      ln -nsf "${COMINobs}/${fn_input_ghcn}" .
+    fi
+    if [ "${OBS_IMS_SNOW}" = "YES" ]; then
+      ln -nsf "${COMINobs}/${fn_input_ims}" .
+    fi
+    if [ "${OBS_SMAP}" = "YES" ]; then
+      ln -nsf "${COMINobs}/${fn_input_smap}" .
+    fi
+    if [ "${OBS_SMOPS}" = "YES" ]; then
+      ln -nsf "${COMINobs}/${fn_input_smops}" .
+    fi
+  
+    cat > plot_obs_file.yaml << EOF
+work_dir: '${DATA}'
+cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+fn_input_ghcn: '${fn_input_ghcn}'
+fn_input_ims: '${fn_input_ims}'
+fn_input_smap: '${fn_input_smap}'
+fn_input_smops: '${fn_input_smops}'
+OBS_GHCN_SNOW: '${OBS_GHCN_SNOW}'
+OBS_IMS_SNOW: '${OBS_IMS_SNOW}'
+OBS_SMAP: '${OBS_SMAP}'
+OBS_SMOPS: '${OBS_SMOPS}'
+PDY: '${PDY}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
+EOF
+
+    ${USHlandda}/plot_obs_file.py
+    if [ $? -ne 0 ]; then
+      err_exit "Observation file plot failed"
+    fi
+    # Copy result file to COMOUT
+    cp -p *.png ${COMOUTplot}
+  fi
+
 done
 
 # Copy the final sfc_data files to COMOUT
@@ -365,7 +413,7 @@ fi
 ###########################################################
 # WE2E test
 ###########################################################
-if [ "${WE2E_TEST}" == "YES" ]; then
+if [ "${WE2E_TEST}" = "YES" ]; then
   path_fbase="${FIXlandda}/test_base/we2e_com/${RUN}.${PDY}"
   fn_sfc="${filedate}.sfc_data.tile"
   fn_inc="${inc_fn_prefix}.tile"

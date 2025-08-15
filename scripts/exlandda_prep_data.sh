@@ -167,8 +167,8 @@ EOF
     # Check if obs is available
     if [ -f "${obs_fp}" ]; then
       echo "SMAP observation file: ${obs_fp}"
-      cp -p "${obs_fp}" "${obs_out_fn_ghcn}"
-      cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_ghcn}"
+      cp -p "${obs_fp}" "${obs_out_fn_smap}"
+      cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_smap}"
     else
       # Create smap_raw_data directory
       smap_raw_dir="${DATA}/smap_raw_data"
@@ -247,8 +247,39 @@ EOF
           err_exit "Generation of SMAP_ioda obs file failed !!!"
         fi
       fi
-
       cp -p "${obs_out_fn_smap}" "${COMOUTobs}/${obs_out_fn_smap}"
+    fi
+  fi
+
+  # SMOPS data
+  if [ "${OBS_SMOPS}" = "YES" ]; then
+    obs_fn="obs.${PDY}.${cycle}.smops.nc"
+    obs_dp="${OBSDIR}/SMOPS/${YYYY}${MM}"
+    obs_fp="${obs_dp}/${obs_fn}"
+    obs_out_fn_smops="${obs_fn}"
+
+    # Check if obs is available
+    if [ -f "${obs_fp}" ]; then
+      echo "SMOPS observation file: ${obs_fp}"
+      cp -p "${obs_fp}" "${obs_out_fn_smops}"
+      cp -p "${obs_fp}" "${COMOUTobs}/${obs_out_fn_smops}"
+    else
+      # Soft-link SMOPS raw data file to DATA directory
+      fn_smops_prefix="SMOPS-CDR_v2r0_s${PDY}"
+      fn_smops_raw=$(ls "${DCOMINsmops}/${fn_smops_prefix}"*)
+      smops_ioda_in_fn="${fn_smops_prefix}.nc"
+      if [ -n "${fn_smops_raw}" ]; then
+        ln -nsf ${fn_smops_raw} ${smops_ioda_in_fn}
+      else
+        err_exit "SMOPS raw data file does not exist in ${DCOMINsmops} !!!"
+      fi
+
+      # Run ioda converting script
+      ${USHlandda}/smops_ssm2ioda.py -i ${smops_ioda_in_fn} -o ${obs_out_fn_smops}
+      if [ $? -ne 0 ]; then
+        err_exit "Generation of SMOPS obs file failed !!!"
+      fi
+      cp -p "${obs_out_fn_smops}" "${COMOUTobs}/${obs_out_fn_smops}"
     fi
   fi
 fi

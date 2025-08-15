@@ -34,9 +34,11 @@ def main():
     fn_input_ghcn=yaml_data['fn_input_ghcn']
     fn_input_ims=yaml_data['fn_input_ims']
     fn_input_smap=yaml_data['fn_input_smap']
+    fn_input_smops=yaml_data['fn_input_smops']
     OBS_GHCN_SNOW=yaml_data['OBS_GHCN_SNOW']
     OBS_IMS_SNOW=yaml_data['OBS_IMS_SNOW']
     OBS_SMAP=yaml_data['OBS_SMAP']
+    OBS_SMOPS=yaml_data['OBS_SMOPS']
     PDY=yaml_data['PDY']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
     
@@ -65,6 +67,9 @@ def main():
     # Plot SMAP
     if OBS_SMAP == "YES":
        obs_plot("smap",PDY,work_dir,fn_input_smap)
+    # Plot SMOPS
+    if OBS_SMOPS == "YES":
+       obs_plot("smops",PDY,work_dir,fn_input_smops)
 
 
 # obs plot =============================================== CHJ =====
@@ -116,7 +121,7 @@ def svar_plot(svar,mdat,lon,lat,c_lon,extent,obs_type,PDY,work_dir):
 
     logging.info(' ===== '+svar+' ==========================================')
     # Extract data array
-    if obs_type == "smap":
+    if obs_type == "smap" or obs_type == "smops":
         gvar="soilMoistureVolumetric"
         pvar="SoilMoisture"
     else:
@@ -172,7 +177,7 @@ def svar_plot(svar,mdat,lon,lat,c_lon,extent,obs_type,PDY,work_dir):
             cs_max=100.0
         elif obs_type == 'ghcn':
             cs_max=1000.0
-        elif obs_type == 'smap':
+        elif obs_type == 'smap' or obs_type == 'smops':
             cs_max=0.4
         else:
             cs_max=300.0
@@ -184,7 +189,7 @@ def svar_plot(svar,mdat,lon,lat,c_lon,extent,obs_type,PDY,work_dir):
 
     # Plot field
     fig,ax=plt.subplots(1,1,subplot_kw=dict(projection=ccrs.Robinson(c_lon)))
-    if obs_type == "smap":
+    if obs_type == "smap" or obs_type == "smops":
         ax.set_global()
     else:
         ax.set_extent(extent, ccrs.PlateCarree())

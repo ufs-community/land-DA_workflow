@@ -65,7 +65,6 @@ setpdy.sh
 
 export COMIN="${COMIN:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
 export COMINhofx="${COMINhofx:-${COMIN}/hofx}"
-export COMINobs=${COMINobs:-${COMIN}/obs}
 
 export COMOUT="${COMOUT:-${COMROOT}/${NET}/${model_ver}/${RUN}.${PDY}}"
 mkdir -p ${COMOUT}

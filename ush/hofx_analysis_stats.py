@@ -161,6 +161,7 @@ if __name__ == '__main__':
     OBS_IMS_SNOW=yaml_data['OBS_IMS_SNOW']
     OBS_SFCSNO=yaml_data['OBS_SFCSNO']
     OBS_SMAP=yaml_data['OBS_SMAP']
+    OBS_SMOPS=yaml_data['OBS_SMOPS']
     PDY=yaml_data['PDY']
     cyc=yaml_data['cyc']
     PY_LOG_LEVEL=yaml_data['PY_LOG_LEVEL']
@@ -187,6 +188,8 @@ if __name__ == '__main__':
         svar_list.append("sfcsno")
     if OBS_SMAP == "YES":
         svar_list.append("smap_soil_moisture")
+    if OBS_SMOPS == "YES":
+        svar_list.append("smops_soil_moisture")
 
     logging.info(f''' svar_list: {svar_list}''')
 
@@ -197,7 +200,7 @@ if __name__ == '__main__':
 
         if svar == "ghcn_snow" or svar == "ims_snow" or svar == "sfcsno":
             svar_long = "totalSnowDepth"
-        elif svar == "smap_soil_moisture":
+        elif svar == "smap_soil_moisture" or svar == "smops_soil_moisture":
             svar_long = "soilMoistureVolumetric"
 
         omb,lat,lon=get_obs_stats(fp_input,plottype,svar_long)
