@@ -18,30 +18,16 @@ HP=${PTIME:8:2}
 
 filedate=${YYYY}${MM}${DD}.${HH}0000
 
-case $MACHINE in
-  "gaeac6")
-    run_cmd="srun"
-    ;;
-  "hera")
-    run_cmd="srun"
-    ;;
-  "hercules")
-    run_cmd="srun"
-    ;;
-  "orion")
-    run_cmd="srun"
-    ;;
-  "ursa")
-    run_cmd="srun"
-    ;;
-  *)
-    run_cmd=`which mpiexec`
-    ;;
-esac
+machines_srun=("gaeac6" "hera" "hercules" "orion" "ursa")
+if [ "${machines_srun[@]}" =~ "${MACHINE}" ]; then
+  run_cmd="srun"
+else
+  run_cmd=`which mpiexec`
+fi
 
 # copy sfc_data files into work directory
 for itile in {1..6}
-do  
+do
   sfc_fn="${filedate}.sfc_data.tile${itile}.nc"
   if [ -f ${DATA_RESTART}/${sfc_fn} ]; then
     cp -p ${DATA_RESTART}/${sfc_fn} .
@@ -58,9 +44,15 @@ done
 if [ "${DO_BKG_ANAL_EXT_SRC}" = "YES" ]; then
   if [ "${BKG_ANAL_EXT_SRC_OPT}" = "era5land" ]; then
     fn_ext_src="era5_land_${PDY}_data_0.nc"
+    cp -p "${DCOMINera5land}/${fn_ext_src}" .
   elif [ "${BKG_ANAL_EXT_SRC_OPT}" = "gfs" ]; then
-    fn_ext_src="gfs.${cycle}.sfcanl.nc"
+    fn_ext_src="${BKG_ANAL_EXT_SRC_OPT}.${cycle}.sfcanl.nc"
+    cp -p "${COMINgfs}/${PDY}${cyc}/${fn_ext_src}" .
   fi
+  if [ ! -f "${fn_ext_src}" ]; then
+    err_exit "External source data file ${fn_ext_src} does not exist !!!"
+  fi
+
   fn_oro_base="${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}_oro_data.tile"
   fn_oro_ext=".nc"
   fn_sfc_base="${filedate}.sfc_data.tile"
