@@ -22,6 +22,7 @@ workflow:
     ATM_LAYOUT_X: "{{ ATM_LAYOUT_X }}"
     ATM_LAYOUT_Y: "{{ ATM_LAYOUT_Y }}"
     ATMOS_FORC: "{{ ATMOS_FORC }}"
+    BKG_ANAL_EXT_SRC_OPT: "{{ BKG_ANAL_EXT_SRC_OPT }}"
     CCPP_SUITE: "{{ CCPP_SUITE }}"
     COLDSTART: "{{ COLDSTART }}"
     COMINgdas: "{{ COMINgdas }}"
@@ -36,6 +37,7 @@ workflow:
     DATM_STREAM_FN_LAST_DATE: "{{ DATM_STREAM_FN_LAST_DATE }}"
     DCOMINera5: "{{ DCOMINera5 }}"
     DCOMINgswp3: "{{ DCOMINgswp3 }}"
+    DO_BKG_ANAL_EXT_SRC: "{{ DO_BKG_ANAL_EXT_SRC }}"
     DO_FREE_FORECAST: "{{ DO_FREE_FORECAST }}"
     do_jedi_snow: "{{ do_jedi_snow }}"
     do_jedi_soil_moisture: "{{ do_jedi_soil_moisture }}"
@@ -320,6 +322,7 @@ workflow:
         maxtries: 2
       envars:
         ACCOUNT: "&ACCOUNT;"
+        BKG_ANAL_EXT_SRC_OPT: "&BKG_ANAL_EXT_SRC_OPT;"
         COMROOT: "&COMROOT;"
         COUPLER_CALENDAR: "&COUPLER_CALENDAR;"
         CUSTOM_JEDI_CONFIG_FLAG: "&CUSTOM_JEDI_CONFIG_FLAG;"
@@ -329,6 +332,7 @@ workflow:
         DATAROOT: "&DATAROOT;"
         DATE_CYCLE_FREQ_HR: "&DATE_CYCLE_FREQ_HR;"
         DATE_FIRST_CYCLE: "&DATE_FIRST_CYCLE;"
+        DO_BKG_ANAL_EXT_SRC: "&DO_BKG_ANAL_EXT_SRC;"
         DO_FREE_FORECAST: "&DO_FREE_FORECAST;"
         do_jedi_snow: "&do_jedi_snow;"
         do_jedi_soil_moisture: "&do_jedi_soil_moisture;"
