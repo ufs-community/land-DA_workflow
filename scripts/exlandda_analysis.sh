@@ -75,7 +75,7 @@ work_dir: '${DATA}'
 PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
 EOF
   # Replacing sfc_data with external source
-  ${USHlandda}/bkg_era5land_gfs_to_sfcdata.py
+  ${USHlandda}/bkg_external_to_sfcdata.py
   if [ $? -ne 0 ]; then
     err_exit "Replacing sfc_data with external source data failed !!!"
   fi
