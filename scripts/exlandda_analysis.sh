@@ -44,10 +44,10 @@ done
 if [ "${DO_BKG_ANAL_EXT_SRC}" = "YES" ]; then
   if [ "${BKG_ANAL_EXT_SRC_OPT}" = "era5land" ]; then
     fn_ext_src="era5_land_${PDY}_data_0.nc"
-    cp -p "${DCOMINera5land}/${fn_ext_src}" .
+    ln -nsf "${DCOMINera5land}/${fn_ext_src}" .
   elif [ "${BKG_ANAL_EXT_SRC_OPT}" = "gfs" ]; then
     fn_ext_src="${BKG_ANAL_EXT_SRC_OPT}.${cycle}.sfcanl.nc"
-    cp -p "${COMINgfs}/${PDY}${cyc}/${fn_ext_src}" .
+    ln -nsf "${COMINgfs}/${PDY}${cyc}/${fn_ext_src}" .
   fi
   if [ ! -f "${fn_ext_src}" ]; then
     err_exit "External source data file ${fn_ext_src} does not exist !!!"
@@ -63,7 +63,7 @@ if [ "${DO_BKG_ANAL_EXT_SRC}" = "YES" ]; then
   plot_sfc_data="YES"
   cat > bkg_ext_to_sfcdata.yaml << EOF
 BKG_ANAL_EXT_SRC_OPT: '${BKG_ANAL_EXT_SRC_OPT}'
-cartopy_ne_path: '${cartopy_ne_path}'
+cartopy_ne_path: '${FIXlandda}/NaturalEarth'
 fn_oro_base: '${fn_oro_base}'
 fn_oro_ext: '${fn_oro_ext}'
 fn_sfc_base: '${fn_sfc_base}'

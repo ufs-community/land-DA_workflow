@@ -65,7 +65,7 @@ def main():
     cartopy.config['data_dir']=cartopy_ne_path
 
     # --- Read data from source data file ---
-    ds1 = xr.open_dataset(fn_sfc_ext)  # external source data
+    ds1 = xr.open_dataset(fn_ext_src)  # external source data
     if BKG_ANAL_EXT_SRC_OPT == "era5land":
         lat1 = ds1["latitude"].values
         lon1 = ds1["longitude"].values       
