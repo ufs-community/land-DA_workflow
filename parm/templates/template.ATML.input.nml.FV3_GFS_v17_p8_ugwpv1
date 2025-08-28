@@ -118,6 +118,8 @@
   imp_physics  = 8
   iovr         = 3
   ltaerosol    = .false.
+  mraerosol    = .false.
+  lthailaware  = .false.
   lradar       = .false.
   ttendlim     = -999
   dt_inner     = 720
@@ -228,8 +230,6 @@
   do_sppt      = .false.
   do_shum      = .false.
   do_skeb      = .false.
-  iaufhrs      = -1
-  iau_delthrs  = 0
   use_med_flux = .false.
   frac_grid    = .true.
   cplchm       = .false.
@@ -257,6 +257,8 @@
   pert_mp = .false.
   pert_radtend = .false.
   pert_clds = .false.
+  iaufhrs      = -1
+  iau_delthrs  = 0
   iau_inc_files= ''
   iau_drymassfixer = .false.
   iau_filter_increments = .false.
