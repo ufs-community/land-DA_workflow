@@ -9,5 +9,4 @@ load("contrib")
 load("rocoto")
 
 prepend_path("MODULEPATH","/work/noaa/epic/UFS-conda/modulefiles")
---load("python-ufs-land-da-wflow")
-load("python-ufs-land-da-wflow-i11-i11")
+load("python-ufs-land-da-wflow")
