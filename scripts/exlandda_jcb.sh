@@ -34,11 +34,11 @@ inflation_mult="1.0"
 inflation_rtpp="0.0"
 inflation_rtps="0.0"
 local_ensemble_da_solver="${JEDI_ALGORITHM^^}"
-snow_background_time_fv3="${YYYY}${MM}${DD}.${HH}0000"
-snow_background_time_iso="${YYYY}-${MM}-${DD}T${HH}:00:00Z"
-snow_fv3jedi_files_path="Data/fv3files"
-snow_window_begin="${yyyy_hf}-${mm_hf}-${dd_hf}T${hh_hf}:00:00Z"
-snow_window_length="PT${DATE_CYCLE_FREQ_HR}H"
+land_background_time_fv3="${YYYY}${MM}${DD}.${HH}0000"
+land_background_time_iso="${YYYY}-${MM}-${DD}T${HH}:00:00Z"
+land_fv3jedi_files_path="Data/fv3files"
+land_window_begin="${yyyy_hf}-${mm_hf}-${dd_hf}T${hh_hf}:00:00Z"
+land_window_length="PT${DATE_CYCLE_FREQ_HR}H"
 
 # Algorithm-specific values
 if [ "${JEDI_ALGORITHM}" = "letkf-oi" ]; then
@@ -55,8 +55,23 @@ else
   snowdepth_vn="snwdph"
 fi
 
-# update jcb-base yaml file
-settings="\
+# Set a list of JEDI analyses
+types_jedi_analyses=()
+if [ "${do_jedi_snow}" = "YES" ]; then
+  types_jedi_analyses+=("snow")
+fi
+if [ "${do_jedi_soil_moisture}" = "YES" ]; then
+  types_jedi_analyses+=("soil_moisture")
+fi
+echo "${types_jedi_analyses[@]}"
+
+################################################
+# Rrun JCB to create JEDI input yaml files
+################################################
+for jedi_type in "${types_jedi_analyses[@]}"; do
+
+    # update jcb-base yaml file
+    settings="\
   'FIXlandda': ${FIXlandda}
   'JEDI_ALGORITHM': ${JEDI_ALGORITHM}
   'jedi_algorithm_mod': ${jedi_algorithm_mod}
@@ -72,44 +87,49 @@ settings="\
   'inflation_mult': ${inflation_mult}
   'inflation_rtpp': ${inflation_rtpp}
   'inflation_rtps': ${inflation_rtps}
+  'jedi_type': ${jedi_type}
   'local_ensemble_da_solver': ${local_ensemble_da_solver}
-  'snow_window_begin': !!str ${snow_window_begin}
-  'snow_window_length': ${snow_window_length}
-  'snow_final_inc_file_path': ./
-  'snow_fv3jedi_files_path': ${snow_fv3jedi_files_path}
-  'snow_layout_x': 1
-  'snow_layout_y': 1
-  'snow_npx_anl': ${res_p1}
-  'snow_npy_anl': ${res_p1}
-  'snow_npz_anl': ${NPZ}
-  'snow_npx_ges': ${res_p1}
-  'snow_npy_ges': ${res_p1}
-  'snow_npz_ges': ${NPZ}
-  'snow_background_path': bkg
-  'snow_background_time_fv3': !!str ${snow_background_time_fv3}
-  'snow_background_time_iso': !!str ${snow_background_time_iso}
-  'snow_bump_data_dir': berror
-  'snow_obsdatain_path': obs
-  'snow_obsdatain_prefix': "obs.${PDY}.${cycle}."
-  'snow_obsdataout_path': diags
-  'snow_obsdataout_prefix': "diag."
-  'snow_obsdataout_suffix': "_${cdate}.nc"
+  'land_window_begin': !!str ${land_window_begin}
+  'land_window_length': ${land_window_length}
+  'land_final_inc_file_path': ./
+  'land_fv3jedi_files_path': ${land_fv3jedi_files_path}
+  'land_layout_x': 1
+  'land_layout_y': 1
+  'land_npx_anl': ${res_p1}
+  'land_npy_anl': ${res_p1}
+  'land_npz_anl': ${NPZ}
+  'land_npx_ges': ${res_p1}
+  'land_npy_ges': ${res_p1}
+  'land_npz_ges': ${NPZ}
+  'land_background_path': bkg
+  'land_background_time_fv3': !!str ${land_background_time_fv3}
+  'land_background_time_iso': !!str ${land_background_time_iso}
+  'land_bump_data_dir': berror
+  'land_obsdatain_path': obs
+  'land_obsdatain_prefix': "obs.${PDY}.${cycle}."
+  'land_obsdataout_path': diags
+  'land_obsdataout_prefix': "diag."
+  'land_obsdataout_suffix': "_${cdate}.nc"
   'snowdepth_vn': ${snowdepth_vn}
   'OBS_GHCN_SNOW': '${OBS_GHCN_SNOW}'
   'OBS_IMS_SNOW': '${OBS_IMS_SNOW}'
   'OBS_SFCSNO': '${OBS_SFCSNO}'
+  'OBS_SMAP': '${OBS_SMAP}'
+  'OBS_SMOPS': '${OBS_SMOPS}'
 " # End of settings variable
 
-template_fp="${PARMlandda}/jedi/jcb-base_snow.yaml.j2"
-jcb_base_fn="jcb-base_snow.yaml"
-jcb_base_fp="${DATA}/${jcb_base_fn}"
-jcb_out_fn="jedi_${JEDI_ALGORITHM}_snow.yaml"
-${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${template_fp}" -o "${jcb_base_fp}"
+    template_fp="${PARMlandda}/jedi/jcb-base_land.yaml.j2"
+    jcb_base_fn="jcb-base_${jedi_type}.yaml"
+    jcb_base_fp="${DATA}/${jcb_base_fn}"
+    jcb_out_fn="jedi_${JEDI_ALGORITHM}_${jedi_type}.yaml"
+    ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${template_fp}" -o "${jcb_base_fp}"
+    
+    ${USHlandda}/jcb_setup.py -i "${jcb_base_fn}" -o "${jcb_out_fn}" -a "${JEDI_ALGORITHM}" -g "${FRAC_GRID}" -l "${PY_LOG_LEVEL}"
+    
+    if [ $? -ne 0 ]; then
+      err_exit "Generation of JEDI YAML file for ${jedi_type} by JCB failed !!!"
+    fi
+    
+    cp -p ${jcb_out_fn} ${COMOUT}
 
-${USHlandda}/jcb_setup.py -i "${jcb_base_fn}" -o "${jcb_out_fn}" -a "${JEDI_ALGORITHM}" -g "${FRAC_GRID}" -l "${PY_LOG_LEVEL}"
-
-if [ $? -ne 0 ]; then
-  err_exit "Generation of JEDI YAML file by JCB failed !!!"
-fi
-
-cp -p ${jcb_out_fn} ${COMOUT}
+done

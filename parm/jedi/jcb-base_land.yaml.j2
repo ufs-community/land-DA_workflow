@@ -1,0 +1,97 @@
+# JCB general
+JEDI_ALGORITHM: "{{ JEDI_ALGORITHM }}"
+snowdepth_vn: "{{ snowdepth_vn }}"
+algorithm: {{ jedi_algorithm_mod }}
+algorithm_path: "{{ PARMlandda }}/jedi/jcb-algorithms"
+app_path_algorithm: "{{ PARMlandda }}/jedi/jcb-gdas/algorithm/land"
+app_path_model: "{{ PARMlandda }}/jedi/jcb-gdas/model/land"
+app_path_observations: "{{ PARMlandda }}/jedi/jcb-gdas/observations/land"
+app_path_observation_chronicle: "{{ PARMlandda }}/jedi/jcb-gdas/observation_chronicle/land"
+
+# Template file name for each section (if not defined, default files in jcb-algorithms will be used)
+{%- if JEDI_ALGORITHM == "letkf-oi" %}
+geometry_background_file: {{ jedi_type }}_geometry_background_letkfoi
+background_ensemble_file: {{ jedi_type }}_background_ensemble_letkfoi
+output_increment_file: {{ jedi_type }}_output_increment_letkfoi
+{%- elif JEDI_ALGORITHM == "3dvar" %}
+geometry_background_file: {{ jedi_type }}_geometry_background
+background_file: {{ jedi_type }}_background
+background_error_file: {{ jedi_type }}_background_error
+final_increment_file: {{ jedi_type }}_final_increment_fms
+{%- endif %}
+
+# Time window
+window_begin: "{{ land_window_begin }}"
+window_length: "{{ land_window_length }}"
+
+# Geometry
+land_fv3jedi_files_path: "{{ land_fv3jedi_files_path }}"
+land_layout_x: {{ land_layout_x }}
+land_layout_y: {{ land_layout_y }}
+land_npx_anl: {{ land_npx_anl }}
+land_npy_anl: {{ land_npy_anl }}
+land_npz_anl: {{ land_npz_anl }}
+land_npx_ges: {{ land_npx_ges }}
+land_npy_ges: {{ land_npy_ges }}
+land_npz_ges: {{ land_npz_ges }}
+land_orog_files_path: "{{ FIXlandda }}/FV3_fix_tiled/C{{ RES }}"
+land_orog_prefix: "C{{ RES }}"
+
+# Final/minimization
+analysis_variables: [totalSnowDepth]
+final_diagnostics_departures: {{ final_diagnostics_departures }}
+land_final_inc_file_path: "{{ land_final_inc_file_path }}"
+minimizer: DRPCG
+number_of_outer_loops: 1
+
+# Local Ensemble DA
+local_ensemble_da_solver: "{{ local_ensemble_da_solver }}"
+inflation_rtps: "{{ inflation_rtps }}"
+inflation_rtpp: "{{ inflation_rtpp }}"
+inflation_mult: "{{ inflation_mult }}"
+
+# Driver
+driver_do_test_prints: {{ driver_do_test_prints }}
+driver_update_obs_config_with_geometry_info: {{ driver_update_obs_config_with_geometry_info }}
+driver_save_posterior_mean: {{ driver_save_posterior_mean }}
+driver_save_posterior_ensemble: {{ driver_save_posterior_ensemble }}
+driver_save_posterior_mean_increment: {{ driver_save_posterior_mean_increment }}
+driver_do_posterior_observer: {{ driver_do_posterior_observer }}
+
+# Background
+land_background_path: "{{ land_background_path }}"
+land_background_time_fv3: "{{ land_background_time_fv3 }}"
+land_background_time_iso: "{{ land_background_time_iso }}"
+land_increment_time_fv3: "{{ land_background_time_fv3 }}"
+land_increment_time_iso: "{{ land_background_time_iso }}"
+
+# Background error
+land_bump_data_directory: "{{ land_bump_data_dir }}"
+
+# Observation
+observations:
+{%- if jedi_type == "snow" %}
+{%- if OBS_GHCN_SNOW == "YES" %}
+- ghcn_snow
+{%- endif %}
+{%- if OBS_IMS_SNOW == "YES" %}
+- ims_snow
+{%- endif %}
+{%- if OBS_SFCSNO == "YES" %}
+- sfcsno
+{%- endif %}
+#- snocvr_snow
+{%- elif jedi_type == "soil_moisture" %}
+{%- if OBS_SMAP == "YES" %}
+- smap_soil_moisture
+{%- elif OBS_SMOPS == "YES" %}
+- smops_soil_moisture
+{%- endif %}
+{%- endif %}
+
+land_obsdatain_path: "{{ land_obsdatain_path }}"
+land_obsdatain_prefix: "{{ land_obsdatain_prefix }}"
+land_obsdataout_path: "{{ land_obsdataout_path }}"
+land_obsdataout_prefix: "{{ land_obsdataout_prefix }}"
+land_obsdataout_suffix: "{{ land_obsdataout_suffix }}"
+
