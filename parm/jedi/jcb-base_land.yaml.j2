@@ -14,6 +14,9 @@ app_path_observation_chronicle: "{{ PARMlandda }}/jedi/jcb-gdas/observation_chro
 geometry_background_file: land_geometry_background_letkfoi
 background_ensemble_file: {{ jedi_type }}_background_ensemble_letkfoi
 output_increment_file: land_output_increment_letkfoi
+{%- if driver_save_posterior_mean %}
+posterior_output_file: {{ jedi_type }}_output_letkfoi
+{%- endif %}
 {%- elif JEDI_ALGORITHM == "3dvar" %}
 geometry_background_file: land_geometry_background
 background_file: {{ jedi_type }}_background
