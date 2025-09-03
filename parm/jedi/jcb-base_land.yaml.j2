@@ -1,5 +1,6 @@
 # JCB general
 JEDI_ALGORITHM: "{{ JEDI_ALGORITHM }}"
+inc_fn_prefix: "{{ inc_fn_prefix }}"
 snowdepth_vn: "{{ snowdepth_vn }}"
 algorithm: {{ jedi_algorithm_mod }}
 algorithm_path: "{{ PARMlandda }}/jedi/jcb-algorithms"
@@ -10,11 +11,11 @@ app_path_observation_chronicle: "{{ PARMlandda }}/jedi/jcb-gdas/observation_chro
 
 # Template file name for each section (if not defined, default files in jcb-algorithms will be used)
 {%- if JEDI_ALGORITHM == "letkf-oi" %}
-geometry_background_file: {{ jedi_type }}_geometry_background_letkfoi
+geometry_background_file: land_geometry_background_letkfoi
 background_ensemble_file: {{ jedi_type }}_background_ensemble_letkfoi
-output_increment_file: {{ jedi_type }}_output_increment_letkfoi
+output_increment_file: land_output_increment_letkfoi
 {%- elif JEDI_ALGORITHM == "3dvar" %}
-geometry_background_file: {{ jedi_type }}_geometry_background
+geometry_background_file: land_geometry_background
 background_file: {{ jedi_type }}_background
 background_error_file: {{ jedi_type }}_background_error
 final_increment_file: {{ jedi_type }}_final_increment_fms
@@ -38,7 +39,11 @@ land_orog_files_path: "{{ FIXlandda }}/FV3_fix_tiled/C{{ RES }}"
 land_orog_prefix: "C{{ RES }}"
 
 # Final/minimization
+{%- if jedi_type == "snow" %}
 analysis_variables: [totalSnowDepth]
+{%- elif jedi_type == "soil_moisture" %}
+analysis_variables: [soilMoistureVolumetric]
+{%- endif %}
 final_diagnostics_departures: {{ final_diagnostics_departures }}
 land_final_inc_file_path: "{{ land_final_inc_file_path }}"
 minimizer: DRPCG

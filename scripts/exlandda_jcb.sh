@@ -26,7 +26,6 @@ hh_hf=${HTIME:8:2}
 driver_do_posterior_observer="false"
 driver_do_test_prints="false"
 driver_save_posterior_ensemble="false"
-driver_save_posterior_mean="false"
 driver_save_posterior_mean_increment="true"
 driver_update_obs_config_with_geometry_info="false"
 final_diagnostics_departures="anlmob"
@@ -70,8 +69,16 @@ echo "${types_jedi_analyses[@]}"
 ################################################
 for jedi_type in "${types_jedi_analyses[@]}"; do
 
-    # update jcb-base yaml file
-    settings="\
+  if [ "${jedi_type}" = "snow" ]; then
+    driver_save_posterior_mean="false"
+    inc_fn_prefix="snowinc" 
+  elif [ "${jedi_type}" = "soil_moisture" ]; then
+    driver_save_posterior_mean="true"
+    inc_fn_prefix="smcinc"
+  fi
+
+  # update jcb-base yaml file
+  settings="\
   'FIXlandda': ${FIXlandda}
   'JEDI_ALGORITHM': ${JEDI_ALGORITHM}
   'jedi_algorithm_mod': ${jedi_algorithm_mod}
@@ -84,6 +91,7 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
   'driver_save_posterior_mean_increment': ${driver_save_posterior_mean_increment}
   'driver_update_obs_config_with_geometry_info': ${driver_update_obs_config_with_geometry_info}
   'final_diagnostics_departures': ${final_diagnostics_departures}
+  'inc_fn_prefix': ${inc_fn_prefix}
   'inflation_mult': ${inflation_mult}
   'inflation_rtpp': ${inflation_rtpp}
   'inflation_rtps': ${inflation_rtps}
@@ -118,18 +126,18 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
   'OBS_SMOPS': '${OBS_SMOPS}'
 " # End of settings variable
 
-    template_fp="${PARMlandda}/jedi/jcb-base_land.yaml.j2"
-    jcb_base_fn="jcb-base_${jedi_type}.yaml"
-    jcb_base_fp="${DATA}/${jcb_base_fn}"
-    jcb_out_fn="jedi_${JEDI_ALGORITHM}_${jedi_type}.yaml"
-    ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${template_fp}" -o "${jcb_base_fp}"
+  template_fp="${PARMlandda}/jedi/jcb-base_land.yaml.j2"
+  jcb_base_fn="jcb-base_${jedi_type}.yaml"
+  jcb_base_fp="${DATA}/${jcb_base_fn}"
+  jcb_out_fn="jedi_${JEDI_ALGORITHM}_${jedi_type}.yaml"
+  ${USHlandda}/fill_jinja_template.py -u "${settings}" -t "${template_fp}" -o "${jcb_base_fp}"
     
-    ${USHlandda}/jcb_setup.py -i "${jcb_base_fn}" -o "${jcb_out_fn}" -a "${JEDI_ALGORITHM}" -g "${FRAC_GRID}" -l "${PY_LOG_LEVEL}"
+  ${USHlandda}/jcb_setup.py -i "${jcb_base_fn}" -o "${jcb_out_fn}" -a "${JEDI_ALGORITHM}" -t "${jedi_type}" -g "${FRAC_GRID}" -l "${PY_LOG_LEVEL}"
     
-    if [ $? -ne 0 ]; then
-      err_exit "Generation of JEDI YAML file for ${jedi_type} by JCB failed !!!"
-    fi
+  if [ $? -ne 0 ]; then
+    err_exit "Generation of JEDI YAML file for ${jedi_type} by JCB failed !!!"
+  fi
     
-    cp -p ${jcb_out_fn} ${COMOUT}
+  cp -p ${jcb_out_fn} ${COMOUT}
 
 done

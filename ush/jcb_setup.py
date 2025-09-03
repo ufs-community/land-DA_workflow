@@ -7,7 +7,7 @@ import yaml
 from jcb import render
 
 # =================================================================== CHJ =====
-def jedi_config_yaml(input_yaml_fn, output_yaml_fn, jedi_algorithm, frac_grid):
+def jedi_config_yaml(input_yaml_fn, output_yaml_fn, jedi_algorithm, jedi_type, frac_grid):
 
     try:
         with open(input_yaml_fn, 'r') as f:
@@ -21,7 +21,7 @@ def jedi_config_yaml(input_yaml_fn, output_yaml_fn, jedi_algorithm, frac_grid):
     logging.debug(f''' JEDI CONFIG: {jedi_config_dict}''')
 
     if frac_grid.upper() == "NO":
-        if jedi_algorithm == "3dvar":
+        if jedi_type == "snow" and jedi_algorithm == "3dvar":
             jedi_config_dict["cost function"]["background"]["state variables"][0] = 'snwdph'
             jedi_config_dict["final"]["increment"]["output"]["state component"]["state variables"][0] = 'snwdph'
 #    else:
@@ -59,6 +59,13 @@ def parse_args(argv):
             help="JEDI ALGORITHM.",
             )
     parser.add_argument(
+            "-t",
+            "--jedi_type",
+            dest="jedi_type",
+            required=True,
+            help="Type of JEDI analysis.",
+            )
+    parser.add_argument(
             "-g",
             "--frac_grid",
             dest="frac_grid",
@@ -92,6 +99,7 @@ if __name__ == "__main__":
         input_yaml_fn=args.input_yaml_fn,
         output_yaml_fn=args.output_yaml_fn,
         jedi_algorithm=args.jedi_algorithm,
+        jedi_type=args.jedi_type,
         frac_grid=args.frac_grid,
     )
 
