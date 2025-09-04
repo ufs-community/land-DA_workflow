@@ -2,32 +2,17 @@
 
 set -xue
 
-
-case $MACHINE in
-  "gaeac6")
-    run_cmd="srun"
-    ;;
-  "hera")
-    run_cmd="srun"
-    ;;
-  "hercules")
-    run_cmd="srun"
-    ;;
-  "orion")
-    run_cmd="srun"
-    ;;
-  "ursa")
-    run_cmd="srun"
-    ;;
-  *)
-    run_cmd=`which mpiexec`
-    ;;
-esac
-
 # Set OpenMP variables.
 export KMP_AFFINITY="scatter"
 export OMP_NUM_THREADS="1"
 export OMP_STACKSIZE="1024m"
+
+machines_srun=( "gaeac6" "hera" "hercules" "orion" "ursa" )
+if [[ ${machines_srun[@]} =~ "${MACHINE}" ]]; then
+  run_cmd="srun"
+else
+  run_cmd=`which mpiexec`
+fi
 
 YYYY=${PDY:0:4}
 MM=${PDY:4:2}

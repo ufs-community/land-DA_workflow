@@ -18,26 +18,12 @@ HP=${PTIME:8:2}
 
 filedate=${YYYY}${MM}${DD}.${HH}0000
 
-case $MACHINE in
-  "gaeac6")
-    run_cmd="srun"
-    ;;
-  "hera")
-    run_cmd="srun"
-    ;;
-  "hercules")
-    run_cmd="srun"
-    ;;
-  "orion")
-    run_cmd="srun"
-    ;;
-  "ursa")
-    run_cmd="srun"
-    ;;
-  *)
-    run_cmd=`which mpiexec`
-    ;;
-esac
+machines_srun=( "gaeac6" "hera" "hercules" "orion" "ursa" )
+if [[ ${machines_srun[@]} =~ "${MACHINE}" ]]; then
+  run_cmd="srun"
+else
+  run_cmd=`which mpiexec`
+fi
 
 # copy sfc_data files into work directory
 for itile in {1..6}
@@ -53,6 +39,52 @@ do
   # copy sfc_data file for comparison
   cp -p ${sfc_fn} "${sfc_fn}_ini"
 done
+
+# Replace soil-moisture with external source data ("era5land" or "gfs")
+if [ "${DO_BKG_ANAL_EXT_SRC}" = "YES" ]; then
+  if [ "${BKG_ANAL_EXT_SRC_OPT}" = "era5land" ]; then
+    fn_ext_src="era5_land_${PDY}_data_0.nc"
+    ln -nsf "${DCOMINera5land}/${fn_ext_src}" .
+  elif [ "${BKG_ANAL_EXT_SRC_OPT}" = "gfs" ]; then
+    fn_ext_src="${BKG_ANAL_EXT_SRC_OPT}.${cycle}.sfcanl.nc"
+    ln -nsf "${COMINgfs}/${PDY}${cyc}/${fn_ext_src}" .
+  fi
+  if [ ! -f "${fn_ext_src}" ]; then
+    err_exit "External source data file ${fn_ext_src} does not exist !!!"
+  fi
+
+  fn_oro_base="${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}_oro_data.tile"
+  fn_oro_ext=".nc"
+  fn_sfc_base="${filedate}.sfc_data.tile"
+  fn_sfc_ext=".nc"
+  # flag for plotting external source data
+  plot_src_data="YES"
+  # flag for plotting new sfc_data
+  plot_sfc_data="YES"
+  cat > bkg_ext_to_sfcdata.yaml << EOF
+BKG_ANAL_EXT_SRC_OPT: '${BKG_ANAL_EXT_SRC_OPT}'
+cartopy_ne_path: '${FIXlandda}/NaturalEarth'
+fn_oro_base: '${fn_oro_base}'
+fn_oro_ext: '${fn_oro_ext}'
+fn_sfc_base: '${fn_sfc_base}'
+fn_sfc_ext: '${fn_sfc_ext}'
+fn_ext_src: '${fn_ext_src}'
+plot_sfc_data: '${plot_sfc_data}'
+plot_src_data: '${plot_src_data}'
+work_dir: '${DATA}'
+PY_LOG_LEVEL: '${PY_LOG_LEVEL}'
+EOF
+  # Replacing sfc_data with external source
+  ${USHlandda}/bkg_external_to_sfcdata.py
+  if [ $? -ne 0 ]; then
+    err_exit "Replacing sfc_data with external source data failed !!!"
+  fi
+  # Change sfc_data files
+  for itile in {1..6}
+  do
+    cp -p "${fn_sfc_base}${itile}_${BKG_ANAL_EXT_SRC_OPT}${fn_sfc_ext}" "${filedate}.sfc_data.tile${itile}.nc"
+  done
+fi
 
 # Copy obserbation file to work directory
 mkdir -p ${DATA}/obs

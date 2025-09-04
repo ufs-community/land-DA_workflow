@@ -120,6 +120,16 @@ def obs_plot(obs_type,PDY,work_dir,fn_input):
 def svar_plot(svar,mdat,lon,lat,c_lon,extent,obs_type,PDY,work_dir):
 
     logging.info(' ===== '+svar+' ==========================================')
+
+    cs_cmap='gist_ncar_r'
+    lb_ext='neither'
+    tick_ln=1.5
+    tick_wd=0.45
+    tlb_sz=3
+    n_rnd=2
+    cmap_range='fixed'
+    scat_sz=1.0
+
     # Extract data array
     if obs_type == "smap" or obs_type == "smops":
         gvar="soilMoistureVolumetric"
@@ -133,15 +143,6 @@ def svar_plot(svar,mdat,lon,lat,c_lon,extent,obs_type,PDY,work_dir):
     obs_type_upper=obs_type.upper()
     out_title_fld=f'''Land-DA::Obs::{obs_type_upper}::{PDY}::{pvar}'''
     out_fn=f'''landda_obs_{obs_type}_{PDY}_{pvar}'''
-
-    cs_cmap='gist_ncar_r'
-    lb_ext='neither'
-    tick_ln=1.5
-    tick_wd=0.45
-    tlb_sz=3
-    n_rnd=2
-    cmap_range='fixed'
-    scat_sz=1.0
 
     # Check array size
     lon_len = len(lon)
@@ -178,7 +179,8 @@ def svar_plot(svar,mdat,lon,lat,c_lon,extent,obs_type,PDY,work_dir):
         elif obs_type == 'ghcn':
             cs_max=1000.0
         elif obs_type == 'smap' or obs_type == 'smops':
-            cs_max=0.4
+            cs_max=1.0
+            cs_min=0.0
         else:
             cs_max=300.0
     else:

@@ -2,27 +2,6 @@
 
 set -xue
 
-case $MACHINE in
-  "gaeac6")
-    run_cmd="srun"
-    ;;
-  "hera")
-    run_cmd="srun"
-    ;;
-  "hercules")
-    run_cmd="srun"
-    ;;
-  "orion")
-    run_cmd="srun"
-    ;;
-  "ursa")
-    run_cmd="srun"
-    ;;
-  *)
-    run_cmd=`which mpiexec`
-    ;;
-esac
-
 export MPI_TYPE_DEPTH=20
 export OMP_STACKSIZE=512M
 # shellcheck disable=SC2125
@@ -32,6 +11,13 @@ export ESMF_RUNTIME_PROFILE=ON
 export ESMF_RUNTIME_PROFILE_OUTPUT="SUMMARY"
 export PSM_RANKS_PER_CONTEXT=4
 export PSM_SHAREDCONTEXTS=1
+
+machines_srun=( "gaeac6" "hera" "hercules" "orion" "ursa" )
+if [[ ${machines_srun[@]} =~ "${MACHINE}" ]]; then
+  run_cmd="srun"
+else
+  run_cmd=`which mpiexec`
+fi
 
 NTIME=$($NDATE ${DATE_CYCLE_FREQ_HR} $PDY$cyc)
 
