@@ -17,14 +17,13 @@ INTERVAL = 10
 def main():
     logfile = extract_logfile(SCRIPT)
     if not logfile:
-        print("Could not extract wflow_log_fn from script.")
+        print(f'''FATAL ERROR: Could not extract WFLOW_LOG_FN from {SCRIPT}.''')
         sys.exit(1)
-
-    print(f"Using log file: {logfile}")
+    print(f'''Using log file: {logfile}''')
 
     try:
         while True:
-            print(f"Running {SCRIPT} ...")
+            print(f'''Running {SCRIPT} ...''')
 
             # Run the script (append output to log file)
             with logfile.open("a") as log:
