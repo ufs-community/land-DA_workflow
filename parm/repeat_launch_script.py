@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import subprocess
 import time
 import sys
@@ -9,12 +10,10 @@ from typing import List, Tuple, Optional
 
 # Launch script to run
 SCRIPT = "./launch_rocoto_wflow.sh"
-# Interval in seconds
-INTERVAL = 10
 
 
 # === Main part (will be called at the end) ==================================== CHJ =====
-def main():
+def main(INTERVAL):
     logfile = extract_logfile(SCRIPT)
     if not logfile:
         print(f'''FATAL ERROR: Could not extract WFLOW_LOG_FN from {SCRIPT}.''')
@@ -71,6 +70,23 @@ def read_wflow_status(logfile: str) -> Tuple[Optional[str], Optional[str], List[
     return num_current, num_all, status
 
 
+# ============================================================================== CHJ =====
+def parse_args(argv):
+    """Parse command line arguments"""
+    parser = argparse.ArgumentParser(description="Repeated launch script.")
+    parser.add_argument(
+            "-i",
+            "--interval",
+            dest="INTERVAL",
+            type=int,
+            default=10,
+            help="Interval in seconds.",
+            )
+
+    return parser.parse_args(argv)
+
+
 # === Main call ================================================================ CHJ =====
 if __name__ == "__main__":
-    main()
+    args = parse_args(sys.argv[1:])
+    main(INTERVAL=args.INTERVAL)

@@ -231,6 +231,13 @@ def setup_wflow_env(machine):
         file.write(fdata)
     os.chmod(fp_launch_script, 0o755)
 
+    # Copy the repeatedly launching python script to exp_case directory
+    fn_repeat_launch_py = "repeat_launch_script.py"
+    fp_repeat_script_orig = os.path.join(parm_dir, fn_repeat_launch_py)
+    fp_repeat_script_expt = os.path.join(exp_case_path, fn_repeat_launch_py)
+    shutil.copyfile(fp_repeat_script_orig, fp_repeat_script_expt)
+    os.chmod(fp_repeat_script_expt, 0o755)
+
     # Add links to log/tmp/com directories within exp_case directory
     envir = config_parm.get("envir")
     model_ver = config_parm.get("model_ver")    
