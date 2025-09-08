@@ -86,7 +86,7 @@ def add_crontab_line(machine, crontab_line, debug):
         log_info(
             f"""
             Adding the following line to the user's cron table in order to automatically
-            resubmit SRW workflow:
+            resubmit workflow:
               crontab_line = '{crontab_line}'""",
             verbose=debug,
         )
