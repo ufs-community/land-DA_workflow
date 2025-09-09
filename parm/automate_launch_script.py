@@ -35,6 +35,9 @@ def main(INTERVAL):
             if status.upper() == "SUCCESS":
                 print("\n !!! ===== Workflow completed successfully. Stopping ===== !!!")
                 break
+            elif status.upper() == "FAILURE":
+                print("\n !!! === FATAL ERROR: Some workflow tasks fail. Please check the log files === !!!")
+                sys.exit(2)
 
             print(f''' Waiting {INTERVAL} seconds before next run...\n''')
             time.sleep(INTERVAL)
