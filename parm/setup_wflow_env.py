@@ -15,6 +15,7 @@ import shutil
 import yaml
 import math
 from datetime import datetime, timedelta
+from pathlib import Path
 
 dirpath = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(dirpath, '../ush'))
@@ -36,6 +37,20 @@ def setup_wflow_env(machine):
     logging.info(f''' Home directory (HOMEdir): {home_dir} ''')
     exp_basedir = os.path.dirname(home_dir)
     logging.info(f''' Experimental base directory (exp_basedir): {exp_basedir} ''')
+
+    # Check whether exec dir is empty
+    exec_dir = os.path.join(home_dir, 'exec')
+    exec_path = Path(exec_dir)
+    fix_dir = os.path.join(home_dir, 'fix')
+    fix_path = Path(fix_dir)
+    if not exec_path.exists():
+        logging.error(f''' exec directory "{exec_path}" does NOT exist. You might skip the build step !!!''')
+        sys.exit(1)        
+    else:
+        visible_files = [p for p in fix_path.iterdir() if not p.name.startswith(".")]
+        if not visible_files:
+            logging.error(f''' fix directory "{fix_path}" is EMPTY. Please check the link in the build script !!!''')
+            sys.exit(1)
 
     # Set default values of input parameters
     config_parm = set_default_parm()
@@ -230,6 +245,13 @@ def setup_wflow_env(machine):
     with open(fp_launch_script, 'w') as file:
         file.write(fdata)
     os.chmod(fp_launch_script, 0o755)
+
+    # Copy the automated launch script to exp_case directory
+    fn_auto_launch_py = "automate_launch_script.py"
+    fp_auto_script_orig = os.path.join(parm_dir, fn_auto_launch_py)
+    fp_auto_script_expt = os.path.join(exp_case_path, fn_auto_launch_py)
+    shutil.copyfile(fp_auto_script_orig, fp_auto_script_expt)
+    os.chmod(fp_auto_script_expt, 0o755)
 
     # Add links to log/tmp/com directories within exp_case directory
     envir = config_parm.get("envir")
