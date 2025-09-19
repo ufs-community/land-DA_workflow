@@ -39,7 +39,7 @@ def main(INTERVAL):
                 print("\n !!! === FATAL ERROR: Some workflow tasks fail. Please check the log files === !!!")
                 sys.exit(2)
 
-            print(f''' Waiting {INTERVAL} seconds before next run...\n''')
+            print(f''' Waiting {INTERVAL} seconds before next run ...\n''')
             time.sleep(INTERVAL)
 
     except KeyboardInterrupt:
