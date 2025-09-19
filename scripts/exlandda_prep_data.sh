@@ -51,13 +51,13 @@ if [ "${COLDSTART}" != "YES" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}"
       if [ ! -f "${input_ghcn_file}" ]; then
         echo "GHCN raw data path: ${DCOMINghcn}"
         echo "GHCN raw data file: ${YYYP}.csv"
-        err_exit "GHCN raw data file does not exist in designated path !!!"
+        err_exit "FATAL ERROR: GHCN raw data file does not exist in designated path !!!"
       fi
       ghcn_station_file="${DCOMINghcn}/ghcnd-stations.txt"
   
       ${USHlandda}/ghcn_snod2ioda.py -i ${input_ghcn_file} -o ${obs_fn} -f ${ghcn_station_file} -d ${YYYP}${MP}${DP}${HP} -m maskout
       if [ $? -ne 0 ]; then
-        err_exit "Generation of GHCN obs file failed !!!"
+        err_exit "FATAL ERROR: Generation of GHCN obs file failed !!!"
       fi
       cp -p "${obs_fn}" "${COMOUTobs}/${obs_out_fn_ghcn}"
     fi
@@ -127,7 +127,7 @@ EOF
         elif [ -f ${WARMSTART_DIR}/${sfc_m1} ]; then
           ln -nsf ${WARMSTART_DIR}/${sfc_m1} ${DATA}/${sfc_m0}
         else
-          err_exit "sfc_data files do not exist"
+          err_exit "FATAL ERROR: sfc_data files do not exist"
         fi
       done
   
@@ -138,14 +138,14 @@ EOF
       export err=$?; err_chk
       cp errfile errfile_calcfIMS
       if [[ $err != 0 ]]; then
-        err_exit "calcfIMS failed"
+        err_exit "FATAL ERROR: calcfIMS failed"
       fi
 
       # Convert to IODA format
       fims_out_fn="IMSscf.${PDY}.C${RES}_oro_data.nc"
       ${USHlandda}/imsfv3_scf2ioda.py -i ${fims_out_fn} -o ${obs_out_fn_ims}
       if [ $? -ne 0 ]; then
-        err_exit "Generation of IMS obs file failed !!!"
+        err_exit "FATAL ERROR: Generation of IMS obs file failed !!!"
       fi
       cp -p ${obs_out_fn_ims} "${COMOUTobs}/${obs_out_fn_ims}"
     fi
@@ -195,12 +195,12 @@ EOF
           fi
         done  
         if ! $found; then
-          err_exit "No matching file for ${PDY}${cyc} found in ${ihr_smap_raw_dir}!"
+          err_exit "FATAL ERROR: No matching file for ${PDY}${cyc} found in ${ihr_smap_raw_dir}!"
         fi
 	# Run ioda converting script
         ${USHlandda}/smap_ssm2ioda.py -i "${smap_raw_dir}/${smap_ioda_in_fn}" -o ${obs_out_fn_smap} --maskMissing
         if [ $? -ne 0 ]; then
-          err_exit "Generation of SMAP obs file failed !!!"
+          err_exit "FATAL ERROR: Generation of SMAP obs file failed !!!"
         fi
       else
         hftime_smap=$($NDATE -${SMAP_RAW_WINDOW_SPAN_HALF} $PDY$cyc)
@@ -223,7 +223,7 @@ EOF
             fi
           done        
           if ! $found; then
-            err_exit "No matching file for ${ihr_date} found in ${ihr_smap_raw_dir}!"
+            err_exit "FATAL ERROR: No matching file for ${ihr_date} found in ${ihr_smap_raw_dir}!"
           fi
         done
   
@@ -244,7 +244,7 @@ EOF
         # Run the ioda converting script for SMAP and concatenate the netcdf files
         ${USHlandda}/smap_ioda_concat_files.py
         if [ $? -ne 0 ]; then
-          err_exit "Generation of SMAP_ioda obs file failed !!!"
+          err_exit "FATAL ERROR: Generation of SMAP_ioda obs file failed !!!"
         fi
       fi
       cp -p "${obs_out_fn_smap}" "${COMOUTobs}/${obs_out_fn_smap}"
@@ -271,13 +271,13 @@ EOF
       if [ -n "${fn_smops_raw}" ]; then
         ln -nsf ${fn_smops_raw} ${smops_ioda_in_fn}
       else
-        err_exit "SMOPS raw data file does not exist in ${DCOMINsmops} !!!"
+        err_exit "FATAL ERROR: SMOPS raw data file does not exist in ${DCOMINsmops} !!!"
       fi
 
       # Run ioda converting script
       ${USHlandda}/smops_ssm2ioda.py -i ${smops_ioda_in_fn} -o ${obs_out_fn_smops}
       if [ $? -ne 0 ]; then
-        err_exit "Generation of SMOPS obs file failed !!!"
+        err_exit "FATAL ERROR: Generation of SMOPS obs file failed !!!"
       fi
       cp -p "${obs_out_fn_smops}" "${COMOUTobs}/${obs_out_fn_smops}"
     fi
@@ -316,7 +316,7 @@ if [ "${APP}" = "LND" ]; then
     elif [ -f "${WARMSTART_DIR}/${rfile2}" ]; then
       ln -nsf "${WARMSTART_DIR}/${rfile2}" .
     else
-      err_exit "${rfile2} does not exist !!!"
+      err_exit "FATAL ERROR: ${rfile2} does not exist !!!"
     fi
     ${USHlandda}/datm_rfile_info.py -i ${rfile2} -f ${ATMOS_FORC} -l ${PY_LOG_LEVEL}
     # Read result file
@@ -340,7 +340,7 @@ if [ "${APP}" = "LND" ]; then
         if [ -f ${var_fp} ]; then
           ln -nsf "${var_fp}" ${DATA_DATM}
         else
-          err_exit "DATM forcing mesh file ${var_fp} does not exist."
+          err_exit "FATAL ERROR: DATM forcing mesh file ${var_fp} does not exist."
         fi
       else
         given_date="${year_first}-${month_first}-08"
@@ -354,7 +354,7 @@ if [ "${APP}" = "LND" ]; then
           if [ -f ${var_fp} ]; then
             ln -nsf "${var_fp}" ${DATA_DATM}
           else
-            err_exit "DATM forcing data file ${var_fp} does not exist."
+            err_exit "FATAL ERROR: DATM forcing data file ${var_fp} does not exist."
           fi
         done
       fi
@@ -367,7 +367,7 @@ if [ "${APP}" = "LND" ]; then
       if [ -f ${tfp} ]; then
         ln -nsf "${tfp}" ${DATA_DATM}
       else
-        err_exit "DATM topo file ${tfp} does not exist."
+        err_exit "FATAL ERROR: DATM topo file ${tfp} does not exist."
       fi
     done
 

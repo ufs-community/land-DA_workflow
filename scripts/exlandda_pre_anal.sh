@@ -18,7 +18,7 @@ do
   elif [ -f ${WARMSTART_DIR}/${rst_fn} ]; then
     cp -p ${WARMSTART_DIR}/${rst_fn} .
   else
-    err_exit "Initial restart files do not exist"
+    err_exit "FATAL ERROR: Initial restart files do not exist"
   fi
 done
 
@@ -51,7 +51,7 @@ ${EXEClandda}/$pgm ufs2jedi.namelist >>$pgmout 2>errfile
 cp errfile errfile_tile2tile
 export err=$?; err_chk
 if [[ $err != 0 ]]; then
-  err_exit "tile2tile failed"
+  err_exit "FATAL ERROR: tile2tile failed"
 fi
 
 #stage restarts for applying JEDI update to intermediate directory
