@@ -34,7 +34,7 @@ do
   elif [ -f ${WARMSTART_DIR}/${sfc_fn} ]; then
     cp -p ${WARMSTART_DIR}/${sfc_fn} .
   else
-    err_exit "Initial sfc_data files do not exist"
+    err_exit "FATAL ERROR: Initial sfc_data files do not exist"
   fi
   # copy sfc_data file for comparison
   cp -p ${sfc_fn} "${sfc_fn}_ini"
@@ -50,7 +50,7 @@ if [ "${DO_BKG_ANAL_EXT_SRC}" = "YES" ]; then
     ln -nsf "${COMINgfs}/${PDY}${cyc}/${fn_ext_src}" .
   fi
   if [ ! -f "${fn_ext_src}" ]; then
-    err_exit "External source data file ${fn_ext_src} does not exist !!!"
+    err_exit "FATAL ERROR: External source data file ${fn_ext_src} does not exist !!!"
   fi
 
   fn_oro_base="${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}_oro_data.tile"
@@ -77,7 +77,7 @@ EOF
   # Replacing sfc_data with external source
   ${USHlandda}/bkg_external_to_sfcdata.py
   if [ $? -ne 0 ]; then
-    err_exit "Replacing sfc_data with external source data failed !!!"
+    err_exit "FATAL ERROR: Replacing sfc_data with external source data failed !!!"
   fi
   # Change sfc_data files
   for itile in {1..6}
@@ -195,7 +195,7 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
     
       ${USHlandda}/letkf_create_ens.py $filedate $snowdepth_vn 30
       if [[ $? != 0 ]]; then
-        err_exit "letkf-oi create failed"
+        err_exit "FATAL ERROR: letkf-oi create failed"
       fi  
     fi
     # Set JEDI executable
@@ -228,7 +228,7 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
   export err=$?; err_chk
   cp errfile errfile_fv3jedi_x
   if [[ $err != 0 ]]; then
-    err_exit "JEDI DA failed"
+    err_exit "FATAL ERROR: JEDI DA failed"
   fi
   
   # save intermediate sfc_data files before applying increment
@@ -280,7 +280,7 @@ EOF
     export err=$?; err_chk
     cp errfile errfile_apply_incr
     if [[ $err != 0 ]]; then
-      err_exit "apply snow increment failed"
+      err_exit "FATAL ERROR: apply snow increment failed"
     fi
 
     # Save intermediate sfc_data files after applying increment
@@ -321,7 +321,7 @@ EOF
 
     ${USHlandda}/sfc_data_replace_var.py
     if [ $? -ne 0 ]; then
-      err_exit "sfc_data var replacement failed"
+      err_exit "FATAL ERROR: sfc_data var replacement failed"
     fi
 
     # Save intermediate sfc_data files after applying increment
@@ -369,7 +369,7 @@ EOF
 
     ${USHlandda}/plot_comp_sfc_data.py
     if [ $? -ne 0 ]; then
-      err_exit "sfc_data comparison plot failed"
+      err_exit "FATAL ERROR: sfc_data comparison plot failed"
     fi
   
     # Copy result file to COMOUT
@@ -418,7 +418,7 @@ EOF
 
     ${USHlandda}/plot_obs_file.py
     if [ $? -ne 0 ]; then
-      err_exit "Observation file plot failed"
+      err_exit "FATAL ERROR: Observation file plot failed"
     fi
     # Copy result file to COMOUT
     cp -p *.png ${COMOUTplot}

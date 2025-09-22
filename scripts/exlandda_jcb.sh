@@ -135,7 +135,7 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
   ${USHlandda}/jcb_setup.py -i "${jcb_base_fn}" -o "${jcb_out_fn}" -a "${JEDI_ALGORITHM}" -t "${jedi_type}" -g "${FRAC_GRID}" -l "${PY_LOG_LEVEL}"
     
   if [ $? -ne 0 ]; then
-    err_exit "Generation of JEDI YAML file for ${jedi_type} by JCB failed !!!"
+    err_exit "FATAL ERROR: Generation of JEDI YAML file for ${jedi_type} by JCB failed !!!"
   fi
     
   cp -p ${jcb_out_fn} ${COMOUT}

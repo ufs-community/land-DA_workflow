@@ -37,7 +37,7 @@ WFLOW_XML_FN="{{ fn_xml_rocoto }}"
 rocoto_xml_bn=$( basename "${WFLOW_XML_FN}" ".xml" )
 rocoto_database_fn="${rocoto_xml_bn}.db"
 WFLOW_LOG_FN="log.rocoto_launch"
-LOG_FN_ROCOTO_RUN="log.rocoto_run"
+LOG_FN_ROCOTO_RUN="log.rocoto_sbatch"
 
 # Initialize the default status of the workflow to "IN PROGRESS".
 wflow_status="IN PROGRESS"

@@ -39,7 +39,7 @@ do
   elif [ -f ${WARMSTART_DIR}/${rst_fn} ]; then
     cp ${WARMSTART_DIR}/${rst_fn} .
   else
-    err_exit "Initial restart files do not exist"
+    err_exit "FATAL ERROR: Initial restart files do not exist"
   fi
 done
 
@@ -71,7 +71,7 @@ ${EXEClandda}/$pgm jedi2ufs.namelist >>$pgmout 2>errfile
 export err=$?; err_chk
 cp errfile errfile_tile2tile
 if [[ $err != 0 ]]; then
-  err_exit "tile2tile failed"
+  err_exit "FATAL ERROR: tile2tile failed"
 fi
 
 # save analysis restart

@@ -75,7 +75,7 @@ EOF
   
   ${USHlandda}/hofx_analysis_stats.py
   if [ $? -ne 0 ]; then
-    err_exit "Scatter/Histogram plots failed"
+    err_exit "FATAL ERROR: Scatter/Histogram plots failed"
   fi
   
   # Copy result files to COMOUT
@@ -110,7 +110,7 @@ EOF
 
   ${USHlandda}/plot_analysis_timehistory.py
   if [ $? -ne 0 ]; then
-    err_exit "Time-history plots failed"
+    err_exit "FATAL ERROR: Time-history plots failed"
   fi
 
   # Copy result files to COMOUT
@@ -145,7 +145,7 @@ EOF
 
   ${USHlandda}/plot_forecast_restart.py
   if [ $? -ne 0 ]; then
-    err_exit "Forecast restart plots failed"
+    err_exit "FATAL ERROR: Forecast restart plots failed"
   fi
 
   # Copy result files to COMOUT
@@ -188,7 +188,7 @@ EOF
 
   ${USHlandda}/plot_combine_tiles.py
   if [ $? -ne 0 ]; then
-    err_exit "Forecast restart plots failed"
+    err_exit "FATAL ERROR: Forecast restart plots failed"
   fi
 
   # Copy result files to COMOUT
@@ -224,7 +224,7 @@ EOF
     # Change basin code here. Default is 4219 - Mississippi River basin
     echo "4219" | ${USHlandda}/plot_basin.py
     if [ $? -ne 0 ]; then
-      err_exit "Basin plot failed"
+      err_exit "FATAL ERROR: Basin plot failed"
     fi
 
     # Copy result files to COMOUT

@@ -65,7 +65,7 @@ if [ "${APP}" = "LND" ]; then
     datm_in_nx_global="1440"
     datm_in_ny_global="721"
   else
-    err_exit "Invalid atmospheric forcing option: ATMOS_FORC: ${ATMOS_FORC} !!!"
+    err_exit "FATAL ERROR: Invalid atmospheric forcing option: ATMOS_FORC: ${ATMOS_FORC} !!!"
   fi
   settings="\
     'datm_in_datamode': '${datm_in_datamode}'
@@ -345,7 +345,7 @@ if [ "${COLDSTART}" = "NO" ] || [ "${PDY}${cyc}" != "${DATE_FIRST_CYCLE:0:10}" ]
   if [ -f "${data_dir}/${r_fn}" ]; then
     ln -nsf "${data_dir}/${r_fn}" RESTART/.
   else
-    err_exit "${data_dir}/${r_fn} file does not exist."
+    err_exit "FATAL ERROR: ${data_dir}/${r_fn} file does not exist."
   fi
   ls -1 "./RESTART/${r_fn}">rpointer.cpl
 
@@ -426,7 +426,7 @@ if [ "${APP}" = "ATML" ]; then
         if [ -f "${r_fp}" ]; then
           ln -nsf "${r_fp}" "${ifn}.tile${itile}.nc"
         else
-          err_exit "${r_fp} file does not exist."
+          err_exit "FATAL ERROR: ${r_fp} file does not exist."
         fi
       done
       if [ "${ifn}" = "fv_core.res" ]; then
@@ -434,7 +434,7 @@ if [ "${APP}" = "ATML" ]; then
         if [ -f "${r_fp}" ]; then
           ln -nsf "${r_fp}" "${ifn}.nc"
         else
-          err_exit "${r_fp} file does not exist."
+          err_exit "FATAL ERROR: ${r_fp} file does not exist."
         fi
       fi
     done
@@ -448,7 +448,7 @@ if [ "${APP}" = "ATML" ]; then
       if [ -f "${r_fp}" ]; then
         ln -nsf "${r_fp}" "sfc_data.tile${itile}.nc"
       else
-        err_exit "${r_fp} file does not exist."
+        err_exit "FATAL ERROR: ${r_fp} file does not exist."
       fi
     done
 
@@ -481,7 +481,7 @@ ${run_cmd} -n ${nprocs_forecast} ${EXEClandda}/$pgm >>$pgmout 2>errfile
 export err=$?; err_chk
 cp errfile errfile_ufs_model
 if [[ $err != 0 ]]; then
-  err_exit "ufs_model failed"
+  err_exit "FATAL ERROR: ufs_model failed"
 fi
 
 ###########################
