@@ -254,15 +254,16 @@ def setup_wflow_env(machine):
     os.chmod(fp_auto_script_expt, 0o755)
 
     # Add links to log/tmp/com directories within exp_case directory
+    envir = config_parm.get("envir")
     model_ver = config_parm.get("model_ver")    
     net = config_parm.get("NET")
     run = config_parm.get("RUN")
     ptmp = os.path.join(exp_basedir,"ptmp")
-    log_dir_src = os.path.join(ptmp, "com/output/logs")
+    log_dir_src = os.path.join(ptmp, envir, "com/output/logs")
     log_dir_dst = os.path.join(exp_case_path, "log_dir")
-    tmp_dir_src = os.path.join(ptmp, "tmp")
+    tmp_dir_src = os.path.join(ptmp, envir, "tmp")
     tmp_dir_dst = os.path.join(exp_case_path, "tmp_dir")
-    com_dir_src = os.path.join(ptmp, "com", net, model_ver)
+    com_dir_src = os.path.join(ptmp, envir, "com", net, model_ver)
     com_dir_dst = os.path.join(exp_case_path, "com_dir")
     os.symlink(log_dir_src, log_dir_dst)
     os.symlink(tmp_dir_src, tmp_dir_dst)
@@ -310,6 +311,7 @@ def set_default_parm():
         "DO_FREE_FORECAST": "NO",
         "DT_ATMOS": 900,
         "DT_RUNSEQ": 3600,
+        "envir": "test",
         "EXP_CASE_NAME": None,
         "FCSTHR": 24,
         "FHROT": 0,

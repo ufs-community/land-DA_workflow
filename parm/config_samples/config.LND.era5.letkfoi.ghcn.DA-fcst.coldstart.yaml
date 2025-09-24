@@ -9,7 +9,8 @@ DATE_LAST_CYCLE: 2025011800
 DATM_STREAM_FN_LAST_DATE: 2025012500
 DT_ATMOS: 900
 DT_RUNSEQ: 3600
-EXP_CASE_NAME: lnd_era5_coldstart_00
+envir: lnd_era5_letkfoi_ghcn
+EXP_CASE_NAME: lnd_era5_letkfoi_ghcn_00
 FCSTHR: 24
 JEDI_ALGORITHM: letkf-oi
 LND_CALC_SNET: .true.

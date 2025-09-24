@@ -8,7 +8,8 @@ DATE_FIRST_CYCLE: 2000020200
 DATE_LAST_CYCLE: 2000020300
 DT_ATMOS: 900
 DT_RUNSEQ: 3600
-EXP_CASE_NAME: lnd_gswp3_warmstart_00
+envir: lnd_gswp3_letkfoi_ghcn
+EXP_CASE_NAME: lnd_gswp3_letkfoi_ghcn_00
 FCSTHR: 24
 JEDI_ALGORITHM: letkf-oi
 LND_CALC_SNET: .true.
