@@ -13,7 +13,8 @@ DATM_STREAM_FN_LAST_DATE: 2022122200
 DO_FREE_FORECAST: 'YES'
 DT_ATMOS: 900
 DT_RUNSEQ: 3600
-EXP_CASE_NAME: lnd_smops_00
+envir: lnd_era5_letkfoi_smops
+EXP_CASE_NAME: lnd_era5_letkfoi_smops_00
 FCSTHR: 72
 JEDI_ALGORITHM: letkf-oi
 LND_CALC_SNET: .true.
