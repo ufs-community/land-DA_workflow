@@ -179,6 +179,16 @@ def setup_wflow_env(machine):
     else:
         memory_flag = True
 
+    # Set machine-dependent paths if not specified in config.yaml
+    warmstart_dir = config_parm.get("WARMSTART_DIR")
+    if warmstart_dir is None:
+        warmstart_dir = os.path.join(fix_dir, "DATA_RESTART")
+
+    # Set PTMP: PTMP/envir = OPSROOT for NOAA NCO EE2 compliance
+    ptmp = config_parm.get("PTMP")
+    if ptmp is None:
+        ptmp = os.path.join(exp_basedir, "ptmp")
+
     # Update config yaml file
     config_parm.update({
         'memory_flag': memory_flag,
@@ -189,7 +199,9 @@ def setup_wflow_env(machine):
         'nprocs_forecast_lnd': nprocs_forecast_lnd,
         'nprocs_per_node': nprocs_per_node,
         'partition_default': partition_default,
+        'PTMP': ptmp,
         'queue_default': queue_default,
+        'WARMSTART_DIR': warmstart_dir,
         })
    
     config_parm_str = yaml.dump(config_parm, sort_keys=True, default_flow_style=False)
@@ -257,8 +269,6 @@ def setup_wflow_env(machine):
     envir = config_parm.get("envir")
     model_ver = config_parm.get("model_ver")    
     net = config_parm.get("NET")
-    run = config_parm.get("RUN")
-    ptmp = os.path.join(exp_basedir,"ptmp")
     log_dir_src = os.path.join(ptmp, envir, "com/output/logs")
     log_dir_dst = os.path.join(exp_case_path, "log_dir")
     tmp_dir_src = os.path.join(ptmp, envir, "tmp")
@@ -343,12 +353,13 @@ def set_default_parm():
         "OBS_SMAP": "NO",
         "OBS_SMOPS": "NO",
         "OUTPUT_FH": "1 -1",
+        "PTMP": None,
         "PY_LOG_LEVEL": "INFO",
         "RES": 96,
         "RESTART_INTERVAL": "12 -1",
         "RUN": "landda",
         "SMAP_RAW_WINDOW_SPAN_HALF": 5,
-        "WARMSTART_DIR": "/path/to/warm/start/dir",
+        "WARMSTART_DIR": None,
         "WE2E_TEST": "NO",
         "WRITE_GROUPS": 1,
         "WRITE_TASKS_PER_GROUP": 6,
@@ -368,37 +379,31 @@ def set_machine_parm(machine):
             JEDI_IODACONV_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/jedi_bundle_sync/build/lib/python3.11"
             JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/jedi_bundle_sync"
             MAX_CORES_PER_NODE = 192
-            WARMSTART_DIR = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "hera":
             CUSTOM_JEDI_CONFIG_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
             JEDI_IODACONV_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_hera/build/lib/python3.11"
             JEDI_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_hera"
             MAX_CORES_PER_NODE = 40
-            WARMSTART_DIR = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "hercules":
             CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
             JEDI_IODACONV_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_hercules/build/lib/python3.11"
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_hercules"
             MAX_CORES_PER_NODE = 80
-            WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "orion":
             CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
             JEDI_IODACONV_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_orion/build/lib/python3.11"
             JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion"
             MAX_CORES_PER_NODE = 40
-            WARMSTART_DIR = "/work/noaa/epic/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "ursa":
             CUSTOM_JEDI_CONFIG_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
             JEDI_IODACONV_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_ursa/build/lib/python3.11"
             JEDI_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_ursa"
             MAX_CORES_PER_NODE = 192
-            WARMSTART_DIR = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/DATA_RESTART"
         case "singularity":
             CUSTOM_JEDI_CONFIG_PATH = "SINGULARITY_WORKING_DIR"
             JEDI_IODACONV_PATH = "SINGULARITY_WORKING_DIR"
             JEDI_PATH = "SINGULARITY_WORKING_DIR"
             MAX_CORES_PER_NODE = 40
-            WARMSTART_DIR = "SINGULARITY_WORKING_DIR/land-DA_workflow/fix/DATA_RESTART"
         case _:
             sys.exit(f"FATAL ERROR: this machine/platform '{lowercase_machine}' is NOT supported yet !!!")
 
@@ -407,7 +412,6 @@ def set_machine_parm(machine):
         "JEDI_IODACONV_PATH": JEDI_IODACONV_PATH,
         "JEDI_PATH": JEDI_PATH,
         "MAX_CORES_PER_NODE": MAX_CORES_PER_NODE,
-        "WARMSTART_DIR": WARMSTART_DIR,
     }
 
     return machine_config
