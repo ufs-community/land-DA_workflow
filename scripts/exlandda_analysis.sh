@@ -196,7 +196,9 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
       ${USHlandda}/letkf_create_ens.py $filedate $snowdepth_vn 30
       if [[ $? != 0 ]]; then
         err_exit "FATAL ERROR: letkf-oi create failed"
-      fi  
+      fi
+    else
+      ln -nsf ${orog_path}/${orog_fn_base}.tile*.nc ${DATA}
     fi
     # Set JEDI executable
     jedi_exe_fn="fv3jedi_letkf.x"
