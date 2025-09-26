@@ -377,27 +377,27 @@ def set_machine_parm(machine):
         case "gaeac6":
             CUSTOM_JEDI_CONFIG_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
             JEDI_IODACONV_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/jedi_bundle_sync/build/lib/python3.11"
-            JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/jedi_bundle_sync"
+            JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/jedi_bundle_sync"
             MAX_CORES_PER_NODE = 192
         case "hera":
             CUSTOM_JEDI_CONFIG_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
             JEDI_IODACONV_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_hera/build/lib/python3.11"
-            JEDI_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_hera"
+            JEDI_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_hera"
             MAX_CORES_PER_NODE = 40
         case "hercules":
             CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
             JEDI_IODACONV_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_hercules/build/lib/python3.11"
-            JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_hercules"
+            JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_hercules"
             MAX_CORES_PER_NODE = 80
         case "orion":
             CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
             JEDI_IODACONV_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_orion/build/lib/python3.11"
-            JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion"
+            JEDI_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_orion"
             MAX_CORES_PER_NODE = 40
         case "ursa":
             CUSTOM_JEDI_CONFIG_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
             JEDI_IODACONV_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_ursa/build/lib/python3.11"
-            JEDI_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_ursa"
+            JEDI_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_ursa"
             MAX_CORES_PER_NODE = 192
         case "singularity":
             CUSTOM_JEDI_CONFIG_PATH = "SINGULARITY_WORKING_DIR"
