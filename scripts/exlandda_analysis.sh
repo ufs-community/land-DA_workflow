@@ -185,18 +185,20 @@ for jedi_type in "${types_jedi_analyses[@]}"; do
       else
         snowdepth_vn="snwdph"
       fi
-	 
       for ens in {1..2}
       do
         mkdir -p $DATA/mem${ens}
         cp -p ${filedate}.sfc_data.tile*.nc ${DATA}/mem${ens}
         cp -p ${filedate}.coupler.res ${DATA}/mem${ens}
+        ln -nsf ${orog_path}/${orog_fn_base}.tile*.nc ${DATA}/mem${ens}
       done
     
       ${USHlandda}/letkf_create_ens.py $filedate $snowdepth_vn 30
       if [[ $? != 0 ]]; then
         err_exit "FATAL ERROR: letkf-oi create failed"
-      fi  
+      fi
+    else
+      ln -nsf ${orog_path}/${orog_fn_base}.tile*.nc ${DATA}
     fi
     # Set JEDI executable
     jedi_exe_fn="fv3jedi_letkf.x"

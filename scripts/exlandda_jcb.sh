@@ -42,7 +42,7 @@ land_window_length="PT${DATE_CYCLE_FREQ_HR}H"
 # Algorithm-specific values
 if [ "${JEDI_ALGORITHM}" = "letkf-oi" ]; then
   jedi_algorithm_mod="local_ensemble_da"
-  local_ensemble_da_solver="LETKF"
+  local_ensemble_da_solver="Deterministic LETKF"
 else
   jedi_algorithm_mod="${JEDI_ALGORITHM}"
 fi
