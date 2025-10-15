@@ -41,6 +41,7 @@ export exp_basedir=${exp_basedir:-$(pwd)}
 [[ ${machine} = hera     ]] && export ACCNR="nems"      || :  # nral0032
 [[ ${machine} = hercules ]] && export ACCNR="epic"      || :
 [[ ${machine} = orion    ]] && export ACCNR="epic"      || :
+[[ ${machine} = ursa     ]] && export ACCNR="epic"      || :
 echo "ACCNR=${ACCNR}"
 
 # Choice of experiment that is supported on the machine.
@@ -50,6 +51,7 @@ if [[ ${LAND_DA_EXPERIMENT} = default ]] ; then
 elif [[ ${LAND_DA_EXPERIMENT} = coverage ]] ; then
 	[[ ${machine} = gaeac6   ]] && experiment="LND.era5.3dvar.ims.warmstart"   || :
 	[[ ${machine} = hera     ]] && experiment="LND.era5.letkf.ghcn.coldstart"  || :
+	[[ ${machine} = ursa     ]] && experiment="LND.era5.letkf.ghcn.coldstart"  || :
 	[[ ${machine} = hercules ]] && experiment="LND.gswp3.letkf.ghcn.warmstart" || :
 	[[ ${machine} = orion    ]] && experiment="LND.gswp3.3dvar.ghcn.coldstart" || :
 else
