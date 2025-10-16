@@ -33,6 +33,9 @@ load(pathJoin("nco", nco_ver))
 nemsio_ver=os.getenv("nemsio_ver") or "2.5.4"
 load(pathJoin("nemsio", nemsio_ver))
 
+sfcio_ver=os.getenv("sfcio_ver") or "1.4.2"
+load(pathJoin("sfcio", sfcio_ver))
+
 sigio_ver=os.getenv("sigio_ver") or "2.3.3"
 load(pathJoin("sigio", sigio_ver))
 
