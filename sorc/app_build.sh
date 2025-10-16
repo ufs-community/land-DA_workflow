@@ -331,14 +331,8 @@ else
   module purge
 fi
 
-# source version file for build
-BUILD_VERSION_FILE="${HOME_DIR}/versions/build.ver_${PLATFORM}"
-if [ -e ${BUILD_VERSION_FILE} ]; then
-  . ${BUILD_VERSION_FILE}
-fi
-
 # set MODULE_FILE for this platform/compiler combination
-MODULE_FILE="build_${PLATFORM}_${COMPILER}"
+MODULE_FILE="ufsland_${PLATFORM}.${COMPILER}"
 if [ ! -f "${HOME_DIR}/modulefiles/${MODULE_FILE}.lua" ]; then
   printf "ERROR: module file does not exist for platform/compiler\n" >&2
   printf "  MODULE_FILE=${MODULE_FILE}\n" >&2
