@@ -5,9 +5,8 @@ set -eux
 
 module purge
 
-source ../../versions/build.ver_orion
 module use ../../modulefiles
-module load build_orion_intel
+module load ufsland_orion.intel
 
 module use /work/noaa/epic/UFS-conda/modulefiles
 module load python-ufs-land-da-wflow

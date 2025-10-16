@@ -5,9 +5,8 @@ set -eux
 
 module purge
 
-source ../../versions/build.ver_hercules
 module use ../../modulefiles
-module load build_hercules_intel
+module load ufsland_hercules.intel
 
 module use /work/noaa/epic/UFS-conda/modulefiles
 module load python-ufs-land-da-wflow
