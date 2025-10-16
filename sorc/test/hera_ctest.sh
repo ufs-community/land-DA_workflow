@@ -4,9 +4,9 @@
 set -eux
 
 module purge
-source ../../versions/build.ver_hera
+
 module use ../../modulefiles
-module load build_hera_intel
+module load ufsland_hera.intel
 
 module use /scratch3/NAGAPE/epic/ufs-conda/modulefiles
 module load python-ufs-land-da-wflow

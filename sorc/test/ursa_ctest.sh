@@ -4,9 +4,9 @@
 set -eux
 
 module purge
-source ../../versions/build.ver_ursa
+
 module use ../../modulefiles
-module load build_ursa_intel
+module load ufsland_ursa.intel
 
 module use /scratch3/NAGAPE/epic/ufs-conda/modulefiles
 module load python-ufs-land-da-wflow
