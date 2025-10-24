@@ -26,7 +26,7 @@ echo "HOME=${HOME}"
 [[ ${machine} = gaea ]] && NODE_PATH=""
 [[ ${machine} = orion ]] && NODE_PATH="/work/noaa/epic/role-epic"
 [[ ${machine} = hercules ]] && NODE_PATH="/work/noaa/epic/role-epic"
-[[ ${machine} = ursa ]] && NODE_PATH='/scratch4/NAGAPE/epic/role.epic"
+[[ ${machine} = ursa ]] && NODE_PATH="/scratch4/NAGAPE/epic/role.epic"
 echo "NODE_PATH=${NODE_PATH}"
 
 ( set -x ; ls -ld ${NODE_PATH} && ls -al ${NODE_PATH}/. )
