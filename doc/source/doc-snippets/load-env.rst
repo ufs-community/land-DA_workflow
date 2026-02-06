@@ -5,4 +5,4 @@
    module load wflow_<platform>
    conda activate land_da
 
-where ``<platform>`` is ``hera``, ``orion``, ``hercules``, or ``gaeac6``. 
+where ``<platform>`` is ``ursa``, ``orion``, ``hercules``, or ``gaeac6``. 

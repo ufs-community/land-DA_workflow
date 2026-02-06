@@ -4,7 +4,7 @@
 Testing the Land DA Workflow
 ************************************
 
-This chapter provides instructions for using the Land DA CTest suite. These steps are designed for use on :ref:`Level 1 <LevelsOfSupport>` systems (e.g., Hera and Orion) and may require significant changes on other systems. 
+This chapter provides instructions for using the Land DA CTest suite. These steps are designed for use on :ref:`Level 1 <LevelsOfSupport>` systems (e.g., Ursa and Hercules) and may require significant changes on other systems. 
 
 .. attention:: 
 
@@ -27,7 +27,7 @@ From the working directory (``$LANDDAROOT``), navigate to ``build`` and run:
    module load build_<platform>_intel 
    ctest
 
-where ``<account_name>`` corresponds to the user's actual account name, ``<partition>`` is a valid partition on the platform of choice (e.g., ``debug`` or ``orion``), and ``<platform>`` is ``hera``, ``orion``, ``hercules``, or ``gaeac6``.
+where ``<account_name>`` corresponds to the user's actual account name, ``<partition>`` is a valid partition on the platform of choice (e.g., ``debug`` or ``orion``), and ``<platform>`` is ``ursa``, ``orion``, ``hercules``, or ``gaeac6``.
 
 This will submit an interactive job, load the appropriate modulefiles, and run the CTests. 
 
@@ -54,7 +54,9 @@ Method #2: Run from the ``test`` Directory
 
 .. note:: 
 
-   This method works only on Hera, Orion, and Hercules and will run even if the Land DA System has not been built yet. 
+   This method works only on Ursa, Orion, and Hercules and will run even if the Land DA System has not been built yet. 
+
+   .. COMMENT: What about Gaea-C6?
 
 From the working directory (``$LANDDAROOT``), navigate to ``test`` and run: 
 

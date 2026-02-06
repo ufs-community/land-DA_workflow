@@ -31,7 +31,7 @@ If the first few tasks run successfully, but future tasks go DEAD, users will ne
 How do I restart a DEAD task?
 =============================
 
-On platforms that utilize Rocoto workflow software (including Hera and Orion), if something goes wrong with the workflow, a task may end up in the DEAD state:
+On platforms that utilize Rocoto workflow software (including Ursa and Hercules), if something goes wrong with the workflow, a task may end up in the DEAD state:
 
 .. code-block:: console
 

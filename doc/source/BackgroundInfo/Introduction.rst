@@ -57,7 +57,7 @@ Background Information
 Building, Running, and Testing the Land DA System
 ===================================================
 
-   * :numref:`Chapter %s: Land DA Workflow <BuildRunLandDA>` explains how to build and run the Land DA System on :ref:`Level 1 <LevelsOfSupport>` systems (currently Hera, Orion, Hercules, and Gaea-C6).
+   * :numref:`Chapter %s: Land DA Workflow <BuildRunLandDA>` explains how to build and run the Land DA System on :ref:`Level 1 <LevelsOfSupport>` systems (currently Ursa, Orion, Hercules, and Gaea-C6).
    * :numref:`Chapter %s: Containerized Land DA Workflow <Container>` explains how to build and run the containerized Land DA System on non-Level 1 systems. 
    * :numref:`Chapter %s: Testing the Land DA Workflow <TestingLandDA>` explains how to run Land DA System tests. 
 
@@ -85,7 +85,7 @@ The Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-
 
 When posting a question, it is recommended that users provide the following information: 
 
-* The platform or system being used (e.g., Hera, Orion, container)
+* The platform or system being used (e.g., Ursa, Hercules, container)
 * The version of the Land DA System being used (e.g., ``develop``, ``release/public-v2.0.0``). (To determine this, users can run ``git branch``, and the name of the branch with an asterisk ``*`` in front of it is the name of the branch or tag they are working with.) Note that the Land DA version being used and the version of the documentation being used should match, or users will run into difficulties.
 * Stage of the application when the issue appeared (i.e., build/compilation, configuration, or forecast run)
 * Contents of relevant configuration files

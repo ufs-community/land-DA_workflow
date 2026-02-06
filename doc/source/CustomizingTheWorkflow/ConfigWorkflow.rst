@@ -339,7 +339,7 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    Output frequency of the land model component (in seconds).
 
 ``MACHINE:`` (Default: ``"/machine/platform/name"`` )
-   The machine (a.k.a. platform or system) on which the workflow will run. The actual value is provided by the user via the ``-p=MACHINE`` command line argument or derived in ``setup_wflow_env.py`` from other parameters if possible. Currently supported platforms are listed in :numref:`Section %s <LevelsOfSupport>`. Valid values: ``"hera"`` | ``"hercules"`` | ``"orion"`` | ``gaeac6``
+   The machine (a.k.a. platform or system) on which the workflow will run. The actual value is provided by the user via the ``-p=MACHINE`` command line argument or derived in ``setup_wflow_env.py`` from other parameters if possible. Currently supported platforms are listed in :numref:`Section %s <LevelsOfSupport>`. Valid values: ``"ursa"`` | ``"hercules"`` | ``"orion"`` | ``gaeac6``
 
 ``MED_COUPLING_MODE:`` (Default: ``"ufs.nfrac.aoflux"`` )
    :term:`CMEPS` coupling mode. Valid values: ``"ufs.frac"`` | ``"ufs.nfrac.aoflux"``. ``"ufs.frac"`` is used with the active FV3 atmospheric component (e.g., in :term:`ATML` configurations), whereas ``"ufs.nfrac.aoflux"`` is used with the data atmosphere component (e.g., :term:`LND` configurations). 

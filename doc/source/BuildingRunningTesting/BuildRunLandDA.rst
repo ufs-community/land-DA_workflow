@@ -1,7 +1,7 @@
 .. _BuildRunLandDA:
 
 ***********************************************
-Land DA Workflow (Hera/Orion/Hercules/Gaea-C6)
+Land DA Workflow (Ursa/Orion/Hercules/Gaea-C6)
 ***********************************************
 
 This chapter provides instructions for building and running the Unified Forecast System (:term:`UFS`) Land DA System using a Jan. 19-20, 2025 00z sample :term:`LND` :term:`warmstart` case using :term:`ERA5` and :term:`IMS` data and the 3D-Var algorithm with the UFS Noah-MP land component and data atmosphere (:term:`DATM`) component.
@@ -10,7 +10,7 @@ This chapter provides instructions for building and running the Unified Forecast
 
 .. attention::
    
-   These steps are designed for use on :ref:`Level 1 <LevelsOfSupport>` systems (e.g., Hera, Orion) and may require significant changes on other systems. It is recommended that users on other systems run the containerized version of Land DA. Users may reference :numref:`Chapter %s: Containerized Land DA Workflow <Container>` for instructions.
+   These steps are designed for use on :ref:`Level 1 <LevelsOfSupport>` systems (e.g., Ursa, Hercules) and may require significant changes on other systems. It is recommended that users on other systems run the containerized version of Land DA. Users may reference :numref:`Chapter %s: Containerized Land DA Workflow <Container>` for instructions.
 
 .. _create-dir:
 
@@ -142,7 +142,7 @@ Users may configure other elements of an experiment in ``config.yaml`` if desire
 Data
 ------
 
-:numref:`Table %s <Level1Data>` shows the locations of pre-staged data on NOAA :term:`RDHPCS` (e.g., Hera, Orion). These data locations are already linked to the Land DA System during the build but are provided here for informational purposes. 
+:numref:`Table %s <Level1Data>` shows the locations of pre-staged data on NOAA :term:`RDHPCS` (e.g., Ursa, Hercules). These data locations are already linked to the Land DA System during the build but are provided here for informational purposes. 
    
 .. _Level1Data:
 
@@ -151,14 +151,15 @@ Data
 
    * - Platform
      - Data Location
-   * - Hera
-     - /scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/inputs
    * - Hercules & Orion
-     - /work/noaa/epic/UFS_Land-DA_v2.1/inputs
+     - /work/noaa/epic/UFS_Land-DA_v3.0/inputs
    * - Gaea-C6
-     - /gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/inputs
+     - /gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/inputs
+   * - Ursa
+     - /scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs
+   
 
-Users who have difficulty accessing the data on Hera, Orion, Hercules, or Gaea-C6 may download it according to the instructions in :numref:`Section %s <GetDataC>`. Its subdirectories are soft-linked to the ``land-DA_workflow/fix`` directory by the build script (``sorc/app_build.sh``); when downloading new data, it should be placed in or linked to the ``fix`` directory.
+Users who have difficulty accessing the data on Ursa, Orion, Hercules, or Gaea-C6 may download it according to the instructions in :numref:`Section %s <GetDataC>`. Its subdirectories are soft-linked to the ``land-DA_workflow/fix`` directory by the build script (``sorc/app_build.sh``); when downloading new data, it should be placed in or linked to the ``fix`` directory.
 
 .. _generate-wflow:
 
@@ -171,7 +172,7 @@ Generate the experiment directory by running:
 
    ./setup_wflow_env.py -p=<platform>
 
-where ``<platform>`` is ``hera``, ``orion``, ``hercules``, or ``gaeac6``.
+where ``<platform>`` is ``ursa``, ``orion``, ``hercules``, or ``gaeac6``.
 
 If the command runs without issue, this script will print override messages, experiment details, and "0 errors found" messages to the console, similar to the following excerpts: 
 
