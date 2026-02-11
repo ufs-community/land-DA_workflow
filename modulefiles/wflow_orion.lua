@@ -9,6 +9,6 @@ load("contrib")
 load("ruby/3.2.3")
 load("rocoto/1.3.7")
 
-prepend_path("MODULEPATH","/work/noaa/epic/UFS-conda/modulefiles")
+prepend_path("MODULEPATH","/work/noaa/epic/UFS-conda-v2/modulefiles")
 load("python-ufs-land-da-wflow")
 
