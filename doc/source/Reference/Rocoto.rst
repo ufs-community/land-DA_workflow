@@ -101,7 +101,7 @@ After issuing the ``rocotorun`` command several times (over the course of severa
    200001040000         forecast      1132186       SUCCEEDED            0       1       31.0
    200001040000       plot_stats      1132319       RUNNING              -       1        0.0
 
-When the workflow runs to completion, all tasks will be marked as SUCCEEDED. The log file for each task is located in ``$LANDDAROOT/ptmp/test/com/output/logs``. If any task fails, the corresponding log file can be checked for error messages. Optional arguments for the ``rocotostat`` command can be found in the `Rocoto documentation <http://christopherwharrop.github.io/rocoto/>`_.
+When the workflow runs to completion, all tasks will be marked as SUCCEEDED. The log file for each task is located in ``$BASEDIR/ptmp/test/com/output/logs``. If any task fails, the corresponding log file can be checked for error messages. Optional arguments for the ``rocotostat`` command can be found in the `Rocoto documentation <http://christopherwharrop.github.io/rocoto/>`_.
 
 .. _rocotocheck:
 

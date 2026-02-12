@@ -48,7 +48,7 @@ On platforms that utilize Rocoto workflow software (including Ursa and Hercules)
    200001030000   plot_stats         -            -             -       -          -
 
 
-This means that the DEAD task has not completed successfully, so the workflow has stopped. Once the issue has been identified and fixed (e.g., by referencing the log files in ``$LANDDAROOT/ptmp/test/com/output/logs``), users can rewind, or "undo," the failed task using the ``rocotorewind`` command:
+This means that the DEAD task has not completed successfully, so the workflow has stopped. Once the issue has been identified and fixed (e.g., by referencing the log files in ``$BASEDIR/ptmp/test/com/output/logs``), users can rewind, or "undo," the failed task using the ``rocotorewind`` command:
 
 .. code-block:: console
 

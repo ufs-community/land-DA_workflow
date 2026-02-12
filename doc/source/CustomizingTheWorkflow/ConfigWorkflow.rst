@@ -261,7 +261,7 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    The run environment. Set to “test” during the initial testing phase, “para” when running in parallel (on a schedule), and “prod” in production. In operations, this is the operations root directory (aka ``$OPSROOT``). In the Land DA System, the default name for this directory is ``test_*`` _________. For more on NCO-compliant directory structure, see the :ref:`Note on NCO Standards <nco-note>`. 
 
 ``exp_basedir:`` (Default: "{{ exp_basedir }}" )
-   The full path to the parent directory of ``land-DA_workflow`` (i.e., ``$LANDDAROOT`` in the documentation). The actual value is derived in the ``setup_wflow_env.py`` file. 
+   The full path to the parent directory of ``land-DA_workflow`` (i.e., ``$BASEBIR`` in the documentation). The actual value is derived in the ``setup_wflow_env.py`` file. 
 
 ``EXP_CASE_NAME:`` (Default: ``None`` )
    A name for the experiment. This variable can be changed to any name the user wants (but note that whitespace and some punctuation characters are not allowed). However, the best names will indicate useful information about the experiment. Each of the sample cases provided sets the experiment name to ``app_[forcing_]starttype_##`` where ``<app>`` is the configuration (:term:`LND` or :term:`ATML`), ``<forcing>`` refers to the atmospheric forcing data used (if any), and ``<starttype>`` indicates either a warmstart or coldstart forecast. 
