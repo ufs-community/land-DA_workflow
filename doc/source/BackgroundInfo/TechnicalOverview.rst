@@ -17,6 +17,8 @@ Minimum System Requirements
 
 :term:`UFS` applications, models, and components require a UNIX-based operating system (i.e., Linux or MacOS). 
 
+.. COMMENT: Check system requirements before release
+
 Additionally, users will need:
 
    * Disk space: ~104 GB 
@@ -60,7 +62,7 @@ Four levels of support have been defined for :term:`UFS` applications, and the L
 
 Level 1 Systems
 ==================
-Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and the :term:`jedi-bundle`. Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them. For the most updated information on stack locations, compilers, and MPI, users can check the :land-wflow-repo:`build and run version files <tree/develop/versions>` for their machine of choice. 
+Preconfigured (Level 1) systems for Land DA already have the required external libraries available in a central location via :term:`spack-stack` and the :term:`jedi-bundle`. Land DA is expected to build and run out-of-the-box on these systems, and users can download the Land DA code without first installing prerequisite software. With the exception of the Land DA container, users must have access to these Level 1 systems in order to use them. For the most updated information on stack locations, compilers, and MPI, users can check the :land-wflow-repo:`run version file <tree/develop/versions>` for their machine of choice. 
 
 .. _stack-compiler-locations:
 
@@ -101,10 +103,12 @@ Preconfigured (Level 1) systems for Land DA already have the required external l
      - /opt/spack-stack/spack-stack-1.6.0/envs/fms-2024.01/install/modulefiles/Core (inside the container)
      - /opt/jedi-bundle (inside the container)
 
+.. COMMENT: Verify container info for release
+
 Level 2-4 Systems
 ===================
 
-On non-Level 1 platforms, the Land DA System can be :ref:`run within a container <Container>` that includes the prerequisite software; otherwise, the required libraries will need to be installed as part of the Land DA build process. Once these prerequisite libraries are installed, Land DA should build and run successfully. However, users may need to perform additional troubleshooting on Level 3 or 4 systems since little or no pre-release testing has been conducted on these systems. Currently, the Land DA System is not supported on Level 2-4 systems except via container. 
+On non-Level 1 platforms, the Land DA System can be :ref:`run within a container <Container>` that includes the prerequisite software; otherwise, the required libraries will need to be installed before building the Land DA System. Once these prerequisite libraries are installed, Land DA should build and run successfully. However, users may need to perform additional troubleshooting on Level 3 or 4 systems since little or no pre-release testing has been conducted on these systems. Currently, the Land DA System is not supported on Level 2-4 systems except via container. 
 
 .. _repos-dir-structure:
 
@@ -175,12 +179,12 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     ├── (lib64)
     ├── modulefiles
     │     ├── conda.lua
-    │     ├── build_<platform>_<compiler>.lua
+    │     ├── ufs_common.lua
+    │     ├── ufsland_<platform>.<compiler>.lua
     │     └── wflow_<platform>.lua
     ├── parm
     │     ├── config_samples
-    │     │     ├── config.*.yaml
-    │     │     └── samples_cadre
+    │     │     └──  config.*.yaml 
     │     ├── jedi
     │     │     ├── jcb-algorithms
     │     │     ├── jcb-base_snow.yaml.j2
@@ -189,12 +193,10 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     │     │     ├── template.ATML.*
     │     │     ├── template.LND.*
     │     │     └── template.land_analysis.yaml
-    │     ├── conda_environment.yml
+    │     ├── automate_launch_script.py
     │     ├── detect_platform.sh
-    │     ├── get_crontab_contents.py
     │     ├── run_container_executable.sh
-    │     ├── setup_wflow_env.py
-    │     └── task_load_modules_run_jjob.sh
+    │     └── setup_wflow_env.py
     ├── scripts
     |     └── exlandda_*.sh
     ├── sorc
@@ -206,28 +208,27 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
     |     |           ├── apply_incr_noahmp_snow.f90
     |     |           └── NoahMPdisag_module.f90
     │     ├── (build)
-    |     ├── calfIMS.fd
+    |     ├── calcfIMS.fd
     |     |     └── sorc
     |     |           ├── IMSaggregate_mod.f90
     |     |           └── driver_fIMS.f90
-    │     ├── (conda)
-    |     |     └── envs
-    |     |           └── land_da 
     │     ├── jcb-algorithms
     |     ├── jcb-gdas
     │     ├── test
-    │     │     ├── <platform>_ctest.sh
-    │     │     └── run_<platform>_ctest.sh
+    │     │     ├── <machine>_ctest.sh
+    │     │     ├── run_<machine>_ctest.sh
+    │     │     └── run_ctest_platform.sh
     │     ├── tile2tile_converter.fd
     │     └── ufs_model.fd
     |           ├── CDEPS-interface
     |           ├── FV3
     |           └── NOAHMP-interface
     ├── ush
+    |     ├── *_2ioda.py
+    |     ├── compare.py
     |     ├── fill_jinja_template.py
-    |     ├── ghcn_snod2ioda.py 
     |     ├── hofx_analysis_stats.py
-    |     ├── imsfv3_scf2ioda.py
+    |     ├── jcb_setup.py
     |     ├── letkf_create_ens.py
     |     └── plot_*.py
     ├── versions
@@ -265,4 +266,4 @@ The ``land-DA_workflow`` is evolving to follow the :term:`NCEP` Central Operatio
    * - ush
      - Utility scripts
    * - versions
-     - Contains ``build.ver_*`` and ``run.ver_*``, which are files that get automatically sourced in order to track package versions at compile and run time respectively.
+     - Contains ``run.ver_*`` files, which get automatically sourced in order to track package versions at runtime.
