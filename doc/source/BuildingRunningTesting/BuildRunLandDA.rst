@@ -1,8 +1,8 @@
 .. _BuildRunLandDA:
 
-***********************************************
-Land DA Workflow (Ursa/Orion/Hercules/Gaea-C6)
-***********************************************
+***********************************************************
+Running the Land DA Workflow (Ursa/Orion/Hercules/Gaea-C6)
+***********************************************************
 
 This chapter provides instructions for building and running the Unified Forecast System (:term:`UFS`) Land DA System using a Jan. 19-20, 2025 00z sample :term:`LND` :term:`warmstart` case using :term:`ERA5` and :term:`IMS` data and the 3D-Var algorithm with the UFS Noah-MP land component and data atmosphere (:term:`DATM`) component.
 
@@ -30,6 +30,8 @@ Clone the Land DA workflow repository. To clone the ``develop`` branch, run:
 
    git clone -b develop --recursive https://github.com/ufs-community/land-DA_workflow.git
 
+.. Update for next release!!!
+
 To clone the most recent release, run the same command with |branch| in place of ``develop``:
 
 .. code-block:: console
@@ -49,7 +51,7 @@ Build the Land DA System
 
    .. code-block:: console
 
-      cd $LANDDAROOT/land-DA_workflow/sorc
+      cd $BASEDIR/land-DA_workflow/sorc
 
 #. Run the build script ``app_build.sh``:
 
@@ -79,23 +81,26 @@ Build the Land DA System
 Configure an Experiment
 *************************
 
-Several sample experiment configurations come with the Land DA System. Although this chapter outlines how to run the ``config.LND.era5.3dvar.ims.warmstart.yaml`` case, the following cases are available for use in the ``land-DA_workflow/parm/config_samples`` directory:
+Several sample experiment configurations come with the Land DA System. Although this chapter outlines how to run the ``config.LND.era5.3dvar.ims.DA-fcst.warmstart.yaml`` case, the following cases are available for use in the ``land-DA_workflow/parm/config_samples`` directory:
 
-* ``config.ATML.3dvar.ghcn.coldstart.yaml``
-* ``config.LND.era5.letkfoi.ghcn.coldstart.yaml``
-* ``config.ATML.3dvar.ghcn.warmstart.yaml``
-* ``config.LND.gswp3.3dvar.ghcn.coldstart.yaml``
-* ``config.LND.era5.3dvar.ims.warmstart.yaml``
-* ``config.LND.gswp3.letkfoi.ghcn.warmstart.yaml``
-* ``config.LND.era5.letkfoi.smap.warmstart.yaml`` (in testing; not yet fully functional)
+* ``config.ATML.3dvar.ghcn.DA-fcst.coldstart.yaml``
+* ``config.ATML.3dvar.ghcn.DA-fcst.warmstart.yaml``
+* ``config.LND.bkg_ext_src_test.yaml``
+* ``config.LND.era5.3dvar.ims.DA-fcst.warmstart.yaml``
+* ``config.LND.era5.letkfoi.ghcn.DA-fcst.coldstart.yaml``
+* ``config.LND.era5.letkfoi.smap.free-fcst.warmstart.yaml``
+* ``config.LND.era5.letkfoi.smops.free-fcst.coldstart.yaml``
+* ``config.LND.gswp3.3dvar.ghcn.DA-fcst.coldstart.yaml``
+* ``config.LND.gswp3.letkfoi.ghcn.DA-fcst.warmstart.yaml``
 
 The sample configuration files are named based on their features: 
 
 * Configuration (:term:`LND` or :term:`ATML`)
 * Atmospheric forcing data (``gswp3`` or ``era5``) --- if any
-* :term:`DA <DA>` algorithm (``letkf-oi`` or ``3dvar``)
-* Snow depth data (:term:`IMS`, :term:`GHCN`, :term:`SFCSNO`) or soil moisture data (:term:`SMAP`)
-* Type of forecast start (i.e., :term:`warmstart` or :term:`coldstart`)
+* :term:`DA <DA>` algorithm (``letkfoi`` or ``3dvar``)
+* Snow depth data source (:term:`IMS`, :term:`GHCN`, :term:`SFCSNO`) or soil moisture data (:term:`SMAP`, :term:`SMOPS`)
+* Type of forecast (i.e., :term:`DA-fcst` or :term:`free-fcst`)
+* Forecast start (i.e., :term:`warmstart` or :term:`coldstart`)
 
 Users are encouraged to explore and modify the options available! 
 
@@ -108,8 +113,6 @@ To load the workflow environment, run:
 
 .. include:: ../doc-snippets/load-env.rst
 
-This activates the ``land_da`` conda environment, and the user typically sees ``(land_da)`` in front of the Terminal prompt at this point.
-
 .. _configure-expt:
 
 Modify the Workflow Configuration YAML
@@ -119,13 +122,13 @@ Copy the experiment settings into ``config.yaml``:
 
 .. code-block:: console
 
-   cd $LANDDAROOT/land-DA_workflow/parm
-   cp config_samples/config.LND.era5.3dvar.ims.warmstart.yaml config.yaml
+   cd $BASEDIR/land-DA_workflow/parm
+   cp config_samples/config.LND.era5.3dvar.ims.DA-fcst.warmstart.yaml config.yaml
 
 Users will need to configure the ``account`` variable in ``config.yaml`` and choose an ``EXP_CASE_NAME`` if a different name for the experiment is desired: 
 
    * ``account:`` A valid account name. Most NOAA :term:`RDHPCS` systems require a valid account name; other systems may not (in which case, any value will do).
-   * ``EXP_CASE_NAME:`` This variable can be changed to any name the user wants (but note that whitespace and some punctuation characters are not allowed). However, the best names will indicate useful information about the experiment. This documentation uses ``lnd_era5_warmstart_00`` to indicate that it is an ERA5-LND warmstart case. 
+   * ``EXP_CASE_NAME:`` This variable can be changed to any name the user wants (but note that whitespace and some punctuation characters are not allowed). However, the best names will indicate useful information about the experiment. This documentation uses ``lnd_era5_3dvar_ims_00`` to indicate that it is an ERA5-LND case using 3D-Var data assimilation of IMS observations. 
 
 .. note::
 
@@ -179,33 +182,40 @@ If the command runs without issue, this script will print override messages, exp
 .. code-block:: console
 
    Python Log Level= str: INFO, attr: 20
-   INFO::/path/to/setup_wflow_env.py::L34:: Current directory (PARMdir): /work/noaa/epic/username/hercules/landda/land-DA_workflow/parm 
-   INFO::/path/to/setup_wflow_env.py::L36:: Home directory (HOMEdir): /work/noaa/epic/username/hercules/landda/land-DA_workflow 
-   INFO::/path/to/setup_wflow_env.py::L38:: Experimental base directory (exp_basedir): /work/noaa/epic/username/hercules/landda 
-   hercules
-   INFO::/path/to/setup_wflow_env.py::L168:: Experimental case directory /work/noaa/epic/username/hercules/landda/exp_case/lnd_era5_warmstart_00 has been created.
-   INFO::/path/to/setup_wflow_env.py::L175:: Rocoto YAML template: /work/noaa/epic/username/hercules/landda/land-DA_workflow/parm/templates/template.land_analysis.yaml
+   INFO::/scratch3/NAGAPE/epic/User.Name/ursa/landda/land-DA_workflow/parm/./setup_wflow_env.py::L35:: Current directory (PARMdir): /scratch3/NAGAPE/epic/User.Name/ursa/landda/land-DA_workflow/parm 
+   INFO::/scratch3/NAGAPE/epic/User.Name/ursa/landda/land-DA_workflow/parm/./setup_wflow_env.py::L37:: Home directory (HOMEdir): /scratch3/NAGAPE/epic/User.Name/ursa/landda/land-DA_workflow 
+   INFO::/scratch3/NAGAPE/epic/User.Name/ursa/landda/land-DA_workflow/parm/./setup_wflow_env.py::L39:: Experimental base directory (exp_basedir): /scratch3/NAGAPE/epic/User.Name/ursa/landda 
+   INFO::/scratch3/NAGAPE/epic/User.Name/ursa/landda/land-DA_workflow/parm/./setup_wflow_env.py::L220:: Experimental case directory /scratch3/NAGAPE/epic/User.Name/ursa/landda/exp_case/lnd_era5_3dvar_ims_00 has been created.
+   INFO::/scratch3/NAGAPE/epic/User.Name/ursa/landda/land-DA_workflow/parm/./setup_wflow_env.py::L227:: Rocoto YAML template: /scratch3/NAGAPE/epic/User.Name/ursa/landda/land-DA_workflow/parm/templates/template.land_analysis.yaml
    **************************************************
    Overriding              ACCOUNT = epic
    Overriding                  APP = LND
    Overriding           ATMOS_FORC = era5
+   Overriding      ATM_IO_LAYOUT_X = 1
+   Overriding      ATM_IO_LAYOUT_Y = 1
    ...
-   Overriding    partition_default = hercules
+   Overriding  nprocs_forecast_atm = 12
+   Overriding  nprocs_forecast_lnd = 12
+   Overriding      nprocs_per_node = 26
+   Overriding    partition_default = u1-compute
    Overriding        queue_default = batch
    Overriding               res_p1 = 97
    **************************************************
-               LND_LAYOUT_X: 1
-   DATM_STREAM_FN_LAST_DATE: 
-                JEDI_PY_VER: python3.10
+           nnodes_forecast: 1
+               DCOMINsmops: 
+                       IMO: 384
+                      PTMP: /path/to/landda/ptmp
+             LND_CALC_SNET: .true.
    ...
-                  model_ver: v2.1.0
-                  OUTPUT_FH: 1 -1
-                  DT_RUNSEQ: 3600
-                   KEEPDATA: YES
-   INFO::/path/to/uwtools/config/validator.py::L76::0 schema-validation errors found in Rocoto config
-   INFO::/path/to/uwtools/rocoto.py::L66::0 Rocoto XML validation errors found
+   CUSTOM_JEDI_CONFIG_FLAG: NO
+             IC_DATA_MODEL: gfs
+            native_default: None
+                  OBS_SMAP: NO
+              do_jedi_snow: YES
+   INFO::/scratch3/NAGAPE/epic/ufs-conda/miniconda3/envs/ufs-land-da-wflow-i11/lib/python3.11/site-packages/uwtools/config/validator.py::L81::Schema validation succeeded for Rocoto config
+   INFO::/scratch3/NAGAPE/epic/ufs-conda/miniconda3/envs/ufs-land-da-wflow-i11/lib/python3.11/site-packages/uwtools/rocoto.py::L81::Schema validation succeeded for Rocoto XML
 
-The setup script (``./setup_wflow_env.py``) will create an experiment directory, located by default at ``../../exp_case/${EXP_CASE_NAME}/``. It will populate this directory with the experiment configuration file (``land_analysis.yaml``), the workflow XML file (``land_analysis.xml``), and the workflow launch script (``launch_rocoto_wflow.sh``), as well as several directories described in :numref:`Table %s <expt_dir>` below. 
+The setup script (``./setup_wflow_env.py``) will create an experiment directory, located by default at ``${BASEDIR}/exp_case/${EXP_CASE_NAME}/``. It will populate this directory with the experiment configuration file (``land_analysis.yaml``), the workflow XML file (``land_analysis.xml``), and the workflow launch script (``launch_rocoto_wflow.sh``), as well as several directories described in :numref:`Table %s <expt_dir>` below. 
 
 .. _expt_dir:
 
@@ -215,7 +225,7 @@ The setup script (``./setup_wflow_env.py``) will create an experiment directory,
    * - File/Directory Name
      - Description
    * - ``com_dir``
-     - Symlink to the ``ptmp/test_*/com/landda/v2.1.0`` directory, which contains output files for each cycle
+     - Symlink to the ``ptmp/${envir}/com/landda/v3.0.0`` directory, which contains output files for each cycle
    * - ``land_analysis.yaml``
      - Combines information from the user's ``config.yaml`` file with machine-specific values and calculated values that will be used in the experiment. 
    * - ``land_analysis.xml``
@@ -223,9 +233,9 @@ The setup script (``./setup_wflow_env.py``) will create an experiment directory,
    * - ``launch_rocoto_wflow.sh``
      - Workflow launch script
    * - ``log_dir``
-     - Symlink to the directory containing log files for the Rocoto workflow (``ptmp/test_*/com/output/logs``)
+     - Symlink to the directory containing log files for the Rocoto workflow (``ptmp/${envir}/com/output/logs``)
    * - ``tmp_dir``
-     - Symlink to the ``ptmp/test_*/tmp`` directory, which contains the working directory and temporary/intermediate files
+     - Symlink to the ``ptmp/${envir}/tmp`` directory, which contains the working directory and temporary/intermediate files
 
 For a deeper understanding of the ``setup_wflow_env.py`` script, see :numref:`Figure %s <setup-wflow-script>`.
 
