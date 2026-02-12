@@ -73,30 +73,32 @@ Preconfigured (Level 1) systems for Land DA already have the required external l
      - MPI
      - *spack-stack* Installation
      - *jedi-bundle* Installation
-   * - Hera
-     - intel/2021.5.0
-     - impi/2021.5.1
-     - /scratch1/NCEPDEV/nems/role.epic/spack-stack/spack-stack-1.6.0/envs/fms-2024.01/install/modulefiles/Core
-     - /scratch2/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_sync
-   * - Orion
-     - intel/2021.9.0
-     - impi/2021.9.0
-     - /work/noaa/epic/role-epic/spack-stack/orion/spack-stack-1.6.0/envs/fms-2024.01/install/modulefiles/Core
-     - /work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_orion
-   * - Hercules
-     - intel/2021.9.0
-     - impi/2021.9.0
-     - /work/noaa/epic/role-epic/spack-stack/hercules/spack-stack-1.6.0/envs/fms-2024.01/install/modulefiles/Core
-     - /work/noaa/epic/UFS_Land-DA_v2.1/jedi_bundle_hercules
    * - Gaea-C6
      - intel/2023.2.0
-     - mpich/8.1.29
-     - /ncrc/proj/epic/spack-stack/c6/spack-stack-1.6.0/envs/fms-2024.01/install/modulefiles/Core
-     - /gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/jedi_bundle_sync
+     - mpich/8.1.30
+     - /ncrc/proj/epic/spack-stack/c6/spack-stack-1.9.2/envs/ue-intel-2023.2.0/install/modulefiles/Core
+       
+       /ncrc/proj/epic/spack-stack/c6/modulefiles
+     - /gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/jedi_bundle_sync
+   * - Hercules
+     - intel/2024.2.1
+     - impi/2021.13
+     - /apps/contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.1.0/install/modulefiles
+     - /work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_hercules
+   * - Orion
+     - intel/2024.2.1
+     - impi/2021.13
+     - /apps/contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.1.0/install/modulefiles
+     - /work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_orion
+   * - Ursa
+     - intel/2024.2.1 
+     - impi/2021.13
+     - /contrib/spack-stack/spack-stack-1.9.2/envs/ue-oneapi-2024.2.1/install/modulefiles
+     - /scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_ursa
    * - Container
      - intel-oneapi-compilers/2021.10.0
      - intel-oneapi-mpi/2021.9.0
-     - /opt/spack-stack/spack-stack-1.6.0/envs/unified-env/install/modulefiles/Core (inside the container)
+     - /opt/spack-stack/spack-stack-1.6.0/envs/fms-2024.01/install/modulefiles/Core (inside the container)
      - /opt/jedi-bundle (inside the container)
 
 Level 2-4 Systems
