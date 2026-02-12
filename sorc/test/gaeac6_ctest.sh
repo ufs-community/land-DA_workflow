@@ -12,7 +12,7 @@ module use /gpfs/f6/bil-fire8/world-shared/ufs-conda/modulefiles
 module load python-ufs-land-da-wflow
 
 export MPIRUN="srun"
-export JEDI_PATH="/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v2.1/jedi_bundle_sync"
+export JEDI_PATH="/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/jedi_bundle_sync"
 
 ctest
 
