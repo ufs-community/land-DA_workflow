@@ -17,14 +17,12 @@ Minimum System Requirements
 
 :term:`UFS` applications, models, and components require a UNIX-based operating system (i.e., Linux or MacOS). 
 
-.. COMMENT: Check system requirements before release
-
 Additionally, users will need:
 
-   * Disk space: ~104 GB 
+   * Disk space: ~130 GB 
 
-      * ~20 GB for basic land-only case (3.5 GB for Land DA System, 128 KB for experiment directory, 16 GB for staging and output)
-      * 84 GB for full set of Land DA data (can use smaller subset if needed)
+      * ~19 GB for basic land-only case (2.4 GB for Land DA System, 136 KB for experiment directory, 16 GB for staging and output)
+      * 111 GB for full set of Land DA data (can use smaller subset if needed)
 
    * 26 CPU cores (13 CPUs may be possible, but it has not been tested)
 

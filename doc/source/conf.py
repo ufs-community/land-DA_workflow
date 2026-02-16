@@ -46,11 +46,12 @@ pygments_style = 'sphinx'
 
 # Documentation-wide substitutions
 
+# UPDATE for release! 
 rst_prolog = """
 .. |latestr| replace:: v2.0.0
 .. |tag| replace:: ``ufs-land-da-v2.0.0``
 .. |branch| replace:: ``release/public-v2.0.0``
-.. |spack-stack-ver| replace:: v1.6.0
+.. |spack-stack-ver| replace:: v1.9.2
 .. |data| replace:: v2.1
 """
 
