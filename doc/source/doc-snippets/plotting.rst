@@ -17,7 +17,7 @@ The histogram plots OMB values on the x-axis and frequency density values on the
 
 .. note::
 
-   There are many options for viewing plots, and instructions for this are highly machine dependent. Users should view the data transfer documentation for their system to secure copy files from a remote system (such as :term:`RDHPCS`) to their local system. 
+   There are many options for viewing plots, and instructions for this are highly machine dependent. Users should view the data transfer documentation for their system to secure-copy files from a remote system (such as :term:`RDHPCS`) to their local system. 
    Another option is to download `Xming <https://sourceforge.net/projects/xming/>`_ (for Windows) or `XQuartz <https://www.xquartz.org/>`_ (for Mac), use the ``-X`` option when connecting to a remote system via SSH, and run:
 
    .. code-block:: console

@@ -51,7 +51,7 @@ Build the Land DA System
 
    .. code-block:: console
 
-      cd $BASEDIR/land-DA_workflow/sorc
+      cd ${BASEDIR}/land-DA_workflow/sorc
 
 #. Run the build script ``app_build.sh``:
 
@@ -98,7 +98,7 @@ The sample configuration files are named based on their features:
 * Configuration (:term:`LND` or :term:`ATML`)
 * Atmospheric forcing data (``gswp3`` or ``era5``) --- if any
 * :term:`DA <DA>` algorithm (``letkfoi`` or ``3dvar``)
-* Snow depth data source (:term:`IMS`, :term:`GHCN`, :term:`SFCSNO`) or soil moisture data (:term:`SMAP`, :term:`SMOPS`)
+* Snow depth data source (:term:`IMS`, :term:`GHCN`, :term:`SFCSNO`) or soil moisture data source (:term:`SMAP`, :term:`SMOPS`)
 * Type of forecast (i.e., :term:`DA-fcst` or :term:`free-fcst`)
 * Forecast start (i.e., :term:`warmstart` or :term:`coldstart`)
 
@@ -122,17 +122,17 @@ Copy the experiment settings into ``config.yaml``:
 
 .. code-block:: console
 
-   cd $BASEDIR/land-DA_workflow/parm
+   cd ${BASEDIR}/land-DA_workflow/parm
    cp config_samples/config.LND.era5.3dvar.ims.DA-fcst.warmstart.yaml config.yaml
 
 Users will need to configure the ``account`` variable in ``config.yaml`` and choose an ``EXP_CASE_NAME`` if a different name for the experiment is desired: 
 
-   * ``account:`` A valid account name. Most NOAA :term:`RDHPCS` systems require a valid account name; other systems may not (in which case, any value will do).
+   * ``ACCOUNT:`` A valid account name. Most NOAA :term:`RDHPCS` systems require a valid account name; other systems may not (in which case, any value will do).
    * ``EXP_CASE_NAME:`` This variable can be changed to any name the user wants (but note that whitespace and some punctuation characters are not allowed). However, the best names will indicate useful information about the experiment. This documentation uses ``lnd_era5_3dvar_ims_00`` to indicate that it is an ERA5-LND case using 3D-Var data assimilation of IMS observations. 
 
 .. note::
 
-   To determine an appropriate ``account`` field for Level 1 systems that use the Slurm job scheduler, run ``saccount_params``. On other systems, running ``groups`` will return a list of projects that the user has permissions for. Not all listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
+   To determine an appropriate ``ACCOUNT`` field for Level 1 systems that use the Slurm job scheduler, run ``saccount_params``. On other systems, running ``groups`` will return a list of projects that the user has permissions for. Not all listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
 
 Users may configure other elements of an experiment in ``config.yaml`` if desired. For example, users may wish to alter ``DATE_FIRST_CYCLE``, ``DATE_LAST_CYCLE``, and/or ``DATE_CYCLE_FREQ_HR`` to indicate a different start cycle, end cycle, and increment. Users may also wish to change the DA algorithm from ``3dvar`` to ``letkf-oi`` via the ``JEDI_ALGORITHM`` variable. Users who wish to run a more complex experiment may change the values in ``config.yaml`` using information from Sections :numref:`%s: Workflow Configuration Parameters <ConfigWorkflow>`, :numref:`%s: I/O for the Land DA System <IO>`, and :numref:`%s: JEDI DA System <DASystem>`. 
 
@@ -177,7 +177,7 @@ Generate the experiment directory by running:
 
 where ``<platform>`` is ``ursa``, ``orion``, ``hercules``, or ``gaeac6``.
 
-If the command runs without issue, this script will print override messages, experiment details, and "0 errors found" messages to the console, similar to the following excerpts: 
+If the command runs without issue, this script will print override messages, experiment details, and "Schema validation succeeded" messages to the console, similar to the following excerpts: 
 
 .. code-block:: console
 
@@ -201,17 +201,18 @@ If the command runs without issue, this script will print override messages, exp
    Overriding        queue_default = batch
    Overriding               res_p1 = 97
    **************************************************
-           nnodes_forecast: 1
-               DCOMINsmops: 
-                       IMO: 384
-                      PTMP: /path/to/landda/ptmp
-             LND_CALC_SNET: .true.
+                    res_p1: 97
+           ATM_IO_LAYOUT_X: 1
+                       APP: LND
+                 OBS_SMOPS: NO
+       DO_BKG_ANAL_EXT_SRC: NO
    ...
+           nprocs_forecast: 26
+                 DT_RUNSEQ: 3600
+                    FCSTHR: 24
+                CCPP_SUITE: FV3_GFS_v17_p8_ugwpv1
+       nprocs_forecast_lnd: 12
    CUSTOM_JEDI_CONFIG_FLAG: NO
-             IC_DATA_MODEL: gfs
-            native_default: None
-                  OBS_SMAP: NO
-              do_jedi_snow: YES
    INFO::/scratch3/NAGAPE/epic/ufs-conda/miniconda3/envs/ufs-land-da-wflow-i11/lib/python3.11/site-packages/uwtools/config/validator.py::L81::Schema validation succeeded for Rocoto config
    INFO::/scratch3/NAGAPE/epic/ufs-conda/miniconda3/envs/ufs-land-da-wflow-i11/lib/python3.11/site-packages/uwtools/rocoto.py::L81::Schema validation succeeded for Rocoto XML
 
@@ -224,10 +225,12 @@ The setup script (``./setup_wflow_env.py``) will create an experiment directory,
 
    * - File/Directory Name
      - Description
+   * - ``automate_launch_script.py``
+     - Script to automate running of the launch script (``launch_rocoto_wflow.sh``)
    * - ``com_dir``
      - Symlink to the ``ptmp/${envir}/com/landda/v3.0.0`` directory, which contains output files for each cycle
    * - ``land_analysis.yaml``
-     - Combines information from the user's ``config.yaml`` file with machine-specific values and calculated values that will be used in the experiment. 
+     - Combines information from the user's ``config.yaml`` file with machine-specific values and calculated values that will be used in the experiment 
    * - ``land_analysis.xml``
      - Workflow XML file used by the Rocoto workflow manager to determine which tasks (or "jobs") to submit to the batch system and when to submit them (e.g., when task dependencies are satisfied) 
    * - ``launch_rocoto_wflow.sh``
@@ -242,7 +245,7 @@ For a deeper understanding of the ``setup_wflow_env.py`` script, see :numref:`Fi
 Run the Experiment
 ********************
 
-To run the experiment, users can automate job submission via :term:`crontab` or submit tasks manually via ``rocotorun``. 
+To run the experiment, users can automate job submission or submit tasks manually via ``rocotorun``. 
 
 .. _wflow-overview:
 
@@ -251,21 +254,57 @@ Workflow Overview
 
 .. include:: ../doc-snippets/wflow-task-table.rst
 
-
 .. _automated-run:
 
 Automated Run
 ==================
 
-To automate task submission, users must be on a system where :term:`cron` is available. On Orion, cron is only available on the orion-login-1 node, and likewise on Hercules, it is only available on hercules-login-1, so users will need to work on those nodes when running cron jobs on Orion/Hercules.
+Via Crontab
+-------------
+To automate task submission via crontab, users must be on a system where :term:`cron` is available. On Orion, cron is only available on the orion-login-1 node, and on Hercules, it is only available on hercules-login-1, so users will need to work on those nodes when running cron jobs on Orion/Hercules.
 
 .. include:: ../doc-snippets/automated-run.rst
 
 To check the status of the experiment, see :numref:`Section %s <VerifySuccess>` on tracking experiment progress.
 
-.. note::
+Via ``automate_launch_script.py``
+----------------------------------
 
-   If users run into issues with the launch script, they can run ``conda deactivate`` before running the launch script. 
+To automate task submission using ``automate_launch_script.py``, simply run the script:
+
+.. code-block:: console 
+
+   ./automate_launch_script.py
+
+The console will output progress messages every 10 seconds by default: 
+
+.. code-block:: console 
+   
+   Running ./launch_rocoto_wflow.sh ...
+    Cycles: 0 out of 2 completed.
+    Detected wflow_status = IN PROGRESS
+    Waiting 10 seconds before next run ...
+   
+   ...
+
+   Running ./launch_rocoto_wflow.sh ...
+    Cycles: 1 out of 2 completed.
+    Detected wflow_status = IN PROGRESS
+    Waiting 10 seconds before next run ...
+
+   Running ./launch_rocoto_wflow.sh ...
+    Cycles: 2 out of 2 completed.
+    Detected wflow_status = SUCCESS
+
+    !!! ===== Workflow completed successfully. Stopping ===== !!!
+
+Users can change how often the script relaunches by adding the ``-i`` argument. For example, to run the workflow launch script every 15 seconds, users would run: 
+
+.. code-block:: console
+
+   ./automate_launch_script.py -i=15
+
+To check the status of the experiment, see :numref:`Section %s <VerifySuccess>` on tracking experiment progress.
 
 .. _manual-run:
 

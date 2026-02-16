@@ -48,4 +48,4 @@ Check for the output files for each cycle in the experiment directory:
 
    ls -l $BASEDIR/ptmp/<envir>/com/landda/<model_ver>/landda.YYYYMMDD
 
-where ``YYYYMMDD`` is the cycle date, and ``<model_ver>`` is the model version (currently v2.1.0 in the ``develop`` branch). The experiment should generate several restart files. 
+where ``YYYYMMDD`` is the cycle date, and ``<model_ver>`` is the model version (currently v3.0.0 in the ``develop`` branch). The experiment should generate several restart files. 

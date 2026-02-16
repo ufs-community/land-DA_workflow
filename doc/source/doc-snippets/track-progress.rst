@@ -32,6 +32,6 @@ If ``rocotorun`` was successful, the ``rocotostat`` command will print a status 
    202501200000     forecast                           -             -            -       -          -
    202501200000   plot_stats                           -             -            -       -          -
 
-Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command (whether issued manually or via cron automation). For each task, a log file is generated. These files are stored in ``$BASEDIR/ptmp/test_*/com/output/logs``. 
+Note that the status table printed by ``rocotostat`` only updates after each ``rocotorun`` command (whether issued manually or via cron/launch script automation). For each task, a log file is generated. These files are stored in ``${BASEDIR}/ptmp/<envir>/com/output/logs``. 
 
 The experiment has successfully completed when all tasks say SUCCEEDED under STATE. Other potential statuses are: QUEUED, SUBMITTING, RUNNING, and DEAD. Users may view the log files to determine why a task may have failed.
