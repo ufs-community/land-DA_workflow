@@ -6,6 +6,8 @@ Joint Effort for Data Assimilation Integration (JEDI) DA System
 
 This chapter describes the :term:`Data Assimilation` (DA) system for Land DA, which utilizes the UFS :ref:`WM <wm-component>` :ref:`Noah-MP <NoahMP>` component together with the ``jedi-bundle`` to enable cycled model forecasts. The data assimilation framework applies either the ``letkf-oi`` algorithm or the ``3dvar`` algorithm. The Local Ensemble Transform Kalman Filter-Optimal Interpolation (LETKF-OI) algorithm uses pseudo-ensemble error covariance; it combines the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007). The 3-D Variational (`3D-Var <https://www.ecmwf.int/sites/default/files/elibrary/2003/76079-variational-data-assimiltion-theory-and-overview_0.pdf>`_) DA algorithm attempts to find the analysis that best represents the true state of the atmosphere by minimizing a cost function given a particular background (previous forecast) and observations. 
 
+.. _JEDIOverview:
+
 JEDI Overview
 ****************
 
@@ -21,10 +23,52 @@ The Joint Effort for Data assimilation Integration (:term:`JEDI`) is a unified a
    * The System Agnostic Background Error Representation (:jedi:`SABER <inside/jedi-components/saber/index.html>`) for computing and manipulating the background error covariance matrix
    * The VAriable DErivation Repository (:jedi:`VADER <inside/jedi-components/vader/index.html>`) for producing new variables from known variables
 
+.. _JCBInfo:
+
+JEDI Configuration Builder (JCB) Overview
+*******************************************
+
+The :term:`JEDI` Configuration Builder (JCB) is a tool that facilitates the use of JEDI :term:`DA` in :term:`NWP` workflows. The JCB ecosystem currently consists of three repositories: JCB, JCB-algorithms, and JCB-gdas. :numref:`Figure %s <jcb_flow_diagram>` shows how the repositories relate to each other. The main JCB repository collects templates from the other two repositories to assemble a final YAML file that follows JEDI conventions. The JCB-algorithms repository contains subtemplates for the actual JEDI algorithms (e.g., *LETKF* or *3D-Var*). The JCB-gdas repository contains subtemplates for assimilating particular types of data (e.g., snow, marine). The YAML files that control JEDI functionality can be extremely complex, but JCB simplifies the process of creating a valid JEDI configuration file. 
+
+.. _jcb_flow_diagram:
+
+.. figure:: https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/images/jcb_flow_diagram.png
+   :align: center
+   :width: 75%
+   :alt: JCB flow diagram
+
+   Flow Diagram of JCB
+
+Concretely, repositories that implement JCB interact with the main JCB code via a JCB input file. In the Land DA repository, this file is called ``jcb-base.yaml``, and it is built using the JCB template file ``parm/jedi/jcb-base_land.yaml.j2``. When users run ``parm/setup_wflow_env.py`` to set up the workflow, ``jcb-base.yaml`` is produced by rendering ``jcb-base_land.yaml.j2`` using values from the user's ``config.yaml`` file. JCB uses this ``jcb-base.yaml`` file to assemble the proper subtemplates from the JCB-algorithms and JCB-gdas repositories into the final JEDI DA workflow file. Note that JCB can generate a JEDI input configuration YAML file only when ``CUSTOM_JEDI_CONFIG_FLAG: NO`` in the configuration file.
+
+JCB Components
+================
+
+The JCB ecosystem has three components: JCB, JCB-algorithms, and JCB-gdas. 
+
+.. list-table:: JCB and component repositories
+   :header-rows: 1
+
+   * - Component
+     - Authoritative Repository Link
+     - NOAA-EPIC Fork (if applicable)
+   * - JCB
+     - https://github.com/NOAA-EMC/jcb
+     - N/A
+   * - JCB-algorithms
+     - https://github.com/NOAA-EMC/jcb-algorithms
+     - https://github.com/NOAA-EPIC/jcb-algorithms
+   * - JCB-gdas
+     - https://github.com/NOAA-EMC/jcb-gdas
+     - https://github.com/NOAA-EPIC/jcb-gdas
+   
+.. note:: 
+   The authoritative EMC JCB-gdas repository contains four categories for analysis models: *aero*, *atmosphere*, *marine*, and *snow*. However, the EPIC fork of JCB-gdas has one more category---*land*---that contains subcomponent files not only for snow analysis but also for soil-moisture analysis. 
+
 .. _jedi-config-and-params:
 
-JEDI Configuration Files & Parameters
-****************************************
+JEDI Configuration Files & Parameters in the Land DA System
+*************************************************************
 
 The Land DA System uses the JEDI Configuration Builder (:ref:`JCB <jcb-component>`) along with parameters defined in the ``land_analysis.xml`` file to interface with the JEDI DA system. As described in :numref:`Section %s <ConfigWorkflow>`, the Land DA workflow generates a ``land_analysis.yaml`` file that contains all settings required for an experiment — user-selected settings from ``config.yaml``, default values, and machine-dependent settings. From this YAML file, the ``land_analysis.xml`` Rocoto workflow file is generated.
 
