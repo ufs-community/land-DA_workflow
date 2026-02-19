@@ -379,11 +379,6 @@ def set_machine_parm(machine):
             JEDI_IODACONV_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/jedi_bundle_sync/build/lib/python3.11"
             JEDI_PATH = "/gpfs/f6/bil-fire8/world-shared/UFS_Land-DA_v3.0/jedi_bundle_sync"
             MAX_CORES_PER_NODE = 192
-        case "hera":
-            CUSTOM_JEDI_CONFIG_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
-            JEDI_IODACONV_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_hera/build/lib/python3.11"
-            JEDI_PATH = "/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_hera"
-            MAX_CORES_PER_NODE = 40
         case "hercules":
             CUSTOM_JEDI_CONFIG_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/inputs/test_base/jedi_yaml"
             JEDI_IODACONV_PATH = "/work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_hercules/build/lib/python3.11"

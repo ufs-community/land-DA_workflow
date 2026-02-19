@@ -18,7 +18,7 @@ HP=${PTIME:8:2}
 
 filedate=${YYYY}${MM}${DD}.${HH}0000
 
-machines_srun=( "gaeac6" "hera" "hercules" "orion" "ursa" )
+machines_srun=( "gaeac6" "hercules" "orion" "ursa" )
 if [[ ${machines_srun[@]} =~ "${MACHINE}" ]]; then
   run_cmd="srun"
 else

@@ -12,7 +12,7 @@ OPTIONS
       show this help guide
   -p, --platform=PLATFORM
       name of machine you are building on
-      (e.g. ursa | hera | gaeac6 | orion | hercules)
+      (e.g. ursa | gaeac6 | orion | hercules)
   -c, --compiler=COMPILER
       compiler to use; default depends on platform
       (e.g. intel | gnu | cray | gccgfortran)
@@ -161,7 +161,7 @@ fi
 
 # check if PLATFORM is set
 if [ -z $PLATFORM ] ; then
-  # Automatically detect HPC platforms for hera, jet, orion, hercules, wcoss2, etc
+  # Automatically detect HPC platforms for ursa, orion, hercules, gaeac6, etc
   source ${HOME_DIR}/parm/detect_platform.sh
   if [ "${PLATFORM}" = "unknown" ]; then
     printf "\nERROR: Please set PLATFORM.\n\n"
@@ -289,7 +289,7 @@ set -eu
 # automatically determine compiler
 if [ -z "${COMPILER}" ] ; then
   case ${PLATFORM} in
-    ursa|hera|gaeac6) COMPILER=intel ;;
+    ursa|gaeac6) COMPILER=intel ;;
     orion|hercules) COMPILER=intel ;;
     wcoss2|singularity) COMPILER=intel ;;
     macos) COMPILER=gnu ;;
@@ -389,7 +389,7 @@ fi
 
 # Link land-DA input files to FIXlandda directory
 ver_fix_data="_v3.0"
-if [ "${PLATFORM}" = "ursa" ] || [ "${PLATFORM}" = "hera" ]; then
+if [ "${PLATFORM}" = "ursa" ]; then
   landda_fix_orig="/scratch3/NAGAPE/epic/UFS_Land-DA${ver_fix_data}/inputs"
 elif [ "${PLATFORM}" = "orion" ] || [ "${PLATFORM}" = "hercules" ]; then
   landda_fix_orig="/work/noaa/epic/UFS_Land-DA${ver_fix_data}/inputs"
