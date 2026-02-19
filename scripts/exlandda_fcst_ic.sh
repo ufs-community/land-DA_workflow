@@ -7,7 +7,7 @@ export KMP_AFFINITY="scatter"
 export OMP_NUM_THREADS="1"
 export OMP_STACKSIZE="1024m"
 
-machines_srun=( "gaeac6" "hera" "hercules" "orion" "ursa" )
+machines_srun=( "gaeac6" "hercules" "orion" "ursa" )
 if [[ ${machines_srun[@]} =~ "${MACHINE}" ]]; then
   run_cmd="srun"
 else

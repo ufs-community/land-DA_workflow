@@ -16,7 +16,7 @@ where the arguments are defined as follows:
   Full path to the pachage home directory.
 
   machine_name:
-  Machine name in lowercase: e.g. hera/orion"
+  Machine name in lowercase: e.g. ursa/orion"
 fi
 
 task_name="$1"
