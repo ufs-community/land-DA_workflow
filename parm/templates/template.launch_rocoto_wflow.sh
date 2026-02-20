@@ -15,7 +15,7 @@ else
   module purge
 fi
 
-if [ "${MACHINE}" == "hera" ] || [ "${MACHINE}" == "ursa" ]; then
+if [ "${MACHINE}" == "ursa" ]; then
   module load rocoto
 elif [ "${MACHINE}" == "orion" ]; then
   module load contrib

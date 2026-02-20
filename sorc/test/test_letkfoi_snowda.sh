@@ -36,6 +36,12 @@ fp_template="jedi_letkf_snow.yaml"
 fn_namelist="jedi_letkf_snow.yaml"
 ${project_source_dir}/../ush/fill_jinja_template.py -u "${settings}" -t "${fp_template}" -o "${fn_namelist}"
 
+for ens in {1..2}
+do
+  mkdir -p mem${ens}
+  ln -nsf ${FIXlandda}/FV3_fix_tiled/C${RES}/C${RES}_oro_data.tile*.nc mem${ens}
+done
+
 for ii in "${!OBS_TYPES[@]}";
 do
   echo "============================= ${OBS_TYPES[$ii]}" 
@@ -59,9 +65,9 @@ mkdir -p ./diags
 
 # link jedi static files
 cp -rp $JEDI_STATICDIR .
-ln -nsf $WORKDIR/Data/fv3files/fmsmpp.nml .
-ln -nsf $WORKDIR/Data/fv3files/field_table_ufs field_table
-ln -nsf $WORKDIR/Data/fv3files/akbk127.nc4 akbk.nc4
+ln -nsf ${FIXlandda}/DATA_jedi_input/fv3files/fmsmpp.nml .
+ln -nsf ${FIXlandda}/DATA_jedi_input/fv3files/field_table_ufs field_table
+ln -nsf ${FIXlandda}/DATA_jedi_input/fv3files/akbk127.nc4 akbk.nc4
 
 # copy restart yaml
 cp $project_source_dir/../parm/jedi/fieldmetadata/fv3jedi_fieldmetadata_restart_nofrac.yaml fv3jedi_fieldmetadata_restart.yaml

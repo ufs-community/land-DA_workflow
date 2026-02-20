@@ -12,7 +12,7 @@ export ESMF_RUNTIME_PROFILE_OUTPUT="SUMMARY"
 export PSM_RANKS_PER_CONTEXT=4
 export PSM_SHAREDCONTEXTS=1
 
-machines_srun=( "gaeac6" "hera" "hercules" "orion" "ursa" )
+machines_srun=( "gaeac6" "hercules" "orion" "ursa" )
 if [[ ${machines_srun[@]} =~ "${MACHINE}" ]]; then
   run_cmd="srun"
 else

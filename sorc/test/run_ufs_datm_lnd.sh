@@ -84,12 +84,12 @@ ${MPIRUN} -n ${NPROCS_FORECAST} ./ufs_model
 #
 echo "Now check model output with ufs-wm baseline!"
 path_fbase="${FIXlandda}/test_base/we2e_com/landda.20000202"
+fn_out_ref="landda.t00z.lnd.f024.c96.tile"
 fn_out="ufs.cpld.lnd.out.2000-02-03-00000.tile"
-fn_res="ufs_land_restart.2000-02-03_00-00-00.tile"
 
 # restart files
 for itile in {1..6}
 do
-  ${project_source_dir}/test/compare.py "${path_fbase}/RESTART/${fn_res}${itile}.nc" "${fn_out}${itile}.nc" ${ATOL}
+  ${project_source_dir}/test/compare.py "${path_fbase}/${fn_out_ref}${itile}.nc" "${fn_out}${itile}.nc" ${ATOL}
 done
 

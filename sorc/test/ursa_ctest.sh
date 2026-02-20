@@ -12,7 +12,7 @@ module use /scratch3/NAGAPE/epic/ufs-conda/modulefiles
 module load python-ufs-land-da-wflow
 
 export MPIRUN="srun"
-export JEDI_PATH="/scratch3/NAGAPE/epic/UFS_Land-DA_v2.1/jedi_bundle_ursa"
+export JEDI_PATH="/scratch3/NAGAPE/epic/UFS_Land-DA_v3.0/jedi_bundle_ursa"
 
 ctest
 

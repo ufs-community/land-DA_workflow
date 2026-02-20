@@ -6,8 +6,6 @@ if [[ -d /scratch3/NAGAPE ]] ; then
   hoststr=$(hostname)
   if [[ "$hoststr" == "ufe"* ]]; then
     PLATFORM="ursa"
-  elif [[ "$hoststr" == "hfe"* ]]; then
-    PLATFORM="hera"
   fi
 elif [[ -d /work/noaa ]]; then
   hoststr=$(hostname)

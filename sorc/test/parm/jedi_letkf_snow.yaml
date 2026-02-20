@@ -3,45 +3,61 @@ geometry:
     namelist filename: fmsmpp.nml
     field table filename: field_table
   akbk: akbk.nc4
+  layout:
+  - 1
+  - 1
   npx: 97
   npy: 97
   npz: 127
-  field metadata override: fv3jedi_fieldmetadata_restart.yaml
   time invariant fields:
     state fields:
       datetime: '2000-02-02T00:00:00Z'
       filetype: fms restart
       skip coupler file: true
       state variables:
-      - orog_filt
+      - filtered_orography
+      field io names:
+        filtered_orography: orog_filt
       datapath: {{ datapath }}
       filename_orog: C96_oro_data.nc
-    derived fields:
-    - nominal_surface_pressure
 time window:
   begin: '2000-02-01T12:00:00Z'
   length: PT24H
   bound to include: begin
 background:
   members:
-  - datetime: '2000-02-02T00:00:00Z'
+  - datapath: mem1
     filetype: fms restart
+    skip coupler file: true
+    datetime: '2000-02-02T00:00:00Z'
     state variables:
-    - snwdph
+    - totalSnowDepth
     - vtype
     - slmsk
-    datapath: mem1
+    - sheleg
+    - filtered_orography
+    field io names:
+      totalSnowDepth: snwdph
+      filtered_orography: orog_filt
     filename_sfcd: 20000202.000000.sfc_data.nc
     filename_cplr: 20000202.000000.coupler.res
-  - datetime: '2000-02-02T00:00:00Z'
+    filename_orog: C96_oro_data.nc
+  - datapath: mem2
     filetype: fms restart
+    skip coupler file: true
+    datetime: '2000-02-02T00:00:00Z'
     state variables:
-    - snwdph
+    - totalSnowDepth
     - vtype
     - slmsk
-    datapath: mem2
+    - sheleg
+    - filtered_orography
+    field io names:
+      totalSnowDepth: snwdph
+      filtered_orography: orog_filt
     filename_sfcd: 20000202.000000.sfc_data.nc
     filename_cplr: 20000202.000000.coupler.res
+    filename_orog: C96_oro_data.nc
 observations:
   observers:
   - obs space:
@@ -99,7 +115,7 @@ observations:
       action:
         name: reject
 local ensemble DA:
-  solver: LETKF
+  solver: Deterministic LETKF
   inflation:
     rtps: 0.0
     rtpp: 0.0
@@ -121,3 +137,5 @@ driver:
 output increment:
   filetype: fms restart
   filename_sfcd: snowinc.sfc_data.nc
+  field io names:
+    totalSnowDepth: snwdph

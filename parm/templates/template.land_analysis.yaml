@@ -529,7 +529,7 @@ workflow:
       command: '&HOMElandda;/parm/task_load_modules_run_jjob.sh "forecast" "&HOMElandda;" "&MACHINE;"'
       jobname: forecast
       nodes: "&nnodes_forecast;:ppn=&nprocs_per_node;"
-      walltime: 00:30:00
+      walltime: 01:30:00
 {%- if native_default is not none %}
       native: "&native_default;"
 {%- endif %}
