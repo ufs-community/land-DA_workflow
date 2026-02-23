@@ -261,7 +261,7 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    The run environment. Set to “test” during the initial testing phase, “para” when running in parallel (on a schedule), and “prod” in production. In operations, this is the operations root directory (aka ``$OPSROOT``). In the Land DA System, the default name for this directory is ``test_*`` _________. For more on NCO-compliant directory structure, see the :ref:`Note on NCO Standards <nco-note>`. 
 
 ``exp_basedir:`` (Default: "{{ exp_basedir }}" )
-   The full path to the parent directory of ``land-DA_workflow`` (i.e., ``$LANDDAROOT`` in the documentation). The actual value is derived in the ``setup_wflow_env.py`` file. 
+   The full path to the parent directory of ``land-DA_workflow`` (i.e., ``$BASEDIR`` in the documentation). The actual value is derived in the ``setup_wflow_env.py`` file. 
 
 ``EXP_CASE_NAME:`` (Default: ``None`` )
    A name for the experiment. This variable can be changed to any name the user wants (but note that whitespace and some punctuation characters are not allowed). However, the best names will indicate useful information about the experiment. Each of the sample cases provided sets the experiment name to ``app_[forcing_]starttype_##`` where ``<app>`` is the configuration (:term:`LND` or :term:`ATML`), ``<forcing>`` refers to the atmospheric forcing data used (if any), and ``<starttype>`` indicates either a warmstart or coldstart forecast. 
@@ -339,7 +339,7 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    Output frequency of the land model component (in seconds).
 
 ``MACHINE:`` (Default: ``"/machine/platform/name"`` )
-   The machine (a.k.a. platform or system) on which the workflow will run. The actual value is provided by the user via the ``-p=MACHINE`` command line argument or derived in ``setup_wflow_env.py`` from other parameters if possible. Currently supported platforms are listed in :numref:`Section %s <LevelsOfSupport>`. Valid values: ``"hera"`` | ``"hercules"`` | ``"orion"`` | ``gaeac6``
+   The machine (a.k.a. platform or system) on which the workflow will run. The actual value is provided by the user via the ``-p=MACHINE`` command line argument or derived in ``setup_wflow_env.py`` from other parameters if possible. Currently supported platforms are listed in :numref:`Section %s <LevelsOfSupport>`. Valid values: ``"ursa"`` | ``"hercules"`` | ``"orion"`` | ``gaeac6``
 
 ``MED_COUPLING_MODE:`` (Default: ``"ufs.nfrac.aoflux"`` )
    :term:`CMEPS` coupling mode. Valid values: ``"ufs.frac"`` | ``"ufs.nfrac.aoflux"``. ``"ufs.frac"`` is used with the active FV3 atmospheric component (e.g., in :term:`ATML` configurations), whereas ``"ufs.nfrac.aoflux"`` is used with the data atmosphere component (e.g., :term:`LND` configurations). 

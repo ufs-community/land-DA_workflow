@@ -5,12 +5,12 @@ Users can either create a new directory for their Land DA work (e.g., ``landda``
    mkdir /path/to/landda
    cd /path/to/landda
 
-where ``/path/to/landda`` is the path to the directory where the user plans to run Land DA experiments (e.g., ``/Users/Joe.Schmoe/landda``). In the experiment configuration file, this directory is referred to as ``${exp_basedir}``. 
+where ``/path/to/landda`` is the path to the directory where the user plans to run Land DA experiments (e.g., ``/Users/Joe.Schmoe/landda``). In experiment configuration files and scripts, this directory is referred to as ``${exp_basedir}``. 
 
-Optionally, users can save this directory path in an environment variable (e.g., ``$LANDDAROOT``) to avoid typing out full path names later. 
+Optionally, users can save this directory path in an environment variable (e.g., ``$BASEDIR``) to avoid typing out full path names later. 
 
 .. code-block:: console
 
-   export LANDDAROOT=`pwd`
+   export BASEDIR=`pwd`
 
-In this documentation, ``$LANDDAROOT`` is used, but users are welcome to choose another name for this variable if they prefer. 
+In this documentation, ``${BASEDIR}`` is used, but users are welcome to choose another name for this variable if they prefer. 

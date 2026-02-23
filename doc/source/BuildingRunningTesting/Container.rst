@@ -4,7 +4,7 @@
 Containerized Land DA Workflow
 **********************************
 
-These instructions will help users build and run a basic case for the Unified Forecast System (:term:`UFS`) Land Data Assimilation (DA) System using a `Singularity/Apptainer <https://apptainer.org/docs/user/latest/>`_ container. The Land DA :term:`container` packages together the Land DA System with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform environment in which to build and run the Land DA System. Normally, the details of building and running Earth system models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, :term:`MPIs <MPI>`, and package versions available. Installation via Singularity/Apptainer container reduces this variability and allows for a smoother experience building and running Land DA. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Hera, Orion). 
+These instructions will help users build and run a basic case for the Unified Forecast System (:term:`UFS`) Land Data Assimilation (DA) System using a `Singularity/Apptainer <https://apptainer.org/docs/user/latest/>`_ container. The Land DA :term:`container` packages together the Land DA System with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform environment in which to build and run the Land DA System. Normally, the details of building and running Earth system models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, :term:`MPIs <MPI>`, and package versions available. Installation via Singularity/Apptainer container reduces this variability and allows for a smoother experience building and running Land DA. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Ursa, Hercules). 
 
 This chapter provides instructions for building and running the Unified Forecast System (:term:`UFS`) Land DA System in a container using a Jan. 19-20, 2025 00z sample case. This case is a :term:`LND` :term:`warmstart` configuration that uses :term:`ERA5` atmospheric forcing data, :term:`IMS` snow depth observation data, and the 3D-Var DA algorithm. 
 
@@ -45,11 +45,11 @@ Get Data
 
 In order to run the Land DA System, users will need input data in the form of fix files, model forcing files, restart files, and snow depth observations for data assimilation. These files are already present on Level 1 systems (see :numref:`Section %s <Level1Data>` for details). 
 
-Users on any system may download and untar the data from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ into their ``$LANDDAROOT`` directory. In the working directory, run: 
+Users on any system may download and untar the data from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ into their ``${BASEDIR}`` directory. In the working directory, run: 
 
 .. code-block:: console
 
-   cd $LANDDAROOT
+   cd ${BASEDIR}
    wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/CADRE-2025/Land-DA_v2.1_inputs.tar.gz
    tar xvfz Land-DA_v2.1_inputs.tar.gz
 
@@ -104,7 +104,7 @@ Set Up the Container
 
    It is recommended that users establish different working directories for :term:`LND` and :term:`ATML` experiments because these experiments use different executables. This makes it impossible to run LND and ATML experiment configurations simultaneously from the same working directory. Users can circumvent this issue by creating an ``lnd`` directory for LND experiments and an ``atml`` directory for ATML experiments. Then, perform the container setup instructions in each directory. 
 
-Create experiment variables that point to the container image (``$img``) and, if necessary, the location of the data (``$LANDDA_INPUTS``). Users only need to set the location of the data if they added it in a location other than ``$LANDDAROOT``: 
+Create experiment variables that point to the container image (``$img``) and, if necessary, the location of the data (``$LANDDA_INPUTS``). Users only need to set the location of the data if they added it in a location other than ``${BASEDIR}``: 
 
 .. code-block:: console
 
@@ -116,13 +116,13 @@ Create experiment variables that point to the container image (``$img``) and, if
 
 where ``/path/to`` is replaced by the absolute path to the location of the container and Land DA input data. 
 
-Within the ``$LANDDAROOT`` directory, copy the ``setup_container.sh`` script out of the container. 
+Within the ``${BASEDIR}`` directory, copy the ``setup_container.sh`` script out of the container. 
 
 .. code-block:: console
 
    singularity exec -H $PWD $img cp -r /opt/land-DA_workflow/setup_container.sh .
 
-The ``setup_container.sh`` script should now be in the ``$LANDDAROOT`` directory. Note that if previous steps included a ``sudo`` command, ``sudo`` may be required in front of this command for it to work. If for some reason, the previous command was unsuccessful, users may try a version of the following command instead: 
+The ``setup_container.sh`` script should now be in the ``${BASEDIR}`` directory. Note that if previous steps included a ``sudo`` command, ``sudo`` may be required in front of this command for it to work. If for some reason, the previous command was unsuccessful, users may try a version of the following command instead: 
 
 .. code-block:: console
 
@@ -150,7 +150,7 @@ where:
 
    * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2022.1.2``, ``intelmpi/2021.13``, ``intel-oneapi-compilers/2022.2.1``, ``intel/2023.2.0``)
    * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``impi/2022.1.2``, ``intelmpi/2021.13``, ``intel-oneapi-mpi/2021.7.1``, ``cray-mpich/8.1.28``)
-   * ``-i`` is the full path to the container image ( e.g., ``$LANDDAROOT/ubuntu22.04-intel-landda-cadre25.img``).
+   * ``-i`` is the full path to the container image ( e.g., ``$BASEDIR/ubuntu22.04-intel-landda-cadre25.img``).
 
 Concretely, users would run something like: 
 
@@ -174,7 +174,7 @@ Running this script will print the following messages to the console:
    Creating links for exe
    Done
 
-The user should now see the ``land-DA_workflow`` and ``jedi-bundle`` directories in the ``$LANDDAROOT`` directory. 
+The user should now see the ``land-DA_workflow`` and ``jedi-bundle`` directories in the ``${BASEDIR}`` directory. 
 
 Containers come with pre-built executables, so users may continue to the next section to configure the experiment. However, users who are interested in learning how to build the executables can skip to :numref:`Section %s <build-exe>` to learn how to build their own executables to use in their experiment. 
 
@@ -408,7 +408,7 @@ The executables come pre-built in the Land DA Container. However, users who are 
 
    .. code-block:: console
 
-      cd $LANDDAROOT/land-DA_workflow/sorc
+      cd ${BASEDIR}/land-DA_workflow/sorc
 
 #. Set up the environment by sourcing the container's spack-stack installation and loading the container modulefiles. 
 
