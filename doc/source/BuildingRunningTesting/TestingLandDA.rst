@@ -31,7 +31,6 @@ The CTests test the operability of four major elements of the Land DA System: ``
    * - ``test_ufs_datm_land``
      - Tests proper functioning of the UFS land model (``ufs-datm-lnd``)
 
-.. COMMENT: Check this! Currently, WE2E test seems to fail
 
 .. note::
 
