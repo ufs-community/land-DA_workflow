@@ -156,7 +156,7 @@ def setup_wflow_env(machine):
         partition_default = 'batch'
         queue_default = 'normal'
     elif machine == "ursa":
-        native_default = None
+        native_default = '--exclusive'
         partition_default = 'u1-compute'
         queue_default = 'batch'
     elif machine == "noaacloud":
