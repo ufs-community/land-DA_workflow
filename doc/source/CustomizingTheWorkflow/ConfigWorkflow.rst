@@ -197,84 +197,83 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
 
    The workflow entities include certain standard environment variables that are defined in the NCEP Central Operations :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` document (pp. 4-5). These variables are used in forming the path to various directories containing input, output, and workflow files. For a visual aid, see the :ref:`Land DA Directory Structure Diagram <land-da-dir-structure>`. 
 
-``ACCOUNT:`` (Default: ``"epic"``)
+``ACCOUNT:``
    An account where users can charge their compute resources on the specified ``MACHINE``. To determine an appropriate ``ACCOUNT`` field on a system with a Slurm job scheduler, users may run the ``saccount_params`` command to display account details. On other systems, users may run the ``groups`` command, which will return a list of projects that the user has permissions for. Not all of the listed projects/groups have an HPC allocation, but those that do are potentially valid account names. 
 
-``APP:`` (Default: ``"LND"`` )
+``APP:``
    Application/configuration to use. Valid values: ``LND`` | ``ATML``. 
 
-``ATM_IO_LAYOUT_X:`` (Default: 1 )
+``ATM_IO_LAYOUT_X:``
    Specifies how many MPI ranks to use in the X direction for input/output (I/O) to the atmospheric component.
 
-``ATM_IO_LAYOUT_Y:`` (Default: 1 )
+``ATM_IO_LAYOUT_Y:``
    Specifies how many MPI ranks to use in the Y direction for input/output (I/O) to the atmospheric component.
 
-``ATM_LAYOUT_X:`` (Default: 3 )
+``ATM_LAYOUT_X:``
    Number of processes in the X direction per tile for the atmospheric component.
 
-``ATM_LAYOUT_Y:`` (Default: 8 )
+``ATM_LAYOUT_Y:``
    Number of processes in the Y direction per tile for the atmospheric component.
 
-``ATMOS_FORC:`` (Default: ``"gswp3"`` )
+``ATMOS_FORC:``
    Type of atmospheric forcing data used. Valid values: ``"era5"`` | ``"gswp3"``. 
 
-``CCPP_SUITE:`` (Default: ``"FV3_GFS_v17_p8_ugwpv1"`` )
+``CCPP_SUITE:``
    The physics suite to use in the experiment (only relevant for :term:`ATML` configurations, which have an active atmospheric component).  
 
-``COLDSTART:`` (Default: ``"NO"`` )
+``COLDSTART:``
    Flag that indicates whether the experiment is a :term:`coldstart` experiment (``"YES"``) or a :term:`warmstart` experiment (``"NO"``).
 
-``COMINgdas:`` (Default: ``""`` )
+``COMINgdas:``
    Output from the GDAS model, which can be used as input to the next forecast. See :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` for information on operational data naming conventions. 
 
-``COMINgfs:`` (Default: ``""`` )
+``COMINgfs:``
    Output from the GFS model, which can be used as input to the next forecast. See :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` for information on operational data naming conventions. 
 
-``COUPLER_CALENDAR:`` (Default: ``"2"`` )
+``COUPLER_CALENDAR:``
    Coupler calendar. Options: no_calendar=0, thirty_day_months=1, julian=2, gregorian=3, noleap=4
 
-``DATE_CYCLE_FREQ_HR:`` (Default: 24 )
+``DATE_CYCLE_FREQ_HR:``
    Cycling frequency (in integer hours).
 
-``DATE_FIRST_CYCLE:`` (Default: ``200001030000`` )
+``DATE_FIRST_CYCLE:``
    Starting :term:`cycle` date of the *first* forecast in the set of forecasts to run. Format is “YYYYMMDDHH”.
 
-``DATE_LAST_CYCLE:`` (Default: ``200001040000`` )
+``DATE_LAST_CYCLE:``
    Starting cycle date of the *last* forecast in the set of forecasts to run. Format is “YYYYMMDDHH”.
 
-``DATM_STREAM_FN_LAST_DATE:`` (Default: ``""`` )
+``DATM_STREAM_FN_LAST_DATE:``
    The last date of a warmstart run. Valid values: Valid date in ``YYYYMMDDHH`` format. This variable is a temporary fix for a bug in the UFS WM. Restart files produced by the :term:`LND` configuration contain a hard-coded :term:`DATM` file list. If the file list does not match the namelist, the warmstart will fail. For example, if the user runs a coldstart forecast from day 1 to day 2, the restart file will contain information for days 1-2. If they then choose to run a warmstart forecast for days 3 to 4 with the restart file from the coldstart, it will fail even if the user puts days 3-4 into the :term:`DATM` input namelist. To resolve this issue, days 1-4 must be added to the namelist of the coldstart even though it only runs for days 1-2. 
 
-``DCOMINera5:`` (Default: ``""`` )
+``DCOMINera5:``
    Path to directory containing ERA5 input data files. See :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` for information on operational data naming conventions. 
 
-``DCOMINgswp3:`` (Default: ``""`` )
+``DCOMINgswp3:``
    Path to directory containing GSWP3 input data files. See :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` for information on operational data naming conventions. 
 
-``DT_ATMOS:`` (Default: ``900`` )
+``DT_ATMOS:``
    The main integration time step of the atmospheric component of the UFS Weather Model (in seconds). This is the time step for the outermost atmospheric model loop and must be a positive integer value. It corresponds to the frequency at which the physics routines and the top level dynamics routine are called. (Note that one call to the top-level dynamics routine results in multiple calls to the horizontal dynamics, tracer transport, and vertical dynamics routines; see the `FV3 dycore scientific documentation <https://repository.library.noaa.gov/view/noaa/30725>`_ for details.) 
    
-``DT_RUNSEQ:`` (Default: ``3600`` )
+``DT_RUNSEQ:``
    Time interval of run sequence (coupling interval) between the model components of the UFS Weather Model (in seconds).
 
-``envir:`` (Default: ``"test"`` )
-   The run environment. Set to “test” during the initial testing phase, “para” when running in parallel (on a schedule), and “prod” in production. In operations, this is the operations root directory (aka ``$OPSROOT``). In the Land DA System, the default name for this directory is ``test_*`` _________. For more on NCO-compliant directory structure, see the :ref:`Note on NCO Standards <nco-note>`. 
+``envir:``
+   The run environment. Set to “test” during the initial testing phase, “para” when running in parallel (on a schedule), and “prod” in production. In operations, this is the operations root directory (aka ``$OPSROOT``). In the Land DA System, the default name for this directory is ``test_*``. For more on NCO-compliant directory structure, see the :ref:`Note on NCO Standards <nco-note>`. 
 
-``exp_basedir:`` (Default: "{{ exp_basedir }}" )
+``exp_basedir:``
    The full path to the parent directory of ``land-DA_workflow`` (i.e., ``$BASEDIR`` in the documentation). The actual value is derived in the ``setup_wflow_env.py`` file. 
 
-``EXP_CASE_NAME:`` (Default: ``None`` )
+``EXP_CASE_NAME:``
    A name for the experiment. This variable can be changed to any name the user wants (but note that whitespace and some punctuation characters are not allowed). However, the best names will indicate useful information about the experiment. Each of the sample cases provided sets the experiment name to ``app_[forcing_]starttype_##`` where ``<app>`` is the configuration (:term:`LND` or :term:`ATML`), ``<forcing>`` refers to the atmospheric forcing data used (if any), and ``<starttype>`` indicates either a warmstart or coldstart forecast. 
    .. COMMENT: What is the ##?
 
-``FCSTHR:`` (Default: 24 )
+``FCSTHR:``
    Specifies the length of each forecast in hours. Valid values: Integers > 0.
 
-``FHROT:`` (Default: 0 )
-   Forecast hour at restart for earth grid component clock in coupled model.
-   .. COMMENT: Check! 
+``FHROT:``
+   Forecast hour at restart in UFS Weather Model (in hours; set in ``model_ configure``).
 
-``FRAC_GRID:`` (Default: ``"NO"`` )
+``FRAC_GRID:``
    Flag used by the tile2tile converter to switch variable names between JEDI and the land model. Two key variable names do not match between JEDI (``sfc_data`` files) and the land model (restart files):
 
    .. list-table:: Mismatched Variable Names
@@ -298,141 +297,140 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
 
    .. COMMENT: Check! 
 
-``IC_DATA_MODEL:`` (Default: ``"gfs"`` )
-   The name of the model that the initial conditions data is coming from. Valid values: ``"gfs"`` | ``gdas``
-   .. COMMENT: Check! 
+``IC_DATA_MODEL:``
+   The name of the model that the initial sfc_data files are coming from in the ``fcst_ic`` task. Valid values: ``"gfs"`` | ``gdas``
 
-``IMO:`` (Default: 384 )
+``IMO:``
    Number of horizontal grid points in the X direction. Usually a multiple of the resolution (``$RES``).
 
-``JEDI_ALGORITHM:`` (Default: ``"letkf-oi"`` )
+``JEDI_ALGORITHM:``
    Data assimilation algorithm selection. Valid values: ``"letkf-oi"`` | ``"3dvar"``
 
-``JEDI_PATH:`` (Default: ``"/path/to/jedi/install/dir"`` )
+``JEDI_PATH:``
    Path to the directory where JEDI is installed. The actual value is set in a machine-specific portion of ``setup_wflow_env.py``.
 
-``JEDI_PY_VER:`` (Default: ``"python3.10"`` )
+``JEDI_PY_VER:``
    Python version for the JEDI software. 
 
-``JMO:`` (Default: 190 )
+``JMO:``
    Number of horizontal grid points in the Y direction. 
 
-``KEEPDATA:`` (Default: ``"YES"`` )
+``KEEPDATA:``
    Flag to keep data (``"YES"``) or not ("NO") that is copied to the ``$DATAROOT`` directory during the forecast experiment.
 
-``LND_CALC_SNET:`` (Default: ``".true."`` )
+``LND_CALC_SNET:``
    Flag indicating whether to calculate the shortwave radiation internally (``".true."``) or not (``".false."``).
 
-``LND_IC_TYPE:`` (Default: ``"custom"`` )
+``LND_IC_TYPE:``
    Indicates the source of the initial conditions. Two options are supported "custom" (i.e., ``C96.initial.tile[1-6].nc``) and "sfc" (i.e., ``sfc_data.tile[1-6].nc``). Valid values: ``custom`` | ``sfc``. 
 
-``LND_INITIAL_ALBEDO:`` (Default: 0.25 )
+``LND_INITIAL_ALBEDO:``
    Initial mean surface albedo. Valid values: Any number between 0-1.
 
-``LND_LAYOUT_X:`` (Default: 1 )
+``LND_LAYOUT_X:``
    Number of processes in the x direction per tile for the land model component.
 
-``LND_LAYOUT_Y:`` (Default: 2 )
+``LND_LAYOUT_Y:``
    Number of processes in the y direction per tile for the land model component.
 
-``LND_OUTPUT_FREQ_SEC:`` (Default: 21600 )
+``LND_OUTPUT_FREQ_SEC:``
    Output frequency of the land model component (in seconds).
 
-``MACHINE:`` (Default: ``"/machine/platform/name"`` )
+``MACHINE:``
    The machine (a.k.a. platform or system) on which the workflow will run. The actual value is provided by the user via the ``-p=MACHINE`` command line argument or derived in ``setup_wflow_env.py`` from other parameters if possible. Currently supported platforms are listed in :numref:`Section %s <LevelsOfSupport>`. Valid values: ``"ursa"`` | ``"hercules"`` | ``"orion"`` | ``gaeac6``
 
-``MED_COUPLING_MODE:`` (Default: ``"ufs.nfrac.aoflux"`` )
+``MED_COUPLING_MODE:``
    :term:`CMEPS` coupling mode. Valid values: ``"ufs.frac"`` | ``"ufs.nfrac.aoflux"``. ``"ufs.frac"`` is used with the active FV3 atmospheric component (e.g., in :term:`ATML` configurations), whereas ``"ufs.nfrac.aoflux"`` is used with the data atmosphere component (e.g., :term:`LND` configurations). 
 
-``model_ver:`` (Default: ``"v2.1.0"`` )
+``model_ver:``
    Version number of package in three digits (e.g., v#.#.#); second level of ``com`` directory (see :ref:`NCO Directory Structure Entities <nco-dir-entities>`)
 
-``native_default:`` (Default: "{{ native_default }}" )
+``native_default:``
    Defines raw batch system options/job scheduler commands that Rocoto will use when submitting jobs for a given task (using the ``<native>`` tag). If more than one option is required, they are listed consecutively as a single string. This is a machine-dependent parameter, so default values differ. 
 
-``NET:`` (Default: ``"landda"`` )
+``NET:``
    Model name (first level of ``com`` directory structure). 
 
-``NPROCS_ANALYSIS:`` (Default: 6 )
+``NPROCS_ANALYSIS:``
    Number of processors for the ``analysis`` task. 
 
-``NPROCS_FCST_IC:`` (Default: 36 )
+``NPROCS_FCST_IC:``
    Number of processors for the ``fcst_ic`` task.
 
-``NPZ:`` (Default: 127 )
+``NPZ:``
    Number of vertical layers in the atmospheric model.
 
-``nnodes_forecast:`` (Default: "{{ nnodes_forecast }}" )
+``nnodes_forecast:``
    Number of nodes for the ``forecast`` task.
 
 ``nprocs_forecast:`` (Default: ``nprocs_forecast_lnd + nprocs_forecast_atm + lnd_layout_x*lnd_layout_y`` )
    Total number of processes for the ``forecast`` task.
 
-``nprocs_forecast_atm:`` (Default: "{{ nprocs_forecast_atm }}" )
+``nprocs_forecast_atm:``
    Number of processes for the atmospheric component in the ``forecast`` task. Actual default value dependent on ``APP:`` (LND or ATML). 
 
-``nprocs_forecast_lnd:`` (Default: ``6*lnd_layout_x*lnd_layout_y`` )
+``nprocs_forecast_lnd:``
    Number of processes for the land model component (Noah-MP) in the ``forecast`` task.
 
-``nprocs_per_node:`` (Default: "{{ nprocs_per_node }}" )
+``nprocs_per_node:``
    Number of processes per node for the ``forecast`` task. Actual default value dependent on ``nprocs_forecast`` and the maximum number of cores available per node. 
 
-``OBSDIR:`` (Default: ``""`` )
+``OBSDIR:``
    The path to the directory where DA fix files are located. In ``scripts/exlandda_prep_data.sh``, this value is set to ``${FIXlandda}/DA_obs`` unless the user specifies a different path in ``config.yaml``. 
 
-``OBS_GHCN_SNOW:`` (Default: ``"NO"`` )
+``OBS_GHCN_SNOW:``
    Flag to use GHCN snow depth observations. 
 
-``OBS_IMS_SNOW:`` (Default: ``"NO"`` )
+``OBS_IMS_SNOW:``
    Flag to use IMS snow depth observations. 
 
-``OBS_SFCSNO:`` (Default: ``"NO"`` )
+``OBS_SFCSNO:``
    Flag to use SFCSNO snow depth observations. 
 
-``OUTPUT_FH:`` (Default: ``"1 -1"`` )
+``OUTPUT_FH:``
    Forecast history file output frequency (when second number is ``-1``) or hours at which to write output history files (e.g., ``"6 9 12"``).
 
-``partition_default:`` (Default: "{{ partition_default }}" )
+``partition_default:``
    Default partition; default set based on ``MACHINE``. 
 
-``PY_LOG_LEVEL:`` (Default: ``"INFO"`` )
+``PY_LOG_LEVEL:``
    Python logging level. Valid values: ``"INFO"`` | ``"DEBUG"`` | ``"WARN"`` | ``"ERROR"`` | ``"CRITICAL"``
 
-``queue_default:`` (Default: "{{ queue_default }}" )
+``queue_default:``
    Default queue; default set based on ``MACHINE``. 
 
-``RES:`` (Default: 96 )
+``RES:``
    Resolution of FV3 grid. Currently, only C96 resolution is supported. 
 
-``RESTART_INTERVAL:`` (Default: ``"12 -1"`` )
+``RESTART_INTERVAL:``
    Determines how often the model creates restart files, which are used to continue simulations from a specific point in time. When the second number is ``-1``, the first number refers to the frequency of restart file output. Otherwise, the list of numbers indicates specific hours at which to output restart files. 
 
-``RUN:`` (Default: ``"landda"`` )
+``RUN:``
    Name of model run (third level of ``com`` directory structure). In general, same as ``${NET}``.
 
-``res_p1:`` (Default: 97 )
+``res_p1:``
    ${RES} plus 1. Must be an integer value. 
 
-``SCHED:`` (Default: "slurm")
+``SCHED:``
    The job scheduler to use (e.g., Slurm) on the specified ``MACHINE``. Valid values: ``"slurm"``. Other options may work with a container but have not been tested: ``"pbspro"`` | ``"lsf"`` | ``"lsfcray"`` | ``"none"``
 
-``WARMSTART_DIR:`` (Default: ``"/path/to/wart/start/dir"`` )
+``WARMSTART_DIR:``
    The path to restart files for a warmstart experiment. The actual value set is machine-dependent. 
 
-``WE2E_TEST:`` (Default: ``"NO"`` )
+``WE2E_TEST:``
    Flag to turn on the workflow end-to-end (WE2E) test. When WE2E_TEST="YES", the result files from the experiment are compared to the test baseline files, located in ``fix/test_base/we2e_com``. If the results are within the tolerance set (via ``WE2E_ATOL``) at the end of the three main tasks --- ``analysis``, ``forecast``, and ``post_anal`` --- then the experiment passes. Valid values: ``"YES"`` | ``"NO"``
    .. COMMENT: Update! 
 
-``WE2E_ATOL:`` (Default: ``"1e-7"`` )
+``WE2E_ATOL:``
    Tolerance of the WE2E test. (Set in ``template.land_analysis.yaml``.)
 
-``WE2E_LOG_FN:`` (Default: ``"we2e.log"`` )
+``WE2E_LOG_FN:``
    Name of the WE2E test log file. (Set in ``template.land_analysis.yaml``.)
 
-``WRITE_GROUPS:`` (Default: 1 )
+``WRITE_GROUPS:``
    The number of write groups (i.e., groups of :term:`MPI` tasks) to use. 
 
-``WRITE_TASKS_PER_GROUP:`` (Default: 6 )
+``WRITE_TASKS_PER_GROUP:``
    The number of MPI tasks to allocate for each of the ``${WRITE_GROUPS}``.
 
 .. _nco-dir-entities:
