@@ -234,9 +234,6 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
 ``ATMOS_FORC:``
    Type of atmospheric forcing data used. Valid values: ``"era5"`` | ``"gswp3"``. 
 
-``DO_BKG_ANAL_EXT_SRC:`` (Default: ``"NO"`` )
-   .. COMMENT: Add definition!
-
 ``CCPP_SUITE:`` (Default: ``"FV3_GFS_v17_p8_ugwpv1"`` )
    The physics suite to use in the experiment (only relevant for :term:`ATML` configurations, which have an active atmospheric component).  
 
@@ -253,15 +250,15 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    Coupler calendar. Options: no_calendar=0, thirty_day_months=1, julian=2, gregorian=3, noleap=4
 
 ``CUSTOM_JEDI_CONFIG_FLAG:`` 
-   .. COMMENT: Add definition!
+   Whether to use a custom JEDI configuration file (``"YES"``) or not (``"NO"``). If this parameter is set to ``"YES"``, in the configuration file ``config.yaml``, the custom input file which is located at ``CUSTOM_JEDI_CONFIG_PATH`` will be used as the JEDI input file in the *analysis* task.
 
 ``CUSTOM_JEDI_CONFIG_PATH:`` 
-   .. COMMENT: Add definition!
+   Path to the custom JEDI configuration file. Valid values: ``"YES"`` | ``"NO"``.
 
 ``CUSTOM_JEDI_CONFIG_PREFIX:`` 
-   .. COMMENT: Add definition!
+   Prefix for the custom JEDI file. For example, if the file were named ``custom_jedi_2026022600.yaml``, then ``CUSTOM_JEDI_CONFIG_PREFIX: custom_jedi_``. Note that the YAML file name should include the date for cycling; the prefix is everything before the cycle date.
 
-``DATE_CYCLE_FREQ_HR:`` (Default: 24 )
+``DATE_CYCLE_FREQ_HR:``
    Cycling frequency (in integer hours).
 
 ``DATE_FIRST_CYCLE:``
@@ -277,31 +274,31 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    Path to directory containing ERA5 input data files. See :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` for information on operational data naming conventions. 
 
 ``DCOMINera5land:`` ""
-   .. COMMENT: Add definition!
+   Variable used in testing. Unsupported for users at this time. 
 
-``DCOMINghcn:`` ""
-   .. COMMENT: Add definition!
+``DCOMINghcn:`` 
+   Path to directory containing GHCN input data files. See :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` for information on operational data naming conventions. 
 
-``DCOMINgswp3:`` (Default: ``""`` )
+``DCOMINgswp3:``
    Path to directory containing GSWP3 input data files. See :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` for information on operational data naming conventions. 
 
-``DCOMINsmap:`` ""
-   .. COMMENT: Add definition!
+``DCOMINsmap:``
+   Path to directory containing SMAP input data files. See :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` for information on operational data naming conventions. 
 
-``DCOMINsmops:`` ""
-   .. COMMENT: Add definition!
+``DCOMINsmops:``
+   Path to directory containing SMOPS input data files. See :nco:`WCOSS Implementation Standards <ImplementationStandards.v11.0.0.pdf>` for information on operational data naming conventions. 
 
-``DO_BKG_ANAL_EXT_SRC:`` "NO"
-   .. COMMENT: Add definition!
+``DO_BKG_ANAL_EXT_SRC:``
+   Whether to use an external source file for the analysis. Only relevant when ``CUSTOM_JEDI_CONFIG_PATH: YES``. Valid values: ``"YES"`` | ``"NO"``.
 
-``DO_FREE_FORECAST:`` "NO"
-   .. COMMENT: Add definition!
+``DO_FREE_FORECAST:``
+   Whether to run a :term:`free forecast <free-fcst>` (``"YES"``) or a :term:`DA forecast <DA-fcst>` (``"NO"``). 
 
-``do_jedi_snow:`` "YES"
-   .. COMMENT: Add definition!
+``do_jedi_snow:``
+   Whether to perform JEDI snow DA. Valid values: ``"YES"`` | ``"NO"``.
 
-``do_jedi_soil_moisture:`` "NO"
-   .. COMMENT: Add definition!
+``do_jedi_soil_moisture:``
+   Whether to perform JEDI soil moisture DA. Valid values: ``"YES"`` | ``"NO"``.
 
 ``DT_ATMOS:`` (Default: ``900`` )
    The main integration time step of the atmospheric component of the UFS Weather Model (in seconds). This is the time step for the outermost atmospheric model loop and must be a positive integer value. It corresponds to the frequency at which the physics routines and the top level dynamics routine are called. (Note that one call to the top-level dynamics routine results in multiple calls to the horizontal dynamics, tracer transport, and vertical dynamics routines; see the `FV3 dycore scientific documentation <https://repository.library.noaa.gov/view/noaa/30725>`_ for details.) 
@@ -317,7 +314,6 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
 
 ``EXP_CASE_NAME:``
    A name for the experiment. This variable can be changed to any name the user wants (but note that whitespace and some punctuation characters are not allowed). However, the best names will indicate useful information about the experiment. Each of the sample cases provided sets the experiment name to ``app_[forcing_]starttype_##`` where ``<app>`` is the configuration (:term:`LND` or :term:`ATML`), ``<forcing>`` refers to the atmospheric forcing data used (if any), and ``<starttype>`` indicates either a warmstart or coldstart forecast. 
-   .. COMMENT: What is the ##?
 
 ``FCSTHR:``
    Specifies the length of each forecast in hours. Valid values: Integers > 0.
@@ -347,8 +343,6 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    In ``pre_anal``, the title2tile converter creates the ``sfc_data`` files from the restart files for the ``analysis`` task.
    In ``post_anal``, the title2tile converter creates the restart files for the warmstart forecast from the ``sfc_data`` and restart files for the ``forecast`` task.
 
-   .. COMMENT: Check! 
-
 ``IC_DATA_MODEL:``
    The name of the model that the initial sfc_data files are coming from in the ``fcst_ic`` task. Valid values: ``"gfs"`` | ``gdas``
 
@@ -359,7 +353,7 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    Data assimilation algorithm selection. Valid values: ``"letkf-oi"`` | ``"3dvar"``
 
 ``JEDI_IODACONV_PATH:`` "/work/noaa/epic/UFS_Land-DA_v3.0/jedi_bundle_hercules/build/lib/python3.11"
-   .. COMMENT: Add definition! Python version for the JEDI software/IODA converter? 
+   Path to directory where the libraries of the JEDI IODA converter are located.
    
 ``JEDI_PATH:`` (Default: ``"/path/to/jedi/install/dir"`` )
    Path to the directory where JEDI is installed. The actual value is set in a machine-specific portion of ``setup_wflow_env.py``.
@@ -431,19 +425,19 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    The path to the directory where DA fix files are located. In ``scripts/exlandda_prep_data.sh``, this value is set to ``${FIXlandda}/DA_obs`` unless the user specifies a different path in ``config.yaml``. 
 
 ``OBS_GHCN_SNOW:``
-   Flag to use GHCN snow depth observations. 
+   Flag to use GHCN snow depth observations. Valid values: ``"YES"`` | ``"NO"``.
 
 ``OBS_IMS_SNOW:``
-   Flag to use IMS snow depth observations. 
+   Flag to use IMS snow depth observations. Valid values: ``"YES"`` | ``"NO"``.
 
 ``OBS_SFCSNO:``
-   Flag to use SFCSNO snow depth observations. 
+   Flag to use SFCSNO snow depth observations. Valid values: ``"YES"`` | ``"NO"``.
 
 ``OBS_SMAP:`` "NO"
-   .. COMMENT: Add definition!
+   Flag to use SMAP soil moisture observation data. Valid values: ``"YES"`` | ``"NO"``.
 
 ``OBS_SMOPS:`` "NO"
-   .. COMMENT: Add definition!
+   Flag to use SMOPS soil moisture observation data. Valid values: ``"YES"`` | ``"NO"``.
 
 ``OUTPUT_FH:`` (Default: ``"1 -1"`` )
    Forecast history file output frequency (when second number is ``-1``) or hours at which to write output history files (e.g., ``"6 9 12"``).
@@ -473,7 +467,8 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    The job scheduler to use (e.g., Slurm) on the specified ``MACHINE``. Valid values: ``"slurm"``. Other options may work with a container but have not been tested: ``"pbspro"`` | ``"lsf"`` | ``"lsfcray"`` | ``"none"``
 
 ``SMAP_RAW_WINDOW_SPAN_HALF:`` "5"
-   .. COMMENT: Add definition!
+   The SMAP satellite is designed to create a global map every 2-3 days. Each SMAP data
+   file covers a narrow and long area of 1000 km width, and there can be overlap. To avoid duplication and cover as wide an area as possible, the data files between ``${PDY}${cyc}`` +/- ``${SMAP_RAW_WINDOW_SPAN_HALF}`` hours are combined after the raw data files are converted into the IODA format in the ``prep_data`` task. Its default value is ``5``. This means that 11-hour data sets are combined by default. For example, combined data for ``2025011800`` would contain the raw data files from ``2025011719`` to ``2025011805``. To use a single data set, set the configuration parameter to ``0``.
 
 ``WARMSTART_DIR:`` (Default: ``"/path/to/wart/start/dir"`` )
    The path to restart files for a warmstart experiment. The actual value set is machine-dependent. 
@@ -552,7 +547,7 @@ Data Location Entities
    Surface data (``sfc_data``) files used to initialize a warmstart experiment. 
 
 ``DATADEP_FREEFCST:`` "<cyclestr>&exp_basedir;/exp_case/&EXP_CASE_NAME;/task_analysis_done_@Y@m@d@H.txt</cyclestr>"
-   .. COMMENT: Add definition!
+   Data file(s) required to trigger the forecast task in a :term:`free-forecast <free-fcst>` experiment. 
 
 .. _wf-log:
 
