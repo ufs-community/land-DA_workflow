@@ -8,9 +8,16 @@ These instructions will help users build and run a basic case for the Unified Fo
 
 The out-of-the-box Land DA case described in this User's Guide builds a weather forecast for January 1, 2016 at 18z to January 3, 2016 at 18z. 
 
+.. warning::
+
+   Container links on this page may not work. For assistance, please reach out to NOAA EPIC support:
+
+   * **Email:** `support.epic@noaa.gov <mailto:support.epic@noaa.gov>`__
+   * **Discussions:** `Land DA Q&A on GitHub <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__
+
 .. attention::
 
-   This chapter of the User's Guide should **only** be used for container builds. For non-container builds, see :numref:`Chapter %s <BuildRunLandDA>`, which describes the steps for building and running Land DA on a :ref:`Level 1 System <LevelsOfSupport>` **without** a container. 
+   This chapter of the User's Guide should **only** be used for container builds. For non-container builds, see :numref:`Chapter %s <BuildRunLandDA>`, which describes the steps for building and running Land DA on a :ref:`Level 1 System <LevelsOfSupport>` **without** a container.
 
 .. _Prereqs:
 
