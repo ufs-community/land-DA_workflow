@@ -11,6 +11,13 @@ This chapter provides instructions for building and running basic Land DA cases 
    * A Dec. 21, 2019 00z sample case using :term:`ERA5` data with the UFS Land Driver (``settings_DA_cycle_era5``)
    * A Jan. 3, 2000 00z sample case using :term:`GSWP3` data with the UFS Noah-MP land component (``settings_DA_cycle_gswp3``). 
 
+.. warning::
+
+   Container links on this page may not work. For assistance, please reach out to NOAA EPIC support:
+
+   * **Email:** `support.epic@noaa.gov <mailto:support.epic@noaa.gov>`__
+   * **Discussions:** `Land DA Q&A on GitHub <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__
+
 .. attention::
 
    This chapter of the User's Guide should **only** be used for container builds. For non-container builds, see :numref:`Chapter %s <BuildRunLandDA>`, which describes the steps for building and running Land DA on a :ref:`Level 1 System <LevelsOfSupport>` **without** a container. 
