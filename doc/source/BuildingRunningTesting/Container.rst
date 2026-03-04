@@ -4,9 +4,9 @@
 Containerized Land DA Workflow
 **********************************
 
-These instructions will help users build and run a basic case for the Unified Forecast System (:term:`UFS`) Land Data Assimilation (DA) System using a `Singularity/Apptainer <https://apptainer.org/docs/user/latest/>`_ container. The Land DA :term:`container` packages together the Land DA System with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform environment in which to build and run the Land DA System. Normally, the details of building and running Earth system models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, :term:`MPIs <MPI>`, and package versions available. Installation via Singularity/Apptainer container reduces this variability and allows for a smoother experience building and running Land DA. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Ursa, Hercules). 
+These instructions will help users run a basic case for the Unified Forecast System (:term:`UFS`) Land Data Assimilation (DA) System using a `Singularity/Apptainer <https://apptainer.org/docs/user/latest/>`_ container. The Land DA :term:`container` packages together the Land DA System with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`), prebuilt Land-DA binaries, and provides a uniform environment in which to run the Land DA System. Normally, the details of running Earth system models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, :term:`MPIs <MPI>`, and package versions available. Installation via Singularity/Apptainer container reduces this variability and allows for a smoother experience running Land DA. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Ursa, Hercules). 
 
-This chapter provides instructions for building and running the Unified Forecast System (:term:`UFS`) Land DA System in a container using a Jan. 19-20, 2025 00z sample case. This case is a :term:`LND` :term:`warmstart` configuration that uses :term:`ERA5` atmospheric forcing data, :term:`IMS` snow depth observation data, and the 3D-Var DA algorithm. 
+This chapter provides instructions for running the Unified Forecast System (:term:`UFS`) Land DA System in a container using a Jan. 19-20, 2025 00z sample case. This case is a :term:`LND` :term:`warmstart` configuration that uses :term:`ERA5` atmospheric forcing data, :term:`IMS` snow depth observation data, and the 3D-Var DA algorithm. 
 
 .. include:: ../doc-snippets/gcblizzard-desc.rst
 
@@ -58,7 +58,7 @@ Users on any system may download and untar the data from the `Land DA Data Bucke
 Download or Build the Container
 *********************************
 
-Users can download the ``ubuntu22.04-intel-landda-cadre25.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ or build the Singularity container from a public Docker :term:`container` image. Downloading may be faster depending on the download speed on the user's system. 
+Users can download the ``ubuntu22.04-intel-landda-cadre25-rt.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ or build the Singularity container from a public Docker :term:`container` image. Downloading may be faster depending on the download speed on the user's system. 
 
 Download the Container
 ========================
@@ -67,9 +67,9 @@ To download from the data bucket, users can run:
 
 .. code-block:: console
 
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/CADRE-2025/ubuntu22.04-intel-landda-cadre25.img
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/CADRE-2025/ubuntu22.04-intel-landda-cadre25-rt.img
 
-This will download a container image named ``ubuntu22.04-intel-landda-cadre25.img``. Users may continue to :ref:`set up the container <SetUpContainer>`.
+This will download a container image named ``ubuntu22.04-intel-landda-cadre25-rt.img``. Users may continue to :ref:`set up the container <SetUpContainer>`.
 
 .. _BuildC:
 
@@ -87,7 +87,7 @@ See detailed instructions for this in :numref:`Section %s <CloudHPC>`. Then, run
 
 .. code-block:: console
 
-   singularity build --force ubuntu22.04-intel-landda-cadre25.img docker://noaaepic/ubuntu22.04-intel21.10-landda:ue160-fms202401-cadre25
+   singularity build --force ubuntu22.04-intel-landda-cadre25-rt.img docker://noaaepic/ubuntu22.04-intel2023.2.1-landda:ue160-fms202401-cadre25
 
 This process may take several hours depending on the system. 
 
@@ -109,7 +109,7 @@ Create experiment variables that point to the container image (``$img``) and, if
 .. code-block:: console
 
    # Set path to container
-   export img=/path/to/ubuntu22.04-intel-landda-cadre25.img
+   export img=/path/to/ubuntu22.04-intel-landda-cadre25-rt.img
 
    # Set path to data (if necessary)
    export LANDDA_INPUTS=/path/to/inputs
@@ -136,7 +136,7 @@ where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level
 
    .. code-block:: console
 
-      singularity build --sandbox ubuntu22.04-intel-landda-cadre25 $img
+      singularity build --sandbox ubuntu22.04-intel-landda-cadre25-rt $img
 
    Sometimes binding directories with different names can cause problems. In general, it is recommended that the local base directory and the container directory have the same name. For example, if the host system's top-level directory is ``/user1234``, the user may want to convert the ``.img`` file to a writable sandbox and create a ``user1234`` directory in the sandbox to bind to. 
 
@@ -150,7 +150,7 @@ where:
 
    * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2022.1.2``, ``intelmpi/2021.13``, ``intel-oneapi-compilers/2022.2.1``, ``intel/2023.2.0``)
    * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``impi/2022.1.2``, ``intelmpi/2021.13``, ``intel-oneapi-mpi/2021.7.1``, ``cray-mpich/8.1.28``)
-   * ``-i`` is the full path to the container image ( e.g., ``$BASEDIR/ubuntu22.04-intel-landda-cadre25.img``).
+   * ``-i`` is the full path to the container image ( e.g., ``$BASEDIR/ubuntu22.04-intel-landda-cadre25-rt.img``).
 
 Concretely, users would run something like: 
 
@@ -176,7 +176,7 @@ Running this script will print the following messages to the console:
 
 The user should now see the ``land-DA_workflow`` and ``jedi-bundle`` directories in the ``${BASEDIR}`` directory. 
 
-Containers come with pre-built executables, so users may continue to the next section to configure the experiment. However, users who are interested in learning how to build the executables can skip to :numref:`Section %s <build-exe>` to learn how to build their own executables to use in their experiment. 
+Containers come with pre-built executables, so users may continue to the next section to configure the experiment. 
 
 .. _ConfigureExptC:
 
@@ -276,7 +276,7 @@ Uncomment the second-to-last line of the script, which adds the executables to t
 .. code-block:: console
 
    # Uncomment the line below when running the ATML experiment
-   export SINGULARITYENV_PREPEND_PATH=/home/ubuntu/land-DA_workflow/sorc/build/bin:$SINGULARITYENV_PREPEND_PATH
+   export SINGULARITYENV_PREPEND_PATH=/home/ubuntu/land-DA_workflow/sorc/build/bin
    ${SINGULARITYBIN} exec -B $BINDDIR:$BINDDIR -B $CONTAINERBASE:$CONTAINERBASE $INPUTBIND $img $cmd $arg
 
 .. hint:: 
@@ -385,55 +385,3 @@ On NOAA Cloud systems, the ``sudo su``/``exit`` commands may also be required; u
 
 After setting the ``SINGULARITY_CACHEDIR`` and ``SINGULARITY_TMPDIR`` environment variables, users may continue to :ref:`build the container <BuildC>`.
 
-.. _build-exe:
-
-Building the Executables
-==========================
-
-The executables come pre-built in the Land DA Container. However, users who are curious about building the executables using the ``app_build.sh`` script can follow the instructions here. 
-
-#. Shell into the container and bind the local base directory with a matching container directory. Run:
-   
-   .. code-block:: console 
-      
-      singularity shell -B /<local_base_dir>:/<container_dir> $img
-
-   where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level directory on the local system and in the container, respectively. For example: 
-
-   .. code-block:: console 
-      
-      singularity shell -B /home:/home $img
-
-#. Go to the ``land-DA_workflow`` directory that was copied out of the container.
-
-   .. code-block:: console
-
-      cd ${BASEDIR}/land-DA_workflow/sorc
-
-#. Set up the environment by sourcing the container's spack-stack installation and loading the container modulefiles. 
-
-   .. code-block:: console
-      
-      source /opt/spack-stack/spack-stack-1.6.0/envs/fms-2024.01/.bashenv-fms
-      module use ../modulefiles
-      module load build_singularity_intel
-
-#. Build the model using ``app_build.sh``. Users must select either the :term:`ATML` configuration (``-a=ATML``) or the :term:`LND` configuration when building. Users indicate that the platform (``-p``) is a container using the ``-p=singularity`` argument. Conda was pre-built in previous steps, so users should include the ``--conda=off`` argument to avoid rebuilding it. The ``--build`` option keeps the executables in the ``build`` directory under ``bin``. 
-
-   .. code-block:: console
-
-      # Build ATML configuration (Noah-MP + FV3)
-      ./app_build.sh -p=singularity -a=ATML --conda=off --build
-
-      # Build LND configuration (Noah-MP + DATM)
-      ./app_build.sh -p=singularity --conda=off --build
-
-
-.. note:: 
-   
-   The ``parm/run_container_executable.sh`` script looks for the executables built by the ``app_build.sh`` script. If users decide not to use this script to build the ATML exectuables, then the ``run_container_executable.sh`` script will need to point to the location of the prebuilt executables: 
-
-   * Pre-built LND executable: ``/opt/land-DA_workflow/install/bin``
-   * Pre-built ATML executable: ``/opt/land-DA_workflow/sorc/build-atml/bin/``. 
-
-After building the executables, continue to :numref:`Section %s: Configure the Experiment <ConfigureExptC>`.
