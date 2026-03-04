@@ -8,6 +8,13 @@ These instructions will help users build and run a basic case for the Unified Fo
 
 This chapter provides instructions for building and running the Unified Forecast System (:term:`UFS`) Land DA System sample case using a container. The sample case runs for Jan. 3-4, 2000 00z and uses :term:`GSWP3` data with the UFS Noah-MP land component and data atmosphere (:term:`DATM`) component.
 
+.. warning::
+
+   Container links on this page may not work. For assistance, please reach out to NOAA EPIC support:
+
+   * **Email:** `support.epic@noaa.gov <mailto:support.epic@noaa.gov>`__
+   * **Discussions:** `Land DA Q&A on GitHub <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__
+
 .. attention::
 
    This chapter of the User's Guide should **only** be used for container builds. For non-container builds, see :numref:`Chapter %s <BuildRunLandDA>`, which describes the steps for building and running Land DA on a :ref:`Level 1 System <LevelsOfSupport>` **without** a container. 
