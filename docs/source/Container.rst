@@ -6,7 +6,14 @@ Containerized Land DA Workflow
 
 These instructions will help users build and run a basic case for the Unified Forecast System (:term:`UFS`) Land Data Assimilation (DA) System using a `Singularity <https://docs.sylabs.io/guides/latest/user-guide/>`__ container. The Land DA :term:`container` packages together the Land DA System with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform environment in which to build and run the Land DA System. Normally, the details of building and running Earth systems models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, :term:`MPIs <MPI>`, and package versions available. Installation via Singularity container reduces this variability and allows for a smoother experience building and running Land DA. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (i.e., Hera, Orion). 
 
-The out-of-the-box Land DA case described in this User's Guide builds a weather forecast for January 1, 2016 at 18z to January 3, 2016 at 18z. 
+The out-of-the-box Land DA case described in this User's Guide builds a weather forecast for January 1, 2016 at 18z to January 3, 2016 at 18z.
+
+.. warning::
+
+   Container links on this page may not work. For assistance, please reach out to NOAA EPIC support:
+
+   * **Email:** `support.epic@noaa.gov <mailto:support.epic@noaa.gov>`__
+   * **Discussions:** `Land DA Q&A on GitHub <https://github.com/ufs-community/land-DA_workflow/discussions/categories/q-a>`__
 
 .. attention::
 
