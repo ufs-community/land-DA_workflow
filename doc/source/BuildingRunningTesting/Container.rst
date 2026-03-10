@@ -50,15 +50,15 @@ Users on any system may download and untar the data from the `Land DA Data Bucke
 .. code-block:: console
 
    cd ${BASEDIR}
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/CADRE-2025/Land-DA_v2.1_inputs.tar.gz
-   tar xvfz Land-DA_v2.1_inputs.tar.gz
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v3.0.0/LandDAInputDatav3.0.0.tar.gz
+   tar xvfz LandDAInputDatav3.0.0.tar.gz
 
 .. _DownloadContainer:
 
 Download or Build the Container
 *********************************
 
-Users can download the ``ubuntu22.04-intel-landda-cadre25-rt.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ or build the Singularity container from a public Docker :term:`container` image. Downloading may be faster depending on the download speed on the user's system. 
+Users can download the ``ubuntu22.04-intel-landda-release-public-v3.0.0.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ or build the Singularity container from a public Docker :term:`container` image. Downloading may be faster depending on the download speed on the user's system. 
 
 Download the Container
 ========================
@@ -67,9 +67,9 @@ To download from the data bucket, users can run:
 
 .. code-block:: console
 
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/CADRE-2025/ubuntu22.04-intel-landda-cadre25-rt.img
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v3.0.0/ubuntu22.04-intel-landda-release-public-v3.0.0.img
 
-This will download a container image named ``ubuntu22.04-intel-landda-cadre25-rt.img``. Users may continue to :ref:`set up the container <SetUpContainer>`.
+This will download a container image named ``ubuntu22.04-intel-landda-release-public-v3.0.0.img``. Users may continue to :ref:`set up the container <SetUpContainer>`.
 
 .. _BuildC:
 
@@ -87,7 +87,7 @@ See detailed instructions for this in :numref:`Section %s <CloudHPC>`. Then, run
 
 .. code-block:: console
 
-   singularity build --force ubuntu22.04-intel-landda-cadre25-rt.img docker://noaaepic/ubuntu22.04-intel2023.2.1-landda:ue160-fms202401-cadre25
+   singularity build --force ubuntu22.04-intel-landda-release-public-v3.0.0.img docker://noaaepic/ubuntu22.04-intel2024.2.0-1-devel-landda:ue192-v3.0.0
 
 This process may take several hours depending on the system. 
 
@@ -109,7 +109,7 @@ Create experiment variables that point to the container image (``$img``) and, if
 .. code-block:: console
 
    # Set path to container
-   export img=/path/to/ubuntu22.04-intel-landda-cadre25-rt.img
+   export img=/path/to/ubuntu22.04-intel-landda-release-public-v3.0.0.img
 
    # Set path to data (if necessary)
    export LANDDA_INPUTS=/path/to/inputs
@@ -136,7 +136,7 @@ where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level
 
    .. code-block:: console
 
-      singularity build --sandbox ubuntu22.04-intel-landda-cadre25-rt $img
+      singularity build --sandbox ubuntu22.04-intel-landda-release-public-v3.0.0 $img
 
    Sometimes binding directories with different names can cause problems. In general, it is recommended that the local base directory and the container directory have the same name. For example, if the host system's top-level directory is ``/user1234``, the user may want to convert the ``.img`` file to a writable sandbox and create a ``user1234`` directory in the sandbox to bind to. 
 
@@ -148,15 +148,15 @@ Next, run the ``setup_container.sh`` script with the proper arguments.
 
 where:
 
-   * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2022.1.2``, ``intelmpi/2021.13``, ``intel-oneapi-compilers/2022.2.1``, ``intel/2023.2.0``)
-   * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``impi/2022.1.2``, ``intelmpi/2021.13``, ``intel-oneapi-mpi/2021.7.1``, ``cray-mpich/8.1.28``)
-   * ``-i`` is the full path to the container image ( e.g., ``$BASEDIR/ubuntu22.04-intel-landda-cadre25-rt.img``).
+   * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2024.2.1``, ``intelmpi/2021.13``, ``intel-oneapi-compilers/2024.2.1``, ``intel/2023.2.0``)
+   * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``impi/2024.2.1``, ``intelmpi/2021.13``, ``intel-oneapi-mpi/2021.7.1``, ``cray-mpich/8.1.28``)
+   * ``-i`` is the full path to the container image ( e.g., ``$BASEDIR/ubuntu22.04-intel-landda-release-public-v3.0.0.img``).
 
 Concretely, users would run something like: 
 
 .. code-block:: console
    
-   ./setup_container.sh -c=intel/2022.1.2 -m=impi/2022.1.2 -i=$img
+   ./setup_container.sh -c=intel/2024.2.1 -m=impi/2024.2.1 -i=$img
 
 Running this script will print the following messages to the console:
 
@@ -191,21 +191,21 @@ To configure an experiment, first load the workflow modulefiles for the containe
    module use modulefiles
    module load wflow_singularity
 
-Then navigate to the ``parm`` directory and copy the desired case (e.g., ``config.LND.era5.3dvar.ims.warmstart.yaml``) into ``config.yaml``: 
+Then navigate to the ``parm`` directory and copy the desired case (e.g., ``config.LND.era5.3dvar.ims.DA-fcst.warmstart.yaml``) into ``config.yaml``: 
 
 .. code-block:: console
 
    cd parm
    cp config_samples/config.<case>.yaml config.yaml
 
-where ``<case>`` is the name of one of the sample case files in the `samples_cadre <https://github.com/ufs-community/land-DA_workflow/tree/develop/parm/config_samples>`_ directory. 
+where ``<case>`` is the name of one of the sample case files in the `config_samples <https://github.com/ufs-community/land-DA_workflow/tree/develop/parm/config_samples>`_ directory. 
 
-For example, when running the ``LND.era5.3dvar.ims.warmstart`` case, run:
+For example, when running the ``LND.era5.3dvar.ims.DA-fcst.warmstart`` case, run:
 
 .. code-block:: console
 
    cd parm
-   cp config_samples/config.LND.era5.3dvar.ims.warmstart.yaml config.yaml
+   cp config_samples/config.LND.era5.3dvar.ims.DA-fcst.warmstart.yaml config.yaml
 
 Users may configure elements of the experiment in ``config.yaml`` if desired. For example, users may wish to alter ``DATE_FIRST_CYCLE``, ``DATE_LAST_CYCLE``, and/or ``DATE_CYCLE_FREQ_HR`` to indicate a different start cycle, end cycle, and increment. Users may also wish to change the DA algorithm from ``3dvar`` to ``letkf`` via the ``JEDI_ALGORITHM`` variable. Users who wish to run a more complex experiment may change the values in ``config.yaml`` using information from Sections :numref:`%s: Workflow Configuration Parameters <ConfigWorkflow>`, :numref:`%s: I/O for the Land DA System <IO>`, and :numref:`%s: JEDI DA System <DASystem>`. 
 
@@ -260,28 +260,6 @@ If the command runs without issue, this script will print override messages, exp
                   COLDSTART: NO
    INFO::/contrib/${USER}/landda/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/config/validator.py::L76::0 schema-validation errors found in Rocoto config
    INFO::/contrib/${USER}/landda/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/rocoto.py::L66::0 Rocoto XML validation errors found
-
-
-ATML Configurations Only
-==========================
-
-For :term:`ATML` configurations only (e.g., ``cadre3``), users must modify the ``run_container_executable.sh`` script using a code editor of their choice. For example: 
-
-.. code-block:: console
-
-   vim run_container_executable.sh
-
-Uncomment the second-to-last line of the script, which adds the executables to the container by exporting the ``SINGULARITYENV_PREPEND_PATH`` variable. Additionally, make sure that the ``SINGULARITYENV_PREPEND_PATH`` points to the correct location (i.e., modify ``/home/ubuntu`` to match the path to ``land-DA_workflow`` on the user's system).
-
-.. code-block:: console
-
-   # Uncomment the line below when running the ATML experiment
-   export SINGULARITYENV_PREPEND_PATH=/home/ubuntu/land-DA_workflow/sorc/build/bin
-   ${SINGULARITYBIN} exec -B $BINDDIR:$BINDDIR -B $CONTAINERBASE:$CONTAINERBASE $INPUTBIND $img $cmd $arg
-
-.. hint:: 
-
-   When using ``vim``, hit the ``i`` key to enter insert mode and make any changes required. To close and save, hit the ``esc`` key and type ``:wq`` to write the changes to the file and exit/quit the file. Users may opt to use their preferred code editor instead. 
 
 
 .. _RunExptC:
