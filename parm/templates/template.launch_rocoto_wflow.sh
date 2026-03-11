@@ -27,6 +27,9 @@ elif [ "${MACHINE}" == "hercules" ]; then
 elif [ "${MACHINE}" == "gaeac6" ]; then
   module use /ncrc/proj/epic/rocoto/modulefiles/
   module load rocoto
+elif [ "${MACHINE}" == "singularity" ]; then
+  # Add other modules if needed to load rocoto on your system
+  module load rocoto
 else
   echo "FATAL ERROR: modules are not loaded"
   exit 31
