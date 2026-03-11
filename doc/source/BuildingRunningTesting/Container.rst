@@ -148,9 +148,9 @@ Next, run the ``setup_container.sh`` script with the proper arguments.
 
 where:
 
-   * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2024.2.1``, ``intelmpi/2021.13``, ``intel-oneapi-compilers/2024.2.1``, ``intel/2023.2.0``)
-   * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``impi/2024.2.1``, ``intelmpi/2021.13``, ``intel-oneapi-mpi/2021.7.1``, ``cray-mpich/8.1.28``)
-   * ``-i`` is the full path to the container image ( e.g., ``$BASEDIR/ubuntu22.04-intel-landda-release-public-v3.0.0.img``).
+   * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2024.2.1``, ``intel-oneapi-compilers/2024.1.0``, ``intel-oneapi-compilers/2024.2.1``)
+   * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``impi/2024.2.1``, ``intel-oneapi-mpi/2021.12.0``, ``intel-oneapi-mpi/2021.13.1``)
+   * ``-i`` is the full path to the container image ( e.g., ``$BASEDIR/ubuntu22.04-intel-landda-release-public-v3.0.0.img``)
 
 Concretely, users would run something like: 
 
@@ -163,6 +163,8 @@ Running this script will print the following messages to the console:
 .. code-block:: console
 
    Copying out land-DA_workflow from container
+   /usr/bin/cp: cannot open '/opt/land-DA_workflow/sorc/conda/pkgs/pyshp-3.0.3-pyhd8ed1ab_0/info/test/build_env_setup.sh' for reading: Permission denied
+   /usr/bin/cp: cannot open '/opt/land-DA_workflow/sorc/conda/pkgs/pyshp-3.0.3-pyhd8ed1ab_0/info/test/conda_build.sh' for reading: Permission denied
    Checking if LANDDA_INPUTS variable exists and linking to land-DA_workflow
    Land DA data exists, creating links
    Updating scripts files
@@ -170,7 +172,6 @@ Running this script will print the following messages to the console:
    Updating run related scripts
    Setup conda
    Getting the jedi test data from container
-   Update experiment variables
    Creating links for exe
    Done
 
@@ -219,7 +220,7 @@ Generate the experiment directory by running:
 
    ./setup_wflow_env.py -p=singularity
 
-If the command runs without issue, this script will print override messages, experiment details, and "0 errors found" messages to the console, similar to the following excerpts: 
+If the command runs without issue, this script will print override messages, experiment details, and "Schema validation succeeded for Rocoto config/XML" messages to the console, similar to the following excerpts: 
 
 .. code-block:: console
 
@@ -258,8 +259,8 @@ If the command runs without issue, this script will print override messages, exp
                   OUTPUT_FH: 1 -1
                   COMINgdas: 
                   COLDSTART: NO
-   INFO::/contrib/${USER}/landda/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/config/validator.py::L76::0 schema-validation errors found in Rocoto config
-   INFO::/contrib/${USER}/landda/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/rocoto.py::L66::0 Rocoto XML validation errors found
+   INFO::/contrib/${USER}/landda/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/config/validator.py::L81::Schema validation succeeded for Rocoto config
+   INFO::/contrib/${USER}/landda/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/rocoto.py::L81::Schema validation succeeded for Rocoto XML
 
 
 .. _RunExptC:
@@ -267,7 +268,7 @@ If the command runs without issue, this script will print override messages, exp
 Run the Experiment
 ********************
 
-To run the experiment, users may submit tasks manually via ``rocotorun`` or use a script to automate submission.
+To run the experiment, users may submit tasks manually via ``rocotorun`` or use the ``automate_launch_script.py`` script to automate the task submission.
 
 .. _WflowOverviewC:
 
@@ -281,16 +282,39 @@ Workflow Overview
 Automated Run
 ==================
 
-To submit jobs automatically, users should navigate to the experiment directory, download the ``run_expt.sh`` script, modify permissions, and run the script: 
+To automate task submission using ``automate_launch_script.py``, simply run the script:
 
 .. code-block:: console
 
-   cd /path/to/exp_case/<EXP_CASE_NAME>
-   wget https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/run_expt.sh .
-   chmod 755 run_expt.sh
-   ./run_expt.sh
+   ./automate_launch_script.py
 
-where ``<EXP_CASE_NAME>`` is replaced with the actual name of the experiment directory (e.g., ``lnd_era5_warmstart_00``).
+The console will output progress messages every 10 seconds by default:
+
+.. code-block:: console
+
+   Running ./launch_rocoto_wflow.sh ...
+    Cycles: 0 out of 2 completed.
+    Detected wflow_status = IN PROGRESS
+    Waiting 10 seconds before next run ...
+
+   ...
+
+   Running ./launch_rocoto_wflow.sh ...
+    Cycles: 1 out of 2 completed.
+    Detected wflow_status = IN PROGRESS
+    Waiting 10 seconds before next run ...
+
+   Running ./launch_rocoto_wflow.sh ...
+    Cycles: 2 out of 2 completed.
+    Detected wflow_status = SUCCESS
+
+    !!! ===== Workflow completed successfully. Stopping ===== !!!
+
+Users can change how often the script relaunches by adding the ``-i`` argument. For example, to run the workflow launch script every 15 seconds, users would run:
+
+.. code-block:: console
+
+   ./automate_launch_script.py -i=15
 
 To check the status of the experiment, see :numref:`Section %s <VerifySuccess>` on tracking experiment progress.
 
