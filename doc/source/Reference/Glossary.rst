@@ -98,10 +98,13 @@ Glossary
       The Global Historical Climatology Network (`GHCN <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_) is "an integrated database of daily climate summaries from land surface stations across the globe."" 
 
    GSWP3
-      The Global Soil Wetness Project Phase 3 dataset is a century-long comprehensive set of data documenting several variables for hydro-energy-eco systems. 
+      The `Global Soil Wetness Project Phase 3 <https://www.isimip.org/gettingstarted/input-data-bias-adjustment/details/4/>`_ dataset is a century-long comprehensive set of data documenting several variables for hydro-energy-eco systems. 
 
    HPC
       High-Performance Computing.
+
+   ICs
+      Initial conditions.
 
    IMS 
       The `Interactive Multisensor Snow and Ice Mapping System <https://usicecenter.gov/Products/ImsHome>`_ (IMS) is "an operational software package used to demarcate the presence of snow and ice across the entire northern hemisphere."

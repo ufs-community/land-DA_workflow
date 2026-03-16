@@ -39,12 +39,14 @@ The :term:`JEDI` Configuration Builder (JCB) is a tool that facilitates the use 
 
    Flow Diagram of JCB
 
-Concretely, repositories that implement JCB interact with the main JCB code via a JCB input file. In the Land DA repository, this file is called ``jcb-base.yaml``, and it is built using the JCB template file ``parm/jedi/jcb-base_land.yaml.j2``. When users run ``parm/setup_wflow_env.py`` to set up the workflow, ``jcb-base.yaml`` is produced by rendering ``jcb-base_land.yaml.j2`` using values from the user's ``config.yaml`` file. JCB uses this ``jcb-base.yaml`` file to assemble the proper subtemplates from the JCB-algorithms and JCB-gdas repositories into the final JEDI DA workflow file. Note that JCB can generate a JEDI input configuration YAML file only when ``CUSTOM_JEDI_CONFIG_FLAG: NO`` in the configuration file.
+Concretely, repositories that implement JCB interact with the main JCB code via a JCB input file. In the Land DA repository, this file is called ``jcb-base.yaml``, and it is built using the JCB template file ``parm/jedi/jcb-base_land.yaml.j2``. When users run ``parm/setup_wflow_env.py`` to set up the workflow, ``jcb-base.yaml`` is produced by rendering ``jcb-base_land.yaml.j2`` using values from the user's ``config.yaml`` file. JCB uses this ``jcb-base.yaml`` file to assemble the proper subtemplates from the JCB-algorithms and JCB-gdas repositories into the final JEDI DA workflow file. Note that JCB can generate a JEDI input configuration YAML file only when ``CUSTOM_JEDI_CONFIG_FLAG`` is set to ``NO`` in the configuration file.
 
 JCB Components
 ================
 
-The JCB ecosystem has three components: JCB, JCB-algorithms, and JCB-gdas. 
+:numref:`Table %s <jcb-repos>` lists the three repositories in the JCB ecosystem. 
+
+.. _jcb-repos:
 
 .. list-table:: JCB and component repositories
    :header-rows: 1
@@ -76,7 +78,7 @@ In the workflow, the first :ref:`workflow tasks <wflow-overview>` to run are:
 
    * ``jcb`` 
    * ``prep_data``
-   * ``pre_anal`` (:term:`LND`) or ``fcst_ic`` (:term:`ATML`) (not required for every experiment)
+   * ``pre_anal`` (:term:`LND`, :term:`ATML` warmstart) or ``fcst_ic`` (:term:`ATML` coldstart)
 
 The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and information provided in the ``land_analysis.xml`` file (e.g., DA algorithm, cycle dates). The template file `jcb-base_snow.yaml.j2 <https://github.com/ufs-community/land-DA_workflow/blob/develop/parm/jedi/jcb-base_snow.yaml.j2>`_ is filled in using information from ``land_analysis.xml`` during the ``jcb`` task. This produces the ``jcb-base_snow.yaml`` file, which points to files containing information on geometry, time window, background, driver, local ensemble DA, and/or output increment. This information is used as input to create a YAML file (``jedi_<algorithm>_snow.yaml``, where ``<algorithm>`` is ``letkf-oi`` or ``3dvar``) containing detailed algorithm-specific information. These two files (``jcb-base_snow.yaml`` and ``jedi_<algorithm>_snow.yaml``) form the basis of the DA system configuration in the Land DA System. 
 

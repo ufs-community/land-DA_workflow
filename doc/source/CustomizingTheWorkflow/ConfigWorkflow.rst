@@ -322,7 +322,7 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    Forecast hour at restart in UFS Weather Model (in hours; set in ``model_configure``).
 
 ``FRAC_GRID:``
-   Flag used by the tile2tile converter to switch variable names between JEDI and the land model. Two key variable names do not match between JEDI (``sfc_data`` files) and the land model (restart files):
+   Flag for the fractional grid option in UFS_UTILS and the UFS WM. When the fractional grid option (``frac_grid``) was introduced in 2024, some variable names such as snow depth were changed in the WM and UFS_UTILS. However, these variable names were not changed in the Noah-MP land model component. The tile2tile converter uses this flag to switch variable names between JEDI and the land model. When fractional grid is enabled (``FRAC_GRID: "YES"``), two key variable names do not match between JEDI (``sfc_data`` files) and the land model (restart files), and the tile2tile converter must translate between them:
 
    .. list-table:: Mismatched Variable Names
       :header-rows: 1
