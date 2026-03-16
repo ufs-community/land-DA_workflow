@@ -15,7 +15,7 @@ cd ${BUILD_DIR}
 cp -p "${TEST_DIR}/${PLATFORM}_ctest.sh" ${BUILD_DIR}/.
 
 if [ "${PLATFORM}" = "hera" ] || [ "${PLATFORM}" = "hercules" ] || [ "${PLATFORM}" = "orion" ] || [ "${PLATFORM}" = "ursa" ]; then
-  JOB_ID=$(sbatch --job-name=ctest --account=epic --qos=batch --ntasks-per-node=13 --nodes=1 --time=00:30:00 ./${PLATFORM}_ctest.sh | awk '{print $4}')
+  JOB_ID=$(sbatch --job-name=ctest --account=epic --qos=batch --ntasks-per-node=13 --nodes=1 --time=00:30:00 --exclusive ./${PLATFORM}_ctest.sh | awk '{print $4}')
 elif [ "${PLATFORM}" = "gaeac6" ]; then
   JOB_ID=$(sbatch --job-name=ctest --account=bil-fire8 -M c6 -p batch --qos=normal --ntasks-per-node=13 --nodes=1 --time=00:30:00 ./${PLATFORM}_ctest.sh | awk '{print $4}')
 else

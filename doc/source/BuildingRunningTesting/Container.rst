@@ -4,9 +4,9 @@
 Containerized Land DA Workflow
 **********************************
 
-These instructions will help users build and run a basic case for the Unified Forecast System (:term:`UFS`) Land Data Assimilation (DA) System using a `Singularity/Apptainer <https://apptainer.org/docs/user/latest/>`_ container. The Land DA :term:`container` packages together the Land DA System with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`) and provides a uniform environment in which to build and run the Land DA System. Normally, the details of building and running Earth system models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, :term:`MPIs <MPI>`, and package versions available. Installation via Singularity/Apptainer container reduces this variability and allows for a smoother experience building and running Land DA. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Ursa, Hercules). 
+These instructions will help users run a basic case for the Unified Forecast System (:term:`UFS`) Land Data Assimilation (DA) System using a `Singularity/Apptainer <https://apptainer.org/docs/user/latest/>`_ container. The Land DA :term:`container` packages together the Land DA System with its dependencies (e.g., :term:`spack-stack`, :term:`JEDI`), prebuilt Land-DA binaries, and provides a uniform environment in which to run the Land DA System. Normally, the details of running Earth system models will vary based on the computing platform because there are many possible combinations of operating systems, compilers, :term:`MPIs <MPI>`, and package versions available. Installation via Singularity/Apptainer container reduces this variability and allows for a smoother experience running Land DA. This approach is recommended for users not running Land DA on a supported :ref:`Level 1 <LevelsOfSupport>` system (e.g., Ursa, Hercules). 
 
-This chapter provides instructions for building and running the Unified Forecast System (:term:`UFS`) Land DA System in a container using a Jan. 19-20, 2025 00z sample case. This case is a :term:`LND` :term:`warmstart` configuration that uses :term:`ERA5` atmospheric forcing data, :term:`IMS` snow depth observation data, and the 3D-Var DA algorithm. 
+This chapter provides instructions for running the Unified Forecast System (:term:`UFS`) Land DA System in a container using a Jan. 19-20, 2025 00z sample case. This case is a :term:`LND` :term:`warmstart` configuration that uses :term:`ERA5` atmospheric forcing data, :term:`IMS` snow depth observation data, and the 3D-Var DA algorithm. 
 
 .. include:: ../doc-snippets/gcblizzard-desc.rst
 
@@ -50,15 +50,15 @@ Users on any system may download and untar the data from the `Land DA Data Bucke
 .. code-block:: console
 
    cd ${BASEDIR}
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/CADRE-2025/Land-DA_v2.1_inputs.tar.gz
-   tar xvfz Land-DA_v2.1_inputs.tar.gz
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v3.0.0/LandDAInputDatav3.0.0.tar.gz
+   tar xvfz LandDAInputDatav3.0.0.tar.gz
 
 .. _DownloadContainer:
 
 Download or Build the Container
 *********************************
 
-Users can download the ``ubuntu22.04-intel-landda-cadre25.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ or build the Singularity container from a public Docker :term:`container` image. Downloading may be faster depending on the download speed on the user's system. 
+Users can download the ``ubuntu22.04-intel-landda-release-public-v3.0.0.img`` container from the `Land DA Data Bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ or build the Singularity container from a public Docker :term:`container` image. Downloading may be faster depending on the download speed on the user's system. 
 
 Download the Container
 ========================
@@ -67,9 +67,9 @@ To download from the data bucket, users can run:
 
 .. code-block:: console
 
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/CADRE-2025/ubuntu22.04-intel-landda-cadre25.img
+   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v3.0.0/ubuntu22.04-intel-landda-release-public-v3.0.0.img
 
-This will download a container image named ``ubuntu22.04-intel-landda-cadre25.img``. Users may continue to :ref:`set up the container <SetUpContainer>`.
+This will download a container image named ``ubuntu22.04-intel-landda-release-public-v3.0.0.img``. Users may continue to :ref:`set up the container <SetUpContainer>`.
 
 .. _BuildC:
 
@@ -87,7 +87,7 @@ See detailed instructions for this in :numref:`Section %s <CloudHPC>`. Then, run
 
 .. code-block:: console
 
-   singularity build --force ubuntu22.04-intel-landda-cadre25.img docker://noaaepic/ubuntu22.04-intel21.10-landda:ue160-fms202401-cadre25
+   singularity build --force ubuntu22.04-intel-landda-release-public-v3.0.0.img docker://noaaepic/ubuntu22.04-intel2024.2.0-1-devel-landda:ue192-v3.0.0
 
 This process may take several hours depending on the system. 
 
@@ -109,7 +109,7 @@ Create experiment variables that point to the container image (``$img``) and, if
 .. code-block:: console
 
    # Set path to container
-   export img=/path/to/ubuntu22.04-intel-landda-cadre25.img
+   export img=/path/to/ubuntu22.04-intel-landda-release-public-v3.0.0.img
 
    # Set path to data (if necessary)
    export LANDDA_INPUTS=/path/to/inputs
@@ -136,7 +136,7 @@ where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level
 
    .. code-block:: console
 
-      singularity build --sandbox ubuntu22.04-intel-landda-cadre25 $img
+      singularity build --sandbox ubuntu22.04-intel-landda-release-public-v3.0.0 $img
 
    Sometimes binding directories with different names can cause problems. In general, it is recommended that the local base directory and the container directory have the same name. For example, if the host system's top-level directory is ``/user1234``, the user may want to convert the ``.img`` file to a writable sandbox and create a ``user1234`` directory in the sandbox to bind to. 
 
@@ -148,21 +148,23 @@ Next, run the ``setup_container.sh`` script with the proper arguments.
 
 where:
 
-   * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2022.1.2``, ``intelmpi/2021.13``, ``intel-oneapi-compilers/2022.2.1``, ``intel/2023.2.0``)
-   * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``impi/2022.1.2``, ``intelmpi/2021.13``, ``intel-oneapi-mpi/2021.7.1``, ``cray-mpich/8.1.28``)
-   * ``-i`` is the full path to the container image ( e.g., ``$BASEDIR/ubuntu22.04-intel-landda-cadre25.img``).
+   * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2024.2.1``, ``intel-oneapi-compilers/2024.1.0``, ``intel-oneapi-compilers/2024.2.1``)
+   * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``impi/2024.2.1``, ``intel-oneapi-mpi/2021.12.0``, ``intel-oneapi-mpi/2021.13.1``)
+   * ``-i`` is the full path to the container image ( e.g., ``$BASEDIR/ubuntu22.04-intel-landda-release-public-v3.0.0.img``)
 
 Concretely, users would run something like: 
 
 .. code-block:: console
    
-   ./setup_container.sh -c=intel/2022.1.2 -m=impi/2022.1.2 -i=$img
+   ./setup_container.sh -c=intel/2024.2.1 -m=impi/2024.2.1 -i=$img
 
 Running this script will print the following messages to the console:
 
 .. code-block:: console
 
    Copying out land-DA_workflow from container
+   /usr/bin/cp: cannot open '/opt/land-DA_workflow/sorc/conda/pkgs/pyshp-3.0.3-pyhd8ed1ab_0/info/test/build_env_setup.sh' for reading: Permission denied
+   /usr/bin/cp: cannot open '/opt/land-DA_workflow/sorc/conda/pkgs/pyshp-3.0.3-pyhd8ed1ab_0/info/test/conda_build.sh' for reading: Permission denied
    Checking if LANDDA_INPUTS variable exists and linking to land-DA_workflow
    Land DA data exists, creating links
    Updating scripts files
@@ -170,13 +172,12 @@ Running this script will print the following messages to the console:
    Updating run related scripts
    Setup conda
    Getting the jedi test data from container
-   Update experiment variables
    Creating links for exe
    Done
 
 The user should now see the ``land-DA_workflow`` and ``jedi-bundle`` directories in the ``${BASEDIR}`` directory. 
 
-Containers come with pre-built executables, so users may continue to the next section to configure the experiment. However, users who are interested in learning how to build the executables can skip to :numref:`Section %s <build-exe>` to learn how to build their own executables to use in their experiment. 
+Containers come with pre-built executables, so users may continue to the next section to configure the experiment. 
 
 .. _ConfigureExptC:
 
@@ -191,21 +192,21 @@ To configure an experiment, first load the workflow modulefiles for the containe
    module use modulefiles
    module load wflow_singularity
 
-Then navigate to the ``parm`` directory and copy the desired case (e.g., ``config.LND.era5.3dvar.ims.warmstart.yaml``) into ``config.yaml``: 
+Then navigate to the ``parm`` directory and copy the desired case (e.g., ``config.LND.era5.3dvar.ims.DA-fcst.warmstart.yaml``) into ``config.yaml``: 
 
 .. code-block:: console
 
    cd parm
    cp config_samples/config.<case>.yaml config.yaml
 
-where ``<case>`` is the name of one of the sample case files in the `samples_cadre <https://github.com/ufs-community/land-DA_workflow/tree/develop/parm/config_samples>`_ directory. 
+where ``<case>`` is the name of one of the sample case files in the `config_samples <https://github.com/ufs-community/land-DA_workflow/tree/develop/parm/config_samples>`_ directory. 
 
-For example, when running the ``LND.era5.3dvar.ims.warmstart`` case, run:
+For example, when running the ``LND.era5.3dvar.ims.DA-fcst.warmstart`` case, run:
 
 .. code-block:: console
 
    cd parm
-   cp config_samples/config.LND.era5.3dvar.ims.warmstart.yaml config.yaml
+   cp config_samples/config.LND.era5.3dvar.ims.DA-fcst.warmstart.yaml config.yaml
 
 Users may configure elements of the experiment in ``config.yaml`` if desired. For example, users may wish to alter ``DATE_FIRST_CYCLE``, ``DATE_LAST_CYCLE``, and/or ``DATE_CYCLE_FREQ_HR`` to indicate a different start cycle, end cycle, and increment. Users may also wish to change the DA algorithm from ``3dvar`` to ``letkf`` via the ``JEDI_ALGORITHM`` variable. Users who wish to run a more complex experiment may change the values in ``config.yaml`` using information from Sections :numref:`%s: Workflow Configuration Parameters <ConfigWorkflow>`, :numref:`%s: I/O for the Land DA System <IO>`, and :numref:`%s: JEDI DA System <DASystem>`. 
 
@@ -219,7 +220,7 @@ Generate the experiment directory by running:
 
    ./setup_wflow_env.py -p=singularity
 
-If the command runs without issue, this script will print override messages, experiment details, and "0 errors found" messages to the console, similar to the following excerpts: 
+If the command runs without issue, this script will print override messages, experiment details, and "Schema validation succeeded for Rocoto config/XML" messages to the console, similar to the following excerpts: 
 
 .. code-block:: console
 
@@ -258,30 +259,8 @@ If the command runs without issue, this script will print override messages, exp
                   OUTPUT_FH: 1 -1
                   COMINgdas: 
                   COLDSTART: NO
-   INFO::/contrib/${USER}/landda/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/config/validator.py::L76::0 schema-validation errors found in Rocoto config
-   INFO::/contrib/${USER}/landda/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/rocoto.py::L66::0 Rocoto XML validation errors found
-
-
-ATML Configurations Only
-==========================
-
-For :term:`ATML` configurations only (e.g., ``cadre3``), users must modify the ``run_container_executable.sh`` script using a code editor of their choice. For example: 
-
-.. code-block:: console
-
-   vim run_container_executable.sh
-
-Uncomment the second-to-last line of the script, which adds the executables to the container by exporting the ``SINGULARITYENV_PREPEND_PATH`` variable. Additionally, make sure that the ``SINGULARITYENV_PREPEND_PATH`` points to the correct location (i.e., modify ``/home/ubuntu`` to match the path to ``land-DA_workflow`` on the user's system).
-
-.. code-block:: console
-
-   # Uncomment the line below when running the ATML experiment
-   export SINGULARITYENV_PREPEND_PATH=/home/ubuntu/land-DA_workflow/sorc/build/bin:$SINGULARITYENV_PREPEND_PATH
-   ${SINGULARITYBIN} exec -B $BINDDIR:$BINDDIR -B $CONTAINERBASE:$CONTAINERBASE $INPUTBIND $img $cmd $arg
-
-.. hint:: 
-
-   When using ``vim``, hit the ``i`` key to enter insert mode and make any changes required. To close and save, hit the ``esc`` key and type ``:wq`` to write the changes to the file and exit/quit the file. Users may opt to use their preferred code editor instead. 
+   INFO::/contrib/${USER}/landda/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/config/validator.py::L81::Schema validation succeeded for Rocoto config
+   INFO::/contrib/${USER}/landda/land-DA_workflow/sorc/conda/envs/land_da/lib/python3.12/site-packages/uwtools/rocoto.py::L81::Schema validation succeeded for Rocoto XML
 
 
 .. _RunExptC:
@@ -289,7 +268,7 @@ Uncomment the second-to-last line of the script, which adds the executables to t
 Run the Experiment
 ********************
 
-To run the experiment, users may submit tasks manually via ``rocotorun`` or use a script to automate submission.
+To run the experiment, users may submit tasks manually via ``rocotorun`` or use the ``automate_launch_script.py`` script to automate the task submission.
 
 .. _WflowOverviewC:
 
@@ -303,16 +282,39 @@ Workflow Overview
 Automated Run
 ==================
 
-To submit jobs automatically, users should navigate to the experiment directory, download the ``run_expt.sh`` script, modify permissions, and run the script: 
+To automate task submission using ``automate_launch_script.py``, simply run the script:
 
 .. code-block:: console
 
-   cd /path/to/exp_case/<EXP_CASE_NAME>
-   wget https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/run_expt.sh .
-   chmod 755 run_expt.sh
-   ./run_expt.sh
+   ./automate_launch_script.py
 
-where ``<EXP_CASE_NAME>`` is replaced with the actual name of the experiment directory (e.g., ``lnd_era5_warmstart_00``).
+The console will output progress messages every 10 seconds by default:
+
+.. code-block:: console
+
+   Running ./launch_rocoto_wflow.sh ...
+    Cycles: 0 out of 2 completed.
+    Detected wflow_status = IN PROGRESS
+    Waiting 10 seconds before next run ...
+
+   ...
+
+   Running ./launch_rocoto_wflow.sh ...
+    Cycles: 1 out of 2 completed.
+    Detected wflow_status = IN PROGRESS
+    Waiting 10 seconds before next run ...
+
+   Running ./launch_rocoto_wflow.sh ...
+    Cycles: 2 out of 2 completed.
+    Detected wflow_status = SUCCESS
+
+    !!! ===== Workflow completed successfully. Stopping ===== !!!
+
+Users can change how often the script relaunches by adding the ``-i`` argument. For example, to run the workflow launch script every 15 seconds, users would run:
+
+.. code-block:: console
+
+   ./automate_launch_script.py -i=15
 
 To check the status of the experiment, see :numref:`Section %s <VerifySuccess>` on tracking experiment progress.
 
@@ -385,55 +387,3 @@ On NOAA Cloud systems, the ``sudo su``/``exit`` commands may also be required; u
 
 After setting the ``SINGULARITY_CACHEDIR`` and ``SINGULARITY_TMPDIR`` environment variables, users may continue to :ref:`build the container <BuildC>`.
 
-.. _build-exe:
-
-Building the Executables
-==========================
-
-The executables come pre-built in the Land DA Container. However, users who are curious about building the executables using the ``app_build.sh`` script can follow the instructions here. 
-
-#. Shell into the container and bind the local base directory with a matching container directory. Run:
-   
-   .. code-block:: console 
-      
-      singularity shell -B /<local_base_dir>:/<container_dir> $img
-
-   where ``<local_base_dir>`` and ``<container_dir>`` are replaced with a top-level directory on the local system and in the container, respectively. For example: 
-
-   .. code-block:: console 
-      
-      singularity shell -B /home:/home $img
-
-#. Go to the ``land-DA_workflow`` directory that was copied out of the container.
-
-   .. code-block:: console
-
-      cd ${BASEDIR}/land-DA_workflow/sorc
-
-#. Set up the environment by sourcing the container's spack-stack installation and loading the container modulefiles. 
-
-   .. code-block:: console
-      
-      source /opt/spack-stack/spack-stack-1.6.0/envs/fms-2024.01/.bashenv-fms
-      module use ../modulefiles
-      module load build_singularity_intel
-
-#. Build the model using ``app_build.sh``. Users must select either the :term:`ATML` configuration (``-a=ATML``) or the :term:`LND` configuration when building. Users indicate that the platform (``-p``) is a container using the ``-p=singularity`` argument. Conda was pre-built in previous steps, so users should include the ``--conda=off`` argument to avoid rebuilding it. The ``--build`` option keeps the executables in the ``build`` directory under ``bin``. 
-
-   .. code-block:: console
-
-      # Build ATML configuration (Noah-MP + FV3)
-      ./app_build.sh -p=singularity -a=ATML --conda=off --build
-
-      # Build LND configuration (Noah-MP + DATM)
-      ./app_build.sh -p=singularity --conda=off --build
-
-
-.. note:: 
-   
-   The ``parm/run_container_executable.sh`` script looks for the executables built by the ``app_build.sh`` script. If users decide not to use this script to build the ATML exectuables, then the ``run_container_executable.sh`` script will need to point to the location of the prebuilt executables: 
-
-   * Pre-built LND executable: ``/opt/land-DA_workflow/install/bin``
-   * Pre-built ATML executable: ``/opt/land-DA_workflow/sorc/build-atml/bin/``. 
-
-After building the executables, continue to :numref:`Section %s: Configure the Experiment <ConfigureExptC>`.
