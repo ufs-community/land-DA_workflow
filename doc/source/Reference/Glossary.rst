@@ -52,7 +52,7 @@ Glossary
    
    DA increment
    Analysis increment
-      A DA increment, or analysis increment, is the difference between a "first guess" of the state of the system (usually a previous model forecast) and the "best guess" of what the actual initial state of the system is (the analysis produced by the DA system). When introducing a new starting state for the model integration, care must be taken to ensure that the initial state is balanced and realistic according to the model equations, otherwise the forecast may be poor or even unstable. The Land DA methods (3D-Var and LETKF-OI) achieve this by minimizing a cost function that accounts for the model state, observations, and the error characteristics present in each.
+      A DA increment, or analysis increment, is the difference between a "first guess" of the state of the system (usually a previous model forecast) and the "best guess" of what the actual initial state of the system is (the analysis produced by the DA system). When introducing a new starting state for the model integration, care must be taken to ensure that the initial state is balanced and realistic according to the model equations, otherwise the forecast may be poor or even unstable. The Land DA 3D-Var implementation achieves this by minimizing a cost function that accounts for the model state, observations, and the error characteristics present in each. The Land DA LETKF-OI implementation combines the state-dependent background error derived from an ensemble forecast with the observations and their corresponding uncertainties to produce an analysis ensemble (:cite:t:`HuntEtAl2007`, 2007).
       Refer to the linked articles for more information on `3D-Var <https://www.ecmwf.int/sites/default/files/elibrary/2003/76079-variational-data-assimiltion-theory-and-overview_0.pdf>`_ and `LETKF-OI <https://doi.org/10.1016/j.physd.2006.11.008>`_ respectively.
 
    DATM
@@ -72,7 +72,7 @@ Glossary
       `Earth System Modeling Framework <https://earthsystemmodeling.org/docs/release/latest/ESMF_usrdoc/>`_. The ESMF defines itself as "a suite of software tools for developing high-performance, multi-component Earth science modeling applications." It is a community-developed software infrastructure for building and coupling models. 
 
    ex-scripts
-      Scripting layer (contained in ``land-DA_workflow/jobs/``) that should be called by a :term:`J-job <J-jobs>` for each workflow component to run a specific task or sub-task in the workflow. The different scripting layers are described in detail in the :nco:`NCO Implementation Standards document <ImplementationStandards.v11.0.0.pdf>`.
+      Scripting layer (contained in ``land-DA_workflow/scripts/``) that should be called by a :term:`J-job <J-jobs>` for each workflow component to run a specific task or sub-task in the workflow. The different scripting layers are described in detail in the :nco:`NCO Implementation Standards document <ImplementationStandards.v11.0.0.pdf>`.
 
    FMS
       The Flexible Modeling System (`FMS <https://www.gfdl.noaa.gov/fms/>`_) is a software framework for supporting the efficient
@@ -117,7 +117,7 @@ Glossary
 
    JCB
    JEDI Configuration Builder
-      The JEDI Configuration Builder (JCB) is a python package used to assemble information on :term:`JEDI` algorithms (e.g., letkf-oi, 3dvar) and data assimilation types (e.g., snow, marine, atmosphere) into one convenient YAML file for use in data assimilation applications. 
+      The JEDI Configuration Builder (JCB) is a python package used to assemble information on :term:`JEDI` algorithms (e.g., letkf-oi, 3dvar) and data assimilation types (e.g., snow, land, marine, atmosphere) into one convenient YAML file for use in data assimilation applications. 
 
    JEDI
       The Joint Effort for Data assimilation Integration (`JEDI <https://www.jcsda.org/jcsda-project-jedi>`_) is a unified and versatile data assimilation (DA) system for Earth System Prediction. It aims to enable efficient research and accelerated transition from research to operations by providing a framework that takes into account all components of the Earth system in a consistent manner. The JEDI software package can run on a variety of platforms and for a variety of purposes, and it is designed to readily accommodate new atmospheric and oceanic models and new observation systems. The `JEDI User's Guide <https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/>`_ contains extensive information on the software. 
@@ -128,7 +128,7 @@ Glossary
       :term:`JCSDA`'s `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`_ repository provides an integrated Earth System data assimilation capability. It combines a variety of :term:`JEDI` components, including :term:`OOPS`, :term:`IODA`, and :term:`UFO`. 
 
    LND
-      The LND experiment configuration uses the :term:`land component` with the :term:`DATM` component. 
+      The LND experiment configuration uses the Noah-MP :term:`land component` with the :term:`DATM` component. 
 
    land component
       The Noah Multi-Physics (Noah-MP) land surface model (LSM) is an open-source, community-developed LSM that has been incorporated into the UFS Weather Model (WM). It is the UFS WM's land component. 
@@ -164,7 +164,7 @@ Glossary
 
    NUOPC
    National Unified Operational Prediction Capability
-      The `National Unified Operational Prediction Capability <https://earthsystemmodeling.org/nuopc/>`_ is a consortium of Navy, NOAA, and Air Force modelers and their research partners. It aims to advance the weather modeling systems used by meteorologists, mission planners, and decision makers. NUOPC partners are working toward a common model architecture --- a standard way of building models --- in order to make it easier to collaboratively build modeling systems.
+      The `National Unified Operational Prediction Capability <https://earthsystemmodeling.org/nuopc/>`_ (NUOPC) is a consortium of Navy, NOAA, and Air Force modelers and their research partners. It aims to advance the weather modeling systems used by meteorologists, mission planners, and decision makers. NUOPC partners are working toward a common model architecture --- a standard way of building models --- in order to make it easier to collaboratively build modeling systems.
 
    Noah-MP
       
@@ -189,10 +189,6 @@ Glossary
 
    SFCSNO
       Global Telecommunication System data available from :term:`GDAS`/:term:`GFS`. 
-
-   Skylab
-      `JEDI Skylab <https://www.jcsda.org/jediskylab>`_ is the name for roll-up releases of :term:`JCSDA`'s `jedi-bundle <https://github.com/JCSDA/jedi-bundle>`_ repository. 
-      This software provides an integrated Earth System Data Assimilation capability. JCSDA has tested Skylab capabilities internally via the SkyLab testbed for the following components: atmosphere, land/snow, ocean, sea-ice, aerosols, and atmospheric composition. However, JCSDA plans to stop releasing ``jedi-bundle`` and instead encourage users and developers to move to the ``develop`` branch, which will contain the latest updates. 
 
    SMAP
       `Soil Moisture Active Passive Data (SMAP) <https://nsidc.org/data/smap/data>`_
@@ -224,4 +220,4 @@ Glossary
 
    Weather Model
    WM
-      A prognostic model that can be used for short- and medium-range research and operational forecasts. It can be an atmosphere-only model or an atmospheric model coupled with one or more additional components, such as a wave or ocean model. The SRW App uses the `UFS Weather Model <https://github.com/ufs-community/ufs-weather-model/wiki>`_.
+      A prognostic model that can be used for short- and medium-range research and operational forecasts. It can be run as an atmosphere-only model or as an atmospheric model coupled with one or more additional components, such as a wave or ocean model. The Land DA System uses the `UFS Weather Model <https://github.com/ufs-community/ufs-weather-model/wiki>`_.
