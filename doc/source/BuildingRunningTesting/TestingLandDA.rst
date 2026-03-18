@@ -4,7 +4,7 @@
 Testing the Land DA Workflow
 ************************************
 
-This chapter provides instructions for using the Land DA CTest suite. These steps are designed for use on :ref:`Level 1 <LevelsOfSupport>` systems (e.g., Ursa and Hercules) and may require significant changes on other systems. 
+This chapter provides instructions for using the Land DA CTest suite. These steps are designed for use on :ref:`Level 1 <LevelsOfSupport>` systems (e.g., Ursa and Hercules) and may require significant changes on other systems. They cannot be run via container at this time. 
 
 .. attention:: 
 
@@ -85,25 +85,3 @@ The bottom of the ``out.ctest`` file will include a message with test results. F
    Total Test time (real) =  66.90 sec
 
 If one or more tests fail, users can check the logs at ``${BASEDIR}/land-DA_workflow/sorc/build/Testing/Temporary/LastTest.log`` for more information on the failure.
-
-Running Tests Using a Container
-=================================
-
-.. COMMENT: Update this container section for the release
-
-.. attention::
-
-   The container CTest functionality has been tested in Jenkins. It should be able to run on a sufficiently large cloud instance. However, it is considered unsupported functionality because it has not been thoroughly tested on the cloud for use by the public. 
-
-For containers, the CTest functionality is wrapped in a Dockerfile. Therefore, users will need to build the Dockerfile to run the CTests. Since the Land DA container is quite large, this process can take a long time --- potentially hours. In the future, the development team hopes to simplify and shorten this process. 
-
-.. code-block:: console
-
-   git clone -b release/public-v2.0.0 --recursive https://github.com/ufs-community/land-DA_workflow.git
-   cd land-DA_workflow/sorc/test/ci
-   sudo systemctl start docker
-   sudo docker build -f Dockerfile -t dockerfile-ci-ctest:release .
-
-.. note::
-   
-   ``sudo`` may not be required in front of the last two commands on all systems. 

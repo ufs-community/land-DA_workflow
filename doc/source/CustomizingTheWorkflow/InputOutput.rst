@@ -19,14 +19,14 @@ The Land DA System requires the following files for each case/configuration:
       * NOAH-MP initial conditions (ICs) files
       * FV3 fix files (tiled)
       * JEDI input fix files
-      * Observation data files (:term:`IMS`, :term:`GHCN`, or :term:`SMAP`)
+      * Observation data files (:term:`IMS`, :term:`GHCN`, :term:`SMAP`, :term:`SMOPS`)
       * Cartopy Natural Earth files (only if running the plotting task)
    * For LND cases:
       * Forcing files (ERA5 or GSWP3)
    * For ATML cases:
       * FV3 fix files (global)
    * For coldstart cases:
-      * Model output from a previous model run (e.g., from GDAS, GFS, SMAP, or SMOPS). _________???
+      * Model output from a previous model run (e.g., from GDAS, GFS, SMAP, or SMOPS).
    * For warmstart cases: 
       * Restart files from a model run starting the cycle before the user's selected date (e.g., RESTART files from a WM run)
 
@@ -43,13 +43,6 @@ The `Land DA data bucket <https://registry.opendata.aws/noaa-ufs-land-da/>`_ con
 
 .. code-block:: console
 
-   wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v3.0.0/LandDAInputDatav3.0.0.tar.gz
-   tar xvfz LandDAInputDatav3.0.0.tar.gz
-
-For data specific to the latest release (|latestr|), users can run: 
-
-.. code-block:: console
-   
    wget https://noaa-ufs-land-da-pds.s3.amazonaws.com/current_land_da_release_data/v3.0.0/LandDAInputDatav3.0.0.tar.gz
    tar xvfz LandDAInputDatav3.0.0.tar.gz
 
@@ -125,7 +118,7 @@ The files contain the following data:
      - "volumetric soil liquid"
      - "m3/m3"
 
-The full Land DA data bucket download (see :numref:`Section %s <sample-case-data>`) includes :term:`ICs` for Land DA in the ``inputs/NOAHMP_IC`` directory. These are essentially dummy ICs that can be used with LND and warmstart ATML cases. For :term:`ATML` coldstart cases, the ``fcst_ic`` task will generate the ICs by running the model for one cycle before performing DA, and users need not worry about staging ICs. For :term:`LND` or ATML warmstart cases, ICs must be provided. Users can use the ICs from the ``inputs/NOAHMP_IC`` directory (downloaded from the data bucket) for any case. In theory, users can also choose to use/produce their own ICs, either by running the ATML coldstart case for the cycle before the desired date or by generating them fro the :term:`GDAS` results. However, this is not yet supported functionality for the Land DA System. 
+The full Land DA data bucket download (see :numref:`Section %s <sample-case-data>`) includes :term:`ICs` for Land DA in the ``inputs/NOAHMP_IC`` directory. These are essentially dummy ICs that can be used with LND and warmstart ATML cases. For :term:`ATML` coldstart cases, the ``fcst_ic`` task will generate the ICs by running the model for one cycle before performing DA, and users need not worry about staging ICs. For :term:`LND` or ATML warmstart cases, ICs must be provided. Users can use the ICs from the ``inputs/NOAHMP_IC`` directory (downloaded from the data bucket) for any case. In theory, users can also choose to use/produce their own ICs, either by running the ATML coldstart case for the cycle before the desired date or by generating them from the :term:`GDAS` results. However, this is not yet supported functionality for the Land DA System. 
 
 .. _fv3-fix-tiled:
 
@@ -188,13 +181,13 @@ Observation Data
 
 * Required for: All Land DA cases
 
-The Land DA System can accepts :term:`GHCN`, :term:`IMS`, and :term:`SFCSNO` snow observation data. It accepts :term:`SMAP` or :term:`SMOPS` soil moisture observation data. Users need only provide one type of observation data depending on whether they plan to perform snow or soil moisture data assimilation. 
+The Land DA System can accept :term:`GHCN`, :term:`IMS`, and :term:`SFCSNO` snow observation data. It accepts :term:`SMAP` or :term:`SMOPS` soil moisture observation data. Users need only provide one type of observation data depending on whether they plan to perform snow or soil moisture data assimilation. 
 
 Currently, snow observation data is primarily drawn from the `Global Historical Climatology Network <https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily>`_ (GHCN) and the U.S. National Ice Center (USNIC) Interactive Multisensor Snow and Ice Mapping System (`IMS <https://usicecenter.gov/Products/ImsHome>`_). GHCN and IMS data for provided sample cases are available in the ``inputs/DA_obs`` directory. These data are converted to :ref:`IODA <IODA>` format in the ``prep_data`` task. 
 
 Soil moisture data is primarily drawn from the National Snow and Ice Data Center `Soil Moisture Active Passive <https://nsidc.org/data/smap/data>`_ (SMAP) data set or from the NOAA `Soil Moisture Operational Products System <https://www.ospo.noaa.gov/products/land/smops/>`_ (SMOPS) data set. SMAP and SMOPS data for provided sample cases are available in the ``inputs/DATA_[smap|smops]`` directories. These data are converted to :ref:`IODA <IODA>` format in the ``prep_data`` task.
 
-In each experiment, the ``land_analysis.yaml`` file sets the type(s) of observation files to be used in the experiment via the ``OBS_*_SNOW`` variables (based on selections in ``config.yaml``). Before assimilation, the files for the specified observation type are copied to the run directory (usually ``$BASEDIR/ptmp/<envir>/com/landda/${model_ver}/landda.${PDY}${cyc}/obs`` by default --- see :numref:`Section %s <nco-dir-entities>` for more on these variables), sometimes with a naming-convention change (e.g., ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` to ``ghcn_snow_${YYYY}${MM}${DD}${HH}.nc``).
+In each experiment, the ``land_analysis.yaml`` file sets the type(s) of observation files to be used in the experiment via the ``OBS_*_SNOW`` variables (based on selections in ``config.yaml``). Before assimilation, the files for the specified observation type are copied to the run directory (usually ``${BASEDIR}/ptmp/<envir>/com/landda/${model_ver}/landda.${PDY}${cyc}/obs`` by default --- see :numref:`Section %s <nco-dir-entities>` for more on these variables), sometimes with a naming-convention change (e.g., ``ghcn_snwd_ioda_${YYYY}${MM}${DD}.nc`` to ``ghcn_snow_${YYYY}${MM}${DD}${HH}.nc``).
 
 .. _ghcn-io:
 
@@ -272,7 +265,7 @@ For additional download options, visit the `NSIDC NASA Earthdata Cloud Data Acce
 SMOPS Soil Moisture Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The `Soil Moisture Operational Products System <https://www.ospo.noaa.gov/products/land/smops/>` (SMOPS) "combines soil moisture retrievals from multi-satellites/sensors to provide a global soil moisture map with more spatial and temporal coverage." Observations for Land DA sample cases are available in the ``inputs/DATA_smops`` directory (downloaded in :numref:`Section %s <sample-case-data>`). However, users can download additional observation data for specific dates of choice from the National Environmental Satellite, Data, and Information Service (NESDIS) by navigating to the `NESDIS STAR file share <https://www.star.nesdis.noaa.gov/pub/smcd/emb/SMOPS/SMOPScdr/V2.0/>` and selecting/downloading data for those dates. 
+The `Soil Moisture Operational Products System <https://www.ospo.noaa.gov/products/land/smops/>`_ (SMOPS) "combines soil moisture retrievals from multi-satellites/sensors to provide a global soil moisture map with more spatial and temporal coverage." Observations for Land DA sample cases are available in the ``inputs/DATA_smops`` directory (downloaded in :numref:`Section %s <sample-case-data>`). However, users can download additional observation data for specific dates of choice from the National Environmental Satellite, Data, and Information Service (NESDIS) by navigating to the `NESDIS STAR file share <https://www.star.nesdis.noaa.gov/pub/smcd/emb/SMOPS/SMOPScdr/V2.0/>`_ and selecting/downloading data for those dates. 
 
 Cartopy Natural Earth Files
 ----------------------------
@@ -475,6 +468,8 @@ The FV3 component requires global fix files and FV3 initial conditions files. On
 Global Fix Files
 -------------------
 
+* Required for: :term:`ATML` configurations
+
 Global fix file data for the :term:`FV3` component are required to run the :term:`ATML` configurations. They are located in the ``inputs/FV3_fix_global`` directory (downloaded in :numref:`Section %s <sample-case-data>`). 
 
 .. code-block:: console
@@ -506,6 +501,8 @@ Note that options in brackets indicate multiple files with similar naming conven
 
 ``ATML`` Input Data for Initial Conditions Generation
 -------------------------------------------------------
+
+* Required for: :term:`ATML` coldstart cases
 
 Input data from GDAS or GFS is required to run the :term:`ATML` configurations. The data are located in the ``inputs/DATA_[gdas|gfs]`` directories (downloaded :ref:`above <InputFiles>`) and are used as initial conditions for the ``fcst_ic`` task. The :github:`exlandda_fcst_ic.sh <blob/develop/scripts/exlandda_fcst_ic.sh>` script sets the default path to this data using the ``COMINgdas`` and ``COMINgfs`` variables. The operational :nco:`WCOSS Implementation Standards <>` designate ``COMIN*`` directories as directories containing input data for the model indicated in the directory name (e.g., ``COMINgfs`` contains input data for the GFS model). In addition, these directories (``DATA_[gdas|gfs]``) contain the IMS raw data files. Within each ``COMIN*`` directory, data is organized by cycle date. For example, for ``20250119``, the following data is present in the ``DATA_gdas/20250119`` directory: 
 
@@ -698,190 +695,6 @@ To restart the Land DA System successfully after land model execution, all param
    +--------------------------+-----------------------------------+-----------------------+
 
 Restart files are located in the ``inputs/DATA_RESTART`` directory (downloaded :ref:`above <InputFiles>` from the data bucket). Each forecast cycle also outputs restart files that can be used as input for the next cycle date(s). These restart files will appear in the ``/ptmp/<envir>/com/landda/v<X.Y.Z>/landda.${PDY}/RESTART`` directory. However, users can generate their own RESTART files by running a coldstart GDAS or WM experiment and using the RESTART files produced. 
-
-.. _data-flow:
-
-Data Flow Through the Land DA System
-=======================================
-
-Each step in the Land DA workflow requires particular ``sfc_data`` and restart files; tasks then produce output that may be used as input for the next step in a given cycle. :numref:`Table %s <LND-io>` and :numref:`Table %s <ATML-io>` illustrate the flow of data through the system. These tables demonstrate the important role that surface data files (``sfc_data.tile#.nc``) and restart files (``ufs.cpld.lnd.out.tile#.nc`` or ``ufs_land_restart.tile#.nc``) play as input for Land DA workflow tasks.
-
-.. _LND-io:
-
-.. list-table:: Input & Output Files by Workflow Task -- LND Configuration
-   :header-rows: 1
-
-   * - Task
-     - Input
-     - Output 
-   * - prep_data 
-     - {YYYY}.csv (for GHCN) 
-     
-       ghcnd-stations.txt (for GHCN) 
-       
-       ims{jdate}_4km_v1.3.asc (for IMS)
-       
-       sfc_data.tile#.nc (for IMS)
-       
-       SMAP_L2_SM_P_E (for SMAP)
-       
-       era5_{PDY}{cyc}_avg.nc
-       
-       era5_{PDY}{cyc}_instant.nc
-     - ghcn_snwd_ioda_{DATE}.nc (ghcn_snow_{PDY}{cyc}.nc)
-
-       obs.{PDY}.{cyc}.{obs_type}.nc
-
-       ERA5_forcing_{YYYY}-{MM}-{DD}_fix.nc
-   * - jcb
-     - jcb-base_snow.yaml
-     - jedi_jcb_snow_nml.yaml
-   * - pre_anal 
-     - ufs_land_restart.tile#.nc (ufs.cpld.lnd.out.tile#.nc)
-     - sfc_data.tile#.nc
-   * - analysis
-     - ghcn_snow_{PDY}{cyc}.nc
-       
-       sfc_data.tile#.nc
-       
-       jedi_jcb_snow_nml.yaml 
-     - snowinc.sfc_data.tile#.nc
-
-       sfc_data.tile#.nc
-
-       letkf_hofx_ghcn_{PDY}{cyc}
-   * - post_anal 
-
-     - sfc_data.tile#.nc
-       
-       ufs_land_restart.tile#.nc
-     - ufs_land_restart.tile#.nc
-   * - forecast 
-     - ufs.cpld.lnd.out.tile#.nc (ufs_land_restart.tile#.nc)
-
-       ufs.cpld.datm.r.nc
-       
-       ufs.cpld.cpl.r.nc 
-     - ufs.cpld.lnd.out.tile#.nc (ufs_land_restart.tile#.nc)
-       
-       ufs.cpld.datm.r.nc
-       
-       ufs.cpld.cpl.r.nc
-   * - plot_stat 
-     - diag_{obs_type}_{PDY}{cyc}
-       
-       analysis_{PDY}.log
-
-       forecast_{PDY}.log
-
-       ufs_land_restart.{DATE}.tile#.nc 
-     - hofx_omb_{PDY}_histogram.png
-     
-       hofx_omb_{PDY}_scatter.png
-       
-       landda_timehistory_omb_totalSnowDepth.png
-       
-       landda_out_restart_{DATE}_snwdph_*.png
-       
-       landda_out_combined_{DATE}_snwdph.png
-
-
-.. _ATML-io:
-
-.. list-table:: Input & Output Files by Workflow Task -- ATML
-   :header-rows: 1
-
-   * - Task
-     - Input
-     - Output 
-   * - prep_data
-     - {YYYY}.csv (for GHCN)
-       
-       ghcnd-stations.txt (for GHCN)
-       
-       ims{jdate}_4km_v1.3.asc (for IMS)
-       
-       sfc_data.tile#.nc (for IMS)
-       
-       SMAP_L2_SM_P_E (for SMAP)
-     
-       era5_{PDY}{cyc}_avg.nc
-
-       era5_{PDY}{cyc}_instant.nc    ???????????
-     - ghcn_snwd_ioda_{DATE}.nc (ghcn_snow_{PDY}{cyc}.nc)
-       
-       obs.{PDY}.{cyc}.{obs_type}.nc
-       
-       ERA5_forcing_{YYYY}-{MM}-{DD}_fix.nc
-   * - jcb
-     - jcb-base_snow.yaml 
-     - jedi_jcb_snow_nml.yaml
-   * - analysis 
-     - ghcn_snow_{PDY}{cyc}.nc
-       
-       sfc_data.tile#.nc 
-
-       jedi_jcb_snow_nml.yaml 
-     - snowinc.sfc_data.tile#.nc
-
-       sfc_data.tile#.nc
-
-       letkf_hofx_ghcn_{PDY}{cyc}
-   * - post_anal
-     - sfc_data.tile#.nc 
-       
-       ufs_land_restart.tile#.nc
-
-     - ufs_land_restart.tile#.nc
-   * - fcst_ic
-
-     - gfs.atmanl.nc
-       
-       gfs.sfcanl.nc
-     - gfs_data.tile#.nc
-       
-       sfc_data.tile#.nc
-   * - forecast 
-     - ufs.cpld.lnd.out.tile#.nc  (ufs_land_restart.tile#.nc)
-       ufs.cpld.cpl.r.nc
-
-       fv_core.res.nc
-
-       sfc_data.tile#.nc
-
-       phy_data.tile#.nc
-     - ufs.cpld.lnd.out.tile#.nc (ufs_land_restart.tile#.nc)
-
-       ufs.cpld.cpl.r.nc
-
-       fv_core.res.nc
-
-       sfc_data.tile#.nc
-
-       phy_data.tile#.nc
-
-       atmfHHH.tile#.nc
-
-       sfcfHHH.tile#.nc
-   * - plot_stat
-     - diag_{obs_type}_{PDY}{cyc}
-
-       analysis_{PDY}.log
-
-       forecast_{PDY}.log
-
-       ufs_land_restart.{DATE}.tile#.nc
-     - hofx_omb_{PDY}_histogram.png
-
-       hofx_omb_{PDY}_scatter.png
-
-       landda_timehistory_omb_totalSnowDepth.png
-
-       landda_out_restart_{DATE}_snwdph_*.png
-
-       landda_out_combined_{DATE}_snwdph.png
-       .. COMMENT: Files for snow depth DA only?!
-
 
 .. _output-files:
 
