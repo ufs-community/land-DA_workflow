@@ -14,7 +14,7 @@ If ``rocotorun`` was successful, the ``rocotostat`` command will print a status 
 
 .. code-block:: console
 
-         CYCLE          TASK                       JOBID         STATE  EXIT STATUS   TRIES   DURATION
+          CYCLE         TASK                       JOBID         STATE  EXIT STATUS   TRIES   DURATION
    ======================================================================================================
    202501190000          jcb                    11531200     SUCCEEDED            0       1       11.0
    202501190000    prep_data                    11531199     SUCCEEDED            0       1       25.0

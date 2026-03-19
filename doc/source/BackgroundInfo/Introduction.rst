@@ -133,6 +133,6 @@ bureau, shall not be used in any manner to imply endorsement of any
 commercial product or activity by DOC or the United States Government.
 
 References
-*************
+============
 
 .. bibliography:: ../references.bib

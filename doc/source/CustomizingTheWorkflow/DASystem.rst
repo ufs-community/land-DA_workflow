@@ -39,12 +39,14 @@ The :term:`JEDI` Configuration Builder (JCB) is a tool that facilitates the use 
 
    Flow Diagram of JCB
 
-Concretely, repositories that implement JCB interact with the main JCB code via a JCB input file. In the Land DA repository, this file is called ``jcb-base.yaml``, and it is built using the JCB template file ``parm/jedi/jcb-base_land.yaml.j2``. When users run ``parm/setup_wflow_env.py`` to set up the workflow, ``jcb-base.yaml`` is produced by rendering ``jcb-base_land.yaml.j2`` using values from the user's ``config.yaml`` file. JCB uses this ``jcb-base.yaml`` file to assemble the proper subtemplates from the JCB-algorithms and JCB-gdas repositories into the final JEDI DA workflow file. Note that JCB can generate a JEDI input configuration YAML file only when ``CUSTOM_JEDI_CONFIG_FLAG: NO`` in the configuration file.
+Concretely, repositories that implement JCB interact with the main JCB code via a JCB input file. In the Land DA repository, this file is called ``jcb-base.yaml``, and it is built using the JCB template file ``parm/jedi/jcb-base_land.yaml.j2``. When users run ``parm/setup_wflow_env.py`` to set up the workflow, ``jcb-base.yaml`` is produced by rendering ``jcb-base_land.yaml.j2`` using values from the user's ``config.yaml`` file. JCB uses this ``jcb-base.yaml`` file to assemble the proper subtemplates from the JCB-algorithms and JCB-gdas repositories into the final JEDI DA workflow file. Note that JCB can generate a JEDI input configuration YAML file only when ``CUSTOM_JEDI_CONFIG_FLAG`` is set to ``NO`` in the configuration file.
 
 JCB Components
 ================
 
-The JCB ecosystem has three components: JCB, JCB-algorithms, and JCB-gdas. 
+:numref:`Table %s <jcb-repos>` lists the three repositories in the JCB ecosystem. 
+
+.. _jcb-repos:
 
 .. list-table:: JCB and component repositories
    :header-rows: 1
@@ -76,7 +78,7 @@ In the workflow, the first :ref:`workflow tasks <wflow-overview>` to run are:
 
    * ``jcb`` 
    * ``prep_data``
-   * ``pre_anal`` (:term:`LND`) or ``fcst_ic`` (:term:`ATML`) (not required for every experiment)
+   * ``pre_anal`` (:term:`LND`, :term:`ATML` warmstart) or ``fcst_ic`` (:term:`ATML` coldstart)
 
 The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and information provided in the ``land_analysis.xml`` file (e.g., DA algorithm, cycle dates). The template file `jcb-base_snow.yaml.j2 <https://github.com/ufs-community/land-DA_workflow/blob/develop/parm/jedi/jcb-base_snow.yaml.j2>`_ is filled in using information from ``land_analysis.xml`` during the ``jcb`` task. This produces the ``jcb-base_snow.yaml`` file, which points to files containing information on geometry, time window, background, driver, local ensemble DA, and/or output increment. This information is used as input to create a YAML file (``jedi_<algorithm>_snow.yaml``, where ``<algorithm>`` is ``letkf-oi`` or ``3dvar``) containing detailed algorithm-specific information. These two files (``jcb-base_snow.yaml`` and ``jedi_<algorithm>_snow.yaml``) form the basis of the DA system configuration in the Land DA System. 
 
@@ -85,22 +87,23 @@ The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and i
 
    Outline of the JCB Task
 
-The ``jcb`` task stores these files in the ``ptmp/test_*/tmp/jcb.${PDY}${cyc}.${jobid}/`` directory, where ``${PDY}${cyc}`` is in YYYYMMDDHH format (see :numref:`Section %s <nco-dir-entities>`), and the ``${jobid}`` is the job ID assigned by the system. Users can also access this file via the ``tmp_dir/jcb.${PDY}${cyc}.${jobid}`` shortcut in their experiment directory. The example below shows what the complete ``jcb-base_snow.yaml`` file might look like for the 2025-01-19 00Z cycle. 
+The ``jcb`` task stores these files in the ``ptmp/<envir>/tmp/jcb.${PDY}${cyc}.${jobid}/`` directory, where ``${PDY}${cyc}`` is in YYYYMMDDHH format (see :numref:`Section %s <nco-dir-entities>`), and the ``${jobid}`` is the job ID assigned by the system. Users can also access this file via the ``tmp_dir/jcb.${PDY}${cyc}.${jobid}`` shortcut in their experiment directory. The example below shows what the complete ``jcb-base_snow.yaml`` file might look like for the 2025-01-19 00Z cycle. 
 
 .. code-block:: yaml
 
    # JCB general
    JEDI_ALGORITHM: "3dvar"
+   inc_fn_prefix: "snowinc"
    snowdepth_vn: "snwdph"
    algorithm: 3dvar
-   algorithm_path: "/home/ubuntu/land-DA_workflow/parm/jedi/jcb-algorithms"
-   app_path_algorithm: "/home/ubuntu/land-DA_workflow/parm/jedi/jcb-gdas/algorithm/snow"
-   app_path_model: "/home/ubuntu/land-DA_workflow/parm/jedi/jcb-gdas/model/snow"
-   app_path_observations: "/home/ubuntu/land-DA_workflow/parm/jedi/jcb-gdas/observations/snow"
-   app_path_observation_chronicle: "/home/ubuntu/land-DA_workflow/parm/jedi/jcb-gdas/observation_chronicle/snow"
+   algorithm_path: "/home/ubuntu/landda/land-DA_workflow/parm/jedi/jcb-algorithms"
+   app_path_algorithm: "/home/ubuntu/landda/land-DA_workflow/parm/jedi/jcb-gdas/algorithm/land"
+   app_path_model: "/home/ubuntu/landda/land-DA_workflow/parm/jedi/jcb-gdas/model/land"
+   app_path_observations: "/home/ubuntu/landda/land-DA_workflow/parm/jedi/jcb-gdas/observations/land"
+   app_path_observation_chronicle: "/home/ubuntu/landda/land-DA_workflow/parm/jedi/jcb-gdas/observation_chronicle/land"
 
    # Template file name for each section (if not defined, default files in jcb-algorithms will be used)
-   geometry_background_file: snow_geometry_background
+   geometry_background_file: land_geometry_background
    background_file: snow_background
    background_error_file: snow_background_error
    final_increment_file: snow_final_increment_fms
@@ -110,22 +113,22 @@ The ``jcb`` task stores these files in the ``ptmp/test_*/tmp/jcb.${PDY}${cyc}.${
    window_length: "PT24H"
 
    # Geometry
-   snow_fv3jedi_files_path: "Data/fv3files"
-   snow_layout_x: 1
-   snow_layout_y: 1
-   snow_npx_anl: 97
-   snow_npy_anl: 97
-   snow_npz_anl: 127
-   snow_npx_ges: 97
-   snow_npy_ges: 97
-   snow_npz_ges: 127
-   snow_orog_files_path: "/home/ubuntu/land-DA_workflow/fix/FV3_fix_tiled/C96"
-   snow_orog_prefix: "C96"
+   land_fv3jedi_files_path: "Data/fv3files"
+   land_layout_x: 1
+   land_layout_y: 1
+   land_npx_anl: 97
+   land_npy_anl: 97
+   land_npz_anl: 127
+   land_npx_ges: 97
+   land_npy_ges: 97
+   land_npz_ges: 127
+   land_orog_files_path: "/home/ubuntu/landda/land-DA_workflow/fix/FV3_fix_tiled/C96"
+   land_orog_prefix: "C96"
 
    # Final/minimization
    analysis_variables: [totalSnowDepth]
    final_diagnostics_departures: anlmob
-   snow_final_inc_file_path: "./"
+   land_final_inc_file_path: "./"
    minimizer: DRPCG
    number_of_outer_loops: 1
 
@@ -144,14 +147,14 @@ The ``jcb`` task stores these files in the ``ptmp/test_*/tmp/jcb.${PDY}${cyc}.${
    driver_do_posterior_observer: False
 
    # Background
-   snow_background_path: "bkg"
-   snow_background_time_fv3: "20250119.000000"
-   snow_background_time_iso: "2025-01-19T00:00:00Z"
-   snow_increment_time_fv3: "20250119.000000"
-   snow_increment_time_iso: "2025-01-19T00:00:00Z"
+   land_background_path: "bkg"
+   land_background_time_fv3: "20250119.000000"
+   land_background_time_iso: "2025-01-19T00:00:00Z"
+   land_increment_time_fv3: "20250119.000000"
+   land_increment_time_iso: "2025-01-19T00:00:00Z"
 
    # Background error
-   snow_bump_data_directory: "berror"
+   land_bump_data_directory: "berror"
 
    # Observation
    observations:
@@ -159,12 +162,11 @@ The ``jcb`` task stores these files in the ``ptmp/test_*/tmp/jcb.${PDY}${cyc}.${
    - sfcsno
    #- snocvr_snow
 
-   # GHCN/IMS
-   snow_obsdatain_path: "obs"
-   snow_obsdatain_prefix: "obs.20250119.t00z."
-   snow_obsdataout_path: "diags"
-   snow_obsdataout_prefix: "diag."
-   snow_obsdataout_suffix: "_2025011900.nc"
+   land_obsdatain_path: "obs"
+   land_obsdatain_prefix: "obs.20250119.t00z."
+   land_obsdataout_path: "diags"
+   land_obsdataout_prefix: "diag."
+   land_obsdataout_suffix: "_2025011900.nc"
 
 The example below shows what the complete ``jedi_<algorithm>_snow.yaml`` file might look like for the 2025-01-19 00Z cycle using the ``3dvar`` option. Concretely, this file would be named ``jedi_3dvar_snow.yaml``. 
 
@@ -197,11 +199,14 @@ The example below shows what the complete ``jedi_<algorithm>_snow.yaml`` file mi
        skip coupler file: true
        datetime: '2025-01-19T00:00:00Z'
        state variables:
-       - snwdph
+       - totalSnowDepth
        - vtype
        - slmsk
        - sheleg
-       - orog_filt
+       - filtered_orography
+       field io names:
+         totalSnowDepth: snwdph
+         filtered_orography: orog_filt
        filename_sfcd: 20250119.000000.sfc_data.nc
        filename_cplr: 20250119.000000.coupler.res
        filename_orog: C96_oro_data.nc
@@ -541,6 +546,46 @@ The example below shows what the complete ``jedi_<algorithm>_snow.yaml`` file mi
              flag: buddy_check
              ignore: rejected observations
            - name: reject
+         obs post filters:
+         - filter: Background Check
+           filter variables:
+           - name: totalSnowDepth
+           threshold: 6.25
+           actions:
+           - name: set
+             flag: background_check
+             ignore: rejected observations
+           - name: reject
+         - filter: Met Office Buddy Check
+           filter variables:
+           - name: totalSnowDepth
+             rejection_threshold: 0.5
+             traced_boxes:
+               min_latitude: -90
+               max_latitude: 90
+               min_longitude: -180
+               max_longitude: 180
+             search_radius: 150
+             station_id_variable:
+               name: MetaData/stationIdentification
+             num_zonal_bands: 24
+             sort_by_pressure: false
+             max_total_num_buddies: 15
+             max_num_buddies_from_single_band: 10
+             max_num_buddies_with_same_station_id: 5
+             use_legacy_buddy_collector: false
+             horizontal_correlation_scale:
+               '-90': 150
+               '90': 150
+             temporal_correlation_scale: PT6H
+             damping_factor_1: 1.0
+             damping_factor_2: 1.0
+             background_error_group: BkgError
+           actions:
+           - name: set
+             flag: buddy_check
+             ignore: rejected observations
+           - name: reject
    variational:
      minimizer:
        algorithm: DRPCG
@@ -559,15 +604,16 @@ The example below shows what the complete ``jedi_<algorithm>_snow.yaml`` file mi
          npx: 97
          npy: 97
          npz: 127
-         field metadata override: Data/fv3files/fv3jedi_fieldmetadata_restart.yaml
          time invariant fields:
            state fields:
              datetime: '2025-01-19T00:00:00Z'
              filetype: fms restart
              skip coupler file: true
              state variables:
-             - orog_filt
-             datapath: /home/ubuntu/land-DA_workflow/fix/FV3_fix_tiled/C96/
+             - filtered_orography
+             field io names:
+               filtered_orography: orog_filt
+             datapath: /home/ubuntu/landda/land-DA_workflow/fix/FV3_fix_tiled/C96/
              filename_orog: C96_oro_data.nc
        diagnostics:
          departures: bkgmob
@@ -583,9 +629,11 @@ The example below shows what the complete ``jedi_<algorithm>_snow.yaml`` file mi
            filename_sfcd: 20250119.000000.sfc_data.nc
            filename_cplr: 20250119.000000.coupler.res
            state variables:
-           - snwdph
+           - totalSnowDepth
            - vtype
            - slmsk
+           field io names:
+             totalSnowDepth: snwdph
        geometry:
          fms initialization:
            namelist filename: Data/fv3files/fmsmpp.nml
@@ -597,7 +645,6 @@ The example below shows what the complete ``jedi_<algorithm>_snow.yaml`` file mi
          npx: 97
          npy: 97
          npz: 127
-         field metadata override: Data/fv3files/fv3jedi_fieldmetadata_restart.yaml
    final j evaluation: false
 
 Variables in the JCB YAML Files: 
@@ -622,13 +669,16 @@ The :jedi:`geometry <using/building_and_running/config_content.html#geometry>` s
    ``akbk`` (Default: Data/fv3files/akbk.nc4)
       Specifies the path to a file containing the coefficients that define the hybrid sigma-pressure vertical coordinates used in FV3. 
 
-   ``npx`` (Default: 97)
+   ``layout:``
+      The processor layout on each face of the cubed sphere. See `JEDI documentation <inside/jedi-components/fv3-jedi/classes.html#geometry>` for more. 
+
+   ``npx``
       Specifies the number of grid points in the east-west direction.
 
-   ``npy`` (Default: 97)
+   ``npy``
       Specifies the number of grid points in the north-south direction.
 
-   ``npz`` (Default: 64)
+   ``npz``
       Specifies the number of vertical layers.
 
    ``field metadata override:`` (Default: Data/fv3files/fv3jedi_fieldmetadata_restart.yaml)
@@ -650,7 +700,7 @@ The :jedi:`geometry <using/building_and_running/config_content.html#geometry>` s
             Specifies whether to enable skipping coupler file. Valid values are: ``true`` | ``false``
 
          ``state variables``
-            Specifies the list of state variables. Valid values may include: ``[orog_filt, snwdph, vtype, slmsk, sheleg]``
+            Specifies the list of state variables. Valid values may include: ``[filtered_orography, snwdph, vtype, slmsk, sheleg]``
            
          ``datapath`` (Default: $BASEDIR/land-DA_workflow/fix/FV3_fix_tiled/C96)
             Specifies the path for state variables data.
@@ -675,6 +725,47 @@ These two items define the assimilation window for many applications, including 
    ``bound to include:``
       Specifies which assimilation window bound is inclusive. Valid values: ``begin`` | ``end``
 
+Background
+------------
+The ``background:`` section includes information on the forecast members generated by the previous cycle, which form the background for the current cycle. 
+
+   ``datapath:`` (Default: bkg)
+      Specifies the path for state variable data. Valid values: ``mem_pos/`` | ``mem_neg/``. (With default experiment values, the full path will be ``ptmp/<envir>/tmp/analysis.${PDY}${cyc}.${jobid}``.)
+
+   ``filetype:`` (Default: fms restart)
+      Specifies the type of file. Valid values include: ``fms restart``
+
+   ``skip coupler file`` (Default: true)
+         Specifies whether to enable skipping coupler file. Valid values are: ``true`` | ``false``
+
+   ``datetime:`` (Default: XXYYYY-XXMM-XXDDTXXHH:00:00Z)
+      Specifies the date and time. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
+
+      .. COMMENT: Date & time of the background forecast? 
+
+   ``state variables:``
+      Specifies a list of state variables. Valid values include: ``[totalSnowDepth,soilMoistureVolumetric,vtype,slmsk,sheleg,filtered_orography,stc]``
+
+   ``field io names:``
+      Field names used in input/output tasks. For example: 
+         * totalSnowDepth: snwdph
+         * soilMoistureVolumetric: smc
+         * filtered_orography: orog_filt
+      
+   ``filename_sfcd:`` (Default: XXYYYYXXMMXXDD.XXHH0000.sfc_data.nc)
+      Specifies the name of the surface data file. This usually takes the form ``YYYYMMDD.HHmmss.sfc_data.nc``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: ``20000103.000000.sfc_data.nc``
+      
+   ``filename_cplr:`` (Default: XXYYYYXXMMXXDD.XXHH0000.coupler.res)
+      Specifies the name of file that contains metadata for the restart. This usually takes the form ``YYYYMMDD.HHmmss.coupler.res``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: ``20000103.000000.coupler.res``
+
+   ``filename_orog:`` (Default: C96_oro_data.nc)
+      Specifies the name of the orographic data file. 
+
+Background Error
+------------------
+
+The ``background error:`` block provides information and specifications for computing the :jedi:`background error covariance matrix <using/building_and_running/config_content.html#background-error>`, or **B** matrix. The first item in this section is usually the covariance model, which identifies the method for computing the B matrix. Typically, the JEDI :jedi:`SABER <inside/jedi-components/saber/index.html#saber>` package is used for this purpose. The JEDI documentation provides an :jedi:`Introduction to SABER Error Covariance Model <inside/jedi-components/saber/SABER_intro.html>` and :jedi:`additional detailed information on the SABER blocks <inside/jedi-components/saber/BUMP_saber_blocks.html>`. 
+
 Observations
 --------------
 
@@ -686,14 +777,14 @@ The ``observations:`` field describes one or more types of observations, each of
 The ``obs space:`` section of the YAML comes under the ``observations.observers:`` section and describes the configuration of the observation data for a single observation type. One experiment can use multiple types of observations. For example, the ``LND.era5.3dvar.ims.warmstart.yaml`` experiment uses both ``ims_snow`` and ``sfcsno`` observation data. 
 
    ``name:`` 
-      Specifies the name of the observation data (also called the "observation space"). Valid values: ``ims_snow`` | ``sfcsno`` | ``ghcn_snow``
+      Specifies the name of the observation data (also called the "observation space"). Valid values: ``ims_snow`` | ``sfcsno`` | ``ghcn_snow`` | ``SoilMoistureSMOPS`` | ``SoilMoistureSMAP``
 
    ``distribution:``
       ``name:``
          Specifies the name of the distribution. ``InefficientDistribution`` "prevents the observations from distributing to different processors between the original obs space and the auxiliary obs space, which could cause in-window observations flagged in the auxiliary obs space to be left unflagged in the original obs space." Valid values include: ``InefficientDistribution`` See :jedi:`JEDI distribution documentation <inside/jedi-components/oops/applications/localensembleda.html#note-about-obs-distributions>`.
 
    ``simulated variables:``
-      Specifies the list of variables that need to be simulated by the observation operator. Valid values: ``[totalSnowDepth]``
+      Specifies the list of variables that need to be simulated by the observation operator. Valid values: ``[totalSnowDepth, soilMoistureVolumetric]``
 
    ``obsdatain:``
       This section specifies information about the observation input data. See :jedi:`JEDI File documentation <inside/conventions/files_and_components.html#files>`.
@@ -705,7 +796,7 @@ The ``obs space:`` section of the YAML comes under the ``observations.observers:
             Specifies the type of input observation data. Valid values: ``H5File`` | ``OBS`` | ``bufr``
 
          ``obsfile:`` (Default: obs/obs.YYYYMMDD.tHHz.<obs_type>.nc)
-            Specifies the relative path to the input file, where ``<obs_type>`` is one of the values in ``obs space.name``. 
+            Specifies the relative path to the input file, where ``<obs_type>`` corresponds to one of the values in ``obs space.name``. 
 
    ``obsdataout:``
       This section contains information about the observation output data. See :jedi:`JEDI File documentation <inside/conventions/files_and_components.html#files>`.
@@ -762,7 +853,7 @@ The ``obs error:`` section explains how to calculate the observation error covar
    ``max nobs:``
       Maximum number of observations used to update each location. 
    
-   ``vertical lengthscale:`` (Default: 700)
+   ``vertical length-scale:``
       Maximum vertical localization distance in meters from given coordinate.
 
 ``obs filters:``/ ``obs [pre|prior|post] filters:``
@@ -887,7 +978,12 @@ The ``variational:`` block contains information on :jedi:`minimizers <inside/jed
      - ninner: 50
        gradient norm reduction: 1e-10
        test: true
+       geometry:
+         ...
+       diagnostics:
+         departures: bkgmob
 
+The ``increment`` field also includes a ``geometry`` block similar to other sections of the YAML and a ``diagnostics.departures:`` section, which saves the difference between H(background) and observations in the output file. 
 
 ``final:``
 ^^^^^^^^^^^^
@@ -908,9 +1004,11 @@ The ``final:`` block is optional but used frequently to configure the output dia
            filename_sfcd: 20250119.000000.sfc_data.nc
            filename_cplr: 20250119.000000.coupler.res
            state variables:
-           - snwdph
+           - totalSnowDepth
            - vtype
            - slmsk
+           field io names:
+             totalSnowDepth: snwdph
        geometry:
          ...
    final j evaluation: false
@@ -924,42 +1022,6 @@ The ``final:`` block is optional but used frequently to configure the output dia
 The ``increment`` field also includes a ``geometry`` block similar to other sections of the YAML. 
 
 After the ``final`` block, there is a one-line ``final j evaluation:`` "block" indicating whether to evaluate J (the cost function). In Land DA, this field is set to false by default. 
-
-Background Error (for ``3dvar``)
-----------------------------------
-
-The ``background error:`` block provides information and specifications for computing the :jedi:`background error covariance matrix <using/building_and_running/config_content.html#background-error>`, or **B** matrix. The first item in this section is usually the covariance model, which identifies the method for computing the B matrix. Typically, the JEDI :jedi:`SABER <inside/jedi-components/saber/index.html#saber>` package is used for this purpose. The JEDI documentation provides an :jedi:`Introduction to SABER Error Covariance Model <inside/jedi-components/saber/SABER_intro.html>` and :jedi:`additional detailed information on the SABER blocks <inside/jedi-components/saber/BUMP_saber_blocks.html>`. 
-
-Background (for ``letkf-oi``)
-------------------------------
-The ``background:`` section includes information on the forecast members generated by the previous cycle, which form the background for the current cycle. 
-
-   ``datapath:`` (Default: bkg)
-      Specifies the path for state variable data. Valid values: ``mem_pos/`` | ``mem_neg/``. (With default experiment values, the full path will be ``ptmp/test_*/tmp/analysis.${PDY}${cyc}.${jobid}``.)
-
-   ``filetype:`` (Default: fms restart)
-      Specifies the type of file. Valid values include: ``fms restart``
-
-   ``skip coupler file`` (Default: true)
-         Specifies whether to enable skipping coupler file. Valid values are: ``true`` | ``false``
-
-   ``datetime:`` (Default: XXYYYY-XXMM-XXDDTXXHH:00:00Z)
-      Specifies the date and time. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
-
-      .. COMMENT: Date & time of the background forecast? 
-
-   ``state variables:``
-      Specifies a list of state variables. Valid values: ``[snwdph,vtype,slmsk,sheleg,orogfilt]``
-
-   
-   ``filename_sfcd:`` (Default: XXYYYYXXMMXXDD.XXHH0000.sfc_data.nc)
-      Specifies the name of the surface data file. This usually takes the form ``YYYYMMDD.HHmmss.sfc_data.nc``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: ``20000103.000000.sfc_data.nc``
-         
-   ``filename_cplr:`` (Default: XXYYYYXXMMXXDD.XXHH0000.coupler.res)
-      Specifies the name of file that contains metadata for the restart. This usually takes the form ``YYYYMMDD.HHmmss.coupler.res``, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour, mm is a valid 2-digit minute and ss is a valid 2-digit second. For example: ``20000103.000000.coupler.res``
-
-   ``filename_orog:`` (Default: C96_oro_data.nc)
-      Specifies the name of the orographic data file. 
 
 Driver (for ``letkf-oi``)
 --------------------------
@@ -1023,11 +1085,11 @@ The IODA file format represents observational field variables (e.g., temperature
 
 Since the raw observational data come in various formats, a diverse set of "IODA converters" exists to transform the raw observation data files into IODA format. While many of these Python-based IODA converters have been developed to handle marine-based observations, users can utilize the "IODA converter engine" components to develop and implement their own IODA converters to prepare arbitrary observation types for data assimilation within JEDI. 
 
-The Land DA System includes options to use observation data in :term:`GHCN`, :term:`IMS`, and :term:`SFCSNO` format. It also includes a variety of utility scripts to convert observation data to IODA format: 
+The Land DA System includes options to use observation data in :term:`GHCN`, :term:`IMS`, :term:`SFCSNO`, :term:`SMAP`, and :term:`SMOPS` format. It also includes a variety of utility scripts to convert observation data to IODA format: 
 
 * :github:`ghcn_snod2ioda.py <blob/develop/ush/ghcn_snod2ioda.py>`
 * :github:`imsfv3_scf2ioda.py <blob/develop/ush/imsfv3_scf2ioda.py>`
+* :github:`smap_ssm2ioda.py <blob/develop/ush/smap_ssm2ioda.py>`
+* :github:`smops_ssm2ioda.py <blob/develop/ush/smops_ssm2ioda.py>`
 
 IODA can also read in certain :jedi:`file formats <inside/jedi-components/ioda/file-formats.html>`, such as BUFR, with a mapping file, such as the :github:`bufr_sfcsno_mapping.yaml <blob/develop/parm/jedi/bufr_sfcsno_mapping.yaml>` file available in the Land DA repository. 
-
-Developers are in the process of adding soil moisture DA to the Land DA system. This functionality will use Soil Moisture Active Passive (:term:`SMAP`) observations and the :github:`smap_ssm2ioda.py <blob/develop/ush/smap_ssm2ioda.py>` utility script to convert observation data to IODA format. 

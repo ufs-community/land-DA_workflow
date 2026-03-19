@@ -5,7 +5,7 @@ Rocoto Introductory Information
 ==================================
 The tasks in the Land DA System are typically run using the Rocoto Workflow Manager (see :numref:`Section %s: Workflow Overview <wflow-overview>` for default tasks). Rocoto is a Ruby program that communicates with the batch system on an :term:`HPC` system to run and manage dependencies between the tasks. Rocoto submits jobs to the HPC batch system as the task dependencies allow and runs one instance of the workflow for a set of user-defined :term:`cycles <cycle>`. More information about Rocoto can be found on the `Rocoto Wiki <https://github.com/christopherwharrop/rocoto/wiki/documentation>`_.
 
-The Land DA workflow is defined in a Jinja-enabled Rocoto XML template called ``land_analysis.xml``, which is generated using the contents of ``land_analysis.yaml`` as input to the Unified Workflow's :uw:`Rocoto tool <sections/user_guide/cli/tools/rocoto.html>`. Both files reside in the ``land-DA_workflow/parm`` directory. The completed XML file contains the workflow task names, parameters needed by the job scheduler, and task interdependencies. 
+The Land DA workflow is defined in a Jinja-enabled Rocoto XML template called ``land_analysis.xml``, which is generated via the ``parm/setup_wflow_env.py`` script. That script uses the contents of ``land_analysis.yaml`` as input to the Unified Workflow's :uw:`Rocoto tool <sections/user_guide/cli/tools/rocoto.html>`. The completed XML file contains the workflow task names, parameters needed by the job scheduler, and task interdependencies. 
 
 There are a number of Rocoto commands available to run and monitor the workflow; users can find more information in the complete `Rocoto documentation <http://christopherwharrop.github.io/rocoto/>`_. Descriptions and examples of commonly used commands are discussed below.
 
@@ -26,7 +26,7 @@ where
 * ``-d`` specifies the name of the database file that stores the state of the workflow (e.g., ``land_analysis.db``). The database file is a binary file created and used only by Rocoto. It does not need to exist when the command is initially run. 
 * ``-v`` (optional) specified level of verbosity. If no level is specified, a level of 1 is used.
 
-From the ``parm`` directory, the ``rocotorun`` command for the workflow would be:
+From the user's experiment directory, the ``rocotorun`` command for the workflow would be:
 
 .. code-block:: console
 
@@ -61,53 +61,56 @@ Executing this command will generate a workflow status table similar to the foll
 
 .. code-block:: console
 
-   CYCLE                TASK                       JOBID        STATE   EXIT STATUS   TRIES   DURATION
-   =========================================================================================================
-   200001030000     prep_obs                    61746064       QUEUED             -       1        0.0
-   200001030000     pre_anal   druby://10.184.3.62:41973   SUBMITTING             -       1        0.0
-   200001030000     analysis                           -            -             -       -          -
-   200001030000    post_anal                           -            -             -       -          -
-   200001030000     forecast                           -            -             -       -          -
-   200001030000   plot_stats                           -            -             -       -          -
-   ================================================================================================================================
-   200001040000     prep_obs   druby://10.184.3.62:41973   SUBMITTING             -       1        0.0
-   200001040000     pre_anal                           -            -             -       -          -
-   200001040000     analysis                           -            -             -       -          -
-   200001040000    post_anal                           -            -             -       -          -
-   200001040000     forecast                           -            -             -       -          -
-   200001040000   plot_stats                           -            -             -       -          -
+          CYCLE         TASK                       JOBID         STATE  EXIT STATUS   TRIES   DURATION
+   ======================================================================================================
+   202501190000          jcb                    11531200     SUCCEEDED            0       1       11.0
+   202501190000    prep_data                    11531199     SUCCEEDED            0       1       25.0
+   202501190000     pre_anal                    11531202     SUCCEEDED            0       1        5.0
+   202501190000     analysis   druby://10.184.3.61:45183    SUBMITTING            -       0        0.0
+   202501190000    post_anal                           -             -            -       -          -
+   202501190000     forecast                           -             -            -       -          -
+   202501190000   plot_stats                           -             -            -       -          -
+   ======================================================================================================
+   202501200000          jcb                    11531201     SUCCEEDED            0       1       11.0
+   202501200000    prep_data                           -             -            -       -          -
+   202501200000     pre_anal                           -             -            -       -          -
+   202501200000     analysis                           -             -            -       -          -
+   202501200000    post_anal                           -             -            -       -          -
+   202501200000     forecast                           -             -            -       -          -
+   202501200000   plot_stats                           -             -            -       -          -
    
-This table indicates that the ``prep_obs`` task for cycle 200001030000 was sent to the batch system and is now queued, while the ``pre_anal`` task for cycle 200001030000 and the ``prep_obs`` task for cycle 200001040000 are currently being submitted to the batch system. 
-
-Note that issuing a ``rocotostat`` command without an intervening ``rocotorun`` command will not result in an updated workflow status table; it will print out the same table. It is the ``rocotorun`` command that updates the workflow database file (in this case ``land_analysis.db``, located in ``parm``). The ``rocotostat`` command reads the database file and prints the table to the screen. To see an updated table, the ``rocotorun`` command must be executed first, followed by the ``rocotostat`` command.
+Note that issuing a ``rocotostat`` command without an intervening ``rocotorun`` command will not result in an updated workflow status table; it will print out the same table. It is the ``rocotorun`` command that updates the workflow database file (in this case ``land_analysis.db``). The ``rocotostat`` command reads the database file and prints the table to the screen. To see an updated table, the ``rocotorun`` command must be executed first, followed by the ``rocotostat`` command.
 
 After issuing the ``rocotorun`` command several times (over the course of several minutes or longer, depending on the grid size and computational resources available), the output of the ``rocotostat`` command should look like this:
 
 .. code-block:: console
 
-          CYCLE             TASK        JOBID           STATE   EXIT STATUS   TRIES   DURATION
-   ============================================================================================
-   200001030000         prep_obs      1131735       SUCCEEDED            0       1        1.0
-   200001030000         pre_anal      1131736       SUCCEEDED            0       1        5.0
-   200001030000         analysis      1131754       SUCCEEDED            0       1       33.0
-   200001030000        post_anal      1131811       SUCCEEDED            0       1       11.0
-   200001030000         forecast      1131918       SUCCEEDED            0       1       31.0
-   200001030000       plot_stats      1131944       SUCCEEDED            0       1       26.0
-   ============================================================================================
-   200001040000         prep_obs      1131737       SUCCEEDED            0       1        2.0
-   200001040000         pre_anal      1131945       SUCCEEDED            0       1        3.0
-   200001040000         analysis      1132118       SUCCEEDED            0       1       29.0
-   200001040000        post_anal      1132174       SUCCEEDED            0       1       10.0
-   200001040000         forecast      1132186       SUCCEEDED            0       1       31.0
-   200001040000       plot_stats      1132319       RUNNING              -       1        0.0
+         CYCLE              TASK        JOBID           STATE   EXIT STATUS   TRIES   DURATION
+   ==============================================================================================
+   202501190000              jcb      8215490       SUCCEEDED            0       1        6.0
+   202501190000        prep_data      8215491       SUCCEEDED            0       1       21.0
+   202501190000         pre_anal      8215492       SUCCEEDED            0       1        6.0
+   202501190000         analysis      8215496       SUCCEEDED            0       1      152.0
+   202501190000        post_anal      8215519       SUCCEEDED            0       1       23.0
+   202501190000         forecast      8215551       SUCCEEDED            0       1       80.0
+   202501190000       plot_stats      8215555       SUCCEEDED            0       1       64.0
+   ==============================================================================================
+   202501200000              jcb      8215493       SUCCEEDED            0       1        5.0
+   202501200000        prep_data      8215556       SUCCEEDED            0       1        8.0
+   202501200000         pre_anal      8215557       SUCCEEDED            0       1        3.0
+   202501200000         analysis      8215563       SUCCEEDED            0       1       68.0
+   202501200000        post_anal      8215578       SUCCEEDED            0       1        7.0
+   202501200000         forecast      8215580       SUCCEEDED            0       1       62.0
+   202501200000       plot_stats      8215592       SUCCEEDED            0       1       65.0
 
-When the workflow runs to completion, all tasks will be marked as SUCCEEDED. The log file for each task is located in ``$BASEDIR/ptmp/test/com/output/logs``. If any task fails, the corresponding log file can be checked for error messages. Optional arguments for the ``rocotostat`` command can be found in the `Rocoto documentation <http://christopherwharrop.github.io/rocoto/>`_.
+
+When the workflow runs to completion, all tasks will be marked as SUCCEEDED. The log file for each task is located in ``${BASEDIR}/ptmp/<envir>/com/output/logs``. If any task fails, the corresponding log file can be checked for error messages. Optional arguments for the ``rocotostat`` command can be found in the `Rocoto documentation <http://christopherwharrop.github.io/rocoto/>`_.
 
 .. _rocotocheck:
 
 rocotocheck
 ============
-Sometimes, issuing a ``rocotorun`` command will not cause the next task to launch. ``rocotocheck`` is a tool that can be used to query detailed information about a task or cycle in the Rocoto workflow. To determine why a particular task has not been submitted, the ``rocotocheck`` command can be used from the ``parm`` directory as follows:
+Sometimes, issuing a ``rocotorun`` command will not cause the next task to launch. ``rocotocheck`` is a tool that can be used to query detailed information about a task or cycle in the Rocoto workflow. To determine why a particular task has not been submitted, the ``rocotocheck`` command can be used from the experiment directory as follows:
 
 .. code-block:: console
 
@@ -124,12 +127,12 @@ A specific example is:
 
 .. code-block:: console
 
-   rocotocheck -w /Users/John.Doe/landda/land-DA_workflow/parm/land_analysis.xml -d /Users/John.Doe/landda/land-DA_workflow/parm/land_analysis.db -v 10 -c 200001040000 -t analysis
+   rocotocheck -w /Users/John.Doe/landda/land-DA_workflow/parm/land_analysis.xml -d /Users/John.Doe/landda/land-DA_workflow/parm/land_analysis.db -v 10 -c 202501200000 -t analysis
 
 Running ``rocotocheck`` will result in output similar to the following:
 
 .. code-block:: console
-   :emphasize-lines: 9,34,35,47
+   :emphasize-lines: 9,34,47
 
    Task: analysis
       account: epic
@@ -192,17 +195,17 @@ rocotorewind
 
    rocotorewind -w /path/to/workflow/xml/file -d /path/to/workflow/database/file -c <YYYYMMDDHHmm> -t <taskname> 
 
-Running this command will edit the Rocoto database file ``land_analysis.db`` to remove evidence that the job has been run. ``rocotorewind`` is recommended over ``rocotoboot`` for restarting a task, since ``rocotoboot`` will force a specific task to run, ignoring all dependencies and throttle limits. The throttle limit, denoted by the variable ``cyclethrottle`` in the ``land_analysis.xml`` file, limits how many cycles can be active at one time. An example of how to use the ``rocotorewind`` command to rerun the forecast task from ``parm`` is:
+Running this command will edit the Rocoto database file ``land_analysis.db`` to remove evidence that the job has been run. ``rocotorewind`` is recommended over ``rocotoboot`` for restarting a task, since ``rocotoboot`` will force a specific task to run, ignoring all dependencies and throttle limits. The throttle limit, denoted by the variable ``cyclethrottle`` in the ``land_analysis.xml`` file, limits how many cycles can be active at one time. An example of how to use the ``rocotorewind`` command to rerun the forecast task from the experiment directory is:
 
 .. code-block:: console
 
-   rocotorewind -w land_analysis.xml -d land_analysis.db -v 10 -c 200001040000 -t forecast
+   rocotorewind -w land_analysis.xml -d land_analysis.db -v 10 -c 202501200000 -t forecast
 
 rocotoboot
 ===========
-``rocotoboot`` will force a specific task of a cycle in a Rocoto workflow to run. All dependencies and throttle limits are ignored, and it is generally recommended to use ``rocotorewind`` instead. An example of how to use this command to rerun the ``prep_obs`` task from ``parm`` is:
+``rocotoboot`` will force a specific task of a cycle in a Rocoto workflow to run. All dependencies and throttle limits are ignored, and it is generally recommended to use ``rocotorewind`` instead. An example of how to use this command to rerun the ``prep_obs`` task from the experiment directory is:
 
 .. code-block:: console
 
-   rocotoboot -w land_analysis.xml -d land_analysis.db -v 10 -c 200001040000 -t prep_obs
+   rocotoboot -w land_analysis.xml -d land_analysis.db -v 10 -c 202501200000 -t prep_obs
 
