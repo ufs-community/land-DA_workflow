@@ -24,23 +24,22 @@ Create a Working Directory
 Get Code
 ***********
 
-Clone the Land DA workflow repository. To clone the ``develop`` branch, run:
+Clone the Land DA workflow repository |latestr| release:
+
+.. code-block:: console
+
+   git clone -b release/public-v3.0.0 --recursive https://github.com/ufs-community/land-DA_workflow.git
+
+.. attention:: 
+
+   When working with a release branch, be sure to follow instructions in the release branch documentation. View the `v3.0.0 release documentation here <https://land-da-workflow.readthedocs.io/en/release-public-v3.0.0/>`_. When working with the ``develop`` branch, the `develop branch documentation <https://land-da-workflow.readthedocs.io/en/develop/>`_ is most appropriate. 
+
+
+To clone the ``develop`` branch instead, run:
 
 .. code-block:: console
 
    git clone -b develop --recursive https://github.com/ufs-community/land-DA_workflow.git
-
-.. Update for next release!!!
-
-To clone the most recent release, run the same command with |branch| in place of ``develop``:
-
-.. code-block:: console
-
-   git clone -b release/public-v2.0.0 --recursive https://github.com/ufs-community/land-DA_workflow.git
-
-.. attention:: 
-
-   When working with a release branch, be sure to follow instructions in the release branch documentation. View the `v2.0.0 release documentation here <https://land-da-workflow.readthedocs.io/en/release-public-v2.0.0/>`_. 
 
 .. _build-land-da:
 

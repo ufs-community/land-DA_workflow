@@ -474,9 +474,7 @@ In the ``land_analysis.yaml`` file, entities are constants that are referred to 
    The path to restart files for a warmstart experiment. The actual value set is machine-dependent. 
 
 ``WE2E_TEST:``
-   Flag to turn on the workflow end-to-end (WE2E) test. When ``WE2E_TEST="YES"``, the results files from the experiment are compared to the test baseline files, located in ``fix/test_base/we2e_com``. If the results are within the tolerance set (via ``WE2E_ATOL``) at the end of the three main tasks --- ``analysis``, ``forecast``, and ``post_anal`` --- then the experiment passes. Valid values: ``"YES"`` | ``"NO"``
-   
-   .. COMMENT: Update! 
+   Flag to turn on the workflow end-to-end (WE2E) test. When ``WE2E_TEST="YES"``, the results files from the experiment are compared to the test baseline files, located by default in ``${BASEDIR}/land-DA_workflow/fix/test_base/we2e_com``. If the results are within the tolerance set (via ``WE2E_ATOL``) at the end of the three main tasks --- ``analysis``, ``forecast``, and ``post_anal`` --- then the experiment passes. Valid values: ``"YES"`` | ``"NO"``
 
 ``WE2E_ATOL:``
    Tolerance of the WE2E test. (Set in ``template.land_analysis.yaml``.)

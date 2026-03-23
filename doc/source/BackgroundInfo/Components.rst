@@ -23,12 +23,12 @@ used for short- and medium-range research and operational forecasts. In addition
 
 The FV3 Atmospheric Model
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-The UFS WM's atmospheric model is the Finite-Volume Cubed-Sphere (:term:`FV3`) dynamical core (`fv3atm <https://github.com/NOAA-EMC/fv3atm>`_). The :term:`dynamical core` is the computational part of a model that solves the equations of fluid motion. The Land DA System currently uses only the C96 resolution with 127 vertical levels. Additional information about the FV3 dynamical core can be found in the `scientific documentation <https://repository.library.noaa.gov/view/noaa/30725>`_, the `technical documentation <https://noaa-emc.github.io/FV3_Dycore_ufs-v2.0.0/html/index.html>`_, and on the `NOAA Geophysical Fluid Dynamics Laboratory (GFDL) website <https://www.gfdl.noaa.gov/fv3/>`_.
+The UFS WM's atmospheric model is the Finite-Volume Cubed-Sphere (:term:`FV3`) dynamical core (`ufsatm <https://github.com/NOAA-EMC/ufsatm>`_). The :term:`dynamical core` is the computational part of a model that solves the equations of fluid motion. The Land DA System currently uses only the C96 resolution with 127 vertical levels. Additional information about the FV3 dynamical core can be found in the `scientific documentation <https://repository.library.noaa.gov/view/noaa/30725>`_, the `technical documentation <https://noaa-emc.github.io/FV3_Dycore_ufs-v2.0.0/html/index.html>`_, and on the `NOAA Geophysical Fluid Dynamics Laboratory (GFDL) website <https://www.gfdl.noaa.gov/fv3/>`_.
 
 Model Physics
 ```````````````
 
-The Common Community Physics Package (CCPP), described `here <https://dtcenter.org/community-code/common-community-physics-package-ccpp>`_, supports interoperable atmospheric physics and land surface model options. Atmospheric physics are a set of numerical methods describing small-scale processes such as clouds, turbulence, radiation, and their interactions. A full scientific description of CCPP v7.0.0 parameterizations and suites can be found in the `CCPP Scientific Documentation <https://dtcenter.ucar.edu/GMTB/v7.0.0/sci_doc/index.html>`_, and CCPP technical aspects are described in the :ccpp-techdoc:`CCPP Technical Documentation <>`. 
+The Common Community Physics Package (CCPP), described `here <https://dtcenter.org/software-tools/common-community-physics-package-ccpp>`_, supports interoperable atmospheric physics and land surface model options. Atmospheric physics are a set of numerical methods describing small-scale processes such as clouds, turbulence, radiation, and their interactions. A full scientific description of CCPP v7.0.0 parameterizations and suites can be found in the `CCPP Scientific Documentation <https://dtcenter.ucar.edu/GMTB/v7.0.0/sci_doc/index.html>`_, and CCPP technical aspects are described in the :ccpp-techdoc:`CCPP Technical Documentation <>`. 
 
 .. _NoahMP:
 

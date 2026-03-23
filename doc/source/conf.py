@@ -7,13 +7,13 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "UFS Land DA User's Guide"
-copyright = '2024, '
+copyright = '2026, '
 author = ' '
 
 # The short X.Y version
-version = 'develop'
+version = 'v3.0.0'
 # The full version, including alpha/beta/rc tags
-release = 'develop'
+release = 'v3.0.0'
 
 numfig = True
 
@@ -50,7 +50,7 @@ pygments_style = 'sphinx'
 rst_prolog = """
 .. |latestr| replace:: v3.0.0
 .. |tag| replace:: ``ufs-land-da-v3.0.0``
-.. |branch| replace:: ``release/public-v2.0.0``
+.. |branch| replace:: ``release/public-v3.0.0``
 .. |spack-stack-ver| replace:: v1.9.2
 .. |data| replace:: v3.0
 """
@@ -65,10 +65,11 @@ user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Ge
 linkcheck_ignore = [r'https://www\.intel\.com/content/www/us/en/developer/tools/oneapi/hpc\-toolkit\-download\.html',
                     r'https://doi.org/*',
                     r'https://sourceforge.net/projects/xming/',
+                    r'https://repository.library.noaa.gov/view/noaa/30725',
                     ]
 
 # Ignore anchor tags for Land DA data bucket. Shows Not Found even when they exist.
-linkcheck_anchors_ignore = []
+linkcheck_anchors_ignore = [r'anchor-download-to-a-local-computer-from-earthdata-cloud',]
 
 linkcheck_allowed_redirects = {r"https://github.com/ufs-community/land-DA_workflow/wiki/.*": 
                                  r"https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/.*",

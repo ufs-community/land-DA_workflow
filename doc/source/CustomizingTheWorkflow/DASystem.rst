@@ -80,14 +80,14 @@ In the workflow, the first :ref:`workflow tasks <wflow-overview>` to run are:
    * ``prep_data``
    * ``pre_anal`` (:term:`LND`, :term:`ATML` warmstart) or ``fcst_ic`` (:term:`ATML` coldstart)
 
-The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and information provided in the ``land_analysis.xml`` file (e.g., DA algorithm, cycle dates). The template file `jcb-base_snow.yaml.j2 <https://github.com/ufs-community/land-DA_workflow/blob/develop/parm/jedi/jcb-base_snow.yaml.j2>`_ is filled in using information from ``land_analysis.xml`` during the ``jcb`` task. This produces the ``jcb-base_snow.yaml`` file, which points to files containing information on geometry, time window, background, driver, local ensemble DA, and/or output increment. This information is used as input to create a YAML file (``jedi_<algorithm>_snow.yaml``, where ``<algorithm>`` is ``letkf-oi`` or ``3dvar``) containing detailed algorithm-specific information. These two files (``jcb-base_snow.yaml`` and ``jedi_<algorithm>_snow.yaml``) form the basis of the DA system configuration in the Land DA System. 
+The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and information provided in the ``land_analysis.xml`` file (e.g., DA algorithm, cycle dates). The template file `jcb-base_land.yaml.j2 <https://github.com/ufs-community/land-DA_workflow/blob/develop/parm/jedi/jcb-base_land.yaml.j2>`_ is filled in using information from ``land_analysis.xml`` during the ``jcb`` task. This produces the ``jcb-base_land.yaml`` file, which points to files containing information on geometry, time window, background, driver, local ensemble DA, and/or output increment. This information is used as input to create a YAML file (``jedi_<algorithm>_snow.yaml``, where ``<algorithm>`` is ``letkf-oi`` or ``3dvar``) containing detailed algorithm-specific information. These two files (``jcb-base_land.yaml`` and ``jedi_<algorithm>_snow.yaml``) form the basis of the DA system configuration in the Land DA System. 
 
 .. figure:: https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/images/jcb.png
    :width: 50%
 
    Outline of the JCB Task
 
-The ``jcb`` task stores these files in the ``ptmp/<envir>/tmp/jcb.${PDY}${cyc}.${jobid}/`` directory, where ``${PDY}${cyc}`` is in YYYYMMDDHH format (see :numref:`Section %s <nco-dir-entities>`), and the ``${jobid}`` is the job ID assigned by the system. Users can also access this file via the ``tmp_dir/jcb.${PDY}${cyc}.${jobid}`` shortcut in their experiment directory. The example below shows what the complete ``jcb-base_snow.yaml`` file might look like for the 2025-01-19 00Z cycle. 
+The ``jcb`` task stores these files in the ``ptmp/<envir>/tmp/jcb.${PDY}${cyc}.${jobid}/`` directory, where ``${PDY}${cyc}`` is in YYYYMMDDHH format (see :numref:`Section %s <nco-dir-entities>`), and the ``${jobid}`` is the job ID assigned by the system. Users can also access this file via the ``tmp_dir/jcb.${PDY}${cyc}.${jobid}`` shortcut in their experiment directory. The example below shows what the complete ``jcb-base_land.yaml`` file might look like for the 2025-01-19 00Z cycle. 
 
 .. code-block:: yaml
 
@@ -739,9 +739,7 @@ The ``background:`` section includes information on the forecast members generat
          Specifies whether to enable skipping coupler file. Valid values are: ``true`` | ``false``
 
    ``datetime:`` (Default: XXYYYY-XXMM-XXDDTXXHH:00:00Z)
-      Specifies the date and time. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
-
-      .. COMMENT: Date & time of the background forecast? 
+      Specifies the date and time of the background forecast. The format is YYYY-MM-DDTHH:00:00Z, where YYYY is a 4-digit year, MM is a valid 2-digit month, DD is a valid 2-digit day, and HH is a valid 2-digit hour. 
 
    ``state variables:``
       Specifies a list of state variables. Valid values include: ``[totalSnowDepth,soilMoistureVolumetric,vtype,slmsk,sheleg,filtered_orography,stc]``
@@ -1085,7 +1083,7 @@ The IODA file format represents observational field variables (e.g., temperature
 
 Since the raw observational data come in various formats, a diverse set of "IODA converters" exists to transform the raw observation data files into IODA format. While many of these Python-based IODA converters have been developed to handle marine-based observations, users can utilize the "IODA converter engine" components to develop and implement their own IODA converters to prepare arbitrary observation types for data assimilation within JEDI. 
 
-The Land DA System includes options to use observation data in :term:`GHCN`, :term:`IMS`, :term:`SFCSNO`, :term:`SMAP`, and :term:`SMOPS` format. It also includes a variety of utility scripts to convert observation data to IODA format: 
+The Land DA System includes options to use observation data in :term:`GHCN`, :term:`IMS`, :term:`SFCSNO`, :term:`SMAP`, and :term:`SMOPS` formats. It also includes a variety of utility scripts to convert observation data to IODA format: 
 
 * :github:`ghcn_snod2ioda.py <blob/develop/ush/ghcn_snod2ioda.py>`
 * :github:`imsfv3_scf2ioda.py <blob/develop/ush/imsfv3_scf2ioda.py>`
