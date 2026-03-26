@@ -46,7 +46,6 @@ pygments_style = 'sphinx'
 
 # Documentation-wide substitutions
 
-# UPDATE for release! 
 rst_prolog = """
 .. |latestr| replace:: v3.0.0
 .. |tag| replace:: ``ufs-land-da-v3.0.0``
@@ -121,16 +120,15 @@ def setup(app):
 
 intersphinx_mapping = {
    'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/8.0.0/', None),
-   'spack-stack': ('https://spack-stack.readthedocs.io/en/1.6.0/', None),
+   'spack-stack': ('https://spack-stack.readthedocs.io/en/1.9.2', None),
 }
 
 # -- Options for extlinks extension ---------------------------------------
 
 extlinks_detect_hardcoded_links = True
-extlinks = {'ccpp-techdoc': ('https://ccpp-techdoc.readthedocs.io/en/latest/%s', '%s'),
+extlinks = {'ccpp-techdoc': ('https://ccpp-techdoc.readthedocs.io/en/v7.0.0/%s', '%s'),
             'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'github-docs': ('https://docs.github.com/en/%s', '%s'),
-            'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/%s', '%s'),
             'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/8.0.0/%s', '%s'),
             'jedi-latest': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/%s', '%s'),
             'nco': ('https://www.nco.ncep.noaa.gov/idsb/implementation_standards/%s', '%s'),
@@ -139,10 +137,10 @@ extlinks = {'ccpp-techdoc': ('https://ccpp-techdoc.readthedocs.io/en/latest/%s',
             'rtd': ('https://readthedocs.org/projects/land-da-workflow/%s', '%s'),
             'land-wflow-repo': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'land-wflow-wiki': ('https://github.com/ufs-community/land-DA_workflow/wiki/%s','%s'),
-            'spack-stack': ('https://spack-stack.readthedocs.io/en/1.6.0/%s', '%s'),
+            'spack-stack': ('https://spack-stack.readthedocs.io/en/1.9.2/%s', '%s'),
             'stochphys': ('https://stochastic-physics.readthedocs.io/en/release-public-v3/%s', '%s'),
-            'ufs-utils': ('https://noaa-emcufs-utils.readthedocs.io/en/latest/%s', '%s'),
+            'ufs-utils': ('https://noaa-emcufs-utils.readthedocs.io/en/release-1_12_0/%s', '%s'),
             'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/develop/%s', '%s'),
             'ufs': ('https://ufs.epic.noaa.gov/%s', '%s'),
-            'uw': ('https://uwtools.readthedocs.io/en/main/%s', '%s'),
+            'uw': ('https://uwtools.readthedocs.io/en/2.6.2/%s', '%s'),
             }

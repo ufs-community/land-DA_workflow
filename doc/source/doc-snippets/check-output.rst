@@ -14,7 +14,7 @@ As the experiment progresses, it will generate a number of directories to hold i
     │     └── ush
     ├── exp_case
     │     └── $EXP_CASE_NAME
-    │           ├── com_dir --> symlinked to ptmp/<envir>/com/landda/v2.1.0
+    │           ├── com_dir --> symlinked to ptmp/<envir>/com/landda/v3.0.0
     │           ├── land_analysis.yaml
     │           ├── land_analysis.xml
     │           ├── launch_rocoto_wflow.sh

@@ -35,11 +35,11 @@ The :term:`JEDI` Configuration Builder (JCB) is a tool that facilitates the use 
 .. figure:: https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/images/jcb_flow_diagram.png
    :align: center
    :width: 75%
-   :alt: JCB flow diagram
+   :alt: JCB flow diagram showing how information is passed to jcb-base_land.yaml and from there to JCB, jcb-gdas, and jcb-algorithms to assemble information required to render the final JEDI YAML file. 
 
    Flow Diagram of JCB
 
-Concretely, repositories that implement JCB interact with the main JCB code via a JCB input file. In the Land DA repository, this file is called ``jcb-base.yaml``, and it is built using the JCB template file ``parm/jedi/jcb-base_land.yaml.j2``. When users run ``parm/setup_wflow_env.py`` to set up the workflow, ``jcb-base.yaml`` is produced by rendering ``jcb-base_land.yaml.j2`` using values from the user's ``config.yaml`` file. JCB uses this ``jcb-base.yaml`` file to assemble the proper subtemplates from the JCB-algorithms and JCB-gdas repositories into the final JEDI DA workflow file. Note that JCB can generate a JEDI input configuration YAML file only when ``CUSTOM_JEDI_CONFIG_FLAG`` is set to ``NO`` in the configuration file.
+Concretely, repositories that implement JCB interact with the main JCB code via a JCB input file. In the Land DA repository, this file is called ``jcb-base_<DA_type>.yaml``, and it is built using the JCB template file ``parm/jedi/jcb-base_land.yaml.j2``. When users run ``parm/setup_wflow_env.py`` to set up the workflow, ``jcb-base_<DA_type>.yaml`` is produced by rendering ``jcb-base_land.yaml.j2`` using values from the user's ``config.yaml`` file. JCB uses this ``jcb-base_<DA_type>.yaml`` file to assemble the proper subtemplates from the JCB-algorithms and JCB-gdas repositories into the final JEDI DA workflow file. Note that JCB can generate a JEDI input configuration YAML file only when ``CUSTOM_JEDI_CONFIG_FLAG`` is set to ``NO`` in the configuration file.
 
 JCB Components
 ================
@@ -80,14 +80,15 @@ In the workflow, the first :ref:`workflow tasks <wflow-overview>` to run are:
    * ``prep_data``
    * ``pre_anal`` (:term:`LND`, :term:`ATML` warmstart) or ``fcst_ic`` (:term:`ATML` coldstart)
 
-The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and information provided in the ``land_analysis.xml`` file (e.g., DA algorithm, cycle dates). The template file `jcb-base_land.yaml.j2 <https://github.com/ufs-community/land-DA_workflow/blob/develop/parm/jedi/jcb-base_land.yaml.j2>`_ is filled in using information from ``land_analysis.xml`` during the ``jcb`` task. This produces the ``jcb-base_land.yaml`` file, which points to files containing information on geometry, time window, background, driver, local ensemble DA, and/or output increment. This information is used as input to create a YAML file (``jedi_<algorithm>_snow.yaml``, where ``<algorithm>`` is ``letkf-oi`` or ``3dvar``) containing detailed algorithm-specific information. These two files (``jcb-base_land.yaml`` and ``jedi_<algorithm>_snow.yaml``) form the basis of the DA system configuration in the Land DA System. 
+The ``jcb`` task generates :term:`JEDI` configuration YAML files using JCB and information provided in the ``land_analysis.xml`` file (e.g., DA algorithm, cycle dates). The template file `jcb-base_land.yaml.j2 <https://github.com/ufs-community/land-DA_workflow/blob/develop/parm/jedi/jcb-base_land.yaml.j2>`_ is filled in using information from ``land_analysis.xml`` during the ``jcb`` task. This produces the ``jcb-base_<DA_type>.yaml`` file, which points to files containing information on geometry, time window, background, driver, local ensemble DA, and/or output increment. ``<DA_type>`` is either ``snow`` or ``soil_moisture``. This information is used as input to create a YAML file (``jedi_<algorithm>_<DA_type>.yaml``, where ``<algorithm>`` is ``letkf-oi`` or ``3dvar``) containing detailed algorithm-specific information. These two files (``jcb-base_<DA_type>.yaml`` and ``jedi_<algorithm>_<DA_type>.yaml``) form the basis of the DA system configuration in the Land DA System. 
 
 .. figure:: https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/images/jcb.png
    :width: 50%
+   :alt: The JCB task draws information from config.yaml and the land_analysis.yaml and XML files to fill in the jcb-base_land.yaml.j2 template. This rendered template is named jcb-base_<DA_type>.yaml. This file is passed through the JCB components to assemble a final, valid JEDI YAML file for the particular DA type and algorithm selected. 
 
    Outline of the JCB Task
 
-The ``jcb`` task stores these files in the ``ptmp/<envir>/tmp/jcb.${PDY}${cyc}.${jobid}/`` directory, where ``${PDY}${cyc}`` is in YYYYMMDDHH format (see :numref:`Section %s <nco-dir-entities>`), and the ``${jobid}`` is the job ID assigned by the system. Users can also access this file via the ``tmp_dir/jcb.${PDY}${cyc}.${jobid}`` shortcut in their experiment directory. The example below shows what the complete ``jcb-base_land.yaml`` file might look like for the 2025-01-19 00Z cycle. 
+The ``jcb`` task stores these files in the ``ptmp/<envir>/tmp/jcb.${PDY}${cyc}.${jobid}/`` directory, where ``${PDY}${cyc}`` is in YYYYMMDDHH format (see :numref:`Section %s <nco-dir-entities>`), and the ``${jobid}`` is the job ID assigned by the system. Users can also access this file via the ``tmp_dir/jcb.${PDY}${cyc}.${jobid}`` shortcut in their experiment directory. The example below shows what the complete ``jcb-base_snow.yaml`` file might look like for the 2025-01-19 00Z cycle. 
 
 .. code-block:: yaml
 
@@ -168,7 +169,7 @@ The ``jcb`` task stores these files in the ``ptmp/<envir>/tmp/jcb.${PDY}${cyc}.$
    land_obsdataout_prefix: "diag."
    land_obsdataout_suffix: "_2025011900.nc"
 
-The example below shows what the complete ``jedi_<algorithm>_snow.yaml`` file might look like for the 2025-01-19 00Z cycle using the ``3dvar`` option. Concretely, this file would be named ``jedi_3dvar_snow.yaml``. 
+The example below shows what the complete ``jedi_<algorithm>_<DA_type>.yaml`` file might look like for the 2025-01-19 00Z cycle using the ``3dvar`` option for snow DA. Concretely, this file would be named ``jedi_3dvar_snow.yaml``. 
 
 .. code-block:: yaml
 
