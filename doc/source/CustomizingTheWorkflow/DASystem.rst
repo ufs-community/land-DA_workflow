@@ -703,7 +703,7 @@ The :jedi:`geometry <using/building_and_running/config_content.html#geometry>` s
          ``state variables``
             Specifies the list of state variables. Valid values may include: ``[filtered_orography, snwdph, vtype, slmsk, sheleg]``
            
-         ``datapath`` (Default: $BASEDIR/land-DA_workflow/fix/FV3_fix_tiled/C96)
+         ``datapath`` (Default: ${BASEDIR}/land-DA_workflow/fix/FV3_fix_tiled/C96)
             Specifies the path for state variables data.
 
          ``filename_orog`` (Default: C96_oro_data.nc)

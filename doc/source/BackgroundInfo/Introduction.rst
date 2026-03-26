@@ -91,7 +91,7 @@ The Land DA System's `GitHub Discussions <https://github.com/ufs-community/land-
 When posting a question, it is recommended that users provide the following information: 
 
 * The platform or system being used (e.g., Ursa, Hercules, container)
-* The version of the Land DA System being used (e.g., ``develop``, ``release/public-v2.0.0``). (To determine this, users can run ``git branch``, and the name of the branch with an asterisk ``*`` in front of it is the name of the branch or tag they are working with.) Note that the Land DA version being used and the version of the documentation being used should match, or users will run into difficulties.
+* The version of the Land DA System being used (e.g., ``develop``, ``release/public-v3.0.0``). (To determine this, users can run ``git branch``, and the name of the branch with an asterisk ``*`` in front of it is the name of the branch or tag they are working with.) Note that the Land DA version being used and the version of the documentation being used should match, or users will run into difficulties.
 * Stage of the application when the issue appeared (i.e., build/compilation, configuration, or forecast run)
 * Contents of relevant configuration files
 * Full error message (preferably in text form rather than a screenshot)

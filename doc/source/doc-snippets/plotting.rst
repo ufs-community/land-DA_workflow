@@ -10,7 +10,7 @@ The histogram plots OMB values on the x-axis and frequency density values on the
 .. |logo2| image:: https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/images/LandDAHistogram.png 
    :alt: Histogram of snow depth in millimeters (observation minus background) on the x-axis and frequency density on the y-axis
 
-.. list-table:: Snow Depth Plots for 2000-01-04
+.. list-table:: Snow Depth Plots for 2025-01-19
 
    * - |logo1|
      - |logo2|
