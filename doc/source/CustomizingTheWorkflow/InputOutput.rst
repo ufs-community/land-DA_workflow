@@ -434,9 +434,7 @@ Once the data is downloaded, change the file names:
    mv data_stream-oper_stepType-avg.nc era5_[yyyymmdd]_avg.nc
    mv data_stream-oper_stepType-instant.nc era5_[yyyymmdd]_instant.nc
 
-Move the files into the ``${FIXlandda}/fix`` directory for the ``prep_data`` workflow task. 
-
-.. COMMENT: How to find this?/Where by default?
+Move or soft link the files to the ``${BASEDIR}/land-DA_workflow/fix`` directory for the ``prep_data`` workflow task. 
 
 .. _atml-input-files:
 
@@ -701,7 +699,7 @@ Restart files are located in the ``inputs/DATA_RESTART`` directory (downloaded :
 Output Files
 *************
 
-Output files for each cycle appear in the ``$BASEDIR/ptmp/<envir>/com/landda/v<X.Y.Z>/landda.${PDY}`` directory. Users can also reach this directory via a shortcut in the experiment directory: ``$BASEDIR/exp_case/lnd_era5_warmstart_00/com_dir/landda.${PDY}``. This directory contains subdirectories with experiment output for each cycle: 
+Output files for each cycle appear in the ``${BASEDIR}/ptmp/<envir>/com/landda/v<X.Y.Z>/landda.${PDY}`` directory. Users can also reach this directory via a shortcut in the experiment directory: ``${BASEDIR}/exp_case/lnd_era5_warmstart_00/com_dir/landda.${PDY}``. This directory contains subdirectories with experiment output for each cycle: 
 
 * hofx
 * plot

@@ -7,13 +7,13 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "UFS Land DA User's Guide"
-copyright = '2024, '
+copyright = '2026, '
 author = ' '
 
 # The short X.Y version
-version = 'develop'
+version = 'v3.0.0'
 # The full version, including alpha/beta/rc tags
-release = 'develop'
+release = 'v3.0.0'
 
 numfig = True
 
@@ -46,11 +46,10 @@ pygments_style = 'sphinx'
 
 # Documentation-wide substitutions
 
-# UPDATE for release! 
 rst_prolog = """
 .. |latestr| replace:: v3.0.0
 .. |tag| replace:: ``ufs-land-da-v3.0.0``
-.. |branch| replace:: ``release/public-v2.0.0``
+.. |branch| replace:: ``release/public-v3.0.0``
 .. |spack-stack-ver| replace:: v1.9.2
 .. |data| replace:: v3.0
 """
@@ -65,10 +64,11 @@ user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Ge
 linkcheck_ignore = [r'https://www\.intel\.com/content/www/us/en/developer/tools/oneapi/hpc\-toolkit\-download\.html',
                     r'https://doi.org/*',
                     r'https://sourceforge.net/projects/xming/',
+                    r'https://repository.library.noaa.gov/view/noaa/30725',
                     ]
 
 # Ignore anchor tags for Land DA data bucket. Shows Not Found even when they exist.
-linkcheck_anchors_ignore = []
+linkcheck_anchors_ignore = [r'anchor-download-to-a-local-computer-from-earthdata-cloud',]
 
 linkcheck_allowed_redirects = {r"https://github.com/ufs-community/land-DA_workflow/wiki/.*": 
                                  r"https://raw.githubusercontent.com/wiki/ufs-community/land-DA_workflow/.*",
@@ -120,16 +120,15 @@ def setup(app):
 
 intersphinx_mapping = {
    'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/8.0.0/', None),
-   'spack-stack': ('https://spack-stack.readthedocs.io/en/1.6.0/', None),
+   'spack-stack': ('https://spack-stack.readthedocs.io/en/1.9.2', None),
 }
 
 # -- Options for extlinks extension ---------------------------------------
 
 extlinks_detect_hardcoded_links = True
-extlinks = {'ccpp-techdoc': ('https://ccpp-techdoc.readthedocs.io/en/latest/%s', '%s'),
+extlinks = {'ccpp-techdoc': ('https://ccpp-techdoc.readthedocs.io/en/v7.0.0/%s', '%s'),
             'github': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'github-docs': ('https://docs.github.com/en/%s', '%s'),
-            'gswp3': ('https://hydro.iis.u-tokyo.ac.jp/GSWP3/%s', '%s'),
             'jedi': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/8.0.0/%s', '%s'),
             'jedi-latest': ('https://jointcenterforsatellitedataassimilation-jedi-docs.readthedocs-hosted.com/en/latest/%s', '%s'),
             'nco': ('https://www.nco.ncep.noaa.gov/idsb/implementation_standards/%s', '%s'),
@@ -138,10 +137,10 @@ extlinks = {'ccpp-techdoc': ('https://ccpp-techdoc.readthedocs.io/en/latest/%s',
             'rtd': ('https://readthedocs.org/projects/land-da-workflow/%s', '%s'),
             'land-wflow-repo': ('https://github.com/ufs-community/land-DA_workflow/%s', '%s'),
             'land-wflow-wiki': ('https://github.com/ufs-community/land-DA_workflow/wiki/%s','%s'),
-            'spack-stack': ('https://spack-stack.readthedocs.io/en/1.6.0/%s', '%s'),
+            'spack-stack': ('https://spack-stack.readthedocs.io/en/1.9.2/%s', '%s'),
             'stochphys': ('https://stochastic-physics.readthedocs.io/en/release-public-v3/%s', '%s'),
-            'ufs-utils': ('https://noaa-emcufs-utils.readthedocs.io/en/latest/%s', '%s'),
+            'ufs-utils': ('https://noaa-emcufs-utils.readthedocs.io/en/release-1_12_0/%s', '%s'),
             'ufs-wm': ('https://ufs-weather-model.readthedocs.io/en/develop/%s', '%s'),
             'ufs': ('https://ufs.epic.noaa.gov/%s', '%s'),
-            'uw': ('https://uwtools.readthedocs.io/en/main/%s', '%s'),
+            'uw': ('https://uwtools.readthedocs.io/en/2.6.2/%s', '%s'),
             }

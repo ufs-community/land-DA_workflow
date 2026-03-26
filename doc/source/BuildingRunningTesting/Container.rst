@@ -150,7 +150,7 @@ where:
 
    * ``-c`` is the compiler on the user's local machine ( e.g., ``intel/2024.2.1``, ``intel-oneapi-compilers/2024.1.0``, ``intel-oneapi-compilers/2024.2.1``)
    * ``-m`` is the :term:`MPI` on the user's local machine ( e.g., ``impi/2024.2.1``, ``intel-oneapi-mpi/2021.12.0``, ``intel-oneapi-mpi/2021.13.1``)
-   * ``-i`` is the full path to the container image ( e.g., ``$BASEDIR/ubuntu22.04-intel-landda-release-public-v3.0.0.img``)
+   * ``-i`` is the full path to the container image ( e.g., ``${BASEDIR}/ubuntu22.04-intel-landda-release-public-v3.0.0.img``)
 
 Concretely, users would run something like: 
 

@@ -4,7 +4,7 @@ As the experiment progresses, it will generate a number of directories to hold i
 
 .. code-block:: console
 
-   $BASEDIR (<exp_basedir>): Base directory
+   ${BASEDIR} (<exp_basedir>): Base directory
     ├── land-DA_workflow (<HOMElandda>): Home directory of the land DA workflow
     │     ├── jobs 
     │     ├── modulefiles
@@ -14,7 +14,7 @@ As the experiment progresses, it will generate a number of directories to hold i
     │     └── ush
     ├── exp_case
     │     └── $EXP_CASE_NAME
-    │           ├── com_dir --> symlinked to ptmp/<envir>/com/landda/v2.1.0
+    │           ├── com_dir --> symlinked to ptmp/<envir>/com/landda/v3.0.0
     │           ├── land_analysis.yaml
     │           ├── land_analysis.xml
     │           ├── launch_rocoto_wflow.sh
@@ -46,6 +46,6 @@ Check for the output files for each cycle in the experiment directory:
 
 .. code-block:: console
 
-   ls -l $BASEDIR/ptmp/<envir>/com/landda/<model_ver>/landda.YYYYMMDD
+   ls -l ${BASEDIR}/ptmp/<envir>/com/landda/<model_ver>/landda.YYYYMMDD
 
 where ``YYYYMMDD`` is the cycle date, and ``<model_ver>`` is the model version (currently v3.0.0 in the ``develop`` branch). The experiment should generate several restart files. 

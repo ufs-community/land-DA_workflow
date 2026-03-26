@@ -13,10 +13,10 @@ Glossary
       The Weather Model configuration that runs only the standalone atmospheric model. 
 
    ATML
-      The ATML configuration of the Land DA System uses the Noah-MP :term:`land component` from the UFS :term:`Weather Model` with an active :term:`FV3` atmospheric component (`fv3atm <https://github.com/NOAA-EMC/fv3atm>`_). 
+      The ATML configuration of the Land DA System uses the Noah-MP :term:`land component` from the UFS :term:`Weather Model` with an active :term:`FV3` atmospheric component (`ufsatm <https://github.com/NOAA-EMC/ufsatm>`_). 
 
    CCPP
-      The `Common Community Physics Package <https://dtcenter.org/community-code/common-community-physics-package-ccpp>`_ is a forecast-model agnostic, vetted collection of code containing atmospheric physical parameterizations and suites of parameterizations for use in Numerical Weather Prediction (NWP) along with a framework that connects the physics to the host forecast model.
+      The `Common Community Physics Package <https://dtcenter.org/software-tools/common-community-physics-package-ccpp>`_ is a forecast-model agnostic, vetted collection of code containing atmospheric physical parameterizations and suites of parameterizations for use in Numerical Weather Prediction (NWP) along with a framework that connects the physics to the host forecast model.
 
    CDEPS
       The `Community Data Models for Earth Predictive Systems <https://github.com/NOAA-EMC/CDEPS/>`_ repository (CDEPS) contains a set of :term:`NUOPC`-compliant data components and :term:`ESMF`-based "stream" code that selectively removes feedback in coupled model systems. In essence, CDEPS handles the static Data Atmosphere (:term:`DATM`) integration with dynamic coupled model components (e.g., :term:`MOM6`). The CDEPS data models perform the basic function of reading external data files, modifying those data, and then sending the data back to the :term:`CMEPS` mediator. The fields sent to the :term:`mediator` are the same as those that would be sent by an active component. This takes advantage of the fact that the mediator and other CMEPS-compliant model components have no fundamental knowledge of whether another component is fully active or just a data component. More information about DATM is available in the CDEPS `Documentation <https://escomp.github.io/CDEPS/versions/master/html/index.html>`_.
@@ -89,7 +89,7 @@ Glossary
       The Finite-Volume Cubed-Sphere dynamical core (dycore). Developed at NOAA’s `Geophysical Fluid Dynamics Laboratory <https://www.gfdl.noaa.gov/fv3/>`__ (GFDL), it is a scalable and flexible dycore capable of both hydrostatic and non-hydrostatic atmospheric simulations. It is the dycore used in the UFS Weather Model.
 
    GDAS
-      The Global Data Assimilation System (`GDAS <https://catalog.data.gov/dataset/global-data-assimilation-system-gdas2>`_) is "the system used by the Global Forecast System (:term:`GFS`) model to place observations into a gridded model space for the purpose of starting, or initializing, weather forecasts with observed data."
+      The Global Data Assimilation System (`GDAS <https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ncdc:C00379>`_) is "the system used by the Global Forecast System (:term:`GFS`) model to place observations into a gridded model space for the purpose of starting, or initializing, weather forecasts with observed data."
 
    GFS
       The Global Forecast System (`GFS <https://www.ncei.noaa.gov/products/weather-climate-models/global-forecast>`_) is an :term:`NCEP` model that "generates data for dozens of atmospheric and land-soil variables." It couples atmosphere, ocean, land/soil, and sea ice models to accurately depict weather conditions.
