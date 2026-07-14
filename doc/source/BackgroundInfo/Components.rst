@@ -28,7 +28,7 @@ The UFS WM's atmospheric model is the Finite-Volume Cubed-Sphere (:term:`FV3`) d
 Model Physics
 ```````````````
 
-The Common Community Physics Package (CCPP), described `here <https://dtcenter.org/community-code/common-community-physics-package-ccpp>`_, supports interoperable atmospheric physics and land surface model options. Atmospheric physics are a set of numerical methods describing small-scale processes such as clouds, turbulence, radiation, and their interactions. A full scientific description of CCPP v7.0.0 parameterizations and suites can be found in the `CCPP Scientific Documentation <https://dtcenter.ucar.edu/GMTB/v7.0.0/sci_doc/index.html>`_, and CCPP technical aspects are described in the :ccpp-techdoc:`CCPP Technical Documentation <>`. 
+The Common Community Physics Package (CCPP), described `here <https://dtcenter.org/community-code/common-community-physics-package-ccpp>`_, supports interoperable atmospheric physics and land surface model options. Atmospheric physics are a set of numerical methods describing small-scale processes such as clouds, turbulence, radiation, and their interactions. A full scientific description of CCPP v7.0.0 parameterizations and suites can be found in the `CCPP Scientific Documentation <https://ncar.github.io/ccpp-physics/LandDA/>`_, and CCPP technical aspects are described in the :ccpp-techdoc:`CCPP Technical Documentation <>`. 
 
 .. _NoahMP:
 
